@@ -32,6 +32,7 @@ namespace JoyReactor.Android.App.Home
 			var adapter = new FeedAdapter(Activity);
 			list.Adapter = adapter;
 
+			// TODO
 //			var result = await model.GetPostsAsync ();
 //			adapter.Clear ();
 //			adapter.AddAll (result);
