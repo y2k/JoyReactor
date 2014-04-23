@@ -10,11 +10,11 @@ namespace JoyReactor.Core.Tests
 		[Test]
 		public void TestCase ()
 		{
-			var parser = new ReactorParser ();
-			parser.ExtractTagPostCollection(ID.SITE_REACTOR, null, 0, 
-				s =>
-				{
-				});
+//			var parser = new ReactorParser ();
+//			parser.ExtractTagPostCollection(ID.SITE_REACTOR, null, 0, 
+//				s =>
+//				{
+//				});
 		}
 	}
 }

@@ -32,10 +32,10 @@ namespace JoyReactor.Android.App.Home
 			var adapter = new FeedAdapter(Activity);
 			list.Adapter = adapter;
 
-			var result = await model.GetPostsAsync ();
-			adapter.Clear ();
-			adapter.AddAll (result);
-			progress.Visibility = ViewStates.Gone;
+//			var result = await model.GetPostsAsync ();
+//			adapter.Clear ();
+//			adapter.AddAll (result);
+//			progress.Visibility = ViewStates.Gone;
 
 			// TODO
 			list.SetItemMargin((int)(4 * Resources.DisplayMetrics.Density));
