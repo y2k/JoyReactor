@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#ccc"
+    android:padding="1dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+        <JoyReactor.Android.Widget.FixedSizeImageView
+            android:minWidth="100dp"
+            android:minHeight="100dp"
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/image"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:background="#4444" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/image"
+            android:layout_margin="4dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="#505050"
+            android:textSize="14sp" />
+        <ImageView
+            android:id="@+id/user_image"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_below="@id/title"
+            android:layout_margin="8dp"
+            android:scaleType="centerCrop" />
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_margin="4dp"
+            android:layout_toRightOf="@id/user_image"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="#505050"
+            android:textSize="14sp" />
+    </RelativeLayout>
+    <Button
+        android:id="@+id/action"
+        android:background="?android:listChoiceBackgroundIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</FrameLayout>

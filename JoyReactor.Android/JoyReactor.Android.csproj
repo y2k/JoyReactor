@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FF269F55-48C8-42BC-A8CC-5BC1C1DBE87F}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>JoyReactor.Android</RootNamespace>
+    <AndroidApplication>True</AndroidApplication>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
+    <AssemblyName>JoyReactor.Android</AssemblyName>
+    <TargetFrameworkVersion>v4.0.3</TargetFrameworkVersion>
+    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;__MOBILE__;__ANDROID__;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidLinkMode>None</AndroidLinkMode>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <DefineConstants>__MOBILE__;__ANDROID__;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+    <Reference Include="Mono.Android.Support.v4" />
+    <Reference Include="Ninject.Common">
+      <HintPath>..\JoyReactor.Core\Libs\Ninject.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="PCLStorage">
+      <HintPath>Libs\PCLStorage.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLite.Net.Platform.XamarinAndroid">
+      <HintPath>Libs\SQLite.Net.Platform.XamarinAndroid.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLite.Net">
+      <HintPath>Libs\SQLite.Net.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Resources\Resource.designer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="App\HomeActivity.cs" />
+    <Compile Include="App\Base\BaseActivity.cs" />
+    <Compile Include="App\Home\FeedFragment.cs" />
+    <Compile Include="App\Base\BaseFragment.cs" />
+    <Compile Include="App\Home\FeedAdapter.cs" />
+    <Compile Include="App\App.cs" />
+    <Compile Include="Model\AndroidInjectModule.cs" />
+    <Compile Include="Model\BitmapImageDecoder.cs" />
+    <Compile Include="Widget\FixedSizeImageView.cs" />
+    <Compile Include="App\Home\LeftMenuFragment.cs" />
+    <Compile Include="App\Home\RightMenuFragment.cs" />
+    <Compile Include="Model\AndroidSQLitePlatformGetter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AboutResources.txt" />
+    <None Include="Assets\AboutAssets.txt" />
+    <None Include="Properties\AndroidManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\Strings.xml" />
+    <AndroidResource Include="Resources\drawable\Icon.png" />
+    <AndroidResource Include="Resources\layout\ActivityHome.axml" />
+    <AndroidResource Include="Resources\layout\FragmentFeed.axml" />
+    <AndroidResource Include="Resources\layout\ItemFeed.axml" />
+    <AndroidResource Include="Resources\layout\FragmentLeftMenu.axml" />
+    <AndroidResource Include="Resources\layout\ItemSubscription.axml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\JoyReactor.Core\JoyReactor.Core.csproj">
+      <Project>{E205F32E-24F2-4B73-B9F1-C474813D605B}</Project>
+      <Name>JoyReactor.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StaggeredGridViewWrapper\JoyReactor.Android.Platform.csproj">
+      <Project>{0C771503-FD14-436A-A7C0-E2DCE1D5FEC3}</Project>
+      <Name>JoyReactor.Android.Platform</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App\" />
+    <Folder Include="App\Base\" />
+    <Folder Include="App\Home\" />
+    <Folder Include="Model\" />
+    <Folder Include="Widget\" />
+  </ItemGroup>
+</Project>
