@@ -86,9 +86,6 @@
     <Reference Include="Ninject.Common">
       <HintPath>Libs\Ninject.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Ninject.Android">
-      <HintPath>Libs\Ninject.Android.dll</HintPath>
-    </Reference>
     <Reference Include="PCLStorage">
       <HintPath>Libs\PCLStorage.dll</HintPath>
     </Reference>

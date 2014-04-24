@@ -46,9 +46,6 @@
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
     <Reference Include="Mono.Android.Support.v4" />
-    <Reference Include="Ninject.Common">
-      <HintPath>..\JoyReactor.Core\Libs\Ninject.Common.dll</HintPath>
-    </Reference>
     <Reference Include="PCLStorage">
       <HintPath>Libs\PCLStorage.dll</HintPath>
     </Reference>
@@ -57,6 +54,12 @@
     </Reference>
     <Reference Include="SQLite.Net">
       <HintPath>Libs\SQLite.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Android">
+      <HintPath>Libs\Ninject.Android.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Common">
+      <HintPath>Libs\Ninject.Common.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +82,14 @@
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
+    <None Include="Libs\Ninject.Android.dll" />
+    <None Include="Libs\PCLStorage.Abstractions.dll" />
+    <None Include="Libs\PCLStorage.Abstractions.xml" />
+    <None Include="Libs\PCLStorage.dll" />
+    <None Include="Libs\PCLStorage.xml" />
+    <None Include="Libs\SQLite.Net.dll" />
+    <None Include="Libs\SQLite.Net.Platform.XamarinAndroid.dll" />
+    <None Include="Libs\Ninject.Common.dll" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />

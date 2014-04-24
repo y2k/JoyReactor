@@ -13,7 +13,8 @@ namespace JoyReactor.Core.Model
 {
 	public class PostCollectionModel : IPostCollectionModel
 	{
-		private ISiteParser[] parsers = InjectService.Instance.Get<ISiteParser[]>();
+//		private ISiteParser[] parsers = InjectService.Instance.Get<ISiteParser[]>();
+		private ISiteParser[] parsers = new ISiteParser[] { new ReactorParser() };
 
 		#region IPostCollectionModel implementation
 
@@ -22,20 +23,19 @@ namespace JoyReactor.Core.Model
 			return Task.Run(
 				() => {
 
-
 					if (flags == SyncFlags.First) SyncFirstPage(id);
 					else if (flags == SyncFlags.Next) SyncNextPage(id);
 
-//					try {
-//						new ReactorParser().ExtractTagPostCollection(ID.TYPE_GOOD, null, 0, 
-//							p => {
-//								if (p.State == CollectionExportState.ExportState.PostItem) {
-//									MainDb.Instance.InsertOrReplace(Convert(p.PostItem));
-//								}
-//							});
-//					} catch {}
+					try {
+						new ReactorParser().ExtractTagPostCollection(ID.TagType.Good, null, 0, 
+							p => {
+								if (p.State == CollectionExportState.ExportState.PostItem) {
+									MainDb.Instance.InsertOrReplace(Convert(p.PostItem));
+								}
+							});
+					} catch {}
 
-					return MainDb.Instance.Query<Post>("SELECT * FROM Post");
+					return MainDb.Instance.Query<Post>("SELECT * FROM posts");
 				});
 		}
 
@@ -58,7 +58,7 @@ namespace JoyReactor.Core.Model
 		private void SavePostToDatabase (ExportPost post)
 		{
 			var p = Convert (post);
-			MainDb.Instance.InsertOrReplace (post);
+			MainDb.Instance.InsertOrReplace (p);
 		}
 
 		private void SyncNextPage (ID id)

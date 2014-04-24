@@ -32,6 +32,12 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="nunit.framework" />
+    <Reference Include="Ninject.Platform">
+      <HintPath>Libs\Ninject.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Common">
+      <HintPath>Libs\Ninject.Common.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ReactorParserTests.cs" />
@@ -42,5 +48,14 @@
       <Project>{E205F32E-24F2-4B73-B9F1-C474813D605B}</Project>
       <Name>JoyReactor.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Libs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Libs\Ninject.Platform.dll" />
+    <None Include="Libs\Ninject.Platform.xml" />
+    <None Include="Libs\Ninject.Common.dll" />
+    <None Include="Libs\Ninject.Common.xml" />
   </ItemGroup>
 </Project>

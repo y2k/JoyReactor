@@ -15,6 +15,7 @@ using Ninject;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Android.App.Base;
 using Com.Android.EX.Widget;
+using JoyReactor.Core;
 
 namespace JoyReactor.Android.App.Home
 {
@@ -33,10 +34,10 @@ namespace JoyReactor.Android.App.Home
 			list.Adapter = adapter;
 
 			// TODO
-//			var result = await model.GetPostsAsync ();
-//			adapter.Clear ();
-//			adapter.AddAll (result);
-//			progress.Visibility = ViewStates.Gone;
+			var result = await model.GetPostsAsync (new ID { Site = ID.SiteParser.JoyReactor, Type = ID.TagType.Good });
+			adapter.Clear ();
+			adapter.AddAll (result);
+			progress.Visibility = ViewStates.Gone;
 
 			// TODO
 			list.SetItemMargin((int)(4 * Resources.DisplayMetrics.Density));

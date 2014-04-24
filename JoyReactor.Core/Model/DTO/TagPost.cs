@@ -3,6 +3,7 @@ using SQLite.Net.Attributes;
 
 namespace JoyReactor.Core.Model.DTO
 {
+	[Table("tag_post")]
 	public class TagPost
 	{
 		[PrimaryKey, AutoIncrement]

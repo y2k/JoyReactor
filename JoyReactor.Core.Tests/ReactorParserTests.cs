@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
 using System;
 using JoyReactor.Core.Model.Parser;
+using JoyReactor.Core.Model.Inject;
+using Ninject;
 
 namespace JoyReactor.Core.Tests
 {
@@ -10,11 +12,13 @@ namespace JoyReactor.Core.Tests
 		[Test]
 		public void TestCase ()
 		{
-//			var parser = new ReactorParser ();
-//			parser.ExtractTagPostCollection(ID.SITE_REACTOR, null, 0, 
-//				s =>
-//				{
-//				});
+			InjectService.Initialize (new StandardKernel());
+
+			var parser = new ReactorParser ();
+			parser.ExtractTagPostCollection(ID.TagType.Good, null, 0, 
+				s =>
+				{
+				});
 		}
 	}
 }

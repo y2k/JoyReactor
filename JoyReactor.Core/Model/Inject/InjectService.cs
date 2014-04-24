@@ -8,18 +8,21 @@ using JoyReactor.Core.Model.Image;
 
 namespace JoyReactor.Core.Model.Inject
 {
-	public class InjectService : StandardKernel
+	public class InjectService 
 	{
 		public static IKernel Instance { get ; private set; }
 
-		private InjectService(params INinjectModule[] modules) : base(modules) { }
+//		private InjectService(params INinjectModule[] modules) : base(modules) { }
 
-		public static void Initialize(params INinjectModule[] modules) 
+		public static void Initialize(IKernel baseKernel, params INinjectModule[] modules) 
 		{
 			var m = new List<INinjectModule>();
 			m.Add (new DefaultModule ());
 			m.AddRange (modules);
-			Instance = new InjectService (m.ToArray());
+
+//			Instance = new InjectService (m.ToArray());
+			baseKernel.Load (m);
+			Instance = baseKernel;
 		}
 
 		private class DefaultModule : NinjectModule
