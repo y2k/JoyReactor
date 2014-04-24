@@ -34,7 +34,7 @@ namespace JoyReactor.Android.App.Home
 			list.Adapter = adapter;
 
 			// TODO
-			var result = await model.GetPostsAsync (new ID { Site = ID.SiteParser.JoyReactor, Type = ID.TagType.Good });
+			var result = await model.GetPostsAsync (new ID { Site = ID.SiteParser.JoyReactor, Type = ID.TagType.Good }, SyncFlags.First);
 			adapter.Clear ();
 			adapter.AddAll (result);
 			progress.Visibility = ViewStates.Gone;

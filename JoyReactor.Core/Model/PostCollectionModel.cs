@@ -26,14 +26,14 @@ namespace JoyReactor.Core.Model
 					if (flags == SyncFlags.First) SyncFirstPage(id);
 					else if (flags == SyncFlags.Next) SyncNextPage(id);
 
-					try {
-						new ReactorParser().ExtractTagPostCollection(ID.TagType.Good, null, 0, 
-							p => {
-								if (p.State == CollectionExportState.ExportState.PostItem) {
-									MainDb.Instance.InsertOrReplace(Convert(p.PostItem));
-								}
-							});
-					} catch {}
+//					try {
+//						new ReactorParser().ExtractTagPostCollection(ID.TagType.Good, null, 0, 
+//							p => {
+//								if (p.State == CollectionExportState.ExportState.PostItem) {
+//									MainDb.Instance.InsertOrReplace(Convert(p.PostItem));
+//								}
+//							});
+//					} catch {}
 
 					return MainDb.Instance.Query<Post>("SELECT * FROM posts");
 				});
@@ -52,13 +52,17 @@ namespace JoyReactor.Core.Model
 
 			});
 
-			throw new NotImplementedException ();
+//			throw new NotImplementedException ();
 		}
 
 		private void SavePostToDatabase (ExportPost post)
 		{
 			var p = Convert (post);
-			MainDb.Instance.InsertOrReplace (p);
+//			MainDb.Instance.InsertOrReplace (p);
+
+			p.Id = MainDb.Instance.ExecuteScalar<int> ("SELECT Id FROM posts WHERE ServerId = ?", p.ServerId);
+			if (p.Id == 0) MainDb.Instance.Insert (p);
+			else MainDb.Instance.Update (p);
 		}
 
 		private void SyncNextPage (ID id)
