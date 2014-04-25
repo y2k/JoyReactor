@@ -78,6 +78,8 @@
     <Compile Include="App\Home\RightMenuFragment.cs" />
     <Compile Include="Model\AndroidSQLitePlatformGetter.cs" />
     <Compile Include="App\Base\Commands\ChangeSubscriptionCommand.cs" />
+    <Compile Include="App\Post\PostActivity.cs" />
+    <Compile Include="App\Post\PostFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -100,6 +102,7 @@
     <AndroidResource Include="Resources\layout\ItemFeed.axml" />
     <AndroidResource Include="Resources\layout\FragmentLeftMenu.axml" />
     <AndroidResource Include="Resources\layout\ItemSubscription.axml" />
+    <AndroidResource Include="Resources\layout\ActivityPost.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
@@ -119,5 +122,6 @@
     <Folder Include="Model\" />
     <Folder Include="Widget\" />
     <Folder Include="App\Base\Commands\" />
+    <Folder Include="App\Post\" />
   </ItemGroup>
 </Project>

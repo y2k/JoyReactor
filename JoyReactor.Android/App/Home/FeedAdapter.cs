@@ -16,10 +16,11 @@ using Ninject;
 using Android.Graphics;
 using JoyReactor.Android.Widget;
 using System.Drawing;
+using JoyReactor.Android.App.Post;
 
 namespace JoyReactor.Android.App.Home
 {
-	class FeedAdapter : ArrayAdapter<Post> 
+	class FeedAdapter : ArrayAdapter<JoyReactor.Core.Model.DTO.Post> 
 	{
 		private IImageModel iModel = InjectService.Instance.Get<IImageModel>();
 		private int maxWidth;
@@ -35,6 +36,8 @@ namespace JoyReactor.Android.App.Home
 				convertView = View.Inflate (parent.Context, Resource.Layout.ItemFeed, null);
 				convertView.LayoutParameters = new StaggeredGridView.LayoutParams (StaggeredGridView.LayoutParams.WrapContent);
 			}
+
+			convertView.Click += (sender, e) => Context.StartActivity(new Intent(Context, typeof(PostActivity)));
 
 			var item = GetItem (position);
 
