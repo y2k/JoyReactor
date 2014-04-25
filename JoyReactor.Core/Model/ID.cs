@@ -5,15 +5,9 @@ namespace JoyReactor.Core
 {
 	public class ID
 	{
-//		public const int SITE_REACTOR = 1;
-//		public const int SITE_2CHAN = 2;
-//		public const int SITE_4CHAN = 3;
-//		public const int SITE_7CHAN = 4;
-//
-//		public const int TYPE_BEST = 1;
-//		public const int TYPE_GOOD = 2;
-//		public const int TYPE_ALL = 3;
-//		public const int TYPE_FAVORITE = 4;
+		public static readonly ID REACTOR_GOOD = new ID { Site = SiteParser.JoyReactor, Type = TagType.Good };
+		public static readonly ID REACTOR_BEST = new ID { Site = SiteParser.JoyReactor, Type = TagType.Best };
+		public static readonly ID REACTOR_ALL = new ID { Site = SiteParser.JoyReactor, Type = TagType.All };
 
 		public SiteParser Site { get; set; }
 		public TagType Type { get; set; }
@@ -21,5 +15,23 @@ namespace JoyReactor.Core
 
 		public enum SiteParser { JoyReactor, Chan4, Chan7, Chan2 }
 		public enum TagType { Best, Good, All, Favorite }
+
+		public class TagID : ID 
+		{
+			// TODO Reserver for future
+		}
+
+		public class Factory
+		{
+			public static ID Tag(SiteParser site, TagType type, String name) 
+			{
+				return new ID { Site = site, Tag = name, Type = type };
+			}
+
+			public static ID Reactor(String name)
+			{
+				return Tag (SiteParser.JoyReactor, TagType.Good, name);
+			}
+		}
 	}
 }

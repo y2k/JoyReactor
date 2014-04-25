@@ -17,28 +17,35 @@ using JoyReactor.Core.Model.Inject;
 using Ninject;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core;
+using JoyReactor.Android.App.Base.Commands;
 
 namespace JoyReactor.Android.App
 {
 	[Activity (Label = "JoyReactor v2", MainLauncher = true)]			
 	public class HomeActivity : BaseActivity
 	{
+		private ViewPager pager;
+
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
 			SetContentView (Resource.Layout.ActivityHome);
 
-//			var dir = AppDomain.CurrentDomain.BaseDirectory;
-//			InjectService.Instance.Get<IWebDownloader> ();
-
-			var pager = FindViewById<ViewPager> (Resource.Id.Pager);
+			pager = FindViewById<ViewPager> (Resource.Id.Pager);
 			pager.Adapter = new Adapter (SupportFragmentManager);
 			pager.CurrentItem = 1;
 		}
 
-		public void ReloadList(ID id)
+		protected override void OnResume ()
 		{
-			//
+			base.OnResume ();
+			ChangeSubscriptionCommand.Register (this, s => pager.CurrentItem = 1);
+		}
+
+		protected override void OnPause ()
+		{
+			base.OnPause ();
+			ChangeSubscriptionCommand.Unregister (this);
 		}
 	}
 

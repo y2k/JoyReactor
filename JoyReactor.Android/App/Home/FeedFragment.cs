@@ -9,13 +9,14 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
-using JoyReactor.Core.Model;
-using JoyReactor.Core.Model.Inject;
-using Ninject;
-using JoyReactor.Core.Model.DTO;
-using JoyReactor.Android.App.Base;
 using Com.Android.EX.Widget;
 using JoyReactor.Core;
+using JoyReactor.Core.Model;
+using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Inject;
+using Ninject;
+using JoyReactor.Android.App.Base;
+using JoyReactor.Android.App.Base.Commands;
 
 namespace JoyReactor.Android.App.Home
 {
@@ -23,6 +24,7 @@ namespace JoyReactor.Android.App.Home
 	{
 		private StaggeredGridView list;
 		private ProgressBar progress;
+		private FeedAdapter adapter;
 
 		private IPostCollectionModel model = InjectService.Instance.Get<IPostCollectionModel>();
 
@@ -30,17 +32,10 @@ namespace JoyReactor.Android.App.Home
 		{
 			base.OnCreate (savedInstanceState);
 
-			var adapter = new FeedAdapter(Activity);
-			list.Adapter = adapter;
-
-			// TODO
-			var result = await model.GetPostsAsync (new ID { Site = ID.SiteParser.JoyReactor, Type = ID.TagType.Good }, SyncFlags.First);
-			adapter.Clear ();
-			adapter.AddAll (result);
-			progress.Visibility = ViewStates.Gone;
-
-			// TODO
+			list.Adapter = adapter = new FeedAdapter (Activity);
 			list.SetItemMargin((int)(4 * Resources.DisplayMetrics.Density));
+
+			ReloadList (ID.REACTOR_GOOD);
 		}
 
 		public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -49,6 +44,27 @@ namespace JoyReactor.Android.App.Home
 			list = v.FindViewById<StaggeredGridView> (Resource.Id.List);
 			progress = v.FindViewById<ProgressBar> (Resource.Id.Progress);
 			return v;
+		}
+
+		public override void OnResume ()
+		{
+			base.OnResume ();
+			ChangeSubscriptionCommand.Register (this, ReloadList);
+		}
+
+		public override void OnPause ()
+		{
+			base.OnPause ();
+			ChangeSubscriptionCommand.Unregister (this);
+		}
+
+		private async void ReloadList (ID id)
+		{
+			adapter.Clear ();
+			var result = await model.GetPostsAsync (id, SyncFlags.First);
+
+			adapter.AddAll (result);
+			progress.Visibility = ViewStates.Gone;
 		}
 	}
 }

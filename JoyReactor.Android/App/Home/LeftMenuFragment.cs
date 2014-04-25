@@ -10,6 +10,7 @@ using Android.Content;
 using Android.Graphics;
 using System;
 using JoyReactor.Core;
+using JoyReactor.Android.App.Base.Commands;
 
 namespace JoyReactor.Android.App.Home
 {
@@ -27,10 +28,10 @@ namespace JoyReactor.Android.App.Home
 			adapter.Clear ();
 			adapter.AddAll(await model.GetMainSubscriptionsAsync ());
 
-//			list.ItemClick += (sender, e) => { 
-//				var i = new ID { Site = ID.SITE_REACTOR, Type = ID.TYPE_FAVORITE, Tag = adapter.GetItem(e.Position).Title };
-//				((HomeActivity) Activity).ReloadList(i);
-//			};
+			list.ItemClick += (sender, e) => { 
+				var id = ID.Factory.Reactor(adapter.GetItem(e.Position).Title);
+				new ChangeSubscriptionCommand(id).Execute();
+			};
 		}
 
 		public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)

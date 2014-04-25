@@ -22,4 +22,3 @@ namespace JoyReactor.Android.App.Home
 		}
 	}
 }
-
