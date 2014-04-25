@@ -33,7 +33,18 @@ namespace JoyReactor.Android.App
 
 			pager = FindViewById<ViewPager> (Resource.Id.Pager);
 			pager.Adapter = new Adapter (SupportFragmentManager);
+			pager.PageSelected += (s, e) => ActionBar.SetDisplayHomeAsUpEnabled(e.Position > 0);
+
 			pager.CurrentItem = 1;
+		}
+
+		public override bool OnOptionsItemSelected (IMenuItem item)
+		{
+			if (item.ItemId == global::Android.Resource.Id.Home) {
+				pager.CurrentItem = 0;
+				return true;
+			}
+			return base.OnOptionsItemSelected (item);
 		}
 
 		protected override void OnResume ()
