@@ -3,6 +3,7 @@ using PCLStorage;
 using System.IO;
 using JoyReactor.Core.Model.Inject;
 using Ninject;
+using System.Threading;
 
 namespace JoyReactor.Core.Model.Image
 {

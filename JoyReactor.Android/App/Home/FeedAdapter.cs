@@ -40,9 +40,11 @@ namespace JoyReactor.Android.App.Home
 
 			var iv = convertView.FindViewById<FixedSizeImageView> (Resource.Id.image);
 			iv.ImageSize = new Size (item.ImageWidth, item.ImageHeight);
+			iv.SetImageDrawable (null);
 			iModel.Load (iv, new Uri(item.Image), maxWidth, s => iv.SetImageBitmap((Bitmap)s.Image));
 
 			var ui = convertView.FindViewById<ImageView> (Resource.Id.user_image);
+			ui.SetImageDrawable (null);
 			iModel.Load (ui, new Uri(item.UserImage), 0, s => ui.SetImageBitmap ((Bitmap)s.Image));
 
 			convertView.FindViewById<TextView> (Resource.Id.user_name).Text = item.UserName;

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Net.Http;
+using System.Linq;
 using System.IO;
 using PCLStorage;
 using System.Threading;
 using Ninject;
 using JoyReactor.Core.Model.Inject;
+using System.Collections.Generic;
 
 namespace JoyReactor.Core.Model.Image
 {
@@ -18,10 +20,20 @@ namespace JoyReactor.Core.Model.Image
 		private IDiskCache diskCachge = InjectService.Instance.Get<IDiskCache> ();
 		private HttpClient webClient = new HttpClient();
 
+		private Dictionary<object, Uri> lockedImages = new Dictionary<object, Uri>();
+
 		#region IImageModel implementation
 
-		public async void Load (object token, Uri originalUri, int maxWidth, Action<ImageWrapper> imageCallback)
+		public async void Load (object token, Uri originalUri, int maxWidth, Action<ImageWrapper> originalImageCallback)
 		{
+			lockedImages [token] = originalUri;
+			Action<ImageWrapper> imageCallback = image => {
+				if (lockedImages.Any(s => s.Key==token && s.Value==originalUri)) {
+					originalImageCallback(image);
+					lockedImages.Remove(token);
+				}
+			};
+
 			var uri = CreateThumbnailUrl (originalUri, maxWidth);
 
 			// Поиск картинки в кэше памяти

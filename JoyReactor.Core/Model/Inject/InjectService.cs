@@ -33,8 +33,8 @@ namespace JoyReactor.Core.Model.Inject
 			{
 				Bind<ISiteParser> ().To<ReactorParser> ();
 				Bind<IWebDownloader> ().To<WebDownloader> ();
-				Bind<IMemoryCache> ().To<MemoryCache> ().InSingletonScope();
 				Bind<IDiskCache>().To<DefaultDiskCache>().InSingletonScope();
+				Bind<IMemoryCache> ().To<MemoryCache> ().InSingletonScope();
 
 				Bind<IPostCollectionModel> ().To<PostCollectionModel> ().InSingletonScope();
 				Bind<IImageModel> ().To<ImageModel> ().InSingletonScope();
