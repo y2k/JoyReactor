@@ -8,6 +8,8 @@ namespace JoyReactor.Core.Model
 	public interface IPostCollectionModel
 	{
 		Task<List<Post>> GetPostsAsync(ID id, SyncFlags flags = SyncFlags.None);
+
+		int GetCount (ID id);
 	}
 
 	public enum SyncFlags { None, Next, First }

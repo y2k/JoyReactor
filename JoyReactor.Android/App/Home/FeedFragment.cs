@@ -28,7 +28,7 @@ namespace JoyReactor.Android.App.Home
 
 		private IPostCollectionModel model = InjectService.Instance.Get<IPostCollectionModel>();
 
-		public override async void OnActivityCreated (Bundle savedInstanceState)
+		public override void OnActivityCreated (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
 

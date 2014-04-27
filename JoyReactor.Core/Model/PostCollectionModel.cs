@@ -22,47 +22,56 @@ namespace JoyReactor.Core.Model
 		{
 			return Task.Run(
 				() => {
-
 					if (flags == SyncFlags.First) SyncFirstPage(id);
 					else if (flags == SyncFlags.Next) SyncNextPage(id);
 
-//					try {
-//						new ReactorParser().ExtractTagPostCollection(ID.TagType.Good, null, 0, 
-//							p => {
-//								if (p.State == CollectionExportState.ExportState.PostItem) {
-//									MainDb.Instance.InsertOrReplace(Convert(p.PostItem));
-//								}
-//							});
-//					} catch {}
-
-					return MainDb.Instance.Query<Post>("SELECT * FROM posts");
+					return MainDb.Instance.Query<Post>("SELECT * FROM posts WHERE Id IN (SELECT PostId FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE ServerId = ?))");
 				});
+		}
+
+		public int GetCount (ID id)
+		{
+			return MainDb.Instance.ExecuteScalar<int> (
+				"SELECT COUNT(*) FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)", 
+				ToFlatId(id));
 		}
 
 		#endregion
 
+		private string ToFlatId (ID id)
+		{
+			return id.Site + "-" + id.Type + "-" + id.Tag;
+		}
+
 		private void SyncFirstPage (ID id)
 		{
-
 			var p = parsers.First (s => s.ParserId == id.Site);
 
 			p.ExtractTagPostCollection (id.Type, id.Tag, 0, state => {
-
-				if (state.State == CollectionExportState.ExportState.PostItem) SavePostToDatabase(state.PostItem);
-
+				if (state.State == CollectionExportState.ExportState.Begin) {
+					MainDb.Instance.Execute(
+						"DELETE FROM tag_post WHERE TagId (SELECT Id FROM tags WHERE ServerId = ?)",
+						ToFlatId(id));
+				} else if (state.State == CollectionExportState.ExportState.PostItem) {
+					SavePostToDatabase(id, state.PostItem);
+				}
 			});
-
-//			throw new NotImplementedException ();
 		}
 
-		private void SavePostToDatabase (ExportPost post)
+		private void SavePostToDatabase (ID listId, ExportPost post)
 		{
-			var p = Convert (post);
-//			MainDb.Instance.InsertOrReplace (p);
+			var p = Convert (listId.Site, post);
+			var f = ToFlatId (listId);
 
 			p.Id = MainDb.Instance.ExecuteScalar<int> ("SELECT Id FROM posts WHERE ServerId = ?", p.ServerId);
 			if (p.Id == 0) MainDb.Instance.Insert (p);
 			else MainDb.Instance.Update (p);
+
+			var tp = new TagPost ();
+			tp.PostId = p.Id;
+			tp.TagId = MainDb.Instance.ExecuteScalar<int> ("SELECT Id FROM tags WHERE ServerId = ?", f);
+			tp.Status = TagPost.StatusNew;
+			MainDb.Instance.Insert (tp);
 		}
 
 		private void SyncNextPage (ID id)
@@ -70,10 +79,10 @@ namespace JoyReactor.Core.Model
 			throw new NotImplementedException ();
 		}
 
-		private Post Convert(ExportPost p)
+		private Post Convert(ID.SiteParser parserId, ExportPost p)
 		{
 			return new Post {
-				ServerId = "reactor:" + p.id,
+				ServerId = parserId + "-" + p.id,
 				CommentCount = p.commentCount,
 				Coub = p.coub,
 				Created = p.created,

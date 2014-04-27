@@ -37,7 +37,8 @@ namespace JoyReactor.Android.App.Home
 				convertView.LayoutParameters = new StaggeredGridView.LayoutParams (StaggeredGridView.LayoutParams.WrapContent);
 			}
 
-			convertView.Click += (sender, e) => Context.StartActivity(new Intent(Context, typeof(PostActivity)));
+			convertView.FindViewById(Resource.Id.action).Click += 
+				(sender, e) => Context.StartActivity(new Intent(Context, typeof(PostActivity)));
 
 			var item = GetItem (position);
 

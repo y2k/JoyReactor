@@ -10,6 +10,7 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using JoyReactor.Android.App.Base;
+using Android.Support.V4.Widget;
 
 namespace JoyReactor.Android.App.Post
 {
@@ -18,6 +19,7 @@ namespace JoyReactor.Android.App.Post
 		public override void OnCreate (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
+
 
 			// Create your fragment here
 		}

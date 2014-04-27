@@ -45,7 +45,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
-    <Reference Include="Mono.Android.Support.v4" />
     <Reference Include="PCLStorage">
       <HintPath>Libs\PCLStorage.dll</HintPath>
     </Reference>
@@ -61,6 +60,7 @@
     <Reference Include="Ninject.Common">
       <HintPath>Libs\Ninject.Common.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Android.Support.v4" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />

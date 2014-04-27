@@ -9,6 +9,7 @@ namespace JoyReactor.Core.Model.DTO
 		[PrimaryKey, AutoIncrement]
 		public int Id { get; set; }
 
+		public string TagId { get; set; }
 		public bool ShowInMain { get; set; }
 		public string Title { get; set; }
 		public string BestImage { get; set; }
