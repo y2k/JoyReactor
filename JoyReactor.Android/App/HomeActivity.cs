@@ -18,6 +18,8 @@ using Ninject;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core;
 using JoyReactor.Android.App.Base.Commands;
+using JoyReactor.Android.App.Profile;
+using JoyReactor.Core.Model.Parser;
 
 namespace JoyReactor.Android.App
 {
@@ -31,6 +33,15 @@ namespace JoyReactor.Android.App
 			base.OnCreate (bundle);
 			SetContentView (Resource.Layout.ActivityHome);
 
+
+			//
+			var p = InjectService.Instance.Get<ISiteParser> ();
+			p.ToString ();
+			//
+
+
+
+
 			pager = FindViewById<ViewPager> (Resource.Id.Pager);
 			pager.Adapter = new Adapter (SupportFragmentManager);
 			pager.PageSelected += (s, e) => ActionBar.SetDisplayHomeAsUpEnabled(e.Position > 0);
@@ -38,11 +49,19 @@ namespace JoyReactor.Android.App
 			pager.CurrentItem = 1;
 		}
 
+		public override bool OnCreateOptionsMenu (IMenu menu)
+		{
+			MenuInflater.Inflate (Resource.Menu.home, menu);
+			return true;
+		}
+
 		public override bool OnOptionsItemSelected (IMenuItem item)
 		{
 			if (item.ItemId == global::Android.Resource.Id.Home) {
 				pager.CurrentItem = 0;
 				return true;
+			} else if (item.ItemId == Resource.Id.profile) {
+				StartActivity (typeof(ProfileActivity));
 			}
 			return base.OnOptionsItemSelected (item);
 		}

@@ -80,6 +80,7 @@
     <Compile Include="App\Base\Commands\ChangeSubscriptionCommand.cs" />
     <Compile Include="App\Post\PostActivity.cs" />
     <Compile Include="App\Post\PostFragment.cs" />
+    <Compile Include="App\Profile\ProfileActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -103,6 +104,8 @@
     <AndroidResource Include="Resources\layout\FragmentLeftMenu.axml" />
     <AndroidResource Include="Resources\layout\ItemSubscription.axml" />
     <AndroidResource Include="Resources\layout\ActivityPost.axml" />
+    <AndroidResource Include="Resources\menu\home.xml" />
+    <AndroidResource Include="Resources\layout\fragment_profile.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
@@ -123,5 +126,7 @@
     <Folder Include="Widget\" />
     <Folder Include="App\Base\Commands\" />
     <Folder Include="App\Post\" />
+    <Folder Include="App\Profile\" />
+    <Folder Include="Resources\menu\" />
   </ItemGroup>
 </Project>

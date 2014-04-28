@@ -51,6 +51,7 @@ namespace JoyReactor.Core.Model.Database
 			CreateTable<Post> ();
 			CreateTable<Tag> ();
 			CreateTable<TagPost> ();
+			CreateTable<Profile> ();
 
 			Insert (new Tag { TagId = ToFlatId(ID.REACTOR_GOOD), Title = "JoyReactor", Flags = Tag.FlagSystem });
 			Insert (new Tag { TagId = ToFlatId(ID.Factory.Reactor("anime")), Title = "Anime", Flags = Tag.FlagShowInMain, BestImage = "http://img1.joyreactor.cc/pics/avatar/tag/2851" });

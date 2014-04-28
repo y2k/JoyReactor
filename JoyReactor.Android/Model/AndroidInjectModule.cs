@@ -14,7 +14,6 @@ namespace JoyReactor.Android.Model
 		public override void Load ()
 		{
 			Bind<IImageDecoder>().To<BitmapImageDecoder> ();
-//			Bind<ISQLitePlatform> ().To<SQLitePlatformAndroid> ();
 			Bind<ISQLitePlatfromGetter>().To<AndroidSQLitePlatformGetter>();
 		}
 

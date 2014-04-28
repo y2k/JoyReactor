@@ -64,47 +64,74 @@ namespace JoyReactor.Android
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f050001
-			public const int List = 2131034113;
+			// aapt resource value: 0x7f060007
+			public const int List = 2131099655;
 			
-			// aapt resource value: 0x7f050000
-			public const int Pager = 2131034112;
+			// aapt resource value: 0x7f060000
+			public const int Pager = 2131099648;
 			
-			// aapt resource value: 0x7f050002
-			public const int Progress = 2131034114;
+			// aapt resource value: 0x7f060008
+			public const int Progress = 2131099656;
 			
-			// aapt resource value: 0x7f050007
-			public const int action = 2131034119;
+			// aapt resource value: 0x7f060016
+			public const int about = 2131099670;
 			
-			// aapt resource value: 0x7f05000a
-			public const int content = 2131034122;
+			// aapt resource value: 0x7f06000d
+			public const int action = 2131099661;
 			
-			// aapt resource value: 0x7f05000d
-			public const int count = 2131034125;
+			// aapt resource value: 0x7f060001
+			public const int animator = 2131099649;
 			
-			// aapt resource value: 0x7f050008
-			public const int group = 2131034120;
+			// aapt resource value: 0x7f060010
+			public const int content = 2131099664;
 			
-			// aapt resource value: 0x7f050009
-			public const int groupTitle = 2131034121;
+			// aapt resource value: 0x7f060013
+			public const int count = 2131099667;
 			
-			// aapt resource value: 0x7f05000c
-			public const int icon = 2131034124;
+			// aapt resource value: 0x7f060004
+			public const int createAccount = 2131099652;
 			
-			// aapt resource value: 0x7f050003
-			public const int image = 2131034115;
+			// aapt resource value: 0x7f06000e
+			public const int group = 2131099662;
 			
-			// aapt resource value: 0x7f05000b
-			public const int stub = 2131034123;
+			// aapt resource value: 0x7f06000f
+			public const int groupTitle = 2131099663;
 			
-			// aapt resource value: 0x7f050004
-			public const int title = 2131034116;
+			// aapt resource value: 0x7f060012
+			public const int icon = 2131099666;
 			
-			// aapt resource value: 0x7f050005
-			public const int user_image = 2131034117;
+			// aapt resource value: 0x7f060009
+			public const int image = 2131099657;
 			
-			// aapt resource value: 0x7f050006
-			public const int user_name = 2131034118;
+			// aapt resource value: 0x7f060005
+			public const int login = 2131099653;
+			
+			// aapt resource value: 0x7f060003
+			public const int password = 2131099651;
+			
+			// aapt resource value: 0x7f060014
+			public const int profile = 2131099668;
+			
+			// aapt resource value: 0x7f060015
+			public const int settings = 2131099669;
+			
+			// aapt resource value: 0x7f060006
+			public const int sources = 2131099654;
+			
+			// aapt resource value: 0x7f060011
+			public const int stub = 2131099665;
+			
+			// aapt resource value: 0x7f06000a
+			public const int title = 2131099658;
+			
+			// aapt resource value: 0x7f06000b
+			public const int user_image = 2131099659;
+			
+			// aapt resource value: 0x7f06000c
+			public const int user_name = 2131099660;
+			
+			// aapt resource value: 0x7f060002
+			public const int username = 2131099650;
 			
 			static Id()
 			{
@@ -126,16 +153,19 @@ namespace JoyReactor.Android
 			public const int ActivityPost = 2130903041;
 			
 			// aapt resource value: 0x7f030002
-			public const int FragmentFeed = 2130903042;
+			public const int fragment_profile = 2130903042;
 			
 			// aapt resource value: 0x7f030003
-			public const int FragmentLeftMenu = 2130903043;
+			public const int FragmentFeed = 2130903043;
 			
 			// aapt resource value: 0x7f030004
-			public const int ItemFeed = 2130903044;
+			public const int FragmentLeftMenu = 2130903044;
 			
 			// aapt resource value: 0x7f030005
-			public const int ItemSubscription = 2130903045;
+			public const int ItemFeed = 2130903045;
+			
+			// aapt resource value: 0x7f030006
+			public const int ItemSubscription = 2130903046;
 			
 			static Layout()
 			{
@@ -143,6 +173,22 @@ namespace JoyReactor.Android
 			}
 			
 			private Layout()
+			{
+			}
+		}
+		
+		public partial class Menu
+		{
+			
+			// aapt resource value: 0x7f050000
+			public const int home = 2131034112;
+			
+			static Menu()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Menu()
 			{
 			}
 		}

@@ -61,11 +61,14 @@
     <Compile Include="Model\ID.cs" />
     <Compile Include="Model\DTO\TagPost.cs" />
     <Compile Include="Model\DTO\Tag.cs" />
+    <Compile Include="Model\IProfileModel.cs" />
+    <Compile Include="Model\ProfileModel.cs" />
+    <Compile Include="Model\DTO\Profile.cs" />
+    <Compile Include="Model\Helper\ThreadUtils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
     <None Include="Libs\MobileHtmlAgilityPack.dll" />
-    <None Include="Model\Parser\ReactorParser.java" />
     <None Include="Libs\System.Net.Http.Extensions.dll" />
     <None Include="Libs\System.Net.Http.Primitives.dll" />
     <None Include="Libs\System.Net.Http.dll" />

@@ -13,8 +13,10 @@ namespace JoyReactor.Core.Model
 {
 	public class PostCollectionModel : IPostCollectionModel
 	{
-//		private ISiteParser[] parsers = InjectService.Instance.Get<ISiteParser[]>();
+//		private IEnumerable<ISiteParser> parsers = InjectService.Instance.GetAll<ISiteParser>();
+//		private ISiteParser[] parsers = new ISiteParser[] { InjectService.Instance.Get<ISiteParser>() };
 		private ISiteParser[] parsers = new ISiteParser[] { new ReactorParser() };
+
 
 		#region IPostCollectionModel implementation
 
