@@ -46,7 +46,12 @@ namespace JoyReactor.Core.Model.Image
 					outs.Write(buf, 0, count);
 				}
 			}
-			tmp.RenameAsync (file).Wait();
+
+			try {
+				tmp.RenameAsync (file).Wait();
+			} catch {
+				tmp.DeleteAsync ().Wait ();
+			}
 		}
 
 		#endregion

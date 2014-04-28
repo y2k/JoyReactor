@@ -25,7 +25,8 @@ namespace JoyReactor.Core.Model
 					if (flags == SyncFlags.First) SyncFirstPage(id);
 					else if (flags == SyncFlags.Next) SyncNextPage(id);
 
-					return MainDb.Instance.Query<Post>("SELECT * FROM posts WHERE Id IN (SELECT PostId FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE ServerId = ?))");
+					var sid = ToFlatId(id);
+					return MainDb.Instance.Query<Post>("SELECT * FROM posts WHERE Id IN (SELECT PostId FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?))", sid);
 				});
 		}
 
@@ -50,7 +51,7 @@ namespace JoyReactor.Core.Model
 			p.ExtractTagPostCollection (id.Type, id.Tag, 0, state => {
 				if (state.State == CollectionExportState.ExportState.Begin) {
 					MainDb.Instance.Execute(
-						"DELETE FROM tag_post WHERE TagId (SELECT Id FROM tags WHERE ServerId = ?)",
+						"DELETE FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)",
 						ToFlatId(id));
 				} else if (state.State == CollectionExportState.ExportState.PostItem) {
 					SavePostToDatabase(id, state.PostItem);
@@ -63,13 +64,13 @@ namespace JoyReactor.Core.Model
 			var p = Convert (listId.Site, post);
 			var f = ToFlatId (listId);
 
-			p.Id = MainDb.Instance.ExecuteScalar<int> ("SELECT Id FROM posts WHERE ServerId = ?", p.ServerId);
+			p.Id = MainDb.Instance.ExecuteScalar<int> ("SELECT Id FROM posts WHERE PostId = ?", p.PostId);
 			if (p.Id == 0) MainDb.Instance.Insert (p);
 			else MainDb.Instance.Update (p);
 
 			var tp = new TagPost ();
 			tp.PostId = p.Id;
-			tp.TagId = MainDb.Instance.ExecuteScalar<int> ("SELECT Id FROM tags WHERE ServerId = ?", f);
+			tp.TagId = MainDb.Instance.ExecuteScalar<int> ("SELECT Id FROM tags WHERE TagId = ?", f);
 			tp.Status = TagPost.StatusNew;
 			MainDb.Instance.Insert (tp);
 		}
@@ -82,11 +83,10 @@ namespace JoyReactor.Core.Model
 		private Post Convert(ID.SiteParser parserId, ExportPost p)
 		{
 			return new Post {
-				ServerId = parserId + "-" + p.id,
+				PostId = parserId + "-" + p.id,
 				CommentCount = p.commentCount,
 				Coub = p.coub,
 				Created = p.created,
-				PostId = p.id,
 				Image = p.image,
 				ImageHeight = p.imageHeight,
 				ImageWidth = p.imageWidth,

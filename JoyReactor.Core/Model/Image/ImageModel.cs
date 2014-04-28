@@ -43,6 +43,7 @@ namespace JoyReactor.Core.Model.Image
 				return;
 			}
 
+			#if ACCESS_TO_DISK_IN_MAIN
 			// Поиск картинки в кэше на диске
 			if (Math.Abs(1) == 0) { // FIXME
 				// Запрос к диску в главном потоке 
@@ -53,6 +54,7 @@ namespace JoyReactor.Core.Model.Image
 					return;
 				}
 			} else {
+			#endif
 				// Запрос к диску в фоновом потоке
 				var i = await Task.Run<ImageWrapper>(() => diskCachge.Get(uri));
 				if (i != null) {
@@ -60,7 +62,9 @@ namespace JoyReactor.Core.Model.Image
 					imageCallback(i);
 					return;
 				}
+			#if ACCESS_TO_DISK_IN_MAIN
 			}
+			#endif
 
 			// Загрузка картинки с вэба
 			await Task.Run (

@@ -29,7 +29,7 @@ namespace JoyReactor.Android.App.Home
 			adapter.AddAll(await model.GetMainSubscriptionsAsync ());
 
 			list.ItemClick += (sender, e) => { 
-				var id = ID.Factory.Reactor(adapter.GetItem(e.Position).Title);
+				var id = ID.Parser(adapter.GetItem(e.Position).TagId);
 				new ChangeSubscriptionCommand(id).Execute();
 			};
 		}

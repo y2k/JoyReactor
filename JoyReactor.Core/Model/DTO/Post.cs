@@ -10,7 +10,7 @@ namespace JoyReactor.Core.Model.DTO
 		public int Id { get; set; }
 
 		[Unique]
-		public string ServerId { get; set; }
+		public string PostId { get; set; }
 
 		public string Image { get; set; }
 		public int ImageWidth { get; set; }
@@ -18,7 +18,6 @@ namespace JoyReactor.Core.Model.DTO
 
 		public string UserName { get; set; }
 		public string Title { get; set; }
-		public string PostId { get; set; }
 		public long Created { get; set; }
 
 		public string UserImage { get; set; }

@@ -52,17 +52,23 @@ namespace JoyReactor.Core.Model.Database
 			CreateTable<Tag> ();
 			CreateTable<TagPost> ();
 
-			Insert (new Tag { Title = "anime", ShowInMain = true, BestImage = "http://img1.joyreactor.cc/pics/avatar/tag/2851" });
-			Insert (new Tag { Title = "cosplay", ShowInMain = true, BestImage = "http://img8.joyreactor.cc/pics/avatar/tag/518" });
-			Insert (new Tag { Title = "android", ShowInMain = true, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/2596" });
-			Insert (new Tag { Title = "гифки", ShowInMain = true, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/116" });
-			Insert (new Tag { Title = "эротика", ShowInMain = true, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/676" });
-			Insert (new Tag { Title = "песочница", ShowInMain = true, BestImage = "http://img0.joyreactor.cc/images/default_avatar.jpeg" });
+			Insert (new Tag { TagId = ToFlatId(ID.REACTOR_GOOD), Title = "JoyReactor", Flags = Tag.FlagSystem });
+			Insert (new Tag { TagId = ToFlatId(ID.Factory.Reactor("anime")), Title = "Anime", Flags = Tag.FlagShowInMain, BestImage = "http://img1.joyreactor.cc/pics/avatar/tag/2851" });
+			Insert (new Tag { TagId = ToFlatId(ID.Factory.Reactor("cosplay")), Title = "Cosplay", Flags = Tag.FlagShowInMain, BestImage = "http://img8.joyreactor.cc/pics/avatar/tag/518" });
+			Insert (new Tag { TagId = ToFlatId(ID.Factory.Reactor("android")), Title = "Android", Flags = Tag.FlagShowInMain, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/2596" });
+			Insert (new Tag { TagId = ToFlatId(ID.Factory.Reactor("гифки")), Title = "Гифки", Flags = Tag.FlagShowInMain, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/116" });
+			Insert (new Tag { TagId = ToFlatId(ID.Factory.Reactor("эротика")), Title = "Эротика", Flags = Tag.FlagShowInMain, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/676" });
+			Insert (new Tag { TagId = ToFlatId(ID.Factory.Reactor("песочница")), Title = "Песочница", Flags = Tag.FlagShowInMain, BestImage = "http://img0.joyreactor.cc/images/default_avatar.jpeg" });
 		}
 
 		protected void OnUpdate(int oldVersion, int newVersion)
 		{
 			// Reserverd
+		}
+
+		public static string ToFlatId (ID id)
+		{
+			return id.Site + "-" + id.Type + "-" + id.Tag;
 		}
 
 		#region Private methods

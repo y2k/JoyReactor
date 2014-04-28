@@ -16,6 +16,15 @@ namespace JoyReactor.Core
 		public enum SiteParser { JoyReactor, Chan4, Chan7, Chan2 }
 		public enum TagType { Best, Good, All, Favorite }
 
+		public static ID Parser(string id) 
+		{
+			var p = id.Split ('-');
+			return new ID { 
+				Site = (SiteParser)Enum.Parse (typeof(SiteParser), p [0]), 
+				Type = (TagType)Enum.Parse (typeof(TagType), p [1]), 
+				Tag = p [2] };
+		}
+
 		public class TagID : ID 
 		{
 			// TODO Reserver for future

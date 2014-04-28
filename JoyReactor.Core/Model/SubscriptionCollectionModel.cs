@@ -12,7 +12,7 @@ namespace JoyReactor.Core.Model
 
 		public Task<List<Tag>> GetMainSubscriptionsAsync ()
 		{
-			return Task<List<Tag>>.Run (() => MainDb.Instance.Query<Tag>("SELECT * FROM tags"));
+			return Task<List<Tag>>.Run (() => MainDb.Instance.Query<Tag>("SELECT * FROM tags WHERE Flags & ? != 0", Tag.FlagShowInMain));
 		}
 
 		#endregion
