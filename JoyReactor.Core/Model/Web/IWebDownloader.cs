@@ -11,6 +11,8 @@ namespace JoyReactor.Core.Model.Web
 		HtmlDocument Get(Uri uri);
 
 		IDictionary<string, string> PostForHeaders (Uri uri, RequestParams reqParams = null);
+
+		IDictionary<string, string> PostForCookies (Uri uri, RequestParams reqParams = null);
 	}
 
 	public class RequestParams 

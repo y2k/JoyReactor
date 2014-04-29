@@ -63,9 +63,9 @@
     <Compile Include="Model\IProfileModel.cs" />
     <Compile Include="Model\ProfileModel.cs" />
     <Compile Include="Model\DTO\Profile.cs" />
-    <Compile Include="Model\Helper\ThreadUtils.cs" />
     <Compile Include="Model\Inject\InjectServiceExtensions.cs" />
-    <Compile Include="Model\Parser\Data\ReactorParser.cs" />
+    <Compile Include="Model\Helper\ThreadHelper.cs" />
+    <Compile Include="Model\Parser\ReactorParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

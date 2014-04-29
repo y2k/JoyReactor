@@ -45,8 +45,13 @@ namespace JoyReactor.Android.App.Profile
 				};
 
 				var t = await model.GetCurrentProfileAsync ();
-				if (t != null) t.ToString ();
-				animator.DisplayedChild = 1;
+				if (t == null) {
+					// TODO
+					animator.DisplayedChild = 1;
+				} else {
+					// TODO
+					animator.DisplayedChild = 2;
+				}
 			}
 
 			public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
