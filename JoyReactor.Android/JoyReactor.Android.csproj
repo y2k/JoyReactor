@@ -54,13 +54,10 @@
     <Reference Include="SQLite.Net">
       <HintPath>Libs\SQLite.Net.dll</HintPath>
     </Reference>
-    <Reference Include="Ninject.Android">
-      <HintPath>Libs\Ninject.Android.dll</HintPath>
-    </Reference>
-    <Reference Include="Ninject.Common">
-      <HintPath>Libs\Ninject.Common.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Android.Support.v4" />
+    <Reference Include="Autofac">
+      <HintPath>Libs\Autofac.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
@@ -94,6 +91,8 @@
     <None Include="Libs\SQLite.Net.dll" />
     <None Include="Libs\SQLite.Net.Platform.XamarinAndroid.dll" />
     <None Include="Libs\Ninject.Common.dll" />
+    <None Include="Libs\Autofac.dll" />
+    <None Include="Libs\Autofac.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />

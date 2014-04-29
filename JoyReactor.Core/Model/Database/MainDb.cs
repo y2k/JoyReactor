@@ -1,7 +1,6 @@
 ﻿using System;
 using SQLite.Net;
 using SQLite.Net.Interop;
-using Ninject;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model.DTO;
 

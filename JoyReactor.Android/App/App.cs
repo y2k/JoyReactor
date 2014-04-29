@@ -10,7 +10,6 @@ using Android.Views;
 using Android.Widget;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Android.Model;
-using Ninject;
 
 namespace JoyReactor.Android.App
 {
@@ -26,7 +25,7 @@ namespace JoyReactor.Android.App
 			base.OnCreate ();
 
 			Instance = this;
-			InjectService.Initialize(new StandardKernel(), new AndroidInjectModule());
+			InjectService.Initialize(new AndroidInjectModule());
 		}
 	}
 }

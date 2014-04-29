@@ -6,17 +6,14 @@ using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model.Parser.Data;
 using JoyReactor.Core.Model.Database;
-using Ninject;
 using JoyReactor.Core.Model.Inject;
+using Autofac;
 
 namespace JoyReactor.Core.Model
 {
 	public class PostCollectionModel : IPostCollectionModel
 	{
-//		private IEnumerable<ISiteParser> parsers = InjectService.Instance.GetAll<ISiteParser>();
-//		private ISiteParser[] parsers = new ISiteParser[] { InjectService.Instance.Get<ISiteParser>() };
-		private ISiteParser[] parsers = new ISiteParser[] { new ReactorParser() };
-
+		private ISiteParser[] parsers = InjectService.Instance.Get<ISiteParser[]>();
 
 		#region IPostCollectionModel implementation
 

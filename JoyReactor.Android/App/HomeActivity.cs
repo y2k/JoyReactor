@@ -14,7 +14,6 @@ using Android.Graphics;
 using Android.Support.V4.App;
 using JoyReactor.Android.App.Home;
 using JoyReactor.Core.Model.Inject;
-using Ninject;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core;
 using JoyReactor.Android.App.Base.Commands;
@@ -32,15 +31,6 @@ namespace JoyReactor.Android.App
 		{
 			base.OnCreate (bundle);
 			SetContentView (Resource.Layout.ActivityHome);
-
-
-			//
-			var p = InjectService.Instance.Get<ISiteParser> ();
-			p.ToString ();
-			//
-
-
-
 
 			pager = FindViewById<ViewPager> (Resource.Id.Pager);
 			pager.Adapter = new Adapter (SupportFragmentManager);

@@ -14,7 +14,6 @@ using Android.Support.V4.View;
 using Android.Util;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Inject;
-using Ninject;
 using JoyReactor.Core;
 
 namespace JoyReactor.Android.App.Post

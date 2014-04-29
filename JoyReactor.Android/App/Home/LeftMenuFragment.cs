@@ -2,7 +2,6 @@
 using Android.OS;
 using Android.Views;
 using Android.Widget;
-using Ninject;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;

@@ -5,7 +5,6 @@ using System.Linq;
 using System.IO;
 using PCLStorage;
 using System.Threading;
-using Ninject;
 using JoyReactor.Core.Model.Inject;
 using System.Collections.Generic;
 

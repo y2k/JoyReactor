@@ -1,46 +1,44 @@
 ﻿using System;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model.Web;
-using Ninject;
-using Ninject.Modules;
 using System.Collections.Generic;
 using JoyReactor.Core.Model.Image;
+using Autofac;
+using Autofac.Core;
+using Autofac.Util;
+using Autofac.Features;
+using Autofac.Builder;
+using System.Linq;
 
 namespace JoyReactor.Core.Model.Inject
 {
 	public class InjectService 
 	{
-		public static IKernel Instance { get ; private set; }
+		public static IContainer Instance { get; private set; }
 
-		public static void Initialize(IKernel baseKernel, params INinjectModule[] modules) 
+		public static void Initialize(params IModule[] modules) 
 		{
-			var m = new List<INinjectModule>();
-			m.Add (new DefaultModule ());
-			m.AddRange (modules);
+			var b = new ContainerBuilder ();
+			b.RegisterModule (new DefaultModule ());
+			foreach (var m in modules)
+				b.RegisterModule (m);
 
-			baseKernel.Load (m);
-			Instance = baseKernel;
+			Instance = b.Build ();
 		}
 
-		private class DefaultModule : NinjectModule
+		private class DefaultModule : Module 
 		{
-			#region implemented abstract members of NinjectModule
-
-			public override void Load ()
+			protected override void Load (ContainerBuilder b)
 			{
-				Bind<IWebDownloader> ().To<WebDownloader> ();
-				Bind<ISiteParser> ().To<ReactorParser> ();
-
-				Bind<IDiskCache>().To<DefaultDiskCache>().InSingletonScope();
-				Bind<IMemoryCache> ().To<MemoryCache> ().InSingletonScope();
-
-				Bind<IPostCollectionModel> ().To<PostCollectionModel> ().InSingletonScope();
-				Bind<IImageModel> ().To<ImageModel> ().InSingletonScope();
-				Bind<ISubscriptionCollectionModel> ().To<SubscriptionCollectionModel> ().InSingletonScope();
-				Bind<IProfileModel> ().To<ProfileModel> ().InSingletonScope();
+				b.RegisterType<WebDownloader> ().As<IWebDownloader> ();
+				b.RegisterType<ReactorParser> ().As<ISiteParser> ();
+				b.RegisterType<DefaultDiskCache> ().As<IDiskCache> ();
+				b.RegisterType<MemoryCache> ().As<IMemoryCache> ();
+				b.RegisterType<PostCollectionModel> ().As<IPostCollectionModel> ();
+				b.RegisterType<ImageModel> ().As<IImageModel> ();
+				b.RegisterType<SubscriptionCollectionModel> ().As<ISubscriptionCollectionModel> ();
+				b.RegisterType<ProfileModel> ().As<IProfileModel> ();
 			}
-
-			#endregion
 		}
 	}
 }

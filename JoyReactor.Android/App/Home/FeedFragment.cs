@@ -14,7 +14,6 @@ using JoyReactor.Core;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Inject;
-using Ninject;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.App.Base.Commands;
 

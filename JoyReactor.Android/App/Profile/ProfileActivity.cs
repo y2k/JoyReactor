@@ -9,7 +9,6 @@ using Android.Runtime;
 using Android.Views;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Inject;
-using Ninject;
 using JoyReactor.Android.App.Base;
 using Android.Widget;
 

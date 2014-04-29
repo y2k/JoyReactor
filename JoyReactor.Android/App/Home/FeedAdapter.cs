@@ -12,7 +12,6 @@ using JoyReactor.Core.Model.DTO;
 using Com.Android.EX.Widget;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Inject;
-using Ninject;
 using Android.Graphics;
 using JoyReactor.Android.Widget;
 using System.Drawing;

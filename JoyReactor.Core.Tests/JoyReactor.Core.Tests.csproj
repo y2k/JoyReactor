@@ -32,11 +32,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="nunit.framework" />
-    <Reference Include="Ninject.Platform">
-      <HintPath>Libs\Ninject.Platform.dll</HintPath>
-    </Reference>
-    <Reference Include="Ninject.Common">
-      <HintPath>Libs\Ninject.Common.dll</HintPath>
+    <Reference Include="Autofac">
+      <HintPath>Libs\Autofac.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -57,5 +54,7 @@
     <None Include="Libs\Ninject.Platform.xml" />
     <None Include="Libs\Ninject.Common.dll" />
     <None Include="Libs\Ninject.Common.xml" />
+    <None Include="Libs\Autofac.dll" />
+    <None Include="Libs\Autofac.xml" />
   </ItemGroup>
 </Project>

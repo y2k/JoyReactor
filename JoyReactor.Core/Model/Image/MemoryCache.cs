@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using JoyReactor.Core.Model.Inject;
-using Ninject;
 
 namespace JoyReactor.Core.Model.Image
 {

@@ -7,7 +7,6 @@ using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model.Parser.Data;
 using System.Net;
-using Ninject;
 using System.Globalization;
 
 namespace JoyReactor.Core.Model.Parser

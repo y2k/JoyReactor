@@ -2,7 +2,6 @@
 using System;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model.Inject;
-using Ninject;
 
 namespace JoyReactor.Core.Tests
 {
@@ -12,7 +11,7 @@ namespace JoyReactor.Core.Tests
 		[Test]
 		public void TestCase ()
 		{
-			InjectService.Initialize (new StandardKernel());
+			InjectService.Initialize ();
 
 			var parser = new ReactorParser ();
 			parser.ExtractTagPostCollection(ID.TagType.Good, null, 0, 
