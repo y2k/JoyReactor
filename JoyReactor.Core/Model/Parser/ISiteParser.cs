@@ -17,9 +17,17 @@ namespace JoyReactor.Core.Model.Parser
 
 	public class ProfileExport 
 	{
-		public string Username {get;set;}
-		public Uri Image {get;set;}
-		public float Rating {get;set;}
+		public string Username { get;set; }
+		public Uri Image { get;set; }
+		public float Rating { get;set; }
+
+		public List<TagExport> ReadingTags { get; set; }
+
+		public class TagExport 
+		{
+			public string Tag { get; set; }
+			public string Title { get; set; }
+		}
 	}
 
 	public class CollectionExportState

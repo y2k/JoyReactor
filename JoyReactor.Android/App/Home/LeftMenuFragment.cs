@@ -55,7 +55,8 @@ namespace JoyReactor.Android.App.Home
 				convertView.FindViewById<TextView> (Resource.Id.title).Text = i.Title;
 
 				var iv = convertView.FindViewById<ImageView> (Resource.Id.icon);
-				iModel.Load (iv, new Uri (i.BestImage), 0, s => iv.SetImageBitmap ((Bitmap)s.Image));
+				if (i.BestImage == null) iv.SetImageBitmap (null);
+				else iModel.Load (iv, new Uri (i.BestImage), 0, s => iv.SetImageBitmap ((Bitmap)s.Image));
 
 				convertView.FindViewById (Resource.Id.group).Visibility = ViewStates.Gone;
 

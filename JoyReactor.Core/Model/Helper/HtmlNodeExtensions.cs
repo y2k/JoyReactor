@@ -9,5 +9,10 @@ namespace JoyReactor.Core.Model.Helper
 		{
 			return node.Attributes ["class"].Value;
 		}
+
+		public static string GetHref(this HtmlNode node)
+		{
+			return node.Attributes ["href"].Value;
+		}
 	}
 }

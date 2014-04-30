@@ -43,15 +43,27 @@ namespace JoyReactor.Core.Model
 		public Task<ProfileInformation> GetCurrentProfileAsync ()
 		{
 			return Task.Run (() => {
-//				ThreadHelper.Sleep(1000);
-//				return new ProfileInformation();
-//				return (ProfileInformation)null;
-
 				var un = MainDb.Instance.ExecuteScalar<string>("SELECT Username From profiles WHERE Site = ?", "" + ID.SiteParser.JoyReactor);
 				if (un == null) return null;
 
-				var p = parsers.First(s=>s.ParserId==ID.SiteParser.JoyReactor);
+				var p = parsers.First(s => s.ParserId == ID.SiteParser.JoyReactor);
 				var pf = p.Profile(un);
+
+				if (pf.ReadingTags != null) {
+					MainDb.Instance.RunInTransaction(() => {
+						foreach (var t in pf.ReadingTags) {
+							var id = MainDb.ToFlatId(ID.Factory.Reactor(t.Tag));
+							int c = MainDb.Instance.ExecuteScalar<int>("SELECT COUNT(*) FROM tags WHERE TagId = ?", id);
+							if (c == 0) {
+								MainDb.Instance.Insert(new Tag {
+									Flags = Tag.FlagWebRead | Tag.FlagShowInMain,
+									TagId = id,
+									Title = t.Title,
+								});
+							}
+						}
+					});
+				}
 
 				return new ProfileInformation {
 					Username = pf.Username,

@@ -8,6 +8,7 @@ namespace JoyReactor.Core.Model.DTO
 	{
 		public const int FlagSystem = 1;
 		public const int FlagShowInMain = 2;
+		public const int FlagWebRead = 4;
 
 		[PrimaryKey, AutoIncrement]
 		public int Id { get; set; }

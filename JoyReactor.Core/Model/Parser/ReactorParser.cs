@@ -63,6 +63,8 @@ namespace JoyReactor.Core.Model.Parser
 
 		private static readonly Regex ImageFromSharing = new Regex("\\[img\\]([^\\[]+)\\[/img\\]");
 
+		private static readonly Regex ProfileTag = new Regex ("/tag/(.+)");
+
 		#endregion
 
 		private IWebDownloader downloader = InjectService.Instance.Get<IWebDownloader>();
@@ -121,6 +123,14 @@ namespace JoyReactor.Core.Model.Parser
 			div = doc.GetElementById ("rating-text").ChildNodes.First (s => s.Name == "b");
 			var n = sProfileRating.Match (div.InnerText.Replace (" ", "")).Groups[1].Value;
 			p.Rating = float.Parse(n, CultureInfo.InvariantCulture);
+
+			div = sidebar.ChildNodes.Where(s => s.HasChildNodes).FirstOrDefault (s => "Читает" == s.ChildNodes [0].InnerText);
+			if (div != null) {
+				p.ReadingTags = div.Descendants ("a").Select (s => new ProfileExport.TagExport { 
+					Title = s.InnerText, 
+					Tag = Uri.UnescapeDataString(Uri.UnescapeDataString(ProfileTag.FirstString (s.GetHref ()))).Replace('+', ' '),
+				}).ToList();
+			}
 
 			return p;
 		}
