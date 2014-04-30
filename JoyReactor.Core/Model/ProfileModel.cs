@@ -9,6 +9,8 @@ using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
 using System.Xml.Serialization;
 using System.IO;
+using System.Collections.Generic;
+using System.Text;
 
 namespace JoyReactor.Core.Model
 {
@@ -33,15 +35,28 @@ namespace JoyReactor.Core.Model
 
 		public Task LogoutAsync ()
 		{
-			throw new NotImplementedException ();
+			return Task.Run (() => {
+				MainDb.Instance.Execute("DELETE FROM profiles");
+			});
 		}
 
 		public Task<ProfileInformation> GetCurrentProfileAsync ()
 		{
 			return Task.Run (() => {
-				ThreadHelper.Sleep(2000);
+//				ThreadHelper.Sleep(1000);
 //				return new ProfileInformation();
-				return (ProfileInformation)null;
+//				return (ProfileInformation)null;
+
+				var un = MainDb.Instance.ExecuteScalar<string>("SELECT Username From profiles WHERE Site = ?", "" + ID.SiteParser.JoyReactor);
+				if (un == null) return null;
+
+				var p = parsers.First(s=>s.ParserId==ID.SiteParser.JoyReactor);
+				var pf = p.Profile(un);
+
+				return new ProfileInformation {
+					Username = pf.Username,
+					Rating = pf.Rating,
+				};
 			});
 		}
 
@@ -49,19 +64,14 @@ namespace JoyReactor.Core.Model
 
 		#region Private methods
 
-		private static string SerializeObject(object toSerialize) {
-			var xmlSerializer = new XmlSerializer(toSerialize.GetType());
-			var textWriter = new StringWriter();
-
-			xmlSerializer.Serialize(textWriter, toSerialize);
-			return textWriter.ToString();
+		private static string SerializeObject(IDictionary<string, string> o) 
+		{
+			return o.Aggregate ("", (a, s) => a + (a.Length > 0 ? ";" : "") + s.Key + "=" + s.Value);
 		}
 
-		private static T DeserializeObject<T>(string serializedObject) {
-			var ser = new XmlSerializer (typeof(T));
-			var r = new StringReader (serializedObject);
-
-			return (T)ser.Deserialize (r);
+		private static IDictionary<string, string> DeserializeObject<T>(string o) 
+		{
+			return o.Split (';').Select (s => s.Split ('=')).ToDictionary (s => s [0], s => s [1]);
 		}
 
 		#endregion

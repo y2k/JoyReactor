@@ -14,6 +14,7 @@ namespace JoyReactor.Core.Model
 
 	public class ProfileInformation
 	{
-		// TODO
+		public string Username { get; set; }
+		public float Rating { get; set; }
 	}
 }

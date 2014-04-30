@@ -11,6 +11,15 @@ namespace JoyReactor.Core.Model.Parser
 		IDictionary<string, string> Login(string username, string password);
 
 		void ExtractTagPostCollection (ID.TagType type, string tag, int lastLoadedPage, Action<CollectionExportState> callback);
+
+		ProfileExport Profile (string username);
+	}
+
+	public class ProfileExport 
+	{
+		public string Username {get;set;}
+		public Uri Image {get;set;}
+		public float Rating {get;set;}
 	}
 
 	public class CollectionExportState

@@ -66,6 +66,7 @@
     <Compile Include="Model\Inject\InjectServiceExtensions.cs" />
     <Compile Include="Model\Helper\ThreadHelper.cs" />
     <Compile Include="Model\Parser\ReactorParser.cs" />
+    <Compile Include="Model\Helper\HtmlNodeExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -86,15 +87,6 @@
     <Reference Include="MobileHtmlAgilityPack">
       <HintPath>Libs\MobileHtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http">
-      <HintPath>Libs\System.Net.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.Extensions">
-      <HintPath>Libs\System.Net.Http.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.Primitives">
-      <HintPath>Libs\System.Net.Http.Primitives.dll</HintPath>
-    </Reference>
     <Reference Include="PCLStorage">
       <HintPath>Libs\PCLStorage.dll</HintPath>
     </Reference>
@@ -106,6 +98,9 @@
     </Reference>
     <Reference Include="Autofac">
       <HintPath>Libs\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <HintPath>Libs\System.Net.Http.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

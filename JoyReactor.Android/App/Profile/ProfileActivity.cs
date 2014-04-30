@@ -33,6 +33,8 @@ namespace JoyReactor.Android.App.Profile
 			private ViewAnimator animator;
 			private EditText username;
 			private EditText password;
+			private TextView profileUsername;
+			private TextView profileRating;
 
 			public async override void OnActivityCreated (Bundle savedInstanceState)
 			{
@@ -51,6 +53,8 @@ namespace JoyReactor.Android.App.Profile
 				} else {
 					// TODO
 					animator.DisplayedChild = 2;
+					profileUsername.Text = "Username = " + t.Username;
+					profileRating.Text = "Rating = " + t.Rating;
 				}
 			}
 
@@ -60,6 +64,8 @@ namespace JoyReactor.Android.App.Profile
 				animator = v.FindViewById<ViewAnimator> (Resource.Id.animator);
 				username = v.FindViewById<EditText> (Resource.Id.username);
 				password = v.FindViewById<EditText> (Resource.Id.password);
+				profileUsername = v.FindViewById<TextView> (Resource.Id.profileUsername);
+				profileRating = v.FindViewById<TextView> (Resource.Id.profileRating);
 				return v;
 			}
 		}

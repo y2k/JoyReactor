@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Xml.Linq;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Text;
@@ -8,6 +10,7 @@ using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model.Parser.Data;
 using System.Net;
 using System.Globalization;
+using HtmlAgilityPack;
 
 namespace JoyReactor.Core.Model.Parser
 {
@@ -75,7 +78,7 @@ namespace JoyReactor.Core.Model.Parser
 			var doc = downloader.Get (new Uri("http://joyreactor.cc/login"));
 			var csrf = doc.GetElementById ("signin__csrf_token").Attributes ["value"].Value;
 
-			var hs = downloader.PostForHeaders (
+			var hs = downloader.PostForCookies (
 				new Uri ("http://joyreactor.cc/login"), 
 				new RequestParams 
 				{
@@ -98,6 +101,28 @@ namespace JoyReactor.Core.Model.Parser
 		public void ExtractTagPostCollection(ID.TagType type, string tag, int lastLoadedPage, Action<CollectionExportState> callback)
 		{
 			ExtractPostCoollection (type, tag, lastLoadedPage, callback);
+		}
+
+		public ProfileExport Profile (string username)
+		{
+			var url = new Uri("http://joyreactor.cc/user/" + Uri.EscapeDataString(username));
+			var doc = downloader.Get (url);
+
+			var p = new ProfileExport();
+			p.Username = username;
+
+			var sidebar = doc.GetElementById ("sidebar");
+			var div = sidebar.Descendants ("div")
+				.Where (s => s.GetClass () == "user")
+				.SelectMany (s => s.ChildNodes)
+				.First (s => s.Name == "img");
+			p.Image = new Uri (div.Attributes ["src"].Value);
+
+			div = doc.GetElementById ("rating-text").ChildNodes.First (s => s.Name == "b");
+			var n = sProfileRating.Match (div.InnerText.Replace (" ", "")).Groups[1].Value;
+			p.Rating = float.Parse(n, CultureInfo.InvariantCulture);
+
+			return p;
 		}
 
 		#endregion
