@@ -36,7 +36,10 @@ namespace JoyReactor.Core.Model
 		public Task LogoutAsync ()
 		{
 			return Task.Run (() => {
-				MainDb.Instance.Execute("DELETE FROM profiles");
+				MainDb.Instance.RunInTransaction(() => {
+					MainDb.Instance.Execute("DELETE FROM profiles");
+					MainDb.Instance.Execute("DELETE FROM tags WHERE Flags & ? != 0", Tag.FlagWebRead);
+				});
 			});
 		}
 

@@ -45,6 +45,11 @@ namespace JoyReactor.Android.App.Profile
 					await model.LoginAsync(username.Text, password.Text);
 					Activity.Recreate();
 				};
+				View.FindViewById (Resource.Id.logout).Click += async (sender, e) => {
+					animator.DisplayedChild = 0;
+					await model.LogoutAsync();
+					Activity.Recreate();
+				};
 
 				var t = await model.GetCurrentProfileAsync ();
 				if (t == null) {
