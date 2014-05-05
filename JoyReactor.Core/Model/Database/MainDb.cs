@@ -26,7 +26,8 @@ namespace JoyReactor.Core.Model.Database
 						}
 					}
 				}
-				return instance;
+
+                return instance;
 			}
 		}
 
