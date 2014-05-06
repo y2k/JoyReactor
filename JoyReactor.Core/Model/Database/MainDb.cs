@@ -1,28 +1,31 @@
 ﻿using System;
-using SQLite.Net;
-using SQLite.Net.Interop;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model.DTO;
+using Cirrious.MvvmCross.Community.Plugins.Sqlite;
 
 namespace JoyReactor.Core.Model.Database
 {
-	public class MainDb : SQLiteConnection
+	public class MainDb
 	{
 		private const string DatabaseName = "net.itwister.joyreactor.main.db";
 		private const int DatabaseVersion = 1;
 
-		private static volatile MainDb instance;
+        private static volatile ISQLiteConnection instance;
 		private static object syncRoot = new Object();
 
-		public static SQLiteConnection Instance
+		public static ISQLiteConnection Instance
 		{
 			get 
 			{
 				if (instance == null) {
 					lock (syncRoot) {
 						if (instance == null) {
-							var plat = InjectService.Instance.Get<ISQLitePlatfromGetter> ();
-							instance = new MainDb (plat.GetPlatform(), plat.CreatePath(DatabaseName));
+                            //var plat = InjectService.Instance.Get<ISQLitePlatfromGetter> ();
+                            //instance = new MainDb (plat.GetPlatform(), plat.CreatePath(DatabaseName));
+                            
+                            var f = InjectService.Instance.Get<ISQLiteConnectionFactory>();
+                            instance = f.Create("main.db");
+                            InitializeDatabase(instance);
 						}
 					}
 				}
@@ -31,38 +34,43 @@ namespace JoyReactor.Core.Model.Database
 			}
 		}
 
-		private MainDb (ISQLitePlatform platform, string path) : base(platform, path)
+        //private MainDb (ISQLitePlatform platform, string path) : base(platform, path)
+        //{
+        //    InitializeDatabase();
+        //}
+
+        private static void InitializeDatabase(ISQLiteConnection db)
+        {
+            int ver = GetUserVesion(db);
+            if (ver == 0)
+                db.RunInTransaction(() => {
+                    OnCreate(db);
+                    SetUserVersion(db, DatabaseVersion);
+                });
+            else if (ver < DatabaseVersion)
+                db.RunInTransaction(() => {
+                    OnUpdate(ver, DatabaseVersion);
+                    SetUserVersion(db, DatabaseVersion);
+                });
+        }
+
+		private static void OnCreate(ISQLiteConnection db)
 		{
-			int ver = GetUserVesion ();
-			if (ver == 0)
-				RunInTransaction (() => {
-					OnCreate ();
-					SetUserVersion (DatabaseVersion);
-				});
-			else if (ver < DatabaseVersion)
-				RunInTransaction (() => {
-					OnUpdate(ver, DatabaseVersion);
-					SetUserVersion (DatabaseVersion);
-				});
+			db.CreateTable<Post> ();
+            db.CreateTable<Tag>();
+            db.CreateTable<TagPost>();
+            db.CreateTable<Profile>();
+
+            db.Insert(new Tag { TagId = ToFlatId(ID.REACTOR_GOOD), Title = "JoyReactor", Flags = Tag.FlagSystem });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.Reactor("anime")), Title = "Anime", Flags = Tag.FlagShowInMain, BestImage = "http://img1.joyreactor.cc/pics/avatar/tag/2851" });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.Reactor("cosplay")), Title = "Cosplay", Flags = Tag.FlagShowInMain, BestImage = "http://img8.joyreactor.cc/pics/avatar/tag/518" });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.Reactor("android")), Title = "Android", Flags = Tag.FlagShowInMain, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/2596" });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.Reactor("гифки")), Title = "Гифки", Flags = Tag.FlagShowInMain, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/116" });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.Reactor("эротика")), Title = "Эротика", Flags = Tag.FlagShowInMain, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/676" });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.Reactor("песочница")), Title = "Песочница", Flags = Tag.FlagShowInMain, BestImage = "http://img0.joyreactor.cc/images/default_avatar.jpeg" });
 		}
 
-		protected void OnCreate()
-		{
-			CreateTable<Post> ();
-			CreateTable<Tag> ();
-			CreateTable<TagPost> ();
-			CreateTable<Profile> ();
-
-			Insert (new Tag { TagId = ToFlatId(ID.REACTOR_GOOD), Title = "JoyReactor", Flags = Tag.FlagSystem });
-			Insert (new Tag { TagId = ToFlatId(ID.Factory.Reactor("anime")), Title = "Anime", Flags = Tag.FlagShowInMain, BestImage = "http://img1.joyreactor.cc/pics/avatar/tag/2851" });
-			Insert (new Tag { TagId = ToFlatId(ID.Factory.Reactor("cosplay")), Title = "Cosplay", Flags = Tag.FlagShowInMain, BestImage = "http://img8.joyreactor.cc/pics/avatar/tag/518" });
-			Insert (new Tag { TagId = ToFlatId(ID.Factory.Reactor("android")), Title = "Android", Flags = Tag.FlagShowInMain, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/2596" });
-			Insert (new Tag { TagId = ToFlatId(ID.Factory.Reactor("гифки")), Title = "Гифки", Flags = Tag.FlagShowInMain, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/116" });
-			Insert (new Tag { TagId = ToFlatId(ID.Factory.Reactor("эротика")), Title = "Эротика", Flags = Tag.FlagShowInMain, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/676" });
-			Insert (new Tag { TagId = ToFlatId(ID.Factory.Reactor("песочница")), Title = "Песочница", Flags = Tag.FlagShowInMain, BestImage = "http://img0.joyreactor.cc/images/default_avatar.jpeg" });
-		}
-
-		protected void OnUpdate(int oldVersion, int newVersion)
+		private static void OnUpdate(int oldVersion, int newVersion)
 		{
 			// Reserverd
 		}
@@ -74,14 +82,14 @@ namespace JoyReactor.Core.Model.Database
 
 		#region Private methods
 
-		private void SetUserVersion (int version)
+		private static void SetUserVersion (ISQLiteConnection db, int version)
 		{
-			Execute ("PRAGMA user_version = " + version);
+			db.Execute ("PRAGMA user_version = " + version);
 		}
 
-		private int GetUserVesion() 
+        private static int GetUserVesion(ISQLiteConnection db) 
 		{
-			return ExecuteScalar<int> ("PRAGMA user_version");
+			return db.ExecuteScalar<int> ("PRAGMA user_version");
 		}
 
 		#endregion
