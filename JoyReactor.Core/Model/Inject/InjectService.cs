@@ -36,7 +36,7 @@ namespace JoyReactor.Core.Model.Inject
 				b.RegisterType<MemoryCache> ().As<IMemoryCache> ();
 				b.RegisterType<PostCollectionModel> ().As<IPostCollectionModel> ();
 				b.RegisterType<ImageModel> ().As<IImageModel> ();
-				b.RegisterType<SubscriptionCollectionModel> ().As<ISubscriptionCollectionModel> ();
+				b.RegisterType<TagCollectionModel> ().As<ITagCollectionModel> ();
 				b.RegisterType<ProfileModel> ().As<IProfileModel> ();
 			}
 		}

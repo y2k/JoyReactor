@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model
 {
-	public interface ISubscriptionCollectionModel
+	public interface ITagCollectionModel
 	{
 		Task<List<Tag>> GetMainSubscriptionsAsync();
+
+		Task<List<TagLinkedTag>> GetTagLinkedTagsAsync(ID tagId);
 	}
 }

@@ -32,11 +32,11 @@ namespace JoyReactor.Core.Model.Parser
 
 	public class CollectionExportState
 	{
-		public enum ExportState { Begin, TagInfo, PostItem, LikendTagItem };
+		public enum ExportState { Begin, TagInfo, PostItem, LikendTag };
 
 		public ExportState State { get; set; }
 		public ExportTag TagInfo { get; set; }
-		public ExportPost PostItem { get; set; }
-		public ExportLinkedTag LinkedTagItem { get; set; }
+		public ExportPost Post { get; set; }
+		public ExportLinkedTag LinkedTag { get; set; }
 	}
 }

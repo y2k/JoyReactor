@@ -53,8 +53,6 @@
     <Compile Include="Model\Image\IImageDecoder.cs" />
     <Compile Include="Model\Image\MemoryCache.cs" />
     <Compile Include="Model\Image\ImageWrapper.cs" />
-    <Compile Include="Model\ISubscriptionCollectionModel.cs" />
-    <Compile Include="Model\SubscriptionCollectionModel.cs" />
     <Compile Include="Model\Database\MainDb.cs" />
     <Compile Include="Model\ID.cs" />
     <Compile Include="Model\DTO\TagPost.cs" />
@@ -67,6 +65,9 @@
     <Compile Include="Model\Parser\ReactorParser.cs" />
     <Compile Include="Model\Helper\HtmlNodeExtensions.cs" />
     <Compile Include="swp8\Bootstrap\CommunitySqlitePluginBootstrap.cs" />
+    <Compile Include="Model\DTO\TagLinkedTag.cs" />
+    <Compile Include="Model\ITagCollectionModel.cs" />
+    <Compile Include="Model\TagCollectionModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

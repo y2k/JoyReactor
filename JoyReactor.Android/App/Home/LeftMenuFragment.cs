@@ -17,7 +17,7 @@ namespace JoyReactor.Android.App.Home
 	{
 		private ListView list;
 		private Adapter adapter;
-		private ISubscriptionCollectionModel model = InjectService.Instance.Get<ISubscriptionCollectionModel> ();
+		private ITagCollectionModel model = InjectService.Instance.Get<ITagCollectionModel> ();
 
 		public async override void OnActivityCreated (Bundle savedInstanceState)
 		{

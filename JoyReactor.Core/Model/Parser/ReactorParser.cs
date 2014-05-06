@@ -160,7 +160,7 @@ namespace JoyReactor.Core.Model.Parser
 			if (m.Success) {
 				do {
 					ExportPost p = CreatePost (m.Groups [1].Value);
-					callback (new CollectionExportState { State = CollectionExportState.ExportState.PostItem, PostItem = p });
+					callback (new CollectionExportState { State = CollectionExportState.ExportState.PostItem, Post = p });
 
 					m = m.NextMatch ();
 				} while (m.Success);
@@ -168,7 +168,7 @@ namespace JoyReactor.Core.Model.Parser
 				m = POST_AUTHORIZED.Match (html);
 				while (m.Success) {
 					var p = CreatePost(m.Groups[1].Value);
-					callback (new CollectionExportState { State = CollectionExportState.ExportState.PostItem, PostItem = p });
+					callback (new CollectionExportState { State = CollectionExportState.ExportState.PostItem, Post = p });
 
 					m = m.NextMatch();
 				}
@@ -182,7 +182,7 @@ namespace JoyReactor.Core.Model.Parser
 					t.group = "None";
 					t.image = m.Groups [1].Value;
 					t.value = Uri.UnescapeDataString(Uri.UnescapeDataString(m.Groups[3].Value));
-					callback (new CollectionExportState { State = CollectionExportState.ExportState.LikendTagItem, LinkedTagItem = t });
+					callback (new CollectionExportState { State = CollectionExportState.ExportState.LikendTag, LinkedTag = t });
 
 					m = m.NextMatch();
 				}

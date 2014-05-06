@@ -92,11 +92,9 @@ namespace JoyReactor.Android.App
 
 		public override global::Android.Support.V4.App.Fragment GetItem (int position)
 		{
-			if (position == 0)
-				return new LeftMenuFragment ();
-			if (position == 1)
-				return new FeedFragment ();
-			return new EmptyFragment ();
+			if (position == 0) return new LeftMenuFragment ();
+			if (position == 1) return new FeedFragment ();
+			return new RightMenuFragment ();
 		}
 
 		#endregion

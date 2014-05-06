@@ -49,11 +49,26 @@ namespace JoyReactor.Core.Model
 
 			p.ExtractTagPostCollection (id.Type, id.Tag, 0, state => {
 				if (state.State == CollectionExportState.ExportState.Begin) {
+					// Удаление постов тега
 					MainDb.Instance.Execute(
 						"DELETE FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)",
 						ToFlatId(id));
+					// Удаление связанных тегов
+					MainDb.Instance.Execute(
+						"DELETE FROM tag_linked_tags WHERE ParentTagId IN (SELECT Id FROM tags WHERE TagId = ?)",
+						ToFlatId(id));
 				} else if (state.State == CollectionExportState.ExportState.PostItem) {
-					SavePostToDatabase(id, state.PostItem);
+					SavePostToDatabase(id, state.Post);
+				} else if (state.State == CollectionExportState.ExportState.LikendTag) {
+					// TODO Добавить проверку, что это первая страница
+					int tid = MainDb.Instance.ExecuteScalar<int>("SELECT Id FROM tags WHERE TagId = ?", ToFlatId(id));
+					MainDb.Instance.Insert(new TagLinkedTag {
+						ParentTagId = tid,
+						GroupName = state.LinkedTag.group,
+						Image = state.LinkedTag.image,
+						Title = state.LinkedTag.name,
+						TagId = ToFlatId(new ID { Site = p.ParserId, Type = ID.TagType.Good, Tag = state.LinkedTag.value }),
+					});
 				}
 			});
 		}
