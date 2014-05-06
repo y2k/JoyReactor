@@ -42,25 +42,57 @@
          -->
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="MY APPLICATION" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
-            <TextBlock Text="page name" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
-        </StackPanel>
+        <!--<StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
+            <TextBlock Text="JOYREACTOR" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
+            <TextBlock Text="featured good" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+        </StackPanel>-->
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             
-            <ListBox
-                ItemsSource="{Binding Tags}"
-                >
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock 
-                            Padding="4"
-                            Text="{Binding Title}" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            <phone:Pivot Title="JOYREACTOR">
+                <phone:PivotItem Header="Tags">
+                    <ListBox ItemsSource="{Binding Tags}" SelectionChanged="ListBox_SelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel VerticalAlignment="Center" 
+                                    Margin="4"
+                                    Orientation="Horizontal">
+                                    <Image Width="64" 
+                                           Height="64"
+                                           Margin="0, 0, 4, 0"
+                                           Source="{Binding BestImage}" />
+                                    <TextBlock Padding="4"
+                                       FontSize="30"
+                                       VerticalAlignment="Center"
+                                       Text="{Binding Title}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </phone:PivotItem>
+                <phone:PivotItem Header="Posts">
+                    <ListBox ItemsSource="{Binding Posts}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel VerticalAlignment="Center" 
+                                    Margin="4"
+                                    Orientation="Vertical">
+                                    <Image Width="400" 
+                                           Height="400"
+                                           Margin="0, 0, 4, 0"
+                                           Source="{Binding Image}" />
+                                    <TextBlock Padding="4"
+                                       FontSize="30"
+                                       VerticalAlignment="Center"
+                                       Text="{Binding Title}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </phone:PivotItem>
+            </phone:Pivot>
+
 
         </Grid>
 

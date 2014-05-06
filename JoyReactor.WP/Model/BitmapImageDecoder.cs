@@ -12,16 +12,18 @@ namespace JoyReactor.WP.Model
 
 		public object Decode (Stream stream)
 		{
-            var image = new BitmapImage();
-            image.SetSource(stream);
-            return image;
+            //var image = new BitmapImage();
+            //image.SetSource(stream);
+            //return image;
+            throw new NotImplementedException();
 		}
 
 		public int GetImageSize (ImageWrapper commonImage)
 		{
-            var image = (BitmapImage)commonImage.Image;
-            return image.PixelWidth * image.PixelHeight * 4;
-		}
+            //var image = (BitmapImage)commonImage.Image;
+            //return image.PixelWidth * image.PixelHeight * 4;
+            throw new NotImplementedException();
+        }
 
 		#endregion
 	}

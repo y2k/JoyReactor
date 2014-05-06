@@ -1,4 +1,6 @@
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using JoyReactor.Core;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Inject;
@@ -22,7 +24,12 @@ namespace JoyReactor.WP.ViewModel
     {
         public ObservableCollection<Tag> Tags { get; set; }
 
+        public ObservableCollection<Post> Posts { get; set; }
+
+        public RelayCommand<Tag> OpenTagCommand { get; set; }
+
         private ISubscriptionCollectionModel model = InjectService.Instance.Get<ISubscriptionCollectionModel>();
+        private IPostCollectionModel posModel = InjectService.Instance.Get<IPostCollectionModel>();
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
@@ -30,25 +37,33 @@ namespace JoyReactor.WP.ViewModel
         public MainViewModel()
         {
             Tags = new ObservableCollection<Tag>();
-            Initialize();
-        }
+            Posts = new ObservableCollection<Post>();
 
-        public async void Initialize()
-        {
             if (IsInDesignMode)
             {
-                // Code runs in Blend --> create design time data.
                 Tags.Add(new Tag { Title = "Tag 1" });
                 Tags.Add(new Tag { Title = "Tag 2" });
                 Tags.Add(new Tag { Title = "Tag 3" });
             }
             else
             {
-                // Code runs "for real"
+                OpenTagCommand = new RelayCommand<Tag>(s => Initialize(s));
+                Initialize(null);
+            }
+        }
+
+        public async void Initialize(Tag tag)
+        {
+            if (tag == null)
+            {
                 Tags.Clear();
                 var tags = await model.GetMainSubscriptionsAsync();
                 tags.ForEach(Tags.Add);
             }
+
+            Posts.Clear();
+            var posts = await posModel.GetPostsAsync(tag == null ? ID.REACTOR_GOOD : ID.Parser(tag.TagId), SyncFlags.First);
+            posts.ForEach(Posts.Add);
         }
     }
 }

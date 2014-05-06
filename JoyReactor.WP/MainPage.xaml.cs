@@ -8,6 +8,7 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using JoyReactor.WP.Resources;
+using JoyReactor.WP.ViewModel;
 
 namespace JoyReactor.WP
 {
@@ -20,6 +21,11 @@ namespace JoyReactor.WP
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
+        }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ((MainViewModel)DataContext).OpenTagCommand.Execute(e.AddedItems[0]);
         }
 
         // Sample code for building a localized ApplicationBar
