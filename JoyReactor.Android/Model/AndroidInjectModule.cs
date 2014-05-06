@@ -1,9 +1,10 @@
 ﻿using System;
 using JoyReactor.Core.Model.Image;
-using SQLite.Net.Platform.XamarinAndroid;
-using SQLite.Net.Interop;
 using JoyReactor.Core.Model.Database;
 using Autofac;
+using Community.SQLite;
+using Cirrious.MvvmCross.Community.Plugins.Sqlite.Droid;
+using Cirrious.MvvmCross.Community.Plugins.Sqlite;
 
 namespace JoyReactor.Android.Model
 {
@@ -14,7 +15,7 @@ namespace JoyReactor.Android.Model
 		protected override void Load (ContainerBuilder builder)
 		{
 			builder.RegisterType<BitmapImageDecoder> ().As<IImageDecoder> ();
-			builder.RegisterType<AndroidSQLitePlatformGetter> ().As<ISQLitePlatfromGetter> ();
+			builder.RegisterType<MvxDroidSQLiteConnectionFactory> ().As<ISQLiteConnectionFactory>();
 		}
 
 		#endregion

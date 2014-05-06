@@ -28,8 +28,6 @@ namespace JoyReactor.Android
 		{
 			global::PCLStorage.Resource.String.ApplicationName = global::JoyReactor.Android.Resource.String.ApplicationName;
 			global::PCLStorage.Resource.String.Hello = global::JoyReactor.Android.Resource.String.Hello;
-			global::SQLite.Net.Platform.XamarinAndroid.Resource.String.ApplicationName = global::JoyReactor.Android.Resource.String.ApplicationName;
-			global::SQLite.Net.Platform.XamarinAndroid.Resource.String.Hello = global::JoyReactor.Android.Resource.String.Hello;
 		}
 		
 		public partial class Attribute
