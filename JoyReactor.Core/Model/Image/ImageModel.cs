@@ -25,6 +25,12 @@ namespace JoyReactor.Core.Model.Image
 
 		public async void Load (object token, Uri originalUri, int maxWidth, Action<ImageWrapper> originalImageCallback)
 		{
+			if (originalUri == null) {
+				originalImageCallback(new ImageWrapper());
+				lockedImages.Remove(token);
+				return;
+			}
+
 			lockedImages [token] = originalUri;
 			Action<ImageWrapper> imageCallback = image => {
 				if (lockedImages.Any(s => s.Key==token && s.Value==originalUri)) {
