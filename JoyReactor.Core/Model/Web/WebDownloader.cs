@@ -63,6 +63,7 @@ namespace JoyReactor.Core.Model.Web
 			if (reqParams == null || reqParams.Form == null) throw new Exception ();
 
             var req = new HttpRequestMessage();
+            req.RequestUri = uri;
             req.Method = HttpMethod.Post;
             req.Content = new FormUrlEncodedContent(reqParams.Form);
             if(reqParams.Referer != null) req.Headers.Referrer = reqParams.Referer;
