@@ -77,13 +77,14 @@ namespace JoyReactor.Core.Model.Parser
 
 		public IDictionary<string, string> Login(string username, string password) 
 		{
-			var doc = downloader.Get (new Uri("http://joyreactor.cc/login"));
+			var doc = downloader.Get (new Uri("http://www.joyreactor.cc/login"));
 			var csrf = doc.GetElementById ("signin__csrf_token").Attributes ["value"].Value;
 
 			var hs = downloader.PostForCookies (
-				new Uri ("http://joyreactor.cc/login"), 
+				new Uri ("http://www.joyreactor.cc/login"), 
 				new RequestParams 
 				{
+                    Referer = new Uri("http://www.joyreactor.cc/login"),
 					Form = new Dictionary<string, string>
 					{
 						{ "signin[username]", username },

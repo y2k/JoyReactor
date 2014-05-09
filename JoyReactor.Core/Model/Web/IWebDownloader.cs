@@ -19,5 +19,7 @@ namespace JoyReactor.Core.Model.Web
 	{
 		public IDictionary<string, string> Form { get; set; }
 		public IDictionary<string, string> Cookies { get; set; }
-	}
+
+        public Uri Referer { get; set; }
+    }
 }

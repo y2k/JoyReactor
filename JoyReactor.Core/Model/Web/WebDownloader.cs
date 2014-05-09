@@ -18,35 +18,39 @@ namespace JoyReactor.Core.Model.Web
 
 		#endregion
 
-		private CookieContainer cookies = new CookieContainer();
-		private Lazy<HttpClient> client;
+        private static readonly CookieContainer DefaultCookies = new CookieContainer();
+        private static readonly Lazy<HttpClient> DefaultClient = new Lazy<HttpClient>(() => {
+            var handler = new HttpClientHandler {
+                UseCookies = true,
+                CookieContainer = DefaultCookies
+            };
+            if (handler.SupportsAutomaticDecompression) {
+                handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+            }
 
-		public WebDownloader()
-		{
-			this.client = new Lazy<HttpClient> (() => {
-				var client = new HttpClient (new HttpClientHandler() { CookieContainer = cookies });
-				client.DefaultRequestHeaders.UserAgent.ParseAdd(UserAgent);
-				client.DefaultRequestHeaders.Accept.ParseAdd(Accept);
-				return client;
-			});
-		}
+            var client = new HttpClient(handler);
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(UserAgent);
+            client.DefaultRequestHeaders.Accept.ParseAdd(Accept);
+            return client;
+        });
 
 		#region IWebDownloader implementation
 
 		public string GetText (Uri uri, RequestParams reqParams = null)
 		{
-			return client.Value.GetStringAsync (uri).Result;
-		}
+            return DefaultClient.Value.GetStringAsync(uri).Result;
+        }
 
 		public HtmlDocument Get (Uri uri)
 		{
-			var doc = new HtmlDocument ();
-			using (var r = client.Value.GetAsync (uri).Result) {
-				using (var s = r.Content.ReadAsStreamAsync ().Result) {
-					doc.Load (s);
-				}
-			}
-			return doc;
+            using (var r = DefaultClient.Value.GetAsync(uri).Result)
+            {
+                using (var s = r.Content.ReadAsStreamAsync().Result) {
+                    var doc = new HtmlDocument();
+                    doc.Load(s);
+                    return doc;
+                }
+            }
 		}
 
 		public IDictionary<string, string> PostForHeaders (Uri uri, RequestParams reqParams = null)
@@ -56,15 +60,18 @@ namespace JoyReactor.Core.Model.Web
 
 		public IDictionary<string, string> PostForCookies (Uri uri, RequestParams reqParams = null)
 		{
-			if (reqParams == null || reqParams.Form == null)
-				throw new Exception ();
+			if (reqParams == null || reqParams.Form == null) throw new Exception ();
 
-			var content = new FormUrlEncodedContent (reqParams.Form);
-			using (var r = client.Value.PostAsync (uri, content).Result) { 
-				// Nothing todo
-			}
+            var req = new HttpRequestMessage();
+            req.Method = HttpMethod.Post;
+            req.Content = new FormUrlEncodedContent(reqParams.Form);
+            if(reqParams.Referer != null) req.Headers.Referrer = reqParams.Referer;
 
-			return cookies.GetCookies (uri).Cast<Cookie> ().ToDictionary (s => s.Name, s => s.Value);
+            using (var r = DefaultClient.Value.SendAsync(req).Result) {
+                // Nothing todo
+            }
+
+            return DefaultCookies.GetCookies(uri).Cast<Cookie>().ToDictionary(s => s.Name, s => s.Value);
 		}
 
 		#endregion
