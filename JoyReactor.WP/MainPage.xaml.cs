@@ -28,6 +28,17 @@ namespace JoyReactor.WP
             ((MainViewModel)DataContext).OpenTagCommand.Execute(e.AddedItems[0]);
         }
 
+        private void ApplicationBarMenuItem_Click(object sender, EventArgs e)
+        {
+            //((MainViewModel)DataContext).OpenProfileCommand.Execute(null);
+            NavigationService.Navigate(new Uri("/ProfilePage.xaml", UriKind.Relative));
+        }
+
+        private void ApplicationBarMenuItem_Click_1(object sender, EventArgs e)
+        {
+            // TODO Navigate to setttings
+        }
+
         // Sample code for building a localized ApplicationBar
         //private void BuildLocalizedApplicationBar()
         //{

@@ -14,7 +14,10 @@ namespace JoyReactor.Core.Model.Inject
 {
 	public class InjectService 
 	{
-		public static IContainer Instance { get; private set; }
+        [Obsolete]
+        public static IContainer Instance { get { return Current; } }
+
+        public static IContainer Current { get; private set; }
 
 		public static void Initialize(params IModule[] modules) 
 		{
@@ -23,7 +26,7 @@ namespace JoyReactor.Core.Model.Inject
 			foreach (var m in modules)
 				b.RegisterModule (m);
 
-			Instance = b.Build ();
+            Current = b.Build();
 		}
 
 		private class DefaultModule : Module 

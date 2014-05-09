@@ -14,7 +14,7 @@ using System.Text;
 
 namespace JoyReactor.Core.Model
 {
-	public class ProfileModel : IProfileModel
+	class ProfileModel : IProfileModel
 	{
 		private ISiteParser[] parsers = InjectService.Instance.Get<ISiteParser[]>();
 

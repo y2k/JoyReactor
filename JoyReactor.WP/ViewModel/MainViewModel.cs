@@ -5,6 +5,7 @@ using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Inject;
 using System.Collections.ObjectModel;
+using System.Windows.Navigation;
 
 namespace JoyReactor.WP.ViewModel
 {
@@ -28,7 +29,7 @@ namespace JoyReactor.WP.ViewModel
 
         public RelayCommand<Tag> OpenTagCommand { get; set; }
 
-        private ISubscriptionCollectionModel model = InjectService.Instance.Get<ISubscriptionCollectionModel>();
+        private ITagCollectionModel model = InjectService.Instance.Get<ITagCollectionModel>();
         private IPostCollectionModel posModel = InjectService.Instance.Get<IPostCollectionModel>();
 
         /// <summary>
@@ -54,16 +55,20 @@ namespace JoyReactor.WP.ViewModel
 
         public async void Initialize(Tag tag)
         {
-            if (tag == null)
-            {
-                Tags.Clear();
-                var tags = await model.GetMainSubscriptionsAsync();
-                tags.ForEach(Tags.Add);
-            }
+            try {
+                if (tag == null)
+                {
+                    Tags.Clear();
+                    var tags = await model.GetMainSubscriptionsAsync();
+                    tags.ForEach(Tags.Add);
+                }
 
-            Posts.Clear();
-            var posts = await posModel.GetPostsAsync(tag == null ? ID.REACTOR_GOOD : ID.Parser(tag.TagId), SyncFlags.First);
-            posts.ForEach(Posts.Add);
+                Posts.Clear();
+                var posts = await posModel.GetPostsAsync(tag == null ? ID.REACTOR_GOOD : ID.Parser(tag.TagId), SyncFlags.First);
+                posts.ForEach(Posts.Add);
+            } catch { 
+                // 
+            }
         }
     }
 }

@@ -43,6 +43,15 @@ namespace JoyReactor.WP.ViewModel
             ////}
 
             SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<ProfileViewModel>();
+        }
+
+        public ProfileViewModel Profile
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<ProfileViewModel>();
+            }
         }
 
         public MainViewModel Main
