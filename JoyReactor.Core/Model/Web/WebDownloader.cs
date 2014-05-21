@@ -24,9 +24,11 @@ namespace JoyReactor.Core.Model.Web
                 UseCookies = true,
                 CookieContainer = DefaultCookies
             };
-            if (handler.SupportsAutomaticDecompression) {
-                handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-            }
+
+			// TODO Почему-то не вызывает ошибку компиляции в Xamarin Studio
+//            if (handler.SupportsAutomaticDecompression) {
+//                handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+//            }
 
             var client = new HttpClient(handler);
             client.DefaultRequestHeaders.UserAgent.ParseAdd(UserAgent);
