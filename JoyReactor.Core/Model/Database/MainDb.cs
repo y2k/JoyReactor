@@ -68,7 +68,8 @@ namespace JoyReactor.Core.Model.Database
             db.Insert(new Tag { TagId = ToFlatId(ID.Factory.Reactor("android")), Title = "Android", Flags = Tag.FlagShowInMain, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/2596" });
             db.Insert(new Tag { TagId = ToFlatId(ID.Factory.Reactor("гифки")), Title = "Гифки", Flags = Tag.FlagShowInMain, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/116" });
             db.Insert(new Tag { TagId = ToFlatId(ID.Factory.Reactor("эротика")), Title = "Эротика", Flags = Tag.FlagShowInMain, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/676" });
-            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.Reactor("песочница")), Title = "Песочница", Flags = Tag.FlagShowInMain, BestImage = "http://img0.joyreactor.cc/images/default_avatar.jpeg" });
+			db.Insert(new Tag { TagId = ToFlatId(ID.Factory.Reactor("песочница")), Title = "Песочница", Flags = Tag.FlagShowInMain, BestImage = "http://img0.joyreactor.cc/images/default_avatar.jpeg" });
+			db.Insert(new Tag { TagId = ToFlatId(ID.Factory.Reactor("комиксы")), Title = "Комиксы", Flags = Tag.FlagShowInMain, BestImage = "http://img0.joyreactor.cc/pics/avatar/tag/27" });
 		}
 
 		private static void OnUpdate(int oldVersion, int newVersion)

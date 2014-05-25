@@ -68,6 +68,8 @@
     <Compile Include="Model\DTO\TagLinkedTag.cs" />
     <Compile Include="Model\ITagCollectionModel.cs" />
     <Compile Include="Model\TagCollectionModel.cs" />
+    <Compile Include="Model\Parser\Data\ExportComment.cs" />
+    <Compile Include="Model\Parser\Data\ExportPreviewPost.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -107,12 +109,10 @@
     <Reference Include="Autofac">
       <HintPath>Libs\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http, Version=1.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="System.Net.Http">
       <HintPath>Libs\System.Net.Http.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http.Primitives, Version=1.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="System.Net.Http.Primitives">
       <HintPath>Libs\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
   </ItemGroup>

@@ -21,12 +21,14 @@ namespace JoyReactor.Core.Model.Inject
 
 		public static void Initialize(params IModule[] modules) 
 		{
-			var b = new ContainerBuilder ();
-			b.RegisterModule (new DefaultModule ());
-			foreach (var m in modules)
-				b.RegisterModule (m);
+			if (Current == null) {
+				var b = new ContainerBuilder ();
+				b.RegisterModule (new DefaultModule ());
+				foreach (var m in modules)
+					b.RegisterModule (m);
 
-            Current = b.Build();
+				Current = b.Build ();
+			}
 		}
 
 		private class DefaultModule : Module 

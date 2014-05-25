@@ -65,6 +65,8 @@ namespace JoyReactor.Core.Model.Parser
 
 		private static readonly Regex ProfileTag = new Regex ("/tag/(.+)");
 
+		private static readonly string COMMENT_START = "<div class=\"post_comment_list\">";
+
 		#endregion
 
 		private IWebDownloader downloader = InjectService.Instance.Get<IWebDownloader>();
@@ -136,9 +138,191 @@ namespace JoyReactor.Core.Model.Parser
 			return p;
 		}
 
+		public void ExtractPost (string id, Action<PostExportState> callback)
+		{
+//			Map<String, String> cook = cookieHolder.get(CookieHolder.REACTOR);
+//			cook.put("showVideoGif2", "1");
+//			String html = downloader.get(generateUrl(id), null, cook);
+//			Document doc = Parser.parse(html, generateUrl(id));
+
+			var html = downloader.GetText (new Uri (string.Format ("http://joyreactor.cc/post/{0}", id)));
+			var doc = new HtmlDocument ();
+			doc.LoadHtml (html);
+
+//			callbacks.onExtractBegin();
+			callback (new PostExportState { State = PostExportState.ExportState.Begin });
+
+			{
+				var p = new PostExportState();
+
+				var m = IMAGE_IN_POST.Match(html);
+				if (m.Success) {
+					p.image = m.Groups [1].Value;
+					p.imageWidth = int.Parse (m.Groups [2].Value);
+					p.imageHeight = int.Parse (m.Groups [3].Value);
+				}
+				if (p.image == null) {
+					m = IMAGE_GIF.Match(html);
+					if (m.Success) {
+						p.image = m.Groups [1].Value;
+						p.imageWidth = int.Parse (m.Groups [2].Value);
+						p.imageHeight = int.Parse (m.Groups [3].Value);
+					}
+				}
+				if (p.image == null) {
+					m = new Regex("\\[img\\]([^\\[]+)\\[/img\\]").Match(html);
+					if (m.Success) {
+						p.image = m.Groups [1].Value;
+						p.imageWidth = 512;
+						p.imageHeight = 512;
+					}
+				}
+
+				if (p.image != null) p.image = Regex.Replace(p.image, "/pics/post/.+-(\\d+\\.[\\d\\w]+)", "/pics/post/-$1");
+
+				p.userName = Uri.UnescapeDataString(Uri.UnescapeDataString(USER_NAME.FirstString(html))).Replace('+', ' ');
+				p.userImage = USER_IMAGE.FirstString (html);
+
+				p.title = TITLE.FirstString (html);
+				if (string.IsNullOrWhiteSpace(p.title)) p.title = null;
+
+				p.created = CREATED.FirstLong(html) * 1000L;
+				p.rating = RATING.FirstFloat (html, CultureInfo.InvariantCulture);
+
+				//		p.coub = PatternUtils.group(COUB, html);
+				m = COUB.Match(html);
+				if (m.Success) {
+					p.coub = m.Groups [1].Value;
+					p.imageWidth = int.Parse (m.Groups [2].Value);
+					p.imageHeight = int.Parse (m.Groups [3].Value);
+				}
+
+				p.State = PostExportState.ExportState.Info;
+				callback (p);
+			}
+
+			{
+				int pos = html.IndexOf(COMMENT_START) + COMMENT_START.Length;
+				pos = skipHtmlTag(html, pos);
+				readChildComments(html, pos, null, comment => {
+					callback(new PostExportState { State = PostExportState.ExportState.Comment, Comment = comment });
+				});
+			}
+
+//			{ // TODO
+//				for (Element g : doc.select("div.sidebar_block")) {
+//					String gt = XpathUtils.innerTextTrim(g, "h2.sideheader.random");
+//					if (gt != null) {
+//						for (Element e : g.select("tr")) {
+//							LinkedTag t = new LinkedTag();
+//							t.name = XpathUtils.innerTextTrim(e, "a");
+//							t.group = gt;
+//							t.image = XpathUtils.firstUrl(e, "img", "src");
+//							t.value = PatternUtils.group(Pattern.compile("/tag/(.+)"), XpathUtils.firstAttr(e, "a", "href"));
+//							callbacks.onExtractTags(t);
+//						}
+//					}
+//				}
+//			}
+
+			{
+				//
+				var m = SIMILAR_POST.Match(html);
+				while (m.Success) {
+					String ss = m.Groups [1].Value;
+
+					var pp = new ExportPreviewPost();
+					pp.id = SIMILAR_POST_ID.FirstString (ss);
+					pp.image = SIMILAR_POST_IMAGE.FirstString (ss);
+
+					{
+						var s1 = SIMILAR_POST_TITLE2.Matches (ss).Cast<Match>().Select(s=>s.Groups[1].Value).Aggregate("",(a,s)=>a+", "+s).Trim();
+						var s2 = SIMILAR_POST_TITLE3.Matches (ss).Cast<Match>().Select(s=>s.Groups[1].Value).Aggregate("",(a,s)=>a+", "+s).Trim();
+
+						if (s1 == "" && s2 == "") pp.title = null;
+						else if (s1 == "") pp.title = s2;
+						else if (s2 == "") pp.title = s1;
+						else pp.title = s1 + ", " + s2;
+					}
+					if (pp.title == null) pp.title = SIMILAR_POST_TITLE.FirstString (ss);
+
+					callback(new PostExportState{State = PostExportState.ExportState.LinkedPost, LinkedPost = pp});
+				}
+			}
+		}
+
 		#endregion
 
 		#region Private methods
+
+		private int readTag(String html, int position) {
+			int level = 0;
+			do {
+				int i = html.IndexOf('<', position);
+				int endTag = html.IndexOf('>', i + 1);
+
+				if ("<br>" == html.Substring(i, 4)) {
+					position += 4;
+					continue;
+				} else if (html[endTag - 1] == '/') {
+					position = endTag + 1;
+					continue;
+				}
+
+				level += html[i + 1] == '/' ? -1 : 1;
+				position = i + 1;
+			} while (level > 0);
+			return level < 0 ? -1 : html.IndexOf('>', position);
+		}
+
+		private ExportComment getComment(String html, int start, int end) {
+			String s = html.Substring(start, end + 1 - start);
+			var c = new ExportComment();
+
+			c.id = COMMENT_ID.FirstString(s);
+			c.text = TEXT.FirstString (s);
+			c.created = TIMESTAMP.FirstLong(s) * 1000L;
+
+			c.userName = Uri.UnescapeDataString(Uri.UnescapeDataString(USER_NAME.FirstString(s))).Replace('+', ' ');
+			c.userImage = "http://img0.joyreactor.cc/pics/avatar/user/" + USER_ID.FirstString (s);
+
+			var m = COMMENT_IMAGES.Match(s);
+			if (m.Success) {
+				var u = m.Groups [1].Value + m.Groups [1].Value;
+				c.attachments = new [] { new ExportComment.ExportAttachment { imageUrl = u } };
+			}
+
+			return c;
+		}
+
+		private int readChildComments(String html, int position, String parentId, Action<ExportComment> callback)
+		{
+			int end;
+			int initPosition = position;
+			while (true) {
+				end = readTag(html, position);
+				if (end < 0) break;
+
+				// Оптимизированная (по памяти и CPU) проверка случая когда "нет комментариев"
+				if (parentId == null && position == initPosition) {
+					if (end - position < 100 && html.Substring(position, end - position).Contains("нет комментариев")) return position;
+				}
+
+				var c = getComment(html, position, end);
+				c.parentId = parentId;
+				callback(c);
+
+				end = skipHtmlTag(html, end + 1);
+				end = readChildComments(html, end, c.id, callback);
+				position = skipHtmlTag(html, end);
+			}
+			return position;
+		}
+
+		private int skipHtmlTag(string html, int position) 
+		{
+			return html.IndexOf('>', position) + 1;
+		}
 
 		private void ExtractPostCoollection (ID.TagType type, string value, int lastLoadedPage, Action<CollectionExportState> callback)
 		{
