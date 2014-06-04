@@ -5,6 +5,8 @@ namespace JoyReactor.Core.Model.Parser.Data
 {
 	public class ExportComment
 	{
+		public static ExportComment.ExportAttachment[] EmptyAttachments = new ExportComment.ExportAttachment[0];
+
 		public string parentId { get; set; }
 		public string id { get; set; }
 		public string text { get; set; }

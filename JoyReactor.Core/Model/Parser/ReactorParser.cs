@@ -225,30 +225,30 @@ namespace JoyReactor.Core.Model.Parser
 //				}
 //			}
 
-			{
-				//
-				var m = SIMILAR_POST.Match(html);
-				while (m.Success) {
-					String ss = m.Groups [1].Value;
-
-					var pp = new ExportPreviewPost();
-					pp.id = SIMILAR_POST_ID.FirstString (ss);
-					pp.image = SIMILAR_POST_IMAGE.FirstString (ss);
-
-					{
-						var s1 = SIMILAR_POST_TITLE2.Matches (ss).Cast<Match>().Select(s=>s.Groups[1].Value).Aggregate("",(a,s)=>a+", "+s).Trim();
-						var s2 = SIMILAR_POST_TITLE3.Matches (ss).Cast<Match>().Select(s=>s.Groups[1].Value).Aggregate("",(a,s)=>a+", "+s).Trim();
-
-						if (s1 == "" && s2 == "") pp.title = null;
-						else if (s1 == "") pp.title = s2;
-						else if (s2 == "") pp.title = s1;
-						else pp.title = s1 + ", " + s2;
-					}
-					if (pp.title == null) pp.title = SIMILAR_POST_TITLE.FirstString (ss);
-
-					callback(new PostExportState{State = PostExportState.ExportState.LinkedPost, LinkedPost = pp});
-				}
-			}
+//			{
+//				//
+//				var m = SIMILAR_POST.Match(html);
+//				while (m.Success) {
+//					String ss = m.Groups [1].Value;
+//
+//					var pp = new ExportPreviewPost();
+//					pp.id = SIMILAR_POST_ID.FirstString (ss);
+//					pp.image = SIMILAR_POST_IMAGE.FirstString (ss);
+//
+//					{
+//						var s1 = SIMILAR_POST_TITLE2.Matches (ss).Cast<Match>().Select(s=>s.Groups[1].Value).Aggregate("",(a,s)=>a+", "+s).Trim();
+//						var s2 = SIMILAR_POST_TITLE3.Matches (ss).Cast<Match>().Select(s=>s.Groups[1].Value).Aggregate("",(a,s)=>a+", "+s).Trim();
+//
+//						if (s1 == "" && s2 == "") pp.title = null;
+//						else if (s1 == "") pp.title = s2;
+//						else if (s2 == "") pp.title = s1;
+//						else pp.title = s1 + ", " + s2;
+//					}
+//					if (pp.title == null) pp.title = SIMILAR_POST_TITLE.FirstString (ss);
+//
+//					callback(new PostExportState{State = PostExportState.ExportState.LinkedPost, LinkedPost = pp});
+//				}
+//			}
 		}
 
 		#endregion
@@ -290,6 +290,8 @@ namespace JoyReactor.Core.Model.Parser
 			if (m.Success) {
 				var u = m.Groups [1].Value + m.Groups [1].Value;
 				c.attachments = new [] { new ExportComment.ExportAttachment { imageUrl = u } };
+			} else {
+				c.attachments = ExportComment.EmptyAttachments;
 			}
 
 			return c;
