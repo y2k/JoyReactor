@@ -97,5 +97,61 @@ namespace JoyReactor.Core.Tests
 			Assert.IsTrue (commenCount >= 44, "Comment count = " + commenCount);
 			Assert.IsTrue (commentsAttachments >= 12, "Total attachments = " + commentsAttachments);
 		}
+
+		[Test]
+		public void testPost1323757()
+		{
+			InjectService.Initialize ();
+			var parser = new ReactorParser ();
+
+			bool wasBegin = false;
+			bool wasInfo = false;
+			int commenCount = 0;
+			int commentsAttachments = 0;
+			var comIds = new HashSet<string> ();
+
+			parser.ExtractPost ("1323757", 
+				s => {
+					// TODO
+					if (s.State == PostExportState.ExportState.Begin) {
+						wasBegin = true;
+					} else if (s.State == PostExportState.ExportState.Info) {
+						wasInfo = true;
+
+						Assert.AreEqual("Dendy-A-", s.userName);
+						Assert.AreEqual("http://img0.joyreactor.cc/pics/avatar/user/47722", s.userImage);
+						Assert.AreEqual("http://img0.joyreactor.cc/pics/post/-1240714.jpeg", s.image);
+						Assert.AreEqual(195, s.imageWidth);
+						Assert.AreEqual(208, s.imageHeight);
+					} else if (s.State == PostExportState.ExportState.Comment) {
+						Assert.IsNotNull(s.Comment);
+						commenCount++;
+
+						Assert.IsTrue(s.Comment.created <= 1577836800000L && s.Comment.created >= 1262304000000L, "Comment created = " + s.Comment.created);
+						Assert.IsTrue(Regex.IsMatch(s.Comment.id, "\\d+"), "Comment id = " + s.Comment.id);
+						comIds.Add(s.Comment.id);
+						if (s.Comment.parentId != null) Assert.IsTrue(comIds.Contains(s.Comment.parentId), "Comment parent id = " + s.Comment.parentId);
+
+						var t=s.Comment.text;
+						Assert.IsTrue(t == null || t == t.Trim(), "Comment text = " + s.Comment.text);
+
+						Assert.NotNull(s.Comment.userName);
+						Assert.IsTrue(Regex.IsMatch(s.Comment.userName, "[\\w\\d_]+"), "Comment user name = " + s.Comment.userName);
+						Assert.IsNotNull(s.Comment.userImage);
+						Assert.IsTrue(Regex.IsMatch(s.Comment.userImage, "http://img\\d+\\.joyreactor\\.cc/pics/avatar/user/\\d+"), s.Comment.userImage);
+
+						Assert.IsNotNull(s.Comment.attachments);
+						commentsAttachments += s.Comment.attachments.Length;
+						foreach (var z in s.Comment.attachments) {
+							Assert.IsTrue(Regex.IsMatch(z.imageUrl, "http://img\\d+\\.joyreactor\\.cc/pics/comment/\\-\\d+\\.(jpeg|png|gif|bmp)"), "Comment id = " + s.Comment.id + ", url = " + z.imageUrl);
+						}
+					}
+				});
+
+			Assert.IsTrue (wasBegin);
+			Assert.IsTrue (wasInfo);
+			Assert.IsTrue (commenCount >= 2520, "Comment count = " + commenCount);
+			Assert.IsTrue (commentsAttachments >= 9999, "Total attachments = " + commentsAttachments);
+		}
 	}
 }
