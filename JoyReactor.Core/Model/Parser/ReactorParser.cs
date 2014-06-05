@@ -67,6 +67,8 @@ namespace JoyReactor.Core.Model.Parser
 
         private static readonly string COMMENT_START = "<div class=\"post_comment_list\">";
 
+        private static readonly string[] SINGLE_TAGS = new string[] { "<br>", "<param " };
+
         #endregion
 
         private IWebDownloader downloader = InjectService.Instance.Get<IWebDownloader>();
@@ -142,119 +144,126 @@ namespace JoyReactor.Core.Model.Parser
         }
 
         public void ExtractPost(string id, Action<PostExportState> callback)
-		{
-//			Map<String, String> cook = cookieHolder.get(CookieHolder.REACTOR);
-//			cook.put("showVideoGif2", "1");
-//			String html = downloader.get(generateUrl(id), null, cook);
-//			Document doc = Parser.parse(html, generateUrl(id));
+        {
+            //			Map<String, String> cook = cookieHolder.get(CookieHolder.REACTOR);
+            //			cook.put("showVideoGif2", "1");
+            //			String html = downloader.get(generateUrl(id), null, cook);
+            //			Document doc = Parser.parse(html, generateUrl(id));
 
-			var html = downloader.GetText (new Uri (string.Format ("http://joyreactor.cc/post/{0}", id)));
-			var doc = new HtmlDocument ();
-			doc.LoadHtml (html);
+            var html = downloader.GetText(new Uri(string.Format("http://joyreactor.cc/post/{0}", id)));
+            var doc = new HtmlDocument();
+            doc.LoadHtml(html);
 
-//			callbacks.onExtractBegin();
-			callback (new PostExportState { State = PostExportState.ExportState.Begin });
+            //			callbacks.onExtractBegin();
+            callback(new PostExportState { State = PostExportState.ExportState.Begin });
 
-			{
-				var p = new PostExportState();
+            {
+                var p = new PostExportState();
 
-				var m = IMAGE_IN_POST.Match(html);
-				if (m.Success) {
-					p.image = m.Groups [1].Value;
-					p.imageWidth = int.Parse (m.Groups [2].Value);
-					p.imageHeight = int.Parse (m.Groups [3].Value);
-				}
-				if (p.image == null) {
-					m = IMAGE_GIF.Match(html);
-					if (m.Success) {
-						p.image = m.Groups [1].Value;
-						p.imageWidth = int.Parse (m.Groups [2].Value);
-						p.imageHeight = int.Parse (m.Groups [3].Value);
-					}
-				}
-				if (p.image == null) {
-					m = new Regex("\\[img\\]([^\\[]+)\\[/img\\]").Match(html);
-					if (m.Success) {
-						p.image = m.Groups [1].Value;
-						p.imageWidth = 512;
-						p.imageHeight = 512;
-					}
-				}
+                var m = IMAGE_IN_POST.Match(html);
+                if (m.Success)
+                {
+                    p.image = m.Groups[1].Value;
+                    p.imageWidth = int.Parse(m.Groups[2].Value);
+                    p.imageHeight = int.Parse(m.Groups[3].Value);
+                }
+                if (p.image == null)
+                {
+                    m = IMAGE_GIF.Match(html);
+                    if (m.Success)
+                    {
+                        p.image = m.Groups[1].Value;
+                        p.imageWidth = int.Parse(m.Groups[2].Value);
+                        p.imageHeight = int.Parse(m.Groups[3].Value);
+                    }
+                }
+                if (p.image == null)
+                {
+                    m = new Regex("\\[img\\]([^\\[]+)\\[/img\\]").Match(html);
+                    if (m.Success)
+                    {
+                        p.image = m.Groups[1].Value;
+                        p.imageWidth = 512;
+                        p.imageHeight = 512;
+                    }
+                }
 
-				if (p.image != null) p.image = Regex.Replace(p.image, "/pics/post/.+-(\\d+\\.[\\d\\w]+)", "/pics/post/-$1");
+                if (p.image != null) p.image = Regex.Replace(p.image, "/pics/post/.+-(\\d+\\.[\\d\\w]+)", "/pics/post/-$1");
 
-				p.userName = Uri.UnescapeDataString(Uri.UnescapeDataString(USER_NAME.FirstString(html))).Replace('+', ' ');
-				p.userImage = USER_IMAGE.FirstString (html);
+                p.userName = Uri.UnescapeDataString(Uri.UnescapeDataString(USER_NAME.FirstString(html))).Replace('+', ' ');
+                p.userImage = USER_IMAGE.FirstString(html);
 
-				p.title = TITLE.FirstString (html);
-				if (string.IsNullOrWhiteSpace(p.title)) p.title = null;
+                p.title = TITLE.FirstString(html);
+                if (string.IsNullOrWhiteSpace(p.title)) p.title = null;
 
-				p.created = CREATED.FirstLong(html) * 1000L;
-				p.rating = RATING.FirstFloat (html, CultureInfo.InvariantCulture);
+                p.created = CREATED.FirstLong(html) * 1000L;
+                p.rating = RATING.FirstFloat(html, CultureInfo.InvariantCulture);
 
                 int i = html.IndexOf("class=\"post_comment_list\"");
                 if (i < 0) throw new Exception("Can't find comments begin");
-                
+
                 m = COUB.Match(html.Substring(0, i));
-                if (m.Success) {
+                if (m.Success)
+                {
                     p.coub = m.Groups[1].Value;
                     p.imageWidth = int.Parse(m.Groups[2].Value);
                     p.imageHeight = int.Parse(m.Groups[3].Value);
                 }
 
-				p.State = PostExportState.ExportState.Info;
-				callback (p);
-			}
+                p.State = PostExportState.ExportState.Info;
+                callback(p);
+            }
 
-			{
-				int pos = html.IndexOf(COMMENT_START) + COMMENT_START.Length;
-				pos = skipHtmlTag(html, pos);
-				readChildComments(html, pos, null, comment => {
-					callback(new PostExportState { State = PostExportState.ExportState.Comment, Comment = comment });
-				});
-			}
+            {
+                int pos = html.IndexOf(COMMENT_START) + COMMENT_START.Length;
+                pos = skipHtmlTag(html, pos);
+                readChildComments(html, pos, null, comment =>
+                {
+                    callback(new PostExportState { State = PostExportState.ExportState.Comment, Comment = comment });
+                });
+            }
 
-//			{ // TODO
-//				for (Element g : doc.select("div.sidebar_block")) {
-//					String gt = XpathUtils.innerTextTrim(g, "h2.sideheader.random");
-//					if (gt != null) {
-//						for (Element e : g.select("tr")) {
-//							LinkedTag t = new LinkedTag();
-//							t.name = XpathUtils.innerTextTrim(e, "a");
-//							t.group = gt;
-//							t.image = XpathUtils.firstUrl(e, "img", "src");
-//							t.value = PatternUtils.group(Pattern.compile("/tag/(.+)"), XpathUtils.firstAttr(e, "a", "href"));
-//							callbacks.onExtractTags(t);
-//						}
-//					}
-//				}
-//			}
+            //			{ // TODO
+            //				for (Element g : doc.select("div.sidebar_block")) {
+            //					String gt = XpathUtils.innerTextTrim(g, "h2.sideheader.random");
+            //					if (gt != null) {
+            //						for (Element e : g.select("tr")) {
+            //							LinkedTag t = new LinkedTag();
+            //							t.name = XpathUtils.innerTextTrim(e, "a");
+            //							t.group = gt;
+            //							t.image = XpathUtils.firstUrl(e, "img", "src");
+            //							t.value = PatternUtils.group(Pattern.compile("/tag/(.+)"), XpathUtils.firstAttr(e, "a", "href"));
+            //							callbacks.onExtractTags(t);
+            //						}
+            //					}
+            //				}
+            //			}
 
-//			{
-//				//
-//				var m = SIMILAR_POST.Match(html);
-//				while (m.Success) {
-//					String ss = m.Groups [1].Value;
-//
-//					var pp = new ExportPreviewPost();
-//					pp.id = SIMILAR_POST_ID.FirstString (ss);
-//					pp.image = SIMILAR_POST_IMAGE.FirstString (ss);
-//
-//					{
-//						var s1 = SIMILAR_POST_TITLE2.Matches (ss).Cast<Match>().Select(s=>s.Groups[1].Value).Aggregate("",(a,s)=>a+", "+s).Trim();
-//						var s2 = SIMILAR_POST_TITLE3.Matches (ss).Cast<Match>().Select(s=>s.Groups[1].Value).Aggregate("",(a,s)=>a+", "+s).Trim();
-//
-//						if (s1 == "" && s2 == "") pp.title = null;
-//						else if (s1 == "") pp.title = s2;
-//						else if (s2 == "") pp.title = s1;
-//						else pp.title = s1 + ", " + s2;
-//					}
-//					if (pp.title == null) pp.title = SIMILAR_POST_TITLE.FirstString (ss);
-//
-//					callback(new PostExportState{State = PostExportState.ExportState.LinkedPost, LinkedPost = pp});
-//				}
-//			}
-		}
+            //			{
+            //				//
+            //				var m = SIMILAR_POST.Match(html);
+            //				while (m.Success) {
+            //					String ss = m.Groups [1].Value;
+            //
+            //					var pp = new ExportPreviewPost();
+            //					pp.id = SIMILAR_POST_ID.FirstString (ss);
+            //					pp.image = SIMILAR_POST_IMAGE.FirstString (ss);
+            //
+            //					{
+            //						var s1 = SIMILAR_POST_TITLE2.Matches (ss).Cast<Match>().Select(s=>s.Groups[1].Value).Aggregate("",(a,s)=>a+", "+s).Trim();
+            //						var s2 = SIMILAR_POST_TITLE3.Matches (ss).Cast<Match>().Select(s=>s.Groups[1].Value).Aggregate("",(a,s)=>a+", "+s).Trim();
+            //
+            //						if (s1 == "" && s2 == "") pp.title = null;
+            //						else if (s1 == "") pp.title = s2;
+            //						else if (s2 == "") pp.title = s1;
+            //						else pp.title = s1 + ", " + s2;
+            //					}
+            //					if (pp.title == null) pp.title = SIMILAR_POST_TITLE.FirstString (ss);
+            //
+            //					callback(new PostExportState{State = PostExportState.ExportState.LinkedPost, LinkedPost = pp});
+            //				}
+            //			}
+        }
 
         #endregion
 
@@ -268,9 +277,11 @@ namespace JoyReactor.Core.Model.Parser
                 int i = html.IndexOf('<', position);
                 int endTag = html.IndexOf('>', i + 1);
 
-                if ("<br>" == html.Substring(i, 4))
+                if (SINGLE_TAGS.Any(s => s == html.Substring(i, s.Length)))
                 {
-                    position += 4;
+                    position = html.IndexOf('>', i);
+                    if (position < 0) throw new Exception();
+                    position++;
                     continue;
                 }
                 else if (html[endTag - 1] == '/')

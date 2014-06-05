@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30110.0
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyReactor.Android", "JoyReactor.Android\JoyReactor.Android.csproj", "{FF269F55-48C8-42BC-A8CC-5BC1C1DBE87F}"
 EndProject
@@ -153,6 +153,7 @@ Global
 		{A5AF8642-6542-445B-9BE8-610B4F4BBFCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A5AF8642-6542-445B-9BE8-610B4F4BBFCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5AF8642-6542-445B-9BE8-610B4F4BBFCE}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{A5AF8642-6542-445B-9BE8-610B4F4BBFCE}.Debug|ARM.Build.0 = Debug|Any CPU
 		{A5AF8642-6542-445B-9BE8-610B4F4BBFCE}.Debug|iPhone.ActiveCfg = Debug|Any CPU
 		{A5AF8642-6542-445B-9BE8-610B4F4BBFCE}.Debug|iPhone.Build.0 = Debug|Any CPU
 		{A5AF8642-6542-445B-9BE8-610B4F4BBFCE}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
@@ -245,9 +246,9 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{FF269F55-48C8-42BC-A8CC-5BC1C1DBE87F} = {EE54189B-2D6E-4B28-896F-3AB4F4337EB0}
 		{BB2B74F2-81BF-4DDC-96D6-1F6226D70EFF} = {EE54189B-2D6E-4B28-896F-3AB4F4337EB0}
 		{0C771503-FD14-436A-A7C0-E2DCE1D5FEC3} = {EE54189B-2D6E-4B28-896F-3AB4F4337EB0}
-		{FF269F55-48C8-42BC-A8CC-5BC1C1DBE87F} = {EE54189B-2D6E-4B28-896F-3AB4F4337EB0}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = JoyReactor.Android\JoyReactor.Android.csproj
