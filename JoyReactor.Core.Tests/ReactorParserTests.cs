@@ -12,7 +12,7 @@ namespace JoyReactor.Core.Tests
 	public class ReactorParserTests
 	{
 		[Test]
-		public void TestCase ()
+		public void TestFeatured ()
 		{
 			InjectService.Initialize ();
 
