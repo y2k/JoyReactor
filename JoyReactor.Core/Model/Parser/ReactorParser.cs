@@ -288,7 +288,7 @@ namespace JoyReactor.Core.Model.Parser
 
 			var m = COMMENT_IMAGES.Match(s);
 			if (m.Success) {
-				var u = m.Groups [1].Value + m.Groups [1].Value;
+				var u = m.Groups [1].Value + m.Groups [2].Value;
 				c.attachments = new [] { new ExportComment.ExportAttachment { imageUrl = u } };
 			} else {
 				c.attachments = ExportComment.EmptyAttachments;

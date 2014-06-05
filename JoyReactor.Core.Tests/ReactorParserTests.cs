@@ -95,7 +95,7 @@ namespace JoyReactor.Core.Tests
 			Assert.IsTrue (wasBegin);
 			Assert.IsTrue (wasInfo);
 			Assert.IsTrue (commenCount >= 44, "Comment count = " + commenCount);
-			Assert.IsTrue (commentsAttachments >= 13, "Total attachments = " + commentsAttachments);
+			Assert.IsTrue (commentsAttachments >= 12, "Total attachments = " + commentsAttachments);
 		}
 	}
 }
