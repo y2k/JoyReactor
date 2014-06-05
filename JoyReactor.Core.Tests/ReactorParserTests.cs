@@ -43,7 +43,7 @@ namespace JoyReactor.Core.Tests
 		}
 
 		[Test]
-		public void testPost861529()
+		public void TestPost861529()
 		{
 			InjectService.Initialize ();
 			var parser = new ReactorParser ();
@@ -99,7 +99,7 @@ namespace JoyReactor.Core.Tests
 		}
 
 		[Test]
-		public void testPost1323757()
+		public void TestPost1323757()
 		{
 			InjectService.Initialize ();
 			var parser = new ReactorParser ();
