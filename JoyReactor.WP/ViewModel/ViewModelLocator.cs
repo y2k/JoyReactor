@@ -44,6 +44,15 @@ namespace JoyReactor.WP.ViewModel
 
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<ProfileViewModel>();
+            SimpleIoc.Default.Register<PostViewModel>();
+        }
+
+        public PostViewModel Post
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<PostViewModel>();
+            }
         }
 
         public ProfileViewModel Profile

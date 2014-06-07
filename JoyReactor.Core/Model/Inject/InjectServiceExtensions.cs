@@ -2,6 +2,7 @@
 using Autofac;
 using System.Collections.Generic;
 using Autofac.Core;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Inject
 {
@@ -11,5 +12,9 @@ namespace JoyReactor.Core.Model.Inject
 		{
 			return context.Resolve<TService> (parameters);
 		}
-	}
+        public static TService Get<TService>(this IServiceLocator context, params Parameter[] parameters)
+        {
+            return context.GetInstance<TService>();
+        }
+    }
 }

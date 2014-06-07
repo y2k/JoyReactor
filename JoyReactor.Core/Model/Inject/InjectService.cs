@@ -9,25 +9,37 @@ using Autofac.Util;
 using Autofac.Features;
 using Autofac.Builder;
 using System.Linq;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Inject
 {
-	public class InjectService 
+	public class InjectService : IServiceLocator
 	{
         [Obsolete]
         public static IContainer Instance { get { return Current; } }
 
-        public static IContainer Current { get; private set; }
+        [Obsolete]
+        public static IContainer Current { get { return ((InjectService)Locator).container; } }
+
+        public static IServiceLocator Locator { get; private set; }
+
+        private IContainer container;
+
+        private InjectService(IContainer container)
+        {
+            this.container = container;
+        }
 
 		public static void Initialize(params IModule[] modules) 
 		{
-			if (Current == null) {
+            if (Locator == null)
+            {
 				var b = new ContainerBuilder ();
 				b.RegisterModule (new DefaultModule ());
 				foreach (var m in modules)
 					b.RegisterModule (m);
 
-				Current = b.Build ();
+				Locator = new InjectService(b.Build ());
 			}
 		}
 
@@ -45,5 +57,44 @@ namespace JoyReactor.Core.Model.Inject
 				b.RegisterType<ProfileModel> ().As<IProfileModel> ();
 			}
 		}
-	}
+
+        #region Implementation IServiceLocator
+
+        public IEnumerable<TService> GetAllInstances<TService>()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<object> GetAllInstances(Type serviceType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TService GetInstance<TService>(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TService GetInstance<TService>()
+        {
+            return container.Resolve<TService>();
+        }
+
+        public object GetInstance(Type serviceType, string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object GetInstance(Type serviceType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object GetService(Type serviceType)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+    }
 }

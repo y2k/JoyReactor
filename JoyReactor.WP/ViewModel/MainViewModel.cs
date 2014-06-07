@@ -1,9 +1,12 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Messaging;
 using JoyReactor.Core;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Inject;
+using JoyReactor.WP.Common;
 using System.Collections.ObjectModel;
 using System.Windows.Navigation;
 
@@ -29,8 +32,12 @@ namespace JoyReactor.WP.ViewModel
 
         public RelayCommand<Tag> OpenTagCommand { get; set; }
 
+        public RelayCommand<Post> OpenPostCommand { get; set; }
+
         private ITagCollectionModel model = InjectService.Instance.Get<ITagCollectionModel>();
         private IPostCollectionModel posModel = InjectService.Instance.Get<IPostCollectionModel>();
+
+        private Tag currentTag;
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
@@ -48,14 +55,24 @@ namespace JoyReactor.WP.ViewModel
             }
             else
             {
-                OpenTagCommand = new RelayCommand<Tag>(s => Initialize(s));
+                OpenTagCommand = new RelayCommand<Tag>(s =>
+                {
+                    currentTag = s;
+                    Initialize(s);
+                });
+                OpenPostCommand = new RelayCommand<Post>(s =>
+                {
+                    var vm = SimpleIoc.Default.GetInstance<PostViewModel>();
+                    vm.Initialize(currentTag == null ? ID.REACTOR_GOOD : ID.Parser(currentTag.TagId), s.PostId);
+                });
                 Initialize(null);
             }
         }
 
         public async void Initialize(Tag tag)
         {
-            try {
+            try
+            {
                 if (tag == null)
                 {
                     Tags.Clear();
@@ -66,7 +83,9 @@ namespace JoyReactor.WP.ViewModel
                 Posts.Clear();
                 var posts = await posModel.GetPostsAsync(tag == null ? ID.REACTOR_GOOD : ID.Parser(tag.TagId), SyncFlags.First);
                 posts.ForEach(Posts.Add);
-            } catch { 
+            }
+            catch
+            {
                 // 
             }
         }

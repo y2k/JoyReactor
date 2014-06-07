@@ -1,5 +1,5 @@
-﻿<phone:PhoneApplicationPage
-    x:Class="JoyReactor.WP.MainPage"
+﻿<v:BasePage
+    x:Class="JoyReactor.WP.View.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:JoyReactor.WP.ViewModel"
+    xmlns:v="clr-namespace:JoyReactor.WP.View"
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -82,7 +83,8 @@
                     </ListBox>
                 </phone:PivotItem>
                 <phone:PivotItem Header="Posts">
-                    <ListBox ItemsSource="{Binding Posts}">
+                    <ListBox ItemsSource="{Binding Posts}"
+                             SelectionChanged="ListBox_SelectionChanged_1">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel VerticalAlignment="Center" 
@@ -115,4 +117,4 @@
         <!--<Image Source="/Assets/AlignmentGrid.png" VerticalAlignment="Top" Height="800" Width="480" Margin="0,-32,0,0" Grid.Row="0" Grid.RowSpan="2" IsHitTestVisible="False" />-->
     </Grid>
 
-</phone:PhoneApplicationPage>
+</v:BasePage>

@@ -10,9 +10,9 @@ using Microsoft.Phone.Shell;
 using JoyReactor.WP.Resources;
 using JoyReactor.WP.ViewModel;
 
-namespace JoyReactor.WP
+namespace JoyReactor.WP.View
 {
-    public partial class MainPage : PhoneApplicationPage
+    public partial class MainPage : BasePage
     {
         // Constructor
         public MainPage()
@@ -37,6 +37,11 @@ namespace JoyReactor.WP
         private void ApplicationBarMenuItem_Click_1(object sender, EventArgs e)
         {
             // TODO Navigate to setttings
+        }
+
+        private void ListBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        {
+            ((MainViewModel)DataContext).OpenPostCommand.Execute(e.AddedItems[0]);
         }
 
         // Sample code for building a localized ApplicationBar
