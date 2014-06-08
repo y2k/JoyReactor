@@ -6,7 +6,7 @@ using JoyReactor.Core.Model.Database;
 
 namespace JoyReactor.Core.Model
 {
-	public class TagCollectionModel : ITagCollectionModel
+	class TagCollectionModel : ITagCollectionModel
 	{
 		#region ISubscriptionCollectionModel implementation
 

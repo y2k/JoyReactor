@@ -21,13 +21,20 @@
         <!--Pivot Control-->
         <phone:Pivot Title="POSTS"
                      ItemsSource="{Binding Posts}"
-                     SelectedIndex="{Binding CurrentPosition}">
+                     SelectedIndex="{Binding CurrentPosition, Mode=TwoWay}">
             <phone:Pivot.ItemTemplate>
                 <DataTemplate>
                     <ScrollViewer>
                         <StackPanel Orientation="Vertical">
                             <!-- TODO -->
                             <Image Source="{Binding Image}" />
+                            <phone:LongListSelector ItemsSource="{Binding Comments}" >
+                                <phone:LongListSelector.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" />
+                                    </DataTemplate>
+                                </phone:LongListSelector.ItemTemplate>
+                            </phone:LongListSelector>
                         </StackPanel>
                     </ScrollViewer>
                 </DataTemplate>

@@ -13,8 +13,8 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Inject
 {
-	public class InjectService : IServiceLocator
-	{
+    public class InjectService : IServiceLocator
+    {
         [Obsolete]
         public static IContainer Instance { get { return Current; } }
 
@@ -30,33 +30,34 @@ namespace JoyReactor.Core.Model.Inject
             this.container = container;
         }
 
-		public static void Initialize(params IModule[] modules) 
-		{
+        public static void Initialize(params IModule[] modules)
+        {
             if (Locator == null)
             {
-				var b = new ContainerBuilder ();
-				b.RegisterModule (new DefaultModule ());
-				foreach (var m in modules)
-					b.RegisterModule (m);
+                var b = new ContainerBuilder();
+                b.RegisterModule(new DefaultModule());
+                foreach (var m in modules)
+                    b.RegisterModule(m);
 
-				Locator = new InjectService(b.Build ());
-			}
-		}
+                Locator = new InjectService(b.Build());
+            }
+        }
 
-		private class DefaultModule : Module 
-		{
-			protected override void Load (ContainerBuilder b)
-			{
-				b.RegisterType<WebDownloader> ().As<IWebDownloader> ();
-				b.RegisterType<ReactorParser> ().As<ISiteParser> ();
-				b.RegisterType<DefaultDiskCache> ().As<IDiskCache> ();
-				b.RegisterType<MemoryCache> ().As<IMemoryCache> ();
-				b.RegisterType<PostCollectionModel> ().As<IPostCollectionModel> ();
-				b.RegisterType<ImageModel> ().As<IImageModel> ();
-				b.RegisterType<TagCollectionModel> ().As<ITagCollectionModel> ();
-				b.RegisterType<ProfileModel> ().As<IProfileModel> ();
-			}
-		}
+        private class DefaultModule : Module
+        {
+            protected override void Load(ContainerBuilder b)
+            {
+                b.RegisterType<WebDownloader>().As<IWebDownloader>();
+                b.RegisterType<ReactorParser>().As<ISiteParser>();
+                b.RegisterType<DefaultDiskCache>().As<IDiskCache>();
+                b.RegisterType<MemoryCache>().As<IMemoryCache>();
+                b.RegisterType<PostCollectionModel>().As<IPostCollectionModel>();
+                b.RegisterType<ImageModel>().As<IImageModel>();
+                b.RegisterType<TagCollectionModel>().As<ITagCollectionModel>();
+                b.RegisterType<ProfileModel>().As<IProfileModel>();
+                b.RegisterType<PostModel>().As<IPostModel>().SingleInstance();
+            }
+        }
 
         #region Implementation IServiceLocator
 

@@ -18,35 +18,33 @@ namespace JoyReactor.WP.ViewModel
         public ObservableCollection<ItemPostViewModel> Posts { get; private set; }
 
         private int _currentPosition;
-        public int CurrentPosition { get { return _currentPosition; } set { Set(ref _currentPosition, value); } }
+        public int CurrentPosition { get { return _currentPosition; } set { Set(ref _currentPosition, value); OnPositionChanged(); } }
 
-        private IPostCollectionModel pModel = InjectService.Locator.GetInstance<IPostCollectionModel>();
+        private IPostCollectionModel model = InjectService.Locator.GetInstance<IPostCollectionModel>();
+        private ID listId;
 
         public PostViewModel()
         {
             Posts = new ObservableCollection<ItemPostViewModel>();
-            //
-
-            if (IsInDesignMode)
-            {
-                Posts.Add(new ItemPostViewModel { Title = "Post 1" });
-                Posts.Add(new ItemPostViewModel { Title = "Post 2" });
-                Posts.Add(new ItemPostViewModel { Title = "Post 3" });
-            }
         }
 
         public async void Initialize(ID listId, string postId)
         {
-            Messenger.Default.Send(new NavigationMessage { ViewModel = this });
+            this.listId = listId;
 
-            CurrentPosition = -1;
             Posts.Clear();
+            for (int i = 0; i < await model.GetCountAsync(listId); i++) Posts.Add(new ItemPostViewModel(listId, i));
+            OnPositionChanged();
 
-            var l = await pModel.GetPostsAsync(listId);
-            l.ForEach(s => {
-                Posts.Add(new ItemPostViewModel { Title = s.Title ?? "<EMPTY>", Image = s.Image == null ? null : new Uri(s.Image) });
-                if (s.PostId == postId) CurrentPosition = Posts.Count - 1;
-            });
+            Messenger.Default.Send(new NavigationMessage { ViewModel = this });
+        }
+
+        private void OnPositionChanged()
+        {
+            for (int i = Math.Max(0, CurrentPosition - 1); i <= Math.Min(Posts.Count - 1, CurrentPosition + 1); i++)
+            {
+                Posts[i].Initialize();
+            }
         }
 
         public class ItemPostViewModel : ViewModelBase
@@ -56,6 +54,31 @@ namespace JoyReactor.WP.ViewModel
 
             private Uri _image;
             public Uri Image { get { return _image; } set { Set(ref _image, value); } }
+
+            public ObservableCollection<string> Comments { get; private set; }
+
+            private IPostModel model = InjectService.Locator.GetInstance<IPostModel>();
+
+            private ID listId;
+            private int position;
+
+            public ItemPostViewModel(ID listId, int position)
+            {
+                Comments = new ObservableCollection<string>();
+                this.listId = listId;
+                this.position = position;
+            }
+
+            internal async void Initialize()
+            {
+                Comments.Clear();
+
+                var post = await model.GetPostAsync(listId, position);
+                Title = post.Title;
+                Image = post.Image == null ? null : new Uri(post.Image);
+
+                (await model.GetCommentsAsync(post.Id, 0)).ForEach(s => Comments.Add(s));
+            }
         }
     }
 }

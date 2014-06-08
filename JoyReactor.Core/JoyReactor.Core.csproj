@@ -32,6 +32,8 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Model\IPostModel.cs" />
+    <Compile Include="Model\PostModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Inject\InjectService.cs" />
     <Compile Include="Model\Web\Parser\ISiteParser.cs" />
