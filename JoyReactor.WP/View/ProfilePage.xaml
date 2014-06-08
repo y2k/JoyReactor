@@ -5,7 +5,7 @@
                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                             xmlns:Common="clr-namespace:JoyReactor.WP.Common"
-                            x:Class="JoyReactor.WP.ProfilePage"
+                            x:Class="JoyReactor.WP.View.ProfilePage"
                             SupportedOrientations="Portrait"
                             Orientation="Portrait"
                             mc:Ignorable="d"
@@ -39,9 +39,9 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="0"
                     Margin="12,17,0,28">
-            <TextBlock Text="JOYREACTOR"
+            <TextBlock Text="{Binding LocalizedResources.ApplicationTitleAllCaps, Mode=OneWay, Source={StaticResource LocalizedStrings}}"
                        Style="{StaticResource PhoneTextNormalStyle}" />
-            <TextBlock Text="profile"
+            <TextBlock Text="{Binding LocalizedResources.ProfilePageTitle, Mode=OneWay, Source={StaticResource LocalizedStrings}}"
                        Margin="9,-7,0,0"
                        Style="{StaticResource PhoneTextTitle1Style}" />
         </StackPanel>
@@ -53,27 +53,27 @@
             <StackPanel Orientation="Vertical"
                         VerticalAlignment="Center"
                         Visibility="{Binding IsAuthorized, Converter={StaticResource BoolToVisibilityConverter}}">
-                <TextBlock Text="USERNAME"
+                <TextBlock Text="{Binding LocalizedResources.Username, Mode=OneWay, Source={StaticResource LocalizedStrings}}"
                            Style="{StaticResource PhoneTextNormalStyle}" />
                 <TextBlock Text="{Binding Username}" />
-                <TextBlock Text="RATING"
+                <TextBlock Text="{Binding LocalizedResources.Rating, Mode=OneWay, Source={StaticResource LocalizedStrings}}"
                            Style="{StaticResource PhoneTextNormalStyle}" />
                 <TextBlock Text="{Binding Rating}" />
-                <Button Content="Logout"
+                <Button Content="{Binding LocalizedResources.ButtonLogout, Mode=OneWay, Source={StaticResource LocalizedStrings}}"
                         Command="{Binding LogoutCommand}" />
             </StackPanel>
             <StackPanel Orientation="Vertical"
                         VerticalAlignment="Center"
                         Visibility="{Binding IsAuthorized, Converter={StaticResource InvertBoolToVisibilityConverter}}">
-                <TextBlock Text="Username"
+                <TextBlock Text="{Binding LocalizedResources.Username, Mode=OneWay, Source={StaticResource LocalizedStrings}}"
                            Style="{StaticResource PhoneTextNormalStyle}" />
                 <TextBox Text="{Binding EditUsername, Mode=TwoWay}" />
-                <TextBlock Text="Password"
+                <TextBlock Text="{Binding LocalizedResources.Password, Mode=OneWay, Source={StaticResource LocalizedStrings}}"
                            Style="{StaticResource PhoneTextNormalStyle}" />
                 <TextBox Text="{Binding EditPassword, Mode=TwoWay}" />
-                <Button Content="Login"
+                <Button Content="{Binding LocalizedResources.ButtonLogin, Mode=OneWay, Source={StaticResource LocalizedStrings}}"
                         Command="{Binding LoginCommand}" />
-                <HyperlinkButton Content="Signin"
+                <HyperlinkButton Content="{Binding LocalizedResources.ButtonSignup, Mode=OneWay, Source={StaticResource LocalizedStrings}}"
                                  NavigateUri="http://joyreactor.cc/" />
             </StackPanel>
         </Grid>

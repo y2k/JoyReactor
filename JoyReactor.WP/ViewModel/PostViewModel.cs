@@ -20,22 +20,42 @@ namespace JoyReactor.WP.ViewModel
         private int _currentPosition;
         public int CurrentPosition { get { return _currentPosition; } set { Set(ref _currentPosition, value); } }
 
-        private IPostCollectionModel posModel = InjectService.Locator.GetInstance<IPostCollectionModel>();
+        private IPostCollectionModel pModel = InjectService.Locator.GetInstance<IPostCollectionModel>();
 
         public PostViewModel()
         {
             Posts = new ObservableCollection<ItemPostViewModel>();
             //
+
+            if (IsInDesignMode)
+            {
+                Posts.Add(new ItemPostViewModel { Title = "Post 1" });
+                Posts.Add(new ItemPostViewModel { Title = "Post 2" });
+                Posts.Add(new ItemPostViewModel { Title = "Post 3" });
+            }
         }
 
         public async void Initialize(ID listId, string postId)
         {
             Messenger.Default.Send(new NavigationMessage { ViewModel = this });
+
+            CurrentPosition = -1;
+            Posts.Clear();
+
+            var l = await pModel.GetPostsAsync(listId);
+            l.ForEach(s => {
+                Posts.Add(new ItemPostViewModel { Title = s.Title, Image = new Uri(s.Image) });
+                if (s.PostId == postId) CurrentPosition = Posts.Count - 1;
+            });
         }
 
         public class ItemPostViewModel : ViewModelBase
         {
+            private string _title;
+            public string Title { get { return _title; } set { Set(ref _title, value); } }
 
+            private Uri _image;
+            public Uri Image { get { return _image; } set { Set(ref _image, value); } }
         }
     }
 }

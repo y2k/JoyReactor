@@ -17,15 +17,6 @@
     DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
     shell:SystemTray.IsVisible="True">
     
-    <phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar Mode="Minimized">
-            <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Text="Profile" Click="ApplicationBarMenuItem_Click" />
-                <shell:ApplicationBarMenuItem Text="Settings" Click="ApplicationBarMenuItem_Click_1" />
-            </shell:ApplicationBar.MenuItems>
-        </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>
-
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <Grid.RowDefinitions>
@@ -62,7 +53,7 @@
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             
             <phone:Pivot Title="JOYREACTOR">
-                <phone:PivotItem Header="Tags">
+                <phone:PivotItem Header="{Binding LocalizedResources.TitleTags, Mode=OneWay, Source={StaticResource LocalizedStrings}}">
                     <ListBox ItemsSource="{Binding Tags}" SelectionChanged="ListBox_SelectionChanged">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -82,7 +73,7 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </phone:PivotItem>
-                <phone:PivotItem Header="Posts">
+                <phone:PivotItem Header="{Binding LocalizedResources.TitlePosts, Mode=OneWay, Source={StaticResource LocalizedStrings}}">
                     <ListBox ItemsSource="{Binding Posts}"
                              SelectionChanged="ListBox_SelectionChanged_1">
                         <ListBox.ItemTemplate>

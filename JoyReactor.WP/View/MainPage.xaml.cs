@@ -20,7 +20,7 @@ namespace JoyReactor.WP.View
             InitializeComponent();
 
             // Sample code to localize the ApplicationBar
-            //BuildLocalizedApplicationBar();
+            BuildLocalizedApplicationBar();
         }
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -31,7 +31,7 @@ namespace JoyReactor.WP.View
         private void ApplicationBarMenuItem_Click(object sender, EventArgs e)
         {
             //((MainViewModel)DataContext).OpenProfileCommand.Execute(null);
-            NavigationService.Navigate(new Uri("/ProfilePage.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/View/ProfilePage.xaml", UriKind.Relative));
         }
 
         private void ApplicationBarMenuItem_Click_1(object sender, EventArgs e)
@@ -45,19 +45,33 @@ namespace JoyReactor.WP.View
         }
 
         // Sample code for building a localized ApplicationBar
-        //private void BuildLocalizedApplicationBar()
-        //{
-        //    // Set the page's ApplicationBar to a new instance of ApplicationBar.
-        //    ApplicationBar = new ApplicationBar();
+        private void BuildLocalizedApplicationBar()
+        {
+    //<phone:PhoneApplicationPage.ApplicationBar>
+    //    <shell:ApplicationBar Mode="Minimized">
+    //        <shell:ApplicationBar.MenuItems>
+    //            <shell:ApplicationBarMenuItem Text="Profile" Click="ApplicationBarMenuItem_Click" />
+    //            <shell:ApplicationBarMenuItem Text="Settings" Click="ApplicationBarMenuItem_Click_1" />
+    //        </shell:ApplicationBar.MenuItems>
+    //    </shell:ApplicationBar>
+    //</phone:PhoneApplicationPage.ApplicationBar>
+            
+            // Set the page's ApplicationBar to a new instance of ApplicationBar.
+            ApplicationBar = new ApplicationBar { Mode = ApplicationBarMode.Minimized };
 
-        //    // Create a new button and set the text value to the localized string from AppResources.
-        //    ApplicationBarIconButton appBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/appbar.add.rest.png", UriKind.Relative));
-        //    appBarButton.Text = AppResources.AppBarButtonText;
-        //    ApplicationBar.Buttons.Add(appBarButton);
+            // Create a new button and set the text value to the localized string from AppResources.
+            //ApplicationBarIconButton appBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/appbar.add.rest.png", UriKind.Relative));
+            //appBarButton.Text = AppResources.AppBarButtonText;
+            //ApplicationBar.Buttons.Add(appBarButton);
 
-        //    // Create a new menu item with the localized string from AppResources.
-        //    ApplicationBarMenuItem appBarMenuItem = new ApplicationBarMenuItem(AppResources.AppBarMenuItemText);
-        //    ApplicationBar.MenuItems.Add(appBarMenuItem);
-        //}
+            // Create a new menu item with the localized string from AppResources.
+            var i = new ApplicationBarMenuItem(AppResources.MenuProfile);
+            i.Click += ApplicationBarMenuItem_Click;
+            ApplicationBar.MenuItems.Add(i);
+
+            i = new ApplicationBarMenuItem(AppResources.MenuSettings);
+            i.Click += ApplicationBarMenuItem_Click_1;
+            ApplicationBar.MenuItems.Add(i);
+        }
     }
 }

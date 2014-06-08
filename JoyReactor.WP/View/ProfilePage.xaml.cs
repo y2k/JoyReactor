@@ -8,7 +8,7 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 
-namespace JoyReactor.WP
+namespace JoyReactor.WP.View
 {
     public partial class ProfilePage : PhoneApplicationPage
     {
