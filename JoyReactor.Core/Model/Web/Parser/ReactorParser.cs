@@ -1,16 +1,15 @@
-﻿using System;
-using System.Xml.Linq;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Text;
+﻿using HtmlAgilityPack;
 using JoyReactor.Core.Model.Helper;
-using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model.Parser.Data;
-using System.Net;
+using JoyReactor.Core.Model.Web;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
-using HtmlAgilityPack;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace JoyReactor.Core.Model.Parser
 {
@@ -80,23 +79,48 @@ namespace JoyReactor.Core.Model.Parser
             get { return ID.SiteParser.JoyReactor; }
         }
 
+        //public IDictionary<string, string> Login(string username, string password)
+        //{
+        //    var doc = downloader.Get(new Uri("http://joyreactor.cc/login"));
+        //    var csrf = doc.GetElementById("signin__csrf_token").Attributes["value"].Value;
+
+        //    var hs = downloader.PostForCookies(
+        //        new Uri("http://joyreactor.cc/login"),
+        //        new RequestParams
+        //        {
+        //            Referer = new Uri("http://joyreactor.cc/login"),
+        //            Form = new Dictionary<string, string>
+        //            {
+        //                { "signin[username]", username },
+        //                { "signin[password]", password },
+        //                { "signin[remember]", "on" },
+        //                { "signin[_csrf_token]", csrf },
+        //            }
+        //        });
+
+        //    if (!hs.ContainsKey("joyreactor"))
+        //        throw new Exception();
+
+        //    return hs;
+        //}
+
         public IDictionary<string, string> Login(string username, string password)
         {
-            var doc = downloader.Get(new Uri("http://www.joyreactor.cc/login"));
-            var csrf = doc.GetElementById("signin__csrf_token").Attributes["value"].Value;
+            var doc = downloader.GetDocument(new Uri("http://joyreactor.cc/login"));
+            var csrf = doc.Document.GetElementById("signin__csrf_token").Attributes["value"].Value;
 
             var hs = downloader.PostForCookies(
-                new Uri("http://www.joyreactor.cc/login"),
+                new Uri("http://joyreactor.cc/login"),
                 new RequestParams
                 {
-                    Referer = new Uri("http://www.joyreactor.cc/login"),
+                    Cookies = doc.Cookies,
+                    Referer = new Uri("http://joyreactor.cc/login"),
                     Form = new Dictionary<string, string>
 					{
 						{ "signin[username]", username },
 						{ "signin[password]", password },
 						{ "signin[remember]", "on" },
 						{ "signin[_csrf_token]", csrf },
-						{ "submit", "Войти" },
 					}
                 });
 
@@ -106,9 +130,9 @@ namespace JoyReactor.Core.Model.Parser
             return hs;
         }
 
-        public void ExtractTagPostCollection(ID.TagType type, string tag, int lastLoadedPage, Action<CollectionExportState> callback)
+        public void ExtractTagPostCollection(ID.TagType type, string tag, int lastLoadedPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
         {
-            ExtractPostCoollection(type, tag, lastLoadedPage, callback);
+            ExtractPostCoollection(type, tag, lastLoadedPage, cookies, callback);
         }
 
         public ProfileExport Profile(string username)
@@ -145,16 +169,13 @@ namespace JoyReactor.Core.Model.Parser
 
         public void ExtractPost(string id, Action<PostExportState> callback)
         {
-            //			Map<String, String> cook = cookieHolder.get(CookieHolder.REACTOR);
-            //			cook.put("showVideoGif2", "1");
-            //			String html = downloader.get(generateUrl(id), null, cook);
-            //			Document doc = Parser.parse(html, generateUrl(id));
+            //var cookies = cookieHolder.Get(GetType());
+            //cookies.Add("showVideoGif2", "1");
 
             var html = downloader.GetText(new Uri(string.Format("http://joyreactor.cc/post/{0}", id)));
             var doc = new HtmlDocument();
             doc.LoadHtml(html);
 
-            //			callbacks.onExtractBegin();
             callback(new PostExportState { State = PostExportState.ExportState.Begin });
 
             {
@@ -353,16 +374,12 @@ namespace JoyReactor.Core.Model.Parser
             return html.IndexOf('>', position) + 1;
         }
 
-        private void ExtractPostCoollection(ID.TagType type, string value, int lastLoadedPage, Action<CollectionExportState> callback)
+        private void ExtractPostCoollection(ID.TagType type, string value, int lastLoadedPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
         {
-            // TODO Востановить запросы авторезированных пользователей
-            //			Map<String, String> cook = cookieHolder.get(CookieHolder.REACTOR);
-            //			cook.put("showVideoGif2", "1");
-            //			String html = downloader.get(generateUrl(id, lastLoadedPage), null, cook);
-
+            cookies.Add("showVideoGif2", "1");
             var html = downloader.GetText(
                 GenerateUrl(type, value, lastLoadedPage),
-                new RequestParams { Cookies = new Dictionary<string, string> { { "showVideoGif2", "1" } } });
+                new RequestParams { Cookies = cookies });
             callback(new CollectionExportState { State = CollectionExportState.ExportState.Begin });
 
             var s = new ExportTag();

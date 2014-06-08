@@ -17,7 +17,7 @@ namespace JoyReactor.Core.Tests
 			InjectService.Initialize ();
 
 			var parser = new ReactorParser ();
-			parser.ExtractTagPostCollection(ID.TagType.Good, null, 0, 
+			parser.ExtractTagPostCollection(ID.TagType.Good, null, 0, new Dictionary<string, string>(),
 				s =>
 				{
 				});
@@ -31,7 +31,7 @@ namespace JoyReactor.Core.Tests
 			int linkedTagCount = 0;
 
 			var parser = new ReactorParser ();
-			parser.ExtractTagPostCollection(ID.TagType.Good, "комиксы", 0, 
+            parser.ExtractTagPostCollection(ID.TagType.Good, "комиксы", 0, new Dictionary<string, string>(),
 				s =>
 				{
 					if (s.State == CollectionExportState.ExportState.LikendTag) {

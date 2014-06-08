@@ -43,7 +43,8 @@ namespace JoyReactor.WP.ViewModel
                 Username = "test-user-1";
                 Rating = "999";
             } else {
-                LoginCommand = new RelayCommand(async () => {
+                LoginCommand = new RelayCommand(async () =>
+                {
                     IsInProgress = true;
                     await model.LoginAsync(EditUsername, EditPassword);
                     Initialize();

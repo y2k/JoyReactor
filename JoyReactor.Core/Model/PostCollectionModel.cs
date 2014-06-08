@@ -47,7 +47,7 @@ namespace JoyReactor.Core.Model
 		{
 			var p = parsers.First (s => s.ParserId == id.Site);
 
-			p.ExtractTagPostCollection (id.Type, id.Tag, 0, state => {
+			p.ExtractTagPostCollection (id.Type, id.Tag, 0, GetSiteCookies(id), state => {
 				if (state.State == CollectionExportState.ExportState.Begin) {
 					// Удаление постов тега
 					MainDb.Instance.Execute(
@@ -73,6 +73,12 @@ namespace JoyReactor.Core.Model
 			});
 		}
 
+        private IDictionary<string, string> GetSiteCookies(ID id)
+        {
+            var p = MainDb.Instance.DeferredQuery<Profile>("SELECT * FROM profiles WHERE Site = ?", "" + id.Site).FirstOrDefault();
+            return p == null ? new Dictionary<string, string>() : DeserializeObject<Dictionary<string, string>>(p.Cookie);
+        }
+
 		private void SavePostToDatabase (ID listId, ExportPost post)
 		{
 			var p = Convert (listId.Site, post);
@@ -93,6 +99,11 @@ namespace JoyReactor.Core.Model
 		{
 			throw new NotImplementedException ();
 		}
+
+        private static IDictionary<string, string> DeserializeObject<T>(string o)
+        {
+            return o.Split(';').Select(s => s.Split('=')).ToDictionary(s => s[0], s => s[1]);
+        }
 
 		private Post Convert(ID.SiteParser parserId, ExportPost p)
 		{

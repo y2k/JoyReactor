@@ -10,7 +10,7 @@ namespace JoyReactor.Core.Model.Parser
 
 		IDictionary<string, string> Login(string username, string password);
 
-		void ExtractTagPostCollection (ID.TagType type, string tag, int lastLoadedPage, Action<CollectionExportState> callback);
+		void ExtractTagPostCollection (ID.TagType type, string tag, int lastLoadedPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback);
 
 		void ExtractPost (string postId, Action<PostExportState> callback);
 

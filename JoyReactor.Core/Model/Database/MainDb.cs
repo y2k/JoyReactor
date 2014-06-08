@@ -24,7 +24,7 @@ namespace JoyReactor.Core.Model.Database
                             //instance = new MainDb (plat.GetPlatform(), plat.CreatePath(DatabaseName));
                             
                             var f = InjectService.Instance.Get<ISQLiteConnectionFactory>();
-                            instance = f.Create("main.db");
+                            instance = f.Create(DatabaseName);
                             InitializeDatabase(instance);
 						}
 					}
@@ -33,11 +33,6 @@ namespace JoyReactor.Core.Model.Database
                 return instance;
 			}
 		}
-
-        //private MainDb (ISQLitePlatform platform, string path) : base(platform, path)
-        //{
-        //    InitializeDatabase();
-        //}
 
         private static void InitializeDatabase(ISQLiteConnection db)
         {
