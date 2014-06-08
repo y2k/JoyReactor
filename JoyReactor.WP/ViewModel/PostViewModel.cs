@@ -49,6 +49,8 @@ namespace JoyReactor.WP.ViewModel
 
         public class ItemPostViewModel : ViewModelBase
         {
+            #region ViewModel properties
+
             private string _title;
             public string Title { get { return _title; } set { Set(ref _title, value); } }
 
@@ -56,6 +58,8 @@ namespace JoyReactor.WP.ViewModel
             public Uri Image { get { return _image; } set { Set(ref _image, value); } }
 
             public ObservableCollection<string> Comments { get; private set; }
+
+            #endregion
 
             private IPostModel model = InjectService.Locator.GetInstance<IPostModel>();
 

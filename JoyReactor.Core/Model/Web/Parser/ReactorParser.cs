@@ -57,6 +57,8 @@ namespace JoyReactor.Core.Model.Parser
         private static readonly Regex SIMILAR_POST_TITLE2 = new Regex("<a href=\"[^\"]*/tag/[^\"]+\">\\s*([^<]+)\\s*</a>");
         private static readonly Regex SIMILAR_POST_TITLE3 = new Regex("<a href=\"http://([\\w\\d]+)\\.joyreactor\\.cc/\">");
 
+        private static readonly Regex COMMENT_RATING = new Regex("<span\\s*class=\"comment_rating\"\\s*comment_id=\"\\d+\">\\s*<span>—\\s*([\\d\\.]+)</span>", RegexOptions.Singleline);
+
         private static readonly Regex CURRENT_PAGE = new Regex("<span class='current'>(\\d+)</span>");
         private static readonly Regex sProfileRating = new Regex("([\\d\\.]+)");
 
@@ -328,6 +330,8 @@ namespace JoyReactor.Core.Model.Parser
 
             c.userName = Uri.UnescapeDataString(Uri.UnescapeDataString(USER_NAME.FirstString(s))).Replace('+', ' ');
             c.userImage = "http://img0.joyreactor.cc/pics/avatar/user/" + USER_ID.FirstString(s);
+
+            c.rating = COMMENT_RATING.FirstFloat(s, CultureInfo.InvariantCulture);
 
             var m = COMMENT_IMAGES.Match(s);
             if (m.Success)

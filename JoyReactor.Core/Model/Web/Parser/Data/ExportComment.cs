@@ -14,11 +14,12 @@ namespace JoyReactor.Core.Model.Parser.Data
 		public string userName { get; set; }
 		public string userImage { get; set; }
 		public ExportComment.ExportAttachment[] attachments { get; set; }
+        public float rating { get; set; }
 
 		public class ExportAttachment
 		{
 			public string imageUrl { get; set; }
 			// TODO
 		}
-	}
+    }
 }

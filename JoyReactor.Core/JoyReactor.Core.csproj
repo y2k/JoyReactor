@@ -32,6 +32,7 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Model\DTO\Comment.cs" />
     <Compile Include="Model\IPostModel.cs" />
     <Compile Include="Model\PostModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

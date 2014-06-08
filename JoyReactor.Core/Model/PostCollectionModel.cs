@@ -20,8 +20,7 @@ namespace JoyReactor.Core.Model
         public Task<List<Post>> GetPostsAsync(ID id, SyncFlags flags = SyncFlags.None)
         {
             return Task.Run(
-                () =>
-                {
+                () => {
                     if (flags == SyncFlags.First) SyncFirstPage(id);
                     else if (flags == SyncFlags.Next) SyncNextPage(id);
 
