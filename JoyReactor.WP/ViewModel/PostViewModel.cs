@@ -44,7 +44,7 @@ namespace JoyReactor.WP.ViewModel
 
             var l = await pModel.GetPostsAsync(listId);
             l.ForEach(s => {
-                Posts.Add(new ItemPostViewModel { Title = s.Title, Image = new Uri(s.Image) });
+                Posts.Add(new ItemPostViewModel { Title = s.Title, Image = s.Image == null ? null : new Uri(s.Image) });
                 if (s.PostId == postId) CurrentPosition = Posts.Count - 1;
             });
         }

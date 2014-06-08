@@ -24,10 +24,12 @@
                      SelectedIndex="{Binding CurrentPosition}">
             <phone:Pivot.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Vertical">
-                        <!-- TODO -->
-                        <Image Source="{Binding Image}" />
-                    </StackPanel>
+                    <ScrollViewer>
+                        <StackPanel Orientation="Vertical">
+                            <!-- TODO -->
+                            <Image Source="{Binding Image}" />
+                        </StackPanel>
+                    </ScrollViewer>
                 </DataTemplate>
             </phone:Pivot.ItemTemplate>
             <phone:Pivot.HeaderTemplate>
