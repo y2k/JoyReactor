@@ -8,6 +8,7 @@ namespace JoyReactor.Core
 		public static readonly ID REACTOR_GOOD = new ID { Site = SiteParser.JoyReactor, Type = TagType.Good };
 		public static readonly ID REACTOR_BEST = new ID { Site = SiteParser.JoyReactor, Type = TagType.Best };
 		public static readonly ID REACTOR_ALL = new ID { Site = SiteParser.JoyReactor, Type = TagType.All };
+		public static readonly ID ReactorFavorite = new ID { Site = SiteParser.JoyReactor, Type = TagType.Favorite };
 
 		public SiteParser Site { get; set; }
 		public TagType Type { get; set; }

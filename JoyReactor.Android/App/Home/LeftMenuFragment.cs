@@ -15,9 +15,14 @@ namespace JoyReactor.Android.App.Home
 {
 	public class LeftMenuFragment : BaseFragment
 	{
+		private static MenuHeader[] Headers = new MenuHeader[] {
+			new MenuHeader { Title = "Feed", ListId = ID.REACTOR_GOOD },
+			new MenuHeader { Title = "Favorite", ListId = ID.ReactorFavorite },
+		};
+
 		private ListView list;
 		private Adapter adapter;
-		private ITagCollectionModel model = InjectService.Instance.Get<ITagCollectionModel> ();
+		private ITagCollectionModel model = InjectService.Locator.GetInstance<ITagCollectionModel> ();
 
 		public async override void OnActivityCreated (Bundle savedInstanceState)
 		{
@@ -28,7 +33,9 @@ namespace JoyReactor.Android.App.Home
 			adapter.AddAll(await model.GetMainSubscriptionsAsync ());
 
 			list.ItemClick += (sender, e) => { 
-				var id = ID.Parser(adapter.GetItem(e.Position).TagId);
+				var id = e.Position < Headers.Length 
+					? Headers[e.Position].ListId 
+					: ID.Parser(adapter.GetItem(e.Position - Headers.Length).TagId);
 				new ChangeSubscriptionCommand(id).Execute();
 			};
 		}
@@ -42,26 +49,41 @@ namespace JoyReactor.Android.App.Home
 
 		public class Adapter : ArrayAdapter<Tag>
 		{
-			private IImageModel iModel = InjectService.Instance.Get<IImageModel> ();
+			private IImageModel iModel = InjectService.Locator.GetInstance<IImageModel> ();
 
 			public Adapter(Context context) : base(context, 0) { }
 
+			public override int Count {
+				get {
+					return base.Count + Headers.Length;
+				}
+			}
+
 			public override View GetView (int position, View convertView, ViewGroup parent)
 			{
-				if (convertView == null)
-					convertView = View.Inflate (parent.Context, Resource.Layout.ItemSubscription, null);
+				convertView = convertView ?? View.Inflate (parent.Context, Resource.Layout.ItemSubscription, null);
 
-				var i = GetItem (position);
-				convertView.FindViewById<TextView> (Resource.Id.title).Text = i.Title;
+				if (position < Headers.Length) {
+					// TODO
+					convertView.FindViewById<TextView> (Resource.Id.title).Text = Headers [position].Title;
+				} else {
+					var i = GetItem (position - Headers.Length);
+					convertView.FindViewById<TextView> (Resource.Id.title).Text = i.Title;
 
-				var iv = convertView.FindViewById<ImageView> (Resource.Id.icon);
-				if (i.BestImage == null) iv.SetImageBitmap (null);
-				else iModel.Load (iv, new Uri (i.BestImage), 0, s => iv.SetImageBitmap ((Bitmap)s.Image));
+					var iv = convertView.FindViewById<ImageView> (Resource.Id.icon);
+					if (i.BestImage == null) iv.SetImageBitmap (null);
+					else iModel.Load (iv, new Uri (i.BestImage), 0, s => iv.SetImageBitmap ((Bitmap)s.Image));
+				}
 
 				convertView.FindViewById (Resource.Id.group).Visibility = ViewStates.Gone;
-
 				return convertView;
 			}
+		}
+
+		class MenuHeader {
+
+			internal string Title { get; set; }
+			internal ID ListId { get; set; }
 		}
 	}
 }
