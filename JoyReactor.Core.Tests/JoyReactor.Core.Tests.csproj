@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A5AF8642-6542-445B-9BE8-610B4F4BBFCE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>JoyReactor.Core.Tests</RootNamespace>
