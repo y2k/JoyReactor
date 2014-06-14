@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace JoyReactor.Core.Model.DTO
 {
     [Table("comments")]
-    class Comment
+    public class Comment
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }

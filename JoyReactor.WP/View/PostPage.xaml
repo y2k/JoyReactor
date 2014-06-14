@@ -28,10 +28,20 @@
                         <StackPanel Orientation="Vertical">
                             <!-- TODO -->
                             <Image Source="{Binding Image}" />
-                            <phone:LongListSelector ItemsSource="{Binding Comments}" >
+                            <phone:LongListSelector ItemsSource="{Binding Comments}">
                                 <phone:LongListSelector.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding}" />
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Image Width="65"
+                                                   Height="65"
+                                                   Source="{Binding UserImage}" />
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding Text}" />
+                                        </Grid>
                                     </DataTemplate>
                                 </phone:LongListSelector.ItemTemplate>
                             </phone:LongListSelector>
@@ -41,7 +51,10 @@
             </phone:Pivot.ItemTemplate>
             <phone:Pivot.HeaderTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Title}" />
+                    <TextBlock Text="{Binding Title}"
+                               TextTrimming="WordEllipsis"
+                               TextWrapping="NoWrap"
+                               Width="400" />
                 </DataTemplate>
             </phone:Pivot.HeaderTemplate>
         </phone:Pivot>

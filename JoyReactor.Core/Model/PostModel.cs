@@ -13,13 +13,14 @@ namespace JoyReactor.Core.Model
     {
         private ISiteParser[] parsers = InjectService.Locator.GetInstance<ISiteParser[]>();
 
-        public Task<List<string>> GetCommentsAsync(int postId, int parentCommentId)
+        public Task<List<Comment>> GetCommentsAsync(int postId, int parentCommentId)
         {
-            return Task.Run<List<string>>(() =>
+            return Task.Run(() =>
             {
-                return MainDb.Instance
-                    .Query<Comment>("SELECT Text FROM comments WHERE PostId = ? AND ParentId = ? ORDER BY Rating DESC", postId, parentCommentId)
-                    .Select(s => s.Text + " | " + s.Rating).ToList();
+                var comments = MainDb.Instance
+                    .Query<Comment>("SELECT * FROM comments WHERE PostId = ? AND ParentId = ? ORDER BY Rating DESC", postId, parentCommentId)
+                    .ToList();
+                return comments;
             });
         }
 
