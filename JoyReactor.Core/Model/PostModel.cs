@@ -18,7 +18,8 @@ namespace JoyReactor.Core.Model
             return Task.Run(() =>
             {
                 var comments = MainDb.Instance
-                    .Query<Comment>("SELECT * FROM comments WHERE PostId = ? AND ParentId = ? ORDER BY Rating DESC", postId, parentCommentId)
+                    //.Query<Comment>("SELECT * FROM comments WHERE PostId = ? AND ParentId = ? ORDER BY Rating DESC", postId, parentCommentId)
+                    .Query<Comment>("SELECT * FROM comments WHERE PostId = ? ORDER BY Rating DESC", postId)
                     .ToList();
                 return comments;
             });

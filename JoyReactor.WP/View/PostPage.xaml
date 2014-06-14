@@ -24,29 +24,33 @@
                      SelectedIndex="{Binding CurrentPosition, Mode=TwoWay}">
             <phone:Pivot.ItemTemplate>
                 <DataTemplate>
-                    <ScrollViewer>
-                        <StackPanel Orientation="Vertical">
-                            <!-- TODO -->
-                            <Image Source="{Binding Image}" />
-                            <phone:LongListSelector ItemsSource="{Binding Comments}">
-                                <phone:LongListSelector.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Image Width="65"
+                    <!-- TODO -->
+                    <!--<Image Source="{Binding Image}" />-->
+                    <phone:LongListSelector ItemsSource="{Binding Comments}"
+                                            HorizontalAlignment="Stretch"
+                                            Background="DarkCyan">
+                        <phone:LongListSelector.ItemTemplate>
+                            <DataTemplate>
+                                <v:PostItemTemplateSelector>
+                                    <v:PostItemTemplateSelector.Comment>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Image Width="65"
                                                    Height="65"
                                                    Source="{Binding UserImage}" />
-                                            <TextBlock Grid.Column="1"
+                                                <TextBlock Grid.Column="1"
                                                        Text="{Binding Text}" />
-                                        </Grid>
-                                    </DataTemplate>
-                                </phone:LongListSelector.ItemTemplate>
-                            </phone:LongListSelector>
-                        </StackPanel>
-                    </ScrollViewer>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </v:PostItemTemplateSelector.Comment>
+                                </v:PostItemTemplateSelector>
+                            </DataTemplate>
+                        </phone:LongListSelector.ItemTemplate>
+                    </phone:LongListSelector>
                 </DataTemplate>
             </phone:Pivot.ItemTemplate>
             <phone:Pivot.HeaderTemplate>

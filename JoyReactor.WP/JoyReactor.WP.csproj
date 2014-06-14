@@ -91,6 +91,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\BoolToVisibilityConverter.cs" />
+    <Compile Include="Common\DataTemplateSelector.cs" />
     <Compile Include="Common\InvertBoolToVisibilityConverter.cs" />
     <Compile Include="Common\NavigationMessage.cs" />
     <Compile Include="Common\PhoneApplicationPageMediator.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Model\Wp8InjectModule.cs" />
     <Compile Include="Model\BitmapImageDecoder.cs" />
     <Compile Include="View\BasePage.cs" />
+    <Compile Include="View\PostItemTemplateSelector.cs" />
     <Compile Include="View\PostPage.xaml.cs">
       <DependentUpon>PostPage.xaml</DependentUpon>
     </Compile>
