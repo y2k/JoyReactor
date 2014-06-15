@@ -18,16 +18,5 @@ namespace JoyReactor.WP.View
         {
             InitializeComponent();
         }
-
-        public class PostItemTemplateSelector : DataTemplateSelector
-        {
-            public DataTemplate Comment { get; set; }
-
-            public override DataTemplate SelectTemplate(object item, DependencyObject container)
-            {
-                if (item is Comment) return Comment;
-                return null;
-            }
-        }
     }
 }

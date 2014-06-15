@@ -13,54 +13,63 @@
             SupportedOrientations="Portrait"
             Orientation="Portrait"
             shell:SystemTray.IsVisible="True"
+            shell:SystemTray.Opacity="0.2"
             DataContext="{Binding Post, Mode=OneWay, Source={StaticResource Locator}}">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot"
-          Background="Transparent">
-        <!--Pivot Control-->
+    <Grid x:Name="LayoutRoot">
+        <Grid.Background>
+            <ImageBrush Stretch="UniformToFill"
+                        ImageSource="/Assets/MainBackground.jpg" />
+        </Grid.Background>
+
         <phone:Pivot Title="POSTS"
+                     Margin="0,15,0,0"
                      ItemsSource="{Binding Posts}"
                      SelectedIndex="{Binding CurrentPosition, Mode=TwoWay}">
             <phone:Pivot.ItemTemplate>
                 <DataTemplate>
-                    <!-- TODO -->
-                    <!--<Image Source="{Binding Image}" />-->
-                    <phone:LongListSelector ItemsSource="{Binding Comments}"
-                                            HorizontalAlignment="Stretch"
-                                            Background="DarkCyan">
-                        <phone:LongListSelector.ItemTemplate>
-                            <DataTemplate>
-                                <v:PostItemTemplateSelector>
-                                    <v:PostItemTemplateSelector.Comment>
-                                        <DataTemplate>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Image Width="65"
+                    <ScrollViewer>
+                        <StackPanel Orientation="Vertical">
+                            <Image Width="400"
+                                   Source="{Binding Image}"
+                                   Height="400" />
+                            <TextBlock Text="TOP COMMENTS" />
+                            <ListBox ItemsSource="{Binding Comments}"
+                                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                     HorizontalAlignment="Stretch">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Image Width="65"
                                                    Height="65"
                                                    Source="{Binding UserImage}" />
-                                                <TextBlock Grid.Column="1"
+                                            <TextBlock Grid.Column="1"
                                                        Text="{Binding Text}" />
-                                            </Grid>
-                                        </DataTemplate>
-                                    </v:PostItemTemplateSelector.Comment>
-                                </v:PostItemTemplateSelector>
-                            </DataTemplate>
-                        </phone:LongListSelector.ItemTemplate>
-                    </phone:LongListSelector>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </ScrollViewer>
                 </DataTemplate>
             </phone:Pivot.ItemTemplate>
             <phone:Pivot.HeaderTemplate>
+                <DataTemplate>
+                </DataTemplate>
+            </phone:Pivot.HeaderTemplate>
+            <!--<phone:Pivot.HeaderTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Title}"
                                TextTrimming="WordEllipsis"
                                TextWrapping="NoWrap"
                                Width="400" />
                 </DataTemplate>
-            </phone:Pivot.HeaderTemplate>
+            </phone:Pivot.HeaderTemplate>-->
         </phone:Pivot>
     </Grid>
 

@@ -37,24 +37,12 @@ namespace JoyReactor.Core.Model.Database
             }
         }
 
-        private static void InitializeDatabase(ISQLiteConnection db)
+        public static string ToFlatId(ID id)
         {
-            int ver = GetUserVesion(db);
-            if (ver == 0)
-                db.RunInTransaction(() =>
-                {
-                    OnCreate(db);
-                    SetUserVersion(db, DatabaseVersion);
-                });
-            else if (ver < DatabaseVersion)
-                db.RunInTransaction(() =>
-                {
-                    OnUpdate(ver, DatabaseVersion);
-                    SetUserVersion(db, DatabaseVersion);
-                });
+            return id.Site + "-" + id.Type + "-" + id.Tag;
         }
 
-        private static void OnCreate(ISQLiteConnection db)
+        protected static void OnCreate(ISQLiteConnection db)
         {
             db.CreateTable<Post>();
             db.CreateTable<Tag>();
@@ -73,17 +61,29 @@ namespace JoyReactor.Core.Model.Database
             db.Insert(new Tag { TagId = ToFlatId(ID.Factory.Reactor("комиксы")), Title = "Комиксы", Flags = Tag.FlagShowInMain, BestImage = "http://img0.joyreactor.cc/pics/avatar/tag/27" });
         }
 
-        private static void OnUpdate(int oldVersion, int newVersion)
+        protected static void OnUpdate(int oldVersion, int newVersion)
         {
             // Reserverd
         }
 
-        public static string ToFlatId(ID id)
-        {
-            return id.Site + "-" + id.Type + "-" + id.Tag;
-        }
-
         #region Private methods
+
+        private static void InitializeDatabase(ISQLiteConnection db)
+        {
+            int ver = GetUserVesion(db);
+            if (ver == 0)
+                db.RunInTransaction(() =>
+                {
+                    OnCreate(db);
+                    SetUserVersion(db, DatabaseVersion);
+                });
+            else if (ver < DatabaseVersion)
+                db.RunInTransaction(() =>
+                {
+                    OnUpdate(ver, DatabaseVersion);
+                    SetUserVersion(db, DatabaseVersion);
+                });
+        }
 
         private static void SetUserVersion(ISQLiteConnection db, int version)
         {
