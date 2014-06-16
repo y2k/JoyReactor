@@ -12,6 +12,8 @@ namespace JoyReactor.Core.Model.Inject
 		{
 			return context.Resolve<TService> (parameters);
 		}
+
+		[Obsolete]
         public static TService Get<TService>(this IServiceLocator context, params Parameter[] parameters)
         {
             return context.GetInstance<TService>();

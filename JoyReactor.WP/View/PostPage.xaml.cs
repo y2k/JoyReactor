@@ -7,6 +7,8 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using JoyReactor.WP.Common;
+using JoyReactor.Core.Model.DTO;
 
 namespace JoyReactor.WP.View
 {

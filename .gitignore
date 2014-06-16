@@ -173,3 +173,4 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 *.userprefs
+JoyReactor.Android/Resources/Resource.designer.cs

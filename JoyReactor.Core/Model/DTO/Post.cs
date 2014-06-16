@@ -24,5 +24,7 @@ namespace JoyReactor.Core.Model.DTO
 		public float Rating { get; set; }
 		public string Coub { get; set; }
 		public int CommentCount { get; set; }
-	}
+    
+        public long Timestamp { get; set; }
+    }
 }

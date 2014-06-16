@@ -7,7 +7,8 @@
   <remove-node path="/api/package[@name='android.support.v4.content']/class[@name='CursorLoader']/method[@name='loadInBackground']" />
   -->
 
+  <!--
   <attr path="/api/package[@name='com.android.volley']/class[@name='Request']/method[@name='getMethod']" name="managedName">getMethod2</attr>
-
   <remove-node path="/api/package[@name='com.android.volley.toolbox']/class[@name='JsonRequest']" />
+  -->
 </metadata>

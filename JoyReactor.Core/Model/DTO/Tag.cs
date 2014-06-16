@@ -16,5 +16,6 @@ namespace JoyReactor.Core.Model.DTO
 		public string TagId { get; set; }
 		public string Title { get; set; }
 		public string BestImage { get; set; }
+        public long Timestamp { get; set; }
 	}
 }

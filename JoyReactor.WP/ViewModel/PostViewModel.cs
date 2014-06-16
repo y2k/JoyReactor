@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.Messaging;
 using JoyReactor.Core;
 using JoyReactor.Core.Model;
+using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.WP.Common;
 using System;
@@ -57,7 +58,7 @@ namespace JoyReactor.WP.ViewModel
             private Uri _image;
             public Uri Image { get { return _image; } set { Set(ref _image, value); } }
 
-            public ObservableCollection<string> Comments { get; private set; }
+            public ObservableCollection<Comment> Comments { get; private set; }
 
             #endregion
 
@@ -68,7 +69,7 @@ namespace JoyReactor.WP.ViewModel
 
             public ItemPostViewModel(ID listId, int position)
             {
-                Comments = new ObservableCollection<string>();
+                Comments = new ObservableCollection<Comment>();
                 this.listId = listId;
                 this.position = position;
             }

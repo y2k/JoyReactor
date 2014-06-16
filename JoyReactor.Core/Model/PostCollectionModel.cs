@@ -20,7 +20,8 @@ namespace JoyReactor.Core.Model
         public Task<List<Post>> GetPostsAsync(ID id, SyncFlags flags = SyncFlags.None)
         {
             return Task.Run(
-                () => {
+                () =>
+                {
                     if (flags == SyncFlags.First) SyncFirstPage(id);
                     else if (flags == SyncFlags.Next) SyncNextPage(id);
 
@@ -43,6 +44,8 @@ namespace JoyReactor.Core.Model
 
         #endregion
 
+        #region Private methods
+
         private string ToFlatId(ID id)
         {
             return id.Site + "-" + id.Type + "-" + id.Tag;
@@ -50,12 +53,17 @@ namespace JoyReactor.Core.Model
 
         private void SyncFirstPage(ID id)
         {
+            var ts = MainDb.Instance.ExecuteScalar<long>("SELECT Timestamp FROM tags WHERE TagId = ?", ToFlatId(id));
+            if (Math.Abs(ts - TimestampNow()) < Constants.TagLifeTime) return;
+
             var p = parsers.First(s => s.ParserId == id.Site);
 
             p.ExtractTagPostCollection(id.Type, id.Tag, 0, GetSiteCookies(id), state =>
             {
                 if (state.State == CollectionExportState.ExportState.Begin)
                 {
+                    MainDb.Instance.Execute("UPDATE tags SET Timestamp = ? WHERE TagId = ?", TimestampNow(), ToFlatId(id));
+
                     // Удаление постов тега
                     MainDb.Instance.Execute(
                         "DELETE FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)",
@@ -112,6 +120,11 @@ namespace JoyReactor.Core.Model
             throw new NotImplementedException();
         }
 
+        private static long TimestampNow()
+        {
+            return DateTime.Now.ToFileTimeUtc() / 10000L;
+        }
+
         private static IDictionary<string, string> DeserializeObject<T>(string o)
         {
             return o.Split(';').Select(s => s.Split('=')).ToDictionary(s => s[0], s => s[1]);
@@ -134,5 +147,7 @@ namespace JoyReactor.Core.Model
                 UserName = p.userName,
             };
         }
+
+        #endregion
     }
 }

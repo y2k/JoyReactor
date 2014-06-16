@@ -25,7 +25,7 @@ namespace JoyReactor.Android.App.Home
 		private ProgressBar progress;
 		private FeedAdapter adapter;
 
-		private IPostCollectionModel model = InjectService.Instance.Get<IPostCollectionModel>();
+		private IPostCollectionModel model = InjectService.Locator.GetInstance<IPostCollectionModel>();
 
 		public override void OnActivityCreated (Bundle savedInstanceState)
 		{
@@ -59,6 +59,8 @@ namespace JoyReactor.Android.App.Home
 
 		private async void ReloadList (ID id)
 		{
+			adapter.ListId = id;
+
 			adapter.Clear ();
 			var result = await model.GetPostsAsync (id, SyncFlags.First);
 			adapter.AddAll (result);

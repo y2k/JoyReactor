@@ -1,27 +1,28 @@
-﻿<v:BasePage
-    x:Class="JoyReactor.WP.View.MainPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
-    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="clr-namespace:JoyReactor.WP.ViewModel"
-    xmlns:v="clr-namespace:JoyReactor.WP.View"
-    mc:Ignorable="d"
-    FontFamily="{StaticResource PhoneFontFamilyNormal}"
-    FontSize="{StaticResource PhoneFontSizeNormal}"
-    Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="Portrait" 
-    Orientation="Portrait"
-    DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
-    shell:SystemTray.IsVisible="True">
-    
+﻿<v:BasePage x:Class="JoyReactor.WP.View.MainPage"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+            xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:vm="clr-namespace:JoyReactor.WP.ViewModel"
+            xmlns:v="clr-namespace:JoyReactor.WP.View"
+            mc:Ignorable="d"
+            FontFamily="{StaticResource PhoneFontFamilyNormal}"
+            FontSize="{StaticResource PhoneFontSizeNormal}"
+            Foreground="{StaticResource PhoneForegroundBrush}"
+            SupportedOrientations="Portrait"
+            Orientation="Portrait"
+            DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
+            shell:SystemTray.Opacity="0.2"
+            shell:SystemTray.IsVisible="True">
+
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="Transparent">
+    <Grid x:Name="LayoutRoot"
+          Background="Transparent">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <!-- LOCALIZATION NOTE:
@@ -50,53 +51,56 @@
         </StackPanel>-->
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            
-            <phone:Pivot Title="JOYREACTOR">
-                <phone:PivotItem Header="{Binding LocalizedResources.TitleTags, Mode=OneWay, Source={StaticResource LocalizedStrings}}">
-                    <ListBox ItemsSource="{Binding Tags}" SelectionChanged="ListBox_SelectionChanged">
+        <Grid x:Name="ContentPanel"
+              Grid.Row="1">
+            <phone:Panorama>
+                <phone:Panorama.Background>
+                    <ImageBrush Stretch="UniformToFill"
+                                ImageSource="/Assets/MainBackground.jpg" />
+                </phone:Panorama.Background>
+                <phone:PanoramaItem Header="{Binding LocalizedResources.TitleTags, Mode=OneWay, Source={StaticResource LocalizedStrings}}">
+                    <ListBox ItemsSource="{Binding Tags}"
+                             SelectionChanged="ListBox_SelectionChanged">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel VerticalAlignment="Center" 
-                                    Margin="4"
-                                    Orientation="Horizontal">
-                                    <Image Width="64" 
+                                <StackPanel VerticalAlignment="Center"
+                                            Margin="4"
+                                            Orientation="Horizontal">
+                                    <Image Width="64"
                                            Height="64"
                                            Margin="0, 0, 4, 0"
                                            Source="{Binding BestImage}" />
                                     <TextBlock Padding="4"
-                                       FontSize="30"
-                                       VerticalAlignment="Center"
-                                       Text="{Binding Title}" />
+                                               FontSize="30"
+                                               VerticalAlignment="Center"
+                                               Text="{Binding Title}" />
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                </phone:PivotItem>
-                <phone:PivotItem Header="{Binding LocalizedResources.TitlePosts, Mode=OneWay, Source={StaticResource LocalizedStrings}}">
+                </phone:PanoramaItem>
+                <phone:PanoramaItem Header="{Binding LocalizedResources.TitlePosts, Mode=OneWay, Source={StaticResource LocalizedStrings}}">
                     <ListBox ItemsSource="{Binding Posts}"
                              SelectionChanged="ListBox_SelectionChanged_1">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel VerticalAlignment="Center" 
-                                    Margin="4"
-                                    Orientation="Vertical">
-                                    <Image Width="400" 
+                                <StackPanel VerticalAlignment="Center"
+                                            Margin="4"
+                                            Orientation="Vertical">
+                                    <Image Width="400"
                                            Height="400"
                                            Margin="0, 0, 4, 0"
                                            Source="{Binding Image}" />
                                     <TextBlock Padding="4"
-                                       FontSize="30"
-                                       VerticalAlignment="Center"
-                                       Text="{Binding Title}" />
+                                               FontSize="30"
+                                               VerticalAlignment="Center"
+                                               Text="{Binding Title}" />
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                </phone:PivotItem>
-            </phone:Pivot>
-
-
+                </phone:PanoramaItem>
+            </phone:Panorama>
         </Grid>
 
         <!--Uncomment to see an alignment grid to help ensure your controls are
