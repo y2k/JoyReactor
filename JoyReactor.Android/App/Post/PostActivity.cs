@@ -18,19 +18,28 @@ using JoyReactor.Core;
 
 namespace JoyReactor.Android.App.Post
 {
-	[Activity (Label = "PostActivity")]			
+	[Activity (Label = "@string/post_acitivty")]			
 	public class PostActivity : BaseActivity
 	{
-		private IPostCollectionModel model = InjectService.Instance.Get<IPostCollectionModel>();
+		private IPostCollectionModel model = InjectService.Locator.GetInstance<IPostCollectionModel>();
 
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
 			SetContentView (Resource.Layout.ActivityPost);
 
+			// var pos = Intent.GetIntExtra ("pos");
+
 			var pager = FindViewById<ViewPager> (Resource.Id.Pager);
-			int count = model.GetCount (new ID ());
+			int count = model.GetCount (ID.DeserializeFromString (Intent.GetStringExtra ("list_id")));
 			pager.Adapter = new Adapter (count, SupportFragmentManager);
+		}
+
+		public static Intent NewIntent(ID listId, int initPosition) {
+			var i = new Intent (App.Instance, typeof(PostActivity));
+			i.PutExtra ("list_id", listId.SerializeToString ());
+			i.PutExtra ("pos", initPosition);
+			return i;
 		}
 
 		private class Adapter : FragmentStatePagerAdapter 
@@ -43,11 +52,6 @@ namespace JoyReactor.Android.App.Post
 
 			#region implemented abstract members of PagerAdapter
 
-			public override int GetItemPosition (Java.Lang.Object @object)
-			{
-				return PagerAdapter.PositionNone;
-			}
-
 			public override int Count { get { return count; } }
 
 			#endregion
@@ -56,36 +60,34 @@ namespace JoyReactor.Android.App.Post
 
 			public override global::Android.Support.V4.App.Fragment GetItem (int position)
 			{
-				var args = new Bundle ();
-				args.PutString ("position", "" + position);
-				var f = new TestFragment ();
-				f.Arguments = args;
-				return f;
+				return PostFragment.NewFragment (position);
 			}
 
 			#endregion
 		}
 
-		public class TestFragment : BaseFragment
-		{
-			public override void OnSaveInstanceState (Bundle outState)
-			{
-				base.OnSaveInstanceState (outState);
-				outState.PutString ("zzz", "" + new Random ().Next ());
-			}
-
-//			public override void OnActivityCreated (Bundle savedInstanceState)
+//		public class TestFragment : BaseFragment
+//		{
+//			private string memoryValue;
+//
+//			public override void OnCreate (Bundle savedInstanceState)
 //			{
-//				base.OnActivityCreated (savedInstanceState);
-//				Log.Info ("PostActivity", "State = " + savedInstanceState);
+//				base.OnCreate (savedInstanceState);
+//				memoryValue = DateTime.Now.ToString ();
 //			}
-
-			public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-			{
-				var v = new TextView (Activity);
-				v.Text = "Position = " + Arguments.GetString ("position") + ", State = " + savedInstanceState;
-				return v;
-			}
-		}
+//
+//			public override void OnSaveInstanceState (Bundle outState)
+//			{
+//				base.OnSaveInstanceState (outState);
+//				outState.PutString ("zzz", "" + new Random ().Next ());
+//			}
+//
+//			public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+//			{
+//				var v = new TextView (Activity);
+//				v.Text = "Position = " + Arguments.GetString ("position") + ", State = " + savedInstanceState + ", Memory state = " + memoryValue;
+//				return v;
+//			}
+//		}
 	}
 }

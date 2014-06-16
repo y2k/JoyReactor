@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model
 {
-    class PostModel : IPostModel
+	class PostModel : IPostModel
     {
         private ISiteParser[] parsers = InjectService.Locator.GetInstance<ISiteParser[]>();
 
@@ -25,6 +25,19 @@ namespace JoyReactor.Core.Model
                 return new Comment[] { new Comment { Text = "ONE" }, new Comment { Text = "TWO" }, new Comment { Text = "THREE" }, new Comment { Text = "FOUR" }, new Comment { Text = "FIVE" } }.ToList();
             });
         }
+
+		public Task<List<Comment>> GetTopCommentsAsync (int postId, int count)
+		{
+			return Task.Run(() =>
+				{
+					//var comments = MainDb.Instance
+					//    //.Query<Comment>("SELECT * FROM comments WHERE PostId = ? AND ParentId = ? ORDER BY Rating DESC", postId, parentCommentId)
+					//    .Query<Comment>("SELECT * FROM comments WHERE PostId = ? ORDER BY Rating DESC", postId)
+					//    .ToList();
+					//return comments;
+					return new Comment[] { new Comment { Text = "ONE" }, new Comment { Text = "TWO" }, new Comment { Text = "THREE" }, new Comment { Text = "FOUR" }, new Comment { Text = "FIVE" } }.ToList();
+				});
+		}
 
         public Task<Post> GetPostAsync(ID listId, int position)
         {
@@ -88,8 +101,8 @@ namespace JoyReactor.Core.Model
 
                 return p;
             });
-
         }
+
         private static long TimestampNow()
         {
             return DateTime.Now.ToFileTimeUtc() / 10000L;

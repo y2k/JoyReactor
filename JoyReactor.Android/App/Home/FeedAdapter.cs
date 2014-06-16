@@ -16,13 +16,16 @@ using Android.Graphics;
 using JoyReactor.Android.Widget;
 using System.Drawing;
 using JoyReactor.Android.App.Post;
+using JoyReactor.Core;
 
 namespace JoyReactor.Android.App.Home
 {
 	class FeedAdapter : ArrayAdapter<JoyReactor.Core.Model.DTO.Post> 
 	{
-		private IImageModel iModel = InjectService.Instance.Get<IImageModel>();
+		private IImageModel iModel = InjectService.Locator.GetInstance<IImageModel>();
 		private int maxWidth;
+
+		public ID ListId { get; set; }
 
 		public FeedAdapter(Context context) : base(context, 0) 
 		{
@@ -37,7 +40,7 @@ namespace JoyReactor.Android.App.Home
 			}
 
 			convertView.FindViewById(Resource.Id.action).Click += 
-				(sender, e) => Context.StartActivity(new Intent(Context, typeof(PostActivity)));
+				(sender, e) => Context.StartActivity(PostActivity.NewIntent(ListId, position));
 
 			var item = GetItem (position);
 

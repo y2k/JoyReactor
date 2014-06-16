@@ -5,6 +5,8 @@ namespace JoyReactor.Core
 {
 	public class ID
 	{
+		private const char Divider = '\u0000';
+
 		public static readonly ID REACTOR_GOOD = new ID { Site = SiteParser.JoyReactor, Type = TagType.Good };
 		public static readonly ID REACTOR_BEST = new ID { Site = SiteParser.JoyReactor, Type = TagType.Best };
 		public static readonly ID REACTOR_ALL = new ID { Site = SiteParser.JoyReactor, Type = TagType.All };
@@ -16,6 +18,20 @@ namespace JoyReactor.Core
 
 		public enum SiteParser { JoyReactor, Chan4, Chan7, Chan2 }
 		public enum TagType { Best, Good, All, Favorite }
+
+		public string SerializeToString ()
+		{
+			return "" + Site + Divider + Type + Divider + Tag;
+		}
+
+		public static ID DeserializeFromString(string value) {
+			var p = value.Split (Divider);
+			return new ID {
+				Site = (SiteParser)Enum.Parse (typeof(SiteParser), p [0]), 
+				Type = (TagType)Enum.Parse (typeof(TagType), p [1]), 
+				Tag = p [2]
+			};
+		}
 
 		public static ID Parser(string id) 
 		{

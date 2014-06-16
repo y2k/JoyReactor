@@ -131,6 +131,7 @@
     <AndroidResource Include="Resources\layout\ActivityPost.axml" />
     <AndroidResource Include="Resources\menu\home.xml" />
     <AndroidResource Include="Resources\layout\fragment_profile.axml" />
+    <AndroidResource Include="Resources\values-ru\Strings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
@@ -153,5 +154,6 @@
     <Folder Include="App\Post\" />
     <Folder Include="App\Profile\" />
     <Folder Include="Resources\menu\" />
+    <Folder Include="Resources\values-ru\" />
   </ItemGroup>
 </Project>
