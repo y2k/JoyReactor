@@ -22,7 +22,7 @@ using JoyReactor.Core.Model.Parser;
 
 namespace JoyReactor.Android.App
 {
-	[Activity (Label = "JoyReactor v2", MainLauncher = true)]			
+	[Activity (Label = "@string/app_name", MainLauncher = true)]			
 	public class HomeActivity : BaseActivity
 	{
 		private ViewPager pager;

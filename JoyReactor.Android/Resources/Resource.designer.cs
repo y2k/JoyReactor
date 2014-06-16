@@ -71,11 +71,14 @@ namespace JoyReactor.Android
 			// aapt resource value: 0x7f06000b
 			public const int Progress = 2131099659;
 			
-			// aapt resource value: 0x7f060019
-			public const int about = 2131099673;
+			// aapt resource value: 0x7f06001a
+			public const int about = 2131099674;
 			
 			// aapt resource value: 0x7f060010
 			public const int action = 2131099664;
+			
+			// aapt resource value: 0x7f060018
+			public const int addTag = 2131099672;
 			
 			// aapt resource value: 0x7f060001
 			public const int animator = 2131099649;
@@ -119,8 +122,8 @@ namespace JoyReactor.Android
 			// aapt resource value: 0x7f060007
 			public const int profileUsername = 2131099655;
 			
-			// aapt resource value: 0x7f060018
-			public const int settings = 2131099672;
+			// aapt resource value: 0x7f060019
+			public const int settings = 2131099673;
 			
 			// aapt resource value: 0x7f060006
 			public const int sources = 2131099654;
@@ -209,11 +212,26 @@ namespace JoyReactor.Android
 			// aapt resource value: 0x7f040000
 			public const int Hello = 2130968576;
 			
+			// aapt resource value: 0x7f040006
+			public const int about = 2130968582;
+			
 			// aapt resource value: 0x7f040003
-			public const int app_name = 2130968579;
+			public const int add_tag = 2130968579;
 			
 			// aapt resource value: 0x7f040002
-			public const int hello = 2130968578;
+			public const int app_name = 2130968578;
+			
+			// aapt resource value: 0x7f040007
+			public const int favorite = 2130968583;
+			
+			// aapt resource value: 0x7f040008
+			public const int feed = 2130968584;
+			
+			// aapt resource value: 0x7f040004
+			public const int profile = 2130968580;
+			
+			// aapt resource value: 0x7f040005
+			public const int settings = 2130968581;
 			
 			static String()
 			{

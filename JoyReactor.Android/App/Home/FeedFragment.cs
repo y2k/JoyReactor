@@ -61,7 +61,6 @@ namespace JoyReactor.Android.App.Home
 		{
 			adapter.Clear ();
 			var result = await model.GetPostsAsync (id, SyncFlags.First);
-
 			adapter.AddAll (result);
 			progress.Visibility = ViewStates.Gone;
 		}

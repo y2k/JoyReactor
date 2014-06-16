@@ -10,14 +10,15 @@ using Android.Graphics;
 using System;
 using JoyReactor.Core;
 using JoyReactor.Android.App.Base.Commands;
+using JoyReactor.Android.Widget;
 
 namespace JoyReactor.Android.App.Home
 {
 	public class LeftMenuFragment : BaseFragment
 	{
 		private static MenuHeader[] Headers = new MenuHeader[] {
-			new MenuHeader { Title = "Feed", ListId = ID.REACTOR_GOOD },
-			new MenuHeader { Title = "Favorite", ListId = ID.ReactorFavorite },
+			new MenuHeader { Title = Resource.String.feed, ListId = ID.REACTOR_GOOD },
+			new MenuHeader { Title = Resource.String.favorite, ListId = ID.ReactorFavorite },
 		};
 
 		private ListView list;
@@ -49,8 +50,6 @@ namespace JoyReactor.Android.App.Home
 
 		public class Adapter : ArrayAdapter<Tag>
 		{
-			private IImageModel iModel = InjectService.Locator.GetInstance<IImageModel> ();
-
 			public Adapter(Context context) : base(context, 0) { }
 
 			public override int Count {
@@ -64,15 +63,12 @@ namespace JoyReactor.Android.App.Home
 				convertView = convertView ?? View.Inflate (parent.Context, Resource.Layout.ItemSubscription, null);
 
 				if (position < Headers.Length) {
-					// TODO
-					convertView.FindViewById<TextView> (Resource.Id.title).Text = Headers [position].Title;
+					convertView.FindViewById<TextView> (Resource.Id.title).SetText(Headers [position].Title);
+					convertView.FindViewById<WebImageView> (Resource.Id.icon).ImageSource = null;
 				} else {
 					var i = GetItem (position - Headers.Length);
 					convertView.FindViewById<TextView> (Resource.Id.title).Text = i.Title;
-
-					var iv = convertView.FindViewById<ImageView> (Resource.Id.icon);
-					if (i.BestImage == null) iv.SetImageBitmap (null);
-					else iModel.Load (iv, new Uri (i.BestImage), 0, s => iv.SetImageBitmap ((Bitmap)s.Image));
+					convertView.FindViewById<WebImageView> (Resource.Id.icon).ImageSource = i.BestImage;
 				}
 
 				convertView.FindViewById (Resource.Id.group).Visibility = ViewStates.Gone;
@@ -82,7 +78,7 @@ namespace JoyReactor.Android.App.Home
 
 		class MenuHeader {
 
-			internal string Title { get; set; }
+			internal int Title { get; set; }
 			internal ID ListId { get; set; }
 		}
 	}

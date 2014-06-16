@@ -4,14 +4,18 @@
     <item
         android:id="@+id/profile"
         android:showAsAction="never"
-        android:title="Profile"/>
+        android:title="@string/profile"/>
+    <item
+        android:id="@+id/addTag"
+        android:showAsAction="never"
+        android:title="@string/add_tag"/>
     <item
         android:id="@+id/settings"
         android:showAsAction="never"
-        android:title="Settings"/>
+        android:title="@string/settings"/>
     <item
         android:id="@+id/about"
         android:showAsAction="never"
-        android:title="About"/>
+        android:title="@string/about"/>
 
 </menu>
