@@ -58,27 +58,6 @@
                     <ImageBrush Stretch="UniformToFill"
                                 ImageSource="/Assets/MainBackground.jpg" />
                 </phone:Panorama.Background>
-                <phone:PanoramaItem Header="{Binding LocalizedResources.TitleTags, Mode=OneWay, Source={StaticResource LocalizedStrings}}">
-                    <ListBox ItemsSource="{Binding Tags}"
-                             SelectionChanged="ListBox_SelectionChanged">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel VerticalAlignment="Center"
-                                            Margin="4"
-                                            Orientation="Horizontal">
-                                    <Image Width="64"
-                                           Height="64"
-                                           Margin="0, 0, 4, 0"
-                                           Source="{Binding BestImage}" />
-                                    <TextBlock Padding="4"
-                                               FontSize="30"
-                                               VerticalAlignment="Center"
-                                               Text="{Binding Title}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </phone:PanoramaItem>
                 <phone:PanoramaItem Header="{Binding LocalizedResources.TitlePosts, Mode=OneWay, Source={StaticResource LocalizedStrings}}">
                     <ListBox ItemsSource="{Binding Posts}"
                              SelectionChanged="ListBox_SelectionChanged_1">
@@ -91,6 +70,27 @@
                                            Height="400"
                                            Margin="0, 0, 4, 0"
                                            Source="{Binding Image}" />
+                                    <TextBlock Padding="4"
+                                               FontSize="30"
+                                               VerticalAlignment="Center"
+                                               Text="{Binding Title}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </phone:PanoramaItem>
+                <phone:PanoramaItem Header="{Binding LocalizedResources.TitleTags, Mode=OneWay, Source={StaticResource LocalizedStrings}}">
+                    <ListBox ItemsSource="{Binding Tags}"
+                             SelectionChanged="ListBox_SelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel VerticalAlignment="Center"
+                                            Margin="4"
+                                            Orientation="Horizontal">
+                                    <Image Width="64"
+                                           Height="64"
+                                           Margin="0, 0, 4, 0"
+                                           Source="{Binding BestImage}" />
                                     <TextBlock Padding="4"
                                                FontSize="30"
                                                VerticalAlignment="Center"

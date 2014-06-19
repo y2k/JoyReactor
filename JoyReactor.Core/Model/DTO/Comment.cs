@@ -16,7 +16,7 @@ namespace JoyReactor.Core.Model.DTO
 
         public int PostId { get; set; }
 
-        public String CommentId;
+        public String CommentId { get; set; }
 
         public String Text { get; set; }
         public long Created { get; set; }

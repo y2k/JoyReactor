@@ -30,12 +30,10 @@ namespace JoyReactor.Core.Model
 		{
 			return Task.Run(() =>
 				{
-					//var comments = MainDb.Instance
-					//    //.Query<Comment>("SELECT * FROM comments WHERE PostId = ? AND ParentId = ? ORDER BY Rating DESC", postId, parentCommentId)
-					//    .Query<Comment>("SELECT * FROM comments WHERE PostId = ? ORDER BY Rating DESC", postId)
-					//    .ToList();
-					//return comments;
-					return new Comment[] { new Comment { Text = "ONE" }, new Comment { Text = "TWO" }, new Comment { Text = "THREE" }, new Comment { Text = "FOUR" }, new Comment { Text = "FIVE" } }.ToList();
+                    var comments = MainDb.Instance
+                        .Query<Comment>("SELECT * FROM comments WHERE PostId = ? AND ParentId = 0 ORDER BY Rating DESC LIMIT ?", postId, count)
+                        .ToList();
+                    return comments;
 				});
 		}
 
@@ -84,7 +82,7 @@ namespace JoyReactor.Core.Model
 
                                     if (state.Comment.parentId != null)
                                     {
-                                        c.ParentId = MainDb.Instance.ExecuteScalar<int>("SELECT Id FROM comments WHERE CommentId = ?", state.Comment.parentId);
+                                        c.ParentId = MainDb.Instance.Query<Comment>("SELECT * FROM comments WHERE CommentId = ? AND PostId = ?", state.Comment.parentId, p.Id).First().Id;
                                     }
 
                                     MainDb.Instance.Insert(c);

@@ -40,15 +40,20 @@
                                      HorizontalAlignment="Stretch">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid>
+                                        <Grid Margin="0,4,0,4">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
                                             <Image Width="65"
                                                    Height="65"
+                                                   VerticalAlignment="Top"
+                                                   Stretch="UniformToFill"
                                                    Source="{Binding UserImage}" />
                                             <TextBlock Grid.Column="1"
+                                                       VerticalAlignment="Center"
+                                                       Padding="8,0,8,0"
+                                                       TextWrapping="Wrap"
                                                        Text="{Binding Text}" />
                                         </Grid>
                                     </DataTemplate>

@@ -82,7 +82,7 @@ namespace JoyReactor.WP.ViewModel
                 Title = post.Title;
                 Image = post.Image == null ? null : new Uri(post.Image);
 
-                (await model.GetCommentsAsync(post.Id, 0)).ForEach(s => Comments.Add(s));
+                (await model.GetTopCommentsAsync(post.Id, 5)).ForEach(s => Comments.Add(s));
             }
         }
     }
