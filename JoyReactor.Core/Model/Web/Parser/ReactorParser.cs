@@ -72,7 +72,7 @@ namespace JoyReactor.Core.Model.Parser
 
         #endregion
 
-        private IWebDownloader downloader = InjectService.Instance.Get<IWebDownloader>();
+		private IWebDownloader downloader = InjectService.Locator.GetInstance<IWebDownloader>();
 
         #region Public methods
 

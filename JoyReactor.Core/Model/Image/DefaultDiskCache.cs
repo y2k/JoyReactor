@@ -8,7 +8,7 @@ namespace JoyReactor.Core.Model.Image
 {
 	public class DefaultDiskCache : IDiskCache
 	{
-		private IImageDecoder decoder = InjectService.Instance.Get<IImageDecoder> ();
+		private IImageDecoder decoder = InjectService.Locator.GetInstance<IImageDecoder> ();
 		private IFolder root;
 
 		public DefaultDiskCache ()

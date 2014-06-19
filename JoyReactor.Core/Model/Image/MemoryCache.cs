@@ -6,7 +6,7 @@ namespace JoyReactor.Core.Model.Image
 {
 	public class MemoryCache : IMemoryCache
 	{
-		private IImageDecoder decoder = InjectService.Instance.Get<IImageDecoder>();
+		private IImageDecoder decoder = InjectService.Locator.GetInstance<IImageDecoder>();
 		private LRUCache<Uri, ImageWrapper> cache;
 
 		public MemoryCache ()

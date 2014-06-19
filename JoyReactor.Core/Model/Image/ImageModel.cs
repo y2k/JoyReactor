@@ -15,8 +15,8 @@ namespace JoyReactor.Core.Model.Image
 		private const int MaxAttempts = 5;
 		private const int BaseAttemptDelay = 500;
 
-		private IMemoryCache memoryCache = InjectService.Instance.Get<IMemoryCache>();
-		private IDiskCache diskCachge = InjectService.Instance.Get<IDiskCache> ();
+		private IMemoryCache memoryCache = InjectService.Locator.GetInstance<IMemoryCache>();
+		private IDiskCache diskCachge = InjectService.Locator.GetInstance<IDiskCache> ();
 		private HttpClient webClient = new HttpClient();
 
 		private Dictionary<object, Uri> lockedImages = new Dictionary<object, Uri>();

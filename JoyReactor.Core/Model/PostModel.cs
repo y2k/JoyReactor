@@ -30,10 +30,12 @@ namespace JoyReactor.Core.Model
 		{
 			return Task.Run(() =>
 				{
-                    var comments = MainDb.Instance
-                        .Query<Comment>("SELECT * FROM comments WHERE PostId = ? AND ParentId = 0 ORDER BY Rating DESC LIMIT ?", postId, count)
-                        .ToList();
-                    return comments;
+					lock (MainDb.Instance) {
+						var comments = MainDb.Instance
+	                        .Query<Comment>("SELECT * FROM comments WHERE PostId = ? AND ParentId = 0 ORDER BY Rating DESC LIMIT ?", postId, count)
+	                        .ToList();
+	                    return comments;
+					}
 				});
 		}
 
@@ -42,9 +44,12 @@ namespace JoyReactor.Core.Model
             return Task.Run(() =>
             {
                 var sid = ToFlatId(listId);
-                var p = MainDb.Instance.Query<Post>(
-                    "SELECT * FROM posts WHERE Id IN (SELECT PostId FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)) LIMIT 1 OFFSET ?",
-                    sid, position).First();
+				Post p;
+				lock (MainDb.Instance) {
+					p = MainDb.Instance.Query<Post>(
+	                    "SELECT * FROM posts WHERE Id IN (SELECT PostId FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)) LIMIT 1 OFFSET ?",
+	                    sid, position).First();
+				}
                 if (Math.Abs(p.Timestamp - TimestampNow()) < Constants.PostListTime) return p;
 
                 try
@@ -57,15 +62,15 @@ namespace JoyReactor.Core.Model
                         switch (state.State)
                         {
                             case PostExportState.ExportState.Begin:
-                                {
+								lock (MainDb.Instance) {
                                     //
-                                    MainDb.Instance.Execute("DELETE FROM comments WHERE PostId = ?", p.Id);
+									MainDb.Instance.Execute("DELETE FROM comments WHERE PostId = ?", p.Id);
                                 }
                                 break;
                             case PostExportState.ExportState.Info:
-                                {
+								lock (MainDb.Instance) {
                                     // TODO
-                                    MainDb.Instance.Execute("UPDATE posts SET Timestamp = ? WHERE Id = ?", TimestampNow(), p.Id);
+									MainDb.Instance.Execute("UPDATE posts SET Timestamp = ? WHERE Id = ?", TimestampNow(), p.Id);
                                 }
                                 break;
                             case PostExportState.ExportState.Comment:
@@ -80,12 +85,15 @@ namespace JoyReactor.Core.Model
                                     c.UserImage = state.Comment.userImage;
                                     c.Rating = state.Comment.rating;
 
-                                    if (state.Comment.parentId != null)
-                                    {
-                                        c.ParentId = MainDb.Instance.Query<Comment>("SELECT * FROM comments WHERE CommentId = ? AND PostId = ?", state.Comment.parentId, p.Id).First().Id;
+									if (state.Comment.parentId != null) {
+										lock (MainDb.Instance) {
+											c.ParentId = MainDb.Instance.Query<Comment>("SELECT * FROM comments WHERE CommentId = ? AND PostId = ?", state.Comment.parentId, p.Id).First().Id;
+										}
                                     }
 
-                                    MainDb.Instance.Insert(c);
+									lock (MainDb.Instance) {
+										MainDb.Instance.Insert(c);
+									}
                                 }
                                 break;
                         }

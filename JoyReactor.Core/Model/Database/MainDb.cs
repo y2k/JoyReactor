@@ -5,7 +5,7 @@ using Cirrious.MvvmCross.Community.Plugins.Sqlite;
 
 namespace JoyReactor.Core.Model.Database
 {
-    public class MainDb
+	internal class MainDb
     {
         private const string DatabaseName = "net.itwister.joyreactor.main.db";
         private const int DatabaseVersion = 1;
@@ -13,31 +13,28 @@ namespace JoyReactor.Core.Model.Database
         private static volatile ISQLiteConnection instance;
         private static object syncRoot = new Object();
 
-        public static ISQLiteConnection Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
-                        if (instance == null)
-                        {
-                            //var plat = InjectService.Instance.Get<ISQLitePlatfromGetter> ();
-                            //instance = new MainDb (plat.GetPlatform(), plat.CreatePath(DatabaseName));
+		public static ISQLiteConnection Instance
+		{
+			get
+			{
+				if (instance == null)
+				{
+					lock (syncRoot)
+					{
+						if (instance == null)
+						{
+							var f = InjectService.Locator.GetInstance<ISQLiteConnectionFactory>();
+							instance = f.Create(DatabaseName);
+							InitializeDatabase(instance);
+						}
+					}
+				}
 
-                            var f = InjectService.Instance.Get<ISQLiteConnectionFactory>();
-                            instance = f.Create(DatabaseName);
-                            InitializeDatabase(instance);
-                        }
-                    }
-                }
+				return instance;
+			}
+		}
 
-                return instance;
-            }
-        }
-
-        public static string ToFlatId(ID id)
+		public static string ToFlatId(ID id)
         {
             return id.Site + "-" + id.Type + "-" + id.Tag;
         }

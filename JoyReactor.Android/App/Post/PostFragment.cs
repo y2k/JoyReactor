@@ -25,7 +25,6 @@ namespace JoyReactor.Android.App.Post
 		private IPostModel model = InjectService.Locator.GetInstance<IPostModel> ();
 
 		private ListView list;
-//		private PostAdapter adapter;
 		private List<Comment> comments;
 		private JoyReactor.Core.Model.DTO.Post post;
 
@@ -35,7 +34,6 @@ namespace JoyReactor.Android.App.Post
 			var adapter = new PostAdapter (this);
 			list.Adapter = adapter;
 
-			//			adapter.ChangeComments(await model.GetTopCommentsAsync (p.Id, 5));
 			post = await model.GetPostAsync (((PostActivity)Activity).ListId, Arguments.GetInt (Arg1));
 			adapter.NotifyDataSetChanged ();
 			comments = await model.GetTopCommentsAsync (post.Id, 5);
@@ -59,12 +57,6 @@ namespace JoyReactor.Android.App.Post
 			public PostAdapter(PostFragment fragment) {
 				this.fragment = fragment;
 			}
-
-//			public void ChangeComments (List<Comment> comments)
-//			{
-//				this.comments = comments;
-//				NotifyDataSetChanged ();
-//			}
 
 			#region implemented abstract members of BaseAdapter
 
