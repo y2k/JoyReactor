@@ -93,6 +93,7 @@ namespace JoyReactor.Core.Tests
 
                         var t = s.Comment.text;
                         Assert.IsTrue(t == null || t == t.Trim(), "Comment text = " + s.Comment.text);
+						TestCommentTextNotContainsTag (s.Comment.text);
 
                         Assert.NotNull(s.Comment.userName);
                         Assert.IsTrue(Regex.IsMatch(s.Comment.userName, "[\\w\\d_]+"), "Comment user name = " + s.Comment.userName);
@@ -167,6 +168,7 @@ namespace JoyReactor.Core.Tests
 
                         var t = s.Comment.text;
                         Assert.IsTrue(t == null || t == t.Trim(), "Comment text = " + s.Comment.text);
+						TestCommentTextNotContainsTag (s.Comment.text);
 
                         Assert.NotNull(s.Comment.userName);
                         Assert.IsTrue(Regex.IsMatch(s.Comment.userName, "[\\w\\d_]+"), "Comment user name = " + s.Comment.userName);
@@ -242,6 +244,7 @@ namespace JoyReactor.Core.Tests
 
                         var t = s.Comment.text;
                         Assert.IsTrue(t == null || t == t.Trim(), "Comment text = " + s.Comment.text);
+						TestCommentTextNotContainsTag (s.Comment.text);
 
                         Assert.NotNull(s.Comment.userName);
                         Assert.IsTrue(Regex.IsMatch(s.Comment.userName, "[\\w\\d_]+"), "Comment user name = " + s.Comment.userName);
@@ -271,5 +274,13 @@ namespace JoyReactor.Core.Tests
             Assert.IsTrue(notRootCommentCount >= 22, "Not root comment count = " + notRootCommentCount);
             Assert.IsTrue(commenCount - notRootCommentCount >= 16, "Root comment count = " + (commenCount - notRootCommentCount));
         }
+
+		private static void TestCommentTextNotContainsTag (string text)
+		{
+			var t = text == null ? null : text.ToLower ();
+			Assert.IsFalse (t != null && new string[] {
+				"<br>", "<br />", "<p>", "<a ", "</a>"
+			}.Any (a => t.Contains (a)), "Comment = " + text);
+		}
     }
 }

@@ -13,6 +13,10 @@ using JoyReactor.Android.App.Base;
 using Android.Support.V4.Widget;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Inject;
+using JoyReactor.Core.Model.DTO;
+using JoyReactor.Android.Widget;
+using JoyReactor.Core;
+using JoyReactor.Core.Model.Helper;
 
 namespace JoyReactor.Android.App.Post
 {
@@ -20,20 +24,94 @@ namespace JoyReactor.Android.App.Post
 	{
 		private IPostModel model = InjectService.Locator.GetInstance<IPostModel> ();
 
-		public async override void OnCreate (Bundle savedInstanceState)
-		{
-			base.OnCreate (savedInstanceState);
+		private ListView list;
+//		private PostAdapter adapter;
+		private List<Comment> comments;
+		private JoyReactor.Core.Model.DTO.Post post;
 
-			var p = await model.GetPostAsync (null, Arguments.GetInt ("pos"));
-			var coms = await model.GetTopCommentsAsync (p.Id, 5);
+		public async override void OnActivityCreated (Bundle savedInstanceState) {
+			base.OnActivityCreated (savedInstanceState);
 
-			// Create your fragment here
+			var adapter = new PostAdapter (this);
+			list.Adapter = adapter;
+
+			//			adapter.ChangeComments(await model.GetTopCommentsAsync (p.Id, 5));
+			post = await model.GetPostAsync (((PostActivity)Activity).ListId, Arguments.GetInt (Arg1));
+			adapter.NotifyDataSetChanged ();
+			comments = await model.GetTopCommentsAsync (post.Id, 5);
+			adapter.NotifyDataSetChanged ();
 		}
 
 		public static PostFragment NewFragment(int position) {
-			var a = new Bundle ();
-			a.PutInt ("pos", position);
-			return new PostFragment { Arguments = a };
+			return NewFragment<PostFragment> (position);
+		}
+
+		public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			var v = inflater.Inflate (Resource.Layout.fragment_post, null);
+			list = v.FindViewById<ListView> (Resource.Id.list);
+			return v;
+		}
+
+		class PostAdapter : BaseAdapter {
+
+			private PostFragment fragment;
+
+			public PostAdapter(PostFragment fragment) {
+				this.fragment = fragment;
+			}
+
+//			public void ChangeComments (List<Comment> comments)
+//			{
+//				this.comments = comments;
+//				NotifyDataSetChanged ();
+//			}
+
+			#region implemented abstract members of BaseAdapter
+
+			public override int GetItemViewType (int position)
+			{
+				return position < 2 ? position : 2;
+			}
+
+			public override int ViewTypeCount {
+				get { return 3; }
+			}
+
+			public override Java.Lang.Object GetItem (int position)
+			{
+				return null;
+			}
+
+			public override long GetItemId (int position)
+			{
+				return position;
+			}
+
+			public override View GetView (int position, View convertView, ViewGroup parent)
+			{
+				switch (GetItemViewType (position)) {
+				case 0:
+					var v = (WebImageView)(convertView ?? new WebImageView (parent.Context, null));
+					v.SetScaleType (ImageView.ScaleType.FitCenter);
+					v.LayoutParameters = new ListView.LayoutParams (parent.Width, parent.Width);
+					v.ImageSource = fragment.post == null ? null : fragment.post.Image;
+					return v;
+				case 1:
+					return convertView ?? new View (parent.Context);
+				default:
+					var v3 = convertView ?? View.Inflate (parent.Context, Resource.Layout.item_comment, null);
+					var c = fragment.comments [position - 2];
+					v3.FindViewById<TextView> (Resource.Id.title).Text = c.Text.HtmlToString();
+					v3.FindViewById<WebImageView> (Resource.Id.icon).ImageSource = c.UserImage;
+					return v3;
+				}
+			}
+
+			public override int Count {
+				get { return 2 + (fragment.comments == null ? 0 : fragment.comments.Count); }
+			}
+
+			#endregion
 		}
 	}
 }

@@ -17,7 +17,7 @@ namespace JoyReactor.Android.App.Home
 	public class LeftMenuFragment : BaseFragment
 	{
 		private static MenuHeader[] Headers = new MenuHeader[] {
-			new MenuHeader { Title = Resource.String.feed, ListId = ID.REACTOR_GOOD },
+			new MenuHeader { Title = Resource.String.feed, ListId = ID.ReactorGood },
 			new MenuHeader { Title = Resource.String.favorite, ListId = ID.ReactorFavorite },
 		};
 

@@ -23,12 +23,15 @@ namespace JoyReactor.Android.App.Post
 	{
 		private IPostCollectionModel model = InjectService.Locator.GetInstance<IPostCollectionModel>();
 
+		public ID ListId { get; private set; }
+
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
 			SetContentView (Resource.Layout.ActivityPost);
 
 			// var pos = Intent.GetIntExtra ("pos");
+			ListId = ID.DeserializeFromString(Intent.GetStringExtra ("list_id"));
 
 			var pager = FindViewById<ViewPager> (Resource.Id.Pager);
 			int count = model.GetCount (ID.DeserializeFromString (Intent.GetStringExtra ("list_id")));

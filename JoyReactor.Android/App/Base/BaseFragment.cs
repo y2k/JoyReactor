@@ -11,9 +11,25 @@ namespace JoyReactor.Android.App.Base
 {
 	public class BaseFragment : Fragment
 	{
-		public override void OnCreate (Bundle savedInstanceState)
-		{
-			base.OnCreate (savedInstanceState);
+		public const string Arg1 = "arg1";
+		public const string Arg2 = "arg2";
+		public const string Arg3 = "arg3";
+		public const string Arg4 = "arg4";
+
+		public static T NewFragment<T>( params object[] args) where T : Fragment {
+			var bundle = new Bundle ();
+			for (int i = 0; i < args.Length; i++) {
+				var a = args [i];
+				var key = "arg" + (i + 1);
+
+				if (a is string) bundle.PutString (key, (string)a);
+				else if (a is int) bundle.PutInt (key, (int)a);
+				else if (a is long) bundle.PutLong(key, (long)a);
+			}
+
+			var f = Activator.CreateInstance<T> ();
+			f.Arguments = bundle;
+			return f;
 		}
 	}
 }

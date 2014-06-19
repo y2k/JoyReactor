@@ -133,6 +133,8 @@
     <AndroidResource Include="Resources\menu\home.xml" />
     <AndroidResource Include="Resources\layout\fragment_profile.axml" />
     <AndroidResource Include="Resources\values-ru\Strings.xml" />
+    <AndroidResource Include="Resources\layout\fragment_post.axml" />
+    <AndroidResource Include="Resources\layout\item_comment.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
