@@ -73,6 +73,7 @@
     <Compile Include="Model\Web\Parser\Data\ExportComment.cs" />
     <Compile Include="Model\Web\Parser\Data\ExportPreviewPost.cs" />
     <Compile Include="Model\Helper\HtmlUtils.cs" />
+    <Compile Include="Model\Database\SQLiteConnectionExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

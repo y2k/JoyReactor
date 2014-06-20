@@ -26,19 +26,15 @@ namespace JoyReactor.Core.Model
                     else if (flags == SyncFlags.Next) SyncNextPage(id);
 
                     var sid = ToFlatId(id);
-					lock (MainDb.Instance) {
-						return MainDb.Instance.Query<Post>("SELECT * FROM posts WHERE Id IN (SELECT PostId FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?))", sid);
-					}
+					return MainDb.Instance.SafeQuery<Post>("SELECT * FROM posts WHERE Id IN (SELECT PostId FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?))", sid);
                 });
         }
 
         public int GetCount(ID id)
         {
-			lock (MainDb.Instance) {
-				return MainDb.Instance.ExecuteScalar<int> (
-					"SELECT COUNT(*) FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)",
-					ToFlatId (id));
-			}
+			return MainDb.Instance.SafeExecuteScalar<int> (
+				"SELECT COUNT(*) FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)",
+				ToFlatId (id));
         }
 
         public Task<int> GetCountAsync(ID id)
@@ -57,29 +53,23 @@ namespace JoyReactor.Core.Model
 
         private void SyncFirstPage(ID id)
         {
-			long ts;
-			lock (MainDb.Instance) {
-				ts = MainDb.Instance.ExecuteScalar<long>("SELECT Timestamp FROM tags WHERE TagId = ?", ToFlatId(id));
-			}
+			long ts = MainDb.Instance.SafeExecuteScalar<long>("SELECT Timestamp FROM tags WHERE TagId = ?", ToFlatId(id));
             if (Math.Abs(ts - TimestampNow()) < Constants.TagLifeTime) return;
 
-            var p = parsers.First(s => s.ParserId == id.Site);
-
+			var p = parsers.First(s => s.ParserId == id.Site);
             p.ExtractTagPostCollection(id.Type, id.Tag, 0, GetSiteCookies(id), state =>
             {
                 if (state.State == CollectionExportState.ExportState.Begin)
                 {
-					lock (MainDb.Instance) {
-						MainDb.Instance.Execute("UPDATE tags SET Timestamp = ? WHERE TagId = ?", TimestampNow(), ToFlatId(id));
-	                    // Удаление постов тега
-						MainDb.Instance.Execute(
-	                        "DELETE FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)",
-	                        ToFlatId(id));
-	                    // Удаление связанных тегов
-						MainDb.Instance.Execute(
-	                        "DELETE FROM tag_linked_tags WHERE ParentTagId IN (SELECT Id FROM tags WHERE TagId = ?)",
-	                        ToFlatId(id));
-					}
+					MainDb.Instance.SafeExecute("UPDATE tags SET Timestamp = ? WHERE TagId = ?", TimestampNow(), ToFlatId(id));
+                    // Удаление постов тега
+					MainDb.Instance.SafeExecute(
+                    "DELETE FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)",
+                    ToFlatId(id));
+                    // Удаление связанных тегов
+					MainDb.Instance.SafeExecute(
+                    "DELETE FROM tag_linked_tags WHERE ParentTagId IN (SELECT Id FROM tags WHERE TagId = ?)",
+                    ToFlatId(id));
                 }
                 else if (state.State == CollectionExportState.ExportState.PostItem)
                 {
@@ -88,27 +78,23 @@ namespace JoyReactor.Core.Model
                 else if (state.State == CollectionExportState.ExportState.LikendTag)
                 {
                     // TODO Добавить проверку, что это первая страница
-					lock (MainDb.Instance) {
-						int tid = MainDb.Instance.ExecuteScalar<int>("SELECT Id FROM tags WHERE TagId = ?", ToFlatId(id));
-						MainDb.Instance.Insert(new TagLinkedTag
-	                    {
-	                        ParentTagId = tid,
-	                        GroupName = state.LinkedTag.group,
-	                        Image = state.LinkedTag.image,
-	                        Title = state.LinkedTag.name,
-	                        TagId = ToFlatId(new ID { Site = p.ParserId, Type = ID.TagType.Good, Tag = state.LinkedTag.value }),
-	                    });
-					}
+					int tid = MainDb.Instance.SafeExecuteScalar<int>("SELECT Id FROM tags WHERE TagId = ?", ToFlatId(id));
+					MainDb.Instance.SafeInsert(new TagLinkedTag
+                    {
+                        ParentTagId = tid,
+                        GroupName = state.LinkedTag.group,
+                        Image = state.LinkedTag.image,
+                        Title = state.LinkedTag.name,
+                        TagId = ToFlatId(new ID { Site = p.ParserId, Type = ID.TagType.Good, Tag = state.LinkedTag.value }),
+                    });
                 }
             });
         }
 
         private IDictionary<string, string> GetSiteCookies(ID id)
         {
-			lock (MainDb.Instance) {
-				var p = MainDb.Instance.DeferredQuery<Profile> ("SELECT * FROM profiles WHERE Site = ?", "" + id.Site).FirstOrDefault ();
-				return p == null ? new Dictionary<string, string> () : DeserializeObject<Dictionary<string, string>> (p.Cookie);
-			}
+			var p = MainDb.Instance.SafeDeferredQuery<Profile> ("SELECT * FROM profiles WHERE Site = ?", "" + id.Site).FirstOrDefault ();
+			return p == null ? new Dictionary<string, string> () : DeserializeObject<Dictionary<string, string>> (p.Cookie);
         }
 
         private void SavePostToDatabase(ID listId, ExportPost post)
@@ -116,19 +102,15 @@ namespace JoyReactor.Core.Model
             var p = Convert(listId.Site, post);
             var f = ToFlatId(listId);
 
-			lock (MainDb.Instance) {
-				p.Id = MainDb.Instance.ExecuteScalar<int> ("SELECT Id FROM posts WHERE PostId = ?", p.PostId);
-				if (p.Id == 0) MainDb.Instance.Insert (p);
-				else MainDb.Instance.Update (p);
-			}
+			p.Id = MainDb.Instance.SafeExecuteScalar<int> ("SELECT Id FROM posts WHERE PostId = ?", p.PostId);
+			if (p.Id == 0) MainDb.Instance.SafeInsert (p);
+			else MainDb.Instance.SafeUpdate (p);
 
             var tp = new TagPost();
             tp.PostId = p.Id;
             tp.Status = TagPost.StatusNew;
-			lock (MainDb.Instance) {
-				tp.TagId = MainDb.Instance.ExecuteScalar<int> ("SELECT Id FROM tags WHERE TagId = ?", f);
-				MainDb.Instance.Insert (tp);
-			}
+			tp.TagId = MainDb.Instance.SafeExecuteScalar<int> ("SELECT Id FROM tags WHERE TagId = ?", f);
+			MainDb.Instance.SafeInsert (tp);
         }
 
         private void SyncNextPage(ID id)
