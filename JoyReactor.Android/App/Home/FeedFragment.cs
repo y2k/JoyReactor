@@ -34,7 +34,7 @@ namespace JoyReactor.Android.App.Home
 			list.Adapter = adapter = new FeedAdapter (Activity);
 			list.SetItemMargin((int)(4 * Resources.DisplayMetrics.Density));
 
-			ReloadList (ID.ReactorGood);
+			ReloadList (ID.Factory.New(ID.IdConst.ReactorGood));
 		}
 
 		public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)

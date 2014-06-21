@@ -144,7 +144,6 @@
     <None Include="Assets\stub.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="JoyReactor.WP_2014_06_18_23_57_33.sap" />
     <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml" />
     <None Include="Properties\WMAppManifest.xml">

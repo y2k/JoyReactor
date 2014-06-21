@@ -64,7 +64,7 @@ namespace JoyReactor.Core.Model
 					lock (MainDb.Instance) {
 						MainDb.Instance.RunInTransaction(() => {
 							foreach (var t in pf.ReadingTags) {
-								var id = MainDb.ToFlatId(ID.Factory.Reactor(t.Tag));
+								var id = MainDb.ToFlatId(ID.Factory.NewTag(t.Tag));
 								int c = MainDb.Instance.ExecuteScalar<int>("SELECT COUNT(*) FROM tags WHERE TagId = ?", id);
 								if (c == 0) {
 									MainDb.Instance.Insert(new Tag {

@@ -1,26 +1,30 @@
 ﻿using System;
 using JoyReactor.Core.Model.Parser;
+using System.Collections.Generic;
 
 namespace JoyReactor.Core
 {
 	public class ID
 	{
+		public enum IdConst { ReactorGood, ReactorBest, ReactorAll, ReactorFavorite }
+
 		private const char Divider = '\u0000';
 
-		public static readonly ID ReactorGood = new ID { Site = SiteParser.JoyReactor, Type = TagType.Good };
-		public static readonly ID ReactorBest = new ID { Site = SiteParser.JoyReactor, Type = TagType.Best };
-		public static readonly ID ReactorAll = new ID { Site = SiteParser.JoyReactor, Type = TagType.All };
-		public static readonly ID ReactorFavorite = new ID { Site = SiteParser.JoyReactor, Type = TagType.Favorite };
+		private static readonly Dictionary<IdConst, ID> Consts = new Dictionary<IdConst, ID>() {
+			{ IdConst.ReactorGood, new ID { Site = SiteParser.JoyReactor, Type = TagType.Good } },
+			{ IdConst.ReactorBest, new ID { Site = SiteParser.JoyReactor, Type = TagType.Best } },
+			{ IdConst.ReactorAll, new ID { Site = SiteParser.JoyReactor, Type = TagType.All } },
+			{ IdConst.ReactorFavorite, new ID { Site = SiteParser.JoyReactor, Type = TagType.Favorite } }
+		};
 
-		public SiteParser Site { get; set; }
-		public TagType Type { get; set; }
-		public string Tag { get; set; }
+		internal SiteParser Site { get; set; }
+		internal TagType Type { get; set; }
+		internal string Tag { get; set; }
 
 		public enum SiteParser { JoyReactor, Chan4, Chan7, Chan2 }
 		public enum TagType { Best, Good, All, Favorite }
 
-		public string SerializeToString ()
-		{
+		public string SerializeToString () {
 			return "" + Site + Divider + Type + Divider + Tag;
 		}
 
@@ -33,8 +37,7 @@ namespace JoyReactor.Core
 			};
 		}
 
-		public static ID Parser(string id) 
-		{
+		public static ID Parser(string id) {
 			var p = id.Split ('-');
 			return new ID { 
 				Site = (SiteParser)Enum.Parse (typeof(SiteParser), p [0]), 
@@ -49,14 +52,16 @@ namespace JoyReactor.Core
 
 		public class Factory
 		{
-			public static ID Tag(SiteParser site, TagType type, String name) 
-			{
-				return new ID { Site = site, Tag = name, Type = type };
+			public static ID New(IdConst c) {
+				return Consts [c];
 			}
 
-			public static ID Reactor(String name)
-			{
-				return Tag (SiteParser.JoyReactor, TagType.Good, name);
+			public static ID NewTag(string tag) {
+				return new ID { Site = SiteParser.JoyReactor, Type = TagType.Good, Tag = tag };
+			}
+
+			public static ID NewFavoriteForUser(string username) {
+				return new ID { Site = SiteParser.JoyReactor, Type = TagType.Good, Tag = username };
 			}
 		}
 	}
