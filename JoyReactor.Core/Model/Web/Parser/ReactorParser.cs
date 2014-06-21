@@ -40,22 +40,20 @@ namespace JoyReactor.Core.Model.Parser
 
         private static readonly Regex COMMENT_IMAGES = new Regex("<img src=\"(http://[^\"]+/pics/comment/)[^\"]+(\\-\\d+\\.[^\"]+)");
 
-        private static readonly Regex TAGS = new Regex("<a title=\"(.+?)\" data\\-ids=");
-        private static readonly Regex TAGS_INTEREST = new Regex(">([^\\(<>]+)\\(\\d+\\)</");
+//        private static readonly Regex TAGS = new Regex("<a title=\"(.+?)\" data\\-ids=");
+//        private static readonly Regex TAGS_INTEREST = new Regex(">([^\\(<>]+)\\(\\d+\\)</");
 
         private static readonly Regex SUB_POSTER = new Regex("src=\"([^\"]+)\" *alt=\"[^\"]+\" *class=\"blog_avatar\" */>");
-
-        private static readonly Regex SIMILAR_POST = new Regex("<td class=\"similar_post\">(.+?)</td>", RegexOptions.Singleline);
-        private static readonly Regex SIMILAR_POST_ID = new Regex("<a href=\"/post/(\\d+)\">");
-        private static readonly Regex SIMILAR_POST_IMAGE = new Regex("<img src=\"([^\"]+)");
+//        private static readonly Regex SIMILAR_POST = new Regex("<td class=\"similar_post\">(.+?)</td>", RegexOptions.Singleline);
+//        private static readonly Regex SIMILAR_POST_ID = new Regex("<a href=\"/post/(\\d+)\">");
+//        private static readonly Regex SIMILAR_POST_IMAGE = new Regex("<img src=\"([^\"]+)");
 
         private static readonly Regex SUB_LINKED_SUBS = new Regex("<img src=\"(http://img\\d+.joyreactor\\.cc/pics/avatar/tag/\\d+)\"\\s+alt=\"([^\"]+)\"\\s*/>\\s*</td>\\s*<td>\\s*<a href=\"[^\"]+tag/([^\"]+)\"");
-
         private static readonly Regex COUB = new Regex("<iframe src=\"http://coub.com/embed/(.+?)\" allowfullscreen=\"true\" frameborder=\"0\" width=\"(\\d+)\" height=\"(\\d+)");
 
-        private static readonly Regex SIMILAR_POST_TITLE = new Regex("<img src=\"[^\"]+\" alt=\"([^\"]+)");
-        private static readonly Regex SIMILAR_POST_TITLE2 = new Regex("<a href=\"[^\"]*/tag/[^\"]+\">\\s*([^<]+)\\s*</a>");
-        private static readonly Regex SIMILAR_POST_TITLE3 = new Regex("<a href=\"http://([\\w\\d]+)\\.joyreactor\\.cc/\">");
+//        private static readonly Regex SIMILAR_POST_TITLE = new Regex("<img src=\"[^\"]+\" alt=\"([^\"]+)");
+//        private static readonly Regex SIMILAR_POST_TITLE2 = new Regex("<a href=\"[^\"]*/tag/[^\"]+\">\\s*([^<]+)\\s*</a>");
+//        private static readonly Regex SIMILAR_POST_TITLE3 = new Regex("<a href=\"http://([\\w\\d]+)\\.joyreactor\\.cc/\">");
 
         private static readonly Regex COMMENT_RATING = new Regex("<span\\s*class=\"comment_rating\"\\s*comment_id=\"\\d+\">\\s*<span>—\\s*([\\d\\.]+)</span>", RegexOptions.Singleline);
 
@@ -392,21 +390,16 @@ namespace JoyReactor.Core.Model.Parser
             callback(new CollectionExportState { State = CollectionExportState.ExportState.TagInfo, TagInfo = s });
 
             var m = POST.Match(html);
-            if (m.Success)
-            {
-                do
-                {
+			if (m.Success) {
+				do {
                     ExportPost p = CreatePost(m.Groups[1].Value);
                     callback(new CollectionExportState { State = CollectionExportState.ExportState.PostItem, Post = p });
 
                     m = m.NextMatch();
                 } while (m.Success);
-            }
-            else
-            {
+			} else {
                 m = POST_AUTHORIZED.Match(html);
-                while (m.Success)
-                {
+				while (m.Success) {
                     var p = CreatePost(m.Groups[1].Value);
                     callback(new CollectionExportState { State = CollectionExportState.ExportState.PostItem, Post = p });
 
@@ -414,11 +407,9 @@ namespace JoyReactor.Core.Model.Parser
                 }
             }
 
-            if (lastLoadedPage == 0)
-            {
+			if (lastLoadedPage == 0) {
                 m = SUB_LINKED_SUBS.Match(html);
-                while (m.Success)
-                {
+				while (m.Success) {
                     var t = new ExportLinkedTag();
                     t.name = WebUtility.HtmlDecode(m.Groups[2].Value);
                     t.group = "None";

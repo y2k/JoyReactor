@@ -22,6 +22,10 @@ namespace JoyReactor.Core.Model
             return Task.Run(
                 () =>
                 {
+					if (id.Type == ID.TagType.Favorite && id.Tag == null) {
+						id.Tag = MainDb.Instance.SafeExecuteScalar<string>("SELECT Username From profiles WHERE Site = ?", "" + ID.SiteParser.JoyReactor);
+					}
+
                     if (flags == SyncFlags.First) SyncFirstPage(id);
                     else if (flags == SyncFlags.Next) SyncNextPage(id);
 
@@ -59,24 +63,20 @@ namespace JoyReactor.Core.Model
 			var p = parsers.First(s => s.ParserId == id.Site);
             p.ExtractTagPostCollection(id.Type, id.Tag, 0, GetSiteCookies(id), state =>
             {
-                if (state.State == CollectionExportState.ExportState.Begin)
-                {
+				if (state.State == CollectionExportState.ExportState.Begin) {
 					MainDb.Instance.SafeExecute("UPDATE tags SET Timestamp = ? WHERE TagId = ?", TimestampNow(), ToFlatId(id));
                     // Удаление постов тега
-					MainDb.Instance.SafeExecute(
-                    "DELETE FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)",
-                    ToFlatId(id));
+					MainDb.Instance.SafeExecute("DELETE FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)", ToFlatId(id));
                     // Удаление связанных тегов
-					MainDb.Instance.SafeExecute(
-                    "DELETE FROM tag_linked_tags WHERE ParentTagId IN (SELECT Id FROM tags WHERE TagId = ?)",
-                    ToFlatId(id));
-                }
-                else if (state.State == CollectionExportState.ExportState.PostItem)
-                {
+					MainDb.Instance.SafeExecute( "DELETE FROM tag_linked_tags WHERE ParentTagId IN (SELECT Id FROM tags WHERE TagId = ?)", ToFlatId(id));
+				} else if (state.State == CollectionExportState.ExportState.TagInfo) {
+					var t = MainDb.Instance.SafeQuery<Tag>("SELECT * FROM tags WHERE TagId = ?", ToFlatId(id)).FirstOrDefault() 
+							?? new Tag { BestImage = state.TagInfo.image, TagId = ToFlatId(id) };
+					if (t.Id == 0) MainDb.Instance.SafeInsert(t);
+					else MainDb.Instance.SafeUpdate(t);
+				} else if (state.State == CollectionExportState.ExportState.PostItem) {
                     SavePostToDatabase(id, state.Post);
-                }
-                else if (state.State == CollectionExportState.ExportState.LikendTag)
-                {
+				} else if (state.State == CollectionExportState.ExportState.LikendTag) {
                     // TODO Добавить проверку, что это первая страница
 					int tid = MainDb.Instance.SafeExecuteScalar<int>("SELECT Id FROM tags WHERE TagId = ?", ToFlatId(id));
 					MainDb.Instance.SafeInsert(new TagLinkedTag

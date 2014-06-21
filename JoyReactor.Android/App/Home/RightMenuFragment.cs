@@ -23,7 +23,7 @@ namespace JoyReactor.Android.App.Home
 	{
 		private ListView list;
 		private Adapter adapter;
-		private ITagCollectionModel model = InjectService.Instance.Get<ITagCollectionModel> ();
+		private ITagCollectionModel model = InjectService.Locator.GetInstance<ITagCollectionModel> ();
 
 		public override void OnResume ()
 		{
@@ -61,7 +61,7 @@ namespace JoyReactor.Android.App.Home
 
 		public class Adapter : ArrayAdapter<TagLinkedTag>
 		{
-			private IImageModel iModel = InjectService.Instance.Get<IImageModel> ();
+			private IImageModel iModel = InjectService.Locator.GetInstance<IImageModel> ();
 
 			public Adapter(Context context) : base(context, 0) { }
 

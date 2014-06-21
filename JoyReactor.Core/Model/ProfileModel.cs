@@ -27,34 +27,30 @@ namespace JoyReactor.Core.Model
 				var c = p.Login(username, password);
 
 				if (c == null || c.Count < 1) throw new Exception();
-
 				var pf = new Profile { Cookie = SerializeObject(c), Site = "" + ID.SiteParser.JoyReactor, Username = username };
 
-				lock (MainDb.Instance) {
-					MainDb.Instance.InsertOrReplace(pf);
-				}
+				MainDb.Instance.SafeRunInTransaction(() => {
+					ClearDatabaseFromOldData();
+					MainDb.Instance.SafeInsert(pf);
+				});
+
+				GetCurrentProfileAsync().Wait();
 			});
 		}
 
 		public Task LogoutAsync ()
 		{
 			return Task.Run (() => {
-				lock (MainDb.Instance) {
-					MainDb.Instance.RunInTransaction(() => {
-						MainDb.Instance.Execute("DELETE FROM profiles");
-						MainDb.Instance.Execute("DELETE FROM tags WHERE Flags & ? != 0", Tag.FlagWebRead);
-					});
-				}
+				MainDb.Instance.SafeRunInTransaction(() => {
+					ClearDatabaseFromOldData();
+				});
 			});
 		}
 
 		public Task<ProfileInformation> GetCurrentProfileAsync ()
 		{
 			return Task.Run (() => {
-				string un;
-				lock (MainDb.Instance) {
-					un = MainDb.Instance.ExecuteScalar<string>("SELECT Username From profiles WHERE Site = ?", "" + ID.SiteParser.JoyReactor);
-				}
+				string un = MainDb.Instance.SafeExecuteScalar<string>("SELECT Username From profiles WHERE Site = ?", "" + ID.SiteParser.JoyReactor);
 				if (un == null) return null;
 
 				var p = parsers.First(s => s.ParserId == ID.SiteParser.JoyReactor);
@@ -88,6 +84,13 @@ namespace JoyReactor.Core.Model
 		#endregion
 
 		#region Private methods
+
+		private static void ClearDatabaseFromOldData() {
+			MainDb.Instance.SafeExecute("DELETE FROM posts");
+			MainDb.Instance.SafeExecute("DELETE FROM tag_post");
+			MainDb.Instance.SafeExecute("DELETE FROM tags WHERE Flags & ? != 0", Tag.FlagWebRead);
+			MainDb.Instance.SafeExecute("DELETE FROM profiles");
+		}
 
 		private static string SerializeObject(IDictionary<string, string> o) 
 		{

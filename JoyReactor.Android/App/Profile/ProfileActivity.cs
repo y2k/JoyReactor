@@ -28,7 +28,7 @@ namespace JoyReactor.Android.App.Profile
 
 		public class ProfileFragment : BaseFragment
 		{
-			private IProfileModel model = InjectService.Instance.Get<IProfileModel>();
+			private IProfileModel model = InjectService.Locator.GetInstance<IProfileModel>();
 
 			private ViewAnimator animator;
 			private EditText username;
@@ -43,12 +43,13 @@ namespace JoyReactor.Android.App.Profile
 				View.FindViewById(Resource.Id.login).Click += async (sender, e) => {
 					animator.DisplayedChild = 0;
 					await model.LoginAsync(username.Text, password.Text);
-					Activity.Recreate();
+//					await model.GetCurrentProfileAsync ();
+					StartActivity(new Intent(Activity, typeof(HomeActivity)).AddFlags(ActivityFlags.ClearTop | ActivityFlags.TaskOnHome));
 				};
 				View.FindViewById (Resource.Id.logout).Click += async (sender, e) => {
 					animator.DisplayedChild = 0;
 					await model.LogoutAsync();
-					Activity.Recreate();
+					StartActivity(new Intent(Activity, typeof(HomeActivity)).AddFlags(ActivityFlags.ClearTop | ActivityFlags.TaskOnHome));
 				};
 
 				var t = await model.GetCurrentProfileAsync ();

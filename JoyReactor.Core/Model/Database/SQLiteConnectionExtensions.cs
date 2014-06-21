@@ -41,5 +41,11 @@ namespace JoyReactor.Core.Model.Database
 				return instance.Query<T> (query, args);
 			}
 		}
+
+		public static void SafeRunInTransaction (this ISQLiteConnection instance, Action action) {
+			lock (instance) {
+				instance.RunInTransaction (action);
+			}
+		}
 	}
 }
