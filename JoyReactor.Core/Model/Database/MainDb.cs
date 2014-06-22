@@ -47,6 +47,7 @@ namespace JoyReactor.Core.Model.Database
             db.CreateTable<Profile>();
             db.CreateTable<TagLinkedTag>();
             db.CreateTable<Comment>();
+            db.CreateTable<CommentAttachment>();
 
 			db.Insert(new Tag { TagId = ToFlatId(ID.Factory.New(ID.IdConst.ReactorGood)), Title = "JoyReactor", Flags = Tag.FlagSystem });
 			db.Insert(new Tag { TagId = ToFlatId(ID.Factory.NewTag("anime")), Title = "Anime", Flags = Tag.FlagShowInMain, BestImage = "http://img1.joyreactor.cc/pics/avatar/tag/2851" });

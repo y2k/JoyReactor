@@ -28,15 +28,11 @@ namespace JoyReactor.Core.Model
 
 		public Task<List<Comment>> GetTopCommentsAsync (int postId, int count)
 		{
-			return Task.Run(() =>
-				{
-					lock (MainDb.Instance) {
-						var comments = MainDb.Instance
-	                        .Query<Comment>("SELECT * FROM comments WHERE PostId = ? AND ParentId = 0 ORDER BY Rating DESC LIMIT ?", postId, count)
-	                        .ToList();
-	                    return comments;
-					}
-				});
+			return Task.Run(() => {
+				return MainDb.Instance
+	                .SafeQuery<Comment>("SELECT * FROM comments WHERE PostId = ? AND ParentId = 0 ORDER BY Rating DESC LIMIT ?", postId, count)
+	                .ToList();
+			});
 		}
 
         public Task<Post> GetPostAsync(ID listId, int position)
@@ -86,14 +82,9 @@ namespace JoyReactor.Core.Model
                                     c.Rating = state.Comment.rating;
 
 									if (state.Comment.parentId != null) {
-										lock (MainDb.Instance) {
-											c.ParentId = MainDb.Instance.Query<Comment>("SELECT * FROM comments WHERE CommentId = ? AND PostId = ?", state.Comment.parentId, p.Id).First().Id;
-										}
+										c.ParentId = MainDb.Instance.SafeQuery<Comment>("SELECT * FROM comments WHERE CommentId = ? AND PostId = ?", state.Comment.parentId, p.Id).First().Id;
                                     }
-
-									lock (MainDb.Instance) {
-										MainDb.Instance.Insert(c);
-									}
+									MainDb.Instance.SafeInsert(c);
                                 }
                                 break;
                         }
@@ -109,6 +100,17 @@ namespace JoyReactor.Core.Model
             });
         }
 
+        public Task<List<string>> GetImages(int postId)
+        {
+            return Task.Run(() => {
+                return MainDb.Instance
+                    .SafeQuery<Comment>("SELECT * FROM comments WHERE PostId = ? AND ParentId = 0 ORDER BY Rating DESC LIMIT ?", postId, count)
+                    .ToList();
+            });
+        }
+
+        #region Private methods
+
         private static long TimestampNow()
         {
             return DateTime.Now.ToFileTimeUtc() / 10000L;
@@ -118,5 +120,7 @@ namespace JoyReactor.Core.Model
         {
             return id.Site + "-" + id.Type + "-" + id.Tag;
         }
+
+        #endregion
     }
 }

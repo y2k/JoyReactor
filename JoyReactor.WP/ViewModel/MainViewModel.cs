@@ -64,7 +64,7 @@ namespace JoyReactor.WP.ViewModel
                 OpenPostCommand = new RelayCommand<Post>(s =>
                 {
                     var vm = SimpleIoc.Default.GetInstance<PostViewModel>();
-                    vm.Initialize(currentTag == null ? ID.ReactorGood : ID.Parser(currentTag.TagId), s.PostId);
+                    vm.Initialize(currentTag == null ? ID.Factory.New(ID.IdConst.ReactorGood) : ID.Parser(currentTag.TagId), s.PostId);
                 });
                 Initialize(null);
             }
@@ -77,15 +77,15 @@ namespace JoyReactor.WP.ViewModel
                 if (tag == null)
                 {
                     Tags.Clear();
-                    Tags.Add(new Tag { Title = AppResources.Feed, TagId = ID.ReactorGood.SerializeToString() });
-                    Tags.Add(new Tag { Title = AppResources.Favorite, TagId = ID.ReactorFavorite.SerializeToString() });
+                    Tags.Add(new Tag { Title = AppResources.Feed, TagId = ID.Factory.New(ID.IdConst.ReactorGood).SerializeToString() });
+                    Tags.Add(new Tag { Title = AppResources.Favorite, TagId = ID.Factory.New(ID.IdConst.ReactorFavorite).SerializeToString() });
 
                     var tags = await model.GetMainSubscriptionsAsync();
                     tags.ForEach(Tags.Add);
                 }
 
                 Posts.Clear();
-                var posts = await posModel.GetPostsAsync(tag == null ? ID.ReactorGood : ID.Parser(tag.TagId), SyncFlags.First);
+                var posts = await posModel.GetPostsAsync(tag == null ? ID.Factory.New(ID.IdConst.ReactorGood) : ID.Parser(tag.TagId), SyncFlags.First);
                 posts.ForEach(Posts.Add);
             }
             catch
