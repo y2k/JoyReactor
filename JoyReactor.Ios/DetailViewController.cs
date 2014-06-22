@@ -3,19 +3,20 @@ using System.Drawing;
 using System.Collections.Generic;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using JoyReactor.Core.Model.DTO;
 
 namespace JoyReactor.Ios
 {
-	public partial class DetailViewController : UIViewController
+	public partial class DetailViewController : UICollectionViewController
 	{
 		UIPopoverController masterPopoverController;
-		object detailItem;
+		Tag detailItem;
 
 		public DetailViewController (IntPtr handle) : base (handle)
 		{
 		}
 
-		public void SetDetailItem (object newDetailItem)
+		public void SetDetailItem (Tag newDetailItem)
 		{
 			if (detailItem != newDetailItem) {
 				detailItem = newDetailItem;
@@ -39,7 +40,7 @@ namespace JoyReactor.Ios
 		{
 			// Releases the view if it doesn't have a superview.
 			base.DidReceiveMemoryWarning ();
-			
+
 			// Release any cached data, images, etc that aren't in use.
 		}
 

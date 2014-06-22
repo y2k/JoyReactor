@@ -249,7 +249,7 @@ Global
 		{0C771503-FD14-436A-A7C0-E2DCE1D5FEC3} = {EE54189B-2D6E-4B28-896F-3AB4F4337EB0}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = JoyReactor.Android\JoyReactor.Android.csproj
+		StartupItem = JoyReactor.Ios\JoyReactor.Ios.csproj
 		Policies = $0
 		$0.DotNetNamingPolicy = $1
 		$1.DirectoryNamespaceAssociation = PrefixedHierarchical

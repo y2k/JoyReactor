@@ -1,6 +1,8 @@
 ﻿using System;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using JoyReactor.Ios.Model;
+using JoyReactor.Core.Model.Inject;
 
 namespace JoyReactor.Ios
 {
@@ -18,6 +20,8 @@ namespace JoyReactor.Ios
 
 		public override bool FinishedLaunching (UIApplication application, NSDictionary launchOptions)
 		{
+			InjectService.Initialize(new IoInjectModule());
+
 			// Override point for customization after application launch.
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad) {
 				var splitViewController = (UISplitViewController)Window.RootViewController;
