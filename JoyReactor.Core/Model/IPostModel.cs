@@ -15,6 +15,6 @@ namespace JoyReactor.Core.Model
 
         Task<Post> GetPostAsync(ID listId, int position);
 
-        Task<List<string>> GetImages(int postId);
+        Task<List<CommentAttachment>> GetAttachmentsAsync(int postId);
     }
 }

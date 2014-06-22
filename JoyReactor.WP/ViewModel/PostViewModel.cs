@@ -58,6 +58,8 @@ namespace JoyReactor.WP.ViewModel
             private Uri _image;
             public Uri Image { get { return _image; } set { Set(ref _image, value); } }
 
+            public ObservableCollection<CommentAttachment> Attachments { get; private set; }
+
             public ObservableCollection<Comment> Comments { get; private set; }
 
             #endregion
@@ -69,6 +71,7 @@ namespace JoyReactor.WP.ViewModel
 
             public ItemPostViewModel(ID listId, int position)
             {
+                Attachments = new ObservableCollection<CommentAttachment>();
                 Comments = new ObservableCollection<Comment>();
                 this.listId = listId;
                 this.position = position;
@@ -77,12 +80,14 @@ namespace JoyReactor.WP.ViewModel
             internal async void Initialize()
             {
                 Comments.Clear();
+                Attachments.Clear();
 
                 var post = await model.GetPostAsync(listId, position);
                 Title = post.Title;
                 Image = post.Image == null ? null : new Uri(post.Image);
 
                 (await model.GetTopCommentsAsync(post.Id, 5)).ForEach(s => Comments.Add(s));
+                (await model.GetAttachmentsAsync(post.Id)).ForEach(s => Attachments.Add(s));
             }
         }
     }
