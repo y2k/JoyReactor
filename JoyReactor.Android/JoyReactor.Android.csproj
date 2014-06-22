@@ -12,9 +12,9 @@
     <AndroidResgenClass>Resource</AndroidResgenClass>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-    <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
+    <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <AssemblyName>JoyReactor.Android</AssemblyName>
-    <TargetFrameworkVersion>v4.0.3</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.4</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -85,7 +85,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App\HomeActivity.cs" />
     <Compile Include="App\Base\BaseActivity.cs" />
@@ -146,17 +145,5 @@
       <Project>{0C771503-FD14-436A-A7C0-E2DCE1D5FEC3}</Project>
       <Name>JoyReactor.Android.Platform</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App\" />
-    <Folder Include="App\Base\" />
-    <Folder Include="App\Home\" />
-    <Folder Include="Model\" />
-    <Folder Include="Widget\" />
-    <Folder Include="App\Base\Commands\" />
-    <Folder Include="App\Post\" />
-    <Folder Include="App\Profile\" />
-    <Folder Include="Resources\menu\" />
-    <Folder Include="Resources\values-ru\" />
   </ItemGroup>
 </Project>

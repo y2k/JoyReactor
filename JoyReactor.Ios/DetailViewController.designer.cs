@@ -1,9 +1,12 @@
-﻿//
-// This file has been generated automatically by MonoDevelop to store outlets and
-// actions made in the Xcode designer. If it is removed, they will be lost.
-// Manual changes to this file may not be handled correctly.
+// WARNING
 //
+// This file has been generated automatically by Xamarin Studio from the outlets and
+// actions declared in your storyboard file.
+// Manual changes to this file will not be maintained.
+//
+using System;
 using MonoTouch.Foundation;
+using MonoTouch.UIKit;
 using System.CodeDom.Compiler;
 
 namespace JoyReactor.Ios
@@ -12,12 +15,8 @@ namespace JoyReactor.Ios
 	partial class DetailViewController
 	{
 		[Outlet]
-		[GeneratedCodeAttribute ("iOS Designer", "1.0")]
-		MonoTouch.UIKit.UILabel detailDescriptionLabel { get; set; }
-
-		[Outlet]
-		[GeneratedCodeAttribute ("iOS Designer", "1.0")]
-		MonoTouch.UIKit.UIToolbar toolbar { get; set; }
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel detailDescriptionLabel { get; set; }
 
 		void ReleaseDesignerOutlets ()
 		{
@@ -25,12 +24,6 @@ namespace JoyReactor.Ios
 				detailDescriptionLabel.Dispose ();
 				detailDescriptionLabel = null;
 			}
-			
-			if (toolbar != null) {
-				toolbar.Dispose ();
-				toolbar = null;
-			}
 		}
 	}
 }
-
