@@ -34,6 +34,8 @@
                             <Image Width="400"
                                    Source="{Binding Image}"
                                    Height="400" />
+                            <HyperlinkButton Content="Images"
+                                             Command="{Binding OpenAllImagesCommand}" />
                             <TextBlock Text="TOP COMMENTS" />
                             <ListBox ItemsSource="{Binding Comments}"
                                      ScrollViewer.VerticalScrollBarVisibility="Disabled"

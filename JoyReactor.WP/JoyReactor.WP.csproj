@@ -96,6 +96,11 @@
     <Compile Include="Common\NavigationMessage.cs" />
     <Compile Include="Common\PhoneApplicationPageMediator.cs" />
     <Compile Include="LocalizedStrings.cs" />
+    <Compile Include="ViewModel\AttachmentViewModel.cs" />
+    <Compile Include="ViewModel\BaseViewModel.cs" />
+    <Compile Include="View\AttachmentsPage.xaml.cs">
+      <DependentUpon>AttachmentsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -127,6 +132,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="View\AttachmentsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using JoyReactor.Core;
 using JoyReactor.Core.Model;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.WP.ViewModel
 {
-    public class PostViewModel : ViewModelBase
+    public class PostViewModel : BaseViewModel
     {
         public ObservableCollection<ItemPostViewModel> Posts { get; private set; }
 
@@ -48,7 +49,7 @@ namespace JoyReactor.WP.ViewModel
             }
         }
 
-        public class ItemPostViewModel : ViewModelBase
+        public class ItemPostViewModel : BaseViewModel
         {
             #region ViewModel properties
 
@@ -62,12 +63,15 @@ namespace JoyReactor.WP.ViewModel
 
             public ObservableCollection<Comment> Comments { get; private set; }
 
+            public RelayCommand OpenAllImagesCommand { get; set; }
+
             #endregion
 
             private IPostModel model = InjectService.Locator.GetInstance<IPostModel>();
 
             private ID listId;
             private int position;
+            private int postId;
 
             public ItemPostViewModel(ID listId, int position)
             {
@@ -75,6 +79,8 @@ namespace JoyReactor.WP.ViewModel
                 Comments = new ObservableCollection<Comment>();
                 this.listId = listId;
                 this.position = position;
+
+                OpenAllImagesCommand = new RelayCommand(() => NavigateToViewModel(typeof(AttachmentViewModel), "id", postId));
             }
 
             internal async void Initialize()
@@ -85,6 +91,7 @@ namespace JoyReactor.WP.ViewModel
                 var post = await model.GetPostAsync(listId, position);
                 Title = post.Title;
                 Image = post.Image == null ? null : new Uri(post.Image);
+                postId = post.Id;
 
                 (await model.GetTopCommentsAsync(post.Id, 5)).ForEach(s => Comments.Add(s));
                 (await model.GetAttachmentsAsync(post.Id)).ForEach(s => Attachments.Add(s));

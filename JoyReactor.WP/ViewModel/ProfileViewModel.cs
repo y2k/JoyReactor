@@ -12,7 +12,7 @@ namespace JoyReactor.WP.ViewModel
 {
     public class ProfileViewModel : ViewModelBase
     {
-        private IProfileModel model = InjectService.Current.Get<IProfileModel>();
+        private IProfileModel model = InjectService.Locator.GetInstance<IProfileModel>();
 
         private string _username;
         public string Username { get { return _username; } set { Set(ref _username, value); } }

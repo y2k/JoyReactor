@@ -35,8 +35,8 @@ namespace JoyReactor.WP.ViewModel
 
         public RelayCommand<Post> OpenPostCommand { get; set; }
 
-        private ITagCollectionModel model = InjectService.Instance.Get<ITagCollectionModel>();
-        private IPostCollectionModel posModel = InjectService.Instance.Get<IPostCollectionModel>();
+        private ITagCollectionModel model = InjectService.Locator.GetInstance<ITagCollectionModel>();
+        private IPostCollectionModel posModel = InjectService.Locator.GetInstance<IPostCollectionModel>();
 
         private Tag currentTag;
 

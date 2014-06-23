@@ -11,5 +11,9 @@ namespace JoyReactor.WP.Common
     class NavigationMessage
     {
         internal ViewModelBase ViewModel { get; set; }
+
+        internal Type Target { get; set; }
+
+        internal IDictionary<string, string> Args { get; set; }
     }
 }
