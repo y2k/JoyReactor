@@ -41,13 +41,9 @@ namespace JoyReactor.Core.Model
             return Task.Run(() =>
             {
                 var sid = ToFlatId(listId);
-                Post p;
-                lock (MainDb.Instance)
-                {
-                    p = MainDb.Instance.Query<Post>(
+                var p = MainDb.Instance.SafeQuery<Post>(
                         "SELECT * FROM posts WHERE Id IN (SELECT PostId FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)) LIMIT 1 OFFSET ?",
                         sid, position).First();
-                }
                 if (Math.Abs(p.Timestamp - TimestampNow()) < Constants.PostListTime) return p;
 
                 try

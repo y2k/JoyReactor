@@ -80,7 +80,7 @@ namespace JoyReactor.WP.ViewModel
                 this.listId = listId;
                 this.position = position;
 
-                OpenAllImagesCommand = new RelayCommand(() => NavigateToViewModel(typeof(AttachmentViewModel), "id", postId));
+                OpenAllImagesCommand = new RelayCommand(() => NavigateToViewModel(typeof(AttachmentsViewModel), "id", postId));
             }
 
             internal async void Initialize()

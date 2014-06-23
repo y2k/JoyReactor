@@ -45,7 +45,7 @@ namespace JoyReactor.WP.ViewModel
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<ProfileViewModel>();
             SimpleIoc.Default.Register<PostViewModel>();
-            SimpleIoc.Default.Register<AttachmentViewModel>();
+            SimpleIoc.Default.Register<AttachmentsViewModel>();
         }
 
         public PostViewModel Post
@@ -72,9 +72,9 @@ namespace JoyReactor.WP.ViewModel
             }
         }
 
-        public AttachmentViewModel Attachments
+        public AttachmentsViewModel Attachments
         {
-            get { return ServiceLocator.Current.GetInstance<AttachmentViewModel>(); }
+            get { return ServiceLocator.Current.GetInstance<AttachmentsViewModel>(); }
         }
         
         public static void Cleanup()

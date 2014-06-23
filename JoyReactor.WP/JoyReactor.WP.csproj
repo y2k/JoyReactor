@@ -96,7 +96,7 @@
     <Compile Include="Common\NavigationMessage.cs" />
     <Compile Include="Common\PhoneApplicationPageMediator.cs" />
     <Compile Include="LocalizedStrings.cs" />
-    <Compile Include="ViewModel\AttachmentViewModel.cs" />
+    <Compile Include="ViewModel\AttachmentsViewModel.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="View\AttachmentsPage.xaml.cs">
       <DependentUpon>AttachmentsPage.xaml</DependentUpon>

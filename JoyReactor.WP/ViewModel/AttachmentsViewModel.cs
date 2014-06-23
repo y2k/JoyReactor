@@ -11,11 +11,16 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.WP.ViewModel
 {
-    public class AttachmentViewModel : BaseViewModel
+    public class AttachmentsViewModel : BaseViewModel
     {
         public ObservableCollection<CommentAttachment> Attachments { get; set; }
 
         private IPostModel model = InjectService.Locator.GetInstance<IPostModel>();
+
+        public AttachmentsViewModel()
+        {
+            Attachments = new ObservableCollection<CommentAttachment>();
+        }
 
         public async override void InitializeWithBundle(IDictionary<string, string> state)
         {
