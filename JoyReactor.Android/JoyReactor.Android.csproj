@@ -3,26 +3,25 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FF269F55-48C8-42BC-A8CC-5BC1C1DBE87F}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{C8E57538-8B6C-4BBE-BECE-C77DF342E022}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>JoyReactor.Android</RootNamespace>
-    <AndroidApplication>True</AndroidApplication>
-    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
-    <AndroidResgenClass>Resource</AndroidResgenClass>
-    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-    <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AndroidApplication>True</AndroidApplication>
+    <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
     <AssemblyName>JoyReactor.Android</AssemblyName>
     <TargetFrameworkVersion>v4.4</TargetFrameworkVersion>
-    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;__MOBILE__;__ANDROID__;</DefineConstants>
+    <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidLinkMode>None</AndroidLinkMode>
@@ -32,23 +31,19 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
-    <DefineConstants>__MOBILE__;__ANDROID__;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+    <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
-    <Reference Include="PCLStorage">
-      <HintPath>Libs\PCLStorage.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Android.Support.v4" />
     <Reference Include="Autofac">
-      <HintPath>Libs\Autofac.dll</HintPath>
+      <HintPath>..\packages\Autofac.3.5.0\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="System.Net">
       <HintPath>..\packages\MvvmCross.PortableSupport.3.1.1\lib\MonoAndroid\System.Net.dll</HintPath>
@@ -83,67 +78,63 @@
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
+    <Reference Include="PCLStorage">
+      <HintPath>..\packages\PCLStorage.0.9.6\lib\monoandroid\PCLStorage.dll</HintPath>
+    </Reference>
+    <Reference Include="PCLStorage.Abstractions">
+      <HintPath>..\packages\PCLStorage.0.9.6\lib\monoandroid\PCLStorage.Abstractions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="App\App.cs" />
     <Compile Include="App\HomeActivity.cs" />
+    <Compile Include="App\Base\Commands\ChangeSubscriptionCommand.cs" />
     <Compile Include="App\Base\BaseActivity.cs" />
-    <Compile Include="App\Home\FeedFragment.cs" />
     <Compile Include="App\Base\BaseFragment.cs" />
     <Compile Include="App\Home\FeedAdapter.cs" />
-    <Compile Include="App\App.cs" />
-    <Compile Include="Model\AndroidInjectModule.cs" />
-    <Compile Include="Model\BitmapImageDecoder.cs" />
-    <Compile Include="Widget\FixedSizeImageView.cs" />
+    <Compile Include="App\Home\FeedFragment.cs" />
     <Compile Include="App\Home\LeftMenuFragment.cs" />
     <Compile Include="App\Home\RightMenuFragment.cs" />
-    <Compile Include="App\Base\Commands\ChangeSubscriptionCommand.cs" />
     <Compile Include="App\Post\PostActivity.cs" />
     <Compile Include="App\Post\PostFragment.cs" />
     <Compile Include="App\Profile\ProfileActivity.cs" />
-    <Compile Include="Bootstrap\CommunitySqlitePluginBootstrap.cs" />
+    <Compile Include="Model\AndroidInjectModule.cs" />
+    <Compile Include="Model\BitmapImageDecoder.cs" />
+    <Compile Include="Widget\FixedSizeImageView.cs" />
     <Compile Include="Widget\WebImageView.cs" />
+    <Compile Include="Bootstrap\CommunitySqlitePluginBootstrap.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
-    <None Include="Properties\AndroidManifest.xml" />
-    <None Include="Libs\Ninject.Android.dll" />
-    <None Include="Libs\PCLStorage.Abstractions.dll" />
-    <None Include="Libs\PCLStorage.Abstractions.xml" />
-    <None Include="Libs\PCLStorage.dll" />
-    <None Include="Libs\PCLStorage.xml" />
-    <None Include="Libs\SQLite.Net.dll" />
-    <None Include="Libs\SQLite.Net.Platform.XamarinAndroid.dll" />
-    <None Include="Libs\Ninject.Common.dll" />
-    <None Include="Libs\Autofac.dll" />
-    <None Include="Libs\Autofac.xml" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />
     <AndroidResource Include="Resources\drawable\Icon.png" />
     <AndroidResource Include="Resources\layout\ActivityHome.axml" />
-    <AndroidResource Include="Resources\layout\FragmentFeed.axml" />
-    <AndroidResource Include="Resources\layout\ItemFeed.axml" />
-    <AndroidResource Include="Resources\layout\FragmentLeftMenu.axml" />
-    <AndroidResource Include="Resources\layout\ItemSubscription.axml" />
     <AndroidResource Include="Resources\layout\ActivityPost.axml" />
-    <AndroidResource Include="Resources\menu\home.xml" />
-    <AndroidResource Include="Resources\layout\fragment_profile.axml" />
-    <AndroidResource Include="Resources\values-ru\Strings.xml" />
     <AndroidResource Include="Resources\layout\fragment_post.axml" />
+    <AndroidResource Include="Resources\layout\fragment_profile.axml" />
+    <AndroidResource Include="Resources\layout\FragmentFeed.axml" />
+    <AndroidResource Include="Resources\layout\FragmentLeftMenu.axml" />
     <AndroidResource Include="Resources\layout\item_comment.axml" />
+    <AndroidResource Include="Resources\layout\ItemFeed.axml" />
+    <AndroidResource Include="Resources\layout\ItemSubscription.axml" />
+    <AndroidResource Include="Resources\menu\home.xml" />
+    <AndroidResource Include="Resources\values-ru\Strings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\JoyReactor.Core\JoyReactor.Core.csproj">
-      <Project>{E205F32E-24F2-4B73-B9F1-C474813D605B}</Project>
-      <Name>JoyReactor.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\StaggeredGridViewWrapper\JoyReactor.Android.Platform.csproj">
       <Project>{0C771503-FD14-436A-A7C0-E2DCE1D5FEC3}</Project>
       <Name>JoyReactor.Android.Platform</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JoyReactor.Core\JoyReactor.Core.csproj">
+      <Project>{E205F32E-24F2-4B73-B9F1-C474813D605B}</Project>
+      <Name>JoyReactor.Core</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
