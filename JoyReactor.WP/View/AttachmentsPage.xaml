@@ -26,11 +26,11 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="0"
                     Margin="12,17,0,28">
-            <TextBlock Text="MY APPLICATION"
+            <TextBlock Text="{Binding LocalizedResources.ApplicationTitleAllCaps, Mode=OneWay, Source={StaticResource LocalizedStrings}}"
                        Style="{StaticResource PhoneTextNormalStyle}" />
-            <TextBlock Text="page name"
+            <!--<TextBlock Text="page name"
                        Margin="9,-7,0,0"
-                       Style="{StaticResource PhoneTextTitle1Style}" />
+                       Style="{StaticResource PhoneTextTitle1Style}" />-->
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
@@ -40,7 +40,7 @@
 
             <phone:LongListSelector ItemsSource="{Binding Attachments}"
                                     LayoutMode="Grid"
-                                    GridCellSize="100,100">
+                                    GridCellSize="150,150">
                 <phone:LongListSelector.ItemTemplate>
                     <DataTemplate>
                         <Image Source="{Binding Url}" />
