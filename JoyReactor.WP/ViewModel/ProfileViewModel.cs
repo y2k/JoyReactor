@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Inject;
+using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace JoyReactor.WP.ViewModel
 {
     public class ProfileViewModel : ViewModelBase
     {
-        private IProfileModel model = InjectService.Locator.GetInstance<IProfileModel>();
+        private IProfileModel model = ServiceLocator.Current.GetInstance<IProfileModel>();
 
         private string _username;
         public string Username { get { return _username; } set { Set(ref _username, value); } }

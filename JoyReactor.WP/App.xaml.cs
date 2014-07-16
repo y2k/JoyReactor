@@ -9,6 +9,7 @@ using Microsoft.Phone.Shell;
 using JoyReactor.WP.Resources;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.WP.Model;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.WP
 {
@@ -57,7 +58,9 @@ namespace JoyReactor.WP
                 PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
 
-            InjectService.Initialize(new Wp8InjectModule());
+            ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator(new Wp8InjectModule()));
+
+            ThemeManager.ToLightTheme();
         }
 
         // Code to execute when the application is launching (eg, from Start)

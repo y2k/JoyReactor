@@ -4,6 +4,7 @@ using JoyReactor.Core.Model.Database;
 using Autofac;
 using Cirrious.MvvmCross.Community.Plugins.Sqlite;
 using Cirrious.MvvmCross.Community.Plugins.Sqlite.WindowsPhone;
+using JoyReactor.WP.ViewModel;
 
 namespace JoyReactor.WP.Model
 {
@@ -15,6 +16,11 @@ namespace JoyReactor.WP.Model
         {
             builder.RegisterType<BitmapImageDecoder>().As<IImageDecoder>();
             builder.RegisterType<MvxWindowsPhoneSQLiteConnectionFactory>().As<ISQLiteConnectionFactory>();
+
+            builder.RegisterType<MainViewModel>().AsSelf().SingleInstance();
+            builder.RegisterType<ProfileViewModel>().AsSelf().SingleInstance();
+            builder.RegisterType<PostViewModel>().AsSelf().SingleInstance();
+            builder.RegisterType<AttachmentsViewModel>().AsSelf().SingleInstance();
         }
 
         #endregion

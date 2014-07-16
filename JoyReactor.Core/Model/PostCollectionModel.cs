@@ -8,12 +8,13 @@ using JoyReactor.Core.Model.Parser.Data;
 using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.Inject;
 using Autofac;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model
 {
     class PostCollectionModel : IPostCollectionModel
     {
-		private ISiteParser[] parsers = InjectService.Locator.GetInstance<ISiteParser[]>();
+        private ISiteParser[] parsers = ServiceLocator.Current.GetInstance<ISiteParser[]>();
 
         #region IPostCollectionModel implementation
 

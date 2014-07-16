@@ -2,6 +2,7 @@
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model.DTO;
 using Cirrious.MvvmCross.Community.Plugins.Sqlite;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Database
 {
@@ -23,7 +24,7 @@ namespace JoyReactor.Core.Model.Database
 					{
 						if (instance == null)
 						{
-							var f = InjectService.Locator.GetInstance<ISQLiteConnectionFactory>();
+                            var f = ServiceLocator.Current.GetInstance<ISQLiteConnectionFactory>();
 							instance = f.Create(DatabaseName);
 							InitializeDatabase(instance);
 						}

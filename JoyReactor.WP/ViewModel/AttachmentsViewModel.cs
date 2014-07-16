@@ -2,6 +2,7 @@
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Inject;
+using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,7 +16,7 @@ namespace JoyReactor.WP.ViewModel
     {
         public ObservableCollection<CommentAttachment> Attachments { get; set; }
 
-        private IPostModel model = InjectService.Locator.GetInstance<IPostModel>();
+        private IPostModel model = ServiceLocator.Current.GetInstance<IPostModel>();
 
         public AttachmentsViewModel()
         {

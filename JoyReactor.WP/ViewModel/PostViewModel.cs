@@ -6,6 +6,7 @@ using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.WP.Common;
+using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,7 +23,7 @@ namespace JoyReactor.WP.ViewModel
         private int _currentPosition;
         public int CurrentPosition { get { return _currentPosition; } set { Set(ref _currentPosition, value); OnPositionChanged(); } }
 
-        private IPostCollectionModel model = InjectService.Locator.GetInstance<IPostCollectionModel>();
+        private IPostCollectionModel model = ServiceLocator.Current.GetInstance<IPostCollectionModel>();
         private ID listId;
 
         public PostViewModel()
@@ -67,7 +68,7 @@ namespace JoyReactor.WP.ViewModel
 
             #endregion
 
-            private IPostModel model = InjectService.Locator.GetInstance<IPostModel>();
+            private IPostModel model = ServiceLocator.Current.GetInstance<IPostModel>();
 
             private ID listId;
             private int position;

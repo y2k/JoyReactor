@@ -3,6 +3,7 @@ using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model.Parser.Data;
 using JoyReactor.Core.Model.Web;
+using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -70,7 +71,7 @@ namespace JoyReactor.Core.Model.Parser
 
         #endregion
 
-		private IWebDownloader downloader = InjectService.Locator.GetInstance<IWebDownloader>();
+        private IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
 
         #region Public methods
 

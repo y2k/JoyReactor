@@ -3,12 +3,13 @@ using PCLStorage;
 using System.IO;
 using JoyReactor.Core.Model.Inject;
 using System.Threading;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Image
 {
 	public class DefaultDiskCache : IDiskCache
 	{
-		private IImageDecoder decoder = InjectService.Locator.GetInstance<IImageDecoder> ();
+        private IImageDecoder decoder = ServiceLocator.Current.GetInstance<IImageDecoder>();
 		private IFolder root;
 
 		public DefaultDiskCache ()

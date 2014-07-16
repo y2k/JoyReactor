@@ -2,6 +2,7 @@
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model.Parser;
+using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace JoyReactor.Core.Model
 {
     class PostModel : IPostModel
     {
-        private ISiteParser[] parsers = InjectService.Locator.GetInstance<ISiteParser[]>();
+        private ISiteParser[] parsers = ServiceLocator.Current.GetInstance<ISiteParser[]>();
 
         public Task<List<Comment>> GetCommentsAsync(int postId, int parentCommentId)
         {

@@ -7,6 +7,7 @@ using PCLStorage;
 using System.Threading;
 using JoyReactor.Core.Model.Inject;
 using System.Collections.Generic;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Image
 {
@@ -15,8 +16,8 @@ namespace JoyReactor.Core.Model.Image
 		private const int MaxAttempts = 5;
 		private const int BaseAttemptDelay = 500;
 
-		private IMemoryCache memoryCache = InjectService.Locator.GetInstance<IMemoryCache>();
-		private IDiskCache diskCachge = InjectService.Locator.GetInstance<IDiskCache> ();
+        private IMemoryCache memoryCache = ServiceLocator.Current.GetInstance<IMemoryCache>();
+        private IDiskCache diskCachge = ServiceLocator.Current.GetInstance<IDiskCache>();
 		private HttpClient webClient = new HttpClient();
 
 		private Dictionary<object, Uri> lockedImages = new Dictionary<object, Uri>();
@@ -93,6 +94,11 @@ namespace JoyReactor.Core.Model.Image
 			imageCallback (mi);
 		}
 
+        public string CreateThumbnailUrl(string url, int px)
+        {
+            return "" + CreateThumbnailUrl(new Uri(url), px);
+        }
+
 		#endregion
 
 		#region Private methods
@@ -108,5 +114,5 @@ namespace JoyReactor.Core.Model.Image
 		}
 
 		#endregion
-	}
+    }
 }

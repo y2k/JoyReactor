@@ -11,12 +11,13 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model
 {
 	class ProfileModel : IProfileModel
 	{
-		private ISiteParser[] parsers = InjectService.Locator.GetInstance<ISiteParser[]>();
+        private ISiteParser[] parsers = ServiceLocator.Current.GetInstance<ISiteParser[]>();
 
 		#region IProfileModel implementation
 

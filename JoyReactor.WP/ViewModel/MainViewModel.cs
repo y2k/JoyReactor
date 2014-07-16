@@ -8,6 +8,7 @@ using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.WP.Common;
 using JoyReactor.WP.Resources;
+using Microsoft.Practices.ServiceLocation;
 using System.Collections.ObjectModel;
 using System.Windows.Navigation;
 
@@ -35,8 +36,8 @@ namespace JoyReactor.WP.ViewModel
 
         public RelayCommand<Post> OpenPostCommand { get; set; }
 
-        private ITagCollectionModel model = InjectService.Locator.GetInstance<ITagCollectionModel>();
-        private IPostCollectionModel posModel = InjectService.Locator.GetInstance<IPostCollectionModel>();
+        private ITagCollectionModel model = ServiceLocator.Current.GetInstance<ITagCollectionModel>();
+        private IPostCollectionModel posModel = ServiceLocator.Current.GetInstance<IPostCollectionModel>();
 
         private Tag currentTag;
 

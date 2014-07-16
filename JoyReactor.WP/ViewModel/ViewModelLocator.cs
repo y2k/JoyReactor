@@ -29,7 +29,7 @@ namespace JoyReactor.WP.ViewModel
         /// </summary>
         public ViewModelLocator()
         {
-            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
+            //ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
             ////if (ViewModelBase.IsInDesignModeStatic)
             ////{
@@ -42,10 +42,10 @@ namespace JoyReactor.WP.ViewModel
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
 
-            SimpleIoc.Default.Register<MainViewModel>();
-            SimpleIoc.Default.Register<ProfileViewModel>();
-            SimpleIoc.Default.Register<PostViewModel>();
-            SimpleIoc.Default.Register<AttachmentsViewModel>();
+            //SimpleIoc.Default.Register<MainViewModel>();
+            //SimpleIoc.Default.Register<ProfileViewModel>();
+            //SimpleIoc.Default.Register<PostViewModel>();
+            //SimpleIoc.Default.Register<AttachmentsViewModel>();
         }
 
         public PostViewModel Post
