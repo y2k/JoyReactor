@@ -10,13 +10,30 @@ namespace JoyReactor.Core.Tests
 	public class FourChanParserTests
 	{
 		[Test ()]
-		public void GetListTest ()
+		public void FourChan_GetPosts_B ()
 		{
 			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator ());
 
 			var parser = new FourChanParser ();
-			parser.ExtractTagPostCollection (ID.TagType.Good, "b", -1, null, state => {
+			parser.ExtractTagPostCollection (ID.TagType.Good, "b", 0, null, state => {
+
+                Assert.IsNotNull(state);
+
 			});
 		}
-	}
+    
+        [Test()]
+        public void FourChan_GetPosts_WSG()
+        {
+            ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator());
+
+            var parser = new FourChanParser();
+            parser.ExtractTagPostCollection(ID.TagType.Good, "wsg", 0, null, state =>
+            {
+
+                Assert.IsNotNull(state);
+
+            });
+        }
+    }
 }

@@ -6,7 +6,7 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Database
 {
-	internal class MainDb
+    internal class MainDb
     {
         private const string DatabaseName = "net.itwister.joyreactor.main.db";
         private const int DatabaseVersion = 1;
@@ -14,28 +14,28 @@ namespace JoyReactor.Core.Model.Database
         private static volatile ISQLiteConnection instance;
         private static object syncRoot = new Object();
 
-		public static ISQLiteConnection Instance
-		{
-			get
-			{
-				if (instance == null)
-				{
-					lock (syncRoot)
-					{
-						if (instance == null)
-						{
+        public static ISQLiteConnection Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    lock (syncRoot)
+                    {
+                        if (instance == null)
+                        {
                             var f = ServiceLocator.Current.GetInstance<ISQLiteConnectionFactory>();
-							instance = f.Create(DatabaseName);
-							InitializeDatabase(instance);
-						}
-					}
-				}
+                            instance = f.Create(DatabaseName);
+                            InitializeDatabase(instance);
+                        }
+                    }
+                }
 
-				return instance;
-			}
-		}
+                return instance;
+            }
+        }
 
-		public static string ToFlatId(ID id)
+        public static string ToFlatId(ID id)
         {
             return id.Site + "-" + id.Type + "-" + id.Tag;
         }
@@ -50,14 +50,19 @@ namespace JoyReactor.Core.Model.Database
             db.CreateTable<Comment>();
             db.CreateTable<CommentAttachment>();
 
-			db.Insert(new Tag { TagId = ToFlatId(ID.Factory.New(ID.IdConst.ReactorGood)), Title = "JoyReactor", Flags = Tag.FlagSystem });
-			db.Insert(new Tag { TagId = ToFlatId(ID.Factory.NewTag("anime")), Title = "Anime", Flags = Tag.FlagShowInMain, BestImage = "http://img1.joyreactor.cc/pics/avatar/tag/2851" });
-			db.Insert(new Tag { TagId = ToFlatId(ID.Factory.NewTag("cosplay")), Title = "Cosplay", Flags = Tag.FlagShowInMain, BestImage = "http://img8.joyreactor.cc/pics/avatar/tag/518" });
-			db.Insert(new Tag { TagId = ToFlatId(ID.Factory.NewTag("android")), Title = "Android", Flags = Tag.FlagShowInMain, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/2596" });
-			db.Insert(new Tag { TagId = ToFlatId(ID.Factory.NewTag("гифки")), Title = "Гифки", Flags = Tag.FlagShowInMain, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/116" });
-			db.Insert(new Tag { TagId = ToFlatId(ID.Factory.NewTag("эротика")), Title = "Эротика", Flags = Tag.FlagShowInMain, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/676" });
-			db.Insert(new Tag { TagId = ToFlatId(ID.Factory.NewTag("песочница")), Title = "Песочница", Flags = Tag.FlagShowInMain, BestImage = "http://img0.joyreactor.cc/images/default_avatar.jpeg" });
-			db.Insert(new Tag { TagId = ToFlatId(ID.Factory.NewTag("комиксы")), Title = "Комиксы", Flags = Tag.FlagShowInMain, BestImage = "http://img0.joyreactor.cc/pics/avatar/tag/27" });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.New(ID.IdConst.ReactorGood)), Title = "JoyReactor", Flags = Tag.FlagSystem });
+
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.New(ID.SiteParser.Chan4, "b")), Title = "4chan / b", Flags = Tag.FlagShowInMain });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.New(ID.SiteParser.Chan4, "gif")), Title = "4chan / NSFW gif", Flags = Tag.FlagShowInMain });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.New(ID.SiteParser.Chan4, "wfg")), Title = "4chan / gif", Flags = Tag.FlagShowInMain });
+
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.NewTag("anime")), Title = "Anime", Flags = Tag.FlagShowInMain, BestImage = "http://img1.joyreactor.cc/pics/avatar/tag/2851" });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.NewTag("cosplay")), Title = "Cosplay", Flags = Tag.FlagShowInMain, BestImage = "http://img8.joyreactor.cc/pics/avatar/tag/518" });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.NewTag("android")), Title = "Android", Flags = Tag.FlagShowInMain, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/2596" });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.NewTag("гифки")), Title = "Гифки", Flags = Tag.FlagShowInMain, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/116" });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.NewTag("эротика")), Title = "Эротика", Flags = Tag.FlagShowInMain, BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/676" });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.NewTag("песочница")), Title = "Песочница", Flags = Tag.FlagShowInMain, BestImage = "http://img0.joyreactor.cc/images/default_avatar.jpeg" });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.NewTag("комиксы")), Title = "Комиксы", Flags = Tag.FlagShowInMain, BestImage = "http://img0.joyreactor.cc/pics/avatar/tag/27" });
         }
 
         protected static void OnUpdate(int oldVersion, int newVersion)

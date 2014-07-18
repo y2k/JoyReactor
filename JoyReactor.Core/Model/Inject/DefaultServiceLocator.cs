@@ -2,6 +2,7 @@
 using JoyReactor.Core.Model.Image;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model.Web;
+using JoyReactor.Core.Model.Web.Parser;
 using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Collections.Generic;
@@ -47,7 +48,10 @@ namespace JoyReactor.Core.Model.Inject
             protected override void Load(ContainerBuilder b)
             {
                 b.RegisterType<WebDownloader>().As<IWebDownloader>();
+
                 b.RegisterType<ReactorParser>().As<ISiteParser>();
+                b.RegisterType<FourChanParser>().As<ISiteParser>();
+
                 b.RegisterType<DefaultDiskCache>().As<IDiskCache>();
                 b.RegisterType<MemoryCache>().As<IMemoryCache>();
                 b.RegisterType<PostCollectionModel>().As<IPostCollectionModel>();
@@ -59,6 +63,5 @@ namespace JoyReactor.Core.Model.Inject
         }
 
         #endregion
-
     }
 }

@@ -3,75 +3,71 @@ using JoyReactor.Core.Model.Parser;
 using System.Collections.Generic;
 using Microsoft.Practices.ServiceLocation;
 using System.Linq;
+using JoyReactor.Core.Model.Parser.Data;
+using System.Text.RegularExpressions;
 
 namespace JoyReactor.Core.Model.Web.Parser
 {
-	public class FourChanParser : ISiteParser
-	{
-		private IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
+    public class FourChanParser : ISiteParser
+    {
+        private IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
 
-		#region ISiteParser implementation
+        #region ISiteParser implementation
 
-		public IDictionary<string, string> Login (string username, string password)
-		{
-			throw new NotImplementedException ();
-		}
+        public IDictionary<string, string> Login(string username, string password)
+        {
+            throw new NotImplementedException();
+        }
 
-		public void ExtractTagPostCollection (ID.TagType type, string tag, int lastLoadedPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
-		{
-			var url = string.Format("http://boards.4chan.org/%s/%s", Uri.EscapeDataString(tag), lastLoadedPage);
-			var doc = downloader.GetDocument(new Uri(url));
+        public void ExtractTagPostCollection(ID.TagType type, string tag, int lastLoadedPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
+        {
+            var baseUrl = new Uri(string.Format("http://boards.4chan.org/{0}/{1}", Uri.EscapeDataString(tag), lastLoadedPage));
+            var doc = downloader.GetDocument(baseUrl).Document.DocumentNode;
 
-			callback(new CollectionExportState { State = CollectionExportState.ExportState.Begin });
+            callback(new CollectionExportState { State = CollectionExportState.ExportState.Begin });
 
-//			var z = doc.Document.DocumentNode.Descendants ().Where (s => s.Name = "div" && s.Attributes.Any (a => a.Name = "class" && a.Value.Contains ("thread"))).ToList ();
-//
-//			List<Post> posts = new ArrayList<Post>();
-//			foreach (Element node in doc.select("div.thread")) {
-//				Post p = new Post();
-//
-//				Elements links = node.select("a.replylink");
-//				Matcher m = Pattern.compile("([^/]+)/res/(\\d+)").matcher(links.first().absUrl("href"));
-//				if (m.find()) p.serverId = m.group(1) + "," + m.group(2);
-//				else throw new IllegalStateException("Can't find post id");
-//
-//				Elements imgs = node.select("a.fileThumb");
-//				if (!imgs.isEmpty()) p.image = imgs.first().absUrl("href");
-//
-//				Elements es = node.select("a.fileThumb > img");
-//				if (!es.isEmpty()) p.thumbnail = es.first().absUrl("src");
-//
-//				Elements titles = node.select("span.subject");
-//				if (!titles.isEmpty()) p.title = titles.first().text();
-//				if (TextUtils.isEmpty(p.title)) p.title = null;
-//
-//				Elements dates = node.select("span.dateTime");
-//				p.updated = new Date(Long.parseLong(dates.attr("data-utc")) * 1000);
-//
-//				p.username = node.select("span.nameBlock span.name").first().text();
-//
-//				posts.add(p);
-//			}
-//
-//			return posts;
-		}
+            foreach (var node in doc.Select("div.thread"))
+            {
+                var p = new ExportPost();
 
-		public void ExtractPost (string postId, Action<PostExportState> callback)
-		{
-			throw new NotImplementedException ();
-		}
+                var links = node.Select("a.replylink");
+                var m = Regex.Match(links.First().AbsUrl(baseUrl, "href"), "/thread/(\\d+)");
+                if (m.Success) p.id = m.Groups[1].Value + "," + m.Groups[2].Value;
+                else throw new InvalidOperationException("Can't find post id");
 
-		public ProfileExport Profile (string username)
-		{
-			throw new NotImplementedException ();
-		}
+                var imgs = node.Select("a.fileThumb");
+                if (imgs.Count() > 0) p.image = imgs.First().AbsUrl(baseUrl, "href");
 
-		public ID.SiteParser ParserId {
-			get {
-				throw new NotImplementedException ();
-			}
-		}
+                var titles = node.Select("span.subject");
+                if (titles.Count() > 0) p.title = titles.First().InnerText;
+                titles = node.Select("blockquote.postMessage");
+                if (titles.Count() > 0) p.title = titles.First().InnerText.ShortString(100);
+                if (string.IsNullOrEmpty(p.title)) p.title = null;
 
-		#endregion
-	}
+                var dates = node.Select("span.dateTime");
+                p.created = long.Parse(dates.First().Attr("data-utc")) * 1000;
+
+                p.userName = node.Select("span.nameBlock span.name").First().InnerText;
+
+                callback(new CollectionExportState { State = CollectionExportState.ExportState.PostItem, Post = p });
+            }
+        }
+
+        public void ExtractPost(string postId, Action<PostExportState> callback)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ProfileExport Profile(string username)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ID.SiteParser ParserId
+        {
+            get { return ID.SiteParser.Chan4; }
+        }
+
+        #endregion
+    }
 }

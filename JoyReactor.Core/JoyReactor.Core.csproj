@@ -36,6 +36,7 @@
     <Compile Include="Model\Inject\DefaultServiceLocator.cs" />
     <Compile Include="Model\IPostModel.cs" />
     <Compile Include="Model\PostModel.cs" />
+    <Compile Include="Model\Web\Parser\NodeHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Web\Parser\ISiteParser.cs" />
     <Compile Include="Model\Web\IWebDownloader.cs" />
