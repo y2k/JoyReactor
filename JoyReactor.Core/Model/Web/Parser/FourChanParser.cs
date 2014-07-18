@@ -5,6 +5,7 @@ using Microsoft.Practices.ServiceLocation;
 using System.Linq;
 using JoyReactor.Core.Model.Parser.Data;
 using System.Text.RegularExpressions;
+using HtmlAgilityPack;
 
 namespace JoyReactor.Core.Model.Web.Parser
 {
@@ -41,7 +42,7 @@ namespace JoyReactor.Core.Model.Web.Parser
                 var titles = node.Select("span.subject");
                 if (titles.Count() > 0) p.title = titles.First().InnerText;
                 titles = node.Select("blockquote.postMessage");
-                if (titles.Count() > 0) p.title = titles.First().InnerText.ShortString(100);
+				if (titles.Count() > 0) p.title = HtmlEntity.DeEntitize(titles.First().InnerText.ShortString(100));
                 if (string.IsNullOrEmpty(p.title)) p.title = null;
 
                 var dates = node.Select("span.dateTime");
