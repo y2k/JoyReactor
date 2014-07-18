@@ -7,14 +7,14 @@ using JoyReactor.Core.Model.Web.Parser;
 namespace JoyReactor.Core.Tests
 {
 	[TestFixture ()]
-	public class FourChanParserTests
+	public class Chan4ParserTests
 	{
 		[Test ()]
-		public void FourChan_GetPosts_B ()
+		public void Chan4_GetPosts_B ()
 		{
 			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator ());
 
-			var parser = new FourChanParser ();
+			var parser = new Chan4Parser ();
 			parser.ExtractTagPostCollection (ID.TagType.Good, "b", 0, null, state => {
 
                 Assert.IsNotNull(state);
@@ -23,11 +23,11 @@ namespace JoyReactor.Core.Tests
 		}
     
         [Test()]
-        public void FourChan_GetPosts_WSG()
+        public void Chan4_GetPosts_WSG()
         {
             ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator());
 
-            var parser = new FourChanParser();
+            var parser = new Chan4Parser();
             parser.ExtractTagPostCollection(ID.TagType.Good, "wsg", 0, null, state =>
             {
 

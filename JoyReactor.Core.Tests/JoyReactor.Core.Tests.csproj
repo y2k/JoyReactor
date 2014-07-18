@@ -40,8 +40,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chan7ParserTests.cs" />
     <Compile Include="ReactorParserTests.cs" />
-    <Compile Include="FourChanParserTests.cs" />
+    <Compile Include="Chan4ParserTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -50,7 +50,7 @@ namespace JoyReactor.Core.Model.Inject
                 b.RegisterType<WebDownloader>().As<IWebDownloader>();
 
                 b.RegisterType<ReactorParser>().As<ISiteParser>();
-                b.RegisterType<FourChanParser>().As<ISiteParser>();
+                b.RegisterType<Chan4Parser>().As<ISiteParser>();
 
                 b.RegisterType<DefaultDiskCache>().As<IDiskCache>();
                 b.RegisterType<MemoryCache>().As<IMemoryCache>();

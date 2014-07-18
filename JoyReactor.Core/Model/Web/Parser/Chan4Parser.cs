@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace JoyReactor.Core.Model.Web.Parser
 {
-    public class FourChanParser : ISiteParser
+    public class Chan4Parser : ISiteParser
     {
         private IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
 

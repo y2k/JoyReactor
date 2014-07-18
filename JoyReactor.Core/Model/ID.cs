@@ -51,7 +51,7 @@ namespace JoyReactor.Core
 
 		public class Factory
 		{
-            public static ID New(SiteParser site, string tag) {
+            public static ID New(SiteParser site, string tag) 
             {
                 return new ID { Site = site, Type = TagType.Good, Tag = tag };
             }
