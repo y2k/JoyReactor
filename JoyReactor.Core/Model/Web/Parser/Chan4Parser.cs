@@ -37,12 +37,20 @@ namespace JoyReactor.Core.Model.Web.Parser
                 else throw new InvalidOperationException("Can't find post id");
 
                 var imgs = node.Select("a.fileThumb");
-                if (imgs.Count() > 0) p.image = imgs.First().AbsUrl(baseUrl, "href");
+                if (imgs.Count() > 0)
+                {
+                    p.image = imgs.First().AbsUrl(baseUrl, "href");
+
+                    var z = Regex.Match(p.image, "(\\d+)\\.[\\w\\d]+$").Value;
+                    m = Regex.Match(node.InnerHtml, "(\\d+)x(\\d+)\\)</div><a class=\"fileThumb\" href=\"//[^/]+/[^/]+/" + Regex.Escape(z));
+                    p.imageWidth = int.Parse(m.Groups[1].Value);
+                    p.imageHeight = int.Parse(m.Groups[2].Value);
+                }
 
                 var titles = node.Select("span.subject");
                 if (titles.Count() > 0) p.title = titles.First().InnerText;
                 titles = node.Select("blockquote.postMessage");
-				if (titles.Count() > 0) p.title = HtmlEntity.DeEntitize(titles.First().InnerText.ShortString(100));
+                if (titles.Count() > 0) p.title = HtmlEntity.DeEntitize(titles.First().InnerText.ShortString(100));
                 if (string.IsNullOrEmpty(p.title)) p.title = null;
 
                 var dates = node.Select("span.dateTime");

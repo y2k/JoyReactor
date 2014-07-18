@@ -13,7 +13,8 @@ namespace JoyReactor.Core.Model.Web.Parser
         public static IEnumerable<HtmlNode> Select(this HtmlNode root, string xpath)
         {
             var m = Regex.Match(xpath, "^(\\w+)\\.(\\w+)$");
-            if (m.Success) return root.Descendants().Where(s => s.Name == m.Groups[1].Value && s.Attributes.Any(a => a.Name == "class" && a.Value.Contains(m.Groups[2].Value)));
+            if (m.Success) return root.Descendants()
+                .Where(s => s.Name == m.Groups[1].Value && s.Attributes.Any(a => a.Name == "class" && a.Value.Contains(m.Groups[2].Value)));
 
             m = Regex.Match(xpath, "^(\\w+)\\.(\\w+) (\\w+)\\.(\\w+)$");
             if (m.Success) return root.Descendants()
@@ -26,6 +27,14 @@ namespace JoyReactor.Core.Model.Web.Parser
                 .Where(s => s.Name == m.Groups[1].Value && s.Attributes.Any(a => a.Name == "class" && a.Value.Contains(m.Groups[2].Value)))
                 .SelectMany(s => s.ChildNodes)
                 .Where(s => s.Name == m.Groups[3].Value);
+
+            m = Regex.Match(xpath, "^(\\w+)\\[(\\w+)=(\\w+)\\]$");
+            if (m.Success) return root.Descendants()
+                .Where(s => s.Name == m.Groups[1].Value && s.Attributes.Any(a => a.Name == m.Groups[2].Value && a.Value == m.Groups[3].Value));
+
+            m = Regex.Match(xpath, "^(\\w+)\\.(\\w+)\\.(\\w+)$");
+            if (m.Success) return root.Descendants()
+                .Where(s => s.Name == m.Groups[1].Value && s.Attributes.Any(a => a.Name == "class" && a.Value.Contains(m.Groups[2].Value) && a.Value.Contains(m.Groups[3].Value)));
 
             throw new InvalidOperationException();
         }
@@ -46,6 +55,11 @@ namespace JoyReactor.Core.Model.Web.Parser
         }
 
         public static long DateTimeToUnixTimestamp(DateTime dateTime)
+        {
+            return (long)((dateTime - new DateTime(1970, 1, 1).ToLocalTime()).TotalSeconds);
+        }
+
+        public static long ToUnixTimestamp(this DateTime dateTime)
         {
             return (long)((dateTime - new DateTime(1970, 1, 1).ToLocalTime()).TotalSeconds);
         }

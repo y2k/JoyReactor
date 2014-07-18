@@ -1,4 +1,5 @@
-﻿using JoyReactor.Core.Model.Parser;
+﻿using HtmlAgilityPack;
+using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model.Parser.Data;
 using Microsoft.Practices.ServiceLocation;
 using System;
@@ -37,38 +38,27 @@ namespace JoyReactor.Core.Model.Web.Parser
                 var p = new ExportPost();
 
                 p.id = tag.Trim().ToLower() + "," + node.Id;
+                p.userName = node.Select("span.postername").First().InnerText;
 
                 var titles = node.Select("span.subject");
                 if (titles.Count() > 0) p.title = titles.First().InnerText;
+                titles = node.Select("p.message");
+                if (titles.Count() > 0) p.title = HtmlEntity.DeEntitize(titles.First().InnerText.ShortString(100).Trim('\r', '\n', ' '));
                 if (string.IsNullOrEmpty(p.title)) p.title = null;
 
-                p.userName = node.Select("span.postername").First().InnerText;
+                var m = Regex.Match(node.InnerHtml, "<a href=\"([^\"]+)\" id=\"expandimg_" + node.Id + "_(\\d+)_(\\d+)");
+                if (m.Success)
+                {
+                    p.image = m.Groups[1].Value.Replace("https://", "http://");
+                    p.imageWidth = int.Parse(m.Groups[2].Value);
+                    p.imageHeight = int.Parse(m.Groups[3].Value);
+                }
 
-                var imgs = node.Select("div.post_thumb > a");
-                if (imgs.Count() > 0) p.image = imgs.First().AbsUrl(baseUrl, "href");
-
-                var m = Regex.Match("</span>[\r\n]*([^\r\n]+)[\r\n]*<span class=\"reflink\">", node.InnerText);
-                p.created = NodeHelper.DateTimeToUnixTimestamp(DateTime.ParseExact(m.Groups[1].Value, "", CultureInfo.InvariantCulture)) * 1000L;
+                m = Regex.Match(node.InnerHtml, "</span>[\r\n]*([^\r\n]+)[\r\n]*<span class=\"reflink\">");
+                if (!m.Success) throw new InvalidOperationException("Can't find date-time in post " + p.id);
+                p.created = NodeHelper.DateTimeToUnixTimestamp(DateTime.ParseExact(m.Groups[1].Value, "yy/MM/dd(ddd)HH:mm", CultureInfo.InvariantCulture)) * 1000L;
 
                 callback(new CollectionExportState { State = CollectionExportState.ExportState.PostItem, Post = p });
-
-                //p.serverId = tags[0] + "," + node.id();
-
-                //Elements es = node.select("span.subject");
-                //if (!es.isEmpty()) p.title = es.first().text();
-                //if (TextUtils.isEmpty(p.title)) p.title = null;
-
-                //p.username = node.select("span.postername").first().text();
-
-                //es = node.select("div.post_thumb > a");
-                //if (!es.isEmpty()) p.image = es.first().absUrl("href");
-
-                //es = node.select("div.post_thumb > a > img");
-                //if (!es.isEmpty()) p.thumbnail = es.first().absUrl("src");
-
-                //Pattern pattern = Pattern.compile("</span>[\r\n]*([^\r\n]+)[\r\n]*<span class=\"reflink\">");
-                //Matcher m = pattern.matcher(node.html());
-                //if (m.find()) p.updated = new SimpleDateFormat("yy/MM/dd(ddd)HH:mm", Locale.US).parse(m.group(1));
             }
         }
 
