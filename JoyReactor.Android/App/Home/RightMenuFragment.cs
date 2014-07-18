@@ -16,6 +16,7 @@ using JoyReactor.Core;
 using JoyReactor.Android.App.Base.Commands;
 using JoyReactor.Core.Model.DTO;
 using Android.Graphics;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Android.App.Home
 {
@@ -23,7 +24,7 @@ namespace JoyReactor.Android.App.Home
 	{
 		private ListView list;
 		private Adapter adapter;
-		private ITagCollectionModel model = InjectService.Locator.GetInstance<ITagCollectionModel> ();
+		private ITagCollectionModel model = ServiceLocator.Current.GetInstance<ITagCollectionModel> ();
 
 		public override void OnResume ()
 		{
@@ -61,7 +62,7 @@ namespace JoyReactor.Android.App.Home
 
 		public class Adapter : ArrayAdapter<TagLinkedTag>
 		{
-			private IImageModel iModel = InjectService.Locator.GetInstance<IImageModel> ();
+			private IImageModel iModel = ServiceLocator.Current.GetInstance<IImageModel> ();
 
 			public Adapter(Context context) : base(context, 0) { }
 

@@ -17,12 +17,13 @@ using JoyReactor.Core.Model.DTO;
 using JoyReactor.Android.Widget;
 using JoyReactor.Core;
 using JoyReactor.Core.Model.Helper;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Android.App.Post
 {
 	public class PostFragment : BaseFragment
 	{
-		private IPostModel model = InjectService.Locator.GetInstance<IPostModel> ();
+		private IPostModel model = ServiceLocator.Current.GetInstance<IPostModel> ();
 
 		private ListView list;
 		private List<Comment> comments;

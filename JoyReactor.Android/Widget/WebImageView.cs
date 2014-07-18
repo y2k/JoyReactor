@@ -12,12 +12,13 @@ using Android.Widget;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Inject;
 using Android.Graphics;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Android.Widget
 {
 	public class WebImageView : ImageView
 	{
-		private IImageModel iModel = InjectService.Locator.GetInstance<IImageModel> ();
+		private IImageModel iModel = ServiceLocator.Current.GetInstance<IImageModel> ();
 
 		private string imageSource;
 

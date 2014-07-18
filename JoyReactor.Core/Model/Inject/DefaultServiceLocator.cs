@@ -15,12 +15,14 @@ namespace JoyReactor.Core.Model.Inject
     {
         private IContainer locator;
 
-        public DefaultServiceLocator(Module platformModule)
+		public DefaultServiceLocator(params Module[] platformModule)
         {
             var b = new ContainerBuilder();
             b.RegisterModule(new DefaultModule());
-            if (platformModule != null)
-                b.RegisterModule(platformModule);
+
+			foreach (var s in platformModule)
+				b.RegisterModule (s);
+
             locator = b.Build();
         }
 

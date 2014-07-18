@@ -11,6 +11,7 @@ using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Android.App.Base;
 using Android.Widget;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Android.App.Profile
 {
@@ -28,7 +29,7 @@ namespace JoyReactor.Android.App.Profile
 
 		public class ProfileFragment : BaseFragment
 		{
-			private IProfileModel model = InjectService.Locator.GetInstance<IProfileModel>();
+			private IProfileModel model = ServiceLocator.Current.GetInstance<IProfileModel>();
 
 			private ViewAnimator animator;
 			private EditText username;

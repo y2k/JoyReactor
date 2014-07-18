@@ -17,12 +17,13 @@ using JoyReactor.Android.Widget;
 using System.Drawing;
 using JoyReactor.Android.App.Post;
 using JoyReactor.Core;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Android.App.Home
 {
 	class FeedAdapter : ArrayAdapter<JoyReactor.Core.Model.DTO.Post> 
 	{
-		private IImageModel iModel = InjectService.Locator.GetInstance<IImageModel>();
+		private IImageModel iModel = ServiceLocator.Current.GetInstance<IImageModel>();
 		private int maxWidth;
 
 		public ID ListId { get; set; }

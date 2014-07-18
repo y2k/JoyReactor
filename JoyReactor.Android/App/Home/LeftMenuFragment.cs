@@ -11,6 +11,7 @@ using System;
 using JoyReactor.Core;
 using JoyReactor.Android.App.Base.Commands;
 using JoyReactor.Android.Widget;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Android.App.Home
 {
@@ -23,7 +24,7 @@ namespace JoyReactor.Android.App.Home
 
 		private ListView list;
 		private Adapter adapter;
-		private ITagCollectionModel model = InjectService.Locator.GetInstance<ITagCollectionModel> ();
+		private ITagCollectionModel model = ServiceLocator.Current.GetInstance<ITagCollectionModel> ();
 
 		public async override void OnActivityCreated (Bundle savedInstanceState)
 		{

@@ -16,6 +16,7 @@ using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.App.Base.Commands;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Android.App.Home
 {
@@ -25,7 +26,7 @@ namespace JoyReactor.Android.App.Home
 		private ProgressBar progress;
 		private FeedAdapter adapter;
 
-		private IPostCollectionModel model = InjectService.Locator.GetInstance<IPostCollectionModel>();
+		private IPostCollectionModel model = ServiceLocator.Current.GetInstance<IPostCollectionModel>();
 
 		public override void OnActivityCreated (Bundle savedInstanceState)
 		{

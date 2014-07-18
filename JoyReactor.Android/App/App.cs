@@ -10,6 +10,7 @@ using Android.Views;
 using Android.Widget;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Android.Model;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Android.App
 {
@@ -18,14 +19,16 @@ namespace JoyReactor.Android.App
 	{
 		public static Application Instance { get; private set; }
 
-		public App(IntPtr handle, JniHandleOwnership transfer) : base(handle,transfer) { }
+		public App (IntPtr handle, JniHandleOwnership transfer) : base (handle, transfer)
+		{
+		}
 
 		public override void OnCreate ()
 		{
 			base.OnCreate ();
 
 			Instance = this;
-			InjectService.Initialize(new AndroidInjectModule());
+			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator (new AndroidInjectModule ()));
 		}
 	}
 }

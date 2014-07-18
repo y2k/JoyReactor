@@ -15,13 +15,14 @@ using Android.Util;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Android.App.Post
 {
 	[Activity (Label = "@string/post_acitivty")]			
 	public class PostActivity : BaseActivity
 	{
-		private IPostCollectionModel model = InjectService.Locator.GetInstance<IPostCollectionModel>();
+		private IPostCollectionModel model = ServiceLocator.Current.GetInstance<IPostCollectionModel>();
 
 		public ID ListId { get; private set; }
 
