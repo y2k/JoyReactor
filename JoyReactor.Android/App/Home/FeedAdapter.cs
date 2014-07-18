@@ -18,6 +18,7 @@ using System.Drawing;
 using JoyReactor.Android.App.Post;
 using JoyReactor.Core;
 using Microsoft.Practices.ServiceLocation;
+using Android.Graphics.Drawables;
 
 namespace JoyReactor.Android.App.Home
 {
@@ -48,7 +49,8 @@ namespace JoyReactor.Android.App.Home
 			var iv = convertView.FindViewById<FixedSizeImageView> (Resource.Id.image);
 			iv.ImageSize = new Size (item.ImageWidth, item.ImageHeight);
 			iv.SetImageDrawable (null);
-			iModel.Load (iv, item.Image == null ? null : new Uri(item.Image), maxWidth, s => iv.SetImageBitmap((Bitmap)s.Image));
+			iModel.Load (iv, item.Image == null ? null : new Uri (item.Image), maxWidth, 
+				s => iv.SetImageDrawable (s == null || s.Image == null ? null : new BitmapDrawable ((Bitmap)s.Image)));
 
 			var ui = convertView.FindViewById<ImageView> (Resource.Id.user_image);
 			ui.SetImageDrawable (null);
