@@ -52,9 +52,13 @@ namespace JoyReactor.Core.Model.Database
 
             db.Insert(new Tag { TagId = ToFlatId(ID.Factory.New(ID.IdConst.ReactorGood)), Title = "JoyReactor", Flags = Tag.FlagSystem });
 
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.New(ID.SiteParser.Chan2, "b")), Title = "2ch / b", Flags = Tag.FlagShowInMain });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.New(ID.SiteParser.Chan2, "media")), Title = "2ch / gif", Flags = Tag.FlagShowInMain });
             db.Insert(new Tag { TagId = ToFlatId(ID.Factory.New(ID.SiteParser.Chan4, "b")), Title = "4chan / b", Flags = Tag.FlagShowInMain });
-            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.New(ID.SiteParser.Chan4, "gif")), Title = "4chan / NSFW gif", Flags = Tag.FlagShowInMain });
-            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.New(ID.SiteParser.Chan4, "wfg")), Title = "4chan / gif", Flags = Tag.FlagShowInMain });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.New(ID.SiteParser.Chan4, "gif")), Title = "4chan / gif", Flags = Tag.FlagShowInMain });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.New(ID.SiteParser.Chan4, "wfg")), Title = "4chan / SFW gif", Flags = Tag.FlagShowInMain });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.New(ID.SiteParser.Chan7, "b")), Title = "7chan / b", Flags = Tag.FlagShowInMain });
+            db.Insert(new Tag { TagId = ToFlatId(ID.Factory.New(ID.SiteParser.Chan7, "gif")), Title = "7chan / gif", Flags = Tag.FlagShowInMain });
 
             db.Insert(new Tag { TagId = ToFlatId(ID.Factory.NewTag("anime")), Title = "Anime", Flags = Tag.FlagShowInMain, BestImage = "http://img1.joyreactor.cc/pics/avatar/tag/2851" });
             db.Insert(new Tag { TagId = ToFlatId(ID.Factory.NewTag("cosplay")), Title = "Cosplay", Flags = Tag.FlagShowInMain, BestImage = "http://img8.joyreactor.cc/pics/avatar/tag/518" });
