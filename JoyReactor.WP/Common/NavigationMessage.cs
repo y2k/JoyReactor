@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using JoyReactor.WP.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,18 @@ namespace JoyReactor.WP.Common
 
         internal Type Target { get; set; }
 
+        internal string TargetName { get; set; }
+
         internal IDictionary<string, string> Args { get; set; }
+
+        internal NavigationMessage()
+        {
+            Args = new Dictionary<string, string>();
+        }
+
+        public static NavigationMessage Post(int id)
+        {
+            return new NavigationMessage { Target = typeof(SinglePostViewModel), Args = { { "id", "" + id } } };
+        }
     }
 }

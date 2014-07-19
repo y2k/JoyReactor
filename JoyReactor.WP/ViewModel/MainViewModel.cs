@@ -49,26 +49,18 @@ namespace JoyReactor.WP.ViewModel
             Tags = new ObservableCollection<Tag>();
             Posts = new ObservableCollection<Post>();
 
-            if (IsInDesignMode)
+            OpenTagCommand = new RelayCommand<Tag>(s =>
             {
-                Tags.Add(new Tag { Title = "Tag 1" });
-                Tags.Add(new Tag { Title = "Tag 2" });
-                Tags.Add(new Tag { Title = "Tag 3" });
-            }
-            else
+                currentTag = s;
+                Initialize(s);
+            });
+            OpenPostCommand = new RelayCommand<Post>(s =>
             {
-                OpenTagCommand = new RelayCommand<Tag>(s =>
-                {
-                    currentTag = s;
-                    Initialize(s);
-                });
-                OpenPostCommand = new RelayCommand<Post>(s =>
-                {
-                    var vm = SimpleIoc.Default.GetInstance<PostViewModel>();
-                    vm.Initialize(currentTag == null ? ID.Factory.New(ID.IdConst.ReactorGood) : ID.Parser(currentTag.TagId), s.PostId);
-                });
-                Initialize(null);
-            }
+                //var vm = SimpleIoc.Default.GetInstance<PostViewModel>();
+                //vm.Initialize(currentTag == null ? ID.Factory.New(ID.IdConst.ReactorGood) : ID.Parser(currentTag.TagId), s.PostId);
+                Messenger.Default.Send(NavigationMessage.Post(s.Id));
+            });
+            Initialize(null);
         }
 
         public async void Initialize(Tag tag)

@@ -95,11 +95,13 @@
     <Compile Include="Common\ImageUrlThumbnailConverter.cs" />
     <Compile Include="Common\InvertBoolToVisibilityConverter.cs" />
     <Compile Include="Common\NavigationMessage.cs" />
+    <Compile Include="Common\ObservableCollectionExtensions.cs" />
     <Compile Include="Common\PhoneApplicationPageMediator.cs" />
     <Compile Include="Common\TextEmptyToVisibilityConverter.cs" />
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="ViewModel\AttachmentsViewModel.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
+    <Compile Include="ViewModel\SinglePostViewModel.cs" />
     <Compile Include="View\AttachmentsPage.xaml.cs">
       <DependentUpon>AttachmentsPage.xaml</DependentUpon>
     </Compile>
@@ -129,6 +131,9 @@
     <Compile Include="ViewModel\ProfileViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\ReactorImage.cs" />
+    <Compile Include="View\SinglePostPage.xaml.cs">
+      <DependentUpon>SinglePostPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -148,6 +153,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ProfilePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SinglePostPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

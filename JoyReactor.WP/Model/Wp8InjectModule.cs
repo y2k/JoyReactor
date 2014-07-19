@@ -1,9 +1,7 @@
-﻿using System;
-using JoyReactor.Core.Model.Image;
-using JoyReactor.Core.Model.Database;
-using Autofac;
+﻿using Autofac;
 using Cirrious.MvvmCross.Community.Plugins.Sqlite;
 using Cirrious.MvvmCross.Community.Plugins.Sqlite.WindowsPhone;
+using JoyReactor.Core.Model.Image;
 using JoyReactor.WP.ViewModel;
 
 namespace JoyReactor.WP.Model
@@ -12,15 +10,16 @@ namespace JoyReactor.WP.Model
     {
         #region implemented abstract members of NinjectModule
 
-        protected override void Load(ContainerBuilder builder)
+        protected override void Load(ContainerBuilder b)
         {
-            builder.RegisterType<BitmapImageDecoder>().As<IImageDecoder>();
-            builder.RegisterType<MvxWindowsPhoneSQLiteConnectionFactory>().As<ISQLiteConnectionFactory>();
+            b.RegisterType<BitmapImageDecoder>().As<IImageDecoder>();
+            b.RegisterType<MvxWindowsPhoneSQLiteConnectionFactory>().As<ISQLiteConnectionFactory>();
 
-            builder.RegisterType<MainViewModel>().AsSelf().SingleInstance();
-            builder.RegisterType<ProfileViewModel>().AsSelf().SingleInstance();
-            builder.RegisterType<PostViewModel>().AsSelf().SingleInstance();
-            builder.RegisterType<AttachmentsViewModel>().AsSelf().SingleInstance();
+            b.RegisterType<MainViewModel>().AsSelf().SingleInstance();
+            b.RegisterType<ProfileViewModel>().AsSelf().SingleInstance();
+            b.RegisterType<PostViewModel>().AsSelf().SingleInstance();
+            b.RegisterType<AttachmentsViewModel>().AsSelf().SingleInstance();
+            b.RegisterType<SinglePostViewModel>().AsSelf().SingleInstance();
         }
 
         #endregion

@@ -37,6 +37,78 @@ namespace JoyReactor.Core.Model
             });
         }
 
+        public Task<Post> GetPostAsync(int postId)
+        {
+            return Task.Run(() =>
+            {
+                var p = MainDb.Instance.SafeQuery<Post>("SELECT * FROM posts WHERE Id = ?", postId).First();
+                if (Math.Abs(p.Timestamp - TimestampNow()) < Constants.PostListTime) return p;
+
+                try
+                {
+                    var r = parsers.First(s => s.ParserId == (ID.SiteParser)Enum.Parse(typeof(ID.SiteParser), p.PostId.Split('-')[0]));
+
+                    r.ExtractPost(p.PostId.Split('-')[1], state =>
+                    {
+                        switch (state.State)
+                        {
+                            case PostExportState.ExportState.Begin:
+                                {
+                                    //
+                                    MainDb.Instance.SafeExecute("DELETE FROM comment_attachments WHERE CommentId IN (SELECT Id FROM comments WHERE PostId = ?)", p.Id);
+                                    MainDb.Instance.SafeExecute("DELETE FROM comments WHERE PostId = ?", p.Id);
+                                }
+                                break;
+                            case PostExportState.ExportState.Info:
+                                {
+                                    //
+                                    MainDb.Instance.SafeExecute("UPDATE posts SET Timestamp = ? WHERE Id = ?", TimestampNow(), p.Id);
+                                }
+                                break;
+                            case PostExportState.ExportState.Comment:
+                                {
+                                    //
+                                    var c = new Comment();
+                                    c.CommentId = state.Comment.id;
+                                    c.PostId = p.Id;
+                                    c.Text = state.Comment.text;
+                                    c.Created = state.Comment.created;
+                                    c.UserName = state.Comment.userName;
+                                    c.UserImage = state.Comment.userImage;
+                                    c.Rating = state.Comment.rating;
+
+                                    if (state.Comment.parentId != null)
+                                    {
+                                        c.ParentId = MainDb.Instance.SafeQuery<Comment>("SELECT * FROM comments WHERE CommentId = ? AND PostId = ?", state.Comment.parentId, p.Id).First().Id;
+                                    }
+                                    var cid = MainDb.Instance.SafeInsert(c);
+
+                                    if (state.Comment.attachments != null)
+                                    {
+                                        foreach (var a in state.Comment.attachments)
+                                        {
+                                            var pa = new CommentAttachment();
+                                            pa.CommentId = c.Id;
+                                            pa.Type = CommentAttachment.TypeImage;
+                                            pa.Url = a.imageUrl;
+                                            MainDb.Instance.SafeInsert(pa);
+                                        }
+                                    }
+                                }
+                                break;
+                        }
+                    });
+
+                }
+                catch (Exception e)
+                {
+                    e.ToString();
+                }
+
+                return p;
+            });
+        }
+
         public Task<Post> GetPostAsync(ID listId, int position)
         {
             return Task.Run(() =>
