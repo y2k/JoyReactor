@@ -105,6 +105,7 @@
     <Compile Include="View\AttachmentsPage.xaml.cs">
       <DependentUpon>AttachmentsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ColorImage.cs" />
     <Compile Include="View\FixedAspectPanel.cs" />
     <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

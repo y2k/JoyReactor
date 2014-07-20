@@ -15,7 +15,7 @@ namespace JoyReactor.WP.ViewModel
     public class AttachmentsViewModel : BaseViewModel
     {
         public ObservableCollection<CommentAttachment> Attachments { get; set; }
-
+        
         private IPostModel model = ServiceLocator.Current.GetInstance<IPostModel>();
 
         public AttachmentsViewModel()

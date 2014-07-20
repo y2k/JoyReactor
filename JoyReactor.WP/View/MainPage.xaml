@@ -81,12 +81,12 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel VerticalAlignment="Center"
-                                            Margin="4"
+                                            Margin="4,4,4,20"
                                             Orientation="Vertical">
                                     <v:FixedAspectPanel MaxChildWidth="{Binding ImageWidth}"
                                                         MaxChildHeight="{Binding ImageHeight}">
                                         <Image Margin="0, 0, 4, 0"
-                                               Stretch="UniformToFill"
+                                               Stretch="Fill"
                                                Source="{Binding Image, ConverterParameter=400, Converter={StaticResource ImageUrlThumbnailConverter}}" />
                                     </v:FixedAspectPanel>
                                     <Border Background="#FFC1C1C1"
@@ -96,6 +96,8 @@
                                                    Text="{Binding Title}"
                                                    Foreground="White" />
                                     </Border>
+                                    <TextBlock HorizontalAlignment="Right"
+                                               Text="{Binding Rating}" />
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -109,8 +111,8 @@
                                 <StackPanel VerticalAlignment="Center"
                                             Margin="4"
                                             Orientation="Horizontal">
-                                    <Image Width="64"
-                                           Height="64"
+                                    <Image Width="80"
+                                           Height="80"
                                            Margin="0, 0, 4, 0"
                                            Source="{Binding BestImage}" />
                                     <TextBlock Padding="4"

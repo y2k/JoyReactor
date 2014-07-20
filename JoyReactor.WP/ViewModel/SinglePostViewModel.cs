@@ -19,6 +19,12 @@ namespace JoyReactor.WP.ViewModel
         private string _content;
         public string Content { get { return _content; } set { Set(ref _content, value); } }
 
+        private string _username;
+        public string Username { get { return _username; } set { Set(ref _username, value); } }
+
+        private string _rating;
+        public string Rating { get { return _rating; } set { Set(ref _rating, value); } }
+
         public ObservableCollection<Comment> Comments { get; set; }
         public ObservableCollection<CommentAttachment> Attachments { get; set; }
 
@@ -33,7 +39,9 @@ namespace JoyReactor.WP.ViewModel
             var p = await model.GetPostAsync(postId);
             ImageUrl = p.Image;
             Title = p.Title;
-
+            Username = p.UserName;
+            Rating = p.Rating > 0 ? "+" + p.Rating : "" + p.Rating;
+            
             Comments.Replace(await model.GetTopCommentsAsync(postId, 100));
             Attachments.Replace(await model.GetAttachmentsAsync(postId));
         }
