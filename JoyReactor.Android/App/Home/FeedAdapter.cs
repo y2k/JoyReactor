@@ -41,10 +41,13 @@ namespace JoyReactor.Android.App.Home
 				convertView.LayoutParameters = new StaggeredGridView.LayoutParams (StaggeredGridView.LayoutParams.WrapContent);
 			}
 
-			convertView.FindViewById(Resource.Id.action).Click += 
-				(sender, e) => Context.StartActivity(PostActivity.NewIntent(ListId, position));
+//			convertView.FindViewById(Resource.Id.action).Click += 
+//				(sender, e) => Context.StartActivity(PostActivity.NewIntent(ListId, position));
 
 			var item = GetItem (position);
+
+			convertView.FindViewById(Resource.Id.action).Click += 
+				(sender, e) => Context.StartActivity(PostActivity.NewIntent(item.Id));
 
 			var iv = convertView.FindViewById<FixedSizeImageView> (Resource.Id.image);
 			iv.ImageSize = new Size (item.ImageWidth, item.ImageHeight);

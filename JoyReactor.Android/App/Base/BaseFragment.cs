@@ -16,7 +16,7 @@ namespace JoyReactor.Android.App.Base
 		public const string Arg3 = "arg3";
 		public const string Arg4 = "arg4";
 
-		public static T NewFragment<T>( params object[] args) where T : Fragment {
+		protected static T NewFragment<T>( params object[] args) where T : Fragment {
 			var bundle = new Bundle ();
 			for (int i = 0; i < args.Length; i++) {
 				var a = args [i];

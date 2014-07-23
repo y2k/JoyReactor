@@ -106,6 +106,7 @@
     <Compile Include="Widget\FixedSizeImageView.cs" />
     <Compile Include="Widget\WebImageView.cs" />
     <Compile Include="Bootstrap\CommunitySqlitePluginBootstrap.cs" />
+    <Compile Include="Widget\RoundBorderLayour.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

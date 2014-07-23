@@ -29,33 +29,37 @@ namespace JoyReactor.Android.App.Post
 		private List<Comment> comments;
 		private JoyReactor.Core.Model.DTO.Post post;
 
-		public async override void OnActivityCreated (Bundle savedInstanceState) {
+		public async override void OnActivityCreated (Bundle savedInstanceState)
+		{
 			base.OnActivityCreated (savedInstanceState);
 
 			var adapter = new PostAdapter (this);
 			list.Adapter = adapter;
 
-			post = await model.GetPostAsync (((PostActivity)Activity).ListId, Arguments.GetInt (Arg1));
+			post = await model.GetPostAsync (Arguments.GetInt (Arg1));
 			adapter.NotifyDataSetChanged ();
-			comments = await model.GetTopCommentsAsync (post.Id, 5);
+			comments = await model.GetTopCommentsAsync (post.Id, 50);
 			adapter.NotifyDataSetChanged ();
 		}
 
-		public static PostFragment NewFragment(int position) {
+		public static PostFragment NewFragment (int position)
+		{
 			return NewFragment<PostFragment> (position);
 		}
 
-		public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+		{
 			var v = inflater.Inflate (Resource.Layout.fragment_post, null);
 			list = v.FindViewById<ListView> (Resource.Id.list);
 			return v;
 		}
 
-		class PostAdapter : BaseAdapter {
-
+		private class PostAdapter : BaseAdapter
+		{
 			private PostFragment fragment;
 
-			public PostAdapter(PostFragment fragment) {
+			public PostAdapter (PostFragment fragment)
+			{
 				this.fragment = fragment;
 			}
 
@@ -94,7 +98,7 @@ namespace JoyReactor.Android.App.Post
 				default:
 					var v3 = convertView ?? View.Inflate (parent.Context, Resource.Layout.item_comment, null);
 					var c = fragment.comments [position - 2];
-					v3.FindViewById<TextView> (Resource.Id.title).Text = c.Text.HtmlToString();
+					v3.FindViewById<TextView> (Resource.Id.title).Text = c.UserName + " - " + (c.Text ?? "").HtmlToString ();
 					v3.FindViewById<WebImageView> (Resource.Id.icon).ImageSource = c.UserImage;
 					return v3;
 				}
