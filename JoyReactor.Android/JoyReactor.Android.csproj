@@ -107,6 +107,9 @@
     <Compile Include="Widget\WebImageView.cs" />
     <Compile Include="Bootstrap\CommunitySqlitePluginBootstrap.cs" />
     <Compile Include="Widget\RoundBorderLayour.cs" />
+    <Compile Include="Widget\PostImageLayout.cs" />
+    <Compile Include="Widget\PostImagesPreviewControl.cs" />
+    <Compile Include="Widget\FixedAspectPanel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -128,6 +131,7 @@
     <AndroidResource Include="Resources\layout\ItemSubscription.axml" />
     <AndroidResource Include="Resources\menu\home.xml" />
     <AndroidResource Include="Resources\values-ru\Strings.xml" />
+    <AndroidResource Include="Resources\layout\laytou_post_header.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>

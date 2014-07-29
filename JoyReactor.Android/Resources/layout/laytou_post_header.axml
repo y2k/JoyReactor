@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<joyreactor.android.widget.PostImageLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <joyreactor.android.widget.FixedAspectPanel
+            android:id="@+id/aspectPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <joyreactor.android.widget.WebImageView
+                android:id="@+id/image"
+                android:scaleType="centerCrop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </joyreactor.android.widget.FixedAspectPanel>
+        <joyreactor.android.widget.PostImagesPreviewControl
+            android:id="@+id/attachments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</joyreactor.android.widget.PostImageLayout>

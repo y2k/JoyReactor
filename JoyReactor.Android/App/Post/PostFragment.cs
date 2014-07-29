@@ -6,18 +6,18 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
+using Android.Support.V4.Widget;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
-using JoyReactor.Android.App.Base;
-using Android.Support.V4.Widget;
-using JoyReactor.Core.Model;
-using JoyReactor.Core.Model.Inject;
-using JoyReactor.Core.Model.DTO;
-using JoyReactor.Android.Widget;
 using JoyReactor.Core;
+using JoyReactor.Core.Model;
+using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
+using JoyReactor.Core.Model.Inject;
 using Microsoft.Practices.ServiceLocation;
+using JoyReactor.Android.App.Base;
+using JoyReactor.Android.Widget;
 
 namespace JoyReactor.Android.App.Post
 {
@@ -27,6 +27,7 @@ namespace JoyReactor.Android.App.Post
 
 		private ListView list;
 		private List<Comment> comments;
+		private List<CommentAttachment> attachments;
 		private JoyReactor.Core.Model.DTO.Post post;
 
 		public async override void OnActivityCreated (Bundle savedInstanceState)
@@ -38,7 +39,9 @@ namespace JoyReactor.Android.App.Post
 
 			post = await model.GetPostAsync (Arguments.GetInt (Arg1));
 			adapter.NotifyDataSetChanged ();
-			comments = await model.GetTopCommentsAsync (post.Id, 50);
+			comments = await model.GetTopCommentsAsync (post.Id, int.MaxValue);
+			adapter.NotifyDataSetChanged ();
+			attachments = await model.GetAttachmentsAsync (post.Id);
 			adapter.NotifyDataSetChanged ();
 		}
 
@@ -88,11 +91,20 @@ namespace JoyReactor.Android.App.Post
 			{
 				switch (GetItemViewType (position)) {
 				case 0:
-					var v = (WebImageView)(convertView ?? new WebImageView (parent.Context, null));
-					v.SetScaleType (ImageView.ScaleType.FitCenter);
-					v.LayoutParameters = new ListView.LayoutParams (parent.Width, parent.Width);
-					v.ImageSource = fragment.post == null ? null : fragment.post.Image;
-					return v;
+					convertView = convertView ?? View.Inflate (parent.Context, Resource.Layout.laytou_post_header, null);
+					var p = fragment.post;
+
+//					var z = ((ViewGroup)((FrameLayout)convertView).GetChildAt (0)).GetChildAt (1);
+
+					var iv = convertView.FindViewById<WebImageView> (Resource.Id.image);
+					var ap = convertView.FindViewById<FixedAspectPanel> (Resource.Id.aspectPanel);
+					var ats = convertView.FindViewById<PostImagesPreviewControl> (Resource.Id.attachments);
+
+					iv.ImageSource = p == null ? null : p.Image;
+					ap.Aspect = p == null ? 1 : (float)p.ImageWidth / p.ImageHeight;
+					ats.Adapter = new AttachmentAdapter { items = fragment.attachments } ;
+
+					return convertView;
 				case 1:
 					return convertView ?? new View (parent.Context);
 				default:
@@ -109,6 +121,40 @@ namespace JoyReactor.Android.App.Post
 			}
 
 			#endregion
+
+			private class AttachmentAdapter : BaseAdapter {
+
+				internal List<CommentAttachment> items;
+
+				#region implemented abstract members of BaseAdapter
+
+				public override Java.Lang.Object GetItem (int position)
+				{
+					return null;
+				}
+
+				public override long GetItemId (int position)
+				{
+					return items [position].Id;
+				}
+
+				public override View GetView (int position, View convertView, ViewGroup parent)
+				{
+					var iv = (WebImageView)(convertView ?? new WebImageView (parent.Context, null));
+					iv.SetMinimumWidth (100);
+					iv.SetMinimumHeight (100);
+					iv.ImageSource = items [position].Url;
+					return iv;
+				}
+
+				public override int Count {
+					get { return items == null ? 0 : items.Count; }
+				}
+
+				#endregion
+			}
+
+			//
 		}
 	}
 }
