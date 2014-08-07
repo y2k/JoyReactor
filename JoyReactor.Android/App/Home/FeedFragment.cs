@@ -25,6 +25,7 @@ namespace JoyReactor.Android.App.Home
 		private StaggeredGridView list;
 		private ProgressBar progress;
 		private FeedAdapter adapter;
+		private bool loading;
 
 		private IPostCollectionModel model = ServiceLocator.Current.GetInstance<IPostCollectionModel>();
 
@@ -32,7 +33,6 @@ namespace JoyReactor.Android.App.Home
 		{
 			base.OnCreate (savedInstanceState);
 
-			list.Adapter = adapter = new FeedAdapter (Activity);
 			list.SetItemMargin((int)(4 * Resources.DisplayMetrics.Density));
 
 			ReloadList (ID.Factory.New(ID.IdConst.ReactorGood));
@@ -60,12 +60,28 @@ namespace JoyReactor.Android.App.Home
 
 		private async void ReloadList (ID id)
 		{
+			ReCreateAdapter ();
 			adapter.ListId = id;
 
-			adapter.Clear ();
 			var result = await model.GetPostsAsync (id, SyncFlags.First);
 			adapter.AddAll (result);
 			progress.Visibility = ViewStates.Gone;
+		}
+
+		private void ReCreateAdapter() {
+			list.Adapter = adapter = new FeedAdapter (Activity);
+			adapter.ClickMore += async (sender, e) => {
+			
+				if (!loading) {
+					loading = true;
+					var result = await model.GetPostsAsync (adapter.ListId, SyncFlags.Next);
+					loading = false;
+
+					adapter.Clear();
+					adapter.AddAll (result);
+				}
+			
+			};
 		}
 	}
 }

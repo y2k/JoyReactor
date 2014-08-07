@@ -131,9 +131,9 @@ namespace JoyReactor.Core.Model.Parser
             return hs;
         }
 
-        public void ExtractTagPostCollection(ID.TagType type, string tag, int lastLoadedPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
+		public void ExtractTagPostCollection(ID.TagType type, string tag, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
         {
-            ExtractPostCoollection(type, tag, lastLoadedPage, cookies, callback);
+			ExtractPostCollection(type, tag, currentPage, cookies, callback);
         }
 
         public ProfileExport Profile(string username)
@@ -377,17 +377,17 @@ namespace JoyReactor.Core.Model.Parser
             return html.IndexOf('>', position) + 1;
         }
 
-        private void ExtractPostCoollection(ID.TagType type, string value, int lastLoadedPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
+		private void ExtractPostCollection(ID.TagType type, string value, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
         {
             cookies.Add("showVideoGif2", "1");
             var html = downloader.GetText(
-                GenerateUrl(type, value, lastLoadedPage),
+				GenerateUrl(type, value, currentPage),
                 new RequestParams { Cookies = cookies });
             callback(new CollectionExportState { State = CollectionExportState.ExportState.Begin });
 
             var s = new ExportTag();
             s.image = SUB_POSTER.FirstString(html); ;
-            s.firstPage = CURRENT_PAGE.FirstInt(html);
+			s.nextPage = CURRENT_PAGE.FirstInt(html) - 1;
             callback(new CollectionExportState { State = CollectionExportState.ExportState.TagInfo, TagInfo = s });
 
             var m = POST.Match(html);
@@ -408,7 +408,7 @@ namespace JoyReactor.Core.Model.Parser
                 }
             }
 
-			if (lastLoadedPage == 0) {
+			if (currentPage == 0) {
                 m = SUB_LINKED_SUBS.Match(html);
 				while (m.Success) {
                     var t = new ExportLinkedTag();
@@ -423,7 +423,7 @@ namespace JoyReactor.Core.Model.Parser
             }
         }
 
-        private Uri GenerateUrl(ID.TagType type, string tag, int beforeLoadedPage)
+		private Uri GenerateUrl(ID.TagType type, string tag, int currentPage)
         {
             StringBuilder url = new StringBuilder("http://joyreactor.cc");
             if (type == ID.TagType.Favorite)
@@ -437,7 +437,7 @@ namespace JoyReactor.Core.Model.Parser
                 else if (ID.TagType.All == type) url.Append(tag == null ? "/all" : "/new");
             }
 
-            if (beforeLoadedPage > 0) url.Append("/").Append(beforeLoadedPage - 1);
+			if (currentPage > 0) url.Append("/").Append(currentPage);
             if ("" + url == "http://joyreactor.cc") url.Append("/");
             return new Uri("" + url);
         }

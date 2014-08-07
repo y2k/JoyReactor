@@ -26,12 +26,15 @@ namespace JoyReactor.Core.Model.Web.Parser
             throw new NotImplementedException();
         }
 
-        public void ExtractTagPostCollection(ID.TagType type, string tag, int lastLoadedPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
+		public void ExtractTagPostCollection(ID.TagType type, string tag, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
         {
-            var baseUrl = new Uri(string.Format("http://7chan.org/{0}/{1}", Uri.EscapeDataString(tag), lastLoadedPage < 1 ? "" : lastLoadedPage + ".html"));
+			var baseUrl = new Uri(string.Format("http://7chan.org/{0}/{1}", Uri.EscapeDataString(tag), currentPage < 1 ? "" : currentPage + ".html"));
             var doc = downloader.GetDocument(baseUrl).Document.DocumentNode;
 
             callback(new CollectionExportState { State = CollectionExportState.ExportState.Begin });
+			callback(new CollectionExportState { 
+				State = CollectionExportState.ExportState.TagInfo, 
+				TagInfo = new ExportTag { nextPage = currentPage + 1 } });
 
             foreach (var node in doc.Select("div.op > div"))
             {
