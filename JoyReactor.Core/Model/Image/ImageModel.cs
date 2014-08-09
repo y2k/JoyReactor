@@ -75,31 +75,30 @@ namespace JoyReactor.Core.Model.Image
 #endif
 
             // Загрузка картинки с вэба
-            await Task.Run(
-                async () =>
-                {
+            //await Task.Run(
+            //    async () =>
+            //    {
+            //        for (int t = 0; t < MaxAttempts; t++)
+            //        {
+            //            try
+            //            {
+            //                using (var ins = await webClient.GetStreamAsync(uri))
+            //                {
+            //                    diskCachge.Put(uri, ins);
+            //                    mi = diskCachge.Get(uri);
+            //                    memoryCache.Put(uri, mi);
+            //                }
+            //                return;
+            //            }
+            //            catch (HttpRequestException)
+            //            {
+            //                new ManualResetEvent(false).WaitOne(BaseAttemptDelay << t);
+            //            }
+            //        }
+            //    });
+            //imageCallback(mi);
 
-                    for (int t = 0; t < MaxAttempts; t++)
-                    {
-                        try
-                        {
-                            using (var ins = await webClient.GetStreamAsync(uri))
-                            {
-                                diskCachge.Put(uri, ins);
-                                mi = diskCachge.Get(uri);
-                                memoryCache.Put(uri, mi);
-                            }
-                            return;
-                        }
-                        catch (HttpRequestException)
-                        {
-                            new ManualResetEvent(false).WaitOne(BaseAttemptDelay << t);
-                        }
-                    }
-
-                });
-
-            imageCallback(mi);
+            DownloadImage(0, uri, s => imageCallback(s));
         }
 
         public string CreateThumbnailUrl(string url, int px)
@@ -110,6 +109,33 @@ namespace JoyReactor.Core.Model.Image
         #endregion
 
         #region Private methods
+
+        private async void DownloadImage(int index, Uri uri, Action<ImageWrapper> callback)
+        {
+            if (index > 0) await Task.Delay(BaseAttemptDelay << index);
+
+            ImageWrapper mi = null;
+            await Task.Run(async () =>
+            {
+                try
+                {
+                    "".ToString();
+                    using (var ins = await webClient.GetStreamAsync(uri))
+                    {
+                        diskCachge.Put(uri, ins);
+                        mi = diskCachge.Get(uri);
+                        memoryCache.Put(uri, mi);
+                    }
+                }
+                catch (HttpRequestException e)
+                {
+                    e.ToString();
+                }
+            });
+
+            if (mi == null && ++index < MaxAttempts) DownloadImage(index, uri, callback);
+            callback(mi);
+        }
 
         private Uri CreateThumbnailUrl(Uri url, int px)
         {

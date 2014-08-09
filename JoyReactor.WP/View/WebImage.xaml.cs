@@ -44,7 +44,7 @@ namespace JoyReactor.WP.View
             var self = (WebImage)d;
             var url = self.ImageSource == null ? null : new Uri(self.ImageSource);
             self.Image.Source = null;
-            self.model.Load(self, url, self.ImageWidth, s => self.Image.Source = new BitmapImage(s.Image as Uri));
+            self.model.Load(self, url, self.ImageWidth, s => self.Image.Source = (s == null || s.Image == null) ? null : new BitmapImage(s.Image as Uri));
         }
     }
 }
