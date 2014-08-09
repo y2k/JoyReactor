@@ -8,7 +8,7 @@ namespace JoyReactor.Core
 	{
 		public enum IdConst { ReactorGood, ReactorBest, ReactorAll, ReactorFavorite }
 
-		private const char Divider = '\u0000';
+		private const char Divider = '-';
 		private static readonly Dictionary<IdConst, ID> Consts = new Dictionary<IdConst, ID>() {
 			{ IdConst.ReactorGood, new ID { Site = SiteParser.JoyReactor, Type = TagType.Good } },
 			{ IdConst.ReactorBest, new ID { Site = SiteParser.JoyReactor, Type = TagType.Best } },
