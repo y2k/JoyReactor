@@ -9,6 +9,7 @@ using JoyReactor.Core.Model.Inject;
 using JoyReactor.WP.Common;
 using JoyReactor.WP.Resources;
 using Microsoft.Practices.ServiceLocation;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows.Navigation;
 
@@ -82,9 +83,10 @@ namespace JoyReactor.WP.ViewModel
                 var posts = await posModel.GetListAsync(tag == null ? ID.Factory.New(ID.IdConst.ReactorGood) : ID.Parser(tag.TagId), SyncFlags.First);
                 posts.ForEach(Posts.Add);
             }
-            catch
+            catch (Exception e)
             {
                 // 
+                e.ToString();
             }
         }
     }

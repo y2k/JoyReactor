@@ -108,18 +108,9 @@
                              SelectionChanged="ListBox_SelectionChanged">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel VerticalAlignment="Center"
-                                            Margin="4"
-                                            Orientation="Horizontal">
-                                    <Image Width="80"
-                                           Height="80"
-                                           Margin="0, 0, 4, 0"
-                                           Source="{Binding BestImage}" />
-                                    <TextBlock Padding="4"
-                                               FontSize="30"
-                                               VerticalAlignment="Center"
-                                               Text="{Binding Title}" />
-                                </StackPanel>
+                                <v:TagImage ImageSource="{Binding BestImage}"
+                                            Title="{Binding Title}"
+                                            HorizontalAlignment="Stretch" />
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>

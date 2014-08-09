@@ -92,6 +92,7 @@
     </Compile>
     <Compile Include="Common\BoolToVisibilityConverter.cs" />
     <Compile Include="Common\DataTemplateSelector.cs" />
+    <Compile Include="Common\HslColor.cs" />
     <Compile Include="Common\ImageUrlThumbnailConverter.cs" />
     <Compile Include="Common\InvertBoolToVisibilityConverter.cs" />
     <Compile Include="Common\NavigationMessage.cs" />
@@ -136,6 +137,9 @@
     <Compile Include="View\SinglePostPage.xaml.cs">
       <DependentUpon>SinglePostPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\TagImage.xaml.cs">
+      <DependentUpon>TagImage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\WebImage.xaml.cs">
       <DependentUpon>WebImage.xaml</DependentUpon>
     </Compile>
@@ -162,6 +166,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\SinglePostPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TagImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
