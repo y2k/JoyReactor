@@ -27,15 +27,16 @@ namespace JoyReactor.Android.App.Home
 		private FeedAdapter adapter;
 		private bool loading;
 
-		private IPostCollectionModel model = ServiceLocator.Current.GetInstance<IPostCollectionModel>();
+		private IPostCollectionModel model = ServiceLocator.Current.GetInstance<IPostCollectionModel> ();
 
 		public override void OnActivityCreated (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
 
-			list.SetItemMargin((int)(4 * Resources.DisplayMetrics.Density));
+			list.SetItemMargin ((int)(4 * Resources.DisplayMetrics.Density));
 
-			ReloadList (ID.Factory.New(ID.IdConst.ReactorGood));
+			ReloadList (ID.Factory.New (ID.IdConst.ReactorGood));
+			AddLifeTimeEvent (() => ChangeSubscriptionCommand.Register (this, ReloadList), () => ChangeSubscriptionCommand.Unregister (this));
 		}
 
 		public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -46,29 +47,18 @@ namespace JoyReactor.Android.App.Home
 			return v;
 		}
 
-		public override void OnResume ()
-		{
-			base.OnResume ();
-			ChangeSubscriptionCommand.Register (this, ReloadList);
-		}
-
-		public override void OnPause ()
-		{
-			base.OnPause ();
-			ChangeSubscriptionCommand.Unregister (this);
-		}
-
 		private async void ReloadList (ID id)
 		{
 			ReCreateAdapter ();
 			adapter.ListId = id;
 
-			var result = await model.GetPostsAsync (id, SyncFlags.First);
+			var result = await model.GetListAsync (id, SyncFlags.First);
 			adapter.AddAll (result);
 			progress.Visibility = ViewStates.Gone;
 		}
 
-		private void ReCreateAdapter() {
+		private void ReCreateAdapter ()
+		{
 			list.Adapter = adapter = new FeedAdapter (Activity);
 			adapter.ClickMore += async (sender, e) => {
 			
@@ -77,7 +67,7 @@ namespace JoyReactor.Android.App.Home
 					var result = await model.GetPostsAsync (adapter.ListId, SyncFlags.Next);
 					loading = false;
 
-					adapter.Clear();
+					adapter.Clear ();
 					adapter.AddAll (result);
 				}
 			

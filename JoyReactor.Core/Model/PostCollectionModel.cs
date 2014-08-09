@@ -18,6 +18,21 @@ namespace JoyReactor.Core.Model
 
 		#region IPostCollectionModel implementation
 
+		public event EventHandler<ID> PostChanged;
+
+		public Task<PostCollection> GetListAsync (ID id, SyncFlags flags = SyncFlags.None)
+		{
+			if (flags == SyncFlags.First)
+				Task.Run (() => SyncFirstPage (id)).GetAwaiter();
+			return Task.Run (
+				() => {
+					var sid = ToFlatId (id);
+					var r = new PostCollection();
+					r.AddRange(MainDb.Instance.SafeQuery<Post> ("SELECT * FROM posts WHERE Id IN (SELECT PostId FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?))", sid));
+					return r;
+				});
+		}
+
 		public Task<List<Post>> GetPostsAsync (ID id, SyncFlags flags = SyncFlags.None)
 		{
 			return Task.Run (
@@ -103,7 +118,7 @@ namespace JoyReactor.Core.Model
 		{
 			// TODO Убрать копипаст
 			var p = parsers.First (s => s.ParserId == id.Site);
-			var t = MainDb.Instance.SafeQuery<Tag> ("SELECT * FROM tags WHERE TagId = ?", ToFlatId (id)).First();
+			var t = MainDb.Instance.SafeQuery<Tag> ("SELECT * FROM tags WHERE TagId = ?", ToFlatId (id)).First ();
 			p.ExtractTagPostCollection (id.Type, id.Tag, t.NextPage, GetSiteCookies (id), state => {
 				if (state.State == CollectionExportState.ExportState.TagInfo) {
 					t.NextPage = state.TagInfo.nextPage;

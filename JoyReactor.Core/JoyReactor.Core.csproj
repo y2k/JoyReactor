@@ -78,6 +78,7 @@
     <Compile Include="Model\Helper\HtmlUtils.cs" />
     <Compile Include="Model\Database\SQLiteConnectionExtensions.cs" />
     <Compile Include="Model\Web\Parser\Chan4Parser.cs" />
+    <Compile Include="Model\DTO\PostCollection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

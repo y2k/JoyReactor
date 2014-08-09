@@ -16,6 +16,9 @@ namespace JoyReactor.Android.App.Base
 		public const string Arg3 = "arg3";
 		public const string Arg4 = "arg4";
 
+		private List<Action> onResumeEvents = new List<Action>();
+		private List<Action> onPauseEvents = new List<Action>();
+
 		protected static T NewFragment<T>( params object[] args) where T : Fragment {
 			var bundle = new Bundle ();
 			for (int i = 0; i < args.Length; i++) {
@@ -30,6 +33,30 @@ namespace JoyReactor.Android.App.Base
 			var f = Activator.CreateInstance<T> ();
 			f.Arguments = bundle;
 			return f;
+		}
+
+		protected void AddLifeTimeEvent(Action onResume, Action onPause) {
+			onResumeEvents.Add (onResume);
+			onPauseEvents.Add (onPause);
+		}
+
+		public override void OnResume ()
+		{
+			base.OnResume ();
+			onResumeEvents.ForEach (s => s ());
+		}
+
+		public override void OnDestroy ()
+		{
+			base.OnDestroy ();
+			onResumeEvents.Clear ();
+			onPauseEvents.Clear ();
+		}
+
+		public override void OnPause ()
+		{
+			base.OnPause ();
+			onPauseEvents.ForEach (s => s ());
 		}
 	}
 }
