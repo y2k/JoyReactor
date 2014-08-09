@@ -25,10 +25,11 @@ namespace JoyReactor.Core.Model.Image
 			if (root.CheckExistsAsync (name).Result == ExistenceCheckResult.NotFound) return null;
 			var f = root.GetFileAsync (name).Result;
 
-			using (var stream = f.OpenAsync (FileAccess.Read).Result) {
-				var i = decoder.Decode (stream);
-				return new ImageWrapper { Image = i };
-			}
+            //using (var stream = f.OpenAsync (FileAccess.Read).Result) {
+            //    var i = decoder.Decode (f.Path, stream);
+            //    return new ImageWrapper { Image = i };
+            //}
+            return new ImageWrapper { Image = decoder.Decode(f) };
 		}
 
 		public void Put (Uri uri, Stream image)

@@ -99,6 +99,7 @@
     <Compile Include="Common\PhoneApplicationPageMediator.cs" />
     <Compile Include="Common\TextEmptyToVisibilityConverter.cs" />
     <Compile Include="LocalizedStrings.cs" />
+    <Compile Include="Model\PathMemoryCache.cs" />
     <Compile Include="ViewModel\AttachmentsViewModel.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\SinglePostViewModel.cs" />
@@ -135,6 +136,9 @@
     <Compile Include="View\SinglePostPage.xaml.cs">
       <DependentUpon>SinglePostPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\WebImage.xaml.cs">
+      <DependentUpon>WebImage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -158,6 +162,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\SinglePostPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WebImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

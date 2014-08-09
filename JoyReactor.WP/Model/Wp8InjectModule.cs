@@ -12,8 +12,10 @@ namespace JoyReactor.WP.Model
 
         protected override void Load(ContainerBuilder b)
         {
-            b.RegisterType<BitmapImageDecoder>().As<IImageDecoder>();
             b.RegisterType<MvxWindowsPhoneSQLiteConnectionFactory>().As<ISQLiteConnectionFactory>();
+
+            b.RegisterType<PathImageDecoder>().As<IImageDecoder>();
+            b.RegisterType<PathMemoryCache>().As<IMemoryCache>();
 
             b.RegisterType<MainViewModel>().AsSelf().SingleInstance();
             b.RegisterType<ProfileViewModel>().AsSelf().SingleInstance();

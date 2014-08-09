@@ -3,28 +3,24 @@ using JoyReactor.Core.Model.Image;
 using System.IO;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using PCLStorage;
 
 namespace JoyReactor.WP.Model
 {
-	public class BitmapImageDecoder : IImageDecoder
-	{
-		#region ImageDecoder implementation
+    public class PathImageDecoder : IImageDecoder
+    {
+        #region ImageDecoder implementation
 
-		public object Decode (Stream stream)
-		{
-            //var image = new BitmapImage();
-            //image.SetSource(stream);
-            //return image;
-            throw new NotImplementedException();
-		}
+        public object Decode(IFile file)
+        {
+            return new Uri(file.Path);
+        }
 
-		public int GetImageSize (ImageWrapper commonImage)
-		{
-            //var image = (BitmapImage)commonImage.Image;
-            //return image.PixelWidth * image.PixelHeight * 4;
+        public int GetImageSize(ImageWrapper commonImage)
+        {
             throw new NotImplementedException();
         }
 
-		#endregion
-	}
+        #endregion
+    }
 }

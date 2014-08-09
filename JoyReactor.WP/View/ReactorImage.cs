@@ -1,4 +1,6 @@
-﻿using System;
+﻿using JoyReactor.Core.Model;
+using Microsoft.Practices.ServiceLocation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +14,8 @@ namespace JoyReactor.WP.View
 {
     public sealed class ReactorImage : Panel
     {
+        private IImageModel model = ServiceLocator.Current.GetInstance<IImageModel>();
+
         public int ImageWidth
         {
             get { return (int)base.GetValue(ImageWidthProperty); }
@@ -41,6 +45,7 @@ namespace JoyReactor.WP.View
         private void Invalidate()
         {
             //
+            var url = ImageSource == null ? null : new Uri(ImageSource);
         }
 
         protected override Size MeasureOverride(Size availableSize)
