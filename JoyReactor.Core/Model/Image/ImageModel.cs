@@ -14,7 +14,7 @@ namespace JoyReactor.Core.Model.Image
         private const int BaseAttemptDelay = 500;
 
         private IMemoryCache memoryCache = ServiceLocator.Current.GetInstance<IMemoryCache>();
-        private IDiskCache diskCachge = ServiceLocator.Current.GetInstance<IDiskCache>();
+        private IDiskCache diskCache = ServiceLocator.Current.GetInstance<IDiskCache>();
         private HttpClient webClient = new HttpClient();
 
         private Dictionary<object, Uri> lockedImages = new Dictionary<object, Uri>();
@@ -63,7 +63,7 @@ namespace JoyReactor.Core.Model.Image
 			} else {
 #endif
             // Запрос к диску в фоновом потоке
-            var i = await Task.Run<ImageWrapper>(() => diskCachge.Get(uri));
+            var i = await diskCache.GetAsync(uri);
             if (i != null)
             {
                 memoryCache.Put(uri, i);
@@ -122,8 +122,8 @@ namespace JoyReactor.Core.Model.Image
                     "".ToString();
                     using (var ins = await webClient.GetStreamAsync(uri))
                     {
-                        diskCachge.Put(uri, ins);
-                        mi = diskCachge.Get(uri);
+                        diskCache.Put(uri, ins);
+                        mi = await diskCache.GetAsync(uri);
                         memoryCache.Put(uri, mi);
                     }
                 }
