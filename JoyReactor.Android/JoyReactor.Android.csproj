@@ -111,6 +111,7 @@
     <Compile Include="Widget\PostImagesPreviewControl.cs" />
     <Compile Include="Widget\FixedAspectPanel.cs" />
     <Compile Include="App\Base\ViewExtensions.cs" />
+    <Compile Include="Widget\FixedGridView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

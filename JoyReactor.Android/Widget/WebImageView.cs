@@ -5,13 +5,13 @@ using System.Text;
 
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Inject;
-using Android.Graphics;
 using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Android.Widget
@@ -41,7 +41,7 @@ namespace JoyReactor.Android.Widget
 
 				var u = imageSource == null ? null : new Uri (imageSource); // u == null отменяет закачки
 				iModel.Load (this, u, 0, s => {
-					if (s.Image == null) SetImageDrawable(null);
+					if (s == null || s.Image == null) SetImageDrawable(null);
 					else SetImageBitmap ((Bitmap)s.Image);
 				}); 
 			}

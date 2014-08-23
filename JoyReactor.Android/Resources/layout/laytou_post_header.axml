@@ -16,7 +16,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </joyreactor.android.widget.FixedAspectPanel>
-        <joyreactor.android.widget.PostImagesPreviewControl
+        <joyreactor.android.widget.FixedGridView
             android:id="@+id/attachments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

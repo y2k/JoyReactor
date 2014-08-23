@@ -9,5 +9,5 @@
         <item name="android:background">#FAB728</item>
     </style>
 
-    <color name="app_background">#FFEE75</color>
+    <color name="app_background">#eee</color>
 </resources>

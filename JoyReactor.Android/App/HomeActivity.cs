@@ -4,21 +4,21 @@ using System.Linq;
 using System.Text;
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
+using Android.Support.V4.App;
+using Android.Support.V4.View;
 using Android.Views;
 using Android.Widget;
-using JoyReactor.Android.App.Base;
-using Android.Support.V4.View;
-using Android.Graphics;
-using Android.Support.V4.App;
-using JoyReactor.Android.App.Home;
-using JoyReactor.Core.Model.Inject;
-using JoyReactor.Core.Model.Web;
 using JoyReactor.Core;
-using JoyReactor.Android.App.Base.Commands;
-using JoyReactor.Android.App.Profile;
+using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model.Parser;
+using JoyReactor.Core.Model.Web;
+using JoyReactor.Android.App.Base;
+using JoyReactor.Android.App.Base.Commands;
+using JoyReactor.Android.App.Home;
+using JoyReactor.Android.App.Profile;
 
 namespace JoyReactor.Android.App
 {

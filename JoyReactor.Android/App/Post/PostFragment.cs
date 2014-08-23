@@ -18,6 +18,7 @@ using JoyReactor.Core.Model.Inject;
 using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.Widget;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Android.App.Post
 {
@@ -30,18 +31,17 @@ namespace JoyReactor.Android.App.Post
 		private List<CommentAttachment> attachments;
 		private JoyReactor.Core.Model.DTO.Post post;
 
+		private View header;
+
 		public async override void OnActivityCreated (Bundle savedInstanceState)
 		{
 			base.OnActivityCreated (savedInstanceState);
 
+			await InitializeHeader ();
+
 			var adapter = new PostAdapter (this);
 			list.Adapter = adapter;
-
-			post = await model.GetPostAsync (Arguments.GetInt (Arg1));
-			adapter.NotifyDataSetChanged ();
 			comments = await model.GetTopCommentsAsync (post.Id, int.MaxValue);
-			adapter.NotifyDataSetChanged ();
-			attachments = await model.GetAttachmentsAsync (post.Id);
 			adapter.NotifyDataSetChanged ();
 		}
 
@@ -54,7 +54,21 @@ namespace JoyReactor.Android.App.Post
 		{
 			var v = inflater.Inflate (Resource.Layout.fragment_post, null);
 			list = v.FindViewById<ListView> (Resource.Id.list);
+			list.AddHeaderView (header = View.Inflate (Activity, Resource.Layout.laytou_post_header, null));
 			return v;
+		}
+
+		private async Task InitializeHeader() {
+			post = await model.GetPostAsync (Arguments.GetInt (Arg1));
+			attachments = await model.GetAttachmentsAsync (post.Id);
+
+			var iv = header.FindViewById<WebImageView> (Resource.Id.image);
+			var ap = header.FindViewById<FixedAspectPanel> (Resource.Id.aspectPanel);
+			var ats = header.FindViewById<FixedGridView> (Resource.Id.attachments);
+
+			iv.ImageSource = post == null ? null : post.Image;
+			ap.Aspect = post == null ? 1 : (float)post.ImageWidth / post.ImageHeight;
+			ats.Adapter = new AttachmentAdapter { items = attachments } ;
 		}
 
 		private class PostAdapter : BaseAdapter
@@ -68,15 +82,6 @@ namespace JoyReactor.Android.App.Post
 
 			#region implemented abstract members of BaseAdapter
 
-			public override int GetItemViewType (int position)
-			{
-				return position < 2 ? position : 2;
-			}
-
-			public override int ViewTypeCount {
-				get { return 3; }
-			}
-
 			public override Java.Lang.Object GetItem (int position)
 			{
 				return null;
@@ -89,72 +94,51 @@ namespace JoyReactor.Android.App.Post
 
 			public override View GetView (int position, View convertView, ViewGroup parent)
 			{
-				switch (GetItemViewType (position)) {
-				case 0:
-					convertView = convertView ?? View.Inflate (parent.Context, Resource.Layout.laytou_post_header, null);
-					var p = fragment.post;
-
-//					var z = ((ViewGroup)((FrameLayout)convertView).GetChildAt (0)).GetChildAt (1);
-
-					var iv = convertView.FindViewById<WebImageView> (Resource.Id.image);
-					var ap = convertView.FindViewById<FixedAspectPanel> (Resource.Id.aspectPanel);
-					var ats = convertView.FindViewById<PostImagesPreviewControl> (Resource.Id.attachments);
-
-					iv.ImageSource = p == null ? null : p.Image;
-					ap.Aspect = p == null ? 1 : (float)p.ImageWidth / p.ImageHeight;
-					ats.Adapter = new AttachmentAdapter { items = fragment.attachments } ;
-
-					return convertView;
-				case 1:
-					return convertView ?? new View (parent.Context);
-				default:
-					var v3 = convertView ?? View.Inflate (parent.Context, Resource.Layout.item_comment, null);
-					var c = fragment.comments [position - 2];
-					v3.FindViewById<TextView> (Resource.Id.title).Text = c.UserName + " - " + (c.Text ?? "").HtmlToString ();
-					v3.FindViewById<WebImageView> (Resource.Id.icon).ImageSource = c.UserImage;
-					return v3;
-				}
+				var v = convertView ?? View.Inflate (parent.Context, Resource.Layout.item_comment, null);
+				var c = fragment.comments [position];
+				v.FindViewById<TextView> (Resource.Id.title).Text = c.UserName + " - " + (c.Text ?? "").HtmlToString ();
+				v.FindViewById<WebImageView> (Resource.Id.icon).ImageSource = c.UserImage;
+				return v;
 			}
 
 			public override int Count {
-				get { return 2 + (fragment.comments == null ? 0 : fragment.comments.Count); }
+				get { return fragment.comments == null ? 0 : fragment.comments.Count; }
 			}
 
 			#endregion
+		}
 
-			private class AttachmentAdapter : BaseAdapter {
+		private class AttachmentAdapter : BaseAdapter {
 
-				internal List<CommentAttachment> items;
+			internal List<CommentAttachment> items;
+			internal IImageModel model = ServiceLocator.Current.GetInstance<IImageModel> ();
 
-				#region implemented abstract members of BaseAdapter
+			#region implemented abstract members of BaseAdapter
 
-				public override Java.Lang.Object GetItem (int position)
-				{
-					return null;
-				}
-
-				public override long GetItemId (int position)
-				{
-					return items [position].Id;
-				}
-
-				public override View GetView (int position, View convertView, ViewGroup parent)
-				{
-					var iv = (WebImageView)(convertView ?? new WebImageView (parent.Context, null));
-					iv.SetMinimumWidth (100);
-					iv.SetMinimumHeight (100);
-					iv.ImageSource = items [position].Url;
-					return iv;
-				}
-
-				public override int Count {
-					get { return items == null ? 0 : items.Count; }
-				}
-
-				#endregion
+			public override Java.Lang.Object GetItem (int position)
+			{
+				return null;
 			}
 
-			//
+			public override long GetItemId (int position)
+			{
+				return items [position].Id;
+			}
+
+			public override View GetView (int position, View convertView, ViewGroup parent)
+			{
+				var iv = (WebImageView)(convertView ?? new WebImageView (parent.Context, null));
+				iv.SetScaleType (ImageView.ScaleType.CenterCrop);
+				iv.ImageSource = model.CreateThumbnailUrl (items [position].Url, 
+					(int)(100 * parent.Resources.DisplayMetrics.Density));
+				return iv;
+			}
+
+			public override int Count {
+				get { return items == null ? 0 : items.Count; }
+			}
+
+			#endregion
 		}
 	}
 }
