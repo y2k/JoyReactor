@@ -9,14 +9,18 @@ namespace JoyReactor.Android.Model
 	{
 		#region ImageDecoder implementation
 
-		public object Decode (Stream stream)
+		public object Decode (PCLStorage.IFile file)
 		{
-			return BitmapFactory.DecodeStream (stream);
+			using (var s = file.OpenAsync (PCLStorage.FileAccess.Read).Result) {
+				return BitmapFactory.DecodeStream (s);
+			}
 		}
 
 		public int GetImageSize (ImageWrapper commonImage)
 		{
-			return ((Bitmap)commonImage.Image).ByteCount;
+			return
+				commonImage == null || commonImage.Image == null
+				? 0 : ((Bitmap)commonImage.Image).ByteCount;
 		}
 
 		#endregion
