@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">JoyReactor</string>
+	<string name="add_tag">Add tag</string>
+	<string name="profile">Profile</string>
+	<string name="settings">Settings</string>
+	<string name="about">About</string>
+	<string name="favorite">Favorite</string>
+	<string name="feed">Feed</string>
+	<string name="post_acitivty">Posts</string>
+</resources>

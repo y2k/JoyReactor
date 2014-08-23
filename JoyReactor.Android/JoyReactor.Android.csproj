@@ -119,7 +119,6 @@
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\values\Strings.xml" />
     <AndroidResource Include="Resources\drawable\Icon.png" />
     <AndroidResource Include="Resources\layout\ActivityHome.axml" />
     <AndroidResource Include="Resources\layout\ActivityPost.axml" />
@@ -133,6 +132,8 @@
     <AndroidResource Include="Resources\menu\home.xml" />
     <AndroidResource Include="Resources\values-ru\Strings.xml" />
     <AndroidResource Include="Resources\layout\laytou_post_header.axml" />
+    <AndroidResource Include="Resources\values\styles.xml" />
+    <AndroidResource Include="Resources\values\strings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
