@@ -109,8 +109,7 @@ namespace JoyReactor.Core.Model.Web.Parser
 			state.State = PostExportState.ExportState.Comment;
 			state.Comment = new ExportComment ();
 			var subIds = new Dictionary<string, int> ();
-			var clist = doc.Select ("div.reply");
-			foreach (var c in clist) {
+			foreach (var c in doc.Select ("div.reply")) {
 				state.Comment.Attachments = c.Select ("a.thrd-thumb")
 					.Where(s => !s.Attr("href").EndsWith(".webm")) // TODO: вернуть поддержку webm
 					.Select (s => new ExportComment.ExportAttachment {
@@ -125,12 +124,13 @@ namespace JoyReactor.Core.Model.Web.Parser
 				var ps = new List<string> ();
 				HtmlDocument pc = null;
 				int index = 0;
-				foreach (var z in r.Select ("div.pst").First ().ChildNodes) {
-					if (z.Name == "a" && z.InnerHtml.StartsWith ("&gt;&gt;")) {
+				foreach (var z in c.Select ("div.pst").SelectMany(s => s.ChildNodes)) {
+					if (z.Name == "a" && z.InnerHtml.StartsWith (">>")) {
 						if (pc == null) {
-							var id = Regex.Match (z.InnerHtml, "&gt;&gt;(\\d+)").Groups [1].Value;
-							int cnt = 1;
-							subIds.TryGetValue (id, out cnt);
+							var id = Regex.Match (z.InnerHtml, ">>(\\d+)").Groups [1].Value;
+							int cnt;
+							if (!subIds.TryGetValue (id, out cnt))
+								cnt = 1;
 							for (int i = 0; i < cnt; i++) {
 								ps.Add (id + "-" + i);
 							}
@@ -151,7 +151,21 @@ namespace JoyReactor.Core.Model.Web.Parser
 						}
 					} else {
 						pc = pc ?? new HtmlDocument ();
-						pc.DocumentNode.ChildNodes.Add (z);
+						pc.DocumentNode.AppendChild (z);
+//						pc.DocumentNode.ChildNodes.Add (z);
+					}
+				}
+				if (pc != null) {
+					if (ps.Count == 0 || ps.All(s => s == r.Id + "-0")) {
+						state.Comment.id = c.Id + "-0";
+						state.Comment.ParentIds = null;
+						state.Comment.text = pc.DocumentNode.InnerHtml;
+						callback (state);
+					} else {
+						state.Comment.id = c.Id + "-" + (index++);
+						state.Comment.ParentIds = ps.ToArray ();
+						state.Comment.text = pc.DocumentNode.InnerHtml;
+						callback (state);
 					}
 				}
 

@@ -14,7 +14,7 @@ namespace JoyReactor.Core.Model.Web.Parser
         {
             var m = Regex.Match(xpath, @"^(\w+)\.([\w-]+)$");
             if (m.Success) return root.Descendants()
-                .Where(s => s.Name == m.Groups[1].Value && s.Attributes.Any(a => a.Name == "class" && a.Value.Contains(m.Groups[2].Value)));
+                .Where(s => s.Name == m.Groups[1].Value && s.Attributes.Any(a => a.Name == "class" && a.Value == m.Groups[2].Value));
 
 			m = Regex.Match(xpath, @"^(\w+)$");
 			if (m.Success) return root.Descendants()
