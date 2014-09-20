@@ -325,7 +325,7 @@ namespace JoyReactor.Core.Model.Parser
 
             c.id = COMMENT_ID.FirstString(s);
             c.text = TEXT.FirstString(s);
-            c.created = TIMESTAMP.FirstLong(s) * 1000L;
+            c.Created = TIMESTAMP.FirstLong(s) * 1000L;
 
             c.userName = Uri.UnescapeDataString(Uri.UnescapeDataString(USER_NAME.FirstString(s))).Replace('+', ' ');
             c.userImage = "http://img0.joyreactor.cc/pics/avatar/user/" + USER_ID.FirstString(s);
@@ -336,11 +336,11 @@ namespace JoyReactor.Core.Model.Parser
             if (m.Success)
             {
                 var u = m.Groups[1].Value + m.Groups[2].Value;
-                c.attachments = new[] { new ExportComment.ExportAttachment { imageUrl = u } };
+                c.Attachments = new[] { new ExportComment.ExportAttachment { Image = u } };
             }
             else
             {
-                c.attachments = ExportComment.EmptyAttachments;
+                c.Attachments = ExportComment.EmptyAttachments;
             }
 
             return c;
@@ -362,7 +362,7 @@ namespace JoyReactor.Core.Model.Parser
                 }
 
                 var c = getComment(html, position, end);
-                c.parentId = parentId;
+				c.ParentIds = parentId == null ? null : new string[] { parentId };
                 callback(c);
 
                 end = skipHtmlTag(html, end + 1);

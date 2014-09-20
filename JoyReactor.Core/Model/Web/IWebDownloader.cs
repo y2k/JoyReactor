@@ -1,6 +1,7 @@
 ﻿using System;
 using HtmlAgilityPack;
 using System.Collections.Generic;
+using System.IO;
 
 namespace JoyReactor.Core.Model.Web
 {
@@ -8,7 +9,7 @@ namespace JoyReactor.Core.Model.Web
 	{
 		string GetText (Uri uri, RequestParams reqParams = null);
 
-		HtmlDocument Get(Uri uri);
+		Stream GetResource (Uri uri, RequestParams reqParams = null);
 
         DocumentReponse GetDocument(Uri uri, RequestParams reqParams = null);
 

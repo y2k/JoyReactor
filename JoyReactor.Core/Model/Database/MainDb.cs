@@ -49,6 +49,7 @@ namespace JoyReactor.Core.Model.Database
             db.CreateTable<TagLinkedTag>();
             db.CreateTable<Comment>();
             db.CreateTable<CommentAttachment>();
+			db.CreateTable<CommentLink> ();
 
             db.Insert(new Tag { TagId = ToFlatId(ID.Factory.New(ID.IdConst.ReactorGood)), Title = "JoyReactor", Flags = Tag.FlagSystem });
 

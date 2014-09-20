@@ -7,7 +7,7 @@ using System.Net.Http;
 
 namespace JoyReactor.Core.Model.Web
 {
-    public class WebDownloader : IWebDownloader
+	public class WebDownloader : IWebDownloader
     {
         #region Constants
 
@@ -38,6 +38,12 @@ namespace JoyReactor.Core.Model.Web
         });
 
         #region IWebDownloader implementation
+
+		public System.IO.Stream GetResource (Uri uri, RequestParams reqParams = null)
+		{
+			var r = DefaultClient.Value.GetAsync (uri).Result;
+			return r.Content.ReadAsStreamAsync ().Result;
+		}
 
         public DocumentReponse GetDocument(Uri uri, RequestParams reqParams = null)
         {
@@ -96,18 +102,18 @@ namespace JoyReactor.Core.Model.Web
             //return DefaultClient.Value.GetStringAsync(uri).Result;
         }
 
-        public HtmlDocument Get(Uri uri)
-        {
-            using (var r = DefaultClient.Value.GetAsync(uri).Result)
-            {
-                using (var s = r.Content.ReadAsStreamAsync().Result)
-                {
-                    var doc = new HtmlDocument();
-                    doc.Load(s);
-                    return doc;
-                }
-            }
-        }
+//        public HtmlDocument Get(Uri uri)
+//        {
+//            using (var r = DefaultClient.Value.GetAsync(uri).Result)
+//            {
+//                using (var s = r.Content.ReadAsStreamAsync().Result)
+//                {
+//                    var doc = new HtmlDocument();
+//                    doc.Load(s);
+//                    return doc;
+//                }
+//            }
+//        }
 
         public IDictionary<string, string> PostForHeaders(Uri uri, RequestParams reqParams = null)
         {

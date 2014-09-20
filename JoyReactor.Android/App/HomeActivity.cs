@@ -30,9 +30,12 @@ namespace JoyReactor.Android.App
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
-			SetContentView (Resource.Layout.ActivityHome);
+			SetContentView (Resource.Layout.activity_home);
 
-			pager = FindViewById<ViewPager> (Resource.Id.Pager);
+			var view = FindViewById (global::Android.Resource.Id.Content);
+			view.ToString ();
+
+			pager = FindViewById<ViewPager> (Resource.Id.pager);
 			pager.Adapter = new Adapter (SupportFragmentManager);
 			pager.PageSelected += (s, e) => ActionBar.SetDisplayHomeAsUpEnabled(e.Position > 0);
 

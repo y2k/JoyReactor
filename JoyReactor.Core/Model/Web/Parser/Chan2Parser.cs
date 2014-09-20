@@ -8,11 +8,15 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Globalization;
+using JoyReactor.Core.Model.Helper;
 
 namespace JoyReactor.Core.Model.Web.Parser
 {
     public class Chan2Parser : ISiteParser
     {
+		private static readonly Regex IMAGE_SIZE = new Regex (@"(\d+)x(\d+)");
+
         private IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
 
         public ID.SiteParser ParserId
@@ -74,7 +78,7 @@ namespace JoyReactor.Core.Model.Web.Parser
                 p.userName = "Unknown"; // TODO
                 p.created = new DateTime(2000, 1, 1).ToUnixTimestamp() * 1000L; // TODO
 
-                p.image = node.Select("a.il").First().Attr("href");
+				p.image = node.Select("a.il").First().Attr("href").Replace("http://", "https://");
                 p.imageWidth = 64;
                 p.imageHeight = node.Select("div.thumb.z").Select(s => Regex.Match(s.Attr("style"), "height: (\\d+)px;")).Select(s => s.Success ? int.Parse(s.Groups[1].Value) : 64).First();
 
@@ -86,12 +90,96 @@ namespace JoyReactor.Core.Model.Web.Parser
 
         public void ExtractPost(string postId, Action<PostExportState> callback)
         {
-            throw new NotImplementedException();
+			var url = new Uri (string.Format ("http://m2-ch.ru/{0}/res/{1}.html", postId.Split(',')[0], postId.Split(',')[1]));
+			var doc = downloader.Get(url).DocumentNode;
+
+			callback(new PostExportState { State = PostExportState.ExportState.Begin });
+
+			var state = new PostExportState { State = PostExportState.ExportState.Info };
+			var r = doc.Select ("div.thread").First ();
+			state.Attachments = r.Select ("a.thrd-thumb")
+				.Select (s => new ExportPostAttachment {
+					Image = s.AbsUrl(url, "href").Replace("http://", "https://"),
+					Width = int.Parse(IMAGE_SIZE.Match(s.InnerHtml).Groups[1].Value),
+					Height = int.Parse(IMAGE_SIZE.Match(s.InnerHtml).Groups[2].Value),
+				}).ToArray();
+			state.Content = r.Select ("div.pst").First ().InnerHtml;
+			callback (state);
+
+			state.State = PostExportState.ExportState.Comment;
+			state.Comment = new ExportComment ();
+			var subIds = new Dictionary<string, int> ();
+			var clist = doc.Select ("div.reply");
+			foreach (var c in clist) {
+				state.Comment.Attachments = c.Select ("a.thrd-thumb")
+					.Where(s => !s.Attr("href").EndsWith(".webm")) // TODO: вернуть поддержку webm
+					.Select (s => new ExportComment.ExportAttachment {
+						Image = s.AbsUrl(url, "href").Replace("http://", "https://"),
+						Width = int.Parse(IMAGE_SIZE.Match(s.InnerText).Groups[1].Value),
+						Height = int.Parse(IMAGE_SIZE.Match(s.InnerText).Groups[2].Value),
+					}).ToArray();
+
+				var d = FixMounthNames(c.Select ("time").First ().InnerText);
+				state.Comment.Created = DateTime.ParseExact (d, "dd MMM, HH:mm", new CultureInfo ("ru")).ToUnixTimestamp();
+
+				var ps = new List<string> ();
+				HtmlDocument pc = null;
+				int index = 0;
+				foreach (var z in r.Select ("div.pst").First ().ChildNodes) {
+					if (z.Name == "a" && z.InnerHtml.StartsWith ("&gt;&gt;")) {
+						if (pc == null) {
+							var id = Regex.Match (z.InnerHtml, "&gt;&gt;(\\d+)").Groups [1].Value;
+							int cnt = 1;
+							subIds.TryGetValue (id, out cnt);
+							for (int i = 0; i < cnt; i++) {
+								ps.Add (id + "-" + i);
+							}
+						} else {
+							if (ps.Count == 0 || ps.All(s => s == r.Id + "-0")) {
+								state.Comment.id = c.Id + "-0";
+								state.Comment.ParentIds = null;
+								state.Comment.text = pc.DocumentNode.InnerHtml;
+								callback (state);
+							} else {
+								state.Comment.id = c.Id + "-" + (index++);
+								state.Comment.ParentIds = ps.ToArray ();
+								state.Comment.text = pc.DocumentNode.InnerHtml;
+								callback (state);
+							}
+							ps.Clear ();
+							pc = null;
+						}
+					} else {
+						pc = pc ?? new HtmlDocument ();
+						pc.DocumentNode.ChildNodes.Add (z);
+					}
+				}
+
+				if (index > 1)
+					subIds [c.Id] = index;
+			}
         }
 
         public ProfileExport Profile(string username)
         {
             throw new NotImplementedException();
         }
+
+		private static string FixMounthNames(string date) {
+			// http://in-coding.blogspot.ru/2012/02/php-date.html
+			return date
+				.Replace ("Янв", "Янв.")
+				.Replace ("Фев", "Февр.")
+				.Replace ("Мар", "Март")
+				.Replace ("Апр", "Апр.")
+				.Replace ("Мая", "Май")
+				.Replace ("Июн", "Июнь")
+				.Replace ("Июл", "Июль")
+				.Replace ("Авг", "Авг.")
+				.Replace ("Сен", "Сент.")
+				.Replace ("Окт", "Окт.")
+				.Replace ("Ноя", "Нояб.")
+				.Replace ("Дек", "Дек.");
+		}
     }
 }

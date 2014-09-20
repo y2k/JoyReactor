@@ -12,9 +12,13 @@ namespace JoyReactor.Core.Model.Web.Parser
     {
         public static IEnumerable<HtmlNode> Select(this HtmlNode root, string xpath)
         {
-            var m = Regex.Match(xpath, "^(\\w+)\\.(\\w+)$");
+            var m = Regex.Match(xpath, @"^(\w+)\.([\w-]+)$");
             if (m.Success) return root.Descendants()
                 .Where(s => s.Name == m.Groups[1].Value && s.Attributes.Any(a => a.Name == "class" && a.Value.Contains(m.Groups[2].Value)));
+
+			m = Regex.Match(xpath, @"^(\w+)$");
+			if (m.Success) return root.Descendants()
+				.Where(s => s.Name == m.Groups[1].Value);
 
             m = Regex.Match(xpath, "^(\\w+)\\.(\\w+) (\\w+)\\.(\\w+)$");
             if (m.Success) return root.Descendants()
@@ -36,7 +40,7 @@ namespace JoyReactor.Core.Model.Web.Parser
             if (m.Success) return root.Descendants()
                 .Where(s => s.Name == m.Groups[1].Value && s.Attributes.Any(a => a.Name == "class" && a.Value.Contains(m.Groups[2].Value) && a.Value.Contains(m.Groups[3].Value)));
 
-            throw new InvalidOperationException();
+			throw new InvalidOperationException("Can't parse XPATH = " + xpath);
         }
 
         public static string AbsUrl(this HtmlNode node, Uri baseUrl, string attrName)

@@ -19,10 +19,11 @@ namespace JoyReactor.Core.Model.Inject
 		public DefaultServiceLocator(params Module[] platformModule)
         {
             var b = new ContainerBuilder();
-            b.RegisterModule(new DefaultModule());
 
-			foreach (var s in platformModule)
+			b.RegisterModule(new DefaultModule());
+			foreach (var s in platformModule) {
 				b.RegisterModule (s);
+			}
 
             locator = b.Build();
         }

@@ -31,5 +31,9 @@ namespace JoyReactor.Android.App.Base
 			}
 			return t;
 		}
+
+		public void NavigateToGallery(int postId) {
+			StartActivity (NewIntent (typeof(GalleryActivity), postId));
+		}
 	}
 }

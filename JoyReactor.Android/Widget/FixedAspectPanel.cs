@@ -16,7 +16,7 @@ namespace JoyReactor.Android.Widget
 {
 	public class FixedAspectPanel : ViewGroup
 	{
-		private float _aspect;
+		private float _aspect = 1;
 
 		public float Aspect {
 			get { return _aspect; }

@@ -83,13 +83,14 @@ namespace JoyReactor.Core.Tests
 
                         sumCommentRating += s.Comment.rating;
 
-                        Assert.IsTrue(s.Comment.created <= 1577836800000L && s.Comment.created >= 1262304000000L, "Comment created = " + s.Comment.created);
+                        Assert.IsTrue(s.Comment.Created <= 1577836800000L && s.Comment.Created >= 1262304000000L, "Comment created = " + s.Comment.Created);
                         Assert.IsTrue(Regex.IsMatch(s.Comment.id, "\\d+"), "Comment id = " + s.Comment.id);
                         comIds.Add(s.Comment.id);
-                        if (s.Comment.parentId != null)
-                        {
-                            Assert.IsTrue(comIds.Contains(s.Comment.parentId), "Comment parent id = " + s.Comment.parentId);
-                            notRootCommentCount++;
+						if (s.Comment.ParentIds != null) {
+							foreach (var c in s.Comment.ParentIds) {
+	                            Assert.IsTrue(comIds.Contains(c), "Comment parent id = " + c);
+    	                        notRootCommentCount++;
+							}
                         }
 
                         var t = s.Comment.text;
@@ -101,11 +102,11 @@ namespace JoyReactor.Core.Tests
                         Assert.IsNotNull(s.Comment.userImage);
                         Assert.IsTrue(Regex.IsMatch(s.Comment.userImage, "http://img\\d+\\.joyreactor\\.cc/pics/avatar/user/\\d+"), s.Comment.userImage);
 
-                        Assert.IsNotNull(s.Comment.attachments);
-                        commentsAttachments += s.Comment.attachments.Length;
-                        foreach (var z in s.Comment.attachments)
+                        Assert.IsNotNull(s.Comment.Attachments);
+                        commentsAttachments += s.Comment.Attachments.Length;
+                        foreach (var z in s.Comment.Attachments)
                         {
-                            Assert.IsTrue(Regex.IsMatch(z.imageUrl, "http://img\\d+\\.joyreactor\\.cc/pics/comment/\\-\\d+\\.(jpeg|png|gif|bmp)"), "Comment id = " + s.Comment.id + ", url = " + z.imageUrl);
+                            Assert.IsTrue(Regex.IsMatch(z.Image, "http://img\\d+\\.joyreactor\\.cc/pics/comment/\\-\\d+\\.(jpeg|png|gif|bmp)"), "Comment id = " + s.Comment.id + ", url = " + z.Image);
                         }
                     }
                 });
@@ -158,14 +159,15 @@ namespace JoyReactor.Core.Tests
 
                         sumCommentRating += s.Comment.rating;
 
-                        Assert.IsTrue(s.Comment.created <= 1577836800000L && s.Comment.created >= 1262304000000L, "Comment created = " + s.Comment.created);
+                        Assert.IsTrue(s.Comment.Created <= 1577836800000L && s.Comment.Created >= 1262304000000L, "Comment created = " + s.Comment.Created);
                         Assert.IsTrue(Regex.IsMatch(s.Comment.id, "\\d+"), "Comment id = " + s.Comment.id);
                         comIds.Add(s.Comment.id);
-                        if (s.Comment.parentId != null)
-                        {
-                            Assert.IsTrue(comIds.Contains(s.Comment.parentId), "Comment parent id = " + s.Comment.parentId);
-                            notRootCommentCount++;
-                        }
+						if (s.Comment.ParentIds != null) {
+							foreach (var c in s.Comment.ParentIds) {
+								Assert.IsTrue(comIds.Contains(c), "Comment parent id = " + c);
+								notRootCommentCount++;
+							}
+						}
 
                         var t = s.Comment.text;
                         Assert.IsTrue(t == null || t == t.Trim(), "Comment text = " + s.Comment.text);
@@ -176,11 +178,11 @@ namespace JoyReactor.Core.Tests
                         Assert.IsNotNull(s.Comment.userImage);
                         Assert.IsTrue(Regex.IsMatch(s.Comment.userImage, "http://img\\d+\\.joyreactor\\.cc/pics/avatar/user/\\d+"), s.Comment.userImage);
 
-                        Assert.IsNotNull(s.Comment.attachments);
-                        commentsAttachments += s.Comment.attachments.Length;
-                        foreach (var z in s.Comment.attachments)
+                        Assert.IsNotNull(s.Comment.Attachments);
+                        commentsAttachments += s.Comment.Attachments.Length;
+                        foreach (var z in s.Comment.Attachments)
                         {
-                            Assert.IsTrue(Regex.IsMatch(z.imageUrl, "http://img\\d+\\.joyreactor\\.cc/pics/comment/\\-\\d+\\.(jpeg|png|gif|bmp)"), "Comment id = " + s.Comment.id + ", url = " + z.imageUrl);
+                            Assert.IsTrue(Regex.IsMatch(z.Image, "http://img\\d+\\.joyreactor\\.cc/pics/comment/\\-\\d+\\.(jpeg|png|gif|bmp)"), "Comment id = " + s.Comment.id + ", url = " + z.Image);
                         }
                     }
                 });
@@ -213,12 +215,9 @@ namespace JoyReactor.Core.Tests
                 s =>
                 {
                     // TODO
-                    if (s.State == PostExportState.ExportState.Begin)
-                    {
+                    if (s.State == PostExportState.ExportState.Begin) {
                         wasBegin = true;
-                    }
-                    else if (s.State == PostExportState.ExportState.Info)
-                    {
+                    } else if (s.State == PostExportState.ExportState.Info) {
                         wasInfo = true;
 
                         Assert.AreEqual("Mishvanda", s.userName);
@@ -226,22 +225,21 @@ namespace JoyReactor.Core.Tests
                         Assert.AreEqual("http://img0.joyreactor.cc/pics/post/-1316599.gif", s.image);
                         Assert.AreEqual(600, s.imageWidth);
                         Assert.AreEqual(750, s.imageHeight);
-                    }
-                    else if (s.State == PostExportState.ExportState.Comment)
-                    {
+                    } else if (s.State == PostExportState.ExportState.Comment) {
                         Assert.IsNotNull(s.Comment);
                         commenCount++;
 
                         sumCommentRating += s.Comment.rating;
 
-                        Assert.IsTrue(s.Comment.created <= 1577836800000L && s.Comment.created >= 1262304000000L, "Comment created = " + s.Comment.created);
+                        Assert.IsTrue(s.Comment.Created <= 1577836800000L && s.Comment.Created >= 1262304000000L, "Comment created = " + s.Comment.Created);
                         Assert.IsTrue(Regex.IsMatch(s.Comment.id, "\\d+"), "Comment id = " + s.Comment.id);
                         comIds.Add(s.Comment.id);
-                        if (s.Comment.parentId != null)
-                        {
-                            Assert.IsTrue(comIds.Contains(s.Comment.parentId), "Comment parent id = " + s.Comment.parentId);
-                            notRootCommentCount++;
-                        }
+						if (s.Comment.ParentIds != null) {
+							foreach (var c in s.Comment.ParentIds) {
+								Assert.IsTrue(comIds.Contains(c), "Comment parent id = " + c);
+								notRootCommentCount++;
+							}
+						}
 
                         var t = s.Comment.text;
                         Assert.IsTrue(t == null || t == t.Trim(), "Comment text = " + s.Comment.text);
@@ -252,15 +250,13 @@ namespace JoyReactor.Core.Tests
                         Assert.IsNotNull(s.Comment.userImage);
                         Assert.IsTrue(Regex.IsMatch(s.Comment.userImage, "http://img\\d+\\.joyreactor\\.cc/pics/avatar/user/\\d+"), s.Comment.userImage);
 
-                        Assert.IsNotNull(s.Comment.attachments);
-                        commentsAttachments += s.Comment.attachments.Length;
-                        foreach (var z in s.Comment.attachments)
-                        {
-                            Assert.IsTrue(Regex.IsMatch(z.imageUrl, "http://img\\d+\\.joyreactor\\.cc/pics/comment/\\-\\d+\\.(jpeg|png|gif|bmp)"), "Comment id = " + s.Comment.id + ", url = " + z.imageUrl);
+                        Assert.IsNotNull(s.Comment.Attachments);
+                        commentsAttachments += s.Comment.Attachments.Length;
+                        foreach (var z in s.Comment.Attachments) {
+                            Assert.IsTrue(Regex.IsMatch(z.Image, "http://img\\d+\\.joyreactor\\.cc/pics/comment/\\-\\d+\\.(jpeg|png|gif|bmp)"), "Comment id = " + s.Comment.id + ", url = " + z.Image);
                         }
 
-                        if (!string.IsNullOrEmpty(s.Comment.text))
-                        {
+                        if (!string.IsNullOrEmpty(s.Comment.text)) {
                             Assert.IsFalse(commentTexts.Contains(s.Comment.text), "Text = " + s.Comment.text);
                             commentTexts.Add(s.Comment.text);
                         }
@@ -276,8 +272,7 @@ namespace JoyReactor.Core.Tests
             Assert.IsTrue(commenCount - notRootCommentCount >= 16, "Root comment count = " + (commenCount - notRootCommentCount));
         }
 
-        private static void TestCommentTextNotContainsTag(string text)
-        {
+        private static void TestCommentTextNotContainsTag(string text) {
             var t = text == null ? null : text.ToLower();
             Assert.IsFalse(t != null && new string[] {
 				"<br>", "<br />", "<p>", "<a ", "</a>"

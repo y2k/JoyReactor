@@ -47,12 +47,19 @@ namespace JoyReactor.Core.Model.Parser
 		public enum ExportState { Begin, Info, Comment, Tag, LinkedTag, LinkedPost }
 
 		public ExportState State { get; set; }
+
+		[Obsolete]
 		public string image {get;set;}
+		[Obsolete]
 		public int imageWidth {get;set;}
+		[Obsolete]
 		public int imageHeight {get;set;}
+		public ExportPostAttachment[] Attachments { get; set; }
+
 		public string userName {get;set;}
 		public string userImage {get;set;}
 		public string title {get;set;}
+		public string Content { get; set; }
 		public long created {get;set;}
 		public float rating {get;set;}
 		public string coub {get;set;}

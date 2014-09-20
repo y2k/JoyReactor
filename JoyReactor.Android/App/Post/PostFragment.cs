@@ -68,7 +68,7 @@ namespace JoyReactor.Android.App.Post
 
 			iv.ImageSource = post == null ? null : post.Image;
 			ap.Aspect = post == null ? 1 : (float)post.ImageWidth / post.ImageHeight;
-			ats.Adapter = new AttachmentAdapter { items = attachments } ;
+			ats.Adapter = new AttachmentAdapter { fragment = this, items = attachments } ;
 		}
 
 		private class PostAdapter : BaseAdapter
@@ -112,6 +112,7 @@ namespace JoyReactor.Android.App.Post
 
 			internal List<CommentAttachment> items;
 			internal IImageModel model = ServiceLocator.Current.GetInstance<IImageModel> ();
+			internal PostFragment fragment;
 
 			#region implemented abstract members of BaseAdapter
 
@@ -131,6 +132,11 @@ namespace JoyReactor.Android.App.Post
 				iv.SetScaleType (ImageView.ScaleType.CenterCrop);
 				iv.ImageSource = model.CreateThumbnailUrl (items [position].Url, 
 					(int)(100 * parent.Resources.DisplayMetrics.Density));
+
+				iv.Click += (sender, e) => {
+					((BaseActivity)fragment.Activity).NavigateToGallery(fragment.post.Id);
+				};
+
 				return iv;
 			}
 

@@ -4,8 +4,11 @@ namespace JoyReactor.Core.Model.Parser.Data
 {
 	public class ExportPost
 	{
+		[Obsolete]
 		public string image { get; set; }
+		[Obsolete]
 		public int imageWidth { get; set; }
+		[Obsolete]
 		public int imageHeight { get; set; }
 
 		public string userName { get; set; }

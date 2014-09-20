@@ -3,6 +3,7 @@ using System;
 using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model.Web.Parser;
+using JoyReactor.Core.Tests.Inner;
 
 namespace JoyReactor.Core.Tests
 {
@@ -35,5 +36,18 @@ namespace JoyReactor.Core.Tests
 
             });
         }
+
+		[Test]
+		public void TestPost1755718()
+		{
+			ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator(new TestModule()));
+
+			var parser = new Chan2Parser();
+
+			parser.ExtractPost ("a,1755718",
+				state => {
+					// TODO
+				});
+		}
     }
 }

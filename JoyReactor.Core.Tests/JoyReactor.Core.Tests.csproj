@@ -44,6 +44,8 @@
     <Compile Include="Chan7ParserTests.cs" />
     <Compile Include="ReactorParserTests.cs" />
     <Compile Include="Chan4ParserTests.cs" />
+    <Compile Include="Inner\TestModule.cs" />
+    <Compile Include="Inner\MockWebDownloader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -63,5 +65,12 @@
     <None Include="Libs\Autofac.dll" />
     <None Include="Libs\Autofac.xml" />
     <None Include="packages.config" />
+    <None Include="FakeWebResponses\response1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Inner\" />
+    <Folder Include="FakeWebResponses\" />
   </ItemGroup>
 </Project>

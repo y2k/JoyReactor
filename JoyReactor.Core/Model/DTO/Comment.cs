@@ -12,7 +12,6 @@ namespace JoyReactor.Core.Model.DTO
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
-        public int ParentId { get; set; }
 
         public int PostId { get; set; }
 

@@ -87,7 +87,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App\App.cs" />
     <Compile Include="App\HomeActivity.cs" />
@@ -112,6 +111,8 @@
     <Compile Include="Widget\FixedAspectPanel.cs" />
     <Compile Include="App\Base\ViewExtensions.cs" />
     <Compile Include="Widget\FixedGridView.cs" />
+    <Compile Include="App\GalleryActivity.cs" />
+    <Compile Include="Resources\Resource.designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -121,7 +122,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\Icon.png" />
-    <AndroidResource Include="Resources\layout\ActivityHome.axml" />
     <AndroidResource Include="Resources\layout\ActivityPost.axml" />
     <AndroidResource Include="Resources\layout\fragment_post.axml" />
     <AndroidResource Include="Resources\layout\fragment_profile.axml" />
@@ -135,6 +135,9 @@
     <AndroidResource Include="Resources\layout\laytou_post_header.axml" />
     <AndroidResource Include="Resources\values\styles.xml" />
     <AndroidResource Include="Resources\values\strings.xml" />
+    <AndroidResource Include="Resources\layout\activity_gallery.axml" />
+    <AndroidResource Include="Resources\layout\activity_home.axml" />
+    <AndroidResource Include="Resources\layout\item_gallery.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
