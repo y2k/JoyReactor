@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using Microsoft.Practices.ServiceLocation;
+using JoyReactor.Core.Tests.Inner;
 
 namespace JoyReactor.Core.Tests
 {
@@ -47,7 +48,7 @@ namespace JoyReactor.Core.Tests
         [Test]
         public void TestPost861529()
         {
-            ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator());
+			ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator(new TestModule()));
             var parser = new ReactorParser();
 
             bool wasBegin = false;
@@ -123,7 +124,7 @@ namespace JoyReactor.Core.Tests
         [Test]
         public void TestPost1323757()
         {
-            ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator());
+			ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator(new TestModule()));
             var parser = new ReactorParser();
 
             bool wasBegin = false;
@@ -199,7 +200,7 @@ namespace JoyReactor.Core.Tests
         [Test]
         public void TestPost1382511()
         {
-            ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator());
+			ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator(new TestModule()));
             var parser = new ReactorParser();
 
             bool wasBegin = false;
