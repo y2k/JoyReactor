@@ -113,6 +113,7 @@
     <Compile Include="Widget\FixedGridView.cs" />
     <Compile Include="App\GalleryActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
+    <Compile Include="Model\LogcatLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

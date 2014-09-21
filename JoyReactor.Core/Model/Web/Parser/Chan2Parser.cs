@@ -75,7 +75,8 @@ namespace JoyReactor.Core.Model.Web.Parser
                 p.title = node.Select("a.oz").First().InnerText;
                 if (string.IsNullOrEmpty(p.title)) p.title = null;
 
-                p.userName = "Unknown"; // TODO
+                p.userName = "Anon"; // TODO
+				p.userImage = "http://img0.joyreactor.cc/pics/avatar/tag/22045";
                 p.created = new DateTime(2000, 1, 1).ToUnixTimestamp() * 1000L; // TODO
 
 				p.image = node.Select("a.il").First().Attr("href").Replace("http://", "https://");
@@ -117,6 +118,9 @@ namespace JoyReactor.Core.Model.Web.Parser
 						Width = int.Parse(IMAGE_SIZE.Match(s.InnerText).Groups[1].Value),
 						Height = int.Parse(IMAGE_SIZE.Match(s.InnerText).Groups[2].Value),
 					}).ToArray();
+
+				state.Comment.UserName = "Anon"; // TODO
+				state.Comment.UserImage = "http://img0.joyreactor.cc/pics/avatar/tag/22045";
 
 				var d = FixMounthNames(c.Select ("time").First ().InnerText);
 				state.Comment.Created = DateTime.ParseExact (d, "dd MMM, HH:mm", new CultureInfo ("ru")).ToUnixTimestamp();

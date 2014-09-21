@@ -5,6 +5,7 @@ using Autofac;
 using Community.SQLite;
 using Cirrious.MvvmCross.Community.Plugins.Sqlite.Droid;
 using Cirrious.MvvmCross.Community.Plugins.Sqlite;
+using JoyReactor.Core.Model.Helper;
 
 namespace JoyReactor.Android.Model
 {
@@ -14,6 +15,7 @@ namespace JoyReactor.Android.Model
 
 		protected override void Load (ContainerBuilder builder)
 		{
+			builder.RegisterType<LogcatLogger> ().As<Log.ILogger>();
 			builder.RegisterType<BitmapImageDecoder> ().As<IImageDecoder> ();
 			builder.RegisterType<MvxDroidSQLiteConnectionFactory> ().As<ISQLiteConnectionFactory>();
 		}

@@ -82,6 +82,7 @@
     <Compile Include="Model\Web\Parser\Data\ExportPostAttachment.cs" />
     <Compile Include="Model\DTO\CommentLink.cs" />
     <Compile Include="Model\Helper\WebDownloaderExtensions.cs" />
+    <Compile Include="Model\Helper\Log.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JoyReactor.Core.Model.Helper;
 
 namespace JoyReactor.Core.Model.Inject
 {
@@ -48,6 +49,8 @@ namespace JoyReactor.Core.Model.Inject
         {
             protected override void Load(ContainerBuilder b)
             {
+				b.RegisterType<Log.DumpLogger> ().As<Log.ILogger>();
+
                 b.RegisterType<WebDownloader>().As<IWebDownloader>();
 
                 b.RegisterType<ReactorParser>().As<ISiteParser>();

@@ -13,8 +13,8 @@ namespace JoyReactor.Core.Model.Parser.Data
 		public string id { get; set; }
 		public string text { get; set; }
 		public long Created { get; set; }
-		public string userName { get; set; }
-		public string userImage { get; set; }
+		public string UserName { get; set; }
+		public string UserImage { get; set; }
 		public ExportComment.ExportAttachment[] Attachments { get; set; }
         public float rating { get; set; }
 

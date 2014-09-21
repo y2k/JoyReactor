@@ -98,10 +98,10 @@ namespace JoyReactor.Core.Tests
                         Assert.IsTrue(t == null || t == t.Trim(), "Comment text = " + s.Comment.text);
                         TestCommentTextNotContainsTag(s.Comment.text);
 
-                        Assert.NotNull(s.Comment.userName);
-                        Assert.IsTrue(Regex.IsMatch(s.Comment.userName, "[\\w\\d_]+"), "Comment user name = " + s.Comment.userName);
-                        Assert.IsNotNull(s.Comment.userImage);
-                        Assert.IsTrue(Regex.IsMatch(s.Comment.userImage, "http://img\\d+\\.joyreactor\\.cc/pics/avatar/user/\\d+"), s.Comment.userImage);
+                        Assert.NotNull(s.Comment.UserName);
+                        Assert.IsTrue(Regex.IsMatch(s.Comment.UserName, "[\\w\\d_]+"), "Comment user name = " + s.Comment.UserName);
+                        Assert.IsNotNull(s.Comment.UserImage);
+                        Assert.IsTrue(Regex.IsMatch(s.Comment.UserImage, "http://img\\d+\\.joyreactor\\.cc/pics/avatar/user/\\d+"), s.Comment.UserImage);
 
                         Assert.IsNotNull(s.Comment.Attachments);
                         commentsAttachments += s.Comment.Attachments.Length;
@@ -174,10 +174,10 @@ namespace JoyReactor.Core.Tests
                         Assert.IsTrue(t == null || t == t.Trim(), "Comment text = " + s.Comment.text);
                         TestCommentTextNotContainsTag(s.Comment.text);
 
-                        Assert.NotNull(s.Comment.userName);
-                        Assert.IsTrue(Regex.IsMatch(s.Comment.userName, "[\\w\\d_]+"), "Comment user name = " + s.Comment.userName);
-                        Assert.IsNotNull(s.Comment.userImage);
-                        Assert.IsTrue(Regex.IsMatch(s.Comment.userImage, "http://img\\d+\\.joyreactor\\.cc/pics/avatar/user/\\d+"), s.Comment.userImage);
+                        Assert.NotNull(s.Comment.UserName);
+                        Assert.IsTrue(Regex.IsMatch(s.Comment.UserName, "[\\w\\d_]+"), "Comment user name = " + s.Comment.UserName);
+                        Assert.IsNotNull(s.Comment.UserImage);
+                        Assert.IsTrue(Regex.IsMatch(s.Comment.UserImage, "http://img\\d+\\.joyreactor\\.cc/pics/avatar/user/\\d+"), s.Comment.UserImage);
 
                         Assert.IsNotNull(s.Comment.Attachments);
                         commentsAttachments += s.Comment.Attachments.Length;
@@ -246,10 +246,10 @@ namespace JoyReactor.Core.Tests
                         Assert.IsTrue(t == null || t == t.Trim(), "Comment text = " + s.Comment.text);
                         TestCommentTextNotContainsTag(s.Comment.text);
 
-                        Assert.NotNull(s.Comment.userName);
-                        Assert.IsTrue(Regex.IsMatch(s.Comment.userName, "[\\w\\d_]+"), "Comment user name = " + s.Comment.userName);
-                        Assert.IsNotNull(s.Comment.userImage);
-                        Assert.IsTrue(Regex.IsMatch(s.Comment.userImage, "http://img\\d+\\.joyreactor\\.cc/pics/avatar/user/\\d+"), s.Comment.userImage);
+                        Assert.NotNull(s.Comment.UserName);
+                        Assert.IsTrue(Regex.IsMatch(s.Comment.UserName, "[\\w\\d_]+"), "Comment user name = " + s.Comment.UserName);
+                        Assert.IsNotNull(s.Comment.UserImage);
+                        Assert.IsTrue(Regex.IsMatch(s.Comment.UserImage, "http://img\\d+\\.joyreactor\\.cc/pics/avatar/user/\\d+"), s.Comment.UserImage);
 
                         Assert.IsNotNull(s.Comment.Attachments);
                         commentsAttachments += s.Comment.Attachments.Length;

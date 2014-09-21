@@ -327,8 +327,8 @@ namespace JoyReactor.Core.Model.Parser
             c.text = TEXT.FirstString(s);
             c.Created = TIMESTAMP.FirstLong(s) * 1000L;
 
-            c.userName = Uri.UnescapeDataString(Uri.UnescapeDataString(USER_NAME.FirstString(s))).Replace('+', ' ');
-            c.userImage = "http://img0.joyreactor.cc/pics/avatar/user/" + USER_ID.FirstString(s);
+            c.UserName = Uri.UnescapeDataString(Uri.UnescapeDataString(USER_NAME.FirstString(s))).Replace('+', ' ');
+            c.UserImage = "http://img0.joyreactor.cc/pics/avatar/user/" + USER_ID.FirstString(s);
 
             c.rating = COMMENT_RATING.FirstFloat(s, CultureInfo.InvariantCulture);
 
