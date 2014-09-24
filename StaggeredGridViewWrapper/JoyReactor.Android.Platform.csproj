@@ -56,5 +56,6 @@
   <Import Project="$(MSBuildExtensionsPath)\Novell\Xamarin.Android.Bindings.targets" />
   <ItemGroup>
     <EmbeddedJar Include="Jars\staggered_grid_view.jar" />
+    <EmbeddedJar Include="Jars\android.support.swiperefreshlayout.jar" />
   </ItemGroup>
 </Project>

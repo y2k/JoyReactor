@@ -30,12 +30,15 @@ namespace JoyReactor.Android.App.Post
 		private List<Comment> comments;
 		private List<CommentAttachment> attachments;
 		private JoyReactor.Core.Model.DTO.Post post;
+		private ColorSwipeRefreshLayout refresher;
 
 		private View header;
 
 		public async override void OnActivityCreated (Bundle savedInstanceState)
 		{
 			base.OnActivityCreated (savedInstanceState);
+
+			refresher.Refresh += (s, e) => refresher.Refreshing = false;
 
 			await InitializeHeader ();
 
@@ -55,6 +58,7 @@ namespace JoyReactor.Android.App.Post
 			var v = inflater.Inflate (Resource.Layout.fragment_post, null);
 			list = v.FindViewById<ListView> (Resource.Id.list);
 			list.AddHeaderView (header = View.Inflate (Activity, Resource.Layout.laytou_post_header, null));
+			refresher = v.FindViewById<ColorSwipeRefreshLayout> (Resource.Id.refresher);
 			return v;
 		}
 
