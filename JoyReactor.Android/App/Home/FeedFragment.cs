@@ -6,6 +6,7 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
+using Android.Support.V4.Widget;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
@@ -14,9 +15,10 @@ using JoyReactor.Core;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Inject;
+using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.App.Base.Commands;
-using Microsoft.Practices.ServiceLocation;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Android.App.Home
 {
@@ -28,10 +30,16 @@ namespace JoyReactor.Android.App.Home
 		private bool loading;
 
 		private IPostCollectionModel model = ServiceLocator.Current.GetInstance<IPostCollectionModel> ();
+		private SwipeRefreshLayout refresher;
 
 		public override void OnActivityCreated (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
+
+			refresher.Refresh += async (s, e) => {
+				await Task.Delay (1000);
+				refresher.Refreshing = false;
+			};
 
 			list.SetItemMargin ((int)(4 * Resources.DisplayMetrics.Density));
 
@@ -41,9 +49,10 @@ namespace JoyReactor.Android.App.Home
 
 		public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 		{
-			var v = inflater.Inflate (Resource.Layout.FragmentFeed, null);
+			var v = inflater.Inflate (Resource.Layout.fragment_feed, null);
 			list = v.FindViewById<StaggeredGridView> (Resource.Id.List);
 			progress = v.FindViewById<ProgressBar> (Resource.Id.Progress);
+			refresher = v.FindViewById<SwipeRefreshLayout> (Resource.Id.refresher);
 			return v;
 		}
 

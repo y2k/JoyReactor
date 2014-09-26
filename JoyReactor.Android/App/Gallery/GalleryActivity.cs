@@ -18,13 +18,13 @@ using JoyReactor.Core.Model.DTO;
 using JoyReactor.Android.Widget;
 using Android.Graphics;
 
-namespace JoyReactor.Android.App
+namespace JoyReactor.Android.App.Gallery
 {
 	[Activity (Label = "Gallery")]			
 	public class GalleryActivity : BaseActivity
 	{
 		private IPostModel model = ServiceLocator.Current.GetInstance<IPostModel>();
-
+			
 		private GridView list;
 
 		protected async override void OnCreate (Bundle bundle)
@@ -51,8 +51,6 @@ namespace JoyReactor.Android.App
 			public override View GetView (int position, View convertView, ViewGroup parent)
 			{
 				convertView = convertView ?? View.Inflate (Context, Resource.Layout.item_gallery, null);
-
-				convertView.SetBackgroundColor (Color.Red);
 
 				var i = GetItem (position);
 				var web = convertView.FindViewById<WebImageView> (Resource.Id.image);

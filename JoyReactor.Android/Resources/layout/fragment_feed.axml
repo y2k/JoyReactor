@@ -3,10 +3,15 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.android.ex.widget.StaggeredGridView
+    <JoyReactor.Android.Widget.ColorSwipeRefreshLayout
+        android:id="@+id/refresher"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/List" />
+        android:layout_height="match_parent">
+        <com.android.ex.widget.StaggeredGridView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/List" />
+    </JoyReactor.Android.Widget.ColorSwipeRefreshLayout>
     <ProgressBar
         android:layout_gravity="center"
         android:id="@+id/Progress"
