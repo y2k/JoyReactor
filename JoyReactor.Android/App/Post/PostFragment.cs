@@ -33,24 +33,17 @@ namespace JoyReactor.Android.App.Post
 		private ColorSwipeRefreshLayout refresher;
 
 		private View header;
+		private PostAdapter adapter;
 
-		public async override void OnActivityCreated (Bundle savedInstanceState)
+		public override void OnActivityCreated (Bundle savedInstanceState)
 		{
 			base.OnActivityCreated (savedInstanceState);
 
-			refresher.Refresh += (s, e) => refresher.Refreshing = false;
+			list.Adapter = adapter = new PostAdapter (this);
 
-			await InitializeHeader ();
-
-			var adapter = new PostAdapter (this);
-			list.Adapter = adapter;
-			comments = await model.GetTopCommentsAsync (post.Id, int.MaxValue);
-			adapter.NotifyDataSetChanged ();
-		}
-
-		public static PostFragment NewFragment (int position)
-		{
-			return NewFragment<PostFragment> (position);
+			refresher.Refresh += (s, e) => ReloadData ();
+			refresher.Refreshing = true;
+			ReloadData ();
 		}
 
 		public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -62,6 +55,15 @@ namespace JoyReactor.Android.App.Post
 			return v;
 		}
 
+		private async void ReloadData() {
+			await InitializeHeader ();
+
+			comments = await model.GetTopCommentsAsync (post.Id, int.MaxValue);
+			adapter.NotifyDataSetChanged ();
+
+			refresher.Refreshing = false;
+		}
+
 		private async Task InitializeHeader() {
 			post = await model.GetPostAsync (Arguments.GetInt (Arg1));
 			attachments = await model.GetAttachmentsAsync (post.Id);
@@ -69,10 +71,17 @@ namespace JoyReactor.Android.App.Post
 			var iv = header.FindViewById<WebImageView> (Resource.Id.image);
 			var ap = header.FindViewById<FixedAspectPanel> (Resource.Id.aspectPanel);
 			var ats = header.FindViewById<FixedGridView> (Resource.Id.attachments);
+			var desc = header.FindViewById<TextView> (Resource.Id.description);
 
 			iv.ImageSource = post == null ? null : post.Image;
 			ap.Aspect = post == null ? 1 : (float)post.ImageWidth / post.ImageHeight;
 			ats.Adapter = new AttachmentAdapter { fragment = this, items = attachments } ;
+			desc.Text = post.Content;
+		}
+
+		public static PostFragment NewFragment (int position)
+		{
+			return NewFragment<PostFragment> (position);
 		}
 
 		private class PostAdapter : BaseAdapter

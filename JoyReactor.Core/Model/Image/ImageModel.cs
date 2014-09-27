@@ -96,6 +96,8 @@ namespace JoyReactor.Core.Model.Image
 					}
 				} catch (HttpRequestException) {
 					// Ignore exception
+				} catch (Exception e) {
+					throw new Exception("URL = " + uri, e);
 				}
 			});
 

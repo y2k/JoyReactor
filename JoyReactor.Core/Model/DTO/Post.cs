@@ -26,5 +26,7 @@ namespace JoyReactor.Core.Model.DTO
 		public int CommentCount { get; set; }
     
         public long Timestamp { get; set; }
+
+		public string Content { get; set; }
     }
 }

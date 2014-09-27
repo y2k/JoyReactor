@@ -66,6 +66,7 @@ namespace JoyReactor.Core.Model
 							break;
 						case PostExportState.ExportState.Info:
 							MainDb.Instance.SafeExecute ("UPDATE posts SET Timestamp = ? WHERE Id = ?", TimestampNow (), p.Id);
+							MainDb.Instance.SafeExecute ("UPDATE posts SET Content = ? WHERE Id = ?", state.Content, p.Id);
 							break;
 						case PostExportState.ExportState.Comment:
 							var c = new Comment ();
@@ -106,6 +107,7 @@ namespace JoyReactor.Core.Model
 					Log.Error(e);
 				}
 
+				p = MainDb.Instance.SafeQuery<Post> ("SELECT * FROM posts WHERE Id = ?", postId).First ();
 				return p;
 			});
 		}
@@ -137,6 +139,7 @@ namespace JoyReactor.Core.Model
 							{
 								//
 								MainDb.Instance.SafeExecute ("UPDATE posts SET Timestamp = ? WHERE Id = ?", TimestampNow (), p.Id);
+								MainDb.Instance.SafeExecute ("UPDATE posts SET Content = ? WHERE Id = ?", state.Content, p.Id);
 							}
 							break;
 						case PostExportState.ExportState.Comment:

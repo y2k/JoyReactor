@@ -96,6 +96,7 @@ namespace JoyReactor.Core.Model.Web.Parser
 
 			callback(new PostExportState { State = PostExportState.ExportState.Begin });
 
+			// Информация о посте
 			var state = new PostExportState { State = PostExportState.ExportState.Info };
 			var r = doc.Select ("div.thread").First ();
 			state.Attachments = r.Select ("a.thrd-thumb")
@@ -104,9 +105,10 @@ namespace JoyReactor.Core.Model.Web.Parser
 					Width = int.Parse(IMAGE_SIZE.Match(s.InnerHtml).Groups[1].Value),
 					Height = int.Parse(IMAGE_SIZE.Match(s.InnerHtml).Groups[2].Value),
 				}).ToArray();
-			state.Content = r.Select ("div.pst").First ().InnerHtml;
+			state.Content = r.Select ("div.pst").First ().InnerHtml.Replace("<br>", Environment.NewLine);
 			callback (state);
 
+			// Комментарии
 			state.State = PostExportState.ExportState.Comment;
 			state.Comment = new ExportComment ();
 			var subIds = new Dictionary<string, int> ();
