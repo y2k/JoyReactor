@@ -8,10 +8,10 @@ using JoyReactor.Core.Model.Parser;
 
 namespace JoyReactor.Core.Tests
 {
-	[TestFixture ()]
+	[TestFixture]
 	public class Chan2ParserTests
 	{
-		[Test ()]
+		[Test]
 		public void Chan2_GetPosts_B ()
 		{
 			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator ());
@@ -19,44 +19,39 @@ namespace JoyReactor.Core.Tests
 			var parser = new Chan2Parser ();
 			parser.ExtractTagPostCollection (ID.TagType.Good, "b", 0, null, state => {
 
-                Assert.IsNotNull(state);
+				Assert.IsNotNull (state);
 
 			});
 		}
-    
-        [Test()]
-        public void Chan2_GetPosts_MEDIA()
-        {
-            ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator());
-
-            var parser = new Chan2Parser();
-            parser.ExtractTagPostCollection(ID.TagType.Good, "media", 0, null, state =>
-            {
-
-                Assert.IsNotNull(state);
-
-            });
-        }
 
 		[Test]
-		public void TestPost1755718()
+		public void Chan2_GetPosts_MEDIA ()
 		{
-			ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator(new TestModule()));
+			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator ());
 
-			var parser = new Chan2Parser();
+			var parser = new Chan2Parser ();
+			parser.ExtractTagPostCollection (ID.TagType.Good, "media", 0, null, state => {
 
-			int commentCount = 0;
-			int imageCount = 0;
-			parser.ExtractPost ("a,1755718",
-				state => {
-					// TODO
-					if (state.State == PostExportState.ExportState.Comment) {
-						commentCount++;
-						imageCount += state.Comment.Attachments.Length;
-					}
-				});
+				Assert.IsNotNull (state);
+
+			});
+		}
+
+		[Test]
+		public void TestPost1755718 ()
+		{
+			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator (new TestModule ()));
+			var parser = new Chan2Parser ();
+
+			int commentCount = 0, imageCount = 0;
+			parser.NewComment += (sender, state) => {
+				commentCount++;
+				imageCount += state.Attachments.Length;
+			};
+			parser.ExtractPost ("a,1755718");
+
 			Assert.IsTrue (commentCount >= 141, "Comment count = " + commentCount);
 			Assert.IsTrue (imageCount >= 70, "Image count = " + imageCount);
 		}
-    }
+	}
 }

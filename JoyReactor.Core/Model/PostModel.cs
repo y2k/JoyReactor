@@ -13,8 +13,6 @@ namespace JoyReactor.Core.Model
 {
 	class PostModel : IPostModel
 	{
-		private ISiteParser[] parsers = ServiceLocator.Current.GetInstance<ISiteParser[]> ();
-
 		public Task<List<Comment>> GetCommentsAsync (int postId, int parentCommentId)
 		{
 			return Task.Run (() => {
@@ -55,61 +53,62 @@ namespace JoyReactor.Core.Model
 					return p;
 
 				try {
-					var r = parsers.First (s => s.ParserId == (ID.SiteParser)Enum.Parse (typeof(ID.SiteParser), p.PostId.Split ('-') [0]));
+					var r = GetSiteParserForPost (p);
+					var syncId = p.PostId.Split ('-') [1];
 
-					r.ExtractPost (p.PostId.Split ('-') [1], state => {
-						switch (state.State) {
-						case PostExportState.ExportState.Begin:
-							MainDb.Instance.SafeExecute ("DELETE FROM comment_attachments WHERE CommentId IN (SELECT Id FROM comments WHERE PostId = ?)", p.Id);
-							MainDb.Instance.SafeExecute ("DELETE FROM comment_links WHERE CommentId IN (SELECT Id FROM comments WHERE PostId = ?)", p.Id);
-							MainDb.Instance.SafeExecute ("DELETE FROM comments WHERE PostId = ?", p.Id);
-							break;
-						case PostExportState.ExportState.Info:
-							MainDb.Instance.SafeExecute ("UPDATE posts SET Timestamp = ? WHERE Id = ?", TimestampNow (), p.Id);
-							MainDb.Instance.SafeExecute ("UPDATE posts SET Content = ? WHERE Id = ?", state.Content, p.Id);
-							break;
-						case PostExportState.ExportState.Comment:
-							var c = new Comment ();
-							c.CommentId = state.Comment.id;
-							c.PostId = p.Id;
-							c.Text = state.Comment.text;
-							c.Created = state.Comment.Created;
-							c.UserName = state.Comment.UserName;
-							c.UserImage = state.Comment.UserImage;
-							c.Rating = state.Comment.rating;
+					r.NewPost += (sender, state) => {
+						MainDb.Instance.SafeExecute ("DELETE FROM comment_attachments WHERE CommentId IN (SELECT Id FROM comments WHERE PostId = ?)", p.Id);
+						MainDb.Instance.SafeExecute ("DELETE FROM comment_links WHERE CommentId IN (SELECT Id FROM comments WHERE PostId = ?)", p.Id);
+						MainDb.Instance.SafeExecute ("DELETE FROM comments WHERE PostId = ?", p.Id);
 
-//							if (state.Comment.parentId != null) {
-//								c.ParentId = MainDb.Instance.SafeQuery<Comment> ("SELECT * FROM comments WHERE CommentId = ? AND PostId = ?", state.Comment.parentId, p.Id).First ().Id;
-//							}
-							var cid = MainDb.Instance.SafeInsert (c);
+						MainDb.Instance.SafeExecute ("UPDATE posts SET Timestamp = ? WHERE Id = ?", TimestampNow (), p.Id);
+						MainDb.Instance.SafeExecute ("UPDATE posts SET Content = ? WHERE Id = ?", state.Content, p.Id);
+					};
+					r.NewComment += (sender, state) => {
+						var c = new Comment ();
+						c.CommentId = state.Id;
+						c.PostId = p.Id;
+						c.Text = state.Content;
+						c.Created = state.Created.ToUnixTimestamp ();
+						c.UserName = state.User.Name;
+						c.UserImage = state.User.Avatar;
+						c.Rating = state.Rating;
 
-							var comIds = state.Comment.ParentIds ?? new string[0];
-							foreach (var i in comIds) {
-								MainDb.Instance.SafeExecute(
-									"INSERT INTO comment_links (CommentId, ParentCommentId) " +
-									"SELECT ?, Id FROM comments WHERE CommentId = ?", cid, i); 
-							}
+						//							if (state.Comment.parentId != null) {
+						//								c.ParentId = MainDb.Instance.SafeQuery<Comment> ("SELECT * FROM comments WHERE CommentId = ? AND PostId = ?", state.Comment.parentId, p.Id).First ().Id;
+						//							}
+						var cid = MainDb.Instance.SafeInsert (c);
 
-							if (state.Comment.Attachments != null) {
-								foreach (var a in state.Comment.Attachments) {
-									var pa = new CommentAttachment ();
-									pa.CommentId = c.Id;
-									pa.Type = CommentAttachment.TypeImage;
-									pa.Url = a.Image;
-									MainDb.Instance.SafeInsert (pa);
-								}
-							}
-							break;
+						var comIds = state.ParentIds ?? new string[0];
+						foreach (var i in comIds) {
+							MainDb.Instance.SafeExecute (
+								"INSERT INTO comment_links (CommentId, ParentCommentId) " +
+								"SELECT ?, Id FROM comments WHERE CommentId = ?", cid, i); 
 						}
-					});
 
+						if (state.Attachments != null)
+							foreach (var a in state.Attachments) {
+								var pa = new CommentAttachment ();
+								pa.CommentId = c.Id;
+								pa.Type = CommentAttachment.TypeImage;
+								pa.Url = a.Image;
+								MainDb.Instance.SafeInsert (pa);
+							}
+					};
 				} catch (Exception e) {
-					Log.Error(e);
+					Log.Error (e);
 				}
 
 				p = MainDb.Instance.SafeQuery<Post> ("SELECT * FROM posts WHERE Id = ?", postId).First ();
 				return p;
 			});
+		}
+
+		private SiteParser GetSiteParserForPost (Post p)
+		{
+			var parsers = ServiceLocator.Current.GetInstance<SiteParser[]> ();
+			var parserId = (ID.SiteParser)Enum.Parse (typeof(ID.SiteParser), p.PostId.Split ('-') [0]);
+			return parsers.First (s => s.ParserId == parserId);
 		}
 
 		public Task<List<CommentAttachment>> GetAttachmentsAsync (int postId)

@@ -10,18 +10,17 @@ using JoyReactor.Core.Model.Helper;
 
 namespace JoyReactor.Core.Model.Web.Parser
 {
-	public class Chan4Parser : ISiteParser
+	public class Chan4Parser : SiteParser
 	{
 		private IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader> ();
 
 		#region ISiteParser implementation
 
-		public IDictionary<string, string> Login (string username, string password)
-		{
-			throw new NotImplementedException ();
+		public override ID.SiteParser ParserId {
+			get { return ID.SiteParser.Chan4; }
 		}
 
-		public void ExtractTagPostCollection (ID.TagType type, string tag, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
+		public override void ExtractTagPostCollection (ID.TagType type, string tag, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
 		{
 			var pagePostfix = currentPage == 0 ? "" : "" + (currentPage + 1);
 			var escapedTag = Uri.EscapeDataString (tag);
@@ -31,7 +30,7 @@ namespace JoyReactor.Core.Model.Web.Parser
 			callback (new CollectionExportState { State = CollectionExportState.ExportState.Begin });
 			callback (new CollectionExportState { 
 				State = CollectionExportState.ExportState.TagInfo, 
-				TagInfo = new ExportTag { nextPage = currentPage + 1 }
+				TagInfo = new ExportTag { NextPage = currentPage + 1 }
 			});
 
 			foreach (var node in doc.Select("div.thread")) {
@@ -40,57 +39,45 @@ namespace JoyReactor.Core.Model.Web.Parser
 				var links = node.Select ("a.replylink");
 				var m = Regex.Match (links.First ().AbsUrl (baseUrl, "href"), "/thread/(\\d+)");
 				if (m.Success)
-					p.id = new ThreadId { Board = tag, Id = m.Groups [1].Value }.Pack ();
+					p.Id = new ThreadId { Board = tag, Id = m.Groups [1].Value }.Pack ();
 				else
 					throw new InvalidOperationException ("Can't find post id");
 
 				var imgs = node.Select ("a.fileThumb");
 				if (imgs.Count () > 0) {
-					p.image = imgs.First ().AbsUrl (baseUrl, "href");
+					p.Image = imgs.First ().AbsUrl (baseUrl, "href");
 
-					var z = Regex.Match (p.image, "(\\d+)\\.[\\w\\d]+$").Value;
+					var z = Regex.Match (p.Image, "(\\d+)\\.[\\w\\d]+$").Value;
 					m = Regex.Match (node.InnerHtml, "(\\d+)x(\\d+)\\)</div><a class=\"fileThumb\" href=\"//[^/]+/[^/]+/" + Regex.Escape (z));
-					p.imageWidth = int.Parse (m.Groups [1].Value);
-					p.imageHeight = int.Parse (m.Groups [2].Value);
+					p.ImageWidth = int.Parse (m.Groups [1].Value);
+					p.ImageHeight = int.Parse (m.Groups [2].Value);
 				}
 
 				var titles = node.Select ("span.subject");
 				if (titles.Count () > 0)
-					p.title = titles.First ().InnerText;
+					p.Title = titles.First ().InnerText;
 				titles = node.Select ("blockquote.postMessage");
 				if (titles.Count () > 0)
-					p.title = HtmlEntity.DeEntitize (titles.First ().InnerText.ShortString (100));
-				if (string.IsNullOrEmpty (p.title))
-					p.title = null;
+					p.Title = HtmlEntity.DeEntitize (titles.First ().InnerText.ShortString (100));
+				if (string.IsNullOrEmpty (p.Title))
+					p.Title = null;
 
 				var dates = node.Select ("span.dateTime");
-				p.created = long.Parse (dates.First ().Attr ("data-utc")) * 1000;
+				p.Created = long.Parse (dates.First ().Attr ("data-utc")) * 1000;
 
-				p.userName = node.Select ("span.nameBlock span.name").First ().InnerText;
+				p.UserName = node.Select ("span.nameBlock span.name").First ().InnerText;
 
 				callback (new CollectionExportState { State = CollectionExportState.ExportState.PostItem, Post = p });
 			}
 		}
 
-		public void ExtractPost (string postId, Action<PostExportState> callback)
+		public override void ExtractPost (string postId)
 		{
 			var thread = ThreadId.Unpack (postId);
 			var threadUri = CreateThreadUri (thread);
 			var doc = downloader.Get (threadUri);
-			callback (new PostExportState { State = PostExportState.ExportState.Begin });
-
-			ExportPostInfo (thread, doc);
 
 			throw new NotImplementedException ();
-		}
-
-		public ProfileExport Profile (string username)
-		{
-			throw new NotImplementedException ();
-		}
-
-		public ID.SiteParser ParserId {
-			get { return ID.SiteParser.Chan4; }
 		}
 
 		#endregion

@@ -10,13 +10,13 @@ namespace JoyReactor.Core.Model.Parser.Data
 //		public string parentId { get; set; }
 		public string[] ParentIds { get; set; }
 
-		public string id { get; set; }
-		public string text { get; set; }
+		public string Id { get; set; }
+		public string Text { get; set; }
 		public long Created { get; set; }
 		public string UserName { get; set; }
 		public string UserImage { get; set; }
 		public ExportComment.ExportAttachment[] Attachments { get; set; }
-        public float rating { get; set; }
+        public float Rating { get; set; }
 
 		public class ExportAttachment
 		{

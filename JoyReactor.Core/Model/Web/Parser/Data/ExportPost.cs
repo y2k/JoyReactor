@@ -5,20 +5,20 @@ namespace JoyReactor.Core.Model.Parser.Data
 	public class ExportPost
 	{
 		[Obsolete]
-		public string image { get; set; }
+		public string Image { get; set; }
 		[Obsolete]
-		public int imageWidth { get; set; }
+		public int ImageWidth { get; set; }
 		[Obsolete]
-		public int imageHeight { get; set; }
+		public int ImageHeight { get; set; }
 
-		public string userName { get; set; }
-		public string title { get; set; }
-		public string id { get; set; }
-		public long created { get; set; }
+		public string UserName { get; set; }
+		public string Title { get; set; }
+		public string Id { get; set; }
+		public long Created { get; set; }
 
-		public string userImage { get; set; }
-		public float rating { get; set; }
-		public string coub { get; set; }
-		public int commentCount { get; set; }
+		public string UserImage { get; set; }
+		public float Rating { get; set; }
+		public string Coub { get; set; }
+		public int CommentCount { get; set; }
 	}
 }

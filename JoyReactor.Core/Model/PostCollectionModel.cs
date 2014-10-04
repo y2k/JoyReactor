@@ -14,7 +14,7 @@ namespace JoyReactor.Core.Model
 {
 	class PostCollectionModel : IPostCollectionModel
 	{
-		private ISiteParser[] parsers = ServiceLocator.Current.GetInstance<ISiteParser[]> ();
+		private SiteParser[] parsers = ServiceLocator.Current.GetInstance<SiteParser[]> ();
 
 		#region IPostCollectionModel implementation
 
@@ -88,8 +88,8 @@ namespace JoyReactor.Core.Model
 					MainDb.Instance.SafeExecute ("DELETE FROM tag_linked_tags WHERE ParentTagId IN (SELECT Id FROM tags WHERE TagId = ?)", ToFlatId (id));
 				} else if (state.State == CollectionExportState.ExportState.TagInfo) {
 					var t = MainDb.Instance.SafeQuery<Tag> ("SELECT * FROM tags WHERE TagId = ?", ToFlatId (id)).FirstOrDefault ()
-					        ?? new Tag { BestImage = state.TagInfo.image, TagId = ToFlatId (id) };
-					t.NextPage = state.TagInfo.nextPage;
+					        ?? new Tag { BestImage = state.TagInfo.Image, TagId = ToFlatId (id) };
+					t.NextPage = state.TagInfo.NextPage;
 					if (t.Id == 0)
 						MainDb.Instance.SafeInsert (t);
 					else
@@ -121,7 +121,7 @@ namespace JoyReactor.Core.Model
 			var t = MainDb.Instance.SafeQuery<Tag> ("SELECT * FROM tags WHERE TagId = ?", ToFlatId (id)).First ();
 			p.ExtractTagPostCollection (id.Type, id.Tag, t.NextPage, GetSiteCookies (id), state => {
 				if (state.State == CollectionExportState.ExportState.TagInfo) {
-					t.NextPage = state.TagInfo.nextPage;
+					t.NextPage = state.TagInfo.NextPage;
 					MainDb.Instance.SafeUpdate (t);
 				} else if (state.State == CollectionExportState.ExportState.PostItem) {
 					SavePostToDatabase (id, state.Post);
@@ -166,17 +166,17 @@ namespace JoyReactor.Core.Model
 		private Post Convert (ID.SiteParser parserId, ExportPost p)
 		{
 			return new Post {
-				PostId = parserId + "-" + p.id,
-				CommentCount = p.commentCount,
-				Coub = p.coub,
-				Created = p.created,
-				Image = p.image,
-				ImageHeight = p.imageHeight,
-				ImageWidth = p.imageWidth,
-				Rating = p.rating,
-				Title = p.title,
-				UserImage = p.userImage,
-				UserName = p.userName,
+				PostId = parserId + "-" + p.Id,
+				CommentCount = p.CommentCount,
+				Coub = p.Coub,
+				Created = p.Created,
+				Image = p.Image,
+				ImageHeight = p.ImageHeight,
+				ImageWidth = p.ImageWidth,
+				Rating = p.Rating,
+				Title = p.Title,
+				UserImage = p.UserImage,
+				UserName = p.UserName,
 			};
 		}
 

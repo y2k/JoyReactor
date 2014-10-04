@@ -12,14 +12,15 @@ namespace JoyReactor.Core.Tests
 	[TestFixture]
 	public class Chan4ParserTests
 	{
-		private ISiteParser parser;
+		private SiteParser parser;
 
 		[Test]
 		public void TestGetThread572092321 ()
 		{
-			parser.ExtractPost ("b,572092321", chunk => {
+			parser.NewPost += (sender, e) => {
 				// TODO
-			});
+			};
+			parser.ExtractPost ("b,572092321");
 		}
 
 		[Test]
@@ -32,7 +33,7 @@ namespace JoyReactor.Core.Tests
 				if (state.State == CollectionExportState.ExportState.PostItem) {
 					actualPostCount++;
 					// TODO: дописать тест
-					Assert.IsTrue (Regex.IsMatch (state.Post.id, @"b,\d+"), "Post id = " + state.Post.id);
+					Assert.IsTrue (Regex.IsMatch (state.Post.Id, @"b,\d+"), "Post id = " + state.Post.Id);
 				}
 
 			});

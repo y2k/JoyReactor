@@ -4,7 +4,7 @@ namespace JoyReactor.Core.Model.Parser.Data
 {
 	public class ExportTag
 	{
-		public String image { get; set; }
-		public int nextPage { get; set; }
+		public String Image { get; set; }
+		public int NextPage { get; set; }
 	}
 }

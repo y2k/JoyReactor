@@ -40,7 +40,6 @@
     <Compile Include="Model\Web\Parser\Chan7Parser.cs" />
     <Compile Include="Model\Web\Parser\NodeHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Model\Web\Parser\ISiteParser.cs" />
     <Compile Include="Model\Web\IWebDownloader.cs" />
     <Compile Include="Model\Web\WebDownloader.cs" />
     <Compile Include="Model\Web\Parser\Data\ExportPost.cs" />
@@ -83,6 +82,12 @@
     <Compile Include="Model\DTO\CommentLink.cs" />
     <Compile Include="Model\Helper\WebDownloaderExtensions.cs" />
     <Compile Include="Model\Helper\Log.cs" />
+    <Compile Include="Model\Web\Parser\Data\ExportPostInformation.cs" />
+    <Compile Include="Model\Web\Parser\Data\ExportAttachment.cs" />
+    <Compile Include="Model\Web\Parser\Data\ExportPostComment.cs" />
+    <Compile Include="Model\Web\Parser\Data\ExportUser.cs" />
+    <Compile Include="Model\Web\Parser\SiteParser.cs" />
+    <Compile Include="Model\Helper\DateTimeExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

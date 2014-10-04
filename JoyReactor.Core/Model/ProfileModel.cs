@@ -17,7 +17,7 @@ namespace JoyReactor.Core.Model
 {
 	class ProfileModel : IProfileModel
 	{
-        private ISiteParser[] parsers = ServiceLocator.Current.GetInstance<ISiteParser[]>();
+        private SiteParser[] parsers = ServiceLocator.Current.GetInstance<SiteParser[]>();
 
 		#region IProfileModel implementation
 

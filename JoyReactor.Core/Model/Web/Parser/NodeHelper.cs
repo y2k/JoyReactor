@@ -57,15 +57,5 @@ namespace JoyReactor.Core.Model.Web.Parser
         {
             return s == null ? null : (s.Length <= maxLength ? s : s.Substring(0, maxLength) + "…");
         }
-
-        public static long DateTimeToUnixTimestamp(DateTime dateTime)
-        {
-            return (long)((dateTime - new DateTime(1970, 1, 1).ToLocalTime()).TotalSeconds);
-        }
-
-        public static long ToUnixTimestamp(this DateTime dateTime)
-        {
-            return (long)((dateTime - new DateTime(1970, 1, 1).ToLocalTime()).TotalSeconds);
-        }
     }
 }
