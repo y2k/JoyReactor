@@ -77,6 +77,7 @@ namespace JoyReactor.Android.App.Post
 			ap.Aspect = post == null ? 1 : (float)post.ImageWidth / post.ImageHeight;
 			ats.Adapter = new AttachmentAdapter { fragment = this, items = attachments } ;
 			desc.Text = post.Content;
+			desc.Visibility = string.IsNullOrEmpty (post.Content) ? ViewStates.Gone : ViewStates.Visible;
 		}
 
 		public static PostFragment NewFragment (int position)

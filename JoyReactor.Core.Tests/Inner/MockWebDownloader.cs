@@ -13,6 +13,10 @@ namespace JoyReactor.Core.Tests.Inner
 			{ "http://joyreactor.cc/post/1323757", "response2.html" },
 			{ "http://joyreactor.cc/post/1382511", "response3.html" },
 			{ "http://joyreactor.cc/post/861529", "resp4.html" },
+			{ "https://boards.4chan.org/b/", "resp_4chan_b.html" },
+			{ "https://boards.4chan.org/b/2", "resp_4chan_b_page2.html" },
+			{ "https://boards.4chan.org/wsg/","resp_4chan_wsg.html" },
+			{ "https://boards.4chan.org/b/thread/572092321","resp_4chan_thread_572092321.html" },
 		};
 
 		#region IWebDownloader implementation
@@ -46,7 +50,12 @@ namespace JoyReactor.Core.Tests.Inner
 
 		private static string GetPathToFile (Uri uri)
 		{
-			var path = Path.Combine (@"FakeWebResponses", RouteUrls ["" + uri]);
+			var textUrl = "" + uri;
+			string name;
+			Assert.IsTrue (
+				RouteUrls.TryGetValue (textUrl, out name),
+				"Can't find path for URL = " + textUrl);
+			var path = Path.Combine (@"FakeWebResponses", name);
 			Assert.IsTrue (File.Exists (path), "File not found at path " + path);
 			return path;
 		}

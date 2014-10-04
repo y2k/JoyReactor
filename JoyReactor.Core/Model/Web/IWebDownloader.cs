@@ -11,6 +11,7 @@ namespace JoyReactor.Core.Model.Web
 
 		Stream GetResource (Uri uri, RequestParams reqParams = null);
 
+		[Obsolete]
         DocumentReponse GetDocument(Uri uri, RequestParams reqParams = null);
 
 		IDictionary<string, string> PostForHeaders (Uri uri, RequestParams reqParams = null);
