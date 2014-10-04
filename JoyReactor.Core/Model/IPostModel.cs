@@ -13,8 +13,6 @@ namespace JoyReactor.Core.Model
 
 		Task<List<Comment>> GetTopCommentsAsync(int postId, int count);
 
-        Task<Post> GetPostAsync(ID listId, int position);
-
         Task<Post> GetPostAsync(int postId);
 
         Task<List<CommentAttachment>> GetAttachmentsAsync(int postId);

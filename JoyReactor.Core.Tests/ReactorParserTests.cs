@@ -71,11 +71,11 @@ namespace JoyReactor.Core.Tests
                     {
                         wasInfo = true;
 
-                        Assert.AreEqual("mr.viridis", s.userName);
+                        Assert.AreEqual("mr.viridis", s.UserName);
                         Assert.AreEqual("http://img0.joyreactor.cc/pics/post/-770859.jpeg", s.image);
                         Assert.AreEqual(551, s.imageWidth);
                         Assert.AreEqual(817, s.imageHeight);
-                        Assert.AreEqual("http://img0.joyreactor.cc/images/default_avatar.jpeg", s.userImage);
+                        Assert.AreEqual("http://img0.joyreactor.cc/images/default_avatar.jpeg", s.UserImage);
                     }
                     else if (s.State == PostExportState.ExportState.Comment)
                     {
@@ -147,8 +147,8 @@ namespace JoyReactor.Core.Tests
                     {
                         wasInfo = true;
 
-                        Assert.AreEqual("Dendy-A-", s.userName);
-                        Assert.AreEqual("http://img0.joyreactor.cc/pics/avatar/user/47722", s.userImage);
+                        Assert.AreEqual("Dendy-A-", s.UserName);
+                        Assert.AreEqual("http://img0.joyreactor.cc/pics/avatar/user/47722", s.UserImage);
                         Assert.AreEqual("http://img0.joyreactor.cc/pics/post/-1240714.jpeg", s.image);
                         Assert.AreEqual(195, s.imageWidth);
                         Assert.AreEqual(208, s.imageHeight);
@@ -221,8 +221,8 @@ namespace JoyReactor.Core.Tests
                     } else if (s.State == PostExportState.ExportState.Info) {
                         wasInfo = true;
 
-                        Assert.AreEqual("Mishvanda", s.userName);
-                        Assert.AreEqual("http://img0.joyreactor.cc/pics/avatar/user/145422", s.userImage);
+                        Assert.AreEqual("Mishvanda", s.UserName);
+                        Assert.AreEqual("http://img0.joyreactor.cc/pics/avatar/user/145422", s.UserImage);
                         Assert.AreEqual("http://img0.joyreactor.cc/pics/post/-1316599.gif", s.image);
                         Assert.AreEqual(600, s.imageWidth);
                         Assert.AreEqual(750, s.imageHeight);

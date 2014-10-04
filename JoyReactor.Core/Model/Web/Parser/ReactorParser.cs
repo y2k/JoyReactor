@@ -212,14 +212,14 @@ namespace JoyReactor.Core.Model.Parser
 
                 if (p.image != null) p.image = Regex.Replace(p.image, "/pics/post/.+-(\\d+\\.[\\d\\w]+)", "/pics/post/-$1");
 
-                p.userName = Uri.UnescapeDataString(Uri.UnescapeDataString(USER_NAME.FirstString(html))).Replace('+', ' ');
-                p.userImage = USER_IMAGE.FirstString(html);
+                p.UserName = Uri.UnescapeDataString(Uri.UnescapeDataString(USER_NAME.FirstString(html))).Replace('+', ' ');
+                p.UserImage = USER_IMAGE.FirstString(html);
 
-                p.title = TITLE.FirstString(html);
-                if (string.IsNullOrWhiteSpace(p.title)) p.title = null;
+                p.Title = TITLE.FirstString(html);
+                if (string.IsNullOrWhiteSpace(p.Title)) p.Title = null;
 
-                p.created = CREATED.FirstLong(html) * 1000L;
-                p.rating = RATING.FirstFloat(html, CultureInfo.InvariantCulture);
+                p.Created = CREATED.FirstLong(html) * 1000L;
+                p.Rating = RATING.FirstFloat(html, CultureInfo.InvariantCulture);
 
                 int i = html.IndexOf("class=\"post_comment_list\"");
                 if (i < 0) throw new Exception("Can't find comments begin");
@@ -227,7 +227,7 @@ namespace JoyReactor.Core.Model.Parser
                 m = COUB.Match(html.Substring(0, i));
                 if (m.Success)
                 {
-                    p.coub = m.Groups[1].Value;
+                    p.Coub = m.Groups[1].Value;
                     p.imageWidth = int.Parse(m.Groups[2].Value);
                     p.imageHeight = int.Parse(m.Groups[3].Value);
                 }

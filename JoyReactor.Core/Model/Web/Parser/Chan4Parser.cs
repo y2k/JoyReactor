@@ -79,7 +79,7 @@ namespace JoyReactor.Core.Model.Web.Parser
 			var doc = downloader.Get (threadUri);
 			callback (new PostExportState { State = PostExportState.ExportState.Begin });
 
-			var postDiv = doc.GetElementById ("p" + thread.Id);
+			ExportPostInfo (thread, doc);
 
 			throw new NotImplementedException ();
 		}
@@ -94,6 +94,13 @@ namespace JoyReactor.Core.Model.Web.Parser
 		}
 
 		#endregion
+
+		private void ExportPostInfo (ThreadId thread, HtmlDocument doc)
+		{
+			var postDiv = doc.GetElementById ("p" + thread.Id);
+
+			var chunk = new PostExportState ();
+		}
 
 		private Uri CreateThreadUri (ThreadId thread)
 		{

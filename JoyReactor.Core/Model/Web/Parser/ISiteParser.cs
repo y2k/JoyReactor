@@ -56,13 +56,13 @@ namespace JoyReactor.Core.Model.Parser
 		public int imageHeight {get;set;}
 		public ExportPostAttachment[] Attachments { get; set; }
 
-		public string userName {get;set;}
-		public string userImage {get;set;}
-		public string title {get;set;}
+		public string UserName {get;set;}
+		public string UserImage {get;set;}
+		public string Title {get;set;}
 		public string Content { get; set; }
-		public long created {get;set;}
-		public float rating {get;set;}
-		public string coub {get;set;}
+		public long Created {get;set;}
+		public float Rating {get;set;}
+		public string Coub {get;set;}
 
 		public ExportComment Comment { get; set; }
 		public ExportPreviewPost LinkedPost { get; set; }
