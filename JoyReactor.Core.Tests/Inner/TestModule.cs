@@ -1,6 +1,8 @@
 ﻿using System;
 using Autofac;
 using JoyReactor.Core.Model.Web;
+using Cirrious.MvvmCross.Community.Plugins.Sqlite;
+using Cirrious.MvvmCross.Community.Plugins.Sqlite.Wpf;
 
 namespace JoyReactor.Core.Tests.Inner
 {
@@ -9,6 +11,7 @@ namespace JoyReactor.Core.Tests.Inner
 		protected override void Load(ContainerBuilder b)
 		{
 			b.RegisterType<MockWebDownloader>().As<IWebDownloader>();
+			b.RegisterInstance (MockSQLiteConnection.Create ()).As<ISQLiteConnection> ();
 		}
 	}
 }

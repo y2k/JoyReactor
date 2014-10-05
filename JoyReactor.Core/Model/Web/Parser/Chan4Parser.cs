@@ -126,9 +126,9 @@ namespace JoyReactor.Core.Model.Web.Parser
 			foreach (var node in postNode.Select("div.file")) {
 				var attach = new ExportAttachment ();
 				attach.Image = node
-					.Select ("a.fileThumb.img")
-					.Select (s => s.AbsUrl (baseUrl, ""))
-					.FirstOrDefault ();
+					.Select ("a.fileThumb")
+					.Select (s => s.AbsUrl (baseUrl, "href"))
+					.First ();
 				var fileInfo = node.Select ("div.fileText").First ().InnerHtml;
 				var matchInfo = Regex.Match (fileInfo, @", (\d+)x(\d+)\)");
 				attach.Width = int.Parse (matchInfo.Groups [1].Value);

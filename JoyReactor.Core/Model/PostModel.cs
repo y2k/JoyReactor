@@ -8,15 +8,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JoyReactor.Core.Model.Helper;
+using Cirrious.MvvmCross.Community.Plugins.Sqlite;
 
 namespace JoyReactor.Core.Model
 {
 	class PostModel : IPostModel
 	{
+		private ISQLiteConnection connection = ServiceLocator.Current.GetInstance<ISQLiteConnection> ();
+
 		public Task<List<Comment>> GetCommentsAsync (int postId, int parentCommentId)
 		{
 			return Task.Run (() => {
-				//var comments = MainDb.Instance
+				//var comments = connection
 				//    //.Query<Comment>("SELECT * FROM comments WHERE PostId = ? AND ParentId = ? ORDER BY Rating DESC", postId, parentCommentId)
 				//    .Query<Comment>("SELECT * FROM comments WHERE PostId = ? ORDER BY Rating DESC", postId)
 				//    .ToList();
@@ -34,12 +37,12 @@ namespace JoyReactor.Core.Model
 		public Task<List<Comment>> GetTopCommentsAsync (int postId, int count)
 		{
 //			return Task.Run (() => {
-//				return MainDb.Instance
+//				return connection
 //                    .SafeQuery<Comment> ("SELECT * FROM comments WHERE PostId = ? AND ParentId = 0 ORDER BY Rating DESC LIMIT ?", postId, count)
 //                    .ToList ();
 //			});
 			return Task.Run (() => {
-				return MainDb.Instance
+				return connection
 					.SafeQuery<Comment> ("SELECT * FROM comments WHERE PostId = ? AND Id NOT IN (SELECT CommentId FROM comment_links) ORDER BY Rating DESC LIMIT ?", postId, count)
                     .ToList ();
 			});
@@ -48,7 +51,7 @@ namespace JoyReactor.Core.Model
 		public Task<Post> GetPostAsync (int postId)
 		{
 			return Task.Run (() => {
-				var p = MainDb.Instance.SafeQuery<Post> ("SELECT * FROM posts WHERE Id = ?", postId).First ();
+				var p = connection.SafeQuery<Post> ("SELECT * FROM posts WHERE Id = ?", postId).First ();
 				if (Math.Abs (p.Timestamp - TimestampNow ()) < Constants.PostListTime)
 					return p;
 
@@ -57,12 +60,12 @@ namespace JoyReactor.Core.Model
 					var syncId = p.PostId.Split ('-') [1];
 
 					r.NewPost += (sender, state) => {
-						MainDb.Instance.SafeExecute ("DELETE FROM comment_attachments WHERE CommentId IN (SELECT Id FROM comments WHERE PostId = ?)", p.Id);
-						MainDb.Instance.SafeExecute ("DELETE FROM comment_links WHERE CommentId IN (SELECT Id FROM comments WHERE PostId = ?)", p.Id);
-						MainDb.Instance.SafeExecute ("DELETE FROM comments WHERE PostId = ?", p.Id);
+						connection.SafeExecute ("DELETE FROM comment_attachments WHERE CommentId IN (SELECT Id FROM comments WHERE PostId = ?)", p.Id);
+						connection.SafeExecute ("DELETE FROM comment_links WHERE CommentId IN (SELECT Id FROM comments WHERE PostId = ?)", p.Id);
+						connection.SafeExecute ("DELETE FROM comments WHERE PostId = ?", p.Id);
 
-						MainDb.Instance.SafeExecute ("UPDATE posts SET Timestamp = ? WHERE Id = ?", TimestampNow (), p.Id);
-						MainDb.Instance.SafeExecute ("UPDATE posts SET Content = ? WHERE Id = ?", state.Content, p.Id);
+						connection.SafeExecute ("UPDATE posts SET Timestamp = ? WHERE Id = ?", TimestampNow (), p.Id);
+						connection.SafeExecute ("UPDATE posts SET Content = ? WHERE Id = ?", state.Content, p.Id);
 					};
 					r.NewComment += (sender, state) => {
 						var c = new Comment ();
@@ -75,13 +78,13 @@ namespace JoyReactor.Core.Model
 						c.Rating = state.Rating;
 
 						//							if (state.Comment.parentId != null) {
-						//								c.ParentId = MainDb.Instance.SafeQuery<Comment> ("SELECT * FROM comments WHERE CommentId = ? AND PostId = ?", state.Comment.parentId, p.Id).First ().Id;
+						//								c.ParentId = connection.SafeQuery<Comment> ("SELECT * FROM comments WHERE CommentId = ? AND PostId = ?", state.Comment.parentId, p.Id).First ().Id;
 						//							}
-						var cid = MainDb.Instance.SafeInsert (c);
+						var cid = connection.SafeInsert (c);
 
 						var comIds = state.ParentIds ?? new string[0];
 						foreach (var i in comIds) {
-							MainDb.Instance.SafeExecute (
+							connection.SafeExecute (
 								"INSERT INTO comment_links (CommentId, ParentCommentId) " +
 								"SELECT ?, Id FROM comments WHERE CommentId = ?", cid, i); 
 						}
@@ -92,14 +95,16 @@ namespace JoyReactor.Core.Model
 								pa.CommentId = c.Id;
 								pa.Type = CommentAttachment.TypeImage;
 								pa.Url = a.Image;
-								MainDb.Instance.SafeInsert (pa);
+								connection.SafeInsert (pa);
 							}
 					};
+					r.ExtractPost (syncId);
+
 				} catch (Exception e) {
-					Log.Error (e);
+					throw e;
 				}
 
-				p = MainDb.Instance.SafeQuery<Post> ("SELECT * FROM posts WHERE Id = ?", postId).First ();
+				p = connection.SafeQuery<Post> ("SELECT * FROM posts WHERE Id = ?", postId).First ();
 				return p;
 			});
 		}
@@ -114,9 +119,8 @@ namespace JoyReactor.Core.Model
 		public Task<List<CommentAttachment>> GetAttachmentsAsync (int postId)
 		{
 			return Task.Run (() => {
-				return MainDb.Instance
-                    .SafeQuery<CommentAttachment> ("SELECT * FROM comment_attachments WHERE CommentId IN (SELECT Id FROM comments WHERE PostId = ?)", postId)
-                    .ToList ();
+				var sql = "SELECT * FROM comment_attachments WHERE CommentId IN (SELECT Id FROM comments WHERE PostId = ?)";
+				return connection.SafeQuery<CommentAttachment> (sql, postId).ToList ();
 			});
 		}
 

@@ -17,17 +17,36 @@ namespace JoyReactor.Core.Tests
 		[Test]
 		public void TestGetThread572092321 ()
 		{
+			int attachemnts = 0;
 			parser.NewPost += (sender, e) => {
 				// TODO
+
+				Assert.AreEqual (1, e.Attachments.Length, "Count = " + e.Attachments.Length);
+				var a = e.Attachments [0];
+				Assert.IsTrue (Uri.IsWellFormedUriString (a.Image, UriKind.Absolute), "Url = " + a.Image);
+				Assert.AreEqual (720, a.Width, "Width = " + a.Width);
+				Assert.AreEqual (720, a.Height, "Height = " + a.Height);
+
+				attachemnts += e.Attachments.Length;
 			};
-			parser.NewComment+= (sender, e) => {
+			parser.NewComment += (sender, e) => {
 				// TODO
+
+				foreach (var a in e.Attachments) {
+					Assert.IsTrue (Uri.IsWellFormedUriString (a.Image, UriKind.Absolute), "Url = " + a.Image);
+					Assert.IsTrue (a.Width > 0, "Width = " + a.Width);
+					Assert.IsTrue (a.Height > 0, "Height = " + a.Height);
+				}
+
+				attachemnts += e.Attachments.Length;
 			};
 			parser.ExtractPost ("b,572092321");
+
+			Assert.AreEqual (90, attachemnts, "Count = " + attachemnts);
 		}
 
 		[Test]
-		public void GetPostsFromB ()
+		public void TestGetPostsFromB ()
 		{
 			int actualPostCount = 0;
 			parser.ExtractTagPostCollection (ID.TagType.Good, "b", 0, null, state => {
@@ -45,7 +64,7 @@ namespace JoyReactor.Core.Tests
 		}
 
 		[Test]
-		public void TestBPages ()
+		public void TestMultiPageLoading ()
 		{
 			for (int i = 0; i < 2; i++)
 				parser.ExtractTagPostCollection (ID.TagType.Good, "b", i, null, state => {
@@ -54,7 +73,7 @@ namespace JoyReactor.Core.Tests
 		}
 
 		[SetUp]
-		public void Setup ()
+		public void SetUp ()
 		{
 			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator (new TestModule ()));
 			parser = new Chan4Parser ();

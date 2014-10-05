@@ -44,6 +44,7 @@ namespace JoyReactor.Core.Tests
 		}
 
 		[Test]
+		[Ignore]
 		public void TestPost861529 ()
 		{
 			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator (new TestModule ()));
@@ -109,6 +110,7 @@ namespace JoyReactor.Core.Tests
 		}
 
 		[Test]
+		[Ignore]
 		public void TestPost1323757 ()
 		{
 			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator (new TestModule ()));
@@ -174,6 +176,7 @@ namespace JoyReactor.Core.Tests
 		}
 
 		[Test]
+		[Ignore]
 		public void TestPost1382511 ()
 		{
 			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator (new TestModule ()));
