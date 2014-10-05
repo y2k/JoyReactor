@@ -20,6 +20,9 @@ namespace JoyReactor.Core.Tests
 			parser.NewPost += (sender, e) => {
 				// TODO
 			};
+			parser.NewComment+= (sender, e) => {
+				// TODO
+			};
 			parser.ExtractPost ("b,572092321");
 		}
 
