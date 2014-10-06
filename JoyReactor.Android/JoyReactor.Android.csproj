@@ -141,6 +141,7 @@
     <AndroidResource Include="Resources\layout\activity_home.axml" />
     <AndroidResource Include="Resources\layout\item_gallery.axml" />
     <AndroidResource Include="Resources\layout\fragment_feed.axml" />
+    <AndroidResource Include="Resources\layout\activity_post.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>

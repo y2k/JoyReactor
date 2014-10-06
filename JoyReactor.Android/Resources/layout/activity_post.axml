@@ -4,16 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 <!-- The main content view -->
-    <GridView
-        android:id="@+id/list"
+    <FrameLayout
+        android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:stretchMode="columnWidth"
-        android:columnWidth="100dp"
-        android:numColumns="auto_fit"
-        android:horizontalSpacing="2dp"
-        android:verticalSpacing="2dp"
-        android:padding="2dp" />
+        android:layout_height="match_parent" />
 <!-- The navigation drawer -->
     <FrameLayout
         android:background="@android:color/white"

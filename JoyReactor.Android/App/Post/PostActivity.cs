@@ -19,39 +19,22 @@ using JoyReactor.Android.App.Base;
 
 namespace JoyReactor.Android.App.Post
 {
-	[Activity (Label = "@string/post_acitivty")]			
+	[Activity (Label = "@string/post_acitivty", ParentActivity = typeof(HomeActivity))]
 	public class PostActivity : BaseActivity
 	{
-		//		public ID ListId { get; private set; }
-
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
-//			SetContentView (Resource.Layout.ActivityPost);
-
-			// var pos = Intent.GetIntExtra ("pos");
-//			ListId = ID.DeserializeFromString(Intent.GetStringExtra ("list_id"));
-
-//			var pager = FindViewById<ViewPager> (Resource.Id.Pager);
-//			int count = model.GetCount (ID.DeserializeFromString (Intent.GetStringExtra ("list_id")));
-//			pager.Adapter = new Adapter (count, SupportFragmentManager);
+			SetContentView (Resource.Layout.activity_post);
 
 			if (bundle == null) {
 				int id = Intent.GetIntExtra (Arg1, 0);
 				SupportFragmentManager
 					.BeginTransaction ()
-					.Add (global::Android.Resource.Id.Content, PostFragment.NewFragment (id))
+					.Add (Resource.Id.content_frame, PostFragment.NewFragment (id))
 					.Commit ();
 			}
 		}
-
-		//		public static Intent NewIntent(ID listId, int initPosition) {
-		//			var i = new Intent (App.Instance, typeof(PostActivity));
-		//			i.PutExtra ("list_id", listId.SerializeToString ());
-		//			i.PutExtra ("pos", initPosition);
-		//			return i;
-		//		}
-
 
 		public static Intent NewIntent (int id)
 		{

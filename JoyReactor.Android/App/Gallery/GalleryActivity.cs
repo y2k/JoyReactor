@@ -20,10 +20,10 @@ using Android.Graphics;
 
 namespace JoyReactor.Android.App.Gallery
 {
-	[Activity (Label = "Gallery")]			
+	[Activity (Label = "Gallery", ParentActivity = typeof(HomeActivity))]			
 	public class GalleryActivity : BaseActivity
 	{
-		private IPostModel model = ServiceLocator.Current.GetInstance<IPostModel>();
+		private IPostModel model = ServiceLocator.Current.GetInstance<IPostModel> ();
 			
 		private GridView list;
 
@@ -45,7 +45,8 @@ namespace JoyReactor.Android.App.Gallery
 		{
 			private IImageModel im = ServiceLocator.Current.GetInstance<IImageModel> ();
 
-			public GalleryAdapter(Context c) : base (c, 0) {
+			public GalleryAdapter (Context c) : base (c, 0)
+			{
 			}
 
 			public override View GetView (int position, View convertView, ViewGroup parent)
@@ -55,7 +56,7 @@ namespace JoyReactor.Android.App.Gallery
 				var i = GetItem (position);
 				var web = convertView.FindViewById<WebImageView> (Resource.Id.image);
 
-				web.ImageSource = im.CreateThumbnailUrl(i.Url, 
+				web.ImageSource = im.CreateThumbnailUrl (i.Url, 
 					(int)(100 * parent.Resources.DisplayMetrics.Density));
 
 				return convertView;
