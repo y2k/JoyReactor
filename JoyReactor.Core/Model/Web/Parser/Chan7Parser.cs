@@ -53,12 +53,10 @@ namespace JoyReactor.Core.Model.Web.Parser
 		{
 			var postInfo = new ExportPostInformation ();
 			var node = document.GetElementById ("" + threadId.Id);
-
 			postInfo.User = GetUserFromHtmlNode (node);
 			postInfo.Content = GetPostTextContent (node);
 			postInfo.Created = GetPostCreated (node);
 			postInfo.Attachments = GetAttachments (node);
-
 			return postInfo;
 		}
 
@@ -118,11 +116,11 @@ namespace JoyReactor.Core.Model.Web.Parser
 
 		private ExportPostComment GetComment (HtmlNode node)
 		{
-			var comment = new ExportPostComment();
-			comment.Attachments = GetAttachments(node);
-			comment.Content = GetPostTextContent(node);
-			comment.Created = GetPostCreated(node);
-			comment.User = GetUserFromHtmlNode(node);
+			var comment = new ExportPostComment ();
+			comment.Attachments = GetAttachments (node);
+			comment.Content = GetPostTextContent (node);
+			comment.Created = GetPostCreated (node);
+			comment.User = GetUserFromHtmlNode (node);
 			comment.Id = node.Id;
 			return comment;
 		}
