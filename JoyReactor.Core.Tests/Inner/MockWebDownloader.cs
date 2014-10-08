@@ -17,6 +17,14 @@ namespace JoyReactor.Core.Tests.Inner
 			{ "https://boards.4chan.org/b/2", "resp_4chan_b_page2.html" },
 			{ "https://boards.4chan.org/wsg/","resp_4chan_wsg.html" },
 			{ "https://boards.4chan.org/b/thread/572092321","resp_4chan_thread_572092321.html" },
+			{ "https://7chan.org/b/", "7chan_b.html" },
+			{ "https://7chan.org/gif/" , "7chan_gif.html" },
+			{ "https://7chan.org/b/1.html", "7chan_b_page2.html" },
+			{ "http://m2-ch.ru/b/", "m2-ch_b.html" },
+			{ "http://m2-ch.ru/b/1.html", "m2-ch_b_page2.html" },
+			{ "http://m2-ch.ru/media/", "m2-ch_media.html" },
+			{ "http://joyreactor.cc/", "joyreactor_feed.html" },
+			{ "http://joyreactor.cc/tag/комиксы", "joyreactor_comics.html" },
 		};
 
 		#region IWebDownloader implementation

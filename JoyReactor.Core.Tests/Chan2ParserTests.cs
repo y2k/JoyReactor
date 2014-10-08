@@ -11,12 +11,18 @@ namespace JoyReactor.Core.Tests
 	[TestFixture]
 	public class Chan2ParserTests
 	{
+		private SiteParser parser;
+
+		[SetUp]
+		public void SetUp ()
+		{
+			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator (new TestModule ()));
+			parser = new Chan2Parser ();
+		}
+
 		[Test]
 		public void Chan2_GetPosts_B ()
 		{
-			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator ());
-
-			var parser = new Chan2Parser ();
 			parser.ExtractTagPostCollection (ID.TagType.Good, "b", 0, null, state => {
 
 				Assert.IsNotNull (state);
@@ -27,9 +33,6 @@ namespace JoyReactor.Core.Tests
 		[Test]
 		public void Chan2_GetPosts_MEDIA ()
 		{
-			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator ());
-
-			var parser = new Chan2Parser ();
 			parser.ExtractTagPostCollection (ID.TagType.Good, "media", 0, null, state => {
 
 				Assert.IsNotNull (state);
@@ -40,9 +43,6 @@ namespace JoyReactor.Core.Tests
 		[Test]
 		public void TestPost1755718 ()
 		{
-			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator (new TestModule ()));
-			var parser = new Chan2Parser ();
-
 			int commentCount = 0, imageCount = 0;
 			parser.NewComment += (sender, state) => {
 				commentCount++;

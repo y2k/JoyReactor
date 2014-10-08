@@ -29,8 +29,10 @@ namespace JoyReactor.Core.Model.Web.Parser
 
 		public override void ExtractTagPostCollection(ID.TagType type, string tag, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
         {
-			var baseUrl = new Uri(string.Format("http://7chan.org/{0}/{1}", Uri.EscapeDataString(tag), currentPage < 1 ? "" : currentPage + ".html"));
-            var doc = downloader.GetDocument(baseUrl).Document.DocumentNode;
+			var baseUrl = new Uri(string.Format("https://7chan.org/{0}/{1}", 
+				Uri.EscapeDataString(tag), 
+				currentPage < 1 ? "" : currentPage + ".html"));
+            var doc = downloader.Get(baseUrl).DocumentNode;
 
             callback(new CollectionExportState { State = CollectionExportState.ExportState.Begin });
 			callback(new CollectionExportState { 

@@ -14,12 +14,17 @@ namespace JoyReactor.Core.Tests
 	[TestFixture]
 	public class ReactorParserTests
 	{
+		private SiteParser parser;
+
+		[SetUp]
+		public void SetUp() {
+			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator (new TestModule()));
+			parser = new ReactorParser ();
+		}
+
 		[Test]
 		public void TestFeatured ()
 		{
-			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator ());
-
-			var parser = new ReactorParser ();
 			parser.ExtractTagPostCollection (ID.TagType.Good, null, 0, new Dictionary<string, string> (),
 				s => {
 				});
@@ -28,11 +33,7 @@ namespace JoyReactor.Core.Tests
 		[Test]
 		public void TestComics ()
 		{
-			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator ());
-
 			int linkedTagCount = 0;
-
-			var parser = new ReactorParser ();
 			parser.ExtractTagPostCollection (ID.TagType.Good, "комиксы", 0, new Dictionary<string, string> (),
 				s => {
 					if (s.State == CollectionExportState.ExportState.LikendTag) {
@@ -47,9 +48,6 @@ namespace JoyReactor.Core.Tests
 		[Ignore]
 		public void TestPost861529 ()
 		{
-			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator (new TestModule ()));
-			var parser = new ReactorParser ();
-
 			bool wasInfo = false;
 			int commenCount = 0;
 			int commentsAttachments = 0;
@@ -113,9 +111,6 @@ namespace JoyReactor.Core.Tests
 		[Ignore]
 		public void TestPost1323757 ()
 		{
-			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator (new TestModule ()));
-			var parser = new ReactorParser ();
-
 			bool wasInfo = false;
 			int commenCount = 0;
 			int commentsAttachments = 0;
@@ -179,9 +174,6 @@ namespace JoyReactor.Core.Tests
 		[Ignore]
 		public void TestPost1382511 ()
 		{
-			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator (new TestModule ()));
-			var parser = new ReactorParser ();
-
 			bool wasInfo = false;
 			int commenCount = 0;
 			int commentsAttachments = 0;

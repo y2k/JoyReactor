@@ -397,9 +397,8 @@ namespace JoyReactor.Core.Model.Parser
 		private void ExtractPostCollection (ID.TagType type, string value, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
 		{
 			cookies.Add ("showVideoGif2", "1");
-			var html = downloader.GetText (
-				           GenerateUrl (type, value, currentPage),
-				           new RequestParams { Cookies = cookies });
+			var url = GenerateUrl (type, value, currentPage);
+			var html = downloader.GetText (url, new RequestParams { Cookies = cookies });
 			callback (new CollectionExportState { State = CollectionExportState.ExportState.Begin });
 
 			var s = new ExportTag ();
@@ -459,8 +458,6 @@ namespace JoyReactor.Core.Model.Parser
 
 			if (currentPage > 0)
 				url.Append ("/").Append (currentPage);
-			if ("" + url == "http://joyreactor.cc")
-				url.Append ("/");
 			return new Uri ("" + url);
 		}
 

@@ -7,38 +7,51 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JoyReactor.Core.Tests.Inner;
+using JoyReactor.Core.Model.Parser;
 
 namespace JoyReactor.Core.Tests
 {
-    [TestFixture()]
-    public class Chan7ParserTests
-    {
-        [Test()]
-        public void Chan7_GetPosts_B()
-        {
-            ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator());
+	[TestFixture]
+	public class Chan7ParserTests
+	{
+		private SiteParser parser;
 
-            var parser = new Chan7Parser();
-            parser.ExtractTagPostCollection(ID.TagType.Good, "b", 0, null, state =>
-            {
+		[SetUp]
+		public void SetUp ()
+		{
+			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator (new TestModule ()));
+			parser = new Chan7Parser ();
+		}
 
-                Assert.IsNotNull(state);
+		[Test]
+		public void Chan7_GetPosts_B ()
+		{
+			parser.ExtractTagPostCollection (ID.TagType.Good, "b", 0, null, state => {
 
-            });
-        }
+				Assert.IsNotNull (state);
 
-        [Test()]
-        public void Chan7_GetPosts_GIF()
-        {
-            ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator());
+			});
+		}
 
-            var parser = new Chan7Parser();
-            parser.ExtractTagPostCollection(ID.TagType.Good, "gif", 0, null, state =>
-            {
+		[Test]
+		public void TestNextPage ()
+		{
+			for (int i = 0; i < 2; i++) {
+				parser.ExtractTagPostCollection (ID.TagType.Good, "b", i, null, state => {
+					Assert.IsNotNull (state);
+				});
+			}
+		}
 
-                Assert.IsNotNull(state);
+		[Test]
+		public void Chan7_GetPosts_GIF ()
+		{
+			parser.ExtractTagPostCollection (ID.TagType.Good, "gif", 0, null, state => {
 
-            });
-        }
-    }
+				Assert.IsNotNull (state);
+
+			});
+		}
+	}
 }
