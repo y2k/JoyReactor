@@ -151,28 +151,5 @@ namespace JoyReactor.Core.Model.Web.Parser
 			var url = string.Format ("https://boards.4chan.org/{0}/thread/{1}", thread.Board, thread.Id);
 			return new Uri (url);
 		}
-
-		private struct ThreadId
-		{
-			public string Id { get; set; }
-
-			public string Board { get; set; }
-
-			public static ThreadId Unpack (string packedId)
-			{
-				var idParts = packedId.Split (',');
-				return new ThreadId { Board = idParts [0], Id = idParts [1] };
-			}
-
-			public string Pack ()
-			{
-				return Board + "," + Id;
-			}
-
-			public override string ToString ()
-			{
-				return string.Format ("[ThreadId: Board={0}, Id={1}]", Board, Id);
-			}
-		}
 	}
 }

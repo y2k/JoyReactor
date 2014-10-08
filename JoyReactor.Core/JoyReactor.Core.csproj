@@ -88,6 +88,7 @@
     <Compile Include="Model\Web\Parser\Data\ExportUser.cs" />
     <Compile Include="Model\Web\Parser\SiteParser.cs" />
     <Compile Include="Model\Helper\DateTimeExtensions.cs" />
+    <Compile Include="Model\Web\Parser\ThreadId.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
