@@ -6,17 +6,17 @@ using System.Text;
 
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using JoyReactor.Core.Model;
-using Microsoft.Practices.ServiceLocation;
-using JoyReactor.Android.App.Base;
 using JoyReactor.Core.Model.DTO;
+using Microsoft.Practices.ServiceLocation;
 
+using JoyReactor.Android.App.Base;
 using JoyReactor.Android.Widget;
-using Android.Graphics;
 
 namespace JoyReactor.Android.App.Gallery
 {

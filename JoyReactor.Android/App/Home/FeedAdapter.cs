@@ -48,6 +48,12 @@ namespace JoyReactor.Android.App.Home
 			}
 		}
 
+		public void ReplaceAll(IEnumerable<JoyReactor.Core.Model.DTO.Post> items) {
+			Clear ();
+			if (items != null)
+				AddAll (items.ToList());
+		}
+
 		public override int GetItemViewType (int position)
 		{
 			return position == Count - 1 ? 1 : 0;

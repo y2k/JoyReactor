@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -18,7 +19,6 @@ using JoyReactor.Core.Model.Inject;
 using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.Widget;
-using System.Threading.Tasks;
 
 namespace JoyReactor.Android.App.Post
 {

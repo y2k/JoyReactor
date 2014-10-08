@@ -25,9 +25,7 @@ namespace JoyReactor.Android.App.Home
 	public class FeedFragment : BaseFragment
 	{
 		private StaggeredGridView list;
-		private ProgressBar progress;
 		private FeedAdapter adapter;
-		private bool loading;
 
 		private IPostCollectionModel model = ServiceLocator.Current.GetInstance<IPostCollectionModel> ();
 		private SwipeRefreshLayout refresher;
@@ -35,52 +33,54 @@ namespace JoyReactor.Android.App.Home
 		public override void OnActivityCreated (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
+			RetainInstance = true;
+
+			list.Adapter = adapter = new FeedAdapter (Activity);
+
+			if (savedInstanceState == null)
+				ChangeCurrentSubscription (ID.Factory.New (ID.IdConst.ReactorGood));
+			OnPostCollectionChanged (null, adapter.ListId);
 
 			refresher.Refresh += async (s, e) => {
-				await Task.Delay (1000);
+				await model.SyncTask (adapter.ListId, SyncFlags.First);
 				refresher.Refreshing = false;
+				OnPostCollectionChanged(null, adapter.ListId);
 			};
 
-			list.SetItemMargin ((int)(4 * Resources.DisplayMetrics.Density));
+			AddLifeTimeEvent (
+				() => ChangeSubscriptionCommand.Register (this, ChangeCurrentSubscription), 
+				() => ChangeSubscriptionCommand.Unregister (this));
 
-			ReloadList (ID.Factory.New (ID.IdConst.ReactorGood));
-			AddLifeTimeEvent (() => ChangeSubscriptionCommand.Register (this, ReloadList), () => ChangeSubscriptionCommand.Unregister (this));
+			adapter.ClickMore += async (sender, e) => {
+				refresher.Refreshing = true;
+				await model.SyncTask (adapter.ListId,SyncFlags.Next);
+				refresher.Refreshing = false;
+				OnPostCollectionChanged(null, adapter.ListId);
+			};
+		}
+
+		private async void OnPostCollectionChanged (object sender, ID e)
+		{
+			var newPosts = await model.GetPostsAsync (adapter.ListId);
+			adapter.ReplaceAll (newPosts);
 		}
 
 		public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 		{
 			var v = inflater.Inflate (Resource.Layout.fragment_feed, null);
 			list = v.FindViewById<StaggeredGridView> (Resource.Id.List);
-			progress = v.FindViewById<ProgressBar> (Resource.Id.Progress);
+			list.SetItemMargin ((int)(4 * Resources.DisplayMetrics.Density));
 			refresher = v.FindViewById<SwipeRefreshLayout> (Resource.Id.refresher);
 			return v;
 		}
 
-		private async void ReloadList (ID id)
+		private async void ChangeCurrentSubscription (ID id)
 		{
-			ReCreateAdapter ();
-			adapter.ListId = id;
-
-			var result = await model.GetListAsync (id, SyncFlags.First);
-			adapter.AddAll (result);
-			progress.Visibility = ViewStates.Gone;
-		}
-
-		private void ReCreateAdapter ()
-		{
+			refresher.Refreshing = true;
 			list.Adapter = adapter = new FeedAdapter (Activity);
-			adapter.ClickMore += async (sender, e) => {
-			
-				if (!loading) {
-					loading = true;
-					var result = await model.GetPostsAsync (adapter.ListId, SyncFlags.Next);
-					loading = false;
-
-					adapter.Clear ();
-					adapter.AddAll (result);
-				}
-			
-			};
+			await model.SyncTask (adapter.ListId = id, SyncFlags.First);
+			refresher.Refreshing = false;
+			OnPostCollectionChanged (null, id);
 		}
 	}
 }

@@ -7,6 +7,14 @@ namespace JoyReactor.Core.Model
 {
 	public interface IPostCollectionModel
 	{
+//		event EventHandler<ID> PostChanged;
+//
+//		void NotifyPostsChanged();
+
+		Task SyncTask(ID id, SyncFlags flags);
+
+		Task<List<Post>> GetPostsAsync (ID id);
+
 		[Obsolete]
 		Task<List<Post>> GetPostsAsync(ID id, SyncFlags flags = SyncFlags.None);
 
@@ -15,8 +23,6 @@ namespace JoyReactor.Core.Model
         Task<int> GetCountAsync(ID id);
 
 		Task<PostCollection> GetListAsync(ID id, SyncFlags flags = SyncFlags.None);
-
-		event EventHandler<ID> PostChanged;
     }
 
 	public enum SyncFlags { None, Next, First }

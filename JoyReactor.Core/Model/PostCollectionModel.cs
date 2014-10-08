@@ -16,9 +16,39 @@ namespace JoyReactor.Core.Model
 	{
 		private SiteParser[] parsers = ServiceLocator.Current.GetInstance<SiteParser[]> ();
 
+//		private static event EventHandler<ID> GlobalHandler;
+
 		#region IPostCollectionModel implementation
 
-		public event EventHandler<ID> PostChanged;
+		public Task<List<Post>> GetPostsAsync (ID id)
+		{
+			return Task.Run (() => {
+				var sid = ToFlatId (id);
+				var sql = "" +
+					"SELECT * " +
+					"FROM posts " +
+					"WHERE Id IN (SELECT PostId FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?))";
+				return MainDb.Instance.SafeQuery<Post> (sql, sid);
+			});
+		}
+
+		public Task SyncTask (ID id, SyncFlags flags)
+		{
+			return Task.Run (() => {
+
+				if (flags == SyncFlags.First)
+					SyncFirstPage (id);
+				else if (flags == SyncFlags.Next)
+					SyncNextPage (id);
+
+
+			});
+		}
+
+//		public event EventHandler<ID> PostChanged {
+//			add { GlobalHandler += value; }
+//			remove { GlobalHandler -= value; }
+//		}
 
 		public Task<PostCollection> GetListAsync (ID id, SyncFlags flags = SyncFlags.None)
 		{
