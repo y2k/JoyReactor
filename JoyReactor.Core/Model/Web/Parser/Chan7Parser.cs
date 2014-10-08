@@ -19,6 +19,8 @@ namespace JoyReactor.Core.Model.Web.Parser
 		/// 14/05/06(Tue)10:40
 		/// </summary>
 		private static readonly Regex DateRegex = new Regex (@"(\d{2})/(\d{2})/(\d{2})\([^\)]+\)(\d{2}):(\d{2})");
+		private static readonly Regex AttachmentRegex = 
+			new Regex ("a href=\"([^\"]*)\" id=\"expandimg_[\\d-]+_(\\d+)_(\\d+)_\\d+_\\d+\">");
 
 		private IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader> ();
 
@@ -38,6 +40,8 @@ namespace JoyReactor.Core.Model.Web.Parser
 
 			var postInfo = GetPostInformation ();
 			OnNewPost (postInfo);
+
+			ExportComments ();
 		}
 
 		private Uri GenerateThreadUrl (ThreadId id)
@@ -61,7 +65,7 @@ namespace JoyReactor.Core.Model.Web.Parser
 		private ExportUser GetUserFromHtmlNode (HtmlNode node)
 		{
 			return new ExportUser { 
-				Name = node.Select ("div.postername").First ().InnerText
+				Name = node.Select ("span.postername").First ().InnerText
 			};
 		}
 
@@ -69,7 +73,7 @@ namespace JoyReactor.Core.Model.Web.Parser
 		{
 			var content = node
 				.Select ("p.message").First ()
-				.InnerText.Replace ("<br />", "");
+				.InnerText.Replace ("<br />", "").Trim (' ', '\n');
 			content = WebUtility.HtmlDecode (content);
 			return content;
 		}
@@ -90,29 +94,37 @@ namespace JoyReactor.Core.Model.Web.Parser
 
 		private ExportAttachment[] GetAttachments (HtmlNode node)
 		{
-			var attachments = new List<ExportAttachment> ();
-			if (node.Select ("p.file_size").Any ()) {
-				//
-				attachments.Add (GetSingleAttachment (node));
-			} else {
-				//
-				attachments.AddRange (GetMultiAttachments (node));
+			return AttachmentRegex
+				.Matches (node.InnerHtml)
+				.Cast<Match> ()
+				.Select (
+				m => {
+					var attachment = new ExportAttachment ();
+					attachment.Image = m.Groups [1].Value;
+					attachment.Width = int.Parse (m.Groups [2].Value);
+					attachment.Height = int.Parse (m.Groups [3].Value);
+					return attachment;
+				})
+				.ToArray ();
+		}
+
+		private void ExportComments ()
+		{
+			foreach (var node in document.DocumentNode.Select ("div.reply div.post")) {
+				var comment = GetComment (node);
+				OnNewComment (comment);
 			}
-			return attachments.ToArray ();
 		}
 
-		private IEnumerable<ExportAttachment> GetMultiAttachments (HtmlNode node)
+		private ExportPostComment GetComment (HtmlNode node)
 		{
-			throw new NotImplementedException ();
-		}
-
-		private ExportAttachment GetSingleAttachment (HtmlNode node)
-		{
-			var attachment = new ExportAttachment ();
-
-			var p = node.Select ("p.file_size").First ();
-
-			return attachment;
+			var comment = new ExportPostComment();
+			comment.Attachments = GetAttachments(node);
+			comment.Content = GetPostTextContent(node);
+			comment.Created = GetPostCreated(node);
+			comment.User = GetUserFromHtmlNode(node);
+			comment.Id = node.Id;
+			return comment;
 		}
 
 		public override void ExtractTagPostCollection (ID.TagType type, string tag, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)

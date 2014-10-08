@@ -34,18 +34,18 @@ namespace JoyReactor.Core.Model.Parser
 		public event EventHandler<ExportPostInformation> NewPost;
 		public event EventHandler<ExportPostComment> NewComment;
 
-		protected void OnNewComment (ExportPostComment arg)
+		protected void OnNewComment (ExportPostComment comment)
 		{
 			var handler = NewComment;
 			if (handler != null)
-				handler (this, arg);
+				handler (this, comment);
 		}
 
-		protected void OnNewPost (ExportPostInformation arg)
+		protected void OnNewPost (ExportPostInformation postInfo)
 		{
 			var handler = NewPost;
 			if (handler != null)
-				handler (this, arg);
+				handler (this, postInfo);
 		}
 
 		// ==============================================================================

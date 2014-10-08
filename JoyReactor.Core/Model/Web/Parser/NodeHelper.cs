@@ -25,9 +25,9 @@ namespace JoyReactor.Core.Model.Web.Parser
 			m = Regex.Match (xpath, "^(\\w+)\\.(\\w+) (\\w+)\\.(\\w+)$");
 			if (m.Success)
 				return root.Descendants ()
-                .Where (s => s.Name == m.Groups [1].Value && s.Attributes.Any (a => a.Name == "class" && a.Value.Contains (m.Groups [2].Value)))
-                .SelectMany (s => s.Descendants ())
-                .Where (s => s.Name == m.Groups [3].Value && s.Attributes.Any (a => a.Name == "class" && a.Value.Contains (m.Groups [4].Value)));
+					.Where (s => s.Name == m.Groups [1].Value && s.ContainsClass (m.Groups [2].Value))
+	                .SelectMany (s => s.Descendants ())
+					.Where (s => s.Name == m.Groups [3].Value && s.ContainsClass (m.Groups [4].Value));
 
 			m = Regex.Match (xpath, "^(\\w+)\\.(\\w+) > (\\w+)$");
 			if (m.Success)
@@ -53,6 +53,14 @@ namespace JoyReactor.Core.Model.Web.Parser
 			throw new InvalidOperationException ("Can't parse XPATH = " + xpath);
 		}
 
+		private static bool ContainsClass (this HtmlNode node, string className)
+		{
+			var classValue = node.Attr ("class");
+			return classValue == null
+				? false
+				: classValue.Split (' ').Any (s => s == className);
+		}
+
 		public static string AbsUrl (this HtmlNode node, Uri baseUrl, string attrName)
 		{
 			return "" + new Uri (baseUrl, node.Attributes [attrName].Value);
@@ -60,7 +68,7 @@ namespace JoyReactor.Core.Model.Web.Parser
 
 		public static string Attr (this HtmlNode node, string attrName)
 		{
-			return node.Attributes [attrName].Value;
+			return node.GetAttributeValue (attrName, null);
 		}
 
 		public static string ShortString (this string s, int maxLength)
