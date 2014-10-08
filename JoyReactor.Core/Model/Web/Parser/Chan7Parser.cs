@@ -1,17 +1,15 @@
-﻿using HtmlAgilityPack;
-using JoyReactor.Core.Model.Helper;
-using JoyReactor.Core.Model.Parser;
-using JoyReactor.Core.Model.Parser.Data;
-using Microsoft.Practices.ServiceLocation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using JoyReactor.Core.Model.Web.Parser.Data;
 using System.Net;
+using System.Text.RegularExpressions;
+using HtmlAgilityPack;
+using Microsoft.Practices.ServiceLocation;
+using JoyReactor.Core.Model.Helper;
+using JoyReactor.Core.Model.Parser;
+using JoyReactor.Core.Model.Parser.Data;
+using JoyReactor.Core.Model.Web.Parser.Data;
 
 namespace JoyReactor.Core.Model.Web.Parser
 {
@@ -56,6 +54,8 @@ namespace JoyReactor.Core.Model.Web.Parser
 			postInfo.Content = GetPostTextContent (node);
 			postInfo.Created = GetPostCreated (node);
 			postInfo.Attachments = GetAttachments (node);
+
+			return postInfo;
 		}
 
 		private ExportUser GetUserFromHtmlNode (HtmlNode node)
@@ -78,7 +78,7 @@ namespace JoyReactor.Core.Model.Web.Parser
 		{
 			var dateMatch = DateRegex.Match (node.InnerText);
 			if (!dateMatch.Success)
-				throw Exception ("Date not found in:\n" + node.InnerText);
+				throw new Exception ("Date not found in:\n" + node.InnerText);
 
 			var year = 2000 + int.Parse (dateMatch.Groups [1].Value);
 			var month = int.Parse (dateMatch.Groups [2].Value);
@@ -99,6 +99,11 @@ namespace JoyReactor.Core.Model.Web.Parser
 				attachments.AddRange (GetMultiAttachments (node));
 			}
 			return attachments.ToArray ();
+		}
+
+		private IEnumerable<ExportAttachment> GetMultiAttachments (HtmlNode node)
+		{
+			throw new NotImplementedException ();
 		}
 
 		private ExportAttachment GetSingleAttachment (HtmlNode node)

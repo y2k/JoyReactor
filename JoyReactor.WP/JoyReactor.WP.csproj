@@ -214,13 +214,8 @@
     <EmbeddedResource Include="Resources\AppResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>AppResources.Designer.cs</LastGenOutput>
-      <LogicalName>
-      </LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\AppResources.ru.resx">
-      <LogicalName>
-      </LogicalName>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\AppResources.ru.resx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Autofac">

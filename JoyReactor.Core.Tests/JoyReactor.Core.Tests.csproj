@@ -35,23 +35,23 @@
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="Autofac">
-      <HintPath>Libs\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="Cirrious.CrossCore.Wpf">
-      <HintPath>..\packages\MvvmCross.HotTuna.CrossCore.3.2.1\lib\net45\Cirrious.CrossCore.Wpf.dll</HintPath>
-    </Reference>
-    <Reference Include="Cirrious.CrossCore">
-      <HintPath>..\packages\MvvmCross.HotTuna.CrossCore.3.2.1\lib\net45\Cirrious.CrossCore.dll</HintPath>
-    </Reference>
-    <Reference Include="Cirrious.MvvmCross.Localization">
-      <HintPath>..\packages\MvvmCross.HotTuna.CrossCore.3.2.1\lib\net45\Cirrious.MvvmCross.Localization.dll</HintPath>
-    </Reference>
     <Reference Include="Cirrious.MvvmCross.Community.Plugins.Sqlite">
       <HintPath>..\packages\MvvmCross.Community.Plugin.Sqlite.3.1.1\lib\net45\Cirrious.MvvmCross.Community.Plugins.Sqlite.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Community.Plugins.Sqlite.Wpf">
       <HintPath>..\packages\MvvmCross.Community.Plugin.Sqlite.3.1.1\lib\net45\Cirrious.MvvmCross.Community.Plugins.Sqlite.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.CrossCore">
+      <HintPath>..\packages\MvvmCross.HotTuna.CrossCore.3.2.1\lib\net45\Cirrious.CrossCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.CrossCore.Wpf">
+      <HintPath>..\packages\MvvmCross.HotTuna.CrossCore.3.2.1\lib\net45\Cirrious.CrossCore.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Localization">
+      <HintPath>..\packages\MvvmCross.HotTuna.CrossCore.3.2.1\lib\net45\Cirrious.MvvmCross.Localization.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -76,12 +76,6 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Libs\Ninject.Platform.dll" />
-    <None Include="Libs\Ninject.Platform.xml" />
-    <None Include="Libs\Ninject.Common.dll" />
-    <None Include="Libs\Ninject.Common.xml" />
-    <None Include="Libs\Autofac.dll" />
-    <None Include="Libs\Autofac.xml" />
     <None Include="packages.config" />
     <None Include="FakeWebResponses\response1.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -3,19 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyReactor.Core", "JoyReactor.Core\JoyReactor.Core.csproj", "{E205F32E-24F2-4B73-B9F1-C474813D605B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyReactor.Core.Tests", "JoyReactor.Core.Tests\JoyReactor.Core.Tests.csproj", "{A5AF8642-6542-445B-9BE8-610B4F4BBFCE}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mac", "Mac", "{EE54189B-2D6E-4B28-896F-3AB4F4337EB0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyReactor.Ios", "JoyReactor.Ios\JoyReactor.Ios.csproj", "{BB2B74F2-81BF-4DDC-96D6-1F6226D70EFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyReactor.Android.Platform", "StaggeredGridViewWrapper\JoyReactor.Android.Platform.csproj", "{0C771503-FD14-436A-A7C0-E2DCE1D5FEC3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyReactor.WP", "JoyReactor.WP\JoyReactor.WP.csproj", "{A1D41143-372D-4C3C-A899-80DDC834E109}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{04D4FDCD-63D0-4BB2-A816-4DC8ABE8E99B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyReactor.Core", "JoyReactor.Core\JoyReactor.Core.csproj", "{E205F32E-24F2-4B73-B9F1-C474813D605B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyReactor.Core.Tests", "JoyReactor.Core.Tests\JoyReactor.Core.Tests.csproj", "{A5AF8642-6542-445B-9BE8-610B4F4BBFCE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Android", "Android", "{CC75DB3F-0312-4BA0-A4B8-7FB9E657D635}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyReactor.Android", "JoyReactor.Android\JoyReactor.Android.csproj", "{C8E57538-8B6C-4BBE-BECE-C77DF342E022}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyReactor.WP", "JoyReactor.WP\JoyReactor.WP.csproj", "{A1D41143-372D-4C3C-A899-80DDC834E109}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyReactor.Android.Platform", "StaggeredGridViewWrapper\JoyReactor.Android.Platform.csproj", "{0C771503-FD14-436A-A7C0-E2DCE1D5FEC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -252,8 +256,10 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BB2B74F2-81BF-4DDC-96D6-1F6226D70EFF} = {EE54189B-2D6E-4B28-896F-3AB4F4337EB0}
-		{0C771503-FD14-436A-A7C0-E2DCE1D5FEC3} = {EE54189B-2D6E-4B28-896F-3AB4F4337EB0}
-		{C8E57538-8B6C-4BBE-BECE-C77DF342E022} = {EE54189B-2D6E-4B28-896F-3AB4F4337EB0}
+		{E205F32E-24F2-4B73-B9F1-C474813D605B} = {04D4FDCD-63D0-4BB2-A816-4DC8ABE8E99B}
+		{A5AF8642-6542-445B-9BE8-610B4F4BBFCE} = {04D4FDCD-63D0-4BB2-A816-4DC8ABE8E99B}
+		{C8E57538-8B6C-4BBE-BECE-C77DF342E022} = {CC75DB3F-0312-4BA0-A4B8-7FB9E657D635}
+		{0C771503-FD14-436A-A7C0-E2DCE1D5FEC3} = {CC75DB3F-0312-4BA0-A4B8-7FB9E657D635}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = JoyReactor.Android\JoyReactor.Android.csproj
