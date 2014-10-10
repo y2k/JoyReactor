@@ -41,9 +41,10 @@ namespace JoyReactor.Core.Model.Web.Parser
 
 				p.Id = tag + "," + Regex.Match (node.Select ("a.bg").First ().Attr ("href"), "\\d+").Value;
 
-				p.Title = node.Select ("a.oz").First ().InnerText;
-				if (string.IsNullOrEmpty (p.Title))
-					p.Title = null;
+//				p.Title = node.Select ("a.oz").First ().InnerText;
+//				if (string.IsNullOrEmpty (p.Title))
+//					p.Title = null;
+				p.Title = node.Select ("div.op.small").First ().InnerText.ShortString (100);
 
 				p.UserName = "Anon"; // TODO
 				p.UserImage = "http://img0.joyreactor.cc/pics/avatar/tag/22045";
