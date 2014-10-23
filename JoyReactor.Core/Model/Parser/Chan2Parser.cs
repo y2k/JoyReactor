@@ -11,8 +11,10 @@ using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model.Parser.Data;
 using JoyReactor.Core.Model.Web.Parser.Data;
+using JoyReactor.Core.Model.Web;
+using JoyReactor.Core.Model.Web.Parser;
 
-namespace JoyReactor.Core.Model.Web.Parser
+namespace JoyReactor.Core.Model.Parser
 {
 	public class Chan2Parser : SiteParser
 	{
@@ -83,7 +85,8 @@ namespace JoyReactor.Core.Model.Web.Parser
 		private void ExportComments (Uri url, HtmlNode doc)
 		{
 			var r = doc.Select ("div.thread").First ();
-			var subIds = new Dictionary<string, int> ();
+//			var subIds = new Dictionary<string, int> ();
+			var linker = new ChanPostLinker (r.Id);
 
 			foreach (var c in doc.Select ("div.reply")) {
 				var data = new ExportPostComment ();
@@ -98,53 +101,16 @@ namespace JoyReactor.Core.Model.Web.Parser
 				var d = FixMounthNames (c.Select ("time").First ().InnerText);
 				data.Created = DateTime.ParseExact (d, "dd MMM, HH:mm", new CultureInfo ("ru"));
 
-				var ps = new List<string> ();
-				HtmlDocument pc = null;
-				int index = 0;
+//				var ps = new List<string> ();
+//				HtmlDocument pc = null;
+//				int index = 0;
 
-				foreach (var z in c.Select ("div.pst").SelectMany (s => s.ChildNodes)) {
-					if (z.Name == "a" && z.InnerHtml.StartsWith (">>")) {
-						if (pc == null) {
-							var id = Regex.Match (z.InnerHtml, ">>(\\d+)").Groups [1].Value;
-							int cnt;
-							if (!subIds.TryGetValue (id, out cnt))
-								cnt = 1;
-							for (int i = 0; i < cnt; i++) {
-								ps.Add (id + "-" + i);
-							}
-						} else {
-							if (ps.Count == 0 || ps.All (s => s == r.Id + "-0")) {
-								data.Id = c.Id + "-0";
-								data.ParentIds = null;
-								data.Content = pc.DocumentNode.InnerHtml;
-							} else {
-								data.Id = c.Id + "-" + (index++);
-								data.ParentIds = ps.ToArray ();
-								data.Content = pc.DocumentNode.InnerHtml;
-							}
-							OnNewComment (data);
-							ps.Clear ();
-							pc = null;
-						}
-					} else {
-						pc = pc ?? new HtmlDocument ();
-						pc.DocumentNode.AppendChild (z);
-					}
-				}
-				if (pc != null) {
-					if (ps.Count == 0 || ps.All (s => s == r.Id + "-0")) {
-						data.Id = c.Id + "-0";
-						data.ParentIds = null;
-						data.Content = pc.DocumentNode.InnerHtml;
-					} else {
-						data.Id = c.Id + "-" + (index++);
-						data.ParentIds = ps.ToArray ();
-						data.Content = pc.DocumentNode.InnerHtml;
-					}
+				foreach (var p in linker.Export (c.Select ("div.pst").FirstOrDefault (), c.Id)) {
+					data.Id = p.Id;
+					data.ParentIds = p.ParentIds;
+					data.Content = p.Content;
 					OnNewComment (data);
 				}
-				if (index > 1)
-					subIds [c.Id] = index;
 			}
 		}
 
