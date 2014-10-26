@@ -23,7 +23,7 @@ namespace JoyReactor.Core.Model.Web.Parser
 			get { return ID.SiteParser.Chan4; }
 		}
 
-		public override void ExtractTagPostCollection (ID.TagType type, string tag, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
+		public override void ExtractTag (ID.TagType type, string tag, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
 		{
 			var pagePostfix = currentPage == 0 ? "" : "" + (currentPage + 1);
 			var escapedTag = Uri.EscapeDataString (tag);
@@ -101,7 +101,7 @@ namespace JoyReactor.Core.Model.Web.Parser
 			comment.Attachments = GetAttachments (node);
 
 			var id = Regex.Match (node.Id, @"p(\d+)").Groups [1].Value;
-			comment.Content = document.GetElementById ("m" + id).InnerHtml;
+			comment.Content = document.GetElementbyId ("m" + id).InnerHtml;
 			var utc = node.Select ("span.dateTime.postNum").First ().Attr ("data-utc");
 			comment.Created = (long.Parse (utc) * 1000L).DateTimeFromUnixTimestamp ();
 
@@ -110,14 +110,14 @@ namespace JoyReactor.Core.Model.Web.Parser
 
 		private void ExportPostInformation (ThreadId thread)
 		{
-			var node = document.GetElementById ("p" + thread.Id);
+			var node = document.GetElementbyId ("p" + thread.Id);
 			var data = new ExportPostInformation ();
-			data.Content = document.GetElementById ("m" + thread.Id).InnerHtml;
+			data.Content = document.GetElementbyId ("m" + thread.Id).InnerHtml;
 			var utc = node.Select ("span.dateTime.postNum").First ().Attr ("data-utc");
 			data.Created = (long.Parse (utc) * 1000L).DateTimeFromUnixTimestamp ();
 			data.User = GetUser (node);
 			data.Attachments = GetAttachments (node);
-			OnNewPost (data);
+			OnNewPostInformation (data);
 		}
 
 		private ExportAttachment[] GetAttachments (HtmlNode postNode)

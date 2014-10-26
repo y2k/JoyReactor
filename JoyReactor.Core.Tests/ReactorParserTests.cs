@@ -25,7 +25,7 @@ namespace JoyReactor.Core.Tests
 		[Test]
 		public void TestFeatured ()
 		{
-			parser.ExtractTagPostCollection (ID.TagType.Good, null, 0, new Dictionary<string, string> (),
+			parser.ExtractTag (ID.TagType.Good, null, 0, new Dictionary<string, string> (),
 				s => {
 				});
 		}
@@ -34,7 +34,7 @@ namespace JoyReactor.Core.Tests
 		public void TestComics ()
 		{
 			int linkedTagCount = 0;
-			parser.ExtractTagPostCollection (ID.TagType.Good, "комиксы", 0, new Dictionary<string, string> (),
+			parser.ExtractTag (ID.TagType.Good, "комиксы", 0, new Dictionary<string, string> (),
 				s => {
 					if (s.State == CollectionExportState.ExportState.LikendTag) {
 						linkedTagCount++;
@@ -55,7 +55,7 @@ namespace JoyReactor.Core.Tests
 			float sumCommentRating = 0;
 			int notRootCommentCount = 0;
 
-			parser.NewPost += (sender, s) => {
+			parser.NewPostInformation += (sender, s) => {
 				wasInfo = true;
 
 				Assert.AreEqual ("mr.viridis", s.User.Name);
@@ -118,7 +118,7 @@ namespace JoyReactor.Core.Tests
 			float sumCommentRating = 0;
 			int notRootCommentCount = 0;
 
-			parser.NewPost += (sender, s) => {
+			parser.NewPostInformation += (sender, s) => {
 				wasInfo = true;
 				
 				Assert.AreEqual ("Dendy-A-", s.User.Name);
@@ -182,7 +182,7 @@ namespace JoyReactor.Core.Tests
 			int notRootCommentCount = 0;
 			var commentTexts = new HashSet<string> ();
 
-			parser.NewPost += (sender, s) => {
+			parser.NewPostInformation += (sender, s) => {
 				Assert.AreEqual ("Mishvanda", s.User.Name);
 				Assert.AreEqual ("http://img0.joyreactor.cc/pics/avatar/user/145422", s.User.Avatar);
 				Assert.AreEqual ("http://img0.joyreactor.cc/pics/post/-1316599.gif", s.Attachments [0].Image);

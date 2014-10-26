@@ -39,7 +39,7 @@ namespace JoyReactor.Core.Model.Web.Parser
 			document = downloader.Get (pageUrl);
 
 			var postInfo = GetPostInformation ();
-			OnNewPost (postInfo);
+			OnNewPostInformation (postInfo);
 
 			ExportComments ();
 		}
@@ -52,7 +52,7 @@ namespace JoyReactor.Core.Model.Web.Parser
 		private ExportPostInformation GetPostInformation ()
 		{
 			var postInfo = new ExportPostInformation ();
-			var node = document.GetElementById ("" + threadId.Id);
+			var node = document.GetElementbyId ("" + threadId.Id);
 			postInfo.User = GetUserFromHtmlNode (node);
 			postInfo.Content = GetPostTextContent (node);
 			postInfo.Created = GetPostCreated (node);
@@ -125,7 +125,7 @@ namespace JoyReactor.Core.Model.Web.Parser
 			return comment;
 		}
 
-		public override void ExtractTagPostCollection (ID.TagType type, string tag, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
+		public override void ExtractTag (ID.TagType type, string tag, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
 		{
 			var baseUrl = new Uri (string.Format ("https://7chan.org/{0}/{1}", 
 				              Uri.EscapeDataString (tag), 

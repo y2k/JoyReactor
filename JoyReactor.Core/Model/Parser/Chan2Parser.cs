@@ -27,7 +27,7 @@ namespace JoyReactor.Core.Model.Parser
 		}
 
 		// Версия через доступ к мобильному сайту
-		public override void ExtractTagPostCollection (ID.TagType type, string tag, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
+		public override void ExtractTag (ID.TagType type, string tag, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
 		{
 			var baseUrl = new Uri (string.Format ("http://m2-ch.ru/{0}/{1}", Uri.EscapeDataString (tag), currentPage < 1 ? "" : currentPage + ".html"));
 			var doc = downloader.Get (baseUrl).DocumentNode;
@@ -79,7 +79,7 @@ namespace JoyReactor.Core.Model.Parser
 				Height = int.Parse (IMAGE_SIZE.Match (s.InnerHtml).Groups [2].Value),
 			}).ToArray ();
 			data.Content = r.Select ("div.pst").First ().InnerHtml.Replace ("<br>", Environment.NewLine);
-			OnNewPost (data);
+			OnNewPostInformation (data);
 		}
 
 		private void ExportComments (Uri url, HtmlNode doc)

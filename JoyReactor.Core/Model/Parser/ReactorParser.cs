@@ -108,7 +108,7 @@ namespace JoyReactor.Core.Model.Parser
 		public override IDictionary<string, string> Login (string username, string password)
 		{
 			var doc = downloader.GetDocument (new Uri ("http://joyreactor.cc/login"));
-			var csrf = doc.Document.GetElementById ("signin__csrf_token").Attributes ["value"].Value;
+			var csrf = doc.Document.GetElementbyId ("signin__csrf_token").Attributes ["value"].Value;
 
 			var hs = downloader.PostForCookies (
 				         new Uri ("http://joyreactor.cc/login"),
@@ -129,7 +129,7 @@ namespace JoyReactor.Core.Model.Parser
 			return hs;
 		}
 
-		public override void ExtractTagPostCollection (ID.TagType type, string tag, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
+		public override void ExtractTag (ID.TagType type, string tag, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
 		{
 			ExtractPostCollection (type, tag, currentPage, cookies, callback);
 		}
@@ -142,14 +142,14 @@ namespace JoyReactor.Core.Model.Parser
 			var p = new ProfileExport ();
 			p.Username = username;
 
-			var sidebar = doc.GetElementById ("sidebar");
+			var sidebar = doc.GetElementbyId ("sidebar");
 			var div = sidebar.Descendants ("div")
                 .Where (s => s.GetClass () == "user")
                 .SelectMany (s => s.ChildNodes)
                 .First (s => s.Name == "img");
 			p.Image = new Uri (div.Attributes ["src"].Value);
 
-			div = doc.GetElementById ("rating-text").ChildNodes.First (s => s.Name == "b");
+			div = doc.GetElementbyId ("rating-text").ChildNodes.First (s => s.Name == "b");
 			var n = sProfileRating.Match (div.InnerText.Replace (" ", "")).Groups [1].Value;
 			p.Rating = float.Parse (n, CultureInfo.InvariantCulture);
 
@@ -227,7 +227,7 @@ namespace JoyReactor.Core.Model.Parser
 			ExportCoub (html, attachments);
 			p.Attachments = attachments.ToArray ();
 
-			OnNewPost (p);
+			OnNewPostInformation (p);
 		}
 
 		private void ExportPostAttachments (string html, List<ExportAttachment> attachments)
@@ -283,7 +283,7 @@ namespace JoyReactor.Core.Model.Parser
 				});
 			}
 		}
-	
+
 		#endregion
 
 		#region Private methods
@@ -394,6 +394,57 @@ namespace JoyReactor.Core.Model.Parser
 			return html.IndexOf ('>', position) + 1;
 		}
 
+		public override void ExtractTag (string tag, ID.TagType type, int currentPage)
+		{
+			Cookies.Add ("showVideoGif2", "1");
+			var url = GenerateUrl (type, tag, currentPage);
+			var html = downloader.GetText (url, new RequestParams { Cookies = Cookies });
+
+			ExtractTagInformation (html);
+
+			var m = POST.Match (html);
+			if (m.Success) {
+				do {
+					ExportPost p = CreatePost (m.Groups [1].Value);
+					OnNewPost (p);
+					m = m.NextMatch ();
+				} while (m.Success);
+			} else {
+				m = POST_AUTHORIZED.Match (html);
+				while (m.Success) {
+					var p = CreatePost (m.Groups [1].Value);
+					OnNewPost (p);
+					m = m.NextMatch ();
+				}
+			}
+
+			if (currentPage == 0)
+				ExtractLinkedTags (html);
+		}
+
+		private void ExtractTagInformation (string html)
+		{
+			var s = new ExportTag ();
+			s.Image = SUB_POSTER.FirstString (html);
+			s.NextPage = CURRENT_PAGE.FirstInt (html) - 1;
+			OnNewTagInformation (s);
+		}
+
+		private void ExtractLinkedTags (string html)
+		{
+			var m = SUB_LINKED_SUBS.Match (html);
+			while (m.Success) {
+				var t = new ExportLinkedTag ();
+				t.name = WebUtility.HtmlDecode (m.Groups [2].Value);
+				t.group = "None";
+				t.image = m.Groups [1].Value;
+				t.value = Uri.UnescapeDataString (Uri.UnescapeDataString (m.Groups [3].Value));
+				OnNewLinkedTag (t);
+				m = m.NextMatch ();
+			}
+		}
+
+		[Obsolete]
 		private void ExtractPostCollection (ID.TagType type, string value, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
 		{
 			cookies.Add ("showVideoGif2", "1");

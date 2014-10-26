@@ -14,6 +14,10 @@ namespace JoyReactor.Core.Tests.Inner
 		{
 			var db = new MvxWpfSqLiteConnectionFactory ().CreateInMemory ();
 			db.CreateTable<Post> ();
+			db.CreateTable<Tag> ();
+			db.CreateTable<TagPost> ();
+			db.CreateTable<Profile> ();
+			db.CreateTable<TagLinkedTag> ();
 			db.CreateTable<Comment> ();
 			db.CreateTable<CommentAttachment> ();
 			db.CreateTable<CommentLink> ();

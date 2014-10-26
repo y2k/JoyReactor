@@ -8,16 +8,16 @@ namespace JoyReactor.Core.Model.Parser
 {
 	public class ChanPostLinker
 	{
-		private string rootId;
+		private string firstPostId;
 		private Dictionary<string, int> subIds;
 
-		public ChanPostLinker (string rootId)
+		public ChanPostLinker (string firstPostId)
 		{
-			this.rootId = rootId;
+			this.firstPostId = firstPostId;
 			subIds = new Dictionary<string, int> ();
 		}
 
-		public List<PartialPost> Export(HtmlNode postNode, string baseId) 
+		public List<PartialPost> Export (HtmlNode postNode, string originalId)
 		{
 			var ps = new List<string> ();
 			HtmlDocument pc = null;
@@ -36,12 +36,12 @@ namespace JoyReactor.Core.Model.Parser
 						}
 					} else {
 						var data = new PartialPost ();
-						if (ps.Count == 0 || ps.All (s => s == rootId + "-0")) {
-							data.Id = baseId + "-0";
+						if (ps.Count == 0 || ps.All (s => s == firstPostId + "-0")) {
+							data.Id = originalId + "-0";
 							data.ParentIds = null;
 							data.Content = pc.DocumentNode.InnerHtml;
 						} else {
-							data.Id = baseId + "-" + (index++);
+							data.Id = originalId + "-" + (index++);
 							data.ParentIds = ps.ToArray ();
 							data.Content = pc.DocumentNode.InnerHtml;
 						}
@@ -56,19 +56,19 @@ namespace JoyReactor.Core.Model.Parser
 			}
 			if (pc != null) {
 				var data = new PartialPost ();
-				if (ps.Count == 0 || ps.All (s => s == rootId + "-0")) {
-					data.Id = baseId + "-0";
+				if (ps.Count == 0 || ps.All (s => s == firstPostId + "-0")) {
+					data.Id = originalId + "-0";
 					data.ParentIds = null;
 					data.Content = pc.DocumentNode.InnerHtml;
 				} else {
-					data.Id = baseId + "-" + (index++);
+					data.Id = originalId + "-" + (index++);
 					data.ParentIds = ps.ToArray ();
 					data.Content = pc.DocumentNode.InnerHtml;
 				}
 				posts.Add (data);
 			}
 			if (index > 1)
-				subIds [baseId] = index;
+				subIds [originalId] = index;
 
 			return posts;
 		}
@@ -79,7 +79,27 @@ namespace JoyReactor.Core.Model.Parser
 
 			public string Id { get; set; }
 
-			public string[] ParentIds{ get; set; }
+			public string[] ParentIds { get; set; }
+
+			public override bool Equals (object obj)
+			{
+				var o = obj as PartialPost;
+				if (o == null)
+					return false;
+				return 
+					Content == o.Content &&
+				Id == o.Id &&
+				CompareArray (ParentIds, o.ParentIds);
+			}
+
+			private static bool CompareArray (string[] l, string[] r)
+			{
+				if (l == null && r == null)
+					return true;
+				if ((l == null && r != null) || (l != null && r == null))
+					return false;
+				return Enumerable.SequenceEqual (l, r);
+			}
 		}
 	}
 }

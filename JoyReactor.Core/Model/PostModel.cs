@@ -59,7 +59,7 @@ namespace JoyReactor.Core.Model
 					var r = GetSiteParserForPost (p);
 					var syncId = p.PostId.Split ('-') [1];
 
-					r.NewPost += (sender, state) => {
+					r.NewPostInformation += (sender, state) => {
 						connection.SafeExecute ("DELETE FROM comment_attachments WHERE CommentId IN (SELECT Id FROM comments WHERE PostId = ?)", p.Id);
 						connection.SafeExecute ("DELETE FROM comment_links WHERE CommentId IN (SELECT Id FROM comments WHERE PostId = ?)", p.Id);
 						connection.SafeExecute ("DELETE FROM comments WHERE PostId = ?", p.Id);

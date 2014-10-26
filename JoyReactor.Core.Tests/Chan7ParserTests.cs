@@ -25,7 +25,7 @@ namespace JoyReactor.Core.Tests
 			bool newPostEntered = false;
 			int commentCount = 0;
 
-			parser.NewPost += (sender, e) => {
+			parser.NewPostInformation += (sender, e) => {
 				Assert.NotNull(e);
 				Assert.AreEqual("Marisa Kirisame", e.User.Name);
 				Assert.AreEqual(
@@ -56,7 +56,7 @@ namespace JoyReactor.Core.Tests
 		[Test]
 		public void Chan7_GetPosts_B ()
 		{
-			parser.ExtractTagPostCollection (ID.TagType.Good, "b", 0, null, state => {
+			parser.ExtractTag (ID.TagType.Good, "b", 0, null, state => {
 
 				Assert.IsNotNull (state);
 
@@ -67,7 +67,7 @@ namespace JoyReactor.Core.Tests
 		public void TestNextPage ()
 		{
 			for (int i = 0; i < 2; i++) {
-				parser.ExtractTagPostCollection (ID.TagType.Good, "b", i, null, state => {
+				parser.ExtractTag (ID.TagType.Good, "b", i, null, state => {
 					Assert.IsNotNull (state);
 				});
 			}
@@ -76,7 +76,7 @@ namespace JoyReactor.Core.Tests
 		[Test]
 		public void Chan7_GetPosts_GIF ()
 		{
-			parser.ExtractTagPostCollection (ID.TagType.Good, "gif", 0, null, state => {
+			parser.ExtractTag (ID.TagType.Good, "gif", 0, null, state => {
 
 				Assert.IsNotNull (state);
 

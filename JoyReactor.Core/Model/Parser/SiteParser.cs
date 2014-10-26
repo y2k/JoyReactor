@@ -7,6 +7,8 @@ namespace JoyReactor.Core.Model.Parser
 {
 	public abstract class SiteParser
 	{
+		public IDictionary<string, string> Cookies { get; set; }
+
 		public abstract ID.SiteParser ParserId { get; }
 
 		public virtual IDictionary<string, string> Login (string username, string password)
@@ -14,7 +16,8 @@ namespace JoyReactor.Core.Model.Parser
 			throw new NotImplementedException ();
 		}
 
-		public virtual void ExtractTagPostCollection (ID.TagType type, string tag, int lastLoadedPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
+		[Obsolete]
+		public virtual void ExtractTag (ID.TagType type, string tag, int lastLoadedPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
 		{
 			throw new NotImplementedException ();
 		}
@@ -31,8 +34,18 @@ namespace JoyReactor.Core.Model.Parser
 			throw new NotImplementedException ();
 		}
 
-		public event EventHandler<ExportPostInformation> NewPost;
+		public virtual void ExtractTag (string tag, ID.TagType type, int lastLoadedPage)
+		{
+			throw new NotImplementedException ();
+		}
+
+		#region Events
+
+		public event EventHandler<ExportPostInformation> NewPostInformation;
 		public event EventHandler<ExportPostComment> NewComment;
+		public event EventHandler<ExportPost> NewPost;
+		public event EventHandler<ExportTag> NewTagInformation;
+		public event EventHandler<ExportLinkedTag> NewLinkedTag;
 
 		protected void OnNewComment (ExportPostComment comment)
 		{
@@ -41,12 +54,35 @@ namespace JoyReactor.Core.Model.Parser
 				handler (this, comment);
 		}
 
-		protected void OnNewPost (ExportPostInformation postInfo)
+		protected void OnNewPostInformation (ExportPostInformation postInfo)
 		{
-			var handler = NewPost;
+			var handler = NewPostInformation;
 			if (handler != null)
 				handler (this, postInfo);
 		}
+
+		protected void OnNewPost (ExportPost post)
+		{
+			var handler = NewPost;
+			if (handler != null)
+				handler (this, post);
+		}
+
+		protected void OnNewTagInformation (ExportTag information)
+		{
+			var handler = NewTagInformation;
+			if (handler != null)
+				handler (this, information);
+		}
+
+		protected void OnNewLinkedTag(ExportLinkedTag tag)
+		{
+			var handler = NewLinkedTag;
+			if (handler != null)
+				handler (this, tag);
+		}
+
+		#endregion
 
 		// ==============================================================================
 	}
@@ -99,7 +135,6 @@ namespace JoyReactor.Core.Model.Parser
 			Tag,
 			LinkedTag,
 			LinkedPost
-
 		}
 
 		public ExportState State { get; set; }

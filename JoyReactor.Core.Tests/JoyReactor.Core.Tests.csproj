@@ -56,6 +56,9 @@
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack-PCL">
+      <HintPath>..\packages\HtmlAgilityPack-PCL.1.4.6\lib\HtmlAgilityPack-PCL.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chan2ParserTests.cs" />
@@ -67,6 +70,8 @@
     <Compile Include="PostModelTests.cs" />
     <Compile Include="Inner\MockSQLiteConnection.cs" />
     <Compile Include="Bootstrap\CommunitySqlitePluginBootstrap.cs" />
+    <Compile Include="Model\Parser\ChanPostLinkerTests.cs" />
+    <Compile Include="Model\PostCollectionModelTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -135,5 +140,7 @@
   <ItemGroup>
     <Folder Include="Inner\" />
     <Folder Include="FakeWebResponses\" />
+    <Folder Include="Model\" />
+    <Folder Include="Model\Parser\" />
   </ItemGroup>
 </Project>

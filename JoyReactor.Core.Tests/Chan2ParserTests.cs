@@ -23,7 +23,7 @@ namespace JoyReactor.Core.Tests
 		[Test]
 		public void Chan2_GetPosts_B ()
 		{
-			parser.ExtractTagPostCollection (ID.TagType.Good, "b", 0, null, state => {
+			parser.ExtractTag (ID.TagType.Good, "b", 0, null, state => {
 
 				Assert.IsNotNull (state);
 
@@ -33,7 +33,7 @@ namespace JoyReactor.Core.Tests
 		[Test]
 		public void Chan2_GetPosts_MEDIA ()
 		{
-			parser.ExtractTagPostCollection (ID.TagType.Good, "media", 0, null, state => {
+			parser.ExtractTag (ID.TagType.Good, "media", 0, null, state => {
 
 				Assert.IsNotNull (state);
 

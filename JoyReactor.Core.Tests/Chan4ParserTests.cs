@@ -18,7 +18,7 @@ namespace JoyReactor.Core.Tests
 		public void TestGetThread572092321 ()
 		{
 			int attachemnts = 0;
-			parser.NewPost += (sender, e) => {
+			parser.NewPostInformation += (sender, e) => {
 				// TODO
 
 				Assert.AreEqual (1, e.Attachments.Length, "Count = " + e.Attachments.Length);
@@ -49,7 +49,7 @@ namespace JoyReactor.Core.Tests
 		public void TestGetPostsFromB ()
 		{
 			int actualPostCount = 0;
-			parser.ExtractTagPostCollection (ID.TagType.Good, "b", 0, null, state => {
+			parser.ExtractTag (ID.TagType.Good, "b", 0, null, state => {
 
 				Assert.IsNotNull (state);
 				if (state.State == CollectionExportState.ExportState.PostItem) {
@@ -67,7 +67,7 @@ namespace JoyReactor.Core.Tests
 		public void TestMultiPageLoading ()
 		{
 			for (int i = 0; i < 2; i++)
-				parser.ExtractTagPostCollection (ID.TagType.Good, "b", i, null, state => {
+				parser.ExtractTag (ID.TagType.Good, "b", i, null, state => {
 					// Ignore
 				});
 		}
@@ -82,7 +82,7 @@ namespace JoyReactor.Core.Tests
 		[Test]
 		public void Chan4_GetPosts_WSG ()
 		{
-			parser.ExtractTagPostCollection (ID.TagType.Good, "wsg", 0, null, state => {
+			parser.ExtractTag (ID.TagType.Good, "wsg", 0, null, state => {
 				Assert.IsNotNull (state);
 				// TODO: дописать тест
 			});
