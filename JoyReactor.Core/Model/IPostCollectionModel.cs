@@ -7,10 +7,6 @@ namespace JoyReactor.Core.Model
 {
 	public interface IPostCollectionModel
 	{
-//		event EventHandler<ID> PostChanged;
-//
-//		void NotifyPostsChanged();
-
 		[Obsolete]
 		Task SyncTask(ID id, SyncFlags flags);
 
@@ -33,13 +29,18 @@ namespace JoyReactor.Core.Model
 
 		Task SyncFirstPage(ID id);
 
+		Task SyncNextPage(ID id);
+
 		Task ApplyNewItems(ID id);
+
+		Task Reset(ID id);
     }
 
 	public class PostCollectionState
 	{
 		public List<Post> Posts { get; set; }
 		public int NewItemsCount { get; set; }
+		public int DividerPosition { get; set; }
 	}
 
 	public enum SyncFlags { None, Next, First }

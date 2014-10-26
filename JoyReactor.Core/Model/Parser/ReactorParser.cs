@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Core.Model.Helper;
-using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model.Parser.Data;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.Model.Web.Parser.Data;

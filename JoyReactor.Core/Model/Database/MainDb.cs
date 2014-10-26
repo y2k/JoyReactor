@@ -1,18 +1,17 @@
 ﻿using System;
-using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model.DTO;
 using Cirrious.MvvmCross.Community.Plugins.Sqlite;
 using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Database
 {
-	internal class MainDb
+	class MainDb
 	{
-		private const string DatabaseName = "net.itwister.joyreactor.main.db";
-		private const int DatabaseVersion = 1;
+		const string DatabaseName = "net.itwister.joyreactor.main.db";
+		const int DatabaseVersion = 1;
 
-		private static volatile ISQLiteConnection instance;
-		private static object syncRoot = new Object ();
+		static volatile ISQLiteConnection instance;
+		static object syncRoot = new Object ();
 
 		public static ISQLiteConnection Instance {
 			get {

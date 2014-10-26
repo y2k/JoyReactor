@@ -136,6 +136,9 @@
     <None Include="FakeWebResponses\7chan_722687.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="FakeWebResponses\joyreactor_page4313.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Inner\" />

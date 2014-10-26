@@ -6,8 +6,6 @@ using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model.Parser.Data;
 using JoyReactor.Core.Model.Database;
-using JoyReactor.Core.Model.Inject;
-using Autofac;
 using Microsoft.Practices.ServiceLocation;
 using Cirrious.MvvmCross.Community.Plugins.Sqlite;
 
@@ -15,8 +13,7 @@ namespace JoyReactor.Core.Model
 {
 	class PostCollectionModel : IPostCollectionModel
 	{
-		private ISQLiteConnection connection = ServiceLocator.Current.GetInstance<ISQLiteConnection> ();
-		private bool isFirstExecuteFirstPostForTag = true;
+		ISQLiteConnection connection = ServiceLocator.Current.GetInstance<ISQLiteConnection> ();
 
 		#region New Methods
 
@@ -24,55 +21,84 @@ namespace JoyReactor.Core.Model
 		{
 			return Task.Run (() => {
 				var tagId = ToFlatId (id);
-				var result = new PostCollectionState ();
-				result.NewItemsCount = connection.SafeExecuteScalar<int> (
-					"SELECT COUNT(*) FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)",
-					tagId);
-				result.Posts = connection.SafeQuery<Post> (
-					"SELECT * " +
-					"FROM posts " +
-					"WHERE Id IN (" +
-					"   SELECT PostId " +
-					"   FROM tag_post " +
-					"   WHERE TagId IN (" +
-					"      SELECT Id " +
-					"      FROM tags " +
-					"      WHERE TagId = ?))", 
-					tagId);
-				return result;
+				return new PostCollectionState {
+					Posts = GetPostsForTag (tagId),
+					NewItemsCount = GetNewItemsCount (tagId),
+					DividerPosition = GetDividerPosition (tagId),
+				};
 			});
+		}
+
+		List<Post> GetPostsForTag (string tagId)
+		{
+			return connection.SafeQuery<Post> (
+				"SELECT * " +
+				"FROM posts " +
+				"WHERE Id IN ( " +
+				"   SELECT PostId " +
+				"   FROM tag_post " +
+				"   WHERE TagId IN ( " +
+				"      SELECT Id " +
+				"      FROM tags " +
+				"      WHERE TagId = ?))",
+				tagId);
+		}
+
+		int GetNewItemsCount (string tagId)
+		{
+			return 0;
+		}
+
+		int GetDividerPosition (string tagId)
+		{
+			return connection.SafeExecuteScalar<int> (
+				"SELECT COUNT(*) " +
+				"FROM tag_post " +
+				"WHERE TagId IN ( " +
+				"   SELECT Id " +
+				"   FROM tags " +
+				"   WHERE TagId = ? AND Status = ?)",
+				tagId, TagPost.StatusNew);
 		}
 
 		public Task SyncFirstPage (ID id)
 		{
 			return Task.Run (() => {
+				var tagId = ToFlatId (id);
 				var parser = GetParserForTag (id);
 				parser.Cookies = GetSiteCookies (id);
+				parser.NewTagInformation += (sender, information) => UpdateTagInformation (tagId, information);
+				bool isFirstPost = true;
 				parser.NewPost += (sender, post) => {
-					if (IsFirstPost ())
+					if (isFirstPost) {
+						isFirstPost = false;
 						ClearDatabaseFromPosts (id);
+						CreateTagIfNotExists (id);
+					}
 					SavePostToDatabase (id, post);
 				};
 				parser.ExtractTag (id.Tag, id.Type, 0);
 			});
 		}
 
-		private SiteParser GetParserForTag (ID id)
+		SiteParser GetParserForTag (ID id)
 		{
 			var parsers = ServiceLocator.Current.GetInstance<SiteParser[]> ();
 			return parsers.First (s => s.ParserId == id.Site);
 		}
 
-		private bool IsFirstPost ()
+		void UpdateTagInformation (string tagId, ExportTag information)
 		{
-			try {
-				return isFirstExecuteFirstPostForTag;
-			} finally {
-				isFirstExecuteFirstPostForTag = false;
-			}
+			var t = connection.SafeQuery<Tag> ("SELECT * FROM tags WHERE TagId = ?", tagId).FirstOrDefault ()
+			        ?? new Tag { BestImage = information.Image, TagId = tagId };
+			t.NextPage = information.NextPage;
+			if (t.Id == 0)
+				connection.SafeInsert (t);
+			else
+				connection.SafeUpdate (t);
 		}
 
-		private void ClearDatabaseFromPosts (ID id)
+		void ClearDatabaseFromPosts (ID id)
 		{
 			connection.SafeExecute ("UPDATE tags SET Timestamp = ? WHERE TagId = ?", TimestampNow (), ToFlatId (id));
 			// Удаление постов тега
@@ -81,9 +107,67 @@ namespace JoyReactor.Core.Model
 			connection.SafeExecute ("DELETE FROM tag_linked_tags WHERE ParentTagId IN (SELECT Id FROM tags WHERE TagId = ?)", ToFlatId (id));
 		}
 
+		void CreateTagIfNotExists (ID id)
+		{
+			var flatTagId = ToFlatId (id);
+			if (!IsTagExists (flatTagId))
+				connection.SafeInsert (new Tag {
+					TagId = flatTagId,
+					Flags = Tag.FlagSystem
+				});
+		}
+
+		bool IsTagExists (string flatTagId)
+		{
+			return connection.SafeExecuteScalar<int> ("SELECT COUNT(*) FROM tags WHERE TagId = ?", flatTagId) > 0;
+		}
+
+		public Task SyncNextPage (ID id)
+		{
+			return Task.Run (() => {
+				var parser = GetParserForTag (id);
+				parser.Cookies = GetSiteCookies (id);
+				parser.NewPost += (sender, post) => {
+					SavePostToDatabase (id, post);
+				};
+				parser.ExtractTag (id.Tag, id.Type, GetNextPageForTag (id));
+			});
+		}
+
+		int GetNextPageForTag (ID id)
+		{
+			return connection.SafeQuery<Tag> (
+				"SELECT * " +
+				"FROM tags " +
+				"WHERE TagId = ?", 
+				ToFlatId (id))
+					.First ()
+					.NextPage;
+		}
+
 		public Task ApplyNewItems (ID id)
 		{
 			throw new NotImplementedException ();
+		}
+
+		public Task Reset (ID id)
+		{
+			return Task.Run (() => {
+				var tagId = ToFlatId (id);
+				var parser = GetParserForTag (id);
+				parser.Cookies = GetSiteCookies (id);
+				parser.NewTagInformation += (sender, information) => UpdateTagInformation (tagId, information);
+				bool isFirstPost = true;
+				parser.NewPost += (sender, post) => {
+					if (isFirstPost) {
+						isFirstPost = false;
+						ClearDatabaseFromPosts (id);
+						CreateTagIfNotExists (id);
+					}
+					SavePostToDatabase (id, post);
+				};
+				parser.ExtractTag (id.Tag, id.Type, 0);
+			});
 		}
 
 		#endregion
@@ -114,11 +198,6 @@ namespace JoyReactor.Core.Model
 
 			});
 		}
-
-		//		public event EventHandler<ID> PostChanged {
-		//			add { GlobalHandler += value; }
-		//			remove { GlobalHandler -= value; }
-		//		}
 
 		public Task<PostCollection> GetListAsync (ID id, SyncFlags flags = SyncFlags.None)
 		{
@@ -214,7 +293,7 @@ namespace JoyReactor.Core.Model
 //			});
 		}
 
-		private void SyncNextPage (ID id)
+		private void InnerSyncNextPage (ID id)
 		{
 //			// TODO Убрать копипаст
 //			var p = parsers.First (s => s.ParserId == id.Site);
