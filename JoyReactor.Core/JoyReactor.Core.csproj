@@ -93,17 +93,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
-    <None Include="Libs\MobileHtmlAgilityPack.dll" />
     <None Include="Libs\System.Net.Http.Extensions.dll" />
     <None Include="Libs\System.Net.Http.Primitives.dll" />
     <None Include="Libs\System.Net.Http.dll" />
-    <None Include="Libs\Autofac.dll" />
-    <None Include="Libs\Autofac.xml" />
-    <None Include="Libs\Ninject.Common.dll" />
-    <None Include="Libs\PCLStorage.Abstractions.dll" />
-    <None Include="Libs\PCLStorage.Abstractions.xml" />
-    <None Include="Libs\PCLStorage.dll" />
-    <None Include="Libs\PCLStorage.xml" />
     <None Include="Libs\SQLite.Net.dll" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -113,9 +105,6 @@
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
-    </Reference>
-    <Reference Include="Autofac">
-      <HintPath>Libs\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http">
       <HintPath>Libs\System.Net.Http.dll</HintPath>
@@ -137,6 +126,9 @@
     </Reference>
     <Reference Include="HtmlAgilityPack-PCL">
       <HintPath>..\packages\HtmlAgilityPack-PCL.1.4.6\lib\HtmlAgilityPack-PCL.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.5.2\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\Autofac.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup />
