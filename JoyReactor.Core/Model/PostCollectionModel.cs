@@ -46,7 +46,14 @@ namespace JoyReactor.Core.Model
 
 		int GetNewItemsCount (string tagId)
 		{
-			return 0;
+			return connection.SafeExecuteScalar<int> (
+				"SELECT COUNT(*) " +
+				"FROM tag_post " +
+				"WHERE TagId IN ( " +
+				"   SELECT Id " +
+				"   FROM tags " +
+				"   WHERE TagId = ? AND Status = ?)",
+				tagId, TagPost.StatusNew);
 		}
 
 		int GetDividerPosition (string tagId)
@@ -58,7 +65,7 @@ namespace JoyReactor.Core.Model
 				"   SELECT Id " +
 				"   FROM tags " +
 				"   WHERE TagId = ? AND Status = ?)",
-				tagId, TagPost.StatusNew);
+				tagId, TagPost.StatusComplete);
 		}
 
 		public Task SyncFirstPage (ID id)
@@ -68,16 +75,14 @@ namespace JoyReactor.Core.Model
 				var parser = GetParserForTag (id);
 				parser.Cookies = GetSiteCookies (id);
 				parser.NewTagInformation += (sender, information) => UpdateTagInformation (tagId, information);
-				bool isFirstPost = true;
+				CreateTagIfNotExists (id);
+				var organizer = new TagIdOrganizer (connection, tagId);
 				parser.NewPost += (sender, post) => {
-					if (isFirstPost) {
-						isFirstPost = false;
-						ClearDatabaseFromPosts (id);
-						CreateTagIfNotExists (id);
-					}
-					SavePostToDatabase (id, post);
+					var newid = SavePostToDatabase (id, post);
+					organizer.AddNewPost (newid);
 				};
 				parser.ExtractTag (id.Tag, id.Type, 0);
+				organizer.SaveChanges ();
 			});
 		}
 
@@ -127,11 +132,29 @@ namespace JoyReactor.Core.Model
 			return Task.Run (() => {
 				var parser = GetParserForTag (id);
 				parser.Cookies = GetSiteCookies (id);
-				parser.NewPost += (sender, post) => {
-					SavePostToDatabase (id, post);
-				};
+				parser.NewPost += (sender, post) => SavePostToDatabase (id, post);
 				parser.ExtractTag (id.Tag, id.Type, GetNextPageForTag (id));
 			});
+		}
+
+		int SavePostToDatabase (ID listId, ExportPost post)
+		{
+			var p = Convert (listId.Site, post);
+			var f = ToFlatId (listId);
+
+			p.Id = connection.SafeExecuteScalar<int> ("SELECT Id FROM posts WHERE PostId = ?", p.PostId);
+			if (p.Id == 0)
+				connection.SafeInsert (p);
+			else
+				connection.SafeUpdate (p);
+
+			var tp = new TagPost ();
+			tp.PostId = p.Id;
+			tp.Status = TagPost.StatusNew;
+			tp.TagId = connection.SafeExecuteScalar<int> ("SELECT Id FROM tags WHERE TagId = ?", f);
+			connection.SafeInsert (tp);
+
+			return p.Id;
 		}
 
 		int GetNextPageForTag (ID id)
@@ -314,23 +337,23 @@ namespace JoyReactor.Core.Model
 			return p == null ? new Dictionary<string, string> () : DeserializeObject<Dictionary<string, string>> (p.Cookie);
 		}
 
-		private void SavePostToDatabase (ID listId, ExportPost post)
-		{
-			var p = Convert (listId.Site, post);
-			var f = ToFlatId (listId);
-
-			p.Id = connection.SafeExecuteScalar<int> ("SELECT Id FROM posts WHERE PostId = ?", p.PostId);
-			if (p.Id == 0)
-				connection.SafeInsert (p);
-			else
-				connection.SafeUpdate (p);
-
-			var tp = new TagPost ();
-			tp.PostId = p.Id;
-			tp.Status = TagPost.StatusNew;
-			tp.TagId = connection.SafeExecuteScalar<int> ("SELECT Id FROM tags WHERE TagId = ?", f);
-			connection.SafeInsert (tp);
-		}
+		//		private void SavePostToDatabase (ID listId, ExportPost post)
+		//		{
+		//			var p = Convert (listId.Site, post);
+		//			var f = ToFlatId (listId);
+		//
+		//			p.Id = connection.SafeExecuteScalar<int> ("SELECT Id FROM posts WHERE PostId = ?", p.PostId);
+		//			if (p.Id == 0)
+		//				connection.SafeInsert (p);
+		//			else
+		//				connection.SafeUpdate (p);
+		//
+		//			var tp = new TagPost ();
+		//			tp.PostId = p.Id;
+		//			tp.Status = TagPost.StatusNew;
+		//			tp.TagId = connection.SafeExecuteScalar<int> ("SELECT Id FROM tags WHERE TagId = ?", f);
+		//			connection.SafeInsert (tp);
+		//		}
 
 		private static long TimestampNow ()
 		{

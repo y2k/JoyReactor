@@ -6,9 +6,9 @@ using NUnit.Framework;
 
 namespace JoyReactor.Core.Tests.Inner
 {
-	public class MockWebDownloader : IWebDownloader
+	class MockWebDownloader : IWebDownloader
 	{
-		public readonly IDictionary<string, string> RouteUrls = new Dictionary<string, string> () {
+		internal readonly IDictionary<string, string> RouteUrls = new Dictionary<string, string> () {
 			{ "http://m2-ch.ru/a/res/1755718.html", "response1.txt" },
 			{ "http://joyreactor.cc/post/1323757", "response2.html" },
 			{ "http://joyreactor.cc/post/1382511", "response3.html" },

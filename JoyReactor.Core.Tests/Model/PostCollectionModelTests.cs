@@ -69,20 +69,20 @@ namespace JoyReactor.Core.Tests.Model
 			Assert.AreEqual (0, actual.NewItemsCount);
 			Assert.AreEqual (10, actual.DividerPosition);
 
-			SetFakeSite ("http://joyreactor.cc/tag/песочница", "joyreactor_pesochnica.html");
+			SetFakeSite ("http://joyreactor.cc/tag/песочница", "joyreactor_pesochnica_2.html");
 			module.SyncFirstPage (testId).Wait ();
 
 			actual = module.Get (testId).Result;
 			Assert.AreEqual (10, actual.Posts.Count);
-			Assert.AreEqual (2, actual.NewItemsCount);
+			Assert.AreEqual (8, actual.NewItemsCount);
 			Assert.AreEqual (0, actual.DividerPosition);
 
 			module.ApplyNewItems (testId).Wait ();
 
 			actual = module.Get (testId).Result;
-			Assert.AreEqual (12, actual.Posts.Count);
+			Assert.AreEqual (18, actual.Posts.Count);
 			Assert.AreEqual (0, actual.NewItemsCount);
-			Assert.AreEqual (2, actual.DividerPosition);
+			Assert.AreEqual (10, actual.DividerPosition);
 		}
 
 		void SetFakeSite (string url, string filename)
