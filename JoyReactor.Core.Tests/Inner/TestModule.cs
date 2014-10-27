@@ -10,7 +10,7 @@ namespace JoyReactor.Core.Tests.Inner
 	{
 		protected override void Load (ContainerBuilder b)
 		{
-			b.RegisterType<MockWebDownloader> ().As<IWebDownloader> ();
+			b.RegisterType<MockWebDownloader> ().As<IWebDownloader> ().SingleInstance();
 			b.RegisterInstance (MockSQLiteConnection.Create ()).As<ISQLiteConnection> ();
 		}
 	}

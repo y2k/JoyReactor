@@ -40,8 +40,9 @@ namespace JoyReactor.Core.Model
 				"   WHERE TagId IN ( " +
 				"      SELECT Id " +
 				"      FROM tags " +
-				"      WHERE TagId = ?))",
-				tagId);
+				"      WHERE TagId = ?)" +
+				"   AND Status = ?)",
+				tagId, TagPost.StatusComplete);
 		}
 
 		int GetNewItemsCount (string tagId)
@@ -58,6 +59,8 @@ namespace JoyReactor.Core.Model
 
 		int GetDividerPosition (string tagId)
 		{
+			if (GetNewItemsCount (tagId) > 0)
+				return 0;
 			return connection.SafeExecuteScalar<int> (
 				"SELECT COUNT(*) " +
 				"FROM tag_post " +
@@ -140,37 +143,33 @@ namespace JoyReactor.Core.Model
 		int SavePostToDatabase (ID listId, ExportPost post)
 		{
 			var p = Convert (listId.Site, post);
-			var f = ToFlatId (listId);
-
 			p.Id = connection.SafeExecuteScalar<int> ("SELECT Id FROM posts WHERE PostId = ?", p.PostId);
 			if (p.Id == 0)
 				connection.SafeInsert (p);
 			else
 				connection.SafeUpdate (p);
-
-			var tp = new TagPost ();
-			tp.PostId = p.Id;
-			tp.Status = TagPost.StatusNew;
-			tp.TagId = connection.SafeExecuteScalar<int> ("SELECT Id FROM tags WHERE TagId = ?", f);
-			connection.SafeInsert (tp);
-
 			return p.Id;
 		}
 
 		int GetNextPageForTag (ID id)
 		{
-			return connection.SafeQuery<Tag> (
-				"SELECT * " +
-				"FROM tags " +
-				"WHERE TagId = ?", 
-				ToFlatId (id))
-					.First ()
-					.NextPage;
+			return connection
+				.SafeQuery<Tag> ("SELECT * FROM tags WHERE TagId = ?", ToFlatId (id))
+				.First ().NextPage;
 		}
 
 		public Task ApplyNewItems (ID id)
 		{
-			throw new NotImplementedException ();
+			return Task.Run (() => {
+				connection.SafeExecute (
+					"UPDATE tag_post " +
+					"SET Status = ? " +
+					"WHERE TagId IN ( " +
+					"   SELECT Id " +
+					"   FROM tags " +
+					"   WHERE TagId = ? AND Status = ?)",
+					TagPost.StatusComplete, ToFlatId (id), TagPost.StatusNew);
+			});
 		}
 
 		public Task Reset (ID id)
@@ -212,13 +211,10 @@ namespace JoyReactor.Core.Model
 		public Task SyncTask (ID id, SyncFlags flags)
 		{
 			return Task.Run (() => {
-
 				if (flags == SyncFlags.First)
 					InnerSyncFirstPage (id);
 				else if (flags == SyncFlags.Next)
 					SyncNextPage (id);
-
-
 			});
 		}
 

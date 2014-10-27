@@ -31,49 +31,39 @@ namespace JoyReactor.Core.Model
 
 		void LoadPostIdsForTag ()
 		{
-			oldPostIds = db.SafeQuery<int> (
-				"SELECT PostId " +
-				"FROM tag_post " +
-				"WHERE TagId = ?", tagId);
-
-			var n2 = oldPostIds.Aggregate ("", (a, s) => s + "," + a);
+			oldPostIds = db
+				.SafeQuery<TagPost> ("SELECT PostId FROM tag_post WHERE TagId = ?", tagId)
+				.Select (s => s.PostId)
+				.ToList ();
 		}
 
 		public void AddNewPost (int newid)
 		{
 			if (!oldPostIds.Contains (newid))
 				newPostIds.Add (newid);
-
-			var n1 = newPostIds.Aggregate ("", (a, s) => s + "," + a);
-			var n2 = oldPostIds.Aggregate ("", (a, s) => s + "," + a);
 		}
 
 		public void SaveChanges ()
 		{
 			db.SafeRunInTransaction (() => {
-				db.SafeExecute (
-					"DELETE FROM tag_post " +
-					"WHERE TagId = ?", tagId);
+				db.SafeExecute ("DELETE FROM tag_post WHERE TagId = ?", tagId);
 
-				var n1 = newPostIds.Aggregate ("", (a, s) => s + "," + a);
-				var n2 = oldPostIds.Aggregate ("", (a, s) => s + "," + a);
-
-				if (IsFirstExecution ()) {
+				if (IsFirstExecution) {
 					foreach (var id in newPostIds)
-						db.Insert (new TagPost { 
+						db.SafeInsert (new TagPost { 
 							TagId = tagId, 
 							PostId = id,
 							Status = TagPost.StatusComplete
 						});
 				} else {
 					foreach (var id in newPostIds)
-						db.Insert (new TagPost { 
+						db.SafeInsert (new TagPost { 
 							TagId = tagId, 
 							PostId = id,
 							Status = TagPost.StatusNew
 						});
 					foreach (var id in oldPostIds)
-						db.Insert (new TagPost {
+						db.SafeInsert (new TagPost {
 							TagId = tagId,
 							PostId = id, 
 							Status = TagPost.StatusComplete
@@ -82,9 +72,8 @@ namespace JoyReactor.Core.Model
 			});
 		}
 
-		bool IsFirstExecution ()
-		{
-			return oldPostIds.Count <= 0;
+		bool IsFirstExecution {
+			get { return oldPostIds.Count <= 0; }
 		}
 	}
 }
