@@ -139,6 +139,12 @@
     <None Include="FakeWebResponses\joyreactor_page4313.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="FakeWebResponses\joyreactor_pesochnica_2.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FakeWebResponses\joyreactor_pesochnica.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Inner\" />

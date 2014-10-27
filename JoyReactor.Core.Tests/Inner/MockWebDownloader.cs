@@ -8,7 +8,7 @@ namespace JoyReactor.Core.Tests.Inner
 {
 	public class MockWebDownloader : IWebDownloader
 	{
-		private static readonly IDictionary<string, string> RouteUrls = new Dictionary<string, string> () {
+		public readonly IDictionary<string, string> RouteUrls = new Dictionary<string, string> () {
 			{ "http://m2-ch.ru/a/res/1755718.html", "response1.txt" },
 			{ "http://joyreactor.cc/post/1323757", "response2.html" },
 			{ "http://joyreactor.cc/post/1382511", "response3.html" },
@@ -27,6 +27,7 @@ namespace JoyReactor.Core.Tests.Inner
 			{ "http://joyreactor.cc/tag/комиксы", "joyreactor_comics.html" },
 			{ "https://7chan.org/b/res/722687.html", "7chan_722687.html" },
 			{ "http://joyreactor.cc/4313", "joyreactor_page4313.html" },
+			{ "http://joyreactor.cc/tag/песочница", "joyreactor_pesochnica.html" },
 		};
 
 		#region IWebDownloader implementation
@@ -58,13 +59,11 @@ namespace JoyReactor.Core.Tests.Inner
 
 		#endregion
 
-		private static string GetPathToFile (Uri uri)
+		private string GetPathToFile (Uri uri)
 		{
 			var textUrl = "" + uri;
 			string name;
-			Assert.IsTrue (
-				RouteUrls.TryGetValue (textUrl, out name),
-				"Can't find path for URL = " + textUrl);
+			Assert.IsTrue (RouteUrls.TryGetValue (textUrl, out name), "Can't find path for URL = " + textUrl);
 			var path = Path.Combine (@"FakeWebResponses", name);
 			Assert.IsTrue (File.Exists (path), "File not found at path " + path);
 			return path;
