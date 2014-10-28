@@ -41,8 +41,8 @@ namespace JoyReactor.Core.Model
 				"      SELECT Id " +
 				"      FROM tags " +
 				"      WHERE TagId = ?)" +
-				"   AND Status = ?)",
-				tagId, TagPost.StatusComplete);
+				"   AND (Status = ? OR Status = ?))",
+				tagId, TagPost.StatusOld, TagPost.StatusActual);
 		}
 
 		int GetNewItemsCount (string tagId)
@@ -67,8 +67,9 @@ namespace JoyReactor.Core.Model
 				"WHERE TagId IN ( " +
 				"   SELECT Id " +
 				"   FROM tags " +
-				"   WHERE TagId = ? AND Status = ?)",
-				tagId, TagPost.StatusComplete);
+				"   WHERE TagId = ?) " +
+				"AND Status = ?",
+				tagId, TagPost.StatusActual);
 		}
 
 		public Task SyncFirstPage (ID id)
@@ -79,7 +80,7 @@ namespace JoyReactor.Core.Model
 				parser.Cookies = GetSiteCookies (id);
 				parser.NewTagInformation += (sender, information) => UpdateTagInformation (tagId, information);
 				CreateTagIfNotExists (id);
-				var organizer = new TagIdOrganizer (connection, tagId);
+				var organizer = new FirstPagePostSorter (connection, tagId);
 				parser.NewPost += (sender, post) => {
 					var newid = SavePostToDatabase (id, post);
 					organizer.AddNewPost (newid);
@@ -135,8 +136,13 @@ namespace JoyReactor.Core.Model
 			return Task.Run (() => {
 				var parser = GetParserForTag (id);
 				parser.Cookies = GetSiteCookies (id);
-				parser.NewPost += (sender, post) => SavePostToDatabase (id, post);
+				var organizer = new NextPagePostSorter (connection, ToFlatId (id));
+				parser.NewPost += (sender, post) => {
+					var newid = SavePostToDatabase (id, post);
+					organizer.AddNewPost (newid);
+				};
 				parser.ExtractTag (id.Tag, id.Type, GetNextPageForTag (id));
+				organizer.SaveChanges ();
 			});
 		}
 
@@ -161,35 +167,41 @@ namespace JoyReactor.Core.Model
 		public Task ApplyNewItems (ID id)
 		{
 			return Task.Run (() => {
-				connection.SafeExecute (
-					"UPDATE tag_post " +
-					"SET Status = ? " +
-					"WHERE TagId IN ( " +
-					"   SELECT Id " +
-					"   FROM tags " +
-					"   WHERE TagId = ? AND Status = ?)",
-					TagPost.StatusComplete, ToFlatId (id), TagPost.StatusNew);
+				connection.SafeRunInTransaction (() => {
+					var tagId = connection.SafeQuery<TagPost> ("SELECT Id FROM tags WHERE TagId = ?", ToFlatId (id)).First ().Id;
+					var links = connection.SafeQuery<TagPost> ("SELECT * FROM tag_post WHERE TagId = ?", tagId);
+					links.Sort (new TagPostComparer ());
+					connection.SafeExecute ("DELETE FROM tag_post WHERE TagId = ?", tagId);
+					foreach (var s in links) {
+						s.Id = 0;
+						if (s.Status == TagPost.StatusNew)
+							s.Status = TagPost.StatusActual;
+					}
+					connection.SafeInsertAll (links);
+				});
 			});
 		}
 
 		public Task Reset (ID id)
 		{
-			return Task.Run (() => {
-				var tagId = ToFlatId (id);
-				var parser = GetParserForTag (id);
-				parser.Cookies = GetSiteCookies (id);
-				parser.NewTagInformation += (sender, information) => UpdateTagInformation (tagId, information);
-				bool isFirstPost = true;
-				parser.NewPost += (sender, post) => {
-					if (isFirstPost) {
-						isFirstPost = false;
-						ClearDatabaseFromPosts (id);
-						CreateTagIfNotExists (id);
-					}
-					SavePostToDatabase (id, post);
-				};
-				parser.ExtractTag (id.Tag, id.Type, 0);
+			return Task.Run (async () => {
+				connection.SafeExecute (
+					"DELETE FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)", 
+					ToFlatId (id));
+				await SyncFirstPage (id);
 			});
+		}
+
+		private class TagPostComparer : IComparer<TagPost>
+		{
+			#region IComparer implementation
+
+			public int Compare (TagPost x, TagPost y)
+			{
+				return x.Status == y.Status ? x.Id - y.Id : x.Status - y.Status;
+			}
+
+			#endregion
 		}
 
 		#endregion

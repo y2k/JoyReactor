@@ -5,8 +5,9 @@ namespace JoyReactor.Core.Model.DTO
 	[Table("tag_post")]
 	public class TagPost
 	{
-		public const int StatusComplete = 0;
-		public const int StatusNew = 1;
+		public const int StatusOld = 0;
+		public const int StatusActual = 1;
+		public const int StatusNew = 2;
 
 		[PrimaryKey, AutoIncrement]
 		public int Id { get; set; }
@@ -16,5 +17,10 @@ namespace JoyReactor.Core.Model.DTO
 		public int PostId { get; set; }
 
 		public int Status { get; set; }
+
+		public override string ToString ()
+		{
+			return string.Format ("[TagPost: Id={0}, TagId={1}, PostId={2}, Status={3}]", Id, TagId, PostId, Status);
+		}
 	}
 }

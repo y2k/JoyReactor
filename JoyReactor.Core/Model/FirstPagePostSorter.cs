@@ -7,14 +7,15 @@ using JoyReactor.Core.Model.DTO;
 
 namespace JoyReactor.Core.Model
 {
-	public class TagIdOrganizer
+	public class FirstPagePostSorter
 	{
-		List<int> newPostIds = new List<int> ();
-		List<int> oldPostIds;
+		List<int> newUniqePostIds = new List<int> ();
+		List<int> newDublicatePosts = new List<int> ();
+		List<int> currentPostIds;
 		ISQLiteConnection db;
 		int tagId;
 
-		public TagIdOrganizer (ISQLiteConnection db, string tagId)
+		public FirstPagePostSorter (ISQLiteConnection db, string tagId)
 		{
 			this.db = db;
 			GetTagId (tagId);
@@ -31,7 +32,7 @@ namespace JoyReactor.Core.Model
 
 		void LoadPostIdsForTag ()
 		{
-			oldPostIds = db
+			currentPostIds = db
 				.SafeQuery<TagPost> ("SELECT PostId FROM tag_post WHERE TagId = ?", tagId)
 				.Select (s => s.PostId)
 				.ToList ();
@@ -39,8 +40,10 @@ namespace JoyReactor.Core.Model
 
 		public void AddNewPost (int newid)
 		{
-			if (!oldPostIds.Contains (newid))
-				newPostIds.Add (newid);
+			if (currentPostIds.Contains (newid))
+				newDublicatePosts.Add (newid);
+			else
+				newUniqePostIds.Add (newid);
 		}
 
 		public void SaveChanges ()
@@ -49,31 +52,33 @@ namespace JoyReactor.Core.Model
 				db.SafeExecute ("DELETE FROM tag_post WHERE TagId = ?", tagId);
 
 				if (IsFirstExecution) {
-					foreach (var id in newPostIds)
+					foreach (var id in newUniqePostIds)
 						db.SafeInsert (new TagPost { 
 							TagId = tagId, 
 							PostId = id,
-							Status = TagPost.StatusComplete
+							Status = TagPost.StatusActual
 						});
 				} else {
-					foreach (var id in newPostIds)
+					foreach (var id in newUniqePostIds)
 						db.SafeInsert (new TagPost { 
 							TagId = tagId, 
 							PostId = id,
 							Status = TagPost.StatusNew
 						});
-					foreach (var id in oldPostIds)
+					foreach (var id in currentPostIds)
 						db.SafeInsert (new TagPost {
 							TagId = tagId,
 							PostId = id, 
-							Status = TagPost.StatusComplete
+							Status = newDublicatePosts.Contains (id)
+								? TagPost.StatusActual
+								: TagPost.StatusOld,
 						});
 				}
 			});
 		}
 
 		bool IsFirstExecution {
-			get { return oldPostIds.Count <= 0; }
+			get { return currentPostIds.Count <= 0; }
 		}
 	}
 }

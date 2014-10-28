@@ -1,11 +1,19 @@
 ﻿using System;
 using Cirrious.MvvmCross.Community.Plugins.Sqlite;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace JoyReactor.Core.Model.Database
 {
 	public static class SQLiteConnectionExtensions
 	{
+		public static int SafeInsertAll (this ISQLiteConnection instance, IEnumerable objects)
+		{
+			lock (instance) {
+				return instance.InsertAll (objects);
+			}
+		}
+
 		public static T SafeExecuteScalar<T> (this ISQLiteConnection instance, string query, params object[] args)
 		{
 			lock (instance) {
