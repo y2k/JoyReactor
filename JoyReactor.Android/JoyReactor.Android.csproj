@@ -94,7 +94,6 @@
     <Compile Include="App\Base\BaseActivity.cs" />
     <Compile Include="App\Base\BaseFragment.cs" />
     <Compile Include="App\Home\FeedAdapter.cs" />
-    <Compile Include="App\Home\FeedFragment.cs" />
     <Compile Include="App\Home\LeftMenuFragment.cs" />
     <Compile Include="App\Home\RightMenuFragment.cs" />
     <Compile Include="App\Post\PostActivity.cs" />
@@ -116,6 +115,8 @@
     <Compile Include="Widget\ColorSwipeRefreshLayout.cs" />
     <Compile Include="App\Gallery\FullscreenGalleryActivity.cs" />
     <Compile Include="App\Gallery\GalleryActivity.cs" />
+    <Compile Include="App\Home\OldFeedFragment.cs" />
+    <Compile Include="App\Home\FeedFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
