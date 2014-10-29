@@ -7,7 +7,7 @@ namespace JoyReactor.Core.Model.DTO
 	{
 		public const int StatusOld = 0;
 		public const int StatusActual = 1;
-		public const int StatusNew = 2;
+		public const int StatusPending = 2;
 
 		[PrimaryKey, AutoIncrement]
 		public int Id { get; set; }

@@ -18,22 +18,21 @@ namespace JoyReactor.Core.Model
 		public FirstPagePostSorter (ISQLiteConnection db, string tagId)
 		{
 			this.db = db;
-			GetTagId (tagId);
+			LoadTagId (tagId);
 			LoadPostIdsForTag ();
 		}
 
-		void GetTagId (string textTagId)
+		void LoadTagId (string textTagId)
 		{
-			tagId = db.SafeExecuteScalar<int> (
-				"SELECT Id " +
-				"FROM tags " +
-				"WHERE TagId = ?", textTagId);
+			tagId = db.SafeExecuteScalar<int> ("SELECT Id FROM tags WHERE TagId = ?", textTagId);
 		}
 
 		void LoadPostIdsForTag ()
 		{
 			currentPostIds = db
-				.SafeQuery<TagPost> ("SELECT PostId FROM tag_post WHERE TagId = ?", tagId)
+				.SafeQuery<TagPost> (
+				"SELECT PostId FROM tag_post WHERE TagId = ? AND (Status = ? OR Status = ?)",
+				tagId, TagPost.StatusActual, TagPost.StatusOld)
 				.Select (s => s.PostId)
 				.ToList ();
 		}
@@ -63,7 +62,7 @@ namespace JoyReactor.Core.Model
 						db.SafeInsert (new TagPost { 
 							TagId = tagId, 
 							PostId = id,
-							Status = TagPost.StatusNew
+							Status = TagPost.StatusPending
 						});
 					foreach (var id in currentPostIds)
 						db.SafeInsert (new TagPost {

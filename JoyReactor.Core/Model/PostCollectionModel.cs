@@ -54,7 +54,7 @@ namespace JoyReactor.Core.Model
 				"   SELECT Id " +
 				"   FROM tags " +
 				"   WHERE TagId = ? AND Status = ?)",
-				tagId, TagPost.StatusNew);
+				tagId, TagPost.StatusPending);
 		}
 
 		int GetDividerPosition (string tagId)
@@ -75,12 +75,12 @@ namespace JoyReactor.Core.Model
 		public Task SyncFirstPage (ID id)
 		{
 			return Task.Run (() => {
-				var tagId = ToFlatId (id);
 				var parser = GetParserForTag (id);
 				parser.Cookies = GetSiteCookies (id);
-				parser.NewTagInformation += (sender, information) => UpdateTagInformation (tagId, information);
+				parser.NewTagInformation += (sender, information) =>
+					UpdateTagInformation (ToFlatId (id), information);
 				CreateTagIfNotExists (id);
-				var organizer = new FirstPagePostSorter (connection, tagId);
+				var organizer = new FirstPagePostSorter (connection, ToFlatId (id));
 				parser.NewPost += (sender, post) => {
 					var newid = SavePostToDatabase (id, post);
 					organizer.AddNewPost (newid);
@@ -174,7 +174,7 @@ namespace JoyReactor.Core.Model
 					connection.SafeExecute ("DELETE FROM tag_post WHERE TagId = ?", tagId);
 					foreach (var s in links) {
 						s.Id = 0;
-						if (s.Status == TagPost.StatusNew)
+						if (s.Status == TagPost.StatusPending)
 							s.Status = TagPost.StatusActual;
 					}
 					connection.SafeInsertAll (links);

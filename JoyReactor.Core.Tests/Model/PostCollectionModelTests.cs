@@ -85,6 +85,22 @@ namespace JoyReactor.Core.Tests.Model
 			Assert.AreEqual (10, actual.DividerPosition);
 		}
 
+		[Test]
+		public void TestDoubleSync ()
+		{
+			var testId = ID.Factory.NewTag ("песочница");
+			module.SyncFirstPage (testId).Wait ();
+			SetFakeSite ("http://joyreactor.cc/tag/песочница", "joyreactor_pesochnica_2.html");
+
+			module.SyncFirstPage (testId).Wait ();
+			module.SyncFirstPage (testId).Wait ();
+
+			var actual = module.Get (testId).Result;
+			Assert.AreEqual (10, actual.Posts.Count);
+			Assert.AreEqual (8, actual.NewItemsCount);
+			Assert.AreEqual (0, actual.DividerPosition);
+		}
+
 		void SetFakeSite (string url, string filename)
 		{
 			var downloader = (MockWebDownloader)ServiceLocator.Current.GetInstance<IWebDownloader> ();
