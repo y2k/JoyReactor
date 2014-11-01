@@ -2,6 +2,7 @@
 using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Tests.Inner;
+using System.Linq;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Web;
 
@@ -68,6 +69,7 @@ namespace JoyReactor.Core.Tests.Model
 			Assert.AreEqual (10, actual.Posts.Count);
 			Assert.AreEqual (0, actual.NewItemsCount);
 			Assert.AreEqual (10, actual.DividerPosition);
+			AssertFirstOrder (actual);
 
 			SetFakeSite ("http://joyreactor.cc/tag/песочница", "joyreactor_pesochnica_2.html");
 			module.SyncFirstPage (testId).Wait ();
@@ -76,6 +78,7 @@ namespace JoyReactor.Core.Tests.Model
 			Assert.AreEqual (10, actual.Posts.Count);
 			Assert.AreEqual (8, actual.NewItemsCount);
 			Assert.AreEqual (0, actual.DividerPosition);
+			AssertFirstOrder (actual);
 
 			module.ApplyNewItems (testId).Wait ();
 
@@ -83,10 +86,56 @@ namespace JoyReactor.Core.Tests.Model
 			Assert.AreEqual (18, actual.Posts.Count);
 			Assert.AreEqual (0, actual.NewItemsCount);
 			Assert.AreEqual (10, actual.DividerPosition);
+			AssertApplyOrder (actual);
+		}
+
+		static void AssertFirstOrder(PostCollectionState actual)
+		{
+			AssertOrder (new string[] {
+				"1623109",
+				"1624655",
+				"1624643",
+				"1624629",
+				"1624613",
+				"1624612",
+				"1624609",
+				"1624603",
+				"1624593",
+				"1624585"
+			}, actual);
+		}
+
+		static void AssertApplyOrder (PostCollectionState actual)
+		{
+			AssertOrder (new string[] {
+				"1624754",
+				"1624728",
+				"1624703",
+				"1624701",
+				"1624694",
+				"1624689",
+				"1624669",
+				"1624665",
+				"1624655",
+				"1624643",
+				"1623109",
+				"1624629",
+				"1624613",
+				"1624612",
+				"1624609",
+				"1624603",
+				"1624593",
+				"1624585"
+			}, actual);
+		}
+
+		static void AssertOrder (string[] expected, PostCollectionState actual)
+		{
+			CollectionAssert.AreEqual (expected, actual.Posts.Select (s => s.PostId.Split ('-') [1]));
 		}
 
 		[Test]
-		public void TestDoubleSync ()
+		public void TestDoubleSyncSamePage ()
 		{
 			var testId = ID.Factory.NewTag ("песочница");
 			module.SyncFirstPage (testId).Wait ();

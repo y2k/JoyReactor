@@ -32,16 +32,11 @@ namespace JoyReactor.Core.Model
 		List<Post> GetPostsForTag (string tagId)
 		{
 			return connection.SafeQuery<Post> (
-				"SELECT * " +
-				"FROM posts " +
-				"WHERE Id IN ( " +
-				"   SELECT PostId " +
-				"   FROM tag_post " +
-				"   WHERE TagId IN ( " +
-				"      SELECT Id " +
-				"      FROM tags " +
-				"      WHERE TagId = ?)" +
-				"   AND (Status = ? OR Status = ?))",
+				"SELECT p.* " +
+				"FROM tag_post t " +
+				"JOIN posts p ON p.Id = t.PostId " +
+				"WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?) " +
+				"AND (Status = ? OR Status = ?)",
 				tagId, TagPost.StatusOld, TagPost.StatusActual);
 		}
 
@@ -198,7 +193,7 @@ namespace JoyReactor.Core.Model
 
 			public int Compare (TagPost x, TagPost y)
 			{
-				return x.Status == y.Status ? x.Id - y.Id : x.Status - y.Status;
+				return x.Status == y.Status ? x.Id - y.Id : y.Status - x.Status;
 			}
 
 			#endregion
