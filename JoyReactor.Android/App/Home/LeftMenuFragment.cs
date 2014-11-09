@@ -1,30 +1,27 @@
-﻿using JoyReactor.Android.App.Base;
+﻿using Android.Content;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
-using JoyReactor.Core.Model.Inject;
+using JoyReactor.Core;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
-using Android.Content;
-using Android.Graphics;
-using System;
-using JoyReactor.Core;
+using Microsoft.Practices.ServiceLocation;
+using JoyReactor.Android.App.Base;
 using JoyReactor.Android.App.Base.Commands;
 using JoyReactor.Android.Widget;
-using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Android.App.Home
 {
 	public class LeftMenuFragment : BaseFragment
 	{
-		private static MenuHeader[] Headers = new MenuHeader[] {
+		static MenuHeader[] Headers = {
 			new MenuHeader { Title = Resource.String.feed, ListId = ID.Factory.New(ID.IdConst.ReactorGood) },
 			new MenuHeader { Title = Resource.String.favorite, ListId = ID.Factory.New(ID.IdConst.ReactorFavorite) },
 		};
 
-		private ListView list;
-		private Adapter adapter;
-		private ITagCollectionModel model = ServiceLocator.Current.GetInstance<ITagCollectionModel> ();
+		ListView list;
+		Adapter adapter;
+		ITagCollectionModel model = ServiceLocator.Current.GetInstance<ITagCollectionModel> ();
 
 		public async override void OnActivityCreated (Bundle savedInstanceState)
 		{

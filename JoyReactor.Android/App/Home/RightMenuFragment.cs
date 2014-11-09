@@ -1,30 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
-using Android.Runtime;
-using Android.Util;
 using Android.Views;
 using Android.Widget;
-using JoyReactor.Android.App.Base;
-using JoyReactor.Core.Model;
-using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core;
-using JoyReactor.Android.App.Base.Commands;
+using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
-using Android.Graphics;
 using Microsoft.Practices.ServiceLocation;
+using JoyReactor.Android.App.Base;
+using JoyReactor.Android.App.Base.Commands;
 
 namespace JoyReactor.Android.App.Home
 {
 	public class RightMenuFragment : BaseFragment
 	{
-		private ListView list;
-		private Adapter adapter;
-		private ITagCollectionModel model = ServiceLocator.Current.GetInstance<ITagCollectionModel> ();
+		ListView list;
+		Adapter adapter;
+		ITagCollectionModel model = ServiceLocator.Current.GetInstance<ITagCollectionModel> ();
 
 		public override void OnResume ()
 		{
@@ -62,7 +55,7 @@ namespace JoyReactor.Android.App.Home
 
 		public class Adapter : ArrayAdapter<TagLinkedTag>
 		{
-			private IImageModel iModel = ServiceLocator.Current.GetInstance<IImageModel> ();
+			IImageModel iModel = ServiceLocator.Current.GetInstance<IImageModel> ();
 
 			public Adapter(Context context) : base(context, 0) { }
 

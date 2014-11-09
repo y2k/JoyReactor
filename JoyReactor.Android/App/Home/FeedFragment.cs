@@ -1,36 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Util;
-using Android.Views;
-using Android.Widget;
-using JoyReactor.Android.App.Base;
 using Android.Support.V4.Widget;
+using Android.Views;
 using Com.Android.EX.Widget;
+using JoyReactor.Core;
 using JoyReactor.Core.Model;
 using Microsoft.Practices.ServiceLocation;
-using JoyReactor.Core;
-using JoyReactor.Android.App.Base.Commands;
+using JoyReactor.Android.App.Base;
 
 namespace JoyReactor.Android.App.Home
 {
 	public class FeedFragment : BaseFragment
 	{
-		private SwipeRefreshLayout refresher;
-		private StaggeredGridView list;
-		private FeedAdapter adapter;
-		private View applyButton;
+		SwipeRefreshLayout refresher;
+		StaggeredGridView list;
+		FeedAdapter adapter;
+		View applyButton;
 
-		private IPostCollectionModel model = ServiceLocator.Current.GetInstance<IPostCollectionModel> ();
-		private PostCollectionState data;
-		private ID id;
-		private bool syncInProgress;
+		IPostCollectionModel model = ServiceLocator.Current.GetInstance<IPostCollectionModel> ();
+		PostCollectionState data;
+		ID id;
+		bool syncInProgress;
 
 		public override async void OnCreate (Bundle savedInstanceState)
 		{

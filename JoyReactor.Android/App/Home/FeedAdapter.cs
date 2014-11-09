@@ -1,32 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
-using System.Text;
-using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
+using Android.Graphics;
+using Android.Graphics.Drawables;
 using Android.Views;
 using Android.Widget;
-using JoyReactor.Core.Model.DTO;
 using Com.Android.EX.Widget;
-using JoyReactor.Core.Model;
-using JoyReactor.Core.Model.Inject;
-using Android.Graphics;
-using JoyReactor.Android.Widget;
-using System.Drawing;
-using JoyReactor.Android.App.Post;
 using JoyReactor.Core;
+using JoyReactor.Core.Model;
+using JoyReactor.Core.Model.DTO;
 using Microsoft.Practices.ServiceLocation;
-using Android.Graphics.Drawables;
 using JoyReactor.Android.App.Base;
+using JoyReactor.Android.App.Post;
+using JoyReactor.Android.Widget;
 
 namespace JoyReactor.Android.App.Home
 {
 	class FeedAdapter : ArrayAdapter<JoyReactor.Core.Model.DTO.Post> 
 	{
-		private IImageModel iModel = ServiceLocator.Current.GetInstance<IImageModel>();
-		private int maxWidth;
+		IImageModel iModel = ServiceLocator.Current.GetInstance<IImageModel>();
+		int maxWidth;
 
 		public ID ListId { get; set; }
 		public event EventHandler ClickMore;
@@ -66,7 +61,7 @@ namespace JoyReactor.Android.App.Home
 				: GetViewForItem (convertView, position, parent);
 		}
 
-		private View GetViewForFooter(View convertView, int position, ViewGroup parent)
+		View GetViewForFooter(View convertView, int position, ViewGroup parent)
 		{
 			if (convertView == null) {
 				convertView = new Button (parent.Context);
@@ -77,7 +72,7 @@ namespace JoyReactor.Android.App.Home
 			return convertView;
 		}
 
-		private View GetViewForItem (View convertView, int position, ViewGroup parent)
+		View GetViewForItem (View convertView, int position, ViewGroup parent)
 		{
 			if (convertView == null) {
 				convertView = View.Inflate (parent.Context, Resource.Layout.ItemFeed, null);
