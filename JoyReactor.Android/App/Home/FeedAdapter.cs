@@ -18,17 +18,18 @@ using JoyReactor.Android.Widget;
 
 namespace JoyReactor.Android.App.Home
 {
-	class FeedAdapter : ArrayAdapter<JoyReactor.Core.Model.DTO.Post> 
+	class FeedAdapter : ArrayAdapter<JoyReactor.Core.Model.DTO.Post>
 	{
-		IImageModel iModel = ServiceLocator.Current.GetInstance<IImageModel>();
+		IImageModel iModel = ServiceLocator.Current.GetInstance<IImageModel> ();
 		int maxWidth;
 
 		public ID ListId { get; set; }
+
 		public event EventHandler ClickMore;
 
-		public FeedAdapter(Context context) : base(context, 0) 
+		public FeedAdapter (Context context) : base (context, 0)
 		{
-			maxWidth = (int) (200 * context.Resources.DisplayMetrics.Density);
+			maxWidth = (int)(200 * context.Resources.DisplayMetrics.Density);
 		}
 
 		public override int Count {
@@ -43,10 +44,11 @@ namespace JoyReactor.Android.App.Home
 			}
 		}
 
-		public void ReplaceAll(IEnumerable<JoyReactor.Core.Model.DTO.Post> items) {
+		public void ReplaceAll (IEnumerable<JoyReactor.Core.Model.DTO.Post> items)
+		{
 			Clear ();
 			if (items != null)
-				AddAll (items.ToList());
+				AddAll (items.ToList ());
 		}
 
 		public override int GetItemViewType (int position)
@@ -57,11 +59,11 @@ namespace JoyReactor.Android.App.Home
 		public override View GetView (int position, View convertView, ViewGroup parent)
 		{
 			return position == Count - 1
-				? GetViewForFooter(convertView, position, parent)
+				? GetViewForFooter (convertView, parent)
 				: GetViewForItem (convertView, position, parent);
 		}
 
-		View GetViewForFooter(View convertView, int position, ViewGroup parent)
+		View GetViewForFooter (View convertView, ViewGroup parent)
 		{
 			if (convertView == null) {
 				convertView = new Button (parent.Context);

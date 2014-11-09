@@ -174,3 +174,4 @@ UpgradeLog*.htm
 FakesAssemblies/
 *.userprefs
 JoyReactor.Android/Resources/Resource.designer.cs
+Components/

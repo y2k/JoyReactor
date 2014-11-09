@@ -16,9 +16,9 @@ namespace JoyReactor.Android.App
 	{
 		private ViewPager pager;
 
-		protected override void OnCreate (Bundle bundle)
+		protected override void OnCreate (Bundle savedInstanceState)
 		{
-			base.OnCreate (bundle);
+			base.OnCreate (savedInstanceState);
 			SetContentView (Resource.Layout.activity_home);
 
 			var view = FindViewById (global::Android.Resource.Id.Content);

@@ -1,5 +1,4 @@
-﻿using System;
-using Android.Content;
+﻿using Android.Content;
 using Android.Support.V4.Widget;
 using Android.Util;
 using Com.Android.EX.Widget;
@@ -17,7 +16,11 @@ namespace JoyReactor.Android.Widget
 		public override void OnAttachedToWindow ()
 		{
 			base.OnAttachedToWindow ();
-			SetColorScheme (global::Android.Resource.Color.HoloBlueBright, global::Android.Resource.Color.HoloGreenLight, global::Android.Resource.Color.HoloOrangeLight, global::Android.Resource.Color.HoloRedLight);
+			SetColorScheme (
+				global::Android.Resource.Color.HoloBlueBright, 
+				global::Android.Resource.Color.HoloGreenLight,
+				global::Android.Resource.Color.HoloOrangeLight, 
+				global::Android.Resource.Color.HoloRedLight);
 		}
 
 		public override bool CanChildScrollUp ()
