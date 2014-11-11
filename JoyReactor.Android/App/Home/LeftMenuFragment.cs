@@ -15,8 +15,8 @@ namespace JoyReactor.Android.App.Home
 	public class LeftMenuFragment : BaseFragment
 	{
 		static MenuHeader[] Headers = {
-			new MenuHeader { Title = Resource.String.feed, ListId = ID.Factory.New(ID.IdConst.ReactorGood) },
-			new MenuHeader { Title = Resource.String.favorite, ListId = ID.Factory.New(ID.IdConst.ReactorFavorite) },
+			new MenuHeader { Title = Resource.String.feed, ListId = ID.Factory.New (ID.IdConst.ReactorGood) },
+			new MenuHeader { Title = Resource.String.favorite, ListId = ID.Factory.New (ID.IdConst.ReactorFavorite) },
 		};
 
 		ListView list;
@@ -27,15 +27,15 @@ namespace JoyReactor.Android.App.Home
 		{
 			base.OnActivityCreated (savedInstanceState);
 
-			list.Adapter = adapter = new Adapter(Activity);
+			list.Adapter = adapter = new Adapter (Activity);
 			adapter.Clear ();
-			adapter.AddAll(await model.GetMainSubscriptionsAsync ());
+			adapter.AddAll (await model.GetMainSubscriptionsAsync ());
 
 			list.ItemClick += (sender, e) => { 
 				var id = e.Position < Headers.Length 
-					? Headers[e.Position].ListId 
-					: ID.Parser(adapter.GetItem(e.Position - Headers.Length).TagId);
-				new ChangeSubscriptionCommand(id).Execute();
+					? Headers [e.Position].ListId 
+					: ID.Parser (adapter.GetItem (e.Position - Headers.Length).TagId);
+				new ChangeSubscriptionCommand (id).Execute ();
 			};
 		}
 
@@ -48,12 +48,12 @@ namespace JoyReactor.Android.App.Home
 
 		public class Adapter : ArrayAdapter<Tag>
 		{
-			public Adapter(Context context) : base(context, 0) { }
+			public Adapter (Context context) : base (context, 0)
+			{
+			}
 
 			public override int Count {
-				get {
-					return base.Count + Headers.Length;
-				}
+				get { return base.Count + Headers.Length; }
 			}
 
 			public override View GetView (int position, View convertView, ViewGroup parent)
@@ -61,7 +61,7 @@ namespace JoyReactor.Android.App.Home
 				convertView = convertView ?? View.Inflate (parent.Context, Resource.Layout.ItemSubscription, null);
 
 				if (position < Headers.Length) {
-					convertView.FindViewById<TextView> (Resource.Id.title).SetText(Headers [position].Title);
+					convertView.FindViewById<TextView> (Resource.Id.title).SetText (Headers [position].Title);
 					convertView.FindViewById<WebImageView> (Resource.Id.icon).ImageSource = null;
 				} else {
 					var i = GetItem (position - Headers.Length);
@@ -74,9 +74,10 @@ namespace JoyReactor.Android.App.Home
 			}
 		}
 
-		class MenuHeader {
-
+		class MenuHeader
+		{
 			internal int Title { get; set; }
+
 			internal ID ListId { get; set; }
 		}
 	}

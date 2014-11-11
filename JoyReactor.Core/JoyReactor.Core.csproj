@@ -79,11 +79,11 @@
     <Compile Include="Model\Parser\Data\ExportPostComment.cs" />
     <Compile Include="Model\Parser\Data\ExportPostInformation.cs" />
     <Compile Include="Model\Parser\Data\ExportPreviewPost.cs" />
-    <Compile Include="Model\Parser\Data\ExportTag.cs" />
     <Compile Include="Model\Parser\Data\ExportUser.cs" />
     <Compile Include="Model\NextPagePostSorter.cs" />
     <Compile Include="Model\FirstPagePostSorter.cs" />
     <Compile Include="Model\ImageModel.cs" />
+    <Compile Include="Model\Parser\Data\ExportTagInformation.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

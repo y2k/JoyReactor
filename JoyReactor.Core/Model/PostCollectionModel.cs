@@ -91,7 +91,7 @@ namespace JoyReactor.Core.Model
 			return parsers.First (s => s.ParserId == id.Site);
 		}
 
-		void UpdateTagInformation (string tagId, ExportTag information)
+		void UpdateTagInformation (string tagId, ExportTagInformation information)
 		{
 			var t = connection.SafeQuery<Tag> ("SELECT * FROM tags WHERE TagId = ?", tagId).FirstOrDefault ()
 			        ?? new Tag { BestImage = information.Image, TagId = tagId };
@@ -187,7 +187,7 @@ namespace JoyReactor.Core.Model
 			});
 		}
 
-		private class TagPostComparer : IComparer<TagPost>
+		class TagPostComparer : IComparer<TagPost>
 		{
 			#region IComparer implementation
 
@@ -272,12 +272,12 @@ namespace JoyReactor.Core.Model
 
 		#region Private methods
 
-		private string ToFlatId (ID id)
+		string ToFlatId (ID id)
 		{
 			return id.Site + "-" + id.Type + "-" + id.Tag;
 		}
 
-		private void InnerSyncFirstPage (ID id)
+		void InnerSyncFirstPage (ID id)
 		{
 //			long ts = MainDb.Instance.SafeExecuteScalar<long> ("SELECT Timestamp FROM tags WHERE TagId = ?", ToFlatId (id));
 //			if (Math.Abs (ts - TimestampNow ()) < Constants.TagLifeTime)
@@ -319,7 +319,7 @@ namespace JoyReactor.Core.Model
 //			});
 		}
 
-		private void InnerSyncNextPage (ID id)
+		void InnerSyncNextPage (ID id)
 		{
 //			// TODO Убрать копипаст
 //			var p = parsers.First (s => s.ParserId == id.Site);
@@ -334,7 +334,7 @@ namespace JoyReactor.Core.Model
 //			});
 		}
 
-		private IDictionary<string, string> GetSiteCookies (ID id)
+		IDictionary<string, string> GetSiteCookies (ID id)
 		{
 			var p = connection.SafeDeferredQuery<Profile> ("SELECT * FROM profiles WHERE Site = ?", "" + id.Site).FirstOrDefault ();
 			return p == null ? new Dictionary<string, string> () : DeserializeObject<Dictionary<string, string>> (p.Cookie);
@@ -358,17 +358,17 @@ namespace JoyReactor.Core.Model
 		//			connection.SafeInsert (tp);
 		//		}
 
-		private static long TimestampNow ()
+		static long TimestampNow ()
 		{
 			return DateTime.Now.ToFileTimeUtc () / 10000L;
 		}
 
-		private static IDictionary<string, string> DeserializeObject<T> (string o)
+		static IDictionary<string, string> DeserializeObject<T> (string o)
 		{
 			return o.Split (';').Select (s => s.Split ('=')).ToDictionary (s => s [0], s => s [1]);
 		}
 
-		private Post Convert (ID.SiteParser parserId, ExportPost p)
+		Post Convert (ID.SiteParser parserId, ExportPost p)
 		{
 			return new Post {
 				PostId = parserId + "-" + p.Id,

@@ -135,7 +135,7 @@ namespace JoyReactor.Core.Model.Web.Parser
 			callback (new CollectionExportState { State = CollectionExportState.ExportState.Begin });
 			callback (new CollectionExportState { 
 				State = CollectionExportState.ExportState.TagInfo, 
-				TagInfo = new ExportTag { NextPage = currentPage + 1 }
+				TagInfo = new ExportTagInformation { NextPage = currentPage + 1 }
 			});
 
 			foreach (var node in doc.Select("div.op > div")) {

@@ -34,7 +34,7 @@ namespace JoyReactor.Core.Model.Parser
 			throw new NotImplementedException ();
 		}
 
-		public virtual void ExtractTag (string tag, ID.TagType type, int lastLoadedPage)
+		public virtual void ExtractTag (string tag, ID.TagType type, int? currentPageId)
 		{
 			throw new NotImplementedException ();
 		}
@@ -44,7 +44,7 @@ namespace JoyReactor.Core.Model.Parser
 		public event EventHandler<ExportPostInformation> NewPostInformation;
 		public event EventHandler<ExportPostComment> NewComment;
 		public event EventHandler<ExportPost> NewPost;
-		public event EventHandler<ExportTag> NewTagInformation;
+		public event EventHandler<ExportTagInformation> NewTagInformation;
 		public event EventHandler<ExportLinkedTag> NewLinkedTag;
 
 		protected void OnNewComment (ExportPostComment comment)
@@ -68,7 +68,7 @@ namespace JoyReactor.Core.Model.Parser
 				handler (this, post);
 		}
 
-		protected void OnNewTagInformation (ExportTag information)
+		protected void OnNewTagInformation (ExportTagInformation information)
 		{
 			var handler = NewTagInformation;
 			if (handler != null)
@@ -118,7 +118,7 @@ namespace JoyReactor.Core.Model.Parser
 
 		public ExportState State { get; set; }
 
-		public ExportTag TagInfo { get; set; }
+		public ExportTagInformation TagInfo { get; set; }
 
 		public ExportPost Post { get; set; }
 

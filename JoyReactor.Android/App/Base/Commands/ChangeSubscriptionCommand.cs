@@ -7,9 +7,9 @@ namespace JoyReactor.Android.App.Base.Commands
 {
 	public class ChangeSubscriptionCommand
 	{
-		private static readonly Dictionary<object, Action<ID>> Callbacks = new Dictionary<object, Action<ID>>();
+		static readonly Dictionary<object, Action<ID>> Callbacks = new Dictionary<object, Action<ID>>();
 
-		private ID id;
+		ID id;
 
 		public ChangeSubscriptionCommand (ID id)
 		{

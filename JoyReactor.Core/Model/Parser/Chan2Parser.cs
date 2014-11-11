@@ -1,63 +1,71 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using HtmlAgilityPack;
 using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model.Parser.Data;
-using JoyReactor.Core.Model.Web.Parser.Data;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.Model.Web.Parser;
+using JoyReactor.Core.Model.Web.Parser.Data;
 
 namespace JoyReactor.Core.Model.Parser
 {
 	public class Chan2Parser : SiteParser
 	{
-		private static readonly Regex IMAGE_SIZE = new Regex (@"(\d+)x(\d+)");
+		static readonly Regex IMAGE_SIZE = new Regex (@"(\d+)x(\d+)");
 
-		private IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader> ();
+		IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader> ();
 
 		public override ID.SiteParser ParserId {
 			get { return ID.SiteParser.Chan2; }
 		}
 
-		// Версия через доступ к мобильному сайту
-		public override void ExtractTag (ID.TagType type, string tag, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
+		public override void ExtractTag (string tag, ID.TagType type, int? currentPageId)
 		{
-			var baseUrl = new Uri (string.Format ("http://m2-ch.ru/{0}/{1}", Uri.EscapeDataString (tag), currentPage < 1 ? "" : currentPage + ".html"));
-			var doc = downloader.Get (baseUrl).DocumentNode;
+			var pageUri = CreateUriForTagPosts (tag, currentPageId);
+			var doc = downloader.Get (pageUri).DocumentNode;
 
-			callback (new CollectionExportState { State = CollectionExportState.ExportState.Begin });
-			callback (new CollectionExportState { 
-				State = CollectionExportState.ExportState.TagInfo, 
-				TagInfo = new ExportTag { NextPage = currentPage + 1 }
+			ExportTagInformation (currentPageId);
+			foreach (var node in doc.Select("div.thread.hand"))
+				ExportPost (node, tag);
+		}
+
+		Uri CreateUriForTagPosts (string tag, int? currentPageId)
+		{
+			var url = string.Format ("http://m2-ch.ru/{0}/{1}", 
+				          Uri.EscapeDataString (tag), 
+				          currentPageId.HasValue ? currentPageId + ".html" : "");
+			return new Uri (url);
+		}
+
+		void ExportTagInformation (int? currentPageId)
+		{
+			OnNewTagInformation (new ExportTagInformation {
+				NextPage = (currentPageId ?? 0) + 1,
+				HasNextPage = true, // TODO Добавить логику
 			});
+		}
 
-			foreach (var node in doc.Select("div.thread.hand")) {
-				var p = new ExportPost ();
+		void ExportPost (HtmlNode node, string tag)
+		{
+			var post = new ExportPost ();
+			post.Id = tag + "," + Regex.Match (node.Select ("a.bg").First ().Attr ("href"), "\\d+").Value;
+			post.Title = node.Select ("div.op.small").First ().InnerText.ShortString (100);
+			post.UserName = "Anon";
 
-				p.Id = tag + "," + Regex.Match (node.Select ("a.bg").First ().Attr ("href"), "\\d+").Value;
+			// TODO
+			post.UserImage = "http://img0.joyreactor.cc/pics/avatar/tag/22045";
+			post.Created = new DateTime (2000, 1, 1).ToUnixTimestamp () * 1000L;
 
-//				p.Title = node.Select ("a.oz").First ().InnerText;
-//				if (string.IsNullOrEmpty (p.Title))
-//					p.Title = null;
-				p.Title = node.Select ("div.op.small").First ().InnerText.ShortString (100);
+			// TODO
+			post.Image = node.Select ("a.il").First ().Attr ("href").Replace ("http://", "https://");
+			post.ImageWidth = 64;
+			post.ImageHeight = node.Select ("div.thumb.z").Select (s => Regex.Match (s.Attr ("style"), "height: (\\d+)px;")).Select (s => s.Success ? int.Parse (s.Groups [1].Value) : 64).First ();
 
-				p.UserName = "Anon"; // TODO
-				p.UserImage = "http://img0.joyreactor.cc/pics/avatar/tag/22045";
-				p.Created = new DateTime (2000, 1, 1).ToUnixTimestamp () * 1000L; // TODO
-
-				p.Image = node.Select ("a.il").First ().Attr ("href").Replace ("http://", "https://");
-				p.ImageWidth = 64;
-				p.ImageHeight = node.Select ("div.thumb.z").Select (s => Regex.Match (s.Attr ("style"), "height: (\\d+)px;")).Select (s => s.Success ? int.Parse (s.Groups [1].Value) : 64).First ();
-
-				callback (new CollectionExportState { State = CollectionExportState.ExportState.PostItem, Post = p });
-			}
+			OnNewPost (post);
 		}
 
 		public override void ExtractPost (string postId)
@@ -69,7 +77,7 @@ namespace JoyReactor.Core.Model.Parser
 			ExportComments (url, doc);
 		}
 
-		private void ExportPostInformation (Uri url, HtmlNode doc)
+		void ExportPostInformation (Uri url, HtmlNode doc)
 		{
 			var data = new ExportPostInformation ();
 			var r = doc.Select ("div.thread").First ();
@@ -82,10 +90,9 @@ namespace JoyReactor.Core.Model.Parser
 			OnNewPostInformation (data);
 		}
 
-		private void ExportComments (Uri url, HtmlNode doc)
+		void ExportComments (Uri url, HtmlNode doc)
 		{
 			var r = doc.Select ("div.thread").First ();
-//			var subIds = new Dictionary<string, int> ();
 			var linker = new ChanPostLinker (r.Id);
 
 			foreach (var c in doc.Select ("div.reply")) {
@@ -96,14 +103,11 @@ namespace JoyReactor.Core.Model.Parser
 					Width = int.Parse (IMAGE_SIZE.Match (s.InnerText).Groups [1].Value),
 					Height = int.Parse (IMAGE_SIZE.Match (s.InnerText).Groups [2].Value),
 				}).ToArray ();
+
 				// TODO
 				data.User = new ExportUser { Name = "Anon", Avatar = "http://img0.joyreactor.cc/pics/avatar/tag/22045" };
 				var d = FixMounthNames (c.Select ("time").First ().InnerText);
 				data.Created = DateTime.ParseExact (d, "dd MMM, HH:mm", new CultureInfo ("ru"));
-
-//				var ps = new List<string> ();
-//				HtmlDocument pc = null;
-//				int index = 0;
 
 				foreach (var p in linker.Export (c.Select ("div.pst").FirstOrDefault (), c.Id)) {
 					data.Id = p.Id;
@@ -114,7 +118,7 @@ namespace JoyReactor.Core.Model.Parser
 			}
 		}
 
-		private static string FixMounthNames (string date)
+		static string FixMounthNames (string date)
 		{
 			// http://in-coding.blogspot.ru/2012/02/php-date.html
 			var months = new CultureInfo ("ru").DateTimeFormat.AbbreviatedMonthNames;

@@ -18,91 +18,66 @@ namespace JoyReactor.Core.Model.Parser
 	{
 		#region Constants
 
-		private static readonly Regex RATING = new Regex ("Рейтинг:\\s*<div class=\"[^\"]+\"></div>\\s*([\\d\\.]+)");
-		private static readonly Regex POST = new Regex ("<div id=\"postContainer\\d+\" class=\"postContainer\">(.*?)<div class=\"vote-minus unregistered\">", RegexOptions.Singleline);
-		private static readonly Regex POST_AUTHORIZED = new Regex ("<div id=\"postContainer\\d+\" class=\"postContainer\">(.*?)<div class=\"vote-minus", RegexOptions.Singleline);
+		static readonly Regex RATING = new Regex ("Рейтинг:\\s*<div class=\"[^\"]+\"></div>\\s*([\\d\\.]+)");
+		static readonly Regex POST = new Regex ("<div id=\"postContainer\\d+\" class=\"postContainer\">(.*?)<div class=\"vote-minus unregistered\">", RegexOptions.Singleline);
+		static readonly Regex POST_AUTHORIZED = new Regex ("<div id=\"postContainer\\d+\" class=\"postContainer\">(.*?)<div class=\"vote-minus", RegexOptions.Singleline);
 
-		private static readonly Regex IMAGE = new Regex ("<div class=\"image\">\\s*<img src=\"([^\"]+)\" width=\"(\\d+)\" height=\"(\\d+)", RegexOptions.Singleline);
-		private static readonly Regex IMAGE_BIG = new Regex ("<div class=\"image\">\\s*<a href=\"([^\"]+)\" class=\"prettyPhotoLink\" rel=\"prettyPhoto\">\\s*<img src=\"[^\"]+\" width=\"(\\d+)\" height=\"(\\d+)\"", RegexOptions.Singleline);
-		private static readonly Regex IMAGE_IN_POST = new Regex ("<img src=\"([^\"]+/pics/post/[^\"]+)\" width=\"(\\d+)\" height=\"(\\d+)", RegexOptions.Singleline);
-		private static readonly Regex IMAGE_GIF = new Regex ("ссылка на гифку</a><img src=\"([^\"]+)\" width=\"(\\d+)\" height=\"(\\d+)");
+		static readonly Regex IMAGE = new Regex ("<div class=\"image\">\\s*<img src=\"([^\"]+)\" width=\"(\\d+)\" height=\"(\\d+)", RegexOptions.Singleline);
+		static readonly Regex IMAGE_BIG = new Regex ("<div class=\"image\">\\s*<a href=\"([^\"]+)\" class=\"prettyPhotoLink\" rel=\"prettyPhoto\">\\s*<img src=\"[^\"]+\" width=\"(\\d+)\" height=\"(\\d+)\"", RegexOptions.Singleline);
+		static readonly Regex IMAGE_IN_POST = new Regex ("<img src=\"([^\"]+/pics/post/[^\"]+)\" width=\"(\\d+)\" height=\"(\\d+)", RegexOptions.Singleline);
+		static readonly Regex IMAGE_GIF = new Regex ("ссылка на гифку</a><img src=\"([^\"]+)\" width=\"(\\d+)\" height=\"(\\d+)");
 
-		private static readonly Regex USER_NAME = new Regex ("href=\"[^\"]+user/([^\"/]+)\"", RegexOptions.Singleline);
-		private static readonly Regex USER_IMAGE = new Regex ("src=\"([^\"]+)\" class=\"avatar\"");
-		private static readonly Regex TITLE = new Regex ("<div class=\"post_content\"><span>([^<]*)</span>", RegexOptions.Singleline);
-		private static readonly Regex POST_ID = new Regex ("<a href=\"/post/(\\d+)\"", RegexOptions.Singleline);
-		private static readonly Regex CREATED = new Regex ("data\\-time=\"(\\d+)\"");
+		static readonly Regex USER_NAME = new Regex ("href=\"[^\"]+user/([^\"/]+)\"", RegexOptions.Singleline);
+		static readonly Regex USER_IMAGE = new Regex ("src=\"([^\"]+)\" class=\"avatar\"");
+		static readonly Regex TITLE = new Regex ("<div class=\"post_content\"><span>([^<]*)</span>", RegexOptions.Singleline);
+		static readonly Regex POST_ID = new Regex ("<a href=\"/post/(\\d+)\"", RegexOptions.Singleline);
+		static readonly Regex CREATED = new Regex ("data\\-time=\"(\\d+)\"");
 
-		private static readonly Regex USER_ID = new Regex ("userId=\"(\\d+)\"");
-		private static readonly Regex TEXT = new Regex ("comment_txt_\\d+_\\d+\">\\s*<span>(.*?)</span>", RegexOptions.Singleline);
+		static readonly Regex USER_ID = new Regex ("userId=\"(\\d+)\"");
+		static readonly Regex TEXT = new Regex ("comment_txt_\\d+_\\d+\">\\s*<span>(.*?)</span>", RegexOptions.Singleline);
 
-		private static readonly Regex COMMENT_ID = new Regex ("comment_txt_\\d+_(\\d+)");
-		private static readonly Regex TIMESTAMP = new Regex ("timestamp=\"(\\d+)");
+		static readonly Regex COMMENT_ID = new Regex ("comment_txt_\\d+_(\\d+)");
+		static readonly Regex TIMESTAMP = new Regex ("timestamp=\"(\\d+)");
 
-		private static readonly Regex COMMENT_IMAGES = new Regex ("<img src=\"(http://[^\"]+/pics/comment/)[^\"]+(\\-\\d+\\.[^\"]+)");
+		static readonly Regex COMMENT_IMAGES = new Regex ("<img src=\"(http://[^\"]+/pics/comment/)[^\"]+(\\-\\d+\\.[^\"]+)");
 
 		//        private static readonly Regex TAGS = new Regex("<a title=\"(.+?)\" data\\-ids=");
 		//        private static readonly Regex TAGS_INTEREST = new Regex(">([^\\(<>]+)\\(\\d+\\)</");
 
-		private static readonly Regex SUB_POSTER = new Regex ("src=\"([^\"]+)\" *alt=\"[^\"]+\" *class=\"blog_avatar\" */>");
+		static readonly Regex SUB_POSTER = new Regex ("src=\"([^\"]+)\" *alt=\"[^\"]+\" *class=\"blog_avatar\" */>");
 		//        private static readonly Regex SIMILAR_POST = new Regex("<td class=\"similar_post\">(.+?)</td>", RegexOptions.Singleline);
 		//        private static readonly Regex SIMILAR_POST_ID = new Regex("<a href=\"/post/(\\d+)\">");
 		//        private static readonly Regex SIMILAR_POST_IMAGE = new Regex("<img src=\"([^\"]+)");
 
-		private static readonly Regex SUB_LINKED_SUBS = new Regex ("<img src=\"(http://img\\d+.joyreactor\\.cc/pics/avatar/tag/\\d+)\"\\s+alt=\"([^\"]+)\"\\s*/>\\s*</td>\\s*<td>\\s*<a href=\"[^\"]+tag/([^\"]+)\"");
-		private static readonly Regex COUB = new Regex ("<iframe src=\"http://coub.com/embed/(.+?)\" allowfullscreen=\"true\" frameborder=\"0\" width=\"(\\d+)\" height=\"(\\d+)");
+		static readonly Regex SUB_LINKED_SUBS = new Regex ("<img src=\"(http://img\\d+.joyreactor\\.cc/pics/avatar/tag/\\d+)\"\\s+alt=\"([^\"]+)\"\\s*/>\\s*</td>\\s*<td>\\s*<a href=\"[^\"]+tag/([^\"]+)\"");
+		static readonly Regex COUB = new Regex ("<iframe src=\"http://coub.com/embed/(.+?)\" allowfullscreen=\"true\" frameborder=\"0\" width=\"(\\d+)\" height=\"(\\d+)");
 
 		//        private static readonly Regex SIMILAR_POST_TITLE = new Regex("<img src=\"[^\"]+\" alt=\"([^\"]+)");
 		//        private static readonly Regex SIMILAR_POST_TITLE2 = new Regex("<a href=\"[^\"]*/tag/[^\"]+\">\\s*([^<]+)\\s*</a>");
 		//        private static readonly Regex SIMILAR_POST_TITLE3 = new Regex("<a href=\"http://([\\w\\d]+)\\.joyreactor\\.cc/\">");
 
-		private static readonly Regex COMMENT_RATING = new Regex ("<span\\s*class=\"comment_rating\"\\s*comment_id=\"\\d+\">\\s*<span>—\\s*([\\d\\.]+)</span>", RegexOptions.Singleline);
+		static readonly Regex COMMENT_RATING = new Regex ("<span\\s*class=\"comment_rating\"\\s*comment_id=\"\\d+\">\\s*<span>—\\s*([\\d\\.]+)</span>", RegexOptions.Singleline);
 
-		private static readonly Regex CURRENT_PAGE = new Regex ("<span class='current'>(\\d+)</span>");
-		private static readonly Regex sProfileRating = new Regex ("([\\d\\.]+)");
+		static readonly Regex CURRENT_PAGE = new Regex ("<span class='current'>(\\d+)</span>");
+		static readonly Regex sProfileRating = new Regex ("([\\d\\.]+)");
 
-		private static readonly Regex ImageFromSharing = new Regex ("\\[img\\]([^\\[]+)\\[/img\\]");
+		static readonly Regex ImageFromSharing = new Regex ("\\[img\\]([^\\[]+)\\[/img\\]");
 
-		private static readonly Regex ProfileTag = new Regex ("/tag/(.+)");
+		static readonly Regex ProfileTag = new Regex ("/tag/(.+)");
 
-		private static readonly string COMMENT_START = "<div class=\"post_comment_list\">";
+		static readonly string COMMENT_START = "<div class=\"post_comment_list\">";
 
-		private static readonly string[] SINGLE_TAGS = new string[] { "<br>", "<param " };
+		static readonly string[] SINGLE_TAGS = new string[] { "<br>", "<param " };
 
 		#endregion
 
-		private IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader> ();
+		IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader> ();
 
 		#region Public methods
 
 		public override ID.SiteParser ParserId {
 			get { return ID.SiteParser.JoyReactor; }
 		}
-
-		//public IDictionary<string, string> Login(string username, string password)
-		//{
-		//    var doc = downloader.Get(new Uri("http://joyreactor.cc/login"));
-		//    var csrf = doc.GetElementById("signin__csrf_token").Attributes["value"].Value;
-		//
-		//    var hs = downloader.PostForCookies(
-		//        new Uri("http://joyreactor.cc/login"),
-		//        new RequestParams
-		//        {
-		//            Referer = new Uri("http://joyreactor.cc/login"),
-		//            Form = new Dictionary<string, string>
-		//            {
-		//                { "signin[username]", username },
-		//                { "signin[password]", password },
-		//                { "signin[remember]", "on" },
-		//                { "signin[_csrf_token]", csrf },
-		//            }
-		//        });
-		//
-		//    if (!hs.ContainsKey("joyreactor"))
-		//        throw new Exception();
-		//
-		//    return hs;
-		//}
 
 		public override IDictionary<string, string> Login (string username, string password)
 		{
@@ -126,11 +101,6 @@ namespace JoyReactor.Core.Model.Parser
 				throw new Exception ();
 
 			return hs;
-		}
-
-		public override void ExtractTag (ID.TagType type, string tag, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
-		{
-			ExtractPostCollection (type, tag, currentPage, cookies, callback);
 		}
 
 		public override ProfileExport Profile (string username)
@@ -173,14 +143,14 @@ namespace JoyReactor.Core.Model.Parser
 			ExportComments (html);
 		}
 
-		private void ExportComments (string html)
+		void ExportComments (string html)
 		{
 			int pos = html.IndexOf (COMMENT_START) + COMMENT_START.Length;
 			pos = skipHtmlTag (html, pos);
 			ReadChildComments (html, pos, null, OnNewComment);
 		}
 
-		private int ReadChildComments (String html, int position, String parentId, Action<ExportPostComment> callback)
+		int ReadChildComments (String html, int position, String parentId, Action<ExportPostComment> callback)
 		{
 			int end;
 			int initPosition = position;
@@ -206,7 +176,7 @@ namespace JoyReactor.Core.Model.Parser
 			return position;
 		}
 
-		private void ExportPostInformation (string html)
+		void ExportPostInformation (string html)
 		{
 			var p = new ExportPostInformation ();
 
@@ -229,7 +199,7 @@ namespace JoyReactor.Core.Model.Parser
 			OnNewPostInformation (p);
 		}
 
-		private void ExportPostAttachments (string html, List<ExportAttachment> attachments)
+		void ExportPostAttachments (string html, List<ExportAttachment> attachments)
 		{
 			string image = null;
 			int width = 0, height = 0;
@@ -268,7 +238,7 @@ namespace JoyReactor.Core.Model.Parser
 			}
 		}
 
-		private void ExportCoub (string html, List<ExportAttachment> attachments)
+		void ExportCoub (string html, List<ExportAttachment> attachments)
 		{
 			int i = html.IndexOf ("class=\"post_comment_list\"");
 			if (i < 0)
@@ -287,7 +257,7 @@ namespace JoyReactor.Core.Model.Parser
 
 		#region Private methods
 
-		private ExportPostComment GetComment (String html, int start, int end)
+		ExportPostComment GetComment (String html, int start, int end)
 		{
 			String s = html.Substring (start, end + 1 - start);
 			var c = new ExportPostComment ();
@@ -313,7 +283,7 @@ namespace JoyReactor.Core.Model.Parser
 			return c;
 		}
 
-		private int readTag (String html, int position)
+		int readTag (String html, int position)
 		{
 			int level = 0;
 			do {
@@ -337,7 +307,7 @@ namespace JoyReactor.Core.Model.Parser
 			return level < 0 ? -1 : html.IndexOf ('>', position);
 		}
 
-		private ExportComment getComment (String html, int start, int end)
+		ExportComment getComment (String html, int start, int end)
 		{
 			String s = html.Substring (start, end + 1 - start);
 			var c = new ExportComment ();
@@ -362,7 +332,7 @@ namespace JoyReactor.Core.Model.Parser
 			return c;
 		}
 
-		private int readChildComments (String html, int position, String parentId, Action<ExportComment> callback)
+		int readChildComments (String html, int position, String parentId, Action<ExportComment> callback)
 		{
 			int end;
 			int initPosition = position;
@@ -388,15 +358,15 @@ namespace JoyReactor.Core.Model.Parser
 			return position;
 		}
 
-		private int skipHtmlTag (string html, int position)
+		int skipHtmlTag (string html, int position)
 		{
 			return html.IndexOf ('>', position) + 1;
 		}
 
-		public override void ExtractTag (string tag, ID.TagType type, int currentPage)
+		public override void ExtractTag (string tag, ID.TagType type, int? currentPageId)
 		{
 			Cookies.Add ("showVideoGif2", "1");
-			var url = GenerateUrl (type, tag, currentPage);
+			var url = GenerateUrl (type, tag, currentPageId);
 			var html = downloader.GetText (url, new RequestParams { Cookies = Cookies });
 
 			ExtractTagInformation (html);
@@ -417,19 +387,25 @@ namespace JoyReactor.Core.Model.Parser
 				}
 			}
 
-			if (currentPage == 0)
+			if (!currentPageId.HasValue)
 				ExtractLinkedTags (html);
 		}
 
-		private void ExtractTagInformation (string html)
+		void ExtractTagInformation (string html)
 		{
-			var s = new ExportTag ();
-			s.Image = SUB_POSTER.FirstString (html);
-			s.NextPage = CURRENT_PAGE.FirstInt (html) - 1;
-			OnNewTagInformation (s);
+			OnNewTagInformation (new ExportTagInformation {
+				Image = SUB_POSTER.FirstString (html),
+				NextPage = GetNextPageOfTagList (html),
+				HasNextPage = GetNextPageOfTagList (html) > 0,
+			});
 		}
 
-		private void ExtractLinkedTags (string html)
+		int GetNextPageOfTagList (string html)
+		{
+			return CURRENT_PAGE.FirstInt (html) - 1;
+		}
+
+		void ExtractLinkedTags (string html)
 		{
 			var m = SUB_LINKED_SUBS.Match (html);
 			while (m.Success) {
@@ -443,56 +419,7 @@ namespace JoyReactor.Core.Model.Parser
 			}
 		}
 
-		[Obsolete]
-		private void ExtractPostCollection (ID.TagType type, string value, int currentPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
-		{
-			cookies.Add ("showVideoGif2", "1");
-			var url = GenerateUrl (type, value, currentPage);
-			var html = downloader.GetText (url, new RequestParams { Cookies = cookies });
-			callback (new CollectionExportState { State = CollectionExportState.ExportState.Begin });
-
-			var s = new ExportTag ();
-			s.Image = SUB_POSTER.FirstString (html);
-			s.NextPage = CURRENT_PAGE.FirstInt (html) - 1;
-			callback (new CollectionExportState { State = CollectionExportState.ExportState.TagInfo, TagInfo = s });
-
-			var m = POST.Match (html);
-			if (m.Success) {
-				do {
-					ExportPost p = CreatePost (m.Groups [1].Value);
-					callback (new CollectionExportState { State = CollectionExportState.ExportState.PostItem, Post = p });
-
-					m = m.NextMatch ();
-				} while (m.Success);
-			} else {
-				m = POST_AUTHORIZED.Match (html);
-				while (m.Success) {
-					var p = CreatePost (m.Groups [1].Value);
-					callback (new CollectionExportState { State = CollectionExportState.ExportState.PostItem, Post = p });
-
-					m = m.NextMatch ();
-				}
-			}
-
-			if (currentPage == 0) {
-				m = SUB_LINKED_SUBS.Match (html);
-				while (m.Success) {
-					var t = new ExportLinkedTag ();
-					t.name = WebUtility.HtmlDecode (m.Groups [2].Value);
-					t.group = "None";
-					t.image = m.Groups [1].Value;
-					t.value = Uri.UnescapeDataString (Uri.UnescapeDataString (m.Groups [3].Value));
-					callback (new CollectionExportState {
-						State = CollectionExportState.ExportState.LikendTag,
-						LinkedTag = t
-					});
-
-					m = m.NextMatch ();
-				}
-			}
-		}
-
-		private Uri GenerateUrl (ID.TagType type, string tag, int currentPage)
+		Uri GenerateUrl (ID.TagType type, string tag, int? currentPage)
 		{
 			StringBuilder url = new StringBuilder ("http://joyreactor.cc");
 			if (type == ID.TagType.Favorite) {
@@ -506,12 +433,12 @@ namespace JoyReactor.Core.Model.Parser
 					url.Append (tag == null ? "/all" : "/new");
 			}
 
-			if (currentPage > 0)
+			if ((currentPage ?? 0) > 0)
 				url.Append ("/").Append (currentPage);
 			return new Uri ("" + url);
 		}
 
-		private ExportPost CreatePost (string html)
+		ExportPost CreatePost (string html)
 		{
 			var p = new ExportPost ();
 

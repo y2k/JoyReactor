@@ -5,6 +5,7 @@ using JoyReactor.Core.Tests.Inner;
 using System.Linq;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Web;
+using System.Collections.Generic;
 
 namespace JoyReactor.Core.Tests.Model
 {

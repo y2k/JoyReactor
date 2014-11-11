@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Android.OS;
 using Android.Support.V4.Widget;
 using Android.Views;
@@ -7,6 +8,7 @@ using JoyReactor.Core;
 using JoyReactor.Core.Model;
 using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Android.App.Base;
+using JoyReactor.Android.App.Base.Commands;
 
 namespace JoyReactor.Android.App.Home
 {
@@ -26,15 +28,21 @@ namespace JoyReactor.Android.App.Home
 		{
 			base.OnCreate (savedInstanceState);
 			RetainInstance = true;
-			LoadFirstPage ();
+
+			LoadFirstPage (ID.Factory.New (ID.IdConst.ReactorGood));
+			ChangeSubscriptionCommand.Register (this, LoadFirstPage);
 		}
 
-		async void LoadFirstPage ()
+		async void LoadFirstPage (ID newId)
 		{
-			id = ID.Factory.New (ID.IdConst.ReactorGood);
+			id = newId;
+			data = null;
+			InvalidateUi ();
+
 			data = await model.Get (id);
 			syncInProgress = true;
 			InvalidateUi ();
+
 			await model.SyncFirstPage (id);
 			data = await model.Get (id);
 			syncInProgress = false;
@@ -47,19 +55,9 @@ namespace JoyReactor.Android.App.Home
 			list.Adapter = adapter = new FeedAdapter (Activity);
 			applyButton.Click += OnApplyButtonClicked;
 			adapter.ClickMore += OnButtonMoreClicked;
+			refresher.Refresh+= OnRefreshInvoked;
 			InvalidateUi ();
 		}
-
-		void InvalidateUi ()
-		{
-			if (IsViewInflated) {
-				applyButton.Visibility = data.NewItemsCount > 0 ? ViewStates.Visible : ViewStates.Gone;
-				adapter.AddAll (data.Posts);
-				refresher.Refreshing = syncInProgress;
-			}
-		}
-
-		bool IsViewInflated { get { return data != null; } }
 
 		async void OnApplyButtonClicked (object sender, EventArgs e)
 		{
@@ -78,6 +76,30 @@ namespace JoyReactor.Android.App.Home
 			InvalidateUi ();
 		}
 
+		async void OnRefreshInvoked (object sender, EventArgs e)
+		{
+			syncInProgress = true;
+			InvalidateUi ();
+
+			await model.Reset (id);
+			await model.SyncFirstPage (id);
+			data = await model.Get (id);
+			syncInProgress = false;
+			InvalidateUi ();
+		}
+
+		void InvalidateUi ()
+		{
+			if (IsViewInflated) {
+				applyButton.Visibility = data?.NewItemsCount > 0 ? ViewStates.Visible : ViewStates.Gone;
+				adapter.Clear();
+				adapter.ReplaceAll (data?.Posts);
+				refresher.Refreshing = syncInProgress;
+			}
+		}
+
+		bool IsViewInflated { get { return list != null; } }
+
 		public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 		{
 			var v = inflater.Inflate (Resource.Layout.fragment_feed, null);
@@ -86,6 +108,12 @@ namespace JoyReactor.Android.App.Home
 			refresher = v.FindViewById<SwipeRefreshLayout> (Resource.Id.refresher);
 			applyButton = v.FindViewById (Resource.Id.apply);
 			return v;
+		}
+
+		public override void OnDestroy ()
+		{
+			base.OnDestroy ();
+			ChangeSubscriptionCommand.Unregister (this);
 		}
 	}
 }
