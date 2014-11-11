@@ -19,14 +19,18 @@ namespace JoyReactor.Android.App.Home
 
 		IPostCollectionModel model = ServiceLocator.Current.GetInstance<IPostCollectionModel> ();
 		PostCollectionState data;
-		ID id;
 		bool syncInProgress;
+		ID id;
 
-		public override async void OnCreate (Bundle savedInstanceState)
+		public override  void OnCreate (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
 			RetainInstance = true;
+			LoadFirstPage ();
+		}
 
+		async void LoadFirstPage ()
+		{
 			id = ID.Factory.New (ID.IdConst.ReactorGood);
 			data = await model.Get (id);
 			syncInProgress = true;
@@ -48,12 +52,14 @@ namespace JoyReactor.Android.App.Home
 
 		void InvalidateUi ()
 		{
-			if (data != null) {
+			if (IsViewInflated) {
 				applyButton.Visibility = data.NewItemsCount > 0 ? ViewStates.Visible : ViewStates.Gone;
 				adapter.AddAll (data.Posts);
 				refresher.Refreshing = syncInProgress;
 			}
 		}
+
+		bool IsViewInflated { get { return data != null; } }
 
 		async void OnApplyButtonClicked (object sender, EventArgs e)
 		{
@@ -61,7 +67,7 @@ namespace JoyReactor.Android.App.Home
 			data = await model.Get (id);
 			InvalidateUi ();
 		}
-		 
+
 		async void OnButtonMoreClicked (object sender, EventArgs e)
 		{
 			syncInProgress = true;
