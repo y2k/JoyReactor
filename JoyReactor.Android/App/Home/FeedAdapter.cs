@@ -20,7 +20,7 @@ namespace JoyReactor.Android.App.Home
 {
 	class FeedAdapter : ArrayAdapter<JoyReactor.Core.Model.DTO.Post>
 	{
-		IImageModel iModel = ServiceLocator.Current.GetInstance<IImageModel> ();
+		ImageModel iModel = ServiceLocator.Current.GetInstance<ImageModel> ();
 		int maxWidth;
 
 		public ID ListId { get; set; }

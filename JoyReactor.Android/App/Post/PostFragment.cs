@@ -1,21 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Android.App;
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Support.V4.Widget;
-using Android.Util;
 using Android.Views;
 using Android.Widget;
-using JoyReactor.Core;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
-using JoyReactor.Core.Model.Inject;
 using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.Widget;
@@ -24,16 +14,16 @@ namespace JoyReactor.Android.App.Post
 {
 	public class PostFragment : BaseFragment
 	{
-		private IPostModel model = ServiceLocator.Current.GetInstance<IPostModel> ();
+		IPostModel model = ServiceLocator.Current.GetInstance<IPostModel> ();
 
-		private ListView list;
-		private List<Comment> comments;
-		private List<CommentAttachment> attachments;
-		private JoyReactor.Core.Model.DTO.Post post;
-		private ColorSwipeRefreshLayout refresher;
+		ListView list;
+		List<Comment> comments;
+		List<CommentAttachment> attachments;
+		JoyReactor.Core.Model.DTO.Post post;
+		ColorSwipeRefreshLayout refresher;
 
-		private View header;
-		private PostAdapter adapter;
+		View header;
+		PostAdapter adapter;
 
 		public override void OnActivityCreated (Bundle savedInstanceState)
 		{
@@ -55,7 +45,7 @@ namespace JoyReactor.Android.App.Post
 			return v;
 		}
 
-		private async void ReloadData() {
+		async void ReloadData() {
 			await InitializeHeader ();
 
 			comments = await model.GetTopCommentsAsync (post.Id, int.MaxValue);
@@ -64,7 +54,7 @@ namespace JoyReactor.Android.App.Post
 			refresher.Refreshing = false;
 		}
 
-		private async Task InitializeHeader() {
+		async Task InitializeHeader() {
 			post = await model.GetPostAsync (Arguments.GetInt (Arg1));
 			attachments = await model.GetAttachmentsAsync (post.Id);
 
@@ -85,9 +75,9 @@ namespace JoyReactor.Android.App.Post
 			return NewFragment<PostFragment> (position);
 		}
 
-		private class PostAdapter : BaseAdapter
+		class PostAdapter : BaseAdapter
 		{
-			private PostFragment fragment;
+			PostFragment fragment;
 
 			public PostAdapter (PostFragment fragment)
 			{
@@ -122,10 +112,10 @@ namespace JoyReactor.Android.App.Post
 			#endregion
 		}
 
-		private class AttachmentAdapter : BaseAdapter {
+		class AttachmentAdapter : BaseAdapter {
 
 			internal List<CommentAttachment> items;
-			internal IImageModel model = ServiceLocator.Current.GetInstance<IImageModel> ();
+			internal ImageModel model = ServiceLocator.Current.GetInstance<ImageModel> ();
 			internal PostFragment fragment;
 
 			#region implemented abstract members of BaseAdapter

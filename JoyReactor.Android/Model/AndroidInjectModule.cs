@@ -1,11 +1,8 @@
-﻿using System;
-using JoyReactor.Core.Model.Image;
-using JoyReactor.Core.Model.Database;
-using Autofac;
-using Community.SQLite;
-using Cirrious.MvvmCross.Community.Plugins.Sqlite.Droid;
+﻿using Autofac;
 using Cirrious.MvvmCross.Community.Plugins.Sqlite;
+using Cirrious.MvvmCross.Community.Plugins.Sqlite.Droid;
 using JoyReactor.Core.Model.Helper;
+using XamarinCommons.Image;
 
 namespace JoyReactor.Android.Model
 {

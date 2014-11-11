@@ -1,0 +1,37 @@
+﻿using System;
+using XamarinCommons.Image;
+using Microsoft.Practices.ServiceLocation;
+
+namespace JoyReactor.Core.Model
+{
+	public class ImageModel
+	{
+		ImageDownloader imageDownloader = new ImageDownloader {
+			DiskCache = new DefaultDiskCache { Decoder = ServiceLocator.Current.GetInstance<IImageDecoder> () },
+			MemoryCache = new DefaultMemoryCache { Decoder = ServiceLocator.Current.GetInstance<IImageDecoder> () },
+		};
+
+		public async void Load (object token, Uri originalUri, int maxWidth, Action<ImageWrapper> callback)
+		{
+			var image = await imageDownloader.Load (token, CreateThumbnailUrl (originalUri, maxWidth));
+			if (image != ImageWrapper.Invalide)
+				callback (image);
+		}
+
+		public string CreateThumbnailUrl (string url, int px)
+		{
+			return "" + CreateThumbnailUrl (new Uri (url), px);
+		}
+
+		Uri CreateThumbnailUrl (Uri url, int px)
+		{
+			if (px == 0)
+				return url;
+	
+			var s = string.Format (
+				        "http://remote-cache.api-i-twister.net/Cache/Get?maxHeight=500&width={0}&url={1}",
+				        px, Uri.EscapeDataString ("" + url));
+			return new Uri (s);
+		}
+	}
+}

@@ -55,7 +55,7 @@ namespace JoyReactor.Android.App.Home
 
 		public class Adapter : ArrayAdapter<TagLinkedTag>
 		{
-			IImageModel iModel = ServiceLocator.Current.GetInstance<IImageModel> ();
+			ImageModel iModel = ServiceLocator.Current.GetInstance<ImageModel> ();
 
 			public Adapter(Context context) : base(context, 0) { }
 

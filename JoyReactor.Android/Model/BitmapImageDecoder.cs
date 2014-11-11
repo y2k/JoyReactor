@@ -1,7 +1,6 @@
-﻿using System;
-using JoyReactor.Core.Model.Image;
-using System.IO;
+﻿using System.IO;
 using Android.Graphics;
+using XamarinCommons.Image;
 
 namespace JoyReactor.Android.Model
 {

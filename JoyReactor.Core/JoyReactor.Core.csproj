@@ -43,15 +43,6 @@
     <Compile Include="Model\IPostCollectionModel.cs" />
     <Compile Include="Model\PostCollectionModel.cs" />
     <Compile Include="Model\DTO\Post.cs" />
-    <Compile Include="Model\IImageModel.cs" />
-    <Compile Include="Model\Image\ImageModel.cs" />
-    <Compile Include="Model\Image\IMemoryCache.cs" />
-    <Compile Include="Model\Image\IDiskCache.cs" />
-    <Compile Include="Model\Image\DefaultDiskCache.cs" />
-    <Compile Include="Model\Image\StubMemoryCache.cs" />
-    <Compile Include="Model\Image\IImageDecoder.cs" />
-    <Compile Include="Model\Image\MemoryCache.cs" />
-    <Compile Include="Model\Image\ImageWrapper.cs" />
     <Compile Include="Model\Database\MainDb.cs" />
     <Compile Include="Model\ID.cs" />
     <Compile Include="Model\DTO\TagPost.cs" />
@@ -92,6 +83,7 @@
     <Compile Include="Model\Parser\Data\ExportUser.cs" />
     <Compile Include="Model\NextPagePostSorter.cs" />
     <Compile Include="Model\FirstPagePostSorter.cs" />
+    <Compile Include="Model\ImageModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -131,6 +123,9 @@
     </Reference>
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.3.5.2\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="XamarinCommons">
+      <HintPath>Libs\XamarinCommons.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup />

@@ -1,20 +1,12 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿using System.Collections.Generic;
 using Android.App;
 using Android.Content;
-using Android.Graphics;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using Microsoft.Practices.ServiceLocation;
-
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.Widget;
 
@@ -23,9 +15,9 @@ namespace JoyReactor.Android.App.Gallery
 	[Activity (Label = "Gallery", ParentActivity = typeof(HomeActivity))]			
 	public class GalleryActivity : BaseActivity
 	{
-		private IPostModel model = ServiceLocator.Current.GetInstance<IPostModel> ();
+		IPostModel model = ServiceLocator.Current.GetInstance<IPostModel> ();
 			
-		private GridView list;
+		GridView list;
 
 		protected async override void OnCreate (Bundle bundle)
 		{
@@ -41,9 +33,9 @@ namespace JoyReactor.Android.App.Gallery
 			a.AddAll (s);
 		}
 
-		private class GalleryAdapter : ArrayAdapter<CommentAttachment>
+		class GalleryAdapter : ArrayAdapter<CommentAttachment>
 		{
-			private IImageModel im = ServiceLocator.Current.GetInstance<IImageModel> ();
+			ImageModel im = ServiceLocator.Current.GetInstance<ImageModel> ();
 
 			public GalleryAdapter (Context c) : base (c, 0)
 			{

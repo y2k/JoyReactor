@@ -1,14 +1,13 @@
-﻿using Autofac;
-using JoyReactor.Core.Model.Image;
+﻿using System;
+using System.Collections.Generic;
+using Autofac;
+using Cirrious.MvvmCross.Community.Plugins.Sqlite;
+using Microsoft.Practices.ServiceLocation;
+using JoyReactor.Core.Model.Database;
+using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.Model.Web.Parser;
-using Microsoft.Practices.ServiceLocation;
-using System;
-using System.Collections.Generic;
-using JoyReactor.Core.Model.Helper;
-using JoyReactor.Core.Model.Database;
-using Cirrious.MvvmCross.Community.Plugins.Sqlite;
 
 namespace JoyReactor.Core.Model.Inject
 {
@@ -44,7 +43,7 @@ namespace JoyReactor.Core.Model.Inject
 
 		#region Inner classes
 
-		private class DefaultModule : Module
+		class DefaultModule : Module
 		{
 			protected override void Load (ContainerBuilder b)
 			{
@@ -57,13 +56,12 @@ namespace JoyReactor.Core.Model.Inject
 				b.RegisterType<Chan4Parser> ().As<SiteParser> ();
 				b.RegisterType<Chan7Parser> ().As<SiteParser> ();
 
-				b.RegisterType<DefaultDiskCache> ().As<IDiskCache> ();
-				b.RegisterType<MemoryCache> ().As<IMemoryCache> ();
 				b.RegisterType<PostCollectionModel> ().As<IPostCollectionModel> ();
-				b.RegisterType<ImageModel> ().As<IImageModel> ();
 				b.RegisterType<TagCollectionModel> ().As<ITagCollectionModel> ();
 				b.RegisterType<ProfileModel> ().As<IProfileModel> ();
 				b.RegisterType<PostModel> ().As<IPostModel> ().SingleInstance ();
+
+				b.RegisterType<ImageModel> ().AsSelf ().SingleInstance ();
 			}
 		}
 

@@ -1,26 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
 using Android.Content;
 using Android.Graphics;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
 using JoyReactor.Core.Model;
-using JoyReactor.Core.Model.Inject;
 using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Android.Widget
 {
 	public class WebImageView : ImageView
 	{
-		private IImageModel iModel = ServiceLocator.Current.GetInstance<IImageModel> ();
+		ImageModel iModel = ServiceLocator.Current.GetInstance<ImageModel> ();
 
-		private string imageSource;
+		string imageSource;
 
 		public string ImageSource {
 			get { return imageSource; }
@@ -31,11 +22,11 @@ namespace JoyReactor.Android.Widget
 //			Initialize ();
 		}
 
-		private void Initialize () {
+		void Initialize () {
 			throw new NotImplementedException ();
 		}
 
-		private void UpdateImageSource (string imageSource) {
+		void UpdateImageSource (string imageSource) {
 			if (this.imageSource != imageSource) {
 				this.imageSource = imageSource;
 
