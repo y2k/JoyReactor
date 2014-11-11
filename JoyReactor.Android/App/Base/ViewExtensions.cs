@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Android.Views;
 using System.Collections.Generic;
 
@@ -7,7 +6,7 @@ namespace JoyReactor.Android.App.Base
 {
 	public static class ViewExtensions
 	{
-		private static List<ClickRecord> records = new List<ClickRecord>();
+		static readonly List<ClickRecord> records = new List<ClickRecord>();
 
 		public static void SetClick(this View view, EventHandler listener) {
 			for (int i = records.Count - 1; i >= 0; i--) {
