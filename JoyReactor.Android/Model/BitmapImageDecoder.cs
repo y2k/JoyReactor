@@ -4,24 +4,16 @@ using XamarinCommons.Image;
 
 namespace JoyReactor.Android.Model
 {
-	public class BitmapImageDecoder : IImageDecoder
+	public class BitmapImageDecoder : ImageDecoder
 	{
-		#region ImageDecoder implementation
-
-		public object Decode (PCLStorage.IFile file)
+		public override int GetImageSize (object commonImage)
 		{
-			using (var s = file.OpenAsync (PCLStorage.FileAccess.Read).Result) {
-				return BitmapFactory.DecodeStream (s);
-			}
+			return commonImage == null ? 0 : ((Bitmap)commonImage).ByteCount;
 		}
 
-		public int GetImageSize (ImageWrapper commonImage)
+		public override object DecoderStream (Stream stream)
 		{
-			return
-				commonImage == null || commonImage.Image == null
-				? 0 : ((Bitmap)commonImage.Image).ByteCount;
+			return BitmapFactory.DecodeStream (stream);
 		}
-
-		#endregion
 	}
 }

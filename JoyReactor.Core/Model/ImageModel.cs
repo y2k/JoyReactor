@@ -7,15 +7,15 @@ namespace JoyReactor.Core.Model
 	public class ImageModel
 	{
 		ImageDownloader imageDownloader = new ImageDownloader {
-			Decoder = ServiceLocator.Current.GetInstance<IImageDecoder> (),
+			Decoder = ServiceLocator.Current.GetInstance<ImageDecoder> (),
 			DiskCache = new DefaultDiskCache (),
 			MemoryCache = new DefaultMemoryCache (),
 		};
 
-		public async void Load (object token, Uri originalUri, int maxWidth, Action<ImageWrapper> callback)
+		public async void Load (object token, Uri originalUri, int maxWidth, Action<object> callback)
 		{
 			var image = await imageDownloader.LoadAsync (token, CreateThumbnailUrl (originalUri, maxWidth));
-			if (image != ImageWrapper.Invalide)
+			if (image != ImageDownloader.InvalideImage)
 				callback (image);
 		}
 

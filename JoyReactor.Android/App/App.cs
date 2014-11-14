@@ -21,7 +21,8 @@ namespace JoyReactor.Android.App
 			base.OnCreate ();
 
 			Instance = this;
-			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator (new AndroidInjectModule ()));
+			var locator = new DefaultServiceLocator (new AndroidInjectModule ());
+			ServiceLocator.SetLocatorProvider (() => locator);
 		}
 	}
 }

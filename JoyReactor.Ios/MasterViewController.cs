@@ -1,21 +1,27 @@
 ﻿using System;
-using System.Drawing;
 using System.Collections.Generic;
+using System.Drawing;
+using JoyReactor.Core.Model;
+using JoyReactor.Core.Model.DTO;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using JoyReactor.Core.Model;
-using JoyReactor.Core.Model.Inject;
-using JoyReactor.Core;
-using JoyReactor.Core.Model.DTO;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Ios
 {
+	//	public partial class MasterViewController : UITableViewController
+	//	{
+	//		DataSource dataSource;
+	//
+	//		public MasterViewController (IntPtr handle) : base (handle)
+	//		{
 	public partial class MasterViewController : UITableViewController
 	{
 		DataSource dataSource;
 
-		private IPostCollectionModel model = InjectService.Locator.GetInstance<IPostCollectionModel>();
-		private ITagCollectionModel tagModel = InjectService.Locator.GetInstance<ITagCollectionModel>();
+		IPostCollectionModel model = ServiceLocator.Current.GetInstance<IPostCollectionModel> ();
+		ITagCollectionModel tagModel = ServiceLocator.Current.GetInstance<ITagCollectionModel> ();
+
 
 		public MasterViewController (IntPtr handle) : base (handle)
 		{
@@ -34,13 +40,13 @@ namespace JoyReactor.Ios
 			set;
 		}
 
-//		void AddNewItem (object sender, EventArgs args)
-//		{
-//			dataSource.Objects.Insert (0, DateTime.Now);
-//
-//			using (var indexPath = NSIndexPath.FromRowSection (0, 0))
-//				TableView.InsertRows (new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Automatic);
-//		}
+		//		void AddNewItem (object sender, EventArgs args)
+		//		{
+		//			dataSource.Objects.Insert (0, DateTime.Now);
+		//
+		//			using (var indexPath = NSIndexPath.FromRowSection (0, 0))
+		//				TableView.InsertRows (new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Automatic);
+		//		}
 
 		public override void DidReceiveMemoryWarning ()
 		{
@@ -102,22 +108,22 @@ namespace JoyReactor.Ios
 				return cell;
 			}
 
-//			public override bool CanEditRow (UITableView tableView, NSIndexPath indexPath)
-//			{
-//				// Return false if you do not want the specified item to be editable.
-//				return true;
-//			}
-//
-//			public override void CommitEditingStyle (UITableView tableView, UITableViewCellEditingStyle editingStyle, NSIndexPath indexPath)
-//			{
-//				if (editingStyle == UITableViewCellEditingStyle.Delete) {
-//					// Delete the row from the data source.
-//					objects.RemoveAt (indexPath.Row);
-//					controller.TableView.DeleteRows (new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Fade);
-//				} else if (editingStyle == UITableViewCellEditingStyle.Insert) {
-//					// Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-//				}
-//			}
+			//			public override bool CanEditRow (UITableView tableView, NSIndexPath indexPath)
+			//			{
+			//				// Return false if you do not want the specified item to be editable.
+			//				return true;
+			//			}
+			//
+			//			public override void CommitEditingStyle (UITableView tableView, UITableViewCellEditingStyle editingStyle, NSIndexPath indexPath)
+			//			{
+			//				if (editingStyle == UITableViewCellEditingStyle.Delete) {
+			//					// Delete the row from the data source.
+			//					objects.RemoveAt (indexPath.Row);
+			//					controller.TableView.DeleteRows (new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Fade);
+			//				} else if (editingStyle == UITableViewCellEditingStyle.Insert) {
+			//					// Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+			//				}
+			//			}
 			/*
 			// Override to support rearranging the table view.
 			public override void MoveRow (UITableView tableView, NSIndexPath sourceIndexPath, NSIndexPath destinationIndexPath)

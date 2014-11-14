@@ -1,22 +1,19 @@
 ﻿using System;
-using JoyReactor.Core.Model.Image;
+using System.IO;
+using XamarinCommons.Image;
 
 namespace JoyReactor.Ios.Model
 {
-	public class BitmapImageDecoder : IImageDecoder
+	public class BitmapImageDecoder : ImageDecoder
 	{
-		#region IImageDecoder implementation
-
-		public object Decode (System.IO.Stream stream)
+		public override object DecoderStream (Stream stream)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public int GetImageSize (ImageWrapper commonImage)
+		public override int GetImageSize (object commonImage)
 		{
 			throw new NotImplementedException ();
 		}
-
-		#endregion
 	}
 }

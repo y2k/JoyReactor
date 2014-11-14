@@ -3,6 +3,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using JoyReactor.Ios.Model;
 using JoyReactor.Core.Model.Inject;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Ios
 {
@@ -20,7 +21,8 @@ namespace JoyReactor.Ios
 
 		public override bool FinishedLaunching (UIApplication application, NSDictionary launchOptions)
 		{
-			InjectService.Initialize(new IoInjectModule());
+			var locator = new DefaultServiceLocator (new IosInjectModule ());
+			ServiceLocator.SetLocatorProvider (() => locator);
 
 			// Override point for customization after application launch.
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad) {

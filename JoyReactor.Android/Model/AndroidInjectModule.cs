@@ -13,7 +13,7 @@ namespace JoyReactor.Android.Model
 		protected override void Load (ContainerBuilder builder)
 		{
 			builder.RegisterType<LogcatLogger> ().As<Log.ILogger>();
-			builder.RegisterType<BitmapImageDecoder> ().As<IImageDecoder> ();
+			builder.RegisterType<BitmapImageDecoder> ().As<ImageDecoder> ();
 			builder.RegisterType<MvxDroidSQLiteConnectionFactory> ().As<ISQLiteConnectionFactory>();
 		}
 

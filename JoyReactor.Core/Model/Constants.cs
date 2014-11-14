@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model
 {
-    class Constants
+    static class Constants
     {
         /// <summary>
         /// Время устаревания страницы списка постов (милисекунды)
