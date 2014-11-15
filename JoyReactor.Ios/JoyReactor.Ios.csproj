@@ -150,6 +150,10 @@
     <Compile Include="Bootstrap\CommunitySqlitePluginBootstrap.cs" />
     <Compile Include="Model\BitmapImageDecoder.cs" />
     <Compile Include="Model\IosInjectModule.cs" />
+    <Compile Include="PostItemView.cs" />
+    <Compile Include="PostItemView.designer.cs">
+      <DependentUpon>PostItemView.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="MainStoryboard_iPhone.storyboard" />

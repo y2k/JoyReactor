@@ -32,8 +32,10 @@ namespace JoyReactor.Ios
 		void ConfigureView ()
 		{
 			// Update the user interface for the detail item
-			if (IsViewLoaded && detailItem != null)
-				detailDescriptionLabel.Text = detailItem.ToString ();
+//			if (IsViewLoaded && detailItem != null)
+//				detailDescriptionLabel.Text = detailItem.ToString ();
+
+			CollectionView.DataSource = new PostSource ();
 		}
 
 		public override void DidReceiveMemoryWarning ()
@@ -67,6 +69,27 @@ namespace JoyReactor.Ios
 			NavigationItem.SetLeftBarButtonItem (null, true);
 			masterPopoverController = null;
 		}
+
+		class PostSource : UICollectionViewDataSource
+		{
+			Random rand = new Random ();
+
+			#region implemented abstract members of UICollectionViewDataSource
+
+			public override UICollectionViewCell GetCell (UICollectionView collectionView, NSIndexPath indexPath)
+			{
+				var cell = (PostItemView)collectionView.DequeueReusableCell (new NSString ("cell"), indexPath);
+				cell.Label = "" + rand.Next ();
+				return cell; 
+
+			}
+
+			public override int GetItemsCount (UICollectionView collectionView, int section)
+			{
+				return 10;
+			}
+
+			#endregion
+		}
 	}
 }
-
