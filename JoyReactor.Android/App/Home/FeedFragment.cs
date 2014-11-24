@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using Android.OS;
-using Android.Support.V4.Widget;
 using Android.Views;
-using Com.Android.EX.Widget;
 using JoyReactor.Core;
 using JoyReactor.Core.Model;
 using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.App.Base.Commands;
+using Android.Support.V4.Widget;
+using Android.Support.V7.Widget;
 
 namespace JoyReactor.Android.App.Home
 {
 	public class FeedFragment : BaseFragment
 	{
 		SwipeRefreshLayout refresher;
-		StaggeredGridView list;
+		RecyclerView list;
 		FeedAdapter adapter;
 		View applyButton;
 
@@ -52,7 +52,7 @@ namespace JoyReactor.Android.App.Home
 		public override void OnActivityCreated (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
-			list.Adapter = adapter = new FeedAdapter (Activity);
+			list.SetAdapter(adapter = new FeedAdapter (Activity));
 			applyButton.Click += OnApplyButtonClicked;
 			adapter.ClickMore += OnButtonMoreClicked;
 			refresher.Refresh+= OnRefreshInvoked;
@@ -96,7 +96,6 @@ namespace JoyReactor.Android.App.Home
 		{
 			if (IsViewInflated) {
 				applyButton.Visibility = data?.NewItemsCount > 0 ? ViewStates.Visible : ViewStates.Gone;
-				adapter.Clear();
 				adapter.ReplaceAll (data?.Posts);
 				refresher.Refreshing = syncInProgress;
 			}
@@ -107,8 +106,8 @@ namespace JoyReactor.Android.App.Home
 		public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 		{
 			var v = inflater.Inflate (Resource.Layout.fragment_feed, null);
-			list = v.FindViewById<StaggeredGridView> (Resource.Id.List);
-			list.SetItemMargin ((int)(4 * Resources.DisplayMetrics.Density));
+			list = v.FindViewById<RecyclerView> (Resource.Id.List);
+			list.SetLayoutManager (new StaggeredGridLayoutManager (2, StaggeredGridLayoutManager.Vertical));
 			refresher = v.FindViewById<SwipeRefreshLayout> (Resource.Id.refresher);
 			applyButton = v.FindViewById (Resource.Id.apply);
 			return v;

@@ -124,7 +124,6 @@
     <Compile Include="Widget\ColorSwipeRefreshLayout.cs" />
     <Compile Include="App\Gallery\FullscreenGalleryActivity.cs" />
     <Compile Include="App\Gallery\GalleryActivity.cs" />
-    <Compile Include="App\Home\OldFeedFragment.cs" />
     <Compile Include="App\Home\FeedFragment.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -155,10 +154,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\StaggeredGridViewWrapper\JoyReactor.Android.Platform.csproj">
-      <Project>{0C771503-FD14-436A-A7C0-E2DCE1D5FEC3}</Project>
-      <Name>JoyReactor.Android.Platform</Name>
-    </ProjectReference>
     <ProjectReference Include="..\JoyReactor.Core\JoyReactor.Core.csproj">
       <Project>{E205F32E-24F2-4B73-B9F1-C474813D605B}</Project>
       <Name>JoyReactor.Core</Name>

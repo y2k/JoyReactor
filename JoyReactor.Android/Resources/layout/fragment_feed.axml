@@ -6,7 +6,7 @@
         android:id="@+id/refresher"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.android.ex.widget.StaggeredGridView
+        <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/List" />
