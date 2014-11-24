@@ -84,6 +84,7 @@
     <Compile Include="Model\FirstPagePostSorter.cs" />
     <Compile Include="Model\ImageModel.cs" />
     <Compile Include="Model\Parser\Data\ExportTagInformation.cs" />
+    <Compile Include="Controller\FeedController.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -131,5 +132,6 @@
   <ItemGroup />
   <ItemGroup>
     <Folder Include="Model\Parser\" />
+    <Folder Include="Controller\" />
   </ItemGroup>
 </Project>
