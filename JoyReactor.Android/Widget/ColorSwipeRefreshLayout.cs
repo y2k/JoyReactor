@@ -13,7 +13,7 @@ namespace JoyReactor.Android.Widget
 		{
 		}
 
-		public override void OnAttachedToWindow ()
+		protected override void OnAttachedToWindow ()
 		{
 			base.OnAttachedToWindow ();
 			SetColorScheme (
