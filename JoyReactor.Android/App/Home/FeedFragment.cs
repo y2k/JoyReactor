@@ -81,8 +81,12 @@ namespace JoyReactor.Android.App.Home
 			syncInProgress = true;
 			InvalidateUi ();
 
-			await model.Reset (id);
-			await model.SyncFirstPage (id);
+			if (data.NewItemsCount > 0) {
+				await model.ApplyNewItems (id);
+			} else {
+				await model.Reset (id);
+				await model.SyncFirstPage (id);
+			}
 			data = await model.Get (id);
 			syncInProgress = false;
 			InvalidateUi ();
