@@ -14,7 +14,7 @@ namespace JoyReactor.Android.App
 	[Activity (Label = "@string/app_name", MainLauncher = true)]			
 	public class HomeActivity : BaseActivity
 	{
-		private ViewPager pager;
+		ViewPager pager;
 
 		protected override void OnCreate (Bundle savedInstanceState)
 		{
@@ -26,7 +26,7 @@ namespace JoyReactor.Android.App
 
 			pager = FindViewById<ViewPager> (Resource.Id.pager);
 			pager.Adapter = new Adapter (SupportFragmentManager);
-			pager.PageSelected += (s, e) => ActionBar.SetDisplayHomeAsUpEnabled(e.Position > 0);
+			pager.PageSelected += (s, e) => SupportActionBar.SetDisplayHomeAsUpEnabled(e.Position > 0);
 
 			pager.CurrentItem = 1;
 		}

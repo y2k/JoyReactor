@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Android.Support.V4.App;
 using JoyReactor.Android.App.Gallery;
+using Android.Support.V7.App;
 
 namespace JoyReactor.Android.App.Base
 {
-	public class BaseActivity : FragmentActivity
+	public class BaseActivity : ActionBarActivity
 	{
 		public const string Arg1 = "arg1";
 		public const string Arg2 = "arg2";

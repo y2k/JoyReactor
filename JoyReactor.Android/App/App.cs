@@ -7,7 +7,7 @@ using JoyReactor.Android.Model;
 
 namespace JoyReactor.Android.App
 {
-	[Application]
+	[Application (Theme = "@style/Theme.AppCompat.Light")]
 	public class App : Application
 	{
 		public static Application Instance { get; private set; }
