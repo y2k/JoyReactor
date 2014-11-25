@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using Android.OS;
+using Android.Support.V4.Widget;
+using Android.Support.V7.Widget;
 using Android.Views;
 using JoyReactor.Core;
 using JoyReactor.Core.Model;
 using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.App.Base.Commands;
-using Android.Support.V4.Widget;
-using Android.Support.V7.Widget;
+using JoyReactor.Android.Widget;
 
 namespace JoyReactor.Android.App.Home
 {
@@ -108,6 +109,7 @@ namespace JoyReactor.Android.App.Home
 			var v = inflater.Inflate (Resource.Layout.fragment_feed, null);
 			list = v.FindViewById<RecyclerView> (Resource.Id.List);
 			list.SetLayoutManager (new StaggeredGridLayoutManager (2, StaggeredGridLayoutManager.Vertical));
+			list.AddItemDecoration (new DividerItemDecoration (2.5f));
 			refresher = v.FindViewById<SwipeRefreshLayout> (Resource.Id.refresher);
 			applyButton = v.FindViewById (Resource.Id.apply);
 			return v;

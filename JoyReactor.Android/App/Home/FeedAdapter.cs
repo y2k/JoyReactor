@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using Android.Content;
 using Android.Graphics;
 using Android.Graphics.Drawables;
+using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
 using JoyReactor.Core;
@@ -14,7 +14,6 @@ using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.App.Post;
 using JoyReactor.Android.Widget;
-using Android.Support.V7.Widget;
 
 namespace JoyReactor.Android.App.Home
 {

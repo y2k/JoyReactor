@@ -94,6 +94,9 @@
     <Reference Include="Xamarin.Android.Support.v7.RecyclerView">
       <HintPath>..\packages\Xamarin.Android.Support.v7.RecyclerView.21.0.0.0-beta1\lib\MonoAndroid\Xamarin.Android.Support.v7.RecyclerView.dll</HintPath>
     </Reference>
+    <Reference Include="Xamarin.Android.Support.v7.CardView">
+      <HintPath>..\packages\Xamarin.Android.Support.v7.CardView.21.0.0.0-beta1\lib\MonoAndroid\Xamarin.Android.Support.v7.CardView.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -125,6 +128,7 @@
     <Compile Include="App\Gallery\FullscreenGalleryActivity.cs" />
     <Compile Include="App\Gallery\GalleryActivity.cs" />
     <Compile Include="App\Home\FeedFragment.cs" />
+    <Compile Include="Widget\DividerItemDecoration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
