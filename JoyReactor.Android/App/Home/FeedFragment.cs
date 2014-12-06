@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Android.OS;
+﻿using Android.OS;
 using Android.Support.V4.Widget;
 using Android.Support.V7.Widget;
 using Android.Views;
 using JoyReactor.Core;
-using JoyReactor.Core.Model;
-using Microsoft.Practices.ServiceLocation;
+using JoyReactor.Core.Controllers;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.App.Base.Commands;
 using JoyReactor.Android.Widget;
@@ -20,89 +17,40 @@ namespace JoyReactor.Android.App.Home
 		FeedAdapter adapter;
 		View applyButton;
 
-		PostCollectionModel model = new PostCollectionModel ();
-		PostCollectionState data;
-		bool syncInProgress;
-		ID id;
+		FeedController controller;
 
-		public override  void OnCreate (Bundle savedInstanceState)
+		public override void OnCreate (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
 			RetainInstance = true;
 
-			LoadFirstPage (ID.Factory.New (ID.IdConst.ReactorGood));
-			ChangeSubscriptionCommand.Register (this, LoadFirstPage);
-		}
-
-		async void LoadFirstPage (ID newId)
-		{
-			id = newId;
-			data = null;
-			InvalidateUi ();
-
-			data = await model.Get (id);
-			syncInProgress = true;
-			InvalidateUi ();
-
-			await model.SyncFirstPage (id);
-			data = await model.Get (id);
-			syncInProgress = false;
-			InvalidateUi ();
+			controller = new FeedController (ID.Factory.New (ID.IdConst.ReactorGood));
+			ChangeSubscriptionCommand.Register (this, controller.OnChangeCurrentListId);
 		}
 
 		public override void OnActivityCreated (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
-			list.SetAdapter(adapter = new FeedAdapter (Activity));
-			applyButton.Click += OnApplyButtonClicked;
-			adapter.ClickMore += OnButtonMoreClicked;
-			refresher.Refresh+= OnRefreshInvoked;
-			InvalidateUi ();
-		}
 
-		async void OnApplyButtonClicked (object sender, EventArgs e)
-		{
-			await model.ApplyNewItems (id);
-			data = await model.Get (id);
-			InvalidateUi ();
-		}
+			list.SetAdapter (adapter = new FeedAdapter (Activity));
+			adapter.ClickMore += (sender, e) => controller.OnButtonMoreClicked ();
 
-		async void OnButtonMoreClicked (object sender, EventArgs e)
-		{
-			syncInProgress = true;
-			InvalidateUi ();
-			await model.SyncNextPage (id);
-			data = await model.Get (id);
-			syncInProgress = false;
-			InvalidateUi ();
-		}
-
-		async void OnRefreshInvoked (object sender, EventArgs e)
-		{
-			syncInProgress = true;
-			InvalidateUi ();
-
-			if (data.NewItemsCount > 0) {
-				await model.ApplyNewItems (id);
-			} else {
-				await model.Reset (id);
-				await model.SyncFirstPage (id);
-			}
-			data = await model.Get (id);
-			syncInProgress = false;
+			applyButton.Click += (sender, e) => controller.OnApplyButtonClicked ();
+			refresher.Refresh += (sender, e) => controller.OnRefreshInvoked ();
+			controller.InvalidateUiCallback = InvalidateUi;
 			InvalidateUi ();
 		}
 
 		void InvalidateUi ()
 		{
 			if (IsViewInflated) {
-				applyButton.Visibility = data?.NewItemsCount > 0 ? ViewStates.Visible : ViewStates.Gone;
-				adapter.ReplaceAll (data?.Posts);
-				refresher.Refreshing = syncInProgress;
+				applyButton.Visibility = controller.HasNewItems ? ViewStates.Visible : ViewStates.Gone;
+				adapter.ReplaceAll (controller.Posts);
+				refresher.Refreshing = controller.SyncInProgress;
 			}
 		}
 
-		bool IsViewInflated { get { return list != null; } }
+		bool IsViewInflated { get { return View != null; } }
 
 		public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 		{

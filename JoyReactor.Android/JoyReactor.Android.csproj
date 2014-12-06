@@ -165,12 +165,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
+    <Folder Include="App\Gallery\" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\JoyReactor.Core\JoyReactor.Core.csproj">
       <Project>{E205F32E-24F2-4B73-B9F1-C474813D605B}</Project>
       <Name>JoyReactor.Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App\Gallery\" />
   </ItemGroup>
 </Project>
