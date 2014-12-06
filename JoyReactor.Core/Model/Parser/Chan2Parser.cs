@@ -61,11 +61,18 @@ namespace JoyReactor.Core.Model.Parser
 			post.Created = new DateTime (2000, 1, 1).ToUnixTimestamp () * 1000L;
 
 			// TODO
-			post.Image = node.Select ("a.il").First ().Attr ("href").Replace ("http://", "https://");
+			post.Image = NormilizeImageUrl (node.Select ("a.il").First ().Attr ("href"));
 			post.ImageWidth = 64;
-			post.ImageHeight = node.Select ("div.thumb.z").Select (s => Regex.Match (s.Attr ("style"), "height: (\\d+)px;")).Select (s => s.Success ? int.Parse (s.Groups [1].Value) : 64).First ();
+			post.ImageHeight = node.Select ("div.thumb.z")
+				.Select (s => Regex.Match (s.Attr ("style"), "height: (\\d+)px;"))
+				.Select (s => s.Success ? int.Parse (s.Groups [1].Value) : 64).First ();
 
 			OnNewPost (post);
+		}
+
+		static string NormilizeImageUrl (string originalUrl)
+		{
+			return originalUrl.Replace ("https://", "http://").Replace ("2ch.hk", "m2-ch.ru");
 		}
 
 		public override void ExtractPost (string postId)
@@ -99,7 +106,7 @@ namespace JoyReactor.Core.Model.Parser
 				var data = new ExportPostComment ();
 				data.Attachments = c.Select ("a.thrd-thumb").Where (s => !s.Attr ("href").EndsWith (".webm"))// TODO: вернуть поддержку webm
 					.Select (s => new ExportAttachment {
-					Image = s.AbsUrl (url, "href").Replace ("http://", "https://"),
+					Image = NormilizeImageUrl (s.AbsUrl (url, "href")),
 					Width = int.Parse (IMAGE_SIZE.Match (s.InnerText).Groups [1].Value),
 					Height = int.Parse (IMAGE_SIZE.Match (s.InnerText).Groups [2].Value),
 				}).ToArray ();
