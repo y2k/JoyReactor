@@ -34,27 +34,23 @@
     <Compile Include="Model\DTO\Comment.cs" />
     <Compile Include="Model\DTO\CommentAttachment.cs" />
     <Compile Include="Model\Inject\DefaultServiceLocator.cs" />
-    <Compile Include="Model\IPostModel.cs" />
     <Compile Include="Model\PostModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Web\IWebDownloader.cs" />
     <Compile Include="Model\Web\WebDownloader.cs" />
     <Compile Include="Model\Helper\RegexExtensions.cs" />
-    <Compile Include="Model\IPostCollectionModel.cs" />
     <Compile Include="Model\PostCollectionModel.cs" />
     <Compile Include="Model\DTO\Post.cs" />
     <Compile Include="Model\Database\MainDb.cs" />
     <Compile Include="Model\ID.cs" />
     <Compile Include="Model\DTO\TagPost.cs" />
     <Compile Include="Model\DTO\Tag.cs" />
-    <Compile Include="Model\IProfileModel.cs" />
     <Compile Include="Model\ProfileModel.cs" />
     <Compile Include="Model\DTO\Profile.cs" />
     <Compile Include="Model\Helper\ThreadHelper.cs" />
     <Compile Include="Model\Helper\HtmlNodeExtensions.cs" />
     <Compile Include="swp8\Bootstrap\CommunitySqlitePluginBootstrap.cs" />
     <Compile Include="Model\DTO\TagLinkedTag.cs" />
-    <Compile Include="Model\ITagCollectionModel.cs" />
     <Compile Include="Model\TagCollectionModel.cs" />
     <Compile Include="Model\Helper\HtmlUtils.cs" />
     <Compile Include="Model\Database\SQLiteConnectionExtensions.cs" />
@@ -84,6 +80,8 @@
     <Compile Include="Model\FirstPagePostSorter.cs" />
     <Compile Include="Model\ImageModel.cs" />
     <Compile Include="Model\Parser\Data\ExportTagInformation.cs" />
+    <Compile Include="Controllers\CreateTagController.cs" />
+    <Compile Include="Controllers\RelayCommand.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -131,5 +129,6 @@
   <ItemGroup />
   <ItemGroup>
     <Folder Include="Model\Parser\" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
 </Project>

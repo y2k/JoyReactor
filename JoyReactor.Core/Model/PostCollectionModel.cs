@@ -11,7 +11,7 @@ using Cirrious.MvvmCross.Community.Plugins.Sqlite;
 
 namespace JoyReactor.Core.Model
 {
-	class PostCollectionModel : IPostCollectionModel
+	public class PostCollectionModel
 	{
 		ISQLiteConnection connection = ServiceLocator.Current.GetInstance<ISQLiteConnection> ();
 
@@ -387,4 +387,13 @@ namespace JoyReactor.Core.Model
 
 		#endregion
 	}
+
+	public class PostCollectionState
+	{
+		public List<Post> Posts { get; set; }
+		public int NewItemsCount { get; set; }
+		public int DividerPosition { get; set; }
+	}
+
+	public enum SyncFlags { None, Next, First }
 }

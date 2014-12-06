@@ -20,7 +20,7 @@ namespace JoyReactor.Android.App.Home
 		FeedAdapter adapter;
 		View applyButton;
 
-		IPostCollectionModel model = ServiceLocator.Current.GetInstance<IPostCollectionModel> ();
+		PostCollectionModel model = new PostCollectionModel ();
 		PostCollectionState data;
 		bool syncInProgress;
 		ID id;

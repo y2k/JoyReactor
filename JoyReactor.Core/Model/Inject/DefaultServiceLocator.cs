@@ -56,11 +56,6 @@ namespace JoyReactor.Core.Model.Inject
 				b.RegisterType<Chan4Parser> ().As<SiteParser> ();
 				b.RegisterType<Chan7Parser> ().As<SiteParser> ();
 
-				b.RegisterType<PostCollectionModel> ().As<IPostCollectionModel> ();
-				b.RegisterType<TagCollectionModel> ().As<ITagCollectionModel> ();
-				b.RegisterType<ProfileModel> ().As<IProfileModel> ();
-				b.RegisterType<PostModel> ().As<IPostModel> ().SingleInstance ();
-
 				b.RegisterType<ImageModel> ().AsSelf ().SingleInstance ();
 			}
 		}

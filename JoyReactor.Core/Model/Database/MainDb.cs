@@ -1,7 +1,7 @@
 ﻿using System;
-using JoyReactor.Core.Model.DTO;
 using Cirrious.MvvmCross.Community.Plugins.Sqlite;
 using Microsoft.Practices.ServiceLocation;
+using JoyReactor.Core.Model.DTO;
 
 namespace JoyReactor.Core.Model.Database
 {
@@ -138,7 +138,7 @@ namespace JoyReactor.Core.Model.Database
 
 		#region Private methods
 
-		private static void InitializeDatabase (ISQLiteConnection db)
+		static void InitializeDatabase (ISQLiteConnection db)
 		{
 			int ver = GetUserVesion (db);
 			if (ver == 0)
@@ -153,12 +153,12 @@ namespace JoyReactor.Core.Model.Database
 				});
 		}
 
-		private static void SetUserVersion (ISQLiteConnection db, int version)
+		static void SetUserVersion (ISQLiteConnection db, int version)
 		{
 			db.Execute ("PRAGMA user_version = " + version);
 		}
 
-		private static int GetUserVesion (ISQLiteConnection db)
+		static int GetUserVesion (ISQLiteConnection db)
 		{
 			return db.ExecuteScalar<int> ("PRAGMA user_version");
 		}

@@ -14,7 +14,7 @@ namespace JoyReactor.Android.App.Post
 {
 	public class PostFragment : BaseFragment
 	{
-		IPostModel model = ServiceLocator.Current.GetInstance<IPostModel> ();
+		PostModel model = new PostModel();
 
 		ListView list;
 		List<Comment> comments;

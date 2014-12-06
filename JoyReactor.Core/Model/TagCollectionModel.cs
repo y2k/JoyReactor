@@ -1,12 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Database;
 
 namespace JoyReactor.Core.Model
 {
-	class TagCollectionModel : ITagCollectionModel
+	public class TagCollectionModel
 	{
 		#region ISubscriptionCollectionModel implementation
 

@@ -1,7 +1,8 @@
 ﻿using System;
 using Android.Content;
-using JoyReactor.Android.App.Gallery;
+using Android.Support.V4.App;
 using Android.Support.V7.App;
+using JoyReactor.Android.App.Gallery;
 
 namespace JoyReactor.Android.App.Base
 {
@@ -37,6 +38,16 @@ namespace JoyReactor.Android.App.Base
 		public void NavigateToFullscreenGallery (int postId, int initPosition)
 		{
 			StartActivity (NewIntent (typeof(FullscreenGalleryActivity), postId, initPosition));
+		}
+
+		public void SetContentViewForFragment() {
+			SetContentView (Resource.Layout.layout_activity_container);
+		}
+
+		public void SetRootFragment(Fragment fragment) {
+			SupportFragmentManager.BeginTransaction ()
+				.Add (Resource.Id.container, fragment)
+				.Commit ();
 		}
 	}
 }

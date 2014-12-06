@@ -1,23 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Threading;
-using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Parser;
-using JoyReactor.Core.Model.Inject;
 using System.Linq;
 using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
-using System.Xml.Serialization;
-using System.IO;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model
 {
-	class ProfileModel : IProfileModel
+	public class ProfileModel
 	{
-        private SiteParser[] parsers = ServiceLocator.Current.GetInstance<SiteParser[]>();
+        SiteParser[] parsers = ServiceLocator.Current.GetInstance<SiteParser[]>();
 
 		#region IProfileModel implementation
 
@@ -86,23 +80,29 @@ namespace JoyReactor.Core.Model
 
 		#region Private methods
 
-		private static void ClearDatabaseFromOldData() {
+		static void ClearDatabaseFromOldData() {
 			MainDb.Instance.SafeExecute("DELETE FROM posts");
 			MainDb.Instance.SafeExecute("DELETE FROM tag_post");
 			MainDb.Instance.SafeExecute("DELETE FROM tags WHERE Flags & ? != 0", Tag.FlagWebRead);
 			MainDb.Instance.SafeExecute("DELETE FROM profiles");
 		}
 
-		private static string SerializeObject(IDictionary<string, string> o) 
+		static string SerializeObject(IDictionary<string, string> o) 
 		{
 			return o.Aggregate ("", (a, s) => a + (a.Length > 0 ? ";" : "") + s.Key + "=" + s.Value);
 		}
 
-		private static IDictionary<string, string> DeserializeObject<T>(string o) 
+		static IDictionary<string, string> DeserializeObject<T>(string o) 
 		{
 			return o.Split (';').Select (s => s.Split ('=')).ToDictionary (s => s [0], s => s [1]);
 		}
 
 		#endregion
+	}
+
+	public class ProfileInformation
+	{
+		public string Username { get; set; }
+		public float Rating { get; set; }
 	}
 }

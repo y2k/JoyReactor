@@ -17,7 +17,7 @@ namespace JoyReactor.Android.App.Home
 	{
 		ListView list;
 		Adapter adapter;
-		ITagCollectionModel model = ServiceLocator.Current.GetInstance<ITagCollectionModel> ();
+		TagCollectionModel model = new TagCollectionModel();
 
 		public override void OnResume ()
 		{

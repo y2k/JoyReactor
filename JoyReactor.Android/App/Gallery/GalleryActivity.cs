@@ -15,7 +15,7 @@ namespace JoyReactor.Android.App.Gallery
 	[Activity (Label = "Gallery", ParentActivity = typeof(HomeActivity))]			
 	public class GalleryActivity : BaseActivity
 	{
-		IPostModel model = ServiceLocator.Current.GetInstance<IPostModel> ();
+		PostModel model = new PostModel ();
 			
 		GridView list;
 

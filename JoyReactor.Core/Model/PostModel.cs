@@ -1,6 +1,5 @@
 ﻿using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
-using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model.Parser;
 using Microsoft.Practices.ServiceLocation;
 using System;
@@ -12,9 +11,9 @@ using Cirrious.MvvmCross.Community.Plugins.Sqlite;
 
 namespace JoyReactor.Core.Model
 {
-	class PostModel : IPostModel
+	public class PostModel
 	{
-		private ISQLiteConnection connection = ServiceLocator.Current.GetInstance<ISQLiteConnection> ();
+		ISQLiteConnection db = ServiceLocator.Current.GetInstance<ISQLiteConnection> ();
 
 		public Task<List<Comment>> GetCommentsAsync (int postId, int parentCommentId)
 		{
@@ -42,7 +41,7 @@ namespace JoyReactor.Core.Model
 //                    .ToList ();
 //			});
 			return Task.Run (() => {
-				return connection
+				return db
 					.SafeQuery<Comment> ("SELECT * FROM comments WHERE PostId = ? AND Id NOT IN (SELECT CommentId FROM comment_links) ORDER BY Rating DESC LIMIT ?", postId, count)
                     .ToList ();
 			});
@@ -51,7 +50,7 @@ namespace JoyReactor.Core.Model
 		public Task<Post> GetPostAsync (int postId)
 		{
 			return Task.Run (() => {
-				var p = connection.SafeQuery<Post> ("SELECT * FROM posts WHERE Id = ?", postId).First ();
+				var p = db.SafeQuery<Post> ("SELECT * FROM posts WHERE Id = ?", postId).First ();
 				if (Math.Abs (p.Timestamp - TimestampNow ()) < Constants.PostListTime)
 					return p;
 
@@ -60,12 +59,12 @@ namespace JoyReactor.Core.Model
 					var syncId = p.PostId.Split ('-') [1];
 
 					r.NewPostInformation += (sender, state) => {
-						connection.SafeExecute ("DELETE FROM comment_attachments WHERE CommentId IN (SELECT Id FROM comments WHERE PostId = ?)", p.Id);
-						connection.SafeExecute ("DELETE FROM comment_links WHERE CommentId IN (SELECT Id FROM comments WHERE PostId = ?)", p.Id);
-						connection.SafeExecute ("DELETE FROM comments WHERE PostId = ?", p.Id);
+						db.SafeExecute ("DELETE FROM comment_attachments WHERE CommentId IN (SELECT Id FROM comments WHERE PostId = ?)", p.Id);
+						db.SafeExecute ("DELETE FROM comment_links WHERE CommentId IN (SELECT Id FROM comments WHERE PostId = ?)", p.Id);
+						db.SafeExecute ("DELETE FROM comments WHERE PostId = ?", p.Id);
 
-						connection.SafeExecute ("UPDATE posts SET Timestamp = ? WHERE Id = ?", TimestampNow (), p.Id);
-						connection.SafeExecute ("UPDATE posts SET Content = ? WHERE Id = ?", state.Content, p.Id);
+						db.SafeExecute ("UPDATE posts SET Timestamp = ? WHERE Id = ?", TimestampNow (), p.Id);
+						db.SafeExecute ("UPDATE posts SET Content = ? WHERE Id = ?", state.Content, p.Id);
 					};
 					r.NewComment += (sender, state) => {
 						var c = new Comment ();
@@ -80,11 +79,11 @@ namespace JoyReactor.Core.Model
 						//							if (state.Comment.parentId != null) {
 						//								c.ParentId = connection.SafeQuery<Comment> ("SELECT * FROM comments WHERE CommentId = ? AND PostId = ?", state.Comment.parentId, p.Id).First ().Id;
 						//							}
-						var cid = connection.SafeInsert (c);
+						var cid = db.SafeInsert (c);
 
 						var comIds = state.ParentIds ?? new string[0];
 						foreach (var i in comIds) {
-							connection.SafeExecute (
+							db.SafeExecute (
 								"INSERT INTO comment_links (CommentId, ParentCommentId) " +
 								"SELECT ?, Id FROM comments WHERE CommentId = ?", cid, i); 
 						}
@@ -95,7 +94,7 @@ namespace JoyReactor.Core.Model
 								pa.CommentId = c.Id;
 								pa.Type = CommentAttachment.TypeImage;
 								pa.Url = a.Image;
-								connection.SafeInsert (pa);
+								db.SafeInsert (pa);
 							}
 					};
 					r.ExtractPost (syncId);
@@ -104,12 +103,12 @@ namespace JoyReactor.Core.Model
 					throw e;
 				}
 
-				p = connection.SafeQuery<Post> ("SELECT * FROM posts WHERE Id = ?", postId).First ();
+				p = db.SafeQuery<Post> ("SELECT * FROM posts WHERE Id = ?", postId).First ();
 				return p;
 			});
 		}
 
-		private SiteParser GetSiteParserForPost (Post p)
+		SiteParser GetSiteParserForPost (Post p)
 		{
 			var parsers = ServiceLocator.Current.GetInstance<SiteParser[]> ();
 			var parserId = (ID.SiteParser)Enum.Parse (typeof(ID.SiteParser), p.PostId.Split ('-') [0]);
@@ -120,18 +119,29 @@ namespace JoyReactor.Core.Model
 		{
 			return Task.Run (() => {
 				var sql = "SELECT * FROM comment_attachments WHERE CommentId IN (SELECT Id FROM comments WHERE PostId = ?)";
-				return connection.SafeQuery<CommentAttachment> (sql, postId).ToList ();
+				return db.SafeQuery<CommentAttachment> (sql, postId).ToList ();
+			});
+		}
+
+		public Task CreateTag (string name)
+		{
+			return Task.Run (() => {
+				db.SafeInsert (new Tag {
+					TagId = ToFlatId (ID.Factory.NewTag (name.ToLower())),
+					Title = name,
+					Flags = Tag.FlagShowInMain,
+				});
 			});
 		}
 
 		#region Private methods
 
-		private static long TimestampNow ()
+		static long TimestampNow ()
 		{
 			return DateTime.Now.ToFileTimeUtc () / 10000L;
 		}
 
-		private string ToFlatId (ID id)
+		string ToFlatId (ID id)
 		{
 			return id.Site + "-" + id.Type + "-" + id.Tag;
 		}

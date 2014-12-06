@@ -7,4 +7,8 @@
 	<string name="favorite">Избранное</string>
 	<string name="feed">Лента</string>
 	<string name="post_acitivty">Пост</string>
+	<string name="create_tag">Добавить тег</string>
+	<string name="tag_name">Имя тега</string>
+	<string name="example_tag">Пример: Android, Anime</string>
+	<string name="required_field">Обязательное поле</string>
 </resources>

@@ -5,7 +5,6 @@ using Android.Widget;
 using JoyReactor.Core;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
-using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.App.Base.Commands;
 using JoyReactor.Android.Widget;
@@ -21,7 +20,7 @@ namespace JoyReactor.Android.App.Home
 
 		ListView list;
 		Adapter adapter;
-		ITagCollectionModel model = ServiceLocator.Current.GetInstance<ITagCollectionModel> ();
+		TagCollectionModel model = new TagCollectionModel();
 
 		public async override void OnActivityCreated (Bundle savedInstanceState)
 		{

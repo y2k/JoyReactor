@@ -7,7 +7,6 @@ using Android.Views;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.App.Base.Commands;
 using JoyReactor.Android.App.Home;
-using JoyReactor.Android.App.Profile;
 
 namespace JoyReactor.Android.App
 {
@@ -26,7 +25,7 @@ namespace JoyReactor.Android.App
 
 			pager = FindViewById<ViewPager> (Resource.Id.pager);
 			pager.Adapter = new Adapter (SupportFragmentManager);
-			pager.PageSelected += (s, e) => SupportActionBar.SetDisplayHomeAsUpEnabled(e.Position > 0);
+			pager.PageSelected += (s, e) => SupportActionBar.SetDisplayHomeAsUpEnabled (e.Position > 0);
 
 			pager.CurrentItem = 1;
 		}
@@ -39,11 +38,16 @@ namespace JoyReactor.Android.App
 
 		public override bool OnOptionsItemSelected (IMenuItem item)
 		{
-			if (item.ItemId == global::Android.Resource.Id.Home) {
+			switch (item.ItemId) {
+			case global::Android.Resource.Id.Home:
 				pager.CurrentItem = 0;
 				return true;
-			} else if (item.ItemId == Resource.Id.profile) {
+			case Resource.Id.profile:
 				StartActivity (typeof(ProfileActivity));
+				return true;
+			case Resource.Id.addTag:
+				new CreateTagDialog ().Show (SupportFragmentManager, null);
+				return true;
 			}
 			return base.OnOptionsItemSelected (item);
 		}
@@ -63,7 +67,9 @@ namespace JoyReactor.Android.App
 
 	public class Adapter : FragmentPagerAdapter
 	{
-		public Adapter(global::Android.Support.V4.App.FragmentManager fm) : base(fm) { }
+		public Adapter (global::Android.Support.V4.App.FragmentManager fm) : base (fm)
+		{
+		}
 
 		#region implemented abstract members of PagerAdapter
 
@@ -84,8 +90,10 @@ namespace JoyReactor.Android.App
 
 		public override global::Android.Support.V4.App.Fragment GetItem (int position)
 		{
-			if (position == 0) return new LeftMenuFragment ();
-			if (position == 1) return new FeedFragment ();
+			if (position == 0)
+				return new LeftMenuFragment ();
+			if (position == 1)
+				return new FeedFragment ();
 			return new RightMenuFragment ();
 		}
 

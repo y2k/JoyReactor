@@ -1,56 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Android.App;
+﻿using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
-using JoyReactor.Core.Model;
-using JoyReactor.Core.Model.Inject;
-using JoyReactor.Android.App.Base;
 using Android.Widget;
-using Microsoft.Practices.ServiceLocation;
+using JoyReactor.Core.Model;
+using JoyReactor.Android.App.Base;
 
-namespace JoyReactor.Android.App.Profile
+namespace JoyReactor.Android.App
 {
-	[Activity (Label = "ProfileActivity")]			
+	[Activity (Label = "@string/profile", ParentActivity = typeof(HomeActivity))]			
 	public class ProfileActivity : BaseActivity
 	{
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
-
-			if (bundle == null) {
-				SupportFragmentManager.BeginTransaction ().Add (global::Android.Resource.Id.Content, new ProfileFragment ()).Commit ();
-			}
+			SetContentViewForFragment ();
+			SupportActionBar.SetDisplayHomeAsUpEnabled (true);
+			if (bundle == null)
+				SetRootFragment (new ProfileFragment ());
 		}
 
 		public class ProfileFragment : BaseFragment
 		{
-			private IProfileModel model = ServiceLocator.Current.GetInstance<IProfileModel>();
+			ProfileModel model = new ProfileModel ();
 
-			private ViewAnimator animator;
-			private EditText username;
-			private EditText password;
-			private TextView profileUsername;
-			private TextView profileRating;
+			ViewAnimator animator;
+			EditText username;
+			EditText password;
+			TextView profileUsername;
+			TextView profileRating;
 
 			public async override void OnActivityCreated (Bundle savedInstanceState)
 			{
 				base.OnActivityCreated (savedInstanceState);
 
-				View.FindViewById(Resource.Id.login).Click += async (sender, e) => {
+				View.FindViewById (Resource.Id.login).Click += async (sender, e) => {
 					animator.DisplayedChild = 0;
-					await model.LoginAsync(username.Text, password.Text);
+					await model.LoginAsync (username.Text, password.Text);
 //					await model.GetCurrentProfileAsync ();
-					StartActivity(new Intent(Activity, typeof(HomeActivity)).AddFlags(ActivityFlags.ClearTop | ActivityFlags.TaskOnHome));
+					StartActivity (new Intent (Activity, typeof(HomeActivity)).AddFlags (ActivityFlags.ClearTop | ActivityFlags.TaskOnHome));
 				};
 				View.FindViewById (Resource.Id.logout).Click += async (sender, e) => {
 					animator.DisplayedChild = 0;
-					await model.LogoutAsync();
-					StartActivity(new Intent(Activity, typeof(HomeActivity)).AddFlags(ActivityFlags.ClearTop | ActivityFlags.TaskOnHome));
+					await model.LogoutAsync ();
+					StartActivity (new Intent (Activity, typeof(HomeActivity)).AddFlags (ActivityFlags.ClearTop | ActivityFlags.TaskOnHome));
 				};
 
 				var t = await model.GetCurrentProfileAsync ();
