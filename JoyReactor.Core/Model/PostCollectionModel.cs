@@ -80,7 +80,7 @@ namespace JoyReactor.Core.Model
 					var newid = SavePostToDatabase (id, post);
 					organizer.AddNewPost (newid);
 				};
-				parser.ExtractTag (id.Tag, id.Type, 0);
+				parser.ExtractTag (id.Tag, id.Type, null);
 				organizer.SaveChanges ();
 			});
 		}
