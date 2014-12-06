@@ -12,15 +12,15 @@ namespace JoyReactor.Core.Tests
 	[TestFixture]
 	public class PostModelTests
 	{
-		private const int TestPostId = 1;
-		private IPostModel model;
+		const int TestPostId = 1;
+		PostModel model;
 
 		[SetUp]
 		public void SetUp ()
 		{
 			var provider = new DefaultServiceLocator (new TestModule ());
 			ServiceLocator.SetLocatorProvider (() => provider);
-			model = ServiceLocator.Current.GetInstance<IPostModel> ();
+			model = new PostModel ();
 		}
 
 		[Test]
@@ -50,7 +50,7 @@ namespace JoyReactor.Core.Tests
 			}
 		}
 
-		private void SyncMockPost ()
+		void SyncMockPost ()
 		{
 			var conn = ServiceLocator.Current.GetInstance<ISQLiteConnection> ();
 			conn.Insert (new Post {

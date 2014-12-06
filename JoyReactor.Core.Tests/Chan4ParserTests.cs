@@ -49,16 +49,14 @@ namespace JoyReactor.Core.Tests
 		public void TestGetPostsFromB ()
 		{
 			int actualPostCount = 0;
-			parser.ExtractTag (ID.TagType.Good, "b", 0, null, state => {
-
-				Assert.IsNotNull (state);
-				if (state.State == CollectionExportState.ExportState.PostItem) {
-					actualPostCount++;
-					// TODO: дописать тест
-					Assert.IsTrue (Regex.IsMatch (state.Post.Id, @"b,\d+"), "Post id = " + state.Post.Id);
-				}
-
-			});
+			parser.NewPost += (sender, e) => {
+				Assert.IsNotNull (e);
+				actualPostCount++;
+				// TODO: дописать тест
+				Assert.IsTrue (Regex.IsMatch (e.Id, @"b,\d+"), "Post id = " + e.Id);
+			};
+			parser.NewTagInformation += (sender, e) => Assert.IsNotNull (e);
+			parser.ExtractTag ("b", ID.TagType.Good, 0);
 
 			Assert.AreEqual (15, actualPostCount);
 		}
@@ -66,10 +64,11 @@ namespace JoyReactor.Core.Tests
 		[Test]
 		public void TestMultiPageLoading ()
 		{
+			parser.NewPost += (sender, e) => Assert.IsNotNull (e);
+			parser.NewTagInformation += (sender, e) => Assert.IsNotNull (e);
+
 			for (int i = 0; i < 2; i++)
-				parser.ExtractTag (ID.TagType.Good, "b", i, null, state => {
-					// Ignore
-				});
+				parser.ExtractTag ("b", ID.TagType.Good, i);
 		}
 
 		[SetUp]
@@ -82,10 +81,9 @@ namespace JoyReactor.Core.Tests
 		[Test]
 		public void Chan4_GetPosts_WSG ()
 		{
-			parser.ExtractTag (ID.TagType.Good, "wsg", 0, null, state => {
-				Assert.IsNotNull (state);
-				// TODO: дописать тест
-			});
+			parser.NewPost += (sender, e) => Assert.IsNotNull (e);
+			parser.NewTagInformation += (sender, e) => Assert.IsNotNull (e);
+			parser.ExtractTag ("wsg", ID.TagType.Good, 0);
 		}
 	}
 }

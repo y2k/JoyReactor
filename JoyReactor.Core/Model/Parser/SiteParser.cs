@@ -16,12 +16,6 @@ namespace JoyReactor.Core.Model.Parser
 			throw new NotImplementedException ();
 		}
 
-		[Obsolete]
-		public virtual void ExtractTag (ID.TagType type, string tag, int lastLoadedPage, IDictionary<string, string> cookies, Action<CollectionExportState> callback)
-		{
-			throw new NotImplementedException ();
-		}
-
 		public virtual ProfileExport Profile (string username)
 		{
 			throw new NotImplementedException ();

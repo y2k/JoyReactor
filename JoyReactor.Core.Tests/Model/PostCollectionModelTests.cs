@@ -1,25 +1,24 @@
-﻿using NUnit.Framework;
-using Microsoft.Practices.ServiceLocation;
-using JoyReactor.Core.Model.Inject;
-using JoyReactor.Core.Tests.Inner;
-using System.Linq;
+﻿using System.Linq;
 using JoyReactor.Core.Model;
+using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model.Web;
-using System.Collections.Generic;
+using Microsoft.Practices.ServiceLocation;
+using NUnit.Framework;
+using JoyReactor.Core.Tests.Inner;
 
 namespace JoyReactor.Core.Tests.Model
 {
 	[TestFixture]
 	public class PostCollectionModelTests
 	{
-		IPostCollectionModel module;
+		PostCollectionModel module;
 
 		[SetUp]
 		public void SetUp ()
 		{
 			var provider = new DefaultServiceLocator (new TestModule ());
 			ServiceLocator.SetLocatorProvider (() => provider);
-			module = ServiceLocator.Current.GetInstance<IPostCollectionModel> ();
+			module = new PostCollectionModel ();
 		}
 
 		[Test]

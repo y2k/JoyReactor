@@ -11,7 +11,7 @@ namespace JoyReactor.Core.Tests
 	[TestFixture]
 	public class Chan2ParserTests
 	{
-		private SiteParser parser;
+		SiteParser parser;
 
 		[SetUp]
 		public void SetUp ()
@@ -23,21 +23,17 @@ namespace JoyReactor.Core.Tests
 		[Test]
 		public void Chan2_GetPosts_B ()
 		{
-			parser.ExtractTag (ID.TagType.Good, "b", 0, null, state => {
-
-				Assert.IsNotNull (state);
-
-			});
+			parser.NewPost += (sender, e) => Assert.IsNotNull (e);
+			parser.NewTagInformation += (sender, e) => Assert.IsNotNull (e);
+			parser.ExtractTag ("b", ID.TagType.Good, 0);
 		}
 
 		[Test]
 		public void Chan2_GetPosts_MEDIA ()
 		{
-			parser.ExtractTag (ID.TagType.Good, "media", 0, null, state => {
-
-				Assert.IsNotNull (state);
-
-			});
+			parser.NewPost += (sender, e) => Assert.IsNotNull (e);
+			parser.NewTagInformation += (sender, e) => Assert.IsNotNull (e);
+			parser.ExtractTag ("media", ID.TagType.Good, 0);
 		}
 
 		[Test]

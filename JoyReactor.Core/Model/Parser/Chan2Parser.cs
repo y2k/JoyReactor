@@ -37,7 +37,7 @@ namespace JoyReactor.Core.Model.Parser
 		{
 			var url = string.Format ("http://m2-ch.ru/{0}/{1}", 
 				          Uri.EscapeDataString (tag), 
-				          currentPageId.HasValue ? currentPageId + ".html" : "");
+				          currentPageId.HasValue && currentPageId > 0 ? currentPageId + ".html" : "");
 			return new Uri (url);
 		}
 

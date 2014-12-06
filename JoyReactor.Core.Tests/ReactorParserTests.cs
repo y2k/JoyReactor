@@ -14,32 +14,36 @@ namespace JoyReactor.Core.Tests
 	[TestFixture]
 	public class ReactorParserTests
 	{
-		private SiteParser parser;
+		SiteParser parser;
 
 		[SetUp]
-		public void SetUp() {
-			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator (new TestModule()));
+		public void SetUp ()
+		{
+			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator (new TestModule ()));
 			parser = new ReactorParser ();
+			parser.Cookies = new Dictionary<string,string> ();
 		}
 
 		[Test]
 		public void TestFeatured ()
 		{
-			parser.ExtractTag (ID.TagType.Good, null, 0, new Dictionary<string, string> (),
-				s => {
-				});
+			parser.NewPost += (sender, e) => Assert.IsNotNull (e);
+			parser.NewTagInformation += (sender, e) => Assert.IsNotNull (e);
+			parser.ExtractTag (null, ID.TagType.Good, 0);
 		}
 
 		[Test]
 		public void TestComics ()
 		{
 			int linkedTagCount = 0;
-			parser.ExtractTag (ID.TagType.Good, "комиксы", 0, new Dictionary<string, string> (),
-				s => {
-					if (s.State == CollectionExportState.ExportState.LikendTag) {
-						linkedTagCount++;
-					}
-				});
+
+			parser.NewPost += (sender, e) => Assert.IsNotNull (e);
+			parser.NewTagInformation += (sender, e) => Assert.IsNotNull (e);
+			parser.NewLinkedTag += (sender, e) => {
+				Assert.IsNotNull (e);
+				linkedTagCount++;
+			};
+			parser.ExtractTag ("комиксы", ID.TagType.Good, 0);
 
 			Assert.True (linkedTagCount > 0, "Linked tags = " + linkedTagCount);
 		}
