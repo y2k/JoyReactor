@@ -29,7 +29,7 @@ namespace JoyReactor.Core.Tests
 		{
 			parser.NewPost += (sender, e) => Assert.IsNotNull (e);
 			parser.NewTagInformation += (sender, e) => Assert.IsNotNull (e);
-			parser.ExtractTag (null, ID.TagType.Good, 0);
+			parser.ExtractTag (null, ID.TagType.Good, null);
 		}
 
 		[Test]
@@ -43,7 +43,7 @@ namespace JoyReactor.Core.Tests
 				Assert.IsNotNull (e);
 				linkedTagCount++;
 			};
-			parser.ExtractTag ("комиксы", ID.TagType.Good, 0);
+			parser.ExtractTag ("комиксы", ID.TagType.Good, null);
 
 			Assert.True (linkedTagCount > 0, "Linked tags = " + linkedTagCount);
 		}
