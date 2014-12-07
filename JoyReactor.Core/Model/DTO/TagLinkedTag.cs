@@ -1,5 +1,4 @@
-﻿using System;
-using Cirrious.MvvmCross.Community.Plugins.Sqlite;
+﻿using Cirrious.MvvmCross.Community.Plugins.Sqlite;
 
 namespace JoyReactor.Core.Model.DTO
 {

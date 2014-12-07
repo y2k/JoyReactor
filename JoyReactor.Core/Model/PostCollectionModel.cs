@@ -70,19 +70,47 @@ namespace JoyReactor.Core.Model
 		public Task SyncFirstPage (ID id)
 		{
 			return Task.Run (() => {
+				CreateTagIfNotExists (id);
+				ClearOldLinkedTags (id);
+
 				var parser = GetParserForTag (id);
 				parser.Cookies = GetSiteCookies (id);
 				parser.NewTagInformation += (sender, information) =>
 					UpdateTagInformation (ToFlatId (id), information);
-				CreateTagIfNotExists (id);
+
 				var organizer = new FirstPagePostSorter (connection, ToFlatId (id));
 				parser.NewPost += (sender, post) => {
 					var newid = SavePostToDatabase (id, post);
 					organizer.AddNewPost (newid);
 				};
+
+				parser.NewLinkedTag += (sender, e) => SaveLinkedTag (id, e);
+
 				parser.ExtractTag (id.Tag, id.Type, null);
 				organizer.SaveChanges ();
 			});
+		}
+
+		void ClearOldLinkedTags (ID id)
+		{
+			connection.SafeExecute (
+				"DELETE FROM tag_linked_tags WHERE ParentTagId IN (SELECT Id FROM tags WHERE TagId = ?)", 
+				ToFlatId (id));
+		}
+
+		void SaveLinkedTag (ID id, ExportLinkedTag linkedTag)
+		{
+			int tagId = connection.SafeQuery<Tag> (
+				            "SELECT * FROM tags WHERE TagId = ?", 
+				            ToFlatId (id)).First ().Id;
+			var dbTag = new TagLinkedTag {
+				ParentTagId = tagId,
+				GroupName = linkedTag.group,
+				Image = linkedTag.image,
+				TagId = linkedTag.value,
+				Title = linkedTag.name,
+			};
+			connection.SafeInsert (dbTag);
 		}
 
 		SiteParser GetParserForTag (ID id)
@@ -211,7 +239,7 @@ namespace JoyReactor.Core.Model
 				          "SELECT * " +
 				          "FROM posts " +
 				          "WHERE Id IN (SELECT PostId FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?))";
-				return MainDb.Instance.SafeQuery<Post> (sql, sid);
+				return connection.SafeQuery<Post> (sql, sid);
 			});
 		}
 
@@ -233,7 +261,7 @@ namespace JoyReactor.Core.Model
 				() => {
 					var sid = ToFlatId (id);
 					var r = new PostCollection ();
-					r.AddRange (MainDb.Instance.SafeQuery<Post> ("SELECT * FROM posts WHERE Id IN (SELECT PostId FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?))", sid));
+					r.AddRange (connection.SafeQuery<Post> ("SELECT * FROM posts WHERE Id IN (SELECT PostId FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?))", sid));
 					return r;
 				});
 		}
@@ -243,7 +271,7 @@ namespace JoyReactor.Core.Model
 			return Task.Run (
 				() => {
 					if (id.Type == ID.TagType.Favorite && id.Tag == null) {
-						id.Tag = MainDb.Instance.SafeExecuteScalar<string> ("SELECT Username From profiles WHERE Site = ?", "" + ID.SiteParser.JoyReactor);
+						id.Tag = connection.SafeExecuteScalar<string> ("SELECT Username From profiles WHERE Site = ?", "" + ID.SiteParser.JoyReactor);
 					}
 
 					if (flags == SyncFlags.First)
@@ -252,13 +280,13 @@ namespace JoyReactor.Core.Model
 						SyncNextPage (id);
 
 					var sid = ToFlatId (id);
-					return MainDb.Instance.SafeQuery<Post> ("SELECT * FROM posts WHERE Id IN (SELECT PostId FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?))", sid);
+					return connection.SafeQuery<Post> ("SELECT * FROM posts WHERE Id IN (SELECT PostId FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?))", sid);
 				});
 		}
 
 		public int GetCount (ID id)
 		{
-			return MainDb.Instance.SafeExecuteScalar<int> (
+			return connection.SafeExecuteScalar<int> (
 				"SELECT COUNT(*) FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)",
 				ToFlatId (id));
 		}
@@ -279,32 +307,32 @@ namespace JoyReactor.Core.Model
 
 		void InnerSyncFirstPage (ID id)
 		{
-//			long ts = MainDb.Instance.SafeExecuteScalar<long> ("SELECT Timestamp FROM tags WHERE TagId = ?", ToFlatId (id));
+//			long ts = connection.SafeExecuteScalar<long> ("SELECT Timestamp FROM tags WHERE TagId = ?", ToFlatId (id));
 //			if (Math.Abs (ts - TimestampNow ()) < Constants.TagLifeTime)
 //				return;
 //
 //			var p = parsers.First (s => s.ParserId == id.Site);
 //			p.ExtractTagPostCollection (id.Type, id.Tag, 0, GetSiteCookies (id), state => {
 //				if (state.State == CollectionExportState.ExportState.Begin) {
-//					MainDb.Instance.SafeExecute ("UPDATE tags SET Timestamp = ? WHERE TagId = ?", TimestampNow (), ToFlatId (id));
+//					connection.SafeExecute ("UPDATE tags SET Timestamp = ? WHERE TagId = ?", TimestampNow (), ToFlatId (id));
 //					// Удаление постов тега
-//					MainDb.Instance.SafeExecute ("DELETE FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)", ToFlatId (id));
+//					connection.SafeExecute ("DELETE FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)", ToFlatId (id));
 //					// Удаление связанных тегов
-//					MainDb.Instance.SafeExecute ("DELETE FROM tag_linked_tags WHERE ParentTagId IN (SELECT Id FROM tags WHERE TagId = ?)", ToFlatId (id));
+//					connection.SafeExecute ("DELETE FROM tag_linked_tags WHERE ParentTagId IN (SELECT Id FROM tags WHERE TagId = ?)", ToFlatId (id));
 //				} else if (state.State == CollectionExportState.ExportState.TagInfo) {
-//					var t = MainDb.Instance.SafeQuery<Tag> ("SELECT * FROM tags WHERE TagId = ?", ToFlatId (id)).FirstOrDefault ()
+//					var t = connection.SafeQuery<Tag> ("SELECT * FROM tags WHERE TagId = ?", ToFlatId (id)).FirstOrDefault ()
 //					        ?? new Tag { BestImage = state.TagInfo.Image, TagId = ToFlatId (id) };
 //					t.NextPage = state.TagInfo.NextPage;
 //					if (t.Id == 0)
-//						MainDb.Instance.SafeInsert (t);
+//						connection.SafeInsert (t);
 //					else
-//						MainDb.Instance.SafeUpdate (t);
+//						connection.SafeUpdate (t);
 //				} else if (state.State == CollectionExportState.ExportState.PostItem) {
 //					SavePostToDatabase (id, state.Post);
 //				} else if (state.State == CollectionExportState.ExportState.LikendTag) {
 //					// TODO Добавить проверку, что это первая страница
-//					int tid = MainDb.Instance.SafeExecuteScalar<int> ("SELECT Id FROM tags WHERE TagId = ?", ToFlatId (id));
-//					MainDb.Instance.SafeInsert (new TagLinkedTag {
+//					int tid = connection.SafeExecuteScalar<int> ("SELECT Id FROM tags WHERE TagId = ?", ToFlatId (id));
+//					connection.SafeInsert (new TagLinkedTag {
 //						ParentTagId = tid,
 //						GroupName = state.LinkedTag.group,
 //						Image = state.LinkedTag.image,
@@ -323,11 +351,11 @@ namespace JoyReactor.Core.Model
 		{
 //			// TODO Убрать копипаст
 //			var p = parsers.First (s => s.ParserId == id.Site);
-//			var t = MainDb.Instance.SafeQuery<Tag> ("SELECT * FROM tags WHERE TagId = ?", ToFlatId (id)).First ();
+//			var t = connection.SafeQuery<Tag> ("SELECT * FROM tags WHERE TagId = ?", ToFlatId (id)).First ();
 //			p.ExtractTagPostCollection (id.Type, id.Tag, t.NextPage, GetSiteCookies (id), state => {
 //				if (state.State == CollectionExportState.ExportState.TagInfo) {
 //					t.NextPage = state.TagInfo.NextPage;
-//					MainDb.Instance.SafeUpdate (t);
+//					connection.SafeUpdate (t);
 //				} else if (state.State == CollectionExportState.ExportState.PostItem) {
 //					SavePostToDatabase (id, state.Post);
 //				}
@@ -391,9 +419,17 @@ namespace JoyReactor.Core.Model
 	public class PostCollectionState
 	{
 		public List<Post> Posts { get; set; }
+
 		public int NewItemsCount { get; set; }
+
 		public int DividerPosition { get; set; }
 	}
 
-	public enum SyncFlags { None, Next, First }
+	public enum SyncFlags
+	{
+		None,
+		Next,
+		First
+
+	}
 }

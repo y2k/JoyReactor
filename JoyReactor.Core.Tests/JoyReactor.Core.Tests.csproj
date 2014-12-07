@@ -72,6 +72,7 @@
     <Compile Include="Bootstrap\CommunitySqlitePluginBootstrap.cs" />
     <Compile Include="Model\Parser\ChanPostLinkerTests.cs" />
     <Compile Include="Model\PostCollectionModelTests.cs" />
+    <Compile Include="Controllers\TagInformationControllerTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -151,5 +152,6 @@
     <Folder Include="FakeWebResponses\" />
     <Folder Include="Model\" />
     <Folder Include="Model\Parser\" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
 </Project>

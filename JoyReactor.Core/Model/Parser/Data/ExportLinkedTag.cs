@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace JoyReactor.Core.Model.Parser.Data
+﻿namespace JoyReactor.Core.Model.Parser.Data
 {
 	public class ExportLinkedTag
 	{

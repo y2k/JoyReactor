@@ -83,6 +83,7 @@
     <Compile Include="Controllers\CreateTagController.cs" />
     <Compile Include="Controllers\RelayCommand.cs" />
     <Compile Include="Controllers\FeedController.cs" />
+    <Compile Include="Controllers\TagInformationController.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
