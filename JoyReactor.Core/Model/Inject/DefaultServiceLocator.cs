@@ -8,6 +8,7 @@ using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.Model.Web.Parser;
+using Refractored.Xam.Settings;
 
 namespace JoyReactor.Core.Model.Inject
 {
@@ -57,6 +58,8 @@ namespace JoyReactor.Core.Model.Inject
 				b.RegisterType<Chan7Parser> ().As<SiteParser> ();
 
 				b.RegisterType<ImageModel> ().AsSelf ().SingleInstance ();
+
+				b.Register (_ => CrossSettings.Current).AsSelf ();
 			}
 		}
 

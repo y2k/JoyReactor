@@ -135,12 +135,19 @@ namespace JoyReactor.Core.Model.Parser
 
 		public override void ExtractPost (string postId)
 		{
-			var html = downloader.GetText (new Uri (string.Format ("http://joyreactor.cc/post/{0}", postId)));
+			var html = DownloadPostPageWithDomainCheck (postId);
 			var doc = new HtmlDocument ();
 			doc.LoadHtml (html);
 
 			ExportPostInformation (html);
 			ExportComments (html);
+		}
+
+		string DownloadPostPageWithDomainCheck (string postId)
+		{
+			var domain = new ReactorDomainDetector ().GetDomainForType (ReactorDomainDetector.TagType.Secret);
+			var uri = new Uri (string.Format ("http://{0}/post/{1}", domain, postId));
+			return downloader.GetText (uri);
 		}
 
 		void ExportComments (string html)
@@ -366,8 +373,7 @@ namespace JoyReactor.Core.Model.Parser
 		public override void ExtractTag (string tag, ID.TagType type, int? currentPageId)
 		{
 			Cookies.Add ("showVideoGif2", "1");
-			var url = GenerateUrl (type, tag, currentPageId);
-			var html = downloader.GetText (url, new RequestParams { Cookies = Cookies });
+			var html = DownloadTagPageWithCheckDomain (tag, type, currentPageId);
 
 			ExtractTagInformation (html);
 
@@ -389,6 +395,27 @@ namespace JoyReactor.Core.Model.Parser
 
 			if (!currentPageId.HasValue)
 				ExtractLinkedTags (html);
+		}
+
+		string DownloadTagPageWithCheckDomain (string tag, ID.TagType type, int? currentPageId)
+		{
+			var html = DownloadTagPage (tag, type, currentPageId);
+			if (IsPageFromSecretSite (html)) {
+				new ReactorDomainDetector ().SetTagType (tag, ReactorDomainDetector.TagType.Secret);
+				return DownloadTagPage (tag, type, currentPageId);
+			}
+			return html;
+		}
+
+		string DownloadTagPage (string tag, ID.TagType type, int? currentPageId)
+		{
+			var url = GenerateUrl (type, tag, currentPageId);
+			return downloader.GetText (url, new RequestParams { Cookies = Cookies });
+		}
+
+		bool IsPageFromSecretSite (string html)
+		{
+			return html.Contains (">секретные разделы</a>");
 		}
 
 		void ExtractTagInformation (string html)
@@ -421,7 +448,7 @@ namespace JoyReactor.Core.Model.Parser
 
 		Uri GenerateUrl (ID.TagType type, string tag, int? currentPage)
 		{
-			StringBuilder url = new StringBuilder ("http://joyreactor.cc");
+			StringBuilder url = new StringBuilder ("http://" + new ReactorDomainDetector ().GetDomainForTag (tag));
 			if (type == ID.TagType.Favorite) {
 				url.Append ("/user/").Append (Uri.EscapeDataString (tag)).Append ("/favorite");
 			} else {
