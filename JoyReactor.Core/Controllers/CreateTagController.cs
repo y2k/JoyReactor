@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
+using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
-using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Controllers
 {

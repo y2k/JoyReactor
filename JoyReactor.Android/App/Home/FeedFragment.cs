@@ -1,9 +1,11 @@
-﻿using Android.OS;
+﻿using System.Collections.Specialized;
+using Android.OS;
 using Android.Support.V4.Widget;
 using Android.Support.V7.Widget;
 using Android.Views;
+using GalaSoft.MvvmLight.Helpers;
 using JoyReactor.Core;
-using JoyReactor.Core.Controllers;
+using JoyReactor.Core.VideModels;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.App.Base.Commands;
 using JoyReactor.Android.Widget;
@@ -17,38 +19,53 @@ namespace JoyReactor.Android.App.Home
 		FeedAdapter adapter;
 		View applyButton;
 
-		FeedController controller;
+		FeedViewModel viewModel;
 
 		public override void OnCreate (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
 			RetainInstance = true;
-
-			controller = new FeedController (ID.Factory.New (ID.IdConst.ReactorGood));
-			ChangeSubscriptionCommand.Register (this, controller.OnChangeCurrentListId);
+			viewModel = new FeedViewModel (ID.Factory.New (ID.IdConst.ReactorGood));
 		}
 
 		public override void OnActivityCreated (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
-
 			list.SetAdapter (adapter = new FeedAdapter (Activity));
-			adapter.ClickMore += (sender, e) => controller.OnButtonMoreClicked ();
 
-			applyButton.Click += (sender, e) => controller.OnApplyButtonClicked ();
-			refresher.Refresh += (sender, e) => controller.OnRefreshInvoked ();
-			controller.InvalidateUiCallback = InvalidateUi;
-			InvalidateUi ();
+			adapter.SetCommand ("ClickMore", viewModel.MoreCommand);
+			applyButton.SetCommand ("Click", viewModel.ApplyCommand);
+			refresher.SetCommand ("Refresh", viewModel.RefreshCommand);
+
+			viewModel
+				.SetBinding (() => viewModel.HasNewItems, applyButton, () => applyButton.Visibility, BindingMode.OneWay)
+				.ConvertSourceToTarget (s => s ? ViewStates.Visible : ViewStates.Gone);
+			viewModel
+				.SetBinding (() => viewModel.SyncInProgress, refresher, () => refresher.Refreshing, BindingMode.OneWay);
 		}
 
-		void InvalidateUi ()
+		#region Collection change listener
+
+		void HandleCollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
-			if (IsViewInflated) {
-				applyButton.Visibility = controller.HasNewItems ? ViewStates.Visible : ViewStates.Gone;
-				adapter.ReplaceAll (controller.Posts);
-				refresher.Refreshing = controller.SyncInProgress;
-			}
+			adapter.ReplaceAll (viewModel.Posts);
 		}
+
+		public override void OnStart ()
+		{
+			base.OnStart ();
+			viewModel.Posts.CollectionChanged += HandleCollectionChanged;
+			ChangeSubscriptionCommand.Register (this, viewModel.ChangeCurrentListIdCommand.Execute);
+		}
+
+		public override void OnStop ()
+		{
+			base.OnStop ();
+			viewModel.Posts.CollectionChanged -= HandleCollectionChanged;
+			ChangeSubscriptionCommand.Unregister (this);
+		}
+
+		#endregion
 
 		bool IsViewInflated { get { return View != null; } }
 
@@ -61,12 +78,6 @@ namespace JoyReactor.Android.App.Home
 			refresher = v.FindViewById<SwipeRefreshLayout> (Resource.Id.refresher);
 			applyButton = v.FindViewById (Resource.Id.apply);
 			return v;
-		}
-
-		public override void OnDestroy ()
-		{
-			base.OnDestroy ();
-			ChangeSubscriptionCommand.Unregister (this);
 		}
 	}
 }
