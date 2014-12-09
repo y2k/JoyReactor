@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using Android.Content;
 using Android.Graphics;
 using Android.OS;
@@ -6,6 +8,7 @@ using Android.Views;
 using Android.Widget;
 using JoyReactor.Core.Controllers;
 using JoyReactor.Core.Model;
+using JoyReactor.Core.VideModels;
 using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.App.Base.Commands;
@@ -17,7 +20,7 @@ namespace JoyReactor.Android.App.Home
 		ListView list;
 		Adapter adapter;
 
-		TagInformationController controller = new TagInformationController ();
+		TagInformationViewModel viewModel = new TagInformationViewModel ();
 
 		public override void OnCreate (Bundle savedInstanceState)
 		{
@@ -25,37 +28,35 @@ namespace JoyReactor.Android.App.Home
 			RetainInstance = true;
 		}
 
-		public override void OnResume ()
+		public override void OnStart ()
 		{
-			base.OnResume ();
-			ChangeSubscriptionCommand.Register (this, s => controller.ChangeCurrentTag (s));
+			base.OnStart ();
+			ChangeSubscriptionCommand.Register (this, s => viewModel.ChangeCurrentTag (s));
+			viewModel.Items.CollectionChanged += HandleCollectionChanged;
 		}
 
-		public override void OnPause ()
+		public override void OnStop ()
 		{
-			base.OnPause ();
+			base.OnStop ();
 			ChangeSubscriptionCommand.Unregister (this);
+			viewModel.Items.CollectionChanged -= HandleCollectionChanged;
+		}
+
+		void HandleCollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
+		{
+			adapter.NotifyDataSetChanged ();
 		}
 
 		public override void OnActivityCreated (Bundle savedInstanceState)
 		{
 			base.OnActivityCreated (savedInstanceState);
 
-			list.Adapter = adapter = new Adapter (Activity);
-
+			list.Adapter = adapter = new Adapter { Source = viewModel.Items };
 			list.ItemClick += (sender, e) => { 
 // TODO:
 //				var id = ID.Parser (adapter.GetItem (e.Position).TagId);
 //				new ChangeSubscriptionCommand (id).Execute ();
 			};
-
-			controller.InvalidateUiCallback += HandleInvalidateUi;
-		}
-
-		void HandleInvalidateUi ()
-		{
-			adapter.Clear ();
-			adapter.AddAll (controller.Items);
 		}
 
 		public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -65,12 +66,27 @@ namespace JoyReactor.Android.App.Home
 			return v;
 		}
 
-		public class Adapter : ArrayAdapter<TagInformationController.ItemController>
+		public class Adapter : BaseAdapter<TagInformationViewModel.ItemViewModel>
 		{
 			ImageModel iModel = ServiceLocator.Current.GetInstance<ImageModel> ();
 
-			public Adapter (Context context) : base (context, 0)
+			public IList<TagInformationViewModel.ItemViewModel> Source { get; set; }
+
+			public override long GetItemId (int position)
 			{
+				return position;
+			}
+
+			public override int Count {
+				get {
+					return Source?.Count ?? 0;
+				}
+			}
+
+			public override TagInformationViewModel.ItemViewModel this [int index] {
+				get {
+					return Source [index];
+				}
 			}
 
 			public override View GetView (int position, View convertView, ViewGroup parent)
@@ -78,7 +94,7 @@ namespace JoyReactor.Android.App.Home
 				if (convertView == null)
 					convertView = View.Inflate (parent.Context, Resource.Layout.ItemSubscription, null);
 
-				var i = GetItem (position);
+				var i = Source [position];
 				convertView.FindViewById<TextView> (Resource.Id.title).Text = i.Title;
 
 				var iv = convertView.FindViewById<ImageView> (Resource.Id.icon);

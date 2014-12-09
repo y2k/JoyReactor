@@ -81,12 +81,11 @@
     <Compile Include="Model\ImageModel.cs" />
     <Compile Include="Model\Parser\Data\ExportTagInformation.cs" />
     <Compile Include="Controllers\CreateTagController.cs" />
-    <Compile Include="Controllers\FeedController.cs" />
-    <Compile Include="Controllers\TagInformationController.cs" />
     <Compile Include="Model\Parser\ReactorDomainDetector.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="VideModels\FeedViewModel.cs" />
     <Compile Include="VideModels\ObservableCollectionExtensions.cs" />
+    <Compile Include="VideModels\TagInformationViewModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

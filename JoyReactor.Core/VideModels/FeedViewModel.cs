@@ -3,13 +3,13 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.VideModels
 {
 	public class FeedViewModel : ViewModelBase
 	{
 		PostCollectionModel model = new PostCollectionModel ();
-		PostCollectionState data;
 		ID id;
 
 		public RelayCommand RefreshCommand { get; set; }
@@ -22,11 +22,11 @@ namespace JoyReactor.Core.VideModels
 
 		public ObservableCollection<Post> Posts { get; } = new ObservableCollection<Post>();
 
-		bool _syncInProgress;
+		bool _isBusy;
 
-		public bool SyncInProgress {
-			get { return _syncInProgress; }
-			set { Set (ref _syncInProgress, value); }
+		public bool IsBusy {
+			get { return _isBusy; }
+			set { Set (ref _isBusy, value); }
 		}
 
 		bool _hasNewItems;
@@ -48,44 +48,44 @@ namespace JoyReactor.Core.VideModels
 		async void LoadFirstPage (ID newId)
 		{
 			id = newId;
-			data = null;
 
-			data = await model.Get (id);
-			Posts.ReplaceAll (data.Posts);
-			SyncInProgress = true;
-
+			IsBusy = true;
+			await ReloadDataFromDatabase ();
 			await model.SyncFirstPage (id);
-			data = await model.Get (id);
+			await ReloadDataFromDatabase ();
+			IsBusy = false;
+		}
+
+		async Task ReloadDataFromDatabase ()
+		{
+			var data = await model.Get (id);
 			Posts.ReplaceAll (data.Posts);
-			SyncInProgress = false;
+			HasNewItems = data.NewItemsCount > 0;
 		}
 
 		async void OnRefreshInvoked ()
 		{
-			SyncInProgress = true;
-			if (data.NewItemsCount > 0) {
+			IsBusy = true;
+			if (HasNewItems) {
 				await model.ApplyNewItems (id);
 			} else {
 				await model.Reset (id);
 				await model.SyncFirstPage (id);
 			}
-			data = await model.Get (id);
-			Posts.ReplaceAll (data.Posts);
-			SyncInProgress = false;
+			await ReloadDataFromDatabase ();
+			IsBusy = false;
 		}
 
 		async void OnApplyButtonClicked ()
 		{
 			await model.ApplyNewItems (id);
-			data = await model.Get (id);
-			Posts.ReplaceAll (data.Posts);
+			await ReloadDataFromDatabase ();
 		}
 
 		async void OnButtonMoreClicked ()
 		{
 			await model.SyncNextPage (id);
-			data = await model.Get (id);
-			Posts.ReplaceAll (data.Posts);
+			await ReloadDataFromDatabase ();
 		}
 
 		void OnChangeCurrentListId (ID newId)

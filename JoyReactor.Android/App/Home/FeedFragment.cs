@@ -41,7 +41,7 @@ namespace JoyReactor.Android.App.Home
 				.SetBinding (() => viewModel.HasNewItems, applyButton, () => applyButton.Visibility, BindingMode.OneWay)
 				.ConvertSourceToTarget (s => s ? ViewStates.Visible : ViewStates.Gone);
 			viewModel
-				.SetBinding (() => viewModel.SyncInProgress, refresher, () => refresher.Refreshing, BindingMode.OneWay);
+				.SetBinding (() => viewModel.IsBusy, refresher, () => refresher.Refreshing, BindingMode.OneWay);
 		}
 
 		#region Collection change listener
