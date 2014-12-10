@@ -1,8 +1,8 @@
-﻿using Cirrious.MvvmCross.Community.Plugins.Sqlite;
+﻿using SQLite.Net.Attributes;
 
 namespace JoyReactor.Core.Model.DTO
 {
-	[Table("tags")]
+    [Table("tags")]
 	public class Tag
 	{
 		public const int FlagSystem = 1;

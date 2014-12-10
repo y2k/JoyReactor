@@ -1,19 +1,19 @@
 ﻿using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Parser;
 using Microsoft.Practices.ServiceLocation;
+using SQLite.Net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using JoyReactor.Core.Model.Helper;
-using Cirrious.MvvmCross.Community.Plugins.Sqlite;
 
 namespace JoyReactor.Core.Model
 {
-	public class PostModel
+    public class PostModel
 	{
-		ISQLiteConnection db = ServiceLocator.Current.GetInstance<ISQLiteConnection> ();
+		SQLiteConnection db = ServiceLocator.Current.GetInstance<SQLiteConnection> ();
 
 		public Task<List<Comment>> GetCommentsAsync (int postId, int parentCommentId)
 		{

@@ -1,8 +1,8 @@
-﻿using Cirrious.MvvmCross.Community.Plugins.Sqlite;
+﻿using SQLite.Net.Attributes;
 
 namespace JoyReactor.Core.Model.DTO
 {
-	[Table("tag_post")]
+    [Table("tag_post")]
 	public class TagPost
 	{
 		public const int StatusOld = 0;

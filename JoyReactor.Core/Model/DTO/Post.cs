@@ -1,9 +1,8 @@
-﻿using Cirrious.MvvmCross.Community.Plugins.Sqlite;
-using System;
+﻿using SQLite.Net.Attributes;
 
 namespace JoyReactor.Core.Model.DTO
 {
-	[Table("posts")]
+    [Table("posts")]
 	public class Post
 	{
 		[PrimaryKey, AutoIncrement]

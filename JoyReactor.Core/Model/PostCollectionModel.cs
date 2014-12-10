@@ -1,19 +1,19 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+﻿using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model.Parser.Data;
-using JoyReactor.Core.Model.Database;
 using Microsoft.Practices.ServiceLocation;
-using Cirrious.MvvmCross.Community.Plugins.Sqlite;
+using SQLite.Net;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model
 {
-	public class PostCollectionModel
+    public class PostCollectionModel
 	{
-		ISQLiteConnection connection = ServiceLocator.Current.GetInstance<ISQLiteConnection> ();
+		SQLiteConnection connection = ServiceLocator.Current.GetInstance<SQLiteConnection> ();
 
 		#region New Methods
 

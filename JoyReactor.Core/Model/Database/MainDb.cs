@@ -1,7 +1,9 @@
 ﻿using System;
-using Cirrious.MvvmCross.Community.Plugins.Sqlite;
 using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Core.Model.DTO;
+using SQLite.Net;
+using SQLite.Net.Interop;
+using PCLStorage;
 
 namespace JoyReactor.Core.Model.Database
 {
@@ -10,16 +12,17 @@ namespace JoyReactor.Core.Model.Database
 		const string DatabaseName = "net.itwister.joyreactor.main.db";
 		const int DatabaseVersion = 1;
 
-		static volatile ISQLiteConnection instance;
-		static object syncRoot = new Object ();
+		static volatile SQLiteConnection instance;
+		static object syncRoot = new object();
 
-		public static ISQLiteConnection Instance {
+		public static SQLiteConnection Instance {
 			get {
 				if (instance == null) {
 					lock (syncRoot) {
 						if (instance == null) {
-							var f = ServiceLocator.Current.GetInstance<ISQLiteConnectionFactory> ();
-							instance = f.Create (DatabaseName);
+                            var path = PortablePath.Combine(FileSystem.Current.LocalStorage.Path, DatabaseName);
+                            var platform = ServiceLocator.Current.GetInstance<ISQLitePlatform>();
+                            instance = new SQLiteConnection(platform, path);
 							InitializeDatabase (instance);
 						}
 					}
@@ -34,7 +37,7 @@ namespace JoyReactor.Core.Model.Database
 			return id.Site + "-" + id.Type + "-" + id.Tag;
 		}
 
-		protected static void OnCreate (ISQLiteConnection db)
+		protected static void OnCreate (SQLiteConnection db)
 		{
 			db.CreateTable<Post> ();
 			db.CreateTable<Tag> ();
@@ -57,33 +60,13 @@ namespace JoyReactor.Core.Model.Database
 				Flags = Tag.FlagShowInMain
 			});
 			db.Insert (new Tag {
-				TagId = ToFlatId (ID.Factory.New (ID.SiteParser.Chan2, "media")),
-				Title = "2ch / gif",
-				Flags = Tag.FlagShowInMain
-			});
-			db.Insert (new Tag {
 				TagId = ToFlatId (ID.Factory.New (ID.SiteParser.Chan4, "b")),
 				Title = "4chan / b",
 				Flags = Tag.FlagShowInMain
 			});
 			db.Insert (new Tag {
-				TagId = ToFlatId (ID.Factory.New (ID.SiteParser.Chan4, "gif")),
-				Title = "4chan / gif",
-				Flags = Tag.FlagShowInMain
-			});
-			db.Insert (new Tag {
-				TagId = ToFlatId (ID.Factory.New (ID.SiteParser.Chan4, "wfg")),
-				Title = "4chan / SFW gif",
-				Flags = Tag.FlagShowInMain
-			});
-			db.Insert (new Tag {
 				TagId = ToFlatId (ID.Factory.New (ID.SiteParser.Chan7, "b")),
 				Title = "7chan / b",
-				Flags = Tag.FlagShowInMain
-			});
-			db.Insert (new Tag {
-				TagId = ToFlatId (ID.Factory.New (ID.SiteParser.Chan7, "gif")),
-				Title = "7chan / gif",
 				Flags = Tag.FlagShowInMain
 			});
 
@@ -138,7 +121,7 @@ namespace JoyReactor.Core.Model.Database
 
 		#region Private methods
 
-		static void InitializeDatabase (ISQLiteConnection db)
+		static void InitializeDatabase (SQLiteConnection db)
 		{
 			int ver = GetUserVesion (db);
 			if (ver == 0)
@@ -153,12 +136,12 @@ namespace JoyReactor.Core.Model.Database
 				});
 		}
 
-		static void SetUserVersion (ISQLiteConnection db, int version)
+		static void SetUserVersion (SQLiteConnection db, int version)
 		{
 			db.Execute ("PRAGMA user_version = " + version);
 		}
 
-		static int GetUserVesion (ISQLiteConnection db)
+		static int GetUserVesion (SQLiteConnection db)
 		{
 			return db.ExecuteScalar<int> ("PRAGMA user_version");
 		}

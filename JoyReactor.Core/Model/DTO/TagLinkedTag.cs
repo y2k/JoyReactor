@@ -1,8 +1,8 @@
-﻿using Cirrious.MvvmCross.Community.Plugins.Sqlite;
+﻿using SQLite.Net.Attributes;
 
 namespace JoyReactor.Core.Model.DTO
 {
-	[Table("tag_linked_tags")]
+    [Table("tag_linked_tags")]
 	public class TagLinkedTag
 	{
 		[PrimaryKey, AutoIncrement]

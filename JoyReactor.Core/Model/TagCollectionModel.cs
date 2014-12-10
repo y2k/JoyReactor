@@ -1,15 +1,15 @@
-﻿using System.Threading.Tasks;
-using System.Collections.Generic;
+﻿using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
-using JoyReactor.Core.Model.Database;
-using Cirrious.MvvmCross.Community.Plugins.Sqlite;
 using Microsoft.Practices.ServiceLocation;
+using SQLite.Net;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model
 {
-	public class TagCollectionModel
+    public class TagCollectionModel
 	{
-		ISQLiteConnection connection = ServiceLocator.Current.GetInstance<ISQLiteConnection> ();
+		SQLiteConnection connection = ServiceLocator.Current.GetInstance<SQLiteConnection> ();
 
 		public Task<List<Tag>> GetMainSubscriptionsAsync ()
 		{

@@ -1,21 +1,20 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using Cirrious.MvvmCross.Community.Plugins.Sqlite;
-using JoyReactor.Core.Model.Database;
+﻿using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
+using SQLite.Net;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JoyReactor.Core.Model
 {
-	public class FirstPagePostSorter
+    public class FirstPagePostSorter
 	{
 		List<int> newUniqePostIds = new List<int> ();
 		List<int> newDublicatePosts = new List<int> ();
 		List<int> currentPostIds;
-		ISQLiteConnection db;
+		SQLiteConnection db;
 		int tagId;
 
-		public FirstPagePostSorter (ISQLiteConnection db, string tagId)
+		public FirstPagePostSorter (SQLiteConnection db, string tagId)
 		{
 			this.db = db;
 			LoadTagId (tagId);

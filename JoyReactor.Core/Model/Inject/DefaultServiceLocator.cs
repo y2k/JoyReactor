@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using Autofac;
-using Cirrious.MvvmCross.Community.Plugins.Sqlite;
-using Microsoft.Practices.ServiceLocation;
+﻿using Autofac;
 using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.Model.Web.Parser;
+using Microsoft.Practices.ServiceLocation;
 using Refractored.Xam.Settings;
+using SQLite.Net;
+using System;
+using System.Collections.Generic;
 
 namespace JoyReactor.Core.Model.Inject
 {
-	public class DefaultServiceLocator : ServiceLocatorImplBase
+    public class DefaultServiceLocator : ServiceLocatorImplBase
 	{
 		private IContainer locator;
 
@@ -50,7 +50,7 @@ namespace JoyReactor.Core.Model.Inject
 			{
 				b.RegisterType<Log.DumpLogger> ().As<Log.ILogger> ();
 				b.RegisterType<WebDownloader> ().As<IWebDownloader> ();
-				b.Register (_ => MainDb.Instance).As<ISQLiteConnection> ();
+				b.Register (_ => MainDb.Instance).As<SQLiteConnection> ();
 
 				b.RegisterType<ReactorParser> ().As<SiteParser> ();
 				b.RegisterType<Chan2Parser> ().As<SiteParser> ();

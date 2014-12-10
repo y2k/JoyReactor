@@ -1,9 +1,8 @@
-﻿using System;
-using Cirrious.MvvmCross.Community.Plugins.Sqlite;
+﻿using SQLite.Net.Attributes;
 
 namespace JoyReactor.Core.Model.DTO
 {
-	[Table("comment_links")]
+    [Table("comment_links")]
 	public class CommentLink
 	{
 		[PrimaryKey, AutoIncrement]

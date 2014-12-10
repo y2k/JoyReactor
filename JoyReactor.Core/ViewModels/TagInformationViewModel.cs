@@ -4,9 +4,9 @@ using GalaSoft.MvvmLight;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 
-namespace JoyReactor.Core.VideModels
+namespace JoyReactor.Core.ViewModels
 {
-	public class TagInformationViewModel : ViewModelBase
+    public class TagInformationViewModel : ViewModelBase
 	{
 		public ObservableCollection<ItemViewModel> Items { get; set; } = new ObservableCollection<ItemViewModel>();
 
