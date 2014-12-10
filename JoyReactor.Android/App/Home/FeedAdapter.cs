@@ -23,6 +23,8 @@ namespace JoyReactor.Android.App.Home
 
 		public event EventHandler ClickMore;
 
+		public int FooterPosition { get; set; } = -1;
+
 		ImageModel iModel = ServiceLocator.Current.GetInstance<ImageModel> ();
 		int maxWidth;
 		Context context;
@@ -34,23 +36,6 @@ namespace JoyReactor.Android.App.Home
 			maxWidth = (int)(200 * context.Resources.DisplayMetrics.Density);
 		}
 
-		//		public FeedAdapter (Context context) : base (context, 0)
-		//		{
-		//			maxWidth = (int)(200 * context.Resources.DisplayMetrics.Density);
-		//		}
-		//
-		//		public override int Count {
-		//			get {
-		//				return base.Count + 1;
-		//			}
-		//		}
-		//
-		//		public override int ViewTypeCount {
-		//			get {
-		//				return 2;
-		//			}
-		//		}
-		
 		public void ReplaceAll (IEnumerable<JoyReactor.Core.Model.DTO.Post> newItems)
 		{
 			items.Clear ();
@@ -58,30 +43,53 @@ namespace JoyReactor.Android.App.Home
 				items.AddRange (newItems);
 			NotifyDataSetChanged ();
 		}
-		
-		//		public override int GetItemViewType (int position)
-		//		{
-		//			return position == Count - 1 ? 1 : 0;
-		//		}
-		//
-		//		public override View GetView (int position, View convertView, ViewGroup parent)
-		//		{
-		//			return position == Count - 1
-		//				? GetViewForFooter (convertView, parent)
-		//				: GetViewForItem (convertView, position, parent);
-		//		}
-		//
-		//		View GetViewForFooter (View convertView, ViewGroup parent)
-		//		{
-		//			if (convertView == null) {
-		//				convertView = new Button (parent.Context);
-		//				((Button)convertView).Text = "FOOTER";
-		//				convertView.SetClick ((s, e) => ClickMore (s, e));
-		////				convertView.LayoutParameters = new StaggeredGridView.LayoutParams (StaggeredGridView.LayoutParams.WrapContent) { Span = 99 };
-		//			}
-		//			return convertView;
-		//		}
-		
+
+		#region implemented abstract members of Adapter
+
+		public override int GetItemViewType (int position)
+		{
+			return position == FooterPosition ? 1 : 0;
+		}
+
+		public override void OnBindViewHolder (RecyclerView.ViewHolder holder, int position)
+		{
+			if (GetItemViewType (position) == 0)
+				GetViewForItem (holder.ItemView, CorrectPosition (position));
+		}
+
+		public override RecyclerView.ViewHolder OnCreateViewHolder (ViewGroup parent, int position)
+		{
+			return GetItemViewType (position) == 1
+				? new ViewHolder (GetViewForFooter (null, parent))
+				: new ViewHolder (View.Inflate (context, Resource.Layout.ItemFeed, null));
+		}
+
+		public override int ItemCount { 
+			get { return items.Count + (items.Count > 0 && FooterPosition >= 0 ? 1 : 0); }
+		}
+
+		#endregion
+
+		int CorrectPosition (int position)
+		{
+			var aboveFooter = FooterPosition >= 0 && position > FooterPosition;
+			return position - (aboveFooter ? 1 : 0);
+		}
+
+		View GetViewForFooter (View convertView, ViewGroup parent)
+		{
+			if (convertView == null) {
+				convertView = new Button (parent.Context);
+				((Button)convertView).Text = "FOOTER";
+				convertView.SetClick (ClickMore);
+				convertView.LayoutParameters = new StaggeredGridLayoutManager.LayoutParams (
+					ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent) {
+					FullSpan = true,
+				};
+			}
+			return convertView;
+		}
+
 		void GetViewForItem (View convertView, int position)
 		{
 			var item = items [position];
@@ -97,26 +105,6 @@ namespace JoyReactor.Android.App.Home
 			convertView.FindViewById<TextView> (Resource.Id.user_name).Text = item.UserName;
 			convertView.FindViewById<TextView> (Resource.Id.title).Text = item.Title;
 		}
-
-		#region implemented abstract members of Adapter
-
-		public override void OnBindViewHolder (RecyclerView.ViewHolder holder, int position)
-		{
-			GetViewForItem (holder.ItemView, position);
-		}
-
-		public override RecyclerView.ViewHolder OnCreateViewHolder (ViewGroup parent, int position)
-		{
-			return new ViewHolder (View.Inflate (context, Resource.Layout.ItemFeed, null));
-		}
-
-		public override int ItemCount {
-			get {
-				return items.Count;
-			}
-		}
-
-		#endregion
 
 		class ViewHolder : RecyclerView.ViewHolder
 		{
