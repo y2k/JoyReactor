@@ -39,7 +39,8 @@ namespace JoyReactor.Core.Model.Database
 
 		protected static void OnCreate (SQLiteConnection db)
 		{
-			db.CreateTable<Post> ();
+            db.CreateTable<Post>();
+            db.CreateTable<Profile>();
 			db.CreateTable<Tag> ();
 			db.CreateTable<TagPost> ();
 			db.CreateTable<Profile> ();

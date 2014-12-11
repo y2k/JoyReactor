@@ -1,6 +1,6 @@
-﻿using System;
-using Autofac;
+﻿using Autofac;
 using SQLite.Net.Interop;
+using System;
 using XamarinCommons.Image;
 
 namespace JoyReactor.Models
@@ -11,11 +11,7 @@ namespace JoyReactor.Models
 
         protected override void Load(ContainerBuilder b)
         {
-#if WINDOWS_PHONE_APP
-            // TODO:
-#else
             b.RegisterType<SQLite.Net.Platform.WinRT.SQLitePlatformWinRT>().As<ISQLitePlatform>();
-#endif
             b.RegisterType<StubImageDecoder>().As<ImageDecoder>();
         }
 

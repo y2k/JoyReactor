@@ -8,7 +8,7 @@ namespace JoyReactor.Core.Model.DTO
 		[PrimaryKey, AutoIncrement]
 		public int Id { get; set; }
 
-		[Unique]
+		//[Unique]
 		public string PostId { get; set; }
 
 		public string Image { get; set; }

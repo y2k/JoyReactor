@@ -2,6 +2,7 @@
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace JoyReactor.Core.ViewModels
@@ -10,17 +11,31 @@ namespace JoyReactor.Core.ViewModels
     {
         TagCollectionModel model = new TagCollectionModel();
 
-        private List<TagItemViewModel> _tags;
+        List<TagItemViewModel> _tags;
         public List<TagItemViewModel> Tags
         {
             get { return _tags; }
             set { Set(ref _tags, value); }
         }
 
+        int _selectedTag;
+        public int SelectedTag
+        {
+            get { return _selectedTag; }
+            set { Set(ref _selectedTag, value); }
+        }
+
         public TagsViewModel()
         {
+            PropertyChanged += TagsViewModel_PropertyChanged;
             if (!IsInDesignMode)
                 LoadTag();
+        }
+
+        private void TagsViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "SelectedTag")
+                MessengerInstance.Send(new SelectTagMessage { Id = ID.Parser(Tags[SelectedTag].tag.TagId) });
         }
 
         private async void LoadTag()
@@ -34,7 +49,7 @@ namespace JoyReactor.Core.ViewModels
             public string Title { get { return tag.Title; } }
             public string Image { get { return tag.BestImage; } }
 
-            Tag tag;
+            internal Tag tag;
 
             public TagItemViewModel(Tag tag)
             {

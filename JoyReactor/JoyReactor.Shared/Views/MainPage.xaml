@@ -4,6 +4,7 @@
       xmlns:local="using:JoyReactor.Views"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:v="using:JoyReactor.Views"
       mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -11,12 +12,17 @@
             <HubSection Header="Subscriptions"
                         DataContext="{Binding Source={StaticResource Locator}, Path=Tags}">
                 <DataTemplate>
-                    <ListView ItemsSource="{Binding Tags}">
+                    <ListView ItemsSource="{Binding Tags}"
+                              SelectedIndex="{Binding SelectedTag, Mode=TwoWay}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Image Source="{Binding Image}" />
-                                    <TextBlock Text="{Binding Title}" />
+                                    <Image Source="{Binding Image}"
+                                           Width="40"
+                                           Height="40" />
+                                    <TextBlock Text="{Binding Title}"
+                                               Margin="8,0,0,0"
+                                               VerticalAlignment="Center" />
                                 </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -26,16 +32,32 @@
             <HubSection Header="Posts"
                         DataContext="{Binding Source={StaticResource Locator}, Path=Feed}">
                 <DataTemplate>
-                    <ListView ItemsSource="{Binding Posts}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel>
-                                    <Image Source="{Binding Image}" />
-                                    <TextBlock Text="{Binding Title}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                    <Grid>
+                        <ListView ItemsSource="{Binding Posts}">
+                            <ListView.ItemTemplateSelector>
+                                <v:FeedItemTemplateSelector>
+                                    <v:FeedItemTemplateSelector.ContentTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Width="300">
+                                                <Image Source="{Binding Image}" />
+                                                <TextBlock Text="{Binding Title}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </v:FeedItemTemplateSelector.ContentTemplate>
+                                    <v:FeedItemTemplateSelector.DividerTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Divider"
+                                                    Command="{Binding LoadMoreCommand}"
+                                                    Width="300" />
+                                        </DataTemplate>
+                                    </v:FeedItemTemplateSelector.DividerTemplate>
+                                </v:FeedItemTemplateSelector>
+                            </ListView.ItemTemplateSelector>
+                        </ListView>
+                        <ProgressRing Width="50"
+                                      Height="50"
+                                      IsActive="{Binding IsBusy}" />
+                    </Grid>
                 </DataTemplate>
             </HubSection>
         </Hub>

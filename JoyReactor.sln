@@ -31,6 +31,7 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		JoyReactor\JoyReactor.Shared\JoyReactor.Shared.projitems*{1a2d9424-b0bd-49b9-93d7-81a1562f38ee}*SharedItemsImports = 13
 		JoyReactor\JoyReactor.Shared\JoyReactor.Shared.projitems*{f83e128f-2ef0-469b-b5af-f96279d45ab3}*SharedItemsImports = 4
+		JoyReactor\JoyReactor.Shared\JoyReactor.Shared.projitems*{daef566d-25ae-4894-b280-9ffdbc0cd7cd}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU

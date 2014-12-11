@@ -85,6 +85,7 @@
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="ViewModels\FeedViewModel.cs" />
     <Compile Include="ViewModels\ObservableCollectionExtensions.cs" />
+    <Compile Include="ViewModels\SelectTagMessage.cs" />
     <Compile Include="ViewModels\TagsViewModel.cs" />
     <Compile Include="ViewModels\TagInformationViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />

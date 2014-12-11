@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -63,6 +64,8 @@ namespace JoyReactor.Core.ViewModels
                 ApplyCommand = new RelayCommand(OnApplyButtonClicked);
                 ChangeCurrentListIdCommand = new RelayCommand<ID>(OnChangeCurrentListId);
                 LoadFirstPage(id);
+
+                MessengerInstance.Register<SelectTagMessage>(this, s => LoadFirstPage(s.Id));
             }
         }
 
@@ -75,21 +78,6 @@ namespace JoyReactor.Core.ViewModels
             await model.SyncFirstPage(id);
             await ReloadDataFromDatabase();
             IsBusy = false;
-        }
-
-        async Task ReloadDataFromDatabase()
-        {
-            var data = await model.Get(id);
-            HasNewItems = data.NewItemsCount > 0;
-            Posts = ConvertToViewModelItemList(data);
-        }
-
-        private List<ViewModelBase> ConvertToViewModelItemList(PostCollectionState data)
-        {
-            var posts = data.Posts.Select(s => new ContentViewModel(s)).ToList<ViewModelBase>();
-            if (data.DividerPosition >= 0)
-                posts.Insert(data.DividerPosition, new DividerViewModel());
-            return posts;
         }
 
         async void OnRefreshInvoked()
@@ -120,6 +108,24 @@ namespace JoyReactor.Core.ViewModels
             await ReloadDataFromDatabase();
         }
 
+        async Task ReloadDataFromDatabase()
+        {
+            var data = await model.Get(id);
+            HasNewItems = data.NewItemsCount > 0;
+            Posts = ConvertToViewModelItemList(data);
+        }
+
+        private List<ViewModelBase> ConvertToViewModelItemList(PostCollectionState data)
+        {
+            var posts = data.Posts.Select(s => new ContentViewModel(s)).ToList<ViewModelBase>();
+            if (data.DividerPosition >= 0)
+            {
+                var divider = new DividerViewModel(OnButtonMoreClicked);
+                posts.Insert(data.DividerPosition, divider);
+            }
+            return posts;
+        }
+
         void OnChangeCurrentListId(ID newId)
         {
             LoadFirstPage(newId);
@@ -128,7 +134,7 @@ namespace JoyReactor.Core.ViewModels
         public class ContentViewModel : ViewModelBase
         {
             public string Title { get { return post.Title; } }
-            public string Image { get { return post.Image; } }
+            public string Image { get { return new ImageModel().CreateThumbnailUrl(post.Image, 200); } }
 
             private Post post;
 
@@ -140,7 +146,12 @@ namespace JoyReactor.Core.ViewModels
 
         public class DividerViewModel : ViewModelBase
         {
-            // TODO:
+            public RelayCommand LoadMoreCommand { get; set; }
+
+            public DividerViewModel(Action command)
+            {
+                LoadMoreCommand = new RelayCommand(command);
+            }
         }
     }
 }
