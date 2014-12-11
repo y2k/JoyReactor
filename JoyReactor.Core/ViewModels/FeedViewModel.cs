@@ -4,6 +4,7 @@ using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,15 +26,9 @@ namespace JoyReactor.Core.ViewModels
 
         #region Properties
 
-        private List<ViewModelBase> _posts;
-        public List<ViewModelBase> Posts
-        {
-            get { return _posts; }
-            set { Set(ref _posts, value); }
-        }
+        public ObservableCollection<ViewModelBase> Posts { get; } = new ObservableCollection<ViewModelBase>();
 
         bool _isBusy;
-
         public bool IsBusy
         {
             get { return _isBusy; }
@@ -41,7 +36,6 @@ namespace JoyReactor.Core.ViewModels
         }
 
         bool _hasNewItems;
-
         public bool HasNewItems
         {
             get { return _hasNewItems; }
@@ -112,7 +106,14 @@ namespace JoyReactor.Core.ViewModels
         {
             var data = await model.Get(id);
             HasNewItems = data.NewItemsCount > 0;
-            Posts = ConvertToViewModelItemList(data);
+
+            var newPosts = ConvertToViewModelItemList(data);
+            for (int i = Posts.Count - 1; i >= newPosts.Count; i--)
+                Posts.RemoveAt(i);
+            for (int i = Posts.Count; i < newPosts.Count; i++)
+                Posts.Add(null);
+            for (int i = 0; i < newPosts.Count; i++)
+                Posts[i] = newPosts[i];
         }
 
         private List<ViewModelBase> ConvertToViewModelItemList(PostCollectionState data)
@@ -142,6 +143,12 @@ namespace JoyReactor.Core.ViewModels
             {
                 this.post = post;
             }
+
+            public override bool Equals(object obj)
+            {
+                var o = obj as ContentViewModel;
+                return o != null && post.PostId == o.post.PostId;
+            }
         }
 
         public class DividerViewModel : ViewModelBase
@@ -151,6 +158,11 @@ namespace JoyReactor.Core.ViewModels
             public DividerViewModel(Action command)
             {
                 LoadMoreCommand = new RelayCommand(command);
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is DividerViewModel;
             }
         }
     }
