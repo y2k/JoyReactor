@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -102,9 +102,7 @@
     <Content Include="Assets\StoreLogo.scale-240.png" />
     <Content Include="Assets\WideLogo.scale-240.png" />
     <None Include="Libs\x86\SQLite.Net.dll" />
-    <None Include="Libs\x86\SQLite.Net.pdb" />
     <None Include="Libs\x86\SQLite.Net.Platform.WindowsPhoneApp81.dll" />
-    <None Include="Libs\x86\SQLite.Net.Platform.WindowsPhoneApp81.pdb" />
     <Content Include="Properties\_SettingsStarted.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -150,14 +148,6 @@
   <ItemGroup>
     <None Include="Libs\x86\SQLite.Net.Platform.WindowsPhoneApp81.pri" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <SDKReference Include="Microsoft.VCLibs, version=12.0">
-      <Name>Microsoft Visual C++ 2013 Runtime Package for Windows Phone</Name>
-    </SDKReference>
-    <SDKReference Include="SQLite.WP81, Version=3.8.7.4">
-      <Name>SQLite for Windows Phone 8.1</Name>
-    </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>

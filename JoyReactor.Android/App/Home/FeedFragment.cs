@@ -5,7 +5,7 @@ using Android.Support.V7.Widget;
 using Android.Views;
 using GalaSoft.MvvmLight.Helpers;
 using JoyReactor.Core;
-using JoyReactor.Core.VideModels;
+using JoyReactor.Core.ViewModels;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.App.Base.Commands;
 using JoyReactor.Android.Widget;
@@ -42,8 +42,8 @@ namespace JoyReactor.Android.App.Home
 				.ConvertSourceToTarget (s => s ? ViewStates.Visible : ViewStates.Gone);
 			viewModel
 				.SetBinding (() => viewModel.IsBusy, refresher, () => refresher.Refreshing, BindingMode.OneWay);
-			viewModel
-				.SetBinding (() => viewModel.DividerPosition, adapter, () => adapter.FooterPosition);
+//			viewModel
+//				.SetBinding (() => viewModel.DividerPosition, adapter, () => adapter.FooterPosition);
 		}
 
 		#region Collection change listener

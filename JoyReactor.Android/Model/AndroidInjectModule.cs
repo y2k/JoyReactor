@@ -1,7 +1,7 @@
 ﻿using Autofac;
-using Cirrious.MvvmCross.Community.Plugins.Sqlite;
-using Cirrious.MvvmCross.Community.Plugins.Sqlite.Droid;
 using JoyReactor.Core.Model.Helper;
+using SQLite.Net.Interop;
+using SQLite.Net.Platform.XamarinAndroid;
 using XamarinCommons.Image;
 
 namespace JoyReactor.Android.Model
@@ -14,7 +14,7 @@ namespace JoyReactor.Android.Model
 		{
 			builder.RegisterType<LogcatLogger> ().As<Log.ILogger>();
 			builder.RegisterType<BitmapImageDecoder> ().As<ImageDecoder> ();
-			builder.RegisterType<MvxDroidSQLiteConnectionFactory> ().As<ISQLiteConnectionFactory>();
+			builder.RegisterType<SQLitePlatformAndroid> ().As<ISQLitePlatform>();
 		}
 
 		#endregion

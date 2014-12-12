@@ -8,7 +8,7 @@ using Android.Views;
 using Android.Widget;
 using JoyReactor.Core.Controllers;
 using JoyReactor.Core.Model;
-using JoyReactor.Core.VideModels;
+using JoyReactor.Core.ViewModels;
 using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.App.Base.Commands;
