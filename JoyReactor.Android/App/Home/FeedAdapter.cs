@@ -14,6 +14,7 @@ using JoyReactor.Core.Model;
 using JoyReactor.Core.ViewModels;
 using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Android.Widget;
+using JoyReactor.Android.App.Base;
 
 namespace JoyReactor.Android.App.Home
 {
@@ -63,15 +64,15 @@ namespace JoyReactor.Android.App.Home
 		public override void OnBindViewHolder (RecyclerView.ViewHolder holder, int position)
 		{
 			if (holder.ItemViewType == TypeContent)
-				GetViewForItem (holder.ItemView, position);
+				BindContent (holder.ItemView, position);
 			else
-				GetViewForFooter (holder.ItemView);
+				BindFooter (holder.ItemView, (FeedViewModel.DividerViewModel)items [position]);
 		}
 
 		public override RecyclerView.ViewHolder OnCreateViewHolder (ViewGroup parent, int viewType)
 		{
 			return viewType == TypeDivider
-				? new ViewHolder (GetViewForFooter (null))
+				? new ViewHolder (CreateViewForFooter ())
 				: new ViewHolder (View.Inflate (context, Resource.Layout.ItemFeed, null));
 		}
 
@@ -81,27 +82,29 @@ namespace JoyReactor.Android.App.Home
 
 		#endregion
 
-		View GetViewForFooter (View convertView)
+		void BindFooter (View footer, FeedViewModel.DividerViewModel viewModel)
 		{
-			if (convertView == null) {
-				convertView = new Button (context);
-				((Button)convertView).Text = "FOOTER";
-//				convertView.SetClick (ClickMore);
-				convertView.LayoutParameters = new StaggeredGridLayoutManager.LayoutParams (
-					ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent) {
-					FullSpan = true,
-				};
-			}
+			footer.SetClick ((sender, e) => viewModel.LoadMoreCommand.Execute (null));
+		}
+
+		View CreateViewForFooter ()
+		{
+			var convertView = View.Inflate (context, Resource.Layout.ItemPostDivider, null);
+			convertView.LayoutParameters = new StaggeredGridLayoutManager.LayoutParams (
+				ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent) {
+				FullSpan = true,
+			};
 			return convertView;
 		}
 
-		void GetViewForItem (View convertView, int position)
+		void BindContent (View convertView, int position)
 		{
 			var item = (FeedViewModel.ContentViewModel)items [position];
 
-			// TODO
-			//			var v = convertView.FindViewById (Resource.Id.action);
-			// v.SetClick ((sender, e) => context.StartActivity (PostActivity.NewIntent (item.Id)));
+			var v = convertView.FindViewById (Resource.Id.action);
+			v.SetClick ((sender, e) => {
+				item.OpenPostCommand.Execute (null);
+			});
 
 			var iv = convertView.FindViewById<FixedSizeImageView> (Resource.Id.image);
 			iv.ImageSize = new Size (item.ImageWidth, item.ImageHeight);

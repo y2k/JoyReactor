@@ -3,6 +3,9 @@ using Android.Content;
 using Android.Support.V4.App;
 using Android.Support.V7.App;
 using JoyReactor.Android.App.Gallery;
+using GalaSoft.MvvmLight.Messaging;
+using JoyReactor.Core.ViewModels;
+using JoyReactor.Android.App.Posts;
 
 namespace JoyReactor.Android.App.Base
 {
@@ -40,14 +43,29 @@ namespace JoyReactor.Android.App.Base
 			StartActivity (NewIntent (typeof(FullscreenGalleryActivity), postId, initPosition));
 		}
 
-		public void SetContentViewForFragment() {
+		public void SetContentViewForFragment ()
+		{
 			SetContentView (Resource.Layout.layout_activity_container);
 		}
 
-		public void SetRootFragment(Fragment fragment) {
+		public void SetRootFragment (Fragment fragment)
+		{
 			SupportFragmentManager.BeginTransaction ()
 				.Add (Resource.Id.container, fragment)
 				.Commit ();
+		}
+
+		protected override void OnStart ()
+		{
+			base.OnStart ();
+			Messenger.Default.Register<PostNavigationMessage> (this, s => 
+				StartActivity (PostActivity.NewIntent (s.PostId)));
+		}
+
+		protected override void OnStop ()
+		{
+			base.OnStop ();
+			Messenger.Default.Unregister (this);
 		}
 	}
 }

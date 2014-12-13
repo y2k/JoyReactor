@@ -131,6 +131,8 @@ namespace JoyReactor.Core.ViewModels
 
 		public class ContentViewModel : ViewModelBase
 		{
+			public RelayCommand OpenPostCommand { get; set; }
+
 			public string Title { get { return post.Title; } }
 
 			public string Image { get { return post.Image; } }
@@ -148,6 +150,8 @@ namespace JoyReactor.Core.ViewModels
 			public ContentViewModel (Post post)
 			{
 				this.post = post;
+				OpenPostCommand = new FixRelayCommand (() =>
+					MessengerInstance.Send (new PostNavigationMessage { PostId = post.Id }));
 			}
 
 			public override bool Equals (object obj)

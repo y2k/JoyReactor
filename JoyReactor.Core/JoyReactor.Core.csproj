@@ -89,6 +89,8 @@
     <Compile Include="ViewModels\TagsViewModel.cs" />
     <Compile Include="ViewModels\TagInformationViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
+    <Compile Include="ViewModels\PostNavigationMessage.cs" />
+    <Compile Include="ViewModels\FixRelayCommand.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

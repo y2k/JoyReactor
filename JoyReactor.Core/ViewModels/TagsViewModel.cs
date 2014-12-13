@@ -32,13 +32,13 @@ namespace JoyReactor.Core.ViewModels
                 LoadTag();
         }
 
-        private void TagsViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void TagsViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "SelectedTag")
                 MessengerInstance.Send(new SelectTagMessage { Id = ID.Parser(Tags[SelectedTag].tag.TagId) });
         }
 
-        private async void LoadTag()
+        async void LoadTag()
         {
             var tags = await model.GetMainSubscriptionsAsync();
             Tags = tags.Select(s => new TagItemViewModel(s)).ToList();
