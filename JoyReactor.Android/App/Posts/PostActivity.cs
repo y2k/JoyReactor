@@ -3,7 +3,7 @@ using Android.Content;
 using Android.OS;
 using JoyReactor.Android.App.Base;
 
-namespace JoyReactor.Android.App.Post
+namespace JoyReactor.Android.App.Posts
 {
 	[Activity (Label = "@string/post_acitivty", ParentActivity = typeof(HomeActivity))]
 	public class PostActivity : BaseActivity

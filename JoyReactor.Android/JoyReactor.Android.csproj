@@ -102,8 +102,6 @@
     <Compile Include="App\Home\FeedAdapter.cs" />
     <Compile Include="App\Home\LeftMenuFragment.cs" />
     <Compile Include="App\Home\RightMenuFragment.cs" />
-    <Compile Include="App\Post\PostActivity.cs" />
-    <Compile Include="App\Post\PostFragment.cs" />
     <Compile Include="Model\AndroidInjectModule.cs" />
     <Compile Include="Model\BitmapImageDecoder.cs" />
     <Compile Include="Widget\FixedSizeImageView.cs" />
@@ -124,6 +122,8 @@
     <Compile Include="App\CreateTagDialog.cs" />
     <Compile Include="App\Base\BaseDialogFragment.cs" />
     <Compile Include="App\ProfileActivity.cs" />
+    <Compile Include="App\Posts\PostActivity.cs" />
+    <Compile Include="App\Posts\PostFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -153,6 +153,7 @@
     <AndroidResource Include="Resources\values\string.xml" />
     <AndroidResource Include="Resources\layout\dialog_create_tag.axml" />
     <AndroidResource Include="Resources\layout\layout_activity_container.axml" />
+    <AndroidResource Include="Resources\layout\ItemPostDivider.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>

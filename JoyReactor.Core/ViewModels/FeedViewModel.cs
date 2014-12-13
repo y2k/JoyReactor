@@ -10,160 +10,166 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.ViewModels
 {
-    public class FeedViewModel : ViewModelBase
-    {
-        #region Commands
+	public class FeedViewModel : ViewModelBase
+	{
+		#region Commands
 
-        public RelayCommand RefreshCommand { get; set; }
+		public RelayCommand RefreshCommand { get; set; }
 
-        public RelayCommand MoreCommand { get; set; }
+		public RelayCommand MoreCommand { get; set; }
 
-        public RelayCommand ApplyCommand { get; set; }
+		public RelayCommand ApplyCommand { get; set; }
 
-        public RelayCommand<ID> ChangeCurrentListIdCommand { get; set; }
+		public RelayCommand<ID> ChangeCurrentListIdCommand { get; set; }
 
-        #endregion
+		#endregion
 
-        #region Properties
+		#region Properties
 
-        public ObservableCollection<ViewModelBase> Posts { get; } = new ObservableCollection<ViewModelBase>();
+		public ObservableCollection<ViewModelBase> Posts { get; } = new ObservableCollection<ViewModelBase>();
 
-        bool _isBusy;
-        public bool IsBusy
-        {
-            get { return _isBusy; }
-            set { Set(ref _isBusy, value); }
-        }
+		bool _isBusy;
 
-        bool _hasNewItems;
-        public bool HasNewItems
-        {
-            get { return _hasNewItems; }
-            set { Set(ref _hasNewItems, value); }
-        }
+		public bool IsBusy {
+			get { return _isBusy; }
+			set { Set (ref _isBusy, value); }
+		}
 
-        #endregion
+		bool _hasNewItems;
 
-        PostCollectionModel model = new PostCollectionModel();
-        ID id;
+		public bool HasNewItems {
+			get { return _hasNewItems; }
+			set { Set (ref _hasNewItems, value); }
+		}
 
-        public FeedViewModel() : this(ID.Factory.New(ID.IdConst.ReactorGood)) { }
+		#endregion
 
-        public FeedViewModel(ID id)
-        {
-            if (!IsInDesignMode)
-            {
-                RefreshCommand = new RelayCommand(OnRefreshInvoked);
-                MoreCommand = new RelayCommand(OnButtonMoreClicked);
-                ApplyCommand = new RelayCommand(OnApplyButtonClicked);
-                ChangeCurrentListIdCommand = new RelayCommand<ID>(OnChangeCurrentListId);
-                LoadFirstPage(id);
+		PostCollectionModel model = new PostCollectionModel ();
+		ID id;
 
-                MessengerInstance.Register<SelectTagMessage>(this, s => LoadFirstPage(s.Id));
-            }
-        }
+		public FeedViewModel () : this (ID.Factory.New (ID.IdConst.ReactorGood))
+		{
+		}
 
-        async void LoadFirstPage(ID newId)
-        {
-            id = newId;
+		public FeedViewModel (ID id)
+		{
+			if (!IsInDesignMode) {
+				RefreshCommand = new RelayCommand (OnRefreshInvoked);
+				MoreCommand = new RelayCommand (OnButtonMoreClicked);
+				ApplyCommand = new RelayCommand (OnApplyButtonClicked);
+				ChangeCurrentListIdCommand = new RelayCommand<ID> (OnChangeCurrentListId);
+				LoadFirstPage (id);
 
-            IsBusy = true;
-            await ReloadDataFromDatabase();
-            await model.SyncFirstPage(id);
-            await ReloadDataFromDatabase();
-            IsBusy = false;
-        }
+				MessengerInstance.Register<SelectTagMessage> (this, s => LoadFirstPage (s.Id));
+			}
+		}
 
-        async void OnRefreshInvoked()
-        {
-            IsBusy = true;
-            if (HasNewItems)
-            {
-                await model.ApplyNewItems(id);
-            }
-            else
-            {
-                await model.Reset(id);
-                await model.SyncFirstPage(id);
-            }
-            await ReloadDataFromDatabase();
-            IsBusy = false;
-        }
+		async void LoadFirstPage (ID newId)
+		{
+			id = newId;
 
-        async void OnApplyButtonClicked()
-        {
-            await model.ApplyNewItems(id);
-            await ReloadDataFromDatabase();
-        }
+			IsBusy = true;
+			await ReloadDataFromDatabase ();
+			await model.SyncFirstPage (id);
+			await ReloadDataFromDatabase ();
+			IsBusy = false;
+		}
 
-        async void OnButtonMoreClicked()
-        {
-            await model.SyncNextPage(id);
-            await ReloadDataFromDatabase();
-        }
+		async void OnRefreshInvoked ()
+		{
+			IsBusy = true;
+			if (HasNewItems) {
+				await model.ApplyNewItems (id);
+			} else {
+				await model.Reset (id);
+				await model.SyncFirstPage (id);
+			}
+			await ReloadDataFromDatabase ();
+			IsBusy = false;
+		}
 
-        async Task ReloadDataFromDatabase()
-        {
-            var data = await model.Get(id);
-            HasNewItems = data.NewItemsCount > 0;
+		async void OnApplyButtonClicked ()
+		{
+			await model.ApplyNewItems (id);
+			await ReloadDataFromDatabase ();
+		}
 
-            var newPosts = ConvertToViewModelItemList(data);
-            for (int i = Posts.Count - 1; i >= newPosts.Count; i--)
-                Posts.RemoveAt(i);
-            for (int i = Posts.Count; i < newPosts.Count; i++)
-                Posts.Add(null);
-            for (int i = 0; i < newPosts.Count; i++)
-                Posts[i] = newPosts[i];
-        }
+		async void OnButtonMoreClicked ()
+		{
+			await model.SyncNextPage (id);
+			await ReloadDataFromDatabase ();
+		}
 
-        private List<ViewModelBase> ConvertToViewModelItemList(PostCollectionState data)
-        {
-            var posts = data.Posts.Select(s => new ContentViewModel(s)).ToList<ViewModelBase>();
-            if (data.DividerPosition >= 0)
-            {
-                var divider = new DividerViewModel(OnButtonMoreClicked);
-                posts.Insert(data.DividerPosition, divider);
-            }
-            return posts;
-        }
+		async Task ReloadDataFromDatabase ()
+		{
+			var data = await model.Get (id);
+			HasNewItems = data.NewItemsCount > 0;
 
-        void OnChangeCurrentListId(ID newId)
-        {
-            LoadFirstPage(newId);
-        }
+			var newPosts = ConvertToViewModelItemList (data);
+			for (int i = Posts.Count - 1; i >= newPosts.Count; i--)
+				Posts.RemoveAt (i);
+			for (int i = Posts.Count; i < newPosts.Count; i++)
+				Posts.Add (null);
+			for (int i = 0; i < newPosts.Count; i++)
+				Posts [i] = newPosts [i];
+		}
 
-        public class ContentViewModel : ViewModelBase
-        {
-            public string Title { get { return post.Title; } }
-            public string Image { get { return new ImageModel().CreateThumbnailUrl(post.Image, 200); } }
+		List<ViewModelBase> ConvertToViewModelItemList (PostCollectionState data)
+		{
+			var posts = data.Posts.Select (s => new ContentViewModel (s)).ToList<ViewModelBase> ();
+			if (data.DividerPosition >= 0) {
+				var divider = new DividerViewModel (OnButtonMoreClicked);
+				posts.Insert (data.DividerPosition, divider);
+			}
+			return posts;
+		}
 
-            private Post post;
+		void OnChangeCurrentListId (ID newId)
+		{
+			LoadFirstPage (newId);
+		}
 
-            public ContentViewModel(Post post)
-            {
-                this.post = post;
-            }
+		public class ContentViewModel : ViewModelBase
+		{
+			public string Title { get { return post.Title; } }
 
-            public override bool Equals(object obj)
-            {
-                var o = obj as ContentViewModel;
-                return o != null && post.PostId == o.post.PostId;
-            }
-        }
+			public string Image { get { return post.Image; } }
 
-        public class DividerViewModel : ViewModelBase
-        {
-            public RelayCommand LoadMoreCommand { get; set; }
+			public int ImageWidth { get { return post.ImageWidth; } }
 
-            public DividerViewModel(Action command)
-            {
-                LoadMoreCommand = new RelayCommand(command);
-            }
+			public int ImageHeight { get { return post.ImageHeight; } }
 
-            public override bool Equals(object obj)
-            {
-                return obj is DividerViewModel;
-            }
-        }
-    }
+			public Uri UserImage { get { return post.UserImage == null ? null : new Uri (post.UserImage); } }
+
+			public string UserName { get { return post.UserName; } }
+
+			Post post;
+
+			public ContentViewModel (Post post)
+			{
+				this.post = post;
+			}
+
+			public override bool Equals (object obj)
+			{
+				var o = obj as ContentViewModel;
+				return o != null && post.PostId == o.post.PostId;
+			}
+		}
+
+		public class DividerViewModel : ViewModelBase
+		{
+			public RelayCommand LoadMoreCommand { get; set; }
+
+			public DividerViewModel (Action command)
+			{
+				LoadMoreCommand = new RelayCommand (command);
+			}
+
+			public override bool Equals (object obj)
+			{
+				return obj is DividerViewModel;
+			}
+		}
+	}
 }

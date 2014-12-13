@@ -1,5 +1,4 @@
-﻿using System.Collections.Specialized;
-using Android.OS;
+﻿using Android.OS;
 using Android.Support.V4.Widget;
 using Android.Support.V7.Widget;
 using Android.Views;
@@ -31,9 +30,10 @@ namespace JoyReactor.Android.App.Home
 		public override void OnActivityCreated (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
-			list.SetAdapter (adapter = new FeedAdapter (Activity));
 
-			adapter.SetCommand ("ClickMore", viewModel.MoreCommand);
+			list.SetAdapter (adapter = new FeedAdapter (Activity));
+			adapter.ChangeItemSource (viewModel.Posts);
+
 			applyButton.SetCommand ("Click", viewModel.ApplyCommand);
 			refresher.SetCommand ("Refresh", viewModel.RefreshCommand);
 
@@ -42,28 +42,19 @@ namespace JoyReactor.Android.App.Home
 				.ConvertSourceToTarget (s => s ? ViewStates.Visible : ViewStates.Gone);
 			viewModel
 				.SetBinding (() => viewModel.IsBusy, refresher, () => refresher.Refreshing, BindingMode.OneWay);
-//			viewModel
-//				.SetBinding (() => viewModel.DividerPosition, adapter, () => adapter.FooterPosition);
 		}
 
 		#region Collection change listener
 
-		void HandleCollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
-		{
-			adapter.ReplaceAll (viewModel.Posts);
-		}
-
 		public override void OnStart ()
 		{
 			base.OnStart ();
-			viewModel.Posts.CollectionChanged += HandleCollectionChanged;
 			ChangeSubscriptionCommand.Register (this, viewModel.ChangeCurrentListIdCommand.Execute);
 		}
 
 		public override void OnStop ()
 		{
 			base.OnStop ();
-			viewModel.Posts.CollectionChanged -= HandleCollectionChanged;
 			ChangeSubscriptionCommand.Unregister (this);
 		}
 

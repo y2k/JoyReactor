@@ -10,7 +10,7 @@ using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.Widget;
 
-namespace JoyReactor.Android.App.Post
+namespace JoyReactor.Android.App.Posts
 {
 	public class PostFragment : BaseFragment
 	{
@@ -19,7 +19,7 @@ namespace JoyReactor.Android.App.Post
 		ListView list;
 		List<Comment> comments;
 		List<CommentAttachment> attachments;
-		JoyReactor.Core.Model.DTO.Post post;
+		Post post;
 		ColorSwipeRefreshLayout refresher;
 
 		View header;

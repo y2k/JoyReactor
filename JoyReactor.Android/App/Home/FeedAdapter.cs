@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Drawing;
 using Android.Content;
 using Android.Graphics;
@@ -7,28 +8,27 @@ using Android.Graphics.Drawables;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
+using GalaSoft.MvvmLight;
 using JoyReactor.Core;
 using JoyReactor.Core.Model;
-using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.ViewModels;
 using Microsoft.Practices.ServiceLocation;
-using JoyReactor.Android.App.Base;
-using JoyReactor.Android.App.Post;
 using JoyReactor.Android.Widget;
 
 namespace JoyReactor.Android.App.Home
 {
 	class FeedAdapter : RecyclerView.Adapter
 	{
+		const int TypeContent = Resource.Layout.ItemFeed;
+		const int TypeDivider = Resource.Layout.item_comment;
+
 		public ID ListId { get; set; }
 
-		public event EventHandler ClickMore;
-
-		public int FooterPosition { get; set; } = -1;
-
 		ImageModel iModel = ServiceLocator.Current.GetInstance<ImageModel> ();
+
 		int maxWidth;
 		Context context;
-		List<JoyReactor.Core.Model.DTO.Post> items = new List<JoyReactor.Core.Model.DTO.Post> ();
+		ObservableCollection<ViewModelBase> items;
 
 		public FeedAdapter (Context context)
 		{
@@ -36,11 +36,20 @@ namespace JoyReactor.Android.App.Home
 			maxWidth = (int)(200 * context.Resources.DisplayMetrics.Density);
 		}
 
-		public void ReplaceAll (IEnumerable<JoyReactor.Core.Model.DTO.Post> newItems)
+		public void ChangeItemSource (ObservableCollection<ViewModelBase> value)
 		{
-			items.Clear ();
-			if (newItems != null)
-				items.AddRange (newItems);
+			if (items != value) {
+				if (items != null)
+					items.CollectionChanged -= HandleCollectionChanged;
+
+				items = value;
+				items.CollectionChanged += HandleCollectionChanged;
+				NotifyDataSetChanged ();
+			}
+		}
+
+		void HandleCollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
+		{
 			NotifyDataSetChanged ();
 		}
 
@@ -48,40 +57,36 @@ namespace JoyReactor.Android.App.Home
 
 		public override int GetItemViewType (int position)
 		{
-			return position == FooterPosition ? 1 : 0;
+			return items [position] is FeedViewModel.ContentViewModel ? TypeContent : TypeDivider;
 		}
 
 		public override void OnBindViewHolder (RecyclerView.ViewHolder holder, int position)
 		{
-			if (GetItemViewType (position) == 0)
-				GetViewForItem (holder.ItemView, CorrectPosition (position));
+			if (holder.ItemViewType == TypeContent)
+				GetViewForItem (holder.ItemView, position);
+			else
+				GetViewForFooter (holder.ItemView);
 		}
 
-		public override RecyclerView.ViewHolder OnCreateViewHolder (ViewGroup parent, int position)
+		public override RecyclerView.ViewHolder OnCreateViewHolder (ViewGroup parent, int viewType)
 		{
-			return GetItemViewType (position) == 1
-				? new ViewHolder (GetViewForFooter (null, parent))
+			return viewType == TypeDivider
+				? new ViewHolder (GetViewForFooter (null))
 				: new ViewHolder (View.Inflate (context, Resource.Layout.ItemFeed, null));
 		}
 
 		public override int ItemCount { 
-			get { return items.Count + (items.Count > 0 && FooterPosition >= 0 ? 1 : 0); }
+			get { return items == null ? 0 : items.Count; }
 		}
 
 		#endregion
 
-		int CorrectPosition (int position)
-		{
-			var aboveFooter = FooterPosition >= 0 && position > FooterPosition;
-			return position - (aboveFooter ? 1 : 0);
-		}
-
-		View GetViewForFooter (View convertView, ViewGroup parent)
+		View GetViewForFooter (View convertView)
 		{
 			if (convertView == null) {
-				convertView = new Button (parent.Context);
+				convertView = new Button (context);
 				((Button)convertView).Text = "FOOTER";
-				convertView.SetClick (ClickMore);
+//				convertView.SetClick (ClickMore);
 				convertView.LayoutParameters = new StaggeredGridLayoutManager.LayoutParams (
 					ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent) {
 					FullSpan = true,
@@ -92,16 +97,21 @@ namespace JoyReactor.Android.App.Home
 
 		void GetViewForItem (View convertView, int position)
 		{
-			var item = items [position];
-			var v = convertView.FindViewById (Resource.Id.action);
-			v.SetClick ((sender, e) => context.StartActivity (PostActivity.NewIntent (item.Id)));
+			var item = (FeedViewModel.ContentViewModel)items [position];
+
+			// TODO
+			//			var v = convertView.FindViewById (Resource.Id.action);
+			// v.SetClick ((sender, e) => context.StartActivity (PostActivity.NewIntent (item.Id)));
+
 			var iv = convertView.FindViewById<FixedSizeImageView> (Resource.Id.image);
 			iv.ImageSize = new Size (item.ImageWidth, item.ImageHeight);
+
 			iv.SetImageDrawable (null);
 			iModel.Load (iv, item.Image == null ? null : new Uri (item.Image), maxWidth, s => iv.SetImageDrawable (s == null ? null : new BitmapDrawable ((Bitmap)s)));
+
 			var ui = convertView.FindViewById<ImageView> (Resource.Id.user_image);
 			ui.SetImageDrawable (null);
-			iModel.Load (ui, item.UserImage == null ? null : new Uri (item.UserImage), 0, s => ui.SetImageBitmap ((Bitmap)s));
+			iModel.Load (ui, item.UserImage, 0, s => ui.SetImageBitmap ((Bitmap)s));
 			convertView.FindViewById<TextView> (Resource.Id.user_name).Text = item.UserName;
 			convertView.FindViewById<TextView> (Resource.Id.title).Text = item.Title;
 		}
