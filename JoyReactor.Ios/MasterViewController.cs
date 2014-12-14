@@ -1,27 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Drawing;
-using JoyReactor.Core.Model;
-using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.ViewModels;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Ios
 {
-	//	public partial class MasterViewController : UITableViewController
-	//	{
-	//		DataSource dataSource;
-	//
-	//		public MasterViewController (IntPtr handle) : base (handle)
-	//		{
 	public partial class MasterViewController : UITableViewController
 	{
 		DataSource dataSource;
 
-		IPostCollectionModel model = ServiceLocator.Current.GetInstance<IPostCollectionModel> ();
-		ITagCollectionModel tagModel = ServiceLocator.Current.GetInstance<ITagCollectionModel> ();
-
+		TagsViewModel tags = new TagsViewModel ();
 
 		public MasterViewController (IntPtr handle) : base (handle)
 		{
@@ -31,8 +22,6 @@ namespace JoyReactor.Ios
 				ContentSizeForViewInPopover = new SizeF (320f, 600f);
 				ClearsSelectionOnViewWillAppear = false;
 			}
-			
-			// Custom initialization
 		}
 
 		public DetailViewController DetailViewController {
@@ -40,54 +29,51 @@ namespace JoyReactor.Ios
 			set;
 		}
 
-		//		void AddNewItem (object sender, EventArgs args)
-		//		{
-		//			dataSource.Objects.Insert (0, DateTime.Now);
-		//
-		//			using (var indexPath = NSIndexPath.FromRowSection (0, 0))
-		//				TableView.InsertRows (new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Automatic);
-		//		}
-
-		public override void DidReceiveMemoryWarning ()
-		{
-			// Releases the view if it doesn't have a superview.
-			base.DidReceiveMemoryWarning ();
-			
-			// Release any cached data, images, etc that aren't in use.
-		}
-
 		public async override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
-
-			// Perform any additional setup after loading the view, typically from a nib.
-//			NavigationItem.LeftBarButtonItem = EditButtonItem;
-
-//			var addButton = new UIBarButtonItem (UIBarButtonSystemItem.Add, AddNewItem);
-//			NavigationItem.RightBarButtonItem = addButton;
-
 			TableView.Source = dataSource = new DataSource (this);
+		}
 
-			var t = await tagModel.GetMainSubscriptionsAsync ();
-			dataSource.Objects.Clear ();
-			dataSource.Objects.AddRange (t);
+		public override void ViewWillAppear (bool animated)
+		{
+			base.ViewWillAppear (animated);
+			tags.Tags.CollectionChanged += HandleTagCollectionChanged;
+		}
+
+		public override void ViewDidDisappear (bool animated)
+		{
+			base.ViewDidDisappear (animated);
+			tags.Tags.CollectionChanged -= HandleTagCollectionChanged;
+		}
+
+		void HandleTagCollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
+		{
+			TableView.ReloadData ();
+		}
+
+		void HandlePostsCollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
+		{
+			// TODO
 			TableView.ReloadData ();
 		}
 
 		class DataSource : UITableViewSource
 		{
 			static readonly NSString CellIdentifier = new NSString ("Cell");
-			readonly List<Tag> objects = new List<Tag> ();
 			readonly MasterViewController controller;
+			ObservableCollection<TagsViewModel.TagItemViewModel> objects;
 
 			public DataSource (MasterViewController controller)
 			{
 				this.controller = controller;
+				objects = controller.tags.Tags;
 			}
 
-			public List<Tag> Objects {
+			public ObservableCollection<TagsViewModel.TagItemViewModel> Objects {
 				get { return objects; }
 			}
+
 			// Customize the number of sections in the table view.
 			public override int NumberOfSections (UITableView tableView)
 			{
@@ -96,52 +82,21 @@ namespace JoyReactor.Ios
 
 			public override int RowsInSection (UITableView tableview, int section)
 			{
-				return objects.Count;
+				return controller.tags.Tags.Count;
 			}
+
 			// Customize the appearance of table view cells.
 			public override UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath)
 			{
-				var cell = (UITableViewCell)tableView.DequeueReusableCell (CellIdentifier, indexPath);
-
+				var cell = tableView.DequeueReusableCell (CellIdentifier, indexPath);
 				cell.TextLabel.Text = objects [indexPath.Row].Title;
-
 				return cell;
 			}
 
-			//			public override bool CanEditRow (UITableView tableView, NSIndexPath indexPath)
-			//			{
-			//				// Return false if you do not want the specified item to be editable.
-			//				return true;
-			//			}
-			//
-			//			public override void CommitEditingStyle (UITableView tableView, UITableViewCellEditingStyle editingStyle, NSIndexPath indexPath)
-			//			{
-			//				if (editingStyle == UITableViewCellEditingStyle.Delete) {
-			//					// Delete the row from the data source.
-			//					objects.RemoveAt (indexPath.Row);
-			//					controller.TableView.DeleteRows (new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Fade);
-			//				} else if (editingStyle == UITableViewCellEditingStyle.Insert) {
-			//					// Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-			//				}
-			//			}
-			/*
-			// Override to support rearranging the table view.
-			public override void MoveRow (UITableView tableView, NSIndexPath sourceIndexPath, NSIndexPath destinationIndexPath)
-			{
-			}
-			*/
-			/*
-			// Override to support conditional rearranging of the table view.
-			public override bool CanMoveRow (UITableView tableView, NSIndexPath indexPath)
-			{
-				// Return false if you do not want the item to be re-orderable.
-				return true;
-			}
-			*/
 			public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
 			{
 				if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
-					controller.DetailViewController.SetDetailItem (objects [indexPath.Row]);
+					controller.DetailViewController.SetDetailItem (objects [indexPath.Row].TagId);
 			}
 		}
 
@@ -151,9 +106,8 @@ namespace JoyReactor.Ios
 				var indexPath = TableView.IndexPathForSelectedRow;
 				var item = dataSource.Objects [indexPath.Row];
 
-				((DetailViewController)segue.DestinationViewController).SetDetailItem (item);
+				((DetailViewController)segue.DestinationViewController).SetDetailItem (item.TagId);
 			}
 		}
 	}
 }
-

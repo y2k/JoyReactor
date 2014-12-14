@@ -95,11 +95,15 @@
                                             <color key="textColor" colorSpace="calibratedRGB" red="1" green="0" blue="0" alpha="1"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="71" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                            <rect key="frame" x="0.0" y="-3" width="201" height="203"/>
+                                        </imageView>
                                     </subviews>
                                 </view>
                                 <color key="backgroundColor" colorSpace="calibratedRGB" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1"/>
                                 <connections>
                                     <outlet property="label1" destination="57" id="name-outlet-57"/>
+                                    <outlet property="Image" destination="71" id="name-outlet-71"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -107,7 +111,7 @@
                             <outlet property="dataSource" destination="41" id="44"/>
                             <outlet property="delegate" destination="41" id="45"/>
                         </connections>
-                        <size key="itemSize" width="200" height="200"/>
+                        <size key="itemSize" width="400" height="400"/>
                     </collectionView>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="47" userLabel="First Responder" sceneMemberID="firstResponder"/>

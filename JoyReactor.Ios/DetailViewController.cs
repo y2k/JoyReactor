@@ -1,23 +1,29 @@
 ﻿using System;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.ViewModels;
+using JoyReactor.Core;
+using System.Collections.Generic;
+using GalaSoft.MvvmLight;
+using System.Collections.Specialized;
 
 namespace JoyReactor.Ios
 {
 	public partial class DetailViewController : UICollectionViewController
 	{
 		UIPopoverController masterPopoverController;
-		Tag detailItem;
+		ID detailItem;
+		FeedViewModel feedViewModel = new FeedViewModel ();
 
 		public DetailViewController (IntPtr handle) : base (handle)
 		{
 		}
 
-		public void SetDetailItem (Tag newDetailItem)
+		public void SetDetailItem (ID newDetailItem)
 		{
 			if (detailItem != newDetailItem) {
 				detailItem = newDetailItem;
+				feedViewModel.ChangeCurrentListIdCommand.Execute (newDetailItem);
 				
 				// Update the view
 				ConfigureView ();
@@ -33,15 +39,7 @@ namespace JoyReactor.Ios
 //			if (IsViewLoaded && detailItem != null)
 //				detailDescriptionLabel.Text = detailItem.ToString ();
 
-			CollectionView.DataSource = new PostSource ();
-		}
-
-		public override void DidReceiveMemoryWarning ()
-		{
-			// Releases the view if it doesn't have a superview.
-			base.DidReceiveMemoryWarning ();
-
-			// Release any cached data, images, etc that aren't in use.
+			CollectionView.DataSource = new PostSource { Items = feedViewModel.Posts };
 		}
 
 		public override void ViewDidLoad ()
@@ -50,6 +48,23 @@ namespace JoyReactor.Ios
 			
 			// Perform any additional setup after loading the view, typically from a nib.
 			ConfigureView ();
+		}
+
+		public override void ViewWillAppear (bool animated)
+		{
+			base.ViewWillAppear (animated);
+			feedViewModel.Posts.CollectionChanged += HandleCollectionChanged;
+		}
+
+		public override void ViewDidDisappear (bool animated)
+		{
+			base.ViewDidDisappear (animated);
+			feedViewModel.Posts.CollectionChanged -= HandleCollectionChanged;
+		}
+
+		void HandleCollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
+		{
+			CollectionView.ReloadData ();
 		}
 
 		[Export ("splitViewController:willHideViewController:withBarButtonItem:forPopoverController:")]
@@ -70,21 +85,24 @@ namespace JoyReactor.Ios
 
 		class PostSource : UICollectionViewDataSource
 		{
-			Random rand = new Random ();
+			public IList<ViewModelBase> Items { get; set; }
 
 			#region implemented abstract members of UICollectionViewDataSource
 
 			public override UICollectionViewCell GetCell (UICollectionView collectionView, NSIndexPath indexPath)
 			{
 				var cell = (PostItemView)collectionView.DequeueReusableCell (new NSString ("cell"), indexPath);
-				cell.Label = "" + rand.Next ();
-				return cell; 
 
+				var s = Items [indexPath.Row] as FeedViewModel.ContentViewModel;
+				if (s != null)
+					cell.Update (s);
+
+				return cell; 
 			}
 
 			public override int GetItemsCount (UICollectionView collectionView, int section)
 			{
-				return 10;
+				return Items.Count;
 			}
 
 			#endregion

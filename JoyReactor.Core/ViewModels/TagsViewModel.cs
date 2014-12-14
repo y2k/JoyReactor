@@ -1,60 +1,59 @@
-﻿using GalaSoft.MvvmLight;
-using JoyReactor.Core.Model;
-using JoyReactor.Core.Model.DTO;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using GalaSoft.MvvmLight;
+using JoyReactor.Core.Model;
+using JoyReactor.Core.Model.DTO;
 
 namespace JoyReactor.Core.ViewModels
 {
-    public class TagsViewModel : ViewModelBase
-    {
-        TagCollectionModel model = new TagCollectionModel();
+	public class TagsViewModel : ViewModelBase
+	{
+		public ObservableCollection<TagItemViewModel> Tags { get; } = new ObservableCollection<TagItemViewModel>();
 
-        List<TagItemViewModel> _tags;
-        public List<TagItemViewModel> Tags
-        {
-            get { return _tags; }
-            set { Set(ref _tags, value); }
-        }
+		int _selectedTag;
 
-        int _selectedTag;
-        public int SelectedTag
-        {
-            get { return _selectedTag; }
-            set { Set(ref _selectedTag, value); }
-        }
+		public int SelectedTag {
+			get { return _selectedTag; }
+			set { Set (ref _selectedTag, value); }
+		}
 
-        public TagsViewModel()
-        {
-            PropertyChanged += TagsViewModel_PropertyChanged;
-            if (!IsInDesignMode)
-                LoadTag();
-        }
+		public TagsViewModel ()
+		{
+			PropertyChanged += TagsViewModel_PropertyChanged;
+			if (!IsInDesignMode)
+				LoadTag ();
+		}
 
-        void TagsViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "SelectedTag")
-                MessengerInstance.Send(new SelectTagMessage { Id = ID.Parser(Tags[SelectedTag].tag.TagId) });
-        }
+		TagCollectionModel model = new TagCollectionModel ();
 
-        async void LoadTag()
-        {
-            var tags = await model.GetMainSubscriptionsAsync();
-            Tags = tags.Select(s => new TagItemViewModel(s)).ToList();
-        }
+		void TagsViewModel_PropertyChanged (object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "SelectedTag")
+				MessengerInstance.Send (new SelectTagMessage { Id = ID.Parser (Tags [SelectedTag].tag.TagId) });
+		}
 
-        public class TagItemViewModel : ViewModelBase
-        {
-            public string Title { get { return tag.Title; } }
-            public string Image { get { return tag.BestImage; } }
+		async void LoadTag ()
+		{
+			var tags = await model.GetMainSubscriptionsAsync ();
+			Tags.ReplaceAll (tags.Select (s => new TagItemViewModel (s)).ToList ());
+		}
 
-            internal Tag tag;
+		public class TagItemViewModel : ViewModelBase
+		{
+			public ID TagId { get { return ID.Parser (tag.TagId); } }
 
-            public TagItemViewModel(Tag tag)
-            {
-                this.tag = tag;
-            }
-        }
-    }
+			public string Title { get { return tag.Title; } }
+
+			public string Image { get { return tag.BestImage; } }
+
+			internal Tag tag;
+
+			public TagItemViewModel (Tag tag)
+			{
+				this.tag = tag;
+			}
+		}
+	}
 }

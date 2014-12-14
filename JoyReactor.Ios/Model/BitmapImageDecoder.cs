@@ -1,19 +1,21 @@
-﻿using System;
-using System.IO;
+﻿using MonoTouch.UIKit;
 using XamarinCommons.Image;
 
 namespace JoyReactor.Ios.Model
 {
 	public class BitmapImageDecoder : ImageDecoder
 	{
-		public override object DecoderStream (Stream stream)
+		public override object Decode (PCLStorage.IFile file)
 		{
-			throw new NotImplementedException ();
+			return new UIImage (file.Path);
 		}
 
 		public override int GetImageSize (object commonImage)
 		{
-			throw new NotImplementedException ();
+			var image = (UIImage)commonImage;
+			if (image == null)
+				return 0;
+			return (int)(image.Size.Width * image.Size.Height * 4);
 		}
 	}
 }

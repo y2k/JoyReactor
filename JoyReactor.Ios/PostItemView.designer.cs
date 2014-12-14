@@ -16,10 +16,18 @@ namespace JoyReactor.Ios
 	{
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
+		UIImageView Image { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
 		UILabel label1 { get; set; }
 
 		void ReleaseDesignerOutlets ()
 		{
+			if (Image != null) {
+				Image.Dispose ();
+				Image = null;
+			}
 			if (label1 != null) {
 				label1.Dispose ();
 				label1 = null;

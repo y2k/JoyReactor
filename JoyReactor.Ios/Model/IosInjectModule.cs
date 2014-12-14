@@ -1,6 +1,6 @@
 ﻿using Autofac;
-using Cirrious.MvvmCross.Community.Plugins.Sqlite.Touch;
-using Cirrious.MvvmCross.Community.Plugins.Sqlite;
+using SQLite.Net.Interop;
+using SQLite.Net.Platform.XamarinIOS;
 using XamarinCommons.Image;
 
 namespace JoyReactor.Ios.Model
@@ -12,7 +12,7 @@ namespace JoyReactor.Ios.Model
 		protected override void Load (ContainerBuilder builder)
 		{
 			builder.RegisterType<BitmapImageDecoder> ().As<ImageDecoder> ();
-			builder.RegisterType<MvxTouchSQLiteConnectionFactory> ().As<ISQLiteConnectionFactory>();
+			builder.RegisterType<SQLitePlatformIOS> ().As<ISQLitePlatform> ();
 		}
 
 		#endregion

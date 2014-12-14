@@ -60,7 +60,7 @@ namespace JoyReactor.Core.ViewModels
 				ChangeCurrentListIdCommand = new RelayCommand<ID> (OnChangeCurrentListId);
 				LoadFirstPage (id);
 
-				MessengerInstance.Register<SelectTagMessage> (this, s => LoadFirstPage (s.Id));
+				MessengerInstance.Register<SelectTagMessage> (this, s => OnChangeCurrentListId (s.Id));
 			}
 		}
 
