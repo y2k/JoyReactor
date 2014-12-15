@@ -94,6 +94,7 @@
     <Compile Include="Model\PostCollectionModelTests.cs" />
     <Compile Include="Controllers\TagInformationControllerTests.cs" />
     <Compile Include="Helpers\Settings.cs" />
+    <Compile Include="ViewModels\FeedViewModelTests.cs" />
     <Compile Include="Xam.Pluging.Settings\MockSettings.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
