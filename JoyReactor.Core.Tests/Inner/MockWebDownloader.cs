@@ -27,7 +27,8 @@ namespace JoyReactor.Core.Tests.Inner
 			{ "http://joyreactor.cc/tag/комиксы", "joyreactor_comics.html" },
 			{ "https://7chan.org/b/res/722687.html", "7chan_722687.html" },
 			{ "http://joyreactor.cc/4313", "joyreactor_page4313.html" },
-			{ "http://joyreactor.cc/tag/песочница", "joyreactor_pesochnica.html" },
+            { "http://joyreactor.cc/4312", "joyreactor_page4312.html" },
+            { "http://joyreactor.cc/tag/песочница", "joyreactor_pesochnica.html" },
 		};
 
 		#region IWebDownloader implementation

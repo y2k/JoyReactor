@@ -28,7 +28,7 @@ namespace JoyReactor.Core.Tests.ViewModels
         {
             await LoadFirstPage();
             await LoadNextPage(11);
-            //await LoadNextPage(21);
+            await LoadNextPage(21);
         }
 
         async Task LoadFirstPage()
