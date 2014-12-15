@@ -6,6 +6,7 @@ using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Tests.Inner;
 using Microsoft.Practices.ServiceLocation;
+using JoyReactor.Core.ViewModels;
 
 namespace JoyReactor.Core.Tests.Controllers
 {
@@ -28,10 +29,7 @@ namespace JoyReactor.Core.Tests.Controllers
 		[Test]
 		public async Task Test ()
 		{
-			var controller = new TagInformationController {
-				InvalidateUiCallback = () => {
-				},
-			};
+            var controller = new TagInformationViewModel();
 			var id = ID.Factory.NewTag ("комиксы");
 
 			await SaveLinkedTagsToDatabase (id);

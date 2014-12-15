@@ -1,15 +1,15 @@
-﻿using System;
-using Cirrious.MvvmCross.Community.Plugins.Sqlite;
-using JoyReactor.Core.Model;
+﻿using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Inject;
+using JoyReactor.Core.Tests.Inner;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
-using JoyReactor.Core.Tests.Inner;
+using SQLite.Net;
+using System;
 
 namespace JoyReactor.Core.Tests
 {
-	[TestFixture]
+    [TestFixture]
 	public class PostModelTests
 	{
 		const int TestPostId = 1;
@@ -52,7 +52,7 @@ namespace JoyReactor.Core.Tests
 
 		void SyncMockPost ()
 		{
-			var conn = ServiceLocator.Current.GetInstance<ISQLiteConnection> ();
+			var conn = ServiceLocator.Current.GetInstance<SQLiteConnection> ();
 			conn.Insert (new Post {
 				PostId = ID.SiteParser.Chan4 + "-b,572092321"
 			});
