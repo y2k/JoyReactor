@@ -92,8 +92,9 @@
     <Compile Include="Inner\MockSQLiteConnection.cs" />
     <Compile Include="Model\Parser\ChanPostLinkerTests.cs" />
     <Compile Include="Model\PostCollectionModelTests.cs" />
-    <Compile Include="Controllers\TagInformationControllerTests.cs" />
+    <Compile Include="ViewModels\TagInformationViewModelTests.cs" />
     <Compile Include="Helpers\Settings.cs" />
+    <Compile Include="ViewModels\CreateTagViewModelTests.cs" />
     <Compile Include="ViewModels\FeedViewModelTests.cs" />
     <Compile Include="Xam.Pluging.Settings\MockSettings.cs" />
   </ItemGroup>

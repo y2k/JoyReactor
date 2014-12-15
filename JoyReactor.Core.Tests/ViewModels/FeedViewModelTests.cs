@@ -12,7 +12,7 @@ namespace JoyReactor.Core.Tests.ViewModels
     [TestFixture]
     class FeedViewModelTests
     {
-        const int DefaultDelay = 300;
+        const int DefaultDelay = 400;
         FeedViewModel vm;
 
         [SetUp]

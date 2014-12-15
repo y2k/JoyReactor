@@ -1,17 +1,16 @@
-﻿using System.Linq;
-using NUnit.Framework;
-using JoyReactor.Core.Controllers;
-using System.Threading.Tasks;
-using JoyReactor.Core.Model;
+﻿using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Tests.Inner;
-using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Core.ViewModels;
+using Microsoft.Practices.ServiceLocation;
+using NUnit.Framework;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace JoyReactor.Core.Tests.Controllers
+namespace JoyReactor.Core.Tests.ViewModels
 {
-	[TestFixture]
-	public class TagInformationControllerTests
+    [TestFixture]
+	public class TagInformationViewModelTests
 	{
 		[SetUp]
 		public void SetUp ()
