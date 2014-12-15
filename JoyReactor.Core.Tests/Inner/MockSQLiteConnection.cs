@@ -1,5 +1,6 @@
 ﻿using JoyReactor.Core.Model.DTO;
 using SQLite.Net;
+using SQLite.Net.Platform.Win32;
 
 namespace JoyReactor.Core.Tests.Inner
 {
@@ -7,7 +8,7 @@ namespace JoyReactor.Core.Tests.Inner
     {
         public static SQLiteConnection Create()
         {
-            var db = new SQLiteConnection(new SQLite.Net.Platform.Win32.SQLitePlatformWin32(), ":memory:");
+            var db = new SQLiteConnection(new SQLitePlatformWin32(), ":memory:");
             db.CreateTable<Post>();
             db.CreateTable<Tag>();
             db.CreateTable<TagPost>();
