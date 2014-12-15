@@ -48,11 +48,11 @@ namespace JoyReactor.Core.Tests.ViewModels
         [Test]
         public async Task CreateCommandTest()
         {
-            viewmodel.Name = "      test      ";
+            viewmodel.Name = "      Test      ";
             viewmodel.CreateCommand.Execute(null);
             await Task.Delay(100);
             Assert.IsFalse(viewmodel.NameError);
-            Assert.AreEqual("test", viewmodel.Name);
+            Assert.AreEqual("Test", viewmodel.Name);
 
             var count = ServiceLocator.Current.GetInstance<SQLiteConnection>().
                 ExecuteScalar<int>("SELECT COUNT(*) FROM tags WHERE TagId = ?", ID.Factory.NewTag("test").SerializeToString());
