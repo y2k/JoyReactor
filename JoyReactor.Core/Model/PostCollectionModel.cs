@@ -56,8 +56,8 @@ namespace JoyReactor.Core.Model
 
         int GetDividerPosition(string tagId)
         {
-            if (GetNewItemsCount(tagId) > 0)
-                return 0;
+            //if (GetNewItemsCount(tagId) > 0)
+            //    return 0;
             return connection.SafeExecuteScalar<int>(
                 "SELECT COUNT(*) " +
                 "FROM tag_post " +

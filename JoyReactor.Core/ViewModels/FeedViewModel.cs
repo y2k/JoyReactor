@@ -70,7 +70,7 @@ namespace JoyReactor.Core.ViewModels
             IsBusy = true;
             await ReloadDataFromDatabase(false);
             await model.SyncFirstPage(id);
-            await ReloadDataFromDatabase(true);
+            await ReloadDataFromDatabaseWithCheck();
             IsBusy = false;
         }
 
@@ -104,6 +104,22 @@ namespace JoyReactor.Core.ViewModels
             IsBusy = false;
         }
 
+        async Task ReloadDataFromDatabaseWithCheck()
+        {
+            var data = await model.Get(id);
+            HasNewItems = data.NewItemsCount > 0;
+            if (!HasNewItems)
+            {
+                var newPosts = ConvertToViewModelItemList(true, data);
+                for (int i = Posts.Count - 1; i >= newPosts.Count; i--)
+                    Posts.RemoveAt(i);
+                for (int i = Posts.Count; i < newPosts.Count; i++)
+                    Posts.Add(null);
+                for (int i = 0; i < newPosts.Count; i++)
+                    Posts[i] = newPosts[i];
+            }
+        }
+
         async Task ReloadDataFromDatabase(bool showDivider)
         {
             var data = await model.Get(id);
@@ -121,7 +137,7 @@ namespace JoyReactor.Core.ViewModels
         List<ViewModelBase> ConvertToViewModelItemList(bool showDivider, PostCollectionState data)
         {
             var posts = data.Posts.Select(s => new ContentViewModel(s)).ToList<ViewModelBase>();
-            if (data.DividerPosition >= 0)
+            if (posts.Count > 0 && data.DividerPosition >= 0)
             {
                 var divider = showDivider
                     ? new DividerViewModel(OnButtonMoreClicked)

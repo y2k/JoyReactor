@@ -6,6 +6,9 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:v="using:JoyReactor.Views"
       mc:Ignorable="d">
+    <Page.Resources>
+        <v:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Hub Header="JoyReactor">
@@ -60,6 +63,11 @@
                         <ProgressRing Width="50"
                                       Height="50"
                                       IsActive="{Binding IsBusy}" />
+                        <Button Content="Has new items"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Top"
+                                Command="{Binding ApplyCommand}"
+                                Visibility="{Binding HasNewItems, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </Grid>
                 </DataTemplate>
             </HubSection>
