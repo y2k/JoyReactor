@@ -55,7 +55,8 @@ namespace JoyReactor.Core.Model.Database
 				Flags = Tag.FlagSystem
 			});
 
-			db.Insert (new Tag {
+#if DEBUG
+            db.Insert (new Tag {
 				TagId = ToFlatId (ID.Factory.New (ID.SiteParser.Chan2, "b")),
 				Title = "2ch / b",
 				Flags = Tag.FlagShowInMain
@@ -70,8 +71,9 @@ namespace JoyReactor.Core.Model.Database
 				Title = "7chan / b",
 				Flags = Tag.FlagShowInMain
 			});
+#endif
 
-			db.Insert (new Tag {
+            db.Insert (new Tag {
 				TagId = ToFlatId (ID.Factory.NewTag ("anime")),
 				Title = "Anime",
 				Flags = Tag.FlagShowInMain,

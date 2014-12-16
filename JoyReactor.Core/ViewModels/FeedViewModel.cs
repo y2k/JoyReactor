@@ -58,9 +58,9 @@ namespace JoyReactor.Core.ViewModels
             RefreshCommand = new RelayCommand(OnRefreshInvoked);
             MoreCommand = new RelayCommand(OnButtonMoreClicked);
             ApplyCommand = new RelayCommand(OnApplyButtonClicked);
-            ChangeCurrentListIdCommand = new RelayCommand<ID>(OnChangeCurrentListId);
+            ChangeCurrentListIdCommand = new RelayCommand<ID>(LoadFirstPage);
 
-            MessengerInstance.Register<SelectTagMessage>(this, s => OnChangeCurrentListId(s.Id));
+            MessengerInstance.Register<SelectTagMessage>(this, s => ChangeCurrentListIdCommand.Execute(s.Id));
         }
 
         async void LoadFirstPage(ID newId)
@@ -68,9 +68,9 @@ namespace JoyReactor.Core.ViewModels
             id = newId;
 
             IsBusy = true;
-            await ReloadDataFromDatabase();
+            await ReloadDataFromDatabase(false);
             await model.SyncFirstPage(id);
-            await ReloadDataFromDatabase();
+            await ReloadDataFromDatabase(true);
             IsBusy = false;
         }
 
@@ -86,30 +86,30 @@ namespace JoyReactor.Core.ViewModels
                 await model.Reset(id);
                 await model.SyncFirstPage(id);
             }
-            await ReloadDataFromDatabase();
+            await ReloadDataFromDatabase(true);
             IsBusy = false;
         }
 
         async void OnApplyButtonClicked()
         {
             await model.ApplyNewItems(id);
-            await ReloadDataFromDatabase();
+            await ReloadDataFromDatabase(true);
         }
 
         async void OnButtonMoreClicked()
         {
             IsBusy = true;
             await model.SyncNextPage(id);
-            await ReloadDataFromDatabase();
+            await ReloadDataFromDatabase(true);
             IsBusy = false;
         }
 
-        async Task ReloadDataFromDatabase()
+        async Task ReloadDataFromDatabase(bool showDivider)
         {
             var data = await model.Get(id);
             HasNewItems = data.NewItemsCount > 0;
 
-            var newPosts = ConvertToViewModelItemList(data);
+            var newPosts = ConvertToViewModelItemList(showDivider, data);
             for (int i = Posts.Count - 1; i >= newPosts.Count; i--)
                 Posts.RemoveAt(i);
             for (int i = Posts.Count; i < newPosts.Count; i++)
@@ -118,20 +118,17 @@ namespace JoyReactor.Core.ViewModels
                 Posts[i] = newPosts[i];
         }
 
-        List<ViewModelBase> ConvertToViewModelItemList(PostCollectionState data)
+        List<ViewModelBase> ConvertToViewModelItemList(bool showDivider, PostCollectionState data)
         {
             var posts = data.Posts.Select(s => new ContentViewModel(s)).ToList<ViewModelBase>();
             if (data.DividerPosition >= 0)
             {
-                var divider = new DividerViewModel(OnButtonMoreClicked);
+                var divider = showDivider
+                    ? new DividerViewModel(OnButtonMoreClicked)
+                    : new DividerViewModel(() => { });
                 posts.Insert(data.DividerPosition, divider);
             }
             return posts;
-        }
-
-        void OnChangeCurrentListId(ID newId)
-        {
-            LoadFirstPage(newId);
         }
 
         public class ContentViewModel : ViewModelBase

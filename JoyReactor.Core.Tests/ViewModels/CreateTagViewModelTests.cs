@@ -4,10 +4,6 @@ using JoyReactor.Core.ViewModels;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
 using SQLite.Net;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Tests.ViewModels

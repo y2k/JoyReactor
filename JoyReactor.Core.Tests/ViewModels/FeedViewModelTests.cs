@@ -14,6 +14,7 @@ namespace JoyReactor.Core.Tests.ViewModels
     {
         const int DefaultDelay = 400;
         FeedViewModel vm;
+        ID testId;
 
         [SetUp]
         public void SetUp()
@@ -24,8 +25,34 @@ namespace JoyReactor.Core.Tests.ViewModels
         }
 
         [Test]
-        public async Task Test()
+        public async Task ApplyTest()
         {
+            testId = ID.Factory.NewTag("песочница");
+            await LoadFirstPage();
+
+            TestExtensions.SetFakeSite("http://joyreactor.cc/tag/песочница", "joyreactor_pesochnica_2.html");
+
+            Assert.IsFalse(vm.HasNewItems);
+            Assert.IsFalse(vm.IsBusy);
+            Assert.AreEqual(11, vm.Posts.Count);
+
+            vm.ChangeCurrentListIdCommand.Execute(testId);
+
+            Assert.IsTrue(vm.IsBusy);
+            Assert.AreEqual(11, vm.Posts.Count);
+
+            await Task.Delay(DefaultDelay);
+
+            Assert.IsTrue(vm.HasNewItems);
+            Assert.IsFalse(vm.IsBusy);
+            Assert.AreEqual(11, vm.Posts.Count);
+            CollectionAssert.AreEqual(GenerateList(10, 1), vm.Posts, new TypeComparer());
+        }
+
+        [Test]
+        public async Task PagingTest()
+        {
+            testId = ID.Factory.New(ID.IdConst.ReactorGood);
             await LoadFirstPage();
             await LoadNextPage(11);
             await LoadNextPage(21);
@@ -36,7 +63,7 @@ namespace JoyReactor.Core.Tests.ViewModels
             Assert.IsFalse(vm.IsBusy);
             Assert.AreEqual(0, vm.Posts.Count);
 
-            vm.ChangeCurrentListIdCommand.Execute(ID.Factory.New(ID.IdConst.ReactorGood));
+            vm.ChangeCurrentListIdCommand.Execute(testId);
 
             Assert.IsTrue(vm.IsBusy);
             Assert.AreEqual(0, vm.Posts.Count);
@@ -45,7 +72,7 @@ namespace JoyReactor.Core.Tests.ViewModels
 
             Assert.IsFalse(vm.IsBusy);
             Assert.AreEqual(11, vm.Posts.Count);
-            CollectionAssert.AreEqual(GenerateList(10), vm.Posts, new TypeComparer());
+            CollectionAssert.AreEqual(GenerateList(10, 1), vm.Posts, new TypeComparer());
         }
 
         async Task LoadNextPage(int initCount)
@@ -62,7 +89,7 @@ namespace JoyReactor.Core.Tests.ViewModels
 
             Assert.IsFalse(vm.IsBusy);
             Assert.AreEqual(initCount + 10, vm.Posts.Count);
-            CollectionAssert.AreEqual(GenerateList(initCount + 10 - 1), vm.Posts, new TypeComparer());
+            CollectionAssert.AreEqual(GenerateList(initCount + 10 - 1, 1), vm.Posts, new TypeComparer());
         }
 
         private FeedViewModel.DividerViewModel GetDivider()
@@ -70,11 +97,12 @@ namespace JoyReactor.Core.Tests.ViewModels
             return vm.Posts.OfType<FeedViewModel.DividerViewModel>().First();
         }
 
-        private static IEnumerable GenerateList(int count)
+        private static IEnumerable GenerateList(int preCount, int divCount)
         {
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < preCount; i++)
                 yield return new FeedViewModel.ContentViewModel(null);
-            yield return new FeedViewModel.DividerViewModel(() => { });
+            for (int i = 0; i < divCount; i++)
+                yield return new FeedViewModel.DividerViewModel(() => { });
         }
 
         public class TypeComparer : IComparer

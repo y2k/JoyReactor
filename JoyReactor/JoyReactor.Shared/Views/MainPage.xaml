@@ -39,7 +39,10 @@
                                     <v:FeedItemTemplateSelector.ContentTemplate>
                                         <DataTemplate>
                                             <StackPanel Width="300">
-                                                <Image Source="{Binding Image}" />
+                                                <v:FixedAspectPanel MaxChildWidth="{Binding ImageWidth}"
+                                                                    MaxChildHeight="{Binding ImageHeight}">
+                                                    <Image Source="{Binding Image}" />
+                                                </v:FixedAspectPanel>
                                                 <TextBlock Text="{Binding Title}" />
                                             </StackPanel>
                                         </DataTemplate>

@@ -82,13 +82,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Chan2ParserTests.cs" />
-    <Compile Include="Chan7ParserTests.cs" />
-    <Compile Include="ReactorParserTests.cs" />
-    <Compile Include="Chan4ParserTests.cs" />
+    <Compile Include="Model\Parser\Chan2ParserTests.cs" />
+    <Compile Include="Model\Parser\Chan7ParserTests.cs" />
+    <Compile Include="Model\Parser\ReactorParserTests.cs" />
+    <Compile Include="Model\Parser\Chan4ParserTests.cs" />
     <Compile Include="Inner\TestModule.cs" />
     <Compile Include="Inner\MockWebDownloader.cs" />
-    <Compile Include="PostModelTests.cs" />
+    <Compile Include="Model\PostModelTests.cs" />
     <Compile Include="Inner\MockSQLiteConnection.cs" />
     <Compile Include="Model\Parser\ChanPostLinkerTests.cs" />
     <Compile Include="Model\PostCollectionModelTests.cs" />
@@ -96,6 +96,7 @@
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="ViewModels\CreateTagViewModelTests.cs" />
     <Compile Include="ViewModels\FeedViewModelTests.cs" />
+    <Compile Include="TestExtensions.cs" />
     <Compile Include="Xam.Pluging.Settings\MockSettings.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

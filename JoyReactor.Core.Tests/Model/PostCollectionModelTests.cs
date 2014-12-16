@@ -7,6 +7,7 @@ using NUnit.Framework;
 using JoyReactor.Core.Tests.Inner;
 using SQLite.Net;
 using System;
+using JoyReactor.Core.Tests.ViewModels;
 
 namespace JoyReactor.Core.Tests.Model
 {
@@ -122,7 +123,7 @@ namespace JoyReactor.Core.Tests.Model
             Assert.AreEqual(10, actual.DividerPosition);
             AssertFirstOrder(actual);
 
-            SetFakeSite("http://joyreactor.cc/tag/песочница", "joyreactor_pesochnica_2.html");
+            TestExtensions.SetFakeSite("http://joyreactor.cc/tag/песочница", "joyreactor_pesochnica_2.html");
             module.SyncFirstPage(testId).Wait();
 
             actual = module.Get(testId).Result;
@@ -190,7 +191,7 @@ namespace JoyReactor.Core.Tests.Model
         {
             var testId = ID.Factory.NewTag("песочница");
             module.SyncFirstPage(testId).Wait();
-            SetFakeSite("http://joyreactor.cc/tag/песочница", "joyreactor_pesochnica_2.html");
+            TestExtensions.SetFakeSite("http://joyreactor.cc/tag/песочница", "joyreactor_pesochnica_2.html");
 
             module.SyncFirstPage(testId).Wait();
             module.SyncFirstPage(testId).Wait();
@@ -199,12 +200,6 @@ namespace JoyReactor.Core.Tests.Model
             Assert.AreEqual(10, actual.Posts.Count);
             Assert.AreEqual(8, actual.NewItemsCount);
             Assert.AreEqual(0, actual.DividerPosition);
-        }
-
-        void SetFakeSite(string url, string filename)
-        {
-            var downloader = (MockWebDownloader)ServiceLocator.Current.GetInstance<IWebDownloader>();
-            downloader.RouteUrls[url] = filename;
         }
     }
 }

@@ -17,6 +17,7 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Models\Wp8InjectModule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\FeedItemTemplateSelector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\FixedAspectPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
