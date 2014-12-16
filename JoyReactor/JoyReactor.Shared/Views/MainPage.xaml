@@ -60,9 +60,9 @@
                                 </v:FeedItemTemplateSelector>
                             </ListView.ItemTemplateSelector>
                         </ListView>
-                        <ProgressRing Width="50"
-                                      Height="50"
-                                      IsActive="{Binding IsBusy}" />
+                        <ProgressBar IsIndeterminate="True"
+                                     Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
+                                     VerticalAlignment="Top" />
                         <Button Content="Has new items"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Top"

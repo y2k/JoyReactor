@@ -129,7 +129,7 @@ namespace JoyReactor.Core.Tests.Model
             actual = module.Get(testId).Result;
             Assert.AreEqual(10, actual.Posts.Count);
             Assert.AreEqual(8, actual.NewItemsCount);
-            Assert.AreEqual(0, actual.DividerPosition);
+            Assert.AreEqual(2, actual.DividerPosition);
             AssertFirstOrder(actual);
 
             module.ApplyNewItems(testId).Wait();
@@ -199,7 +199,7 @@ namespace JoyReactor.Core.Tests.Model
             var actual = module.Get(testId).Result;
             Assert.AreEqual(10, actual.Posts.Count);
             Assert.AreEqual(8, actual.NewItemsCount);
-            Assert.AreEqual(0, actual.DividerPosition);
+            Assert.AreEqual(2, actual.DividerPosition);
         }
     }
 }

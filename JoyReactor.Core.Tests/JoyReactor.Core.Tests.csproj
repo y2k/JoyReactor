@@ -92,6 +92,7 @@
     <Compile Include="Inner\MockSQLiteConnection.cs" />
     <Compile Include="Model\Parser\ChanPostLinkerTests.cs" />
     <Compile Include="Model\PostCollectionModelTests.cs" />
+    <Compile Include="ViewModels\PostViewModelTests.cs" />
     <Compile Include="ViewModels\TagInformationViewModelTests.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="ViewModels\CreateTagViewModelTests.cs" />
