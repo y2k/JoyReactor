@@ -1,10 +1,11 @@
 ﻿using GalaSoft.MvvmLight;
-using System.Linq;
+using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using JoyReactor.Core.Model.DTO;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -33,7 +34,7 @@ namespace JoyReactor.Core.ViewModels
             var post = await new PostModel().GetPostAsync(postId);
             var attachments = await new PostModel().GetPostAttachmentsAsync(postId);
 
-            Comments.ReplaceAll(ConvertToViewModels(await new PostModel().GetCommentsAsync(postId, 0)));
+            Comments.ReplaceAll(ConvertToViewModels(await new PostModel().GetChildCommentsAsync(postId, 0)));
 
             Image = attachments.Select(s => s.PreviewImageUrl).FirstOrDefault();
             IsBusy = false;
@@ -42,12 +43,38 @@ namespace JoyReactor.Core.ViewModels
         IEnumerable<CommentViewModel> ConvertToViewModels(IEnumerable<Comment> comments)
         {
             foreach (var s in comments)
-                yield return new CommentViewModel();
+                yield return new CommentViewModel(this, s);
+        }
+
+        async void ChangeRootCommen(Comment comment, bool isRoot)
+        {
+            if (isRoot)
+            {
+                var comments = await new PostModel().GetCommentsWithSameParentAsync(comment.PostId, comment.Id);
+                var parent = await new PostModel().GetParentCommentAsync(comment.PostId, comment.Id);
+                Comments.ReplaceAll(ConvertToViewModels(comments));
+                if (parent != null)
+                    Comments.Insert(0, new CommentViewModel(this, parent) { IsRoot = true });
+            }
+            else
+            {
+                var childs = await new PostModel().GetChildCommentsAsync(comment.PostId, comment.Id);
+                Comments.ReplaceAll(ConvertToViewModels(childs));
+                Comments.Insert(0, new CommentViewModel(this, comment) { IsRoot = true });
+            }
         }
 
         public class CommentViewModel : ViewModelBase
         {
-            public FixRelayCommand NavigateCommand { get; set; }
+            public RelayCommand NavigateCommand { get; set; }
+
+            public bool IsRoot { get; set; }
+
+            public CommentViewModel(PostViewModel parent, Comment comment)
+            {
+                NavigateCommand = new FixRelayCommand(() =>
+                    parent.ChangeRootCommen(comment, IsRoot));
+            }
         }
     }
 }

@@ -15,11 +15,37 @@ namespace JoyReactor.Core.Model
     {
         SQLiteConnection db = ServiceLocator.Current.GetInstance<SQLiteConnection>();
 
-        public Task<List<Comment>> GetCommentsAsync(int postId, int parentCommentId)
+        public Task<List<Comment>> GetChildCommentsAsync(int postId, int parentCommentId)
         {
             if (parentCommentId == 0)
                 return GetTopCommentsAsync(postId, int.MaxValue);
-            throw new NotImplementedException();
+            return Task.Run(() => db.SafeQuery<Comment>(
+                "SELECT * FROM comments WHERE PostId = ? AND Id IN (" +
+                "   SELECT CommentId FROM comment_links WHERE ParentCommentId = ?) ORDER BY Rating",
+                postId, parentCommentId));
+        }
+
+        public Task<List<Comment>> GetCommentsWithSameParentAsync(int postId, int commentId)
+        {
+            return Task.Run(async () =>
+            {
+                var comments = db.SafeQuery<Comment>(
+                    "SELECT * FROM comments WHERE PostId = ? AND Id IN (" +
+                    "   SELECT CommentId FROM comment_links WHERE ParentCommentId IN (" +
+                    "       SELECT ParentCommentId FROM comment_links WHERE CommentId = ?)) ORDER BY Rating",
+                    postId, commentId);
+                if (comments.Count == 0)
+                    comments = await GetTopCommentsAsync(postId, int.MaxValue);
+                return comments;
+            });
+        }
+
+        public Task<Comment> GetParentCommentAsync(int postId, int commentId)
+        {
+            return Task.Run(() => db.SafeQuery<Comment>(
+                "SELECT * FROM comments WHERE PostId = ? AND Id IN (" +
+                "   SELECT ParentCommentId FROM comment_links WHERE CommentId =?)",
+                postId, commentId).FirstOrDefault());
         }
 
         public Task<List<Comment>> GetTopCommentsAsync(int postId, int count)
@@ -31,8 +57,9 @@ namespace JoyReactor.Core.Model
             //			});
             return Task.Run(() =>
             {
-                return db
-                    .SafeQuery<Comment>("SELECT * FROM comments WHERE PostId = ? AND Id NOT IN (SELECT CommentId FROM comment_links) ORDER BY Rating DESC LIMIT ?", postId, count);
+                return db.SafeQuery<Comment>(
+                    "SELECT * FROM comments WHERE PostId = ? AND Id NOT IN (SELECT CommentId FROM comment_links) ORDER BY Rating DESC LIMIT ?",
+                    postId, count);
             });
         }
 

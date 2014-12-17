@@ -1,5 +1,6 @@
 ﻿using JoyReactor.Core.ViewModels;
 using NUnit.Framework;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Tests.ViewModels
@@ -25,11 +26,37 @@ namespace JoyReactor.Core.Tests.ViewModels
             viewmodel.Initialize(id).GetAwaiter();
             Assert.IsTrue(viewmodel.IsBusy);
 
-            await Task.Delay(300);
+            await Task.Delay(400);
             Assert.IsFalse(viewmodel.IsBusy);
 
             Assert.AreEqual("http://img0.joyreactor.cc/pics/post/-770859.jpeg", viewmodel.Image);
             Assert.AreEqual(13, viewmodel.Comments.Count);
+
+            // ==============================================
+            Assert.IsTrue(viewmodel.Comments.All(s => !s.IsRoot));
+
+            viewmodel.Comments[0].NavigateCommand.Execute(null);
+            await Task.Delay(300);
+            Assert.AreEqual(3, viewmodel.Comments.Count);
+            Assert.IsTrue(viewmodel.Comments[0].IsRoot);
+            Assert.IsTrue(viewmodel.Comments.Skip(1).All(s => !s.IsRoot));
+
+            viewmodel.Comments[1].NavigateCommand.Execute(null);
+            await Task.Delay(300);
+            Assert.AreEqual(2, viewmodel.Comments.Count);
+            Assert.IsTrue(viewmodel.Comments[0].IsRoot);
+            Assert.IsTrue(viewmodel.Comments.Skip(1).All(s => !s.IsRoot));
+
+            viewmodel.Comments[0].NavigateCommand.Execute(null);
+            await Task.Delay(300);
+            Assert.AreEqual(3, viewmodel.Comments.Count);
+            Assert.IsTrue(viewmodel.Comments[0].IsRoot);
+            Assert.IsTrue(viewmodel.Comments.Skip(1).All(s => !s.IsRoot));
+
+            viewmodel.Comments[0].NavigateCommand.Execute(null);
+            await Task.Delay(300);
+            Assert.AreEqual(13, viewmodel.Comments.Count);
+            Assert.IsTrue(viewmodel.Comments.All(s => !s.IsRoot));
         }
     }
 }
