@@ -1,5 +1,10 @@
 ﻿using GalaSoft.MvvmLight;
+using System.Linq;
+using JoyReactor.Core.Model;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using JoyReactor.Core.Model.DTO;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -14,9 +19,30 @@ namespace JoyReactor.Core.ViewModels
             set { Set(ref _image, value); }
         }
 
-        public void LoadData(int postId)
+        bool _isBusy;
+        public bool IsBusy
         {
-            // TODO
+            get { return _isBusy; }
+            set { Set(ref _isBusy, value); }
+        }
+
+        public async Task Initialize(int postId)
+        {
+            IsBusy = true;
+
+            var post = await new PostModel().GetPostAsync(postId);
+            var attachments = await new PostModel().GetPostAttachmentsAsync(postId);
+
+            Comments.ReplaceAll(ConvertToViewModels(await new PostModel().GetCommentsAsync(postId, 0)));
+
+            Image = attachments.Select(s => s.PreviewImageUrl).FirstOrDefault();
+            IsBusy = false;
+        }
+
+        IEnumerable<CommentViewModel> ConvertToViewModels(IEnumerable<Comment> comments)
+        {
+            foreach (var s in comments)
+                yield return new CommentViewModel();
         }
 
         public class CommentViewModel : ViewModelBase

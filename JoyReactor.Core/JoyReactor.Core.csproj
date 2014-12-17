@@ -33,7 +33,7 @@
   <ItemGroup>
     <Compile Include="Model\Constants.cs" />
     <Compile Include="Model\DTO\Comment.cs" />
-    <Compile Include="Model\DTO\CommentAttachment.cs" />
+    <Compile Include="Model\DTO\Attachment.cs" />
     <Compile Include="Model\Inject\DefaultServiceLocator.cs" />
     <Compile Include="Model\PostModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

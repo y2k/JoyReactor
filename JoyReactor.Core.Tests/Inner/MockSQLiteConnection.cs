@@ -15,7 +15,7 @@ namespace JoyReactor.Core.Tests.Inner
             db.CreateTable<Profile>();
             db.CreateTable<TagLinkedTag>();
             db.CreateTable<Comment>();
-            db.CreateTable<CommentAttachment>();
+            db.CreateTable<Attachment>();
             db.CreateTable<CommentLink>();
             return db;
         }

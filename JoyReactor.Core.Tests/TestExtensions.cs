@@ -1,4 +1,5 @@
-﻿using JoyReactor.Core.Model.Inject;
+﻿using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.Tests.Inner;
 using Microsoft.Practices.ServiceLocation;
@@ -12,6 +13,12 @@ namespace JoyReactor.Core.Tests
         {
             var downloader = (MockWebDownloader)ServiceLocator.Current.GetInstance<IWebDownloader>();
             downloader.RouteUrls[url] = filename;
+        }
+
+        public static int CreatePostIdDatabase(ID.SiteParser parser, string postId)
+        {
+            var post = new Post { PostId = parser + "-" + postId };
+            return GetDatabase().Insert(post);
         }
 
         public static void SetUp()

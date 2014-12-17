@@ -3,20 +3,20 @@ using System.Collections.Generic;
 
 namespace JoyReactor.Core.Model.Web.Parser.Data
 {
-	public class ExportPostComment
-	{
-		public string[] ParentIds { get; set; }
+    public class ExportPostComment
+    {
+        public string[] ParentIds { get; set; } = new string[0];
 
-		public string Id { get; set; }
+        public string Id { get; set; }
 
-		public string Content { get; set; }
+        public string Content { get; set; }
 
-		public DateTime Created { get; set; }
+        public DateTime Created { get; set; }
 
-		public ExportUser User { get; set; }
+        public ExportUser User { get; set; }
 
-		public ExportAttachment[] Attachments { get; set; }
+        public ExportAttachment[] Attachments { get; set; } = new ExportAttachment[0];
 
-		public float Rating { get; set; }
-	}
+        public float Rating { get; set; }
+    }
 }

@@ -82,7 +82,6 @@ namespace JoyReactor.Core.Tests
         }
 
         [Test]
-        [Ignore]
         public void TestPost861529()
         {
             bool wasInfo = false;

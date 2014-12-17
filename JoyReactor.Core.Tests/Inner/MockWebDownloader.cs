@@ -9,11 +9,20 @@ namespace JoyReactor.Core.Tests.Inner
 	class MockWebDownloader : IWebDownloader
 	{
 		internal readonly IDictionary<string, string> RouteUrls = new Dictionary<string, string> () {
-			{ "http://m2-ch.ru/a/res/1755718.html", "response1.txt" },
 			{ "http://joyreactor.cc/post/1323757", "response2.html" },
 			{ "http://joyreactor.cc/post/1382511", "response3.html" },
 			{ "http://joyreactor.cc/post/861529", "resp4.html" },
-			{ "https://boards.4chan.org/b/", "resp_4chan_b.html" },
+            { "http://pornreactor.cc/post/1323757", "response2.html" },
+            { "http://pornreactor.cc/post/1382511", "response3.html" },
+            { "http://pornreactor.cc/post/861529", "resp4.html" },
+
+            { "http://joyreactor.cc/", "joyreactor_feed.html" },
+            { "http://joyreactor.cc/tag/комиксы", "joyreactor_comics.html" },
+            { "http://joyreactor.cc/4313", "joyreactor_page4313.html" },
+            { "http://joyreactor.cc/4312", "joyreactor_page4312.html" },
+            { "http://joyreactor.cc/tag/песочница", "joyreactor_pesochnica.html" },
+
+            { "https://boards.4chan.org/b/", "resp_4chan_b.html" },
 			{ "https://boards.4chan.org/b/2", "resp_4chan_b_page2.html" },
 			{ "https://boards.4chan.org/wsg/","resp_4chan_wsg.html" },
 			{ "https://boards.4chan.org/b/thread/572092321","resp_4chan_thread_572092321.html" },
@@ -23,12 +32,8 @@ namespace JoyReactor.Core.Tests.Inner
 			{ "http://m2-ch.ru/b/", "m2-ch_b.html" },
 			{ "http://m2-ch.ru/b/1.html", "m2-ch_b_page2.html" },
 			{ "http://m2-ch.ru/media/", "m2-ch_media.html" },
-			{ "http://joyreactor.cc/", "joyreactor_feed.html" },
-			{ "http://joyreactor.cc/tag/комиксы", "joyreactor_comics.html" },
-			{ "https://7chan.org/b/res/722687.html", "7chan_722687.html" },
-			{ "http://joyreactor.cc/4313", "joyreactor_page4313.html" },
-            { "http://joyreactor.cc/4312", "joyreactor_page4312.html" },
-            { "http://joyreactor.cc/tag/песочница", "joyreactor_pesochnica.html" },
+            { "http://m2-ch.ru/a/res/1755718.html", "response1.txt" },
+            { "https://7chan.org/b/res/722687.html", "7chan_722687.html" },
 		};
 
 		#region IWebDownloader implementation
