@@ -35,16 +35,23 @@
             <HubSection Header="Posts"
                         DataContext="{Binding Source={StaticResource Locator}, Path=Feed}">
                 <DataTemplate>
-                    <Grid>
+                    <Grid Width="300">
                         <ListView ItemsSource="{Binding Posts}">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment"
+                                            Value="Stretch" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
                             <ListView.ItemTemplateSelector>
                                 <v:FeedItemTemplateSelector>
                                     <v:FeedItemTemplateSelector.ContentTemplate>
                                         <DataTemplate>
-                                            <StackPanel Width="300">
+                                            <StackPanel HorizontalAlignment="Stretch">
                                                 <v:FixedAspectPanel MaxChildWidth="{Binding ImageWidth}"
                                                                     MaxChildHeight="{Binding ImageHeight}">
-                                                    <Image Source="{Binding Image}" />
+                                                    <Image Source="{Binding Image}"
+                                                           Stretch="UniformToFill" />
                                                 </v:FixedAspectPanel>
                                                 <TextBlock Text="{Binding Title}" />
                                             </StackPanel>
@@ -53,8 +60,8 @@
                                     <v:FeedItemTemplateSelector.DividerTemplate>
                                         <DataTemplate>
                                             <Button Content="Divider"
-                                                    Command="{Binding LoadMoreCommand}"
-                                                    Width="300" />
+                                                    HorizontalAlignment="Stretch"
+                                                    Command="{Binding LoadMoreCommand}" />
                                         </DataTemplate>
                                     </v:FeedItemTemplateSelector.DividerTemplate>
                                 </v:FeedItemTemplateSelector>
