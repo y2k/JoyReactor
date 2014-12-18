@@ -1,4 +1,5 @@
 ﻿using JoyReactor.Core.Model.Inject;
+using JoyReactor.Core.ViewModels;
 using JoyReactor.Models;
 using JoyReactor.Views;
 using Microsoft.Practices.ServiceLocation;
@@ -19,6 +20,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using JoyReactor.Core;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
@@ -109,6 +111,8 @@ namespace JoyReactor
 
             // Ensure the current window is active
             Window.Current.Activate();
+
+            ((ViewModelLocator)Resources["Locator"]).Feed.ChangeCurrentListIdCommand.Execute(ID.Factory.New(ID.IdConst.ReactorGood));
         }
 
         private static void InitializeServiceLocator()

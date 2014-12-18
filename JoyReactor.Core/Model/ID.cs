@@ -1,10 +1,9 @@
 ﻿using System;
-using JoyReactor.Core.Model.Parser;
 using System.Collections.Generic;
 
 namespace JoyReactor.Core
 {
-	public class ID
+    public class ID
 	{
 		public enum IdConst { ReactorGood, ReactorBest, ReactorAll, ReactorFavorite }
 

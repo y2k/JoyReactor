@@ -36,7 +36,8 @@
                         DataContext="{Binding Source={StaticResource Locator}, Path=Feed}">
                 <DataTemplate>
                     <Grid Width="300">
-                        <ListView ItemsSource="{Binding Posts}">
+                        <ListView ItemsSource="{Binding Posts}"
+                                  SelectionMode="None">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalContentAlignment"
@@ -47,14 +48,19 @@
                                 <v:FeedItemTemplateSelector>
                                     <v:FeedItemTemplateSelector.ContentTemplate>
                                         <DataTemplate>
-                                            <StackPanel HorizontalAlignment="Stretch">
-                                                <v:FixedAspectPanel MaxChildWidth="{Binding ImageWidth}"
-                                                                    MaxChildHeight="{Binding ImageHeight}">
-                                                    <Image Source="{Binding Image}"
-                                                           Stretch="UniformToFill" />
-                                                </v:FixedAspectPanel>
-                                                <TextBlock Text="{Binding Title}" />
-                                            </StackPanel>
+                                            <Grid>
+                                                <StackPanel HorizontalAlignment="Stretch">
+                                                    <v:FixedAspectPanel MaxChildWidth="{Binding ImageWidth}"
+                                                                        MaxChildHeight="{Binding ImageHeight}">
+                                                        <Image Source="{Binding Image}"
+                                                               Stretch="UniformToFill" />
+                                                    </v:FixedAspectPanel>
+                                                    <TextBlock Text="{Binding Title}" />
+                                                </StackPanel>
+                                                <Button HorizontalAlignment="Stretch"
+                                                        VerticalAlignment="Stretch"
+                                                        Command="{Binding OpenPostCommand}" />
+                                            </Grid>
                                         </DataTemplate>
                                     </v:FeedItemTemplateSelector.ContentTemplate>
                                     <v:FeedItemTemplateSelector.DividerTemplate>

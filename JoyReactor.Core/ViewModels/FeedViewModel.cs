@@ -165,7 +165,7 @@ namespace JoyReactor.Core.ViewModels
             {
                 this.post = post;
                 OpenPostCommand = new FixRelayCommand(() =>
-                   MessengerInstance.Send(new PostNavigationMessage { PostId = post.Id }));
+                    MessengerInstance.Send(new PostNavigationMessage { PostId = post.Id }));
             }
 
             public override bool Equals(object obj)
