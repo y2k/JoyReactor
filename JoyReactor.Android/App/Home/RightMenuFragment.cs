@@ -6,7 +6,6 @@ using Android.Graphics;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
-using JoyReactor.Core.Controllers;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.ViewModels;
 using Microsoft.Practices.ServiceLocation;

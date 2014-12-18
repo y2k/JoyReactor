@@ -123,6 +123,7 @@
     <Compile Include="App\Base\BaseDialogFragment.cs" />
     <Compile Include="App\ProfileActivity.cs" />
     <Compile Include="App\Posts\PostActivity.cs" />
+    <Compile Include="App\Posts\OldPostFragment.cs" />
     <Compile Include="App\Posts\PostFragment.cs" />
   </ItemGroup>
   <ItemGroup>

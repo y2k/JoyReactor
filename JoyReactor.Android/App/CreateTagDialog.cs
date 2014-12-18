@@ -2,22 +2,21 @@
 using Android.OS;
 using Android.Views;
 using Android.Widget;
-using JoyReactor.Core.Controllers;
 using JoyReactor.Android.App.Base;
+using JoyReactor.Core.ViewModels;
+using GalaSoft.MvvmLight.Helpers;
 
 namespace JoyReactor.Android.App
 {
 	public class CreateTagDialog : BaseDialogFragment
 	{
-		CreateTagController controller;
-
+		CreateTagViewModel controller = new CreateTagViewModel ();
 		EditText name;
 
 		public override void OnCreate (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
 			RetainInstance = true;
-			controller = new CreateTagController ();
 		}
 
 		public override Dialog OnCreateDialog (Bundle savedInstanceState)
@@ -37,23 +36,15 @@ namespace JoyReactor.Android.App
 		public override void OnActivityCreated (Bundle savedInstanceState)
 		{
 			base.OnActivityCreated (savedInstanceState);
-			controller.InvalidateUiCallback = HandleInvalidateUi;
 
-			name.TextChanged += (sender, e) => controller.Name = name.Text;
-			View.FindViewById (Resource.Id.ok).Click += (sender, e) => controller.CreateCommand.Execute (null);
 			View.FindViewById (Resource.Id.cancel).Click += (sender, e) => Dismiss ();
 
-			HandleInvalidateUi ();
-		}
+			controller.SetBinding (() => controller.Name, name, () => name.Text);
+			controller
+				.SetBinding (() => controller.NameError, name, () => name.Error)
+				.ConvertSourceToTarget (s => s ? GetString (Resource.String.required_field) : null);
 
-		void HandleInvalidateUi ()
-		{
-			name.Text = controller.Name;
-			name.Error = controller.NameError ? GetString (Resource.String.required_field) : null;
-			View.FindViewById (Resource.Id.ok).Enabled = !controller.IsBusy;
-			View.FindViewById (Resource.Id.cancel).Enabled = !controller.IsBusy;
-			if (controller.IsComplete)
-				DismissAllowingStateLoss ();
+			View.FindViewById (Resource.Id.ok).SetCommand ("Click", controller.CreateCommand);
 		}
 	}
 }

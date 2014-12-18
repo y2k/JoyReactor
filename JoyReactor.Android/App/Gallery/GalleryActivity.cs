@@ -33,7 +33,7 @@ namespace JoyReactor.Android.App.Gallery
 			a.AddAll (s);
 		}
 
-		class GalleryAdapter : ArrayAdapter<CommentAttachment>
+		class GalleryAdapter : ArrayAdapter<Attachment>
 		{
 			ImageModel im = ServiceLocator.Current.GetInstance<ImageModel> ();
 
