@@ -9,72 +9,72 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.ViewModels
 {
-    public class PostViewModel : ViewModelBase
-    {
-        public ObservableCollection<CommentViewModel> Comments { get; } = new ObservableCollection<CommentViewModel>();
+	public class PostViewModel : ViewModelBase
+	{
+		public ObservableCollection<CommentViewModel> Comments { get; } = new ObservableCollection<CommentViewModel>();
 
-        string _image;
-        public string Image
-        {
-            get { return _image; }
-            set { Set(ref _image, value); }
-        }
+		string _image;
 
-        bool _isBusy;
-        public bool IsBusy
-        {
-            get { return _isBusy; }
-            set { Set(ref _isBusy, value); }
-        }
+		public string Image {
+			get { return _image; }
+			set { Set (ref _image, value); }
+		}
 
-        public async Task Initialize(int postId)
-        {
-            IsBusy = true;
+		bool _isBusy;
 
-            var post = await new PostModel().GetPostAsync(postId);
-            var attachments = await new PostModel().GetPostAttachmentsAsync(postId);
+		public bool IsBusy {
+			get { return _isBusy; }
+			set { Set (ref _isBusy, value); }
+		}
 
-            Comments.ReplaceAll(ConvertToViewModels(await new PostModel().GetChildCommentsAsync(postId, 0)));
+		public async Task Initialize (int postId)
+		{
+			IsBusy = true;
 
-            Image = attachments.Select(s => s.PreviewImageUrl).FirstOrDefault();
-            IsBusy = false;
-        }
+			var post = await new PostModel ().GetPostAsync (postId);
+			var attachments = await new PostModel ().GetPostAttachmentsAsync (postId);
 
-        IEnumerable<CommentViewModel> ConvertToViewModels(IEnumerable<Comment> comments)
-        {
-            foreach (var s in comments)
-                yield return new CommentViewModel(this, s);
-        }
+			Comments.ReplaceAll (ConvertToViewModels (await new PostModel ().GetChildCommentsAsync (postId, 0)));
 
-        async void ChangeRootCommen(Comment comment, bool isRoot)
-        {
-            if (isRoot)
-            {
-                var comments = await new PostModel().GetCommentsWithSameParentAsync(comment.PostId, comment.Id);
-                var parent = await new PostModel().GetParentCommentAsync(comment.PostId, comment.Id);
-                Comments.ReplaceAll(ConvertToViewModels(comments));
-                if (parent != null)
-                    Comments.Insert(0, new CommentViewModel(this, parent) { IsRoot = true });
-            }
-            else
-            {
-                var childs = await new PostModel().GetChildCommentsAsync(comment.PostId, comment.Id);
-                Comments.ReplaceAll(ConvertToViewModels(childs));
-                Comments.Insert(0, new CommentViewModel(this, comment) { IsRoot = true });
-            }
-        }
+			Image = attachments.Select (s => s.PreviewImageUrl).FirstOrDefault ();
+			IsBusy = false;
+		}
 
-        public class CommentViewModel : ViewModelBase
-        {
-            public RelayCommand NavigateCommand { get; set; }
+		IEnumerable<CommentViewModel> ConvertToViewModels (IEnumerable<Comment> comments)
+		{
+			foreach (var s in comments)
+				yield return new CommentViewModel (this, s);
+		}
 
-            public bool IsRoot { get; set; }
+		async void ChangeRootCommen (Comment comment, bool isRoot)
+		{
+			if (isRoot) {
+				var comments = await new PostModel ().GetCommentsWithSameParentAsync (comment.PostId, comment.Id);
+				var parent = await new PostModel ().GetParentCommentAsync (comment.PostId, comment.Id);
+				Comments.ReplaceAll (ConvertToViewModels (comments));
+				if (parent != null)
+					Comments.Insert (0, new CommentViewModel (this, parent) { IsRoot = true });
+			} else {
+				var childs = await new PostModel ().GetChildCommentsAsync (comment.PostId, comment.Id);
+				Comments.ReplaceAll (ConvertToViewModels (childs));
+				Comments.Insert (0, new CommentViewModel (this, comment) { IsRoot = true });
+			}
+		}
 
-            public CommentViewModel(PostViewModel parent, Comment comment)
-            {
-                NavigateCommand = new FixRelayCommand(() =>
-                    parent.ChangeRootCommen(comment, IsRoot));
-            }
-        }
-    }
+		public class CommentViewModel : ViewModelBase
+		{
+			public RelayCommand NavigateCommand { get; set; }
+
+			public bool IsRoot { get; set; }
+
+			public string Text { get; set; }
+
+			public CommentViewModel (PostViewModel parent, Comment comment)
+			{
+				Text = comment.Text;
+				NavigateCommand = new FixRelayCommand (() =>
+                    parent.ChangeRootCommen (comment, IsRoot));
+			}
+		}
+	}
 }

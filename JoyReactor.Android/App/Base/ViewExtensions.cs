@@ -1,6 +1,6 @@
 ﻿using System;
-using Android.Views;
 using System.Collections.Generic;
+using Android.Views;
 
 namespace JoyReactor.Android.App.Base
 {

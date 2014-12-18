@@ -24,7 +24,8 @@ namespace JoyReactor.Android.App.Home
 		{
 			base.OnCreate (savedInstanceState);
 			RetainInstance = true;
-			viewModel = new FeedViewModel (ID.Factory.New (ID.IdConst.ReactorGood));
+			viewModel = new FeedViewModel ();
+			viewModel.ChangeCurrentListIdCommand.Execute (ID.Factory.New (ID.IdConst.ReactorGood));
 		}
 
 		public override void OnActivityCreated (Bundle savedInstanceState)

@@ -49,11 +49,7 @@ namespace JoyReactor.Core.ViewModels
         PostCollectionModel model = new PostCollectionModel();
         ID id;
 
-        public FeedViewModel() : this(ID.Factory.New(ID.IdConst.ReactorGood))
-        {
-        }
-
-        public FeedViewModel(ID id)
+        public FeedViewModel()
         {
             RefreshCommand = new RelayCommand(OnRefreshInvoked);
             MoreCommand = new RelayCommand(OnButtonMoreClicked);
