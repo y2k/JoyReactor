@@ -1,5 +1,7 @@
 ﻿using JoyReactor.Core.ViewModels;
 using NUnit.Framework;
+using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,34 +31,43 @@ namespace JoyReactor.Core.Tests.ViewModels
             await Task.Delay(400);
             Assert.IsFalse(viewmodel.IsBusy);
 
-            Assert.AreEqual("http://img0.joyreactor.cc/pics/post/-770859.jpeg", viewmodel.Image);
-            Assert.AreEqual(13, viewmodel.Comments.Count);
+            var poster = (PostViewModel.PosterViewModel)viewmodel.ViewModelParts[0];
+            Assert.AreEqual("http://img0.joyreactor.cc/pics/post/-770859.jpeg", poster.Image);
+            Assert.AreEqual(13, viewmodel.Comments().Count);
 
             // ==============================================
-            Assert.IsTrue(viewmodel.Comments.All(s => !s.IsRoot));
+            Assert.IsTrue(viewmodel.Comments().All(s => !s.IsRoot));
 
-            viewmodel.Comments[0].NavigateCommand.Execute(null);
+            viewmodel.Comments()[0].NavigateCommand.Execute(null);
             await Task.Delay(300);
-            Assert.AreEqual(3, viewmodel.Comments.Count);
-            Assert.IsTrue(viewmodel.Comments[0].IsRoot);
-            Assert.IsTrue(viewmodel.Comments.Skip(1).All(s => !s.IsRoot));
+            Assert.AreEqual(3, viewmodel.Comments().Count);
+            Assert.IsTrue(viewmodel.Comments()[0].IsRoot);
+            Assert.IsTrue(viewmodel.Comments().Skip(1).All(s => !s.IsRoot));
 
-            viewmodel.Comments[1].NavigateCommand.Execute(null);
+            viewmodel.Comments()[1].NavigateCommand.Execute(null);
             await Task.Delay(300);
-            Assert.AreEqual(2, viewmodel.Comments.Count);
-            Assert.IsTrue(viewmodel.Comments[0].IsRoot);
-            Assert.IsTrue(viewmodel.Comments.Skip(1).All(s => !s.IsRoot));
+            Assert.AreEqual(2, viewmodel.Comments().Count);
+            Assert.IsTrue(viewmodel.Comments()[0].IsRoot);
+            Assert.IsTrue(viewmodel.Comments().Skip(1).All(s => !s.IsRoot));
 
-            viewmodel.Comments[0].NavigateCommand.Execute(null);
+            viewmodel.Comments()[0].NavigateCommand.Execute(null);
             await Task.Delay(300);
-            Assert.AreEqual(3, viewmodel.Comments.Count);
-            Assert.IsTrue(viewmodel.Comments[0].IsRoot);
-            Assert.IsTrue(viewmodel.Comments.Skip(1).All(s => !s.IsRoot));
+            Assert.AreEqual(3, viewmodel.Comments().Count);
+            Assert.IsTrue(viewmodel.Comments()[0].IsRoot);
+            Assert.IsTrue(viewmodel.Comments().Skip(1).All(s => !s.IsRoot));
 
-            viewmodel.Comments[0].NavigateCommand.Execute(null);
+            viewmodel.Comments()[0].NavigateCommand.Execute(null);
             await Task.Delay(300);
-            Assert.AreEqual(13, viewmodel.Comments.Count);
-            Assert.IsTrue(viewmodel.Comments.All(s => !s.IsRoot));
+            Assert.AreEqual(13, viewmodel.Comments().Count);
+            Assert.IsTrue(viewmodel.Comments().All(s => !s.IsRoot));
+        }
+    }
+
+    static class PostViewModelExtensions
+    {
+        public static List<PostViewModel.CommentViewModel> Comments(this PostViewModel viewmodel)
+        {
+            return viewmodel.ViewModelParts.OfType<PostViewModel.CommentViewModel>().ToList();
         }
     }
 }

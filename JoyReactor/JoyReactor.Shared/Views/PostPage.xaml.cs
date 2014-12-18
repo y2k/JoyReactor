@@ -1,6 +1,4 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-using JoyReactor.Core.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,26 +20,11 @@ namespace JoyReactor.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class PostPage : Page
     {
-        public MainPage()
+        public PostPage()
         {
             this.InitializeComponent();
-        }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            Messenger.Default.Register<PostNavigationMessage>(this, m =>
-            {
-                //
-            });
-        }
-
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-        {
-            base.OnNavigatingFrom(e);
-            Messenger.Default.Unregister(this);
         }
     }
 }
