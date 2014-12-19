@@ -31,7 +31,7 @@ namespace JoyReactor.Core.Model
                 return url;
 
             var s = string.Format(
-                        "http://remote-cache.api-i-twister.net/Cache/Get?maxHeight=500&width={0}&url={1}",
+                        "https://remote-cache.api-i-twister.net/Cache/Get?maxHeight=500&width={0}&url={1}",
                         px, Uri.EscapeDataString("" + url));
             return new Uri(s);
         }
