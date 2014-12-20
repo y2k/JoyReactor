@@ -20,9 +20,10 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Image Source="{Binding Image}"
-                                           Width="40"
-                                           Height="40" />
+                                    <v:ThumbnailImage ThumbnailSize="40"
+                                                      Source="{Binding Image}"
+                                                      Width="40"
+                                                      Height="40" />
                                     <TextBlock Text="{Binding Title}"
                                                Margin="8,0,0,0"
                                                VerticalAlignment="Center" />

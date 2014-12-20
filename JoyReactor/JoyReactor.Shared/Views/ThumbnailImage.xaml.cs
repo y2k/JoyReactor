@@ -38,6 +38,7 @@ namespace JoyReactor.Views
         {
             if (Source != null)
             {
+                Image.Source = null;
                 var path = await new ImageLoader(new Uri(Source), ThumbnailSize).Load<PathImage>();
                 Image.Source = path == null ? null : new BitmapImage(path.PathUri);
             }
