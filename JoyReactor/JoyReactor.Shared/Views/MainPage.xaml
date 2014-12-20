@@ -52,8 +52,8 @@
                                                 <StackPanel HorizontalAlignment="Stretch">
                                                     <v:FixedAspectPanel MaxChildWidth="{Binding ImageWidth}"
                                                                         MaxChildHeight="{Binding ImageHeight}">
-                                                        <Image Source="{Binding Image}"
-                                                               Stretch="UniformToFill" />
+                                                        <v:ThumbnailImage Source="{Binding Image}"
+                                                                          ThumbnailSize="300" />
                                                     </v:FixedAspectPanel>
                                                     <TextBlock Text="{Binding Title}" />
                                                 </StackPanel>

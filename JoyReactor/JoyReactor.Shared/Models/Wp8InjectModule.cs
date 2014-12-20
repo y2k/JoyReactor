@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using PCLStorage;
 using SQLite.Net.Interop;
 using System;
 using XamarinCommons.Image;
@@ -12,17 +13,22 @@ namespace JoyReactor.Models
         protected override void Load(ContainerBuilder b)
         {
             b.RegisterType<SQLite.Net.Platform.WinRT.SQLitePlatformWinRT>().As<ISQLitePlatform>();
-            b.RegisterType<StubImageDecoder>().As<ImageDecoder>();
+            b.RegisterType<PathImageDecoder>().As<ImageDecoder>();
         }
 
         #endregion
     }
 
-    public class StubImageDecoder : ImageDecoder
+    public class PathImageDecoder : ImageDecoder
     {
+        public override object Decode(IFile file)
+        {
+            return new PathImage { PathUri = new Uri(file.Path) };
+        }
+
         public override int GetImageSize(object commonImage)
         {
-            throw new NotImplementedException();
+            return 0;
         }
     }
 }

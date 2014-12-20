@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Models\PathImage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Wp8InjectModule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\BoolToVisibilityConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\FeedItemTemplateSelector.cs" />
@@ -22,8 +23,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\PostItemTemplateSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\PostPage.xaml.cs">
       <DependentUpon>PostPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ThumbnailImage.xaml.cs">
+      <DependentUpon>ThumbnailImage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -32,6 +37,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Views\PostPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Views\ThumbnailImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

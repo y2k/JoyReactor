@@ -77,11 +77,17 @@
     <Reference Include="System.Data.SQLite">
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.94.0\lib\net45\System.Data.SQLite.dll</HintPath>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.0.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
+    <Reference Include="XamarinCommons, Version=1.0.5431.37798, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Spectator-Cross\Spectator.Core\Libs\XamarinCommons.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\ImageLoaderTests.cs" />
     <Compile Include="Model\Parser\Chan2ParserTests.cs" />
     <Compile Include="Model\Parser\Chan7ParserTests.cs" />
     <Compile Include="Model\Parser\ReactorParserTests.cs" />
@@ -92,6 +98,7 @@
     <Compile Include="Inner\MockSQLiteConnection.cs" />
     <Compile Include="Model\Parser\ChanPostLinkerTests.cs" />
     <Compile Include="Model\PostCollectionModelTests.cs" />
+    <Compile Include="ViewModels\GalleryViewModelTests.cs" />
     <Compile Include="ViewModels\PostViewModelTests.cs" />
     <Compile Include="ViewModels\TagInformationViewModelTests.cs" />
     <Compile Include="Helpers\Settings.cs" />

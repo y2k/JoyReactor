@@ -34,6 +34,7 @@
     <Compile Include="Model\Constants.cs" />
     <Compile Include="Model\DTO\Comment.cs" />
     <Compile Include="Model\DTO\Attachment.cs" />
+    <Compile Include="Model\ImageLoader.cs" />
     <Compile Include="Model\Inject\DefaultServiceLocator.cs" />
     <Compile Include="Model\PostModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="ViewModels\CreateTagViewModel.cs" />
     <Compile Include="ViewModels\FeedViewModel.cs" />
+    <Compile Include="ViewModels\GalleryViewModel.cs" />
     <Compile Include="ViewModels\ObservableCollectionExtensions.cs" />
     <Compile Include="ViewModels\PostViewModel.cs" />
     <Compile Include="ViewModels\SelectTagMessage.cs" />

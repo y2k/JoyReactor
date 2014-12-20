@@ -15,5 +15,7 @@ namespace JoyReactor.Core.ViewModels
         {
             get { return _tags.Value; }
         }
+
+        public PostViewModel Post { get; } = new PostViewModel();
     }
 }

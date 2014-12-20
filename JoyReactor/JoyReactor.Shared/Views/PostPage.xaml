@@ -4,10 +4,37 @@
       xmlns:local="using:JoyReactor.Views"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:v="using:JoyReactor.Views"
+      DataContext="{Binding Source={StaticResource Locator}, Path=Post}"
       mc:Ignorable="d">
 
+    <Page.TopAppBar>
+        <AppBar>
+            <AppBarButton Icon="Back"
+                          Click="AppBarButton_Click" />
+        </AppBar>
+    </Page.TopAppBar>
+
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListView SelectionMode="None">
+        <ListView SelectionMode="None"
+                  ItemsSource="{Binding ViewModelParts}">
+            <ListView.ItemTemplateSelector>
+                <v:PostItemTemplateSelector>
+                    <v:PostItemTemplateSelector.PosterTemplate>
+                        <DataTemplate>
+                            <Image Width="500"
+                                   Height="500"
+                                   Source="{Binding Image}" />
+                        </DataTemplate>
+                    </v:PostItemTemplateSelector.PosterTemplate>
+                    <v:PostItemTemplateSelector.CommentTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding Text}"
+                                    Command="{Binding NavigateCommand}" />
+                        </DataTemplate>
+                    </v:PostItemTemplateSelector.CommentTemplate>
+                </v:PostItemTemplateSelector>
+            </ListView.ItemTemplateSelector>
         </ListView>
     </Grid>
 </Page>

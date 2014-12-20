@@ -1,7 +1,6 @@
 ﻿using JoyReactor.Core.ViewModels;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
