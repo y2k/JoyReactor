@@ -170,7 +170,7 @@
       <HintPath>..\..\packages\SQLite.Net.Platform.WinRT.2.4.1\lib\Windows8\SQLite.Net.Platform.WinRT.dll</HintPath>
     </Reference>
     <Reference Include="XamarinCommons">
-      <HintPath>..\..\..\Spectator-Cross\Spectator.Core\Libs\XamarinCommons.dll</HintPath>
+      <HintPath>..\..\JoyReactor.Core\Libs\XamarinCommons.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">

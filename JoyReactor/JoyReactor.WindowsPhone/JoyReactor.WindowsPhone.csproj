@@ -142,7 +142,7 @@
       <HintPath>Libs\x86\SQLite.Net.Platform.WindowsPhoneApp81.dll</HintPath>
     </Reference>
     <Reference Include="XamarinCommons">
-      <HintPath>..\..\..\Spectator-Cross\Spectator.Core\Libs\XamarinCommons.dll</HintPath>
+      <HintPath>..\..\JoyReactor.Core\Libs\XamarinCommons.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

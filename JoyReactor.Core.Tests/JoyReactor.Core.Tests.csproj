@@ -81,9 +81,8 @@
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.0.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
-    <Reference Include="XamarinCommons, Version=1.0.5431.37798, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Spectator-Cross\Spectator.Core\Libs\XamarinCommons.dll</HintPath>
+    <Reference Include="XamarinCommons">
+      <HintPath>..\JoyReactor.Core\Libs\XamarinCommons.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
