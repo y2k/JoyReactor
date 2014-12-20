@@ -1,4 +1,5 @@
-﻿using JoyReactor.Core.ViewModels;
+﻿using GalaSoft.MvvmLight.Messaging;
+using JoyReactor.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -17,14 +18,23 @@ namespace JoyReactor.Views
             this.InitializeComponent();
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {
-            await ((PostViewModel)DataContext).Initialize((int)e.Parameter);
-        }
-
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
             Frame.GoBack();
+        }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            await ((PostViewModel)DataContext).Initialize((int)e.Parameter);
+            Messenger.Default.Register<GalleryNavigationMessage>(this, m =>
+                Frame.Navigate(typeof(GalleryPage), m.PostId));
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            base.OnNavigatingFrom(e);
+            Messenger.Default.Unregister(this);
         }
     }
 }

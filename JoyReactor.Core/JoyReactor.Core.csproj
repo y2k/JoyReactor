@@ -150,6 +150,4 @@
       <HintPath>..\packages\SQLite.Net-PCL.2.4.1\lib\portable-win8+net45+wp8+wpa81+MonoAndroid1+MonoTouch1\SQLite.Net.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
-  <ItemGroup />
 </Project>

@@ -10,8 +10,14 @@
 
     <Page.TopAppBar>
         <AppBar>
-            <AppBarButton Icon="Back"
-                          Click="AppBarButton_Click" />
+            <StackPanel Orientation="Horizontal">
+                <AppBarButton Icon="Back"
+                              Label="Home"
+                              Click="AppBarButton_Click" />
+                <AppBarButton Icon="Pictures"
+                              Label="Gallery"
+                              Command="{Binding OpenGalleryCommand}" />
+            </StackPanel>
         </AppBar>
     </Page.TopAppBar>
 

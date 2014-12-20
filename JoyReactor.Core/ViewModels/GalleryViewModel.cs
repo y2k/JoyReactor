@@ -12,6 +12,7 @@ namespace JoyReactor.Core.ViewModels
 
         public async Task Initialize(int postId)
         {
+            await new PostModel().GetPostAsync(postId);
             var attachments = await new PostModel().GetAttachmentsAsync(postId);
             Images.ReplaceAll(attachments.Select(s => s.Url));
         }

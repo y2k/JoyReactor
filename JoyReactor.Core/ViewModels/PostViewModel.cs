@@ -20,8 +20,13 @@ namespace JoyReactor.Core.ViewModels
             set { Set(ref _isBusy, value); }
         }
 
+        public RelayCommand OpenGalleryCommand { get; set; }
+
         public async Task Initialize(int postId)
         {
+            OpenGalleryCommand = new FixRelayCommand(() =>
+                  MessengerInstance.Send(new GalleryNavigationMessage { PostId = postId }));
+
             IsBusy = true;
 
             var post = await new PostModel().GetPostAsync(postId);
