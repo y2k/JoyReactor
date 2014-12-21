@@ -60,6 +60,18 @@ namespace JoyReactor.Core.Tests.ViewModels
             Assert.AreEqual(13, viewmodel.Comments().Count);
             Assert.IsTrue(viewmodel.Comments().All(s => !s.IsRoot));
         }
+
+        [Test]
+        public async Task LoadPost4chan572092321Test()
+        {
+            int id = TestExtensions.CreatePostIdDatabase(ID.SiteParser.Chan4, "572092321");
+
+            await viewmodel.Initialize(id);
+
+            var poster = (PostViewModel.PosterViewModel)viewmodel.ViewModelParts[0];
+            Assert.AreEqual("http://0.t.4cdn.org/b/1412408056109s.jpg", poster.Image);
+            Assert.AreEqual(10, viewmodel.Comments().Count);
+        }
     }
 
     static class PostViewModelExtensions
