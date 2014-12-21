@@ -8,18 +8,16 @@
       DataContext="{Binding Source={StaticResource Locator}, Path=Post}"
       mc:Ignorable="d">
 
-    <Page.TopAppBar>
-        <AppBar>
-            <StackPanel Orientation="Horizontal">
-                <AppBarButton Icon="Back"
-                              Label="Home"
-                              Click="AppBarButton_Click" />
-                <AppBarButton Icon="Pictures"
-                              Label="Gallery"
-                              Command="{Binding OpenGalleryCommand}" />
-            </StackPanel>
-        </AppBar>
-    </Page.TopAppBar>
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Icon="Back"
+                          Label="Home"
+                          Click="AppBarButton_Click" />
+            <AppBarButton Icon="Pictures"
+                          Label="Gallery"
+                          Command="{Binding OpenGalleryCommand}" />
+        </CommandBar>
+    </Page.BottomAppBar>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <ListView SelectionMode="None"
