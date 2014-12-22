@@ -1,6 +1,6 @@
 ﻿using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Inject;
-using JoyReactor.Core.Tests.Inner;
+using JoyReactor.Core.Tests.Helpers;
 using JoyReactor.Core.ViewModels;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;

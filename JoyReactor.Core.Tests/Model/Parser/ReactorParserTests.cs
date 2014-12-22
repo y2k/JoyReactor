@@ -1,7 +1,7 @@
 ﻿using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model.Parser;
-using JoyReactor.Core.Tests.Inner;
+using JoyReactor.Core.Tests.Helpers;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
 using System.Collections.Generic;

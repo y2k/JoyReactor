@@ -1,14 +1,14 @@
-﻿using System;
-using JoyReactor.Core.Model.Inject;
+﻿using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model.Web.Parser;
+using JoyReactor.Core.Tests.Helpers;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
-using JoyReactor.Core.Tests.Inner;
+using System;
 
 namespace JoyReactor.Core.Tests
 {
-	[TestFixture]
+    [TestFixture]
 	public class Chan7ParserTests
 	{
 		private SiteParser parser;

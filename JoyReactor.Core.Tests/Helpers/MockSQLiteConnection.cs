@@ -2,7 +2,7 @@
 using SQLite.Net;
 using SQLite.Net.Platform.Win32;
 
-namespace JoyReactor.Core.Tests.Inner
+namespace JoyReactor.Core.Tests.Helpers
 {
     public class MockSQLiteConnection
     {

@@ -7,7 +7,7 @@ using System.Drawing;
 using System.IO;
 using XamarinCommons.Image;
 
-namespace JoyReactor.Core.Tests.Inner
+namespace JoyReactor.Core.Tests.Helpers
 {
     public class TestModule : Module
     {

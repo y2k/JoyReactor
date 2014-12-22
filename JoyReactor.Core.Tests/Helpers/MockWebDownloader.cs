@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 
-namespace JoyReactor.Core.Tests.Inner
+namespace JoyReactor.Core.Tests.Helpers
 {
-	class MockWebDownloader : IWebDownloader
+    class MockWebDownloader : IWebDownloader
 	{
 		internal readonly IDictionary<string, string> RouteUrls = new Dictionary<string, string> () {
 			{ "http://joyreactor.cc/post/1323757", "response2.html" },
