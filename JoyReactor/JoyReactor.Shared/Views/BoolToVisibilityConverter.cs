@@ -8,7 +8,9 @@ namespace JoyReactor.Views
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return true.Equals(value) ? Visibility.Visible : Visibility.Collapsed;
+            return "invert".Equals(parameter)
+                ? true.Equals(value) ? Visibility.Collapsed : Visibility.Visible
+                : true.Equals(value) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

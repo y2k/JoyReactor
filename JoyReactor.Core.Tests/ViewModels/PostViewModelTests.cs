@@ -33,6 +33,9 @@ namespace JoyReactor.Core.Tests.ViewModels
             var poster = (PostViewModel.PosterViewModel)viewmodel.ViewModelParts[0];
             Assert.AreEqual("http://img0.joyreactor.cc/pics/post/-770859.jpeg", poster.Image);
             Assert.AreEqual(13, viewmodel.Comments().Count);
+            CollectionAssert.AreEqual(
+                new int[] { 2, 0, 0, 4, 0, 2, 0, 0, 0, 1, 0, 0, 0 },
+                viewmodel.Comments().Select(s => s.ChildCount));
 
             // ==============================================
             Assert.IsTrue(viewmodel.Comments().All(s => !s.IsRoot));
@@ -61,15 +64,16 @@ namespace JoyReactor.Core.Tests.ViewModels
             Assert.IsTrue(viewmodel.Comments().All(s => !s.IsRoot));
         }
 
+        [Ignore("Доделать парсер комментариев для *chan")]
         [Test]
         public async Task LoadPost4chan572092321Test()
         {
-            int id = TestExtensions.CreatePostIdDatabase(ID.SiteParser.Chan4, "572092321");
+            int id = TestExtensions.CreatePostIdDatabase(ID.SiteParser.Chan4, "b,572092321");
 
             await viewmodel.Initialize(id);
 
             var poster = (PostViewModel.PosterViewModel)viewmodel.ViewModelParts[0];
-            Assert.AreEqual("http://0.t.4cdn.org/b/1412408056109s.jpg", poster.Image);
+            Assert.AreEqual("https://i.4cdn.org/b/1412408056109.jpg", poster.Image);
             Assert.AreEqual(10, viewmodel.Comments().Count);
         }
     }

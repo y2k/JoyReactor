@@ -1,13 +1,10 @@
-﻿using System.Linq;
-using JoyReactor.Core.Model;
+﻿using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Inject;
-using JoyReactor.Core.Model.Web;
+using JoyReactor.Core.Tests.Helpers;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
-using JoyReactor.Core.Tests.Inner;
 using SQLite.Net;
-using System;
-using JoyReactor.Core.Tests.ViewModels;
+using System.Linq;
 
 namespace JoyReactor.Core.Tests.Model
 {

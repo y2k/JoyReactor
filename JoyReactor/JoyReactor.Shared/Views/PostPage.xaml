@@ -33,8 +33,14 @@
                     </v:PostItemTemplateSelector.PosterTemplate>
                     <v:PostItemTemplateSelector.CommentTemplate>
                         <DataTemplate>
-                            <Button Content="{Binding Text}"
-                                    Command="{Binding NavigateCommand}" />
+                            <StackPanel Orientation="Horizontal">
+                                <Grid Width="40"
+                                      Visibility="{Binding IsRoot, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}" />
+                                <TextBlock Text="{Binding ChildCount}"
+                                           VerticalAlignment="Center" />
+                                <Button Content="{Binding Text}"
+                                        Command="{Binding NavigateCommand}" />
+                            </StackPanel>
                         </DataTemplate>
                     </v:PostItemTemplateSelector.CommentTemplate>
                 </v:PostItemTemplateSelector>

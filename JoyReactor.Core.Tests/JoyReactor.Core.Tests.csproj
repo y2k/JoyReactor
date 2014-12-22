@@ -44,14 +44,6 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="PCLStorage, Version=1.0.0.0, Culture=neutral, PublicKeyToken=286fe515a2c35b64, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\PCLStorage.1.0.0\lib\net45\PCLStorage.dll</HintPath>
-    </Reference>
-    <Reference Include="PCLStorage.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=286fe515a2c35b64, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\PCLStorage.1.0.0\lib\net45\PCLStorage.Abstractions.dll</HintPath>
-    </Reference>
     <Reference Include="SQLite.Net">
       <HintPath>..\packages\SQLite.Net-PCL.2.4.1\lib\portable-win8+net45+wp8+wpa81+MonoAndroid1+MonoTouch1\SQLite.Net.dll</HintPath>
     </Reference>
@@ -78,11 +70,20 @@
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.94.0\lib\net45\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\MvvmLightLibs.5.0.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
     <Reference Include="XamarinCommons">
       <HintPath>..\JoyReactor.Core\Libs\XamarinCommons.dll</HintPath>
+    </Reference>
+    <Reference Include="PCLStorage">
+      <HintPath>..\packages\PCLStorage.1.0.0\lib\net45\PCLStorage.dll</HintPath>
+    </Reference>
+    <Reference Include="PCLStorage.Abstractions">
+      <HintPath>..\packages\PCLStorage.1.0.0\lib\net45\PCLStorage.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\packages\MvvmLightLibs.5.0.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLite.Net.Platform.Generic">
+      <HintPath>..\packages\SQLite.Net.Platform.Generic.2.4.1\lib\net40\SQLite.Net.Platform.Generic.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -91,10 +92,10 @@
     <Compile Include="Model\Parser\Chan7ParserTests.cs" />
     <Compile Include="Model\Parser\ReactorParserTests.cs" />
     <Compile Include="Model\Parser\Chan4ParserTests.cs" />
-    <Compile Include="Inner\TestModule.cs" />
-    <Compile Include="Inner\MockWebDownloader.cs" />
+    <Compile Include="Helpers\TestModule.cs" />
+    <Compile Include="Helpers\MockWebDownloader.cs" />
     <Compile Include="Model\PostModelTests.cs" />
-    <Compile Include="Inner\MockSQLiteConnection.cs" />
+    <Compile Include="Helpers\MockSQLiteConnection.cs" />
     <Compile Include="Model\Parser\ChanPostLinkerTests.cs" />
     <Compile Include="Model\PostCollectionModelTests.cs" />
     <Compile Include="ViewModels\GalleryViewModelTests.cs" />
@@ -184,6 +185,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.94.0\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.94.0\build\net45\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

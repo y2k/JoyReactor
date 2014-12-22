@@ -1,7 +1,7 @@
 ﻿using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model.Web;
-using JoyReactor.Core.Tests.Inner;
+using JoyReactor.Core.Tests.Helpers;
 using Microsoft.Practices.ServiceLocation;
 using SQLite.Net;
 

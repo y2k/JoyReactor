@@ -6,9 +6,6 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:v="using:JoyReactor.Views"
       mc:Ignorable="d">
-    <Page.Resources>
-        <v:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-    </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Hub Header="JoyReactor">
