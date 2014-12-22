@@ -11,14 +11,14 @@ namespace JoyReactor.Core.Model.DTO
 
         public int PostId { get; set; }
 
-        public String CommentId { get; set; }
+        public string CommentId { get; set; }
 
-        public String Text { get; set; }
+        public string Text { get; set; }
         public long Created { get; set; }
 
         public float Rating { get; set; }
 
-        public String UserName { get; set; }
-        public String UserImage { get; set; }
+        public string UserName { get; set; }
+        public string UserImage { get; set; }
     }
 }

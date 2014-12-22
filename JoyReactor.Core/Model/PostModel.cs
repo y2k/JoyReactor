@@ -15,24 +15,24 @@ namespace JoyReactor.Core.Model
     {
         SQLiteConnection db = ServiceLocator.Current.GetInstance<SQLiteConnection>();
 
-        public Task<List<Comment>> GetChildCommentsAsync(int postId, int parentCommentId)
+        public Task<List<CommentWithChildCount>> GetChildCommentsAsync(int postId, int parentCommentId)
         {
             if (parentCommentId == 0)
                 return GetTopCommentsAsync(postId, int.MaxValue);
-            return Task.Run(() => db.SafeQuery<Comment>(
-                "SELECT * FROM comments WHERE PostId = ? AND Id IN (" +
-                "   SELECT CommentId FROM comment_links WHERE ParentCommentId = ?) ORDER BY Rating",
+            return Task.Run(() => db.SafeQuery<CommentWithChildCount>(
+                "SELECT c.*, (SELECT COUNT(*) FROM comment_links WHERE ParentCommentId = c.Id) AS ChildCount FROM comments c WHERE c.PostId = ? AND c.Id IN (" +
+                "   SELECT CommentId FROM comment_links WHERE ParentCommentId = ?) ORDER BY c.Rating",
                 postId, parentCommentId));
         }
 
-        public Task<List<Comment>> GetCommentsWithSameParentAsync(int postId, int commentId)
+        public Task<List<CommentWithChildCount>> GetCommentsWithSameParentAsync(int postId, int commentId)
         {
             return Task.Run(async () =>
             {
-                var comments = db.SafeQuery<Comment>(
-                    "SELECT * FROM comments WHERE PostId = ? AND Id IN (" +
+                var comments = db.SafeQuery<CommentWithChildCount>(
+                    "SELECT c.*, (SELECT COUNT(*) FROM comment_links WHERE ParentCommentId = c.Id) AS ChildCount FROM comments c WHERE c.PostId = ? AND c.Id IN (" +
                     "   SELECT CommentId FROM comment_links WHERE ParentCommentId IN (" +
-                    "       SELECT ParentCommentId FROM comment_links WHERE CommentId = ?)) ORDER BY Rating",
+                    "       SELECT ParentCommentId FROM comment_links WHERE CommentId = ?)) ORDER BY c.Rating",
                     postId, commentId);
                 if (comments.Count == 0)
                     comments = await GetTopCommentsAsync(postId, int.MaxValue);
@@ -40,25 +40,20 @@ namespace JoyReactor.Core.Model
             });
         }
 
-        public Task<Comment> GetParentCommentAsync(int postId, int commentId)
+        public Task<CommentWithChildCount> GetParentCommentAsync(int postId, int commentId)
         {
-            return Task.Run(() => db.SafeQuery<Comment>(
-                "SELECT * FROM comments WHERE PostId = ? AND Id IN (" +
+            return Task.Run(() => db.SafeQuery<CommentWithChildCount>(
+                "SELECT c.*, (SELECT COUNT(*) FROM comment_links WHERE ParentCommentId = c.Id) AS ChildCount FROM comments c WHERE c.PostId = ? AND c.Id IN (" +
                 "   SELECT ParentCommentId FROM comment_links WHERE CommentId =?)",
                 postId, commentId).FirstOrDefault());
         }
 
-        public Task<List<Comment>> GetTopCommentsAsync(int postId, int count)
+        public Task<List<CommentWithChildCount>> GetTopCommentsAsync(int postId, int count)
         {
-            //			return Task.Run (() => {
-            //				return connection
-            //                    .SafeQuery<Comment> ("SELECT * FROM comments WHERE PostId = ? AND ParentId = 0 ORDER BY Rating DESC LIMIT ?", postId, count)
-            //                    .ToList ();
-            //			});
             return Task.Run(() =>
             {
-                return db.SafeQuery<Comment>(
-                    "SELECT * FROM comments WHERE PostId = ? AND Id NOT IN (SELECT CommentId FROM comment_links) ORDER BY Rating DESC LIMIT ?",
+                return db.SafeQuery<CommentWithChildCount>(
+                    "SELECT c.*, (SELECT COUNT(*) FROM comment_links WHERE ParentCommentId = c.Id) AS ChildCount FROM comments c WHERE c.PostId = ? AND c.Id NOT IN (SELECT CommentId FROM comment_links) ORDER BY c.Rating DESC LIMIT ?",
                     postId, count);
             });
         }

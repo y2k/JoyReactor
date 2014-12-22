@@ -33,6 +33,9 @@ namespace JoyReactor.Core.Tests.ViewModels
             var poster = (PostViewModel.PosterViewModel)viewmodel.ViewModelParts[0];
             Assert.AreEqual("http://img0.joyreactor.cc/pics/post/-770859.jpeg", poster.Image);
             Assert.AreEqual(13, viewmodel.Comments().Count);
+            CollectionAssert.AreEqual(
+                new int[] { 2, 0, 0, 4, 0, 2, 0, 0, 0, 1, 0, 0, 0 },
+                viewmodel.Comments().Select(s => s.ChildCount));
 
             // ==============================================
             Assert.IsTrue(viewmodel.Comments().All(s => !s.IsRoot));

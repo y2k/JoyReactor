@@ -40,13 +40,13 @@ namespace JoyReactor.Core.ViewModels
             IsBusy = false;
         }
 
-        IEnumerable<CommentViewModel> ConvertToViewModels(IEnumerable<Comment> comments)
+        IEnumerable<CommentViewModel> ConvertToViewModels(IEnumerable<CommentWithChildCount> comments)
         {
             foreach (var s in comments)
                 yield return new CommentViewModel(this, s);
         }
 
-        async void ChangeRootCommen(Comment comment, bool isRoot)
+        async void ChangeRootComment(CommentWithChildCount comment, bool isRoot)
         {
             if (isRoot)
             {
@@ -82,11 +82,14 @@ namespace JoyReactor.Core.ViewModels
 
             public string Text { get; set; }
 
-            public CommentViewModel(PostViewModel parent, Comment comment)
+            public int ChildCount { get; set; }
+
+            public CommentViewModel(PostViewModel parent, CommentWithChildCount comment)
             {
                 Text = comment.Text;
+                ChildCount = comment.ChildCount;
                 NavigateCommand = new FixRelayCommand(() =>
-                   parent.ChangeRootCommen(comment, IsRoot));
+                   parent.ChangeRootComment(comment, IsRoot));
             }
         }
     }
