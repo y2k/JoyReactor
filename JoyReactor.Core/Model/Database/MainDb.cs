@@ -1,13 +1,12 @@
-﻿using System;
+﻿using JoyReactor.Core.Model.DTO;
 using Microsoft.Practices.ServiceLocation;
-using JoyReactor.Core.Model.DTO;
+using PCLStorage;
 using SQLite.Net;
 using SQLite.Net.Interop;
-using PCLStorage;
 
 namespace JoyReactor.Core.Model.Database
 {
-	class MainDb
+    public class MainDb
 	{
 		const string DatabaseName = "net.itwister.joyreactor.main.db";
 		const int DatabaseVersion = 1;
@@ -37,94 +36,7 @@ namespace JoyReactor.Core.Model.Database
 			return id.Site + "-" + id.Type + "-" + id.Tag;
 		}
 
-		protected static void OnCreate (SQLiteConnection db)
-		{
-            db.CreateTable<Post>();
-            db.CreateTable<Profile>();
-			db.CreateTable<Tag> ();
-			db.CreateTable<TagPost> ();
-			db.CreateTable<Profile> ();
-			db.CreateTable<TagLinkedTag> ();
-			db.CreateTable<Comment> ();
-			db.CreateTable<Attachment> ();
-			db.CreateTable<CommentLink> ();
-
-			db.Insert (new Tag {
-				TagId = ToFlatId (ID.Factory.New (ID.IdConst.ReactorGood)),
-				Title = "JoyReactor",
-				Flags = Tag.FlagSystem
-			});
-
-#if DEBUG
-            db.Insert (new Tag {
-				TagId = ToFlatId (ID.Factory.New (ID.SiteParser.Chan2, "b")),
-				Title = "2ch / b",
-				Flags = Tag.FlagShowInMain
-			});
-			db.Insert (new Tag {
-				TagId = ToFlatId (ID.Factory.New (ID.SiteParser.Chan4, "b")),
-				Title = "4chan / b",
-				Flags = Tag.FlagShowInMain
-			});
-			db.Insert (new Tag {
-				TagId = ToFlatId (ID.Factory.New (ID.SiteParser.Chan7, "b")),
-				Title = "7chan / b",
-				Flags = Tag.FlagShowInMain
-			});
-#endif
-
-            db.Insert (new Tag {
-				TagId = ToFlatId (ID.Factory.NewTag ("anime")),
-				Title = "Anime",
-				Flags = Tag.FlagShowInMain,
-				BestImage = "http://img1.joyreactor.cc/pics/avatar/tag/2851"
-			});
-			db.Insert (new Tag {
-				TagId = ToFlatId (ID.Factory.NewTag ("cosplay")),
-				Title = "Cosplay",
-				Flags = Tag.FlagShowInMain,
-				BestImage = "http://img8.joyreactor.cc/pics/avatar/tag/518"
-			});
-			db.Insert (new Tag {
-				TagId = ToFlatId (ID.Factory.NewTag ("android")),
-				Title = "Android",
-				Flags = Tag.FlagShowInMain,
-				BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/2596"
-			});
-			db.Insert (new Tag {
-				TagId = ToFlatId (ID.Factory.NewTag ("гифки")),
-				Title = "Гифки",
-				Flags = Tag.FlagShowInMain,
-				BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/116"
-			});
-			db.Insert (new Tag {
-				TagId = ToFlatId (ID.Factory.NewTag ("эротика")),
-				Title = "Эротика",
-				Flags = Tag.FlagShowInMain,
-				BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/676"
-			});
-			db.Insert (new Tag {
-				TagId = ToFlatId (ID.Factory.NewTag ("песочница")),
-				Title = "Песочница",
-				Flags = Tag.FlagShowInMain,
-				BestImage = "http://img0.joyreactor.cc/images/default_avatar.jpeg"
-			});
-			db.Insert (new Tag {
-				TagId = ToFlatId (ID.Factory.NewTag ("комиксы")),
-				Title = "Комиксы",
-				Flags = Tag.FlagShowInMain,
-				BestImage = "http://img0.joyreactor.cc/pics/avatar/tag/27"
-			});
-		}
-
-		protected static void OnUpdate (int oldVersion, int newVersion)
-		{
-			// Reserverd
-		}
-
-		#region Private methods
-
-		static void InitializeDatabase (SQLiteConnection db)
+		public static void InitializeDatabase (SQLiteConnection db)
 		{
 			int ver = GetUserVesion (db);
 			if (ver == 0)
@@ -139,7 +51,103 @@ namespace JoyReactor.Core.Model.Database
 				});
 		}
 
-		static void SetUserVersion (SQLiteConnection db, int version)
+        private static void OnCreate(SQLiteConnection db)
+        {
+            db.CreateTable<Post>();
+            db.CreateTable<Profile>();
+            db.CreateTable<Tag>();
+            db.CreateTable<TagPost>();
+            db.CreateTable<Profile>();
+            db.CreateTable<TagLinkedTag>();
+            db.CreateTable<Comment>();
+            db.CreateTable<Attachment>();
+            db.CreateTable<CommentLink>();
+
+            db.Insert(new Tag
+            {
+                TagId = ToFlatId(ID.Factory.New(ID.IdConst.ReactorGood)),
+                Title = "JoyReactor",
+                Flags = Tag.FlagSystem
+            });
+
+#if DEBUG
+            db.Insert(new Tag
+            {
+                TagId = ToFlatId(ID.Factory.New(ID.SiteParser.Chan2, "b")),
+                Title = "2ch / b",
+                Flags = Tag.FlagShowInMain
+            });
+            db.Insert(new Tag
+            {
+                TagId = ToFlatId(ID.Factory.New(ID.SiteParser.Chan4, "b")),
+                Title = "4chan / b",
+                Flags = Tag.FlagShowInMain
+            });
+            db.Insert(new Tag
+            {
+                TagId = ToFlatId(ID.Factory.New(ID.SiteParser.Chan7, "b")),
+                Title = "7chan / b",
+                Flags = Tag.FlagShowInMain
+            });
+#endif
+
+            db.Insert(new Tag
+            {
+                TagId = ToFlatId(ID.Factory.NewTag("anime")),
+                Title = "Anime",
+                Flags = Tag.FlagShowInMain,
+                BestImage = "http://img1.joyreactor.cc/pics/avatar/tag/2851"
+            });
+            db.Insert(new Tag
+            {
+                TagId = ToFlatId(ID.Factory.NewTag("cosplay")),
+                Title = "Cosplay",
+                Flags = Tag.FlagShowInMain,
+                BestImage = "http://img8.joyreactor.cc/pics/avatar/tag/518"
+            });
+            db.Insert(new Tag
+            {
+                TagId = ToFlatId(ID.Factory.NewTag("android")),
+                Title = "Android",
+                Flags = Tag.FlagShowInMain,
+                BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/2596"
+            });
+            db.Insert(new Tag
+            {
+                TagId = ToFlatId(ID.Factory.NewTag("гифки")),
+                Title = "Гифки",
+                Flags = Tag.FlagShowInMain,
+                BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/116"
+            });
+            db.Insert(new Tag
+            {
+                TagId = ToFlatId(ID.Factory.NewTag("эротика")),
+                Title = "Эротика",
+                Flags = Tag.FlagShowInMain,
+                BestImage = "http://img6.joyreactor.cc/pics/avatar/tag/676"
+            });
+            db.Insert(new Tag
+            {
+                TagId = ToFlatId(ID.Factory.NewTag("песочница")),
+                Title = "Песочница",
+                Flags = Tag.FlagShowInMain,
+                BestImage = "http://img0.joyreactor.cc/images/default_avatar.jpeg"
+            });
+            db.Insert(new Tag
+            {
+                TagId = ToFlatId(ID.Factory.NewTag("комиксы")),
+                Title = "Комиксы",
+                Flags = Tag.FlagShowInMain,
+                BestImage = "http://img0.joyreactor.cc/pics/avatar/tag/27"
+            });
+        }
+
+        protected static void OnUpdate(int oldVersion, int newVersion)
+        {
+            // Reserverd
+        }
+
+        static void SetUserVersion (SQLiteConnection db, int version)
 		{
 			db.Execute ("PRAGMA user_version = " + version);
 		}
@@ -148,7 +156,5 @@ namespace JoyReactor.Core.Model.Database
 		{
 			return db.ExecuteScalar<int> ("PRAGMA user_version");
 		}
-
-		#endregion
 	}
 }
