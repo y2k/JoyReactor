@@ -48,7 +48,8 @@
                                         <DataTemplate>
                                             <Grid>
                                                 <StackPanel HorizontalAlignment="Stretch">
-                                                    <v:FixedAspectPanel MaxChildWidth="{Binding ImageWidth}"
+                                                    <v:FixedAspectPanel MaxAspect="1.67"
+                                                                        MaxChildWidth="{Binding ImageWidth}"
                                                                         MaxChildHeight="{Binding ImageHeight}">
                                                         <v:ThumbnailImage Source="{Binding Image}"
                                                                           ThumbnailSize="300" />
