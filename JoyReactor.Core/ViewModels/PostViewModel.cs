@@ -28,11 +28,11 @@ namespace JoyReactor.Core.ViewModels
                   MessengerInstance.Send(new GalleryNavigationMessage { PostId = postId }));
 
             IsBusy = true;
+            ViewModelParts.Clear();
 
             var post = await new PostModel().GetPostAsync(postId);
             var attachments = await new PostModel().GetPostAttachmentsAsync(postId);
 
-            ViewModelParts.Clear();
             var poster = attachments.Select(s => s.PreviewImageUrl).FirstOrDefault();
             ViewModelParts.Add(new PosterViewModel { Image = poster });
             ViewModelParts.AddRange(ConvertToViewModels(await new PostModel().GetChildCommentsAsync(postId, 0)));

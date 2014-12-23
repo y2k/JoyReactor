@@ -46,5 +46,8 @@
                 </v:PostItemTemplateSelector>
             </ListView.ItemTemplateSelector>
         </ListView>
+        <ProgressBar IsIndeterminate="True"
+                     VerticalAlignment="Top"
+                     Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" />
     </Grid>
 </Page>
