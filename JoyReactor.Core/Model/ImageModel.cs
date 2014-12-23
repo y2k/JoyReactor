@@ -15,7 +15,8 @@ namespace JoyReactor.Core.Model
 
         public async void Load(object token, Uri originalUri, int maxWidth, Action<object> callback)
         {
-            var image = await imageDownloader.LoadAsync(token, CreateThumbnailUrl(originalUri, maxWidth));
+            var thumbnailUrl = CreateThumbnailUrl(originalUri, maxWidth);
+            var image = await imageDownloader.LoadAsync(token, thumbnailUrl);
             if (image != ImageDownloader.InvalideImage)
                 callback(image);
         }

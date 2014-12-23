@@ -7,6 +7,13 @@
       xmlns:v="using:JoyReactor.Views"
       mc:Ignorable="d">
 
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Icon="Add"
+                          Label="Tag" />
+        </CommandBar>
+    </Page.BottomAppBar>
+
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Hub Header="JoyReactor">
             <HubSection Header="Subscriptions"
