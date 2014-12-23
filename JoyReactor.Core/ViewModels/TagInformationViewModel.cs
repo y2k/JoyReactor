@@ -7,35 +7,39 @@ using JoyReactor.Core.Model.DTO;
 namespace JoyReactor.Core.ViewModels
 {
     public class TagInformationViewModel : ViewModelBase
-	{
-		public ObservableCollection<ItemViewModel> Items { get; set; } = new ObservableCollection<ItemViewModel>();
+    {
+        public ObservableCollection<ItemViewModel> Items { get; } = new ObservableCollection<ItemViewModel>();
 
-		TagCollectionModel model = new TagCollectionModel ();
+        public TagInformationViewModel()
+        {
+            MessengerInstance.Register<SelectTagMessage>(this, async m => await ChangeCurrentTag(m.Id));
+        }
 
-		public async Task ChangeCurrentTag (ID currentTagId)
-		{
-			Items.Clear ();
+        public async Task ChangeCurrentTag(ID currentTagId)
+        {
+            Items.Clear();
 
-			var tags = await model.GetTagLinkedTagsAsync (currentTagId);
+            var model = new TagCollectionModel();
+            var tags = await model.GetTagLinkedTagsAsync(currentTagId);
 
-			foreach (var s in tags)
-				Items.Add (new ItemViewModel (s));
-		}
+            foreach (var s in tags)
+                Items.Add(new ItemViewModel(s));
+        }
 
-		public class ItemViewModel : ViewModelBase
-		{
-			public string Group { get { return tag.GroupName; } }
+        public class ItemViewModel : ViewModelBase
+        {
+            public string Group { get { return tag.GroupName; } }
 
-			public string Title { get { return tag.Title; } }
+            public string Title { get { return tag.Title; } }
 
-			public string Image { get { return tag.Image; } }
+            public string Image { get { return tag.Image; } }
 
-			readonly TagLinkedTag tag;
+            readonly TagLinkedTag tag;
 
-			public ItemViewModel (TagLinkedTag tag)
-			{
-				this.tag = tag;
-			}
-		}
-	}
+            public ItemViewModel(TagLinkedTag tag)
+            {
+                this.tag = tag;
+            }
+        }
+    }
 }

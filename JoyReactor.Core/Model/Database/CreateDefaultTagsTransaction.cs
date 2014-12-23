@@ -20,10 +20,11 @@ namespace JoyReactor.Core.Model.Database
             InsertMain(ID.Factory.New(ID.SiteParser.Chan4, "b"), "4chan / b");
             InsertMain(ID.Factory.New(ID.SiteParser.Chan7, "b"), "7chan / b");
 #endif
-            InsertMain(ID.Factory.NewTag("dev"), "Dev", "http://img0.joyreactor.cc/pics/avatar/tag/2");
             InsertMain(ID.Factory.NewTag("anime"), "Anime", "http://img1.joyreactor.cc/pics/avatar/tag/2851");
             InsertMain(ID.Factory.NewTag("cosplay"), "Cosplay", "http://img8.joyreactor.cc/pics/avatar/tag/518");
+            InsertMain(ID.Factory.NewTag("dev"), "Dev", "http://img0.joyreactor.cc/pics/avatar/tag/2");
             InsertMain(ID.Factory.NewTag("android"), "Android", "http://img6.joyreactor.cc/pics/avatar/tag/2596");
+            InsertMain(ID.Factory.NewTag("ios"), "iOS", "http://img0.joyreactor.cc/images/default_avatar.jpeg");
             InsertMain(ID.Factory.NewTag("гифки"), "Гифки", "http://img6.joyreactor.cc/pics/avatar/tag/116");
             InsertMain(ID.Factory.NewTag("эротика"), "Эротика", "http://img6.joyreactor.cc/pics/avatar/tag/676");
             InsertMain(ID.Factory.NewTag("песочница"), "Песочница", "http://img0.joyreactor.cc/images/default_avatar.jpeg");

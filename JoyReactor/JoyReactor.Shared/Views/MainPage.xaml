@@ -13,6 +13,7 @@
                         DataContext="{Binding Source={StaticResource Locator}, Path=Tags}">
                 <DataTemplate>
                     <ListView ItemsSource="{Binding Tags}"
+                              Width="200"
                               SelectedIndex="{Binding SelectedTag, Mode=TwoWay}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
@@ -57,6 +58,7 @@
                                                     <TextBlock Text="{Binding Title}" />
                                                 </StackPanel>
                                                 <Button HorizontalAlignment="Stretch"
+                                                        Opacity="0.2"
                                                         VerticalAlignment="Stretch"
                                                         Command="{Binding OpenPostCommand}" />
                                             </Grid>
@@ -81,6 +83,28 @@
                                 Command="{Binding ApplyCommand}"
                                 Visibility="{Binding HasNewItems, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </Grid>
+                </DataTemplate>
+            </HubSection>
+            <HubSection Header="Information"
+                        DataContext="{Binding Source={StaticResource Locator}, Path=TagInformation}">
+                <DataTemplate>
+                    <ListView ItemsSource="{Binding Items}"
+                              SelectionMode="None"
+                              SelectedIndex="{Binding SelectedTag, Mode=TwoWay}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <v:ThumbnailImage ThumbnailSize="40"
+                                                      Source="{Binding Image}"
+                                                      Width="40"
+                                                      Height="40" />
+                                    <TextBlock Text="{Binding Title}"
+                                               Margin="8,0,0,0"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </DataTemplate>
             </HubSection>
         </Hub>

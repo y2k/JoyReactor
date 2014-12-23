@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using GalaSoft.MvvmLight;
+using JoyReactor.Core.Model;
+using JoyReactor.Core.Model.DTO;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using GalaSoft.MvvmLight;
-using JoyReactor.Core.Model;
-using JoyReactor.Core.Model.DTO;
 
 namespace JoyReactor.Core.ViewModels
 {

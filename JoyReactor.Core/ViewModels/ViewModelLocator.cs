@@ -19,5 +19,7 @@ namespace JoyReactor.Core.ViewModels
         public PostViewModel Post { get; } = new PostViewModel();
 
         public GalleryViewModel Gallery { get; } = new GalleryViewModel();
+
+        public TagInformationViewModel TagInformation { get; } = new TagInformationViewModel();
     }
 }
