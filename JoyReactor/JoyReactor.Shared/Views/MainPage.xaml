@@ -10,6 +10,7 @@
     <Page.BottomAppBar>
         <CommandBar>
             <AppBarButton Icon="Add"
+                          Click="AppBarButton_Click"
                           Label="Tag" />
         </CommandBar>
     </Page.BottomAppBar>

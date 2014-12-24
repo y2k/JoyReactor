@@ -18,6 +18,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\PathImage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Wp8InjectModule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\BoolToVisibilityConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\CreateTabPage.xaml.cs">
+      <DependentUpon>CreateTabPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\FeedItemTemplateSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\FixedAspectPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\GalleryPage.xaml.cs">
@@ -35,6 +38,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)Views\CreateTabPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)Views\GalleryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
