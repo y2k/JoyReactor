@@ -21,7 +21,8 @@ namespace JoyReactor.Core.Model
                 return GetTopCommentsAsync(postId, int.MaxValue);
             return Task.Run(() => db.SafeQuery<CommentWithChildCount>(
                 "SELECT c.*, (SELECT COUNT(*) FROM comment_links WHERE ParentCommentId = c.Id) AS ChildCount FROM comments c WHERE c.PostId = ? AND c.Id IN (" +
-                "   SELECT CommentId FROM comment_links WHERE ParentCommentId = ?) ORDER BY c.Rating",
+                "   SELECT CommentId FROM comment_links WHERE ParentCommentId = ?) " +
+                "ORDER BY c.Rating DESC, ChildCount DESC",
                 postId, parentCommentId));
         }
 
@@ -32,7 +33,8 @@ namespace JoyReactor.Core.Model
                 var comments = db.SafeQuery<CommentWithChildCount>(
                     "SELECT c.*, (SELECT COUNT(*) FROM comment_links WHERE ParentCommentId = c.Id) AS ChildCount FROM comments c WHERE c.PostId = ? AND c.Id IN (" +
                     "   SELECT CommentId FROM comment_links WHERE ParentCommentId IN (" +
-                    "       SELECT ParentCommentId FROM comment_links WHERE CommentId = ?)) ORDER BY c.Rating",
+                    "       SELECT ParentCommentId FROM comment_links WHERE CommentId = ?)) " +
+                    "ORDER BY c.Rating DESC, ChildCount DESC",
                     postId, commentId);
                 if (comments.Count == 0)
                     comments = await GetTopCommentsAsync(postId, int.MaxValue);
@@ -43,7 +45,9 @@ namespace JoyReactor.Core.Model
         public Task<CommentWithChildCount> GetParentCommentAsync(int postId, int commentId)
         {
             return Task.Run(() => db.SafeQuery<CommentWithChildCount>(
-                "SELECT c.*, (SELECT COUNT(*) FROM comment_links WHERE ParentCommentId = c.Id) AS ChildCount FROM comments c WHERE c.PostId = ? AND c.Id IN (" +
+                "SELECT c.*, (SELECT COUNT(*) FROM comment_links WHERE ParentCommentId = c.Id) AS ChildCount " +
+                "FROM comments c " +
+                "WHERE c.PostId = ? AND c.Id IN (" +
                 "   SELECT ParentCommentId FROM comment_links WHERE CommentId =?)",
                 postId, commentId).FirstOrDefault());
         }
@@ -53,7 +57,11 @@ namespace JoyReactor.Core.Model
             return Task.Run(() =>
             {
                 return db.SafeQuery<CommentWithChildCount>(
-                    "SELECT c.*, (SELECT COUNT(*) FROM comment_links WHERE ParentCommentId = c.Id) AS ChildCount FROM comments c WHERE c.PostId = ? AND c.Id NOT IN (SELECT CommentId FROM comment_links) ORDER BY c.Rating DESC LIMIT ?",
+                    "SELECT c.*, (SELECT COUNT(*) FROM comment_links WHERE ParentCommentId = c.Id) AS ChildCount " +
+                    "FROM comments c " +
+                    "WHERE c.PostId = ? AND c.Id NOT IN (SELECT CommentId FROM comment_links) " +
+                    "ORDER BY c.Rating DESC, ChildCount DESC " +
+                    "LIMIT ?",
                     postId, count);
             });
         }
