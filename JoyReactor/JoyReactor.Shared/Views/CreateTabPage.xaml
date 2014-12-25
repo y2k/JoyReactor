@@ -7,7 +7,38 @@
       DataContext="{Binding Source={StaticResource Locator}, Path=CreateTag}"
       mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="#C0101010">
+        <Grid VerticalAlignment="Center"
+              MaxWidth="500">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox PlaceholderText="Tag name"
+                     Grid.ColumnSpan="2"
+                     Text="{Binding Name, Mode=TwoWay}"
+                     Margin="0,0,0,8" />
+            <Button Content="Cancel"
+                    Grid.Row="1"
+                    Click="Button_Click"
+                    HorizontalAlignment="Right" />
+            <Button Content="Create"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Command="{Binding CreateCommand}"
+                    HorizontalAlignment="Right" />
+        </Grid>
 
+        <Grid Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
+              Background="#C0101010">
+            <ProgressRing Width="100"
+                          Height="100"
+                          HorizontalAlignment="Center"
+                          IsActive="True" />
+        </Grid>
     </Grid>
 </Page>

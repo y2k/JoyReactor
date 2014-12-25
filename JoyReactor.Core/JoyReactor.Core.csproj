@@ -155,4 +155,7 @@
   <ItemGroup>
     <None Include="Libs\XamarinCommons.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\Messages\" />
+  </ItemGroup>
 </Project>

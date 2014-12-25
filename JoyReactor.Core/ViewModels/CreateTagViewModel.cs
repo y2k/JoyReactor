@@ -64,6 +64,11 @@ namespace JoyReactor.Core.ViewModels
             await new PostModel().CreateTag(Name);
             IsBusy = false;
             IsComplete = true;
+            MessengerInstance.Send(new CloseMessage());
+        }
+
+        public class CloseMessage
+        {
         }
     }
 }
