@@ -88,8 +88,10 @@
     <Compile Include="ViewModels\CreateTagViewModel.cs" />
     <Compile Include="ViewModels\FeedViewModel.cs" />
     <Compile Include="ViewModels\GalleryViewModel.cs" />
+    <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\ObservableCollectionExtensions.cs" />
     <Compile Include="ViewModels\PostViewModel.cs" />
+    <Compile Include="ViewModels\ProfileViewModel.cs" />
     <Compile Include="ViewModels\SelectTagMessage.cs" />
     <Compile Include="ViewModels\TagsViewModel.cs" />
     <Compile Include="ViewModels\TagInformationViewModel.cs" />

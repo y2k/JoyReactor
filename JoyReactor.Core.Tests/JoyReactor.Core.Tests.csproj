@@ -99,7 +99,9 @@
     <Compile Include="Model\Parser\ChanPostLinkerTests.cs" />
     <Compile Include="Model\PostCollectionModelTests.cs" />
     <Compile Include="ViewModels\GalleryViewModelTests.cs" />
+    <Compile Include="ViewModels\LoginViewModelTests.cs" />
     <Compile Include="ViewModels\PostViewModelTests.cs" />
+    <Compile Include="ViewModels\ProfileViewModelTests.cs" />
     <Compile Include="ViewModels\TagInformationViewModelTests.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="ViewModels\CreateTagViewModelTests.cs" />
