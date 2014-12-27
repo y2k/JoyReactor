@@ -1,34 +1,63 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using JoyReactor.Core.Model;
 
 namespace JoyReactor.Core.ViewModels
 {
-    public class ProfileViewModel : ViewModelBase
-    {
-        string _avatar;
-        public string Avatar
-        {
-            get { return _avatar; }
-            set { Set(ref _avatar, value); }
-        }
+	public class ProfileViewModel : ViewModelBase
+	{
+		bool _isLoading;
 
-        string _username;
-        public string Username
-        {
-            get { return _username; }
-            set { Set(ref _username, value); }
-        }
+		public bool IsLoading {
+			get { return _isLoading; }
+			set { Set (ref _isLoading, value); }
+		}
 
-        public RelayCommand LogoutCommand { get; set; }
+		string _avatar;
 
-        public void Initialize()
-        {
-            //
-        }
-    }
+		public string Avatar {
+			get { return _avatar; }
+			set { Set (ref _avatar, value); }
+		}
+
+		string _username;
+
+		public string Username {
+			get { return _username; }
+			set { Set (ref _username, value); }
+		}
+
+		float _rating;
+
+		public float Rating {
+			get { return _rating; }
+			set { Set (ref _rating, value); }
+		}
+
+		public RelayCommand LogoutCommand { get; set; }
+
+		public ProfileViewModel ()
+		{
+			LogoutCommand = new FixRelayCommand (async () => {
+				await new ProfileModel ().LogoutAsync ();
+			});
+		}
+
+		public async void Initialize ()
+		{
+			IsLoading = true;
+			var profile = await new ProfileModel ().GetCurrentProfileAsync ();
+			if (profile == null) {
+				MessengerInstance.Send (new NavigateToLoginMessage ());
+			} else {
+				Username = profile.Username;
+				Rating = profile.Rating;
+			}
+			IsLoading = false;
+		}
+
+		public class NavigateToLoginMessage
+		{
+		}
+	}
 }
