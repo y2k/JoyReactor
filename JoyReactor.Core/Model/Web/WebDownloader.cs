@@ -7,7 +7,7 @@ using System.Net.Http;
 
 namespace JoyReactor.Core.Model.Web
 {
-	public class WebDownloader : IWebDownloader
+    public class WebDownloader : IWebDownloader
     {
         #region Constants
 
@@ -22,7 +22,7 @@ namespace JoyReactor.Core.Model.Web
             var handler = new HttpClientHandler
             {
                 UseCookies = true,
-                CookieContainer = DefaultCookies
+                CookieContainer = DefaultCookies,
             };
 
             // TODO Вызывает ошибку компилирования в Xamarin Studio
@@ -39,11 +39,11 @@ namespace JoyReactor.Core.Model.Web
 
         #region IWebDownloader implementation
 
-		public System.IO.Stream GetResource (Uri uri, RequestParams reqParams = null)
-		{
-			var r = DefaultClient.Value.GetAsync (uri).Result;
-			return r.Content.ReadAsStreamAsync ().Result;
-		}
+        public System.IO.Stream GetResource(Uri uri, RequestParams reqParams = null)
+        {
+            var r = DefaultClient.Value.GetAsync(uri).Result;
+            return r.Content.ReadAsStreamAsync().Result;
+        }
 
         public DocumentReponse GetDocument(Uri uri, RequestParams reqParams = null)
         {
@@ -81,6 +81,9 @@ namespace JoyReactor.Core.Model.Web
             {
                 handler.UseCookies = true;
                 handler.CookieContainer = new CookieContainer();
+#if DEBUG
+                handler.Proxy = new DefaultProxy();
+#endif
 
                 if (reqParams != null && reqParams.Cookies != null)
                 {
@@ -102,18 +105,18 @@ namespace JoyReactor.Core.Model.Web
             //return DefaultClient.Value.GetStringAsync(uri).Result;
         }
 
-//        public HtmlDocument Get(Uri uri)
-//        {
-//            using (var r = DefaultClient.Value.GetAsync(uri).Result)
-//            {
-//                using (var s = r.Content.ReadAsStreamAsync().Result)
-//                {
-//                    var doc = new HtmlDocument();
-//                    doc.Load(s);
-//                    return doc;
-//                }
-//            }
-//        }
+        //        public HtmlDocument Get(Uri uri)
+        //        {
+        //            using (var r = DefaultClient.Value.GetAsync(uri).Result)
+        //            {
+        //                using (var s = r.Content.ReadAsStreamAsync().Result)
+        //                {
+        //                    var doc = new HtmlDocument();
+        //                    doc.Load(s);
+        //                    return doc;
+        //                }
+        //            }
+        //        }
 
         public IDictionary<string, string> PostForHeaders(Uri uri, RequestParams reqParams = null)
         {
@@ -189,5 +192,20 @@ namespace JoyReactor.Core.Model.Web
 
 
         #endregion
+
+        class DefaultProxy : IWebProxy
+        {
+            public ICredentials Credentials { get; set; }
+
+            public Uri GetProxy(Uri destination)
+            {
+                return new Uri("http://109.201.140.42:8118/");
+            }
+
+            public bool IsBypassed(Uri host)
+            {
+                return false;
+            }
+        }
     }
 }
