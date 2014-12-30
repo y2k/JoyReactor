@@ -1,17 +1,22 @@
 ﻿using GalaSoft.MvvmLight;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.ViewModels
 {
-    public class TagsViewModel : ViewModelBase
+    public class TagsViewModel : ViewModelBase, IDisposable
     {
         public ObservableCollection<TagItemViewModel> Tags { get; } = new ObservableCollection<TagItemViewModel>();
 
         int _selectedTag;
+
+        IDisposable scheduledTask;
 
         public int SelectedTag
         {
@@ -23,10 +28,8 @@ namespace JoyReactor.Core.ViewModels
         {
             PropertyChanged += TagsViewModel_PropertyChanged;
             if (!IsInDesignMode)
-                LoadTag();
+                Initialize();
         }
-
-        TagCollectionModel model = new TagCollectionModel();
 
         void TagsViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -34,11 +37,24 @@ namespace JoyReactor.Core.ViewModels
                 MessengerInstance.Send(new SelectTagMessage { Id = ID.Parser(Tags[SelectedTag].tag.TagId) });
         }
 
-        async void LoadTag()
+        //TagCollectionModel model = new TagCollectionModel();
+
+        void Initialize()
         {
-            var tags = await model.GetMainSubscriptionsAsync();
-            Tags.ReplaceAll(tags.Select(s => new TagItemViewModel(s)).ToList());
-            Tags.Insert(0, CreateFeaturedViewModel());
+            //var tags = await model.GetMainSubscriptionsAsync();
+            //Tags.ReplaceAll(tags.Select(s => new TagItemViewModel(s)).ToList());
+            //Tags.Insert(0, CreateFeaturedViewModel());
+
+            scheduledTask = new TagCollectionModel().GetMainSubscriptions().Subscribe(tags =>
+            {
+                Tags.ReplaceAll(tags.Select(s => new TagItemViewModel(s)).ToList());
+                Tags.Insert(0, CreateFeaturedViewModel());
+            });
+        }
+
+        public void Dispose()
+        {
+            scheduledTask?.Dispose();
         }
 
         private TagItemViewModel CreateFeaturedViewModel()
