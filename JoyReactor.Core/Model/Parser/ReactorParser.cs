@@ -151,7 +151,7 @@ namespace JoyReactor.Core.Model.Parser
         {
             var domain = new ReactorDomainDetector().GetDomainForType(ReactorDomainDetector.TagType.Secret);
             var uri = new Uri(string.Format("http://{0}/post/{1}", domain, postId));
-            return downloader.GetText(uri);
+            return downloader.GetText(uri, new RequestParams { UseForeignProxy = true });
         }
 
         void ExportComments(string html)
@@ -447,7 +447,7 @@ namespace JoyReactor.Core.Model.Parser
         string DownloadTagPage(string tag, ID.TagType type, int? currentPageId)
         {
             var url = GenerateUrl(type, tag, currentPageId);
-            return downloader.GetText(url, new RequestParams { Cookies = Cookies });
+            return downloader.GetText(url, new RequestParams { Cookies = Cookies, UseForeignProxy = true });
         }
 
         bool IsPageFromSecretSite(string html)

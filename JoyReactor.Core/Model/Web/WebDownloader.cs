@@ -81,16 +81,15 @@ namespace JoyReactor.Core.Model.Web
             {
                 handler.UseCookies = true;
                 handler.CookieContainer = new CookieContainer();
-#if DEBUG
-                handler.Proxy = new DefaultProxy();
-#endif
 
-                if (reqParams != null && reqParams.Cookies != null)
+                if (reqParams != null)
                 {
-                    foreach (var k in reqParams.Cookies.Keys)
-                    {
-                        handler.CookieContainer.Add(uri, new Cookie(k, reqParams.Cookies[k]));
-                    }
+                    if (reqParams.UseForeignProxy)
+                        handler.Proxy = new DefaultProxy();
+
+                    if (reqParams.Cookies != null)
+                        foreach (var k in reqParams.Cookies.Keys)
+                            handler.CookieContainer.Add(uri, new Cookie(k, reqParams.Cookies[k]));
                 }
 
                 using (var client = new HttpClient(handler))
@@ -101,49 +100,12 @@ namespace JoyReactor.Core.Model.Web
                     return client.GetStringAsync(uri).Result;
                 }
             }
-
-            //return DefaultClient.Value.GetStringAsync(uri).Result;
         }
-
-        //        public HtmlDocument Get(Uri uri)
-        //        {
-        //            using (var r = DefaultClient.Value.GetAsync(uri).Result)
-        //            {
-        //                using (var s = r.Content.ReadAsStreamAsync().Result)
-        //                {
-        //                    var doc = new HtmlDocument();
-        //                    doc.Load(s);
-        //                    return doc;
-        //                }
-        //            }
-        //        }
 
         public IDictionary<string, string> PostForHeaders(Uri uri, RequestParams reqParams = null)
         {
             throw new NotImplementedException();
         }
-
-        //        public IDictionary<string, string> PostForCookies(Uri uri, RequestParams reqParams = null)
-        //        {
-        //            if (reqParams == null || reqParams.Form == null) throw new Exception();
-
-        //            var req = new HttpRequestMessage();
-        //            req.RequestUri = uri;
-        //            req.Method = HttpMethod.Post;
-        //            req.Content = new FormUrlEncodedContent(reqParams.Form);
-        //            if (reqParams.Referer != null) req.Headers.Referrer = reqParams.Referer;
-
-        //            using (var r = DefaultClient.Value.SendAsync(req).Result)
-        //            {
-        //                // Nothing todo
-        //#if DEBUG
-        //                var s = r.Content.ReadAsStringAsync().Result;
-        //                s.ToString();
-        //#endif
-        //            }
-
-        //            return DefaultCookies.GetCookies(uri).Cast<System.Net.Cookie>().ToDictionary(s => s.Name, s => s.Value);
-        //        }
 
         public IDictionary<string, string> PostForCookies(Uri uri, RequestParams reqParams = null)
         {
@@ -175,7 +137,6 @@ namespace JoyReactor.Core.Model.Web
 
                     using (var r = client.SendAsync(req).Result)
                     {
-                        // Nothing todo
 #if DEBUG
                         var s = r.Content.ReadAsStringAsync().Result;
                         s.ToString();
@@ -186,10 +147,7 @@ namespace JoyReactor.Core.Model.Web
                 var u = new Uri("http://" + (uri.Host.StartsWith("www.") ? "" : "www.") + uri.Host);
                 return handler.CookieContainer.GetCookies(u).Cast<Cookie>().ToDictionary(s => s.Name, s => s.Value);
             }
-
-            //return DefaultCookies.GetCookies(uri).Cast<System.Net.Cookie>().ToDictionary(s => s.Name, s => s.Value);
         }
-
 
         #endregion
 
