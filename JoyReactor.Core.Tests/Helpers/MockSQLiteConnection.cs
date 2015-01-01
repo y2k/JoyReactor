@@ -7,22 +7,26 @@ using SQLite.Net.Platform.Generic;
 
 namespace JoyReactor.Core.Tests.Helpers
 {
-	public static class MockSQLiteConnection
-	{
-		public static SQLiteConnection Create ()
-		{
-			var db = new SQLiteConnection (GetPlatfrom (), ":memory:");
-			MainDb.InitializeDatabase (db);
-			return db;
-		}
+    public static class MockSQLiteConnection
+    {
+        public static SQLiteConnection Create()
+        {
+            var db = new SQLiteConnection(GetPlatfrom(), ":memory:");
+            MainDb.InitializeDatabase(db);
+            return db;
+        }
 
-		static ISQLitePlatform GetPlatfrom ()
-		{
-			if (Environment.OSVersion.Platform == PlatformID.Unix)
-				return new SQLitePlatformGeneric ();
-			if (Environment.OSVersion.Platform == PlatformID.Win32Windows)
-				return new SQLitePlatformWin32 ();
-			throw new Exception ("Not supported platform");
-		}
-	}
+        static ISQLitePlatform GetPlatfrom()
+        {
+            switch (Environment.OSVersion.Platform)
+            {
+                case PlatformID.Unix:
+                    return new SQLitePlatformGeneric();
+                case PlatformID.Win32Windows:
+                case PlatformID.Win32NT:
+                    return new SQLitePlatformWin32();
+            }
+            throw new Exception("Not supported platform: " + Environment.OSVersion.Platform);
+        }
+    }
 }
