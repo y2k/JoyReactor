@@ -91,12 +91,13 @@ namespace JoyReactor.Core.Model.Parser
                          {
                              Cookies = doc.Cookies,
                              Referer = new Uri("http://joyreactor.cc/login"),
-                             Form = new Dictionary<string, string> {
-                        { "signin[username]", username },
-                        { "signin[password]", password },
-                        { "signin[remember]", "on" },
-                        { "signin[_csrf_token]", csrf },
-                    }
+                             Form = new Dictionary<string, string>
+                             {
+                                 ["signin[username]"] = username,
+                                 ["signin[password]"] = password,
+                                 ["signin[remember]"] = "on",
+                                 ["signin[_csrf_token]"] = csrf,
+                             }
                          });
 
             if (!hs.ContainsKey("joyreactor"))

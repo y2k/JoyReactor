@@ -6,7 +6,9 @@ namespace JoyReactor.Core.ViewModels
 {
 	public class ProfileViewModel : ViewModelBase
 	{
-		bool _isLoading;
+        #region Properties
+
+        bool _isLoading;
 
 		public bool IsLoading {
 			get { return _isLoading; }
@@ -34,7 +36,9 @@ namespace JoyReactor.Core.ViewModels
 			set { Set (ref _rating, value); }
 		}
 
-		public RelayCommand LogoutCommand { get; set; }
+        #endregion
+
+        public RelayCommand LogoutCommand { get; set; }
 
 		public ProfileViewModel ()
 		{
