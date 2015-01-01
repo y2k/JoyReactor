@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -37,19 +37,16 @@ namespace JoyReactor.Core.ViewModels
                 MessengerInstance.Send(new SelectTagMessage { Id = ID.Parser(Tags[SelectedTag].tag.TagId) });
         }
 
-        //TagCollectionModel model = new TagCollectionModel();
-
         void Initialize()
         {
-            //var tags = await model.GetMainSubscriptionsAsync();
-            //Tags.ReplaceAll(tags.Select(s => new TagItemViewModel(s)).ToList());
-            //Tags.Insert(0, CreateFeaturedViewModel());
-
-            scheduledTask = new TagCollectionModel().GetMainSubscriptions().Subscribe(tags =>
-            {
-                Tags.ReplaceAll(tags.Select(s => new TagItemViewModel(s)).ToList());
-                Tags.Insert(0, CreateFeaturedViewModel());
-            });
+            scheduledTask = new TagCollectionModel()
+                .GetMainSubscriptions()
+                .ObserveOn(SynchronizationContext.Current)
+                .Subscribe(tags =>
+                {
+                    Tags.ReplaceAll(tags.Select(s => new TagItemViewModel(s)).ToList());
+                    Tags.Insert(0, CreateFeaturedViewModel());
+                });
         }
 
         public void Dispose()

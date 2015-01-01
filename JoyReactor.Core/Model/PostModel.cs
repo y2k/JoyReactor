@@ -138,7 +138,6 @@ namespace JoyReactor.Core.Model
             return parsers.First(s => s.ParserId == parserId);
         }
 
-
         public Task<List<Attachment>> GetPostAttachmentsAsync(int postId)
         {
             return Task.Run(() =>
@@ -167,6 +166,8 @@ namespace JoyReactor.Core.Model
                     Title = name,
                     Flags = Tag.FlagShowInMain,
                 });
+
+                TagCollectionModel.OnInvalidateEvent();
             });
         }
 

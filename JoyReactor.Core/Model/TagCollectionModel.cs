@@ -4,8 +4,6 @@ using Microsoft.Practices.ServiceLocation;
 using SQLite.Net;
 using System;
 using System.Collections.Generic;
-using System.Reactive.Concurrency;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
@@ -13,38 +11,34 @@ namespace JoyReactor.Core.Model
 {
     public class TagCollectionModel
     {
+        public static event EventHandler InvalidateEvent;
+
+        public static void OnInvalidateEvent()
+        {
+            InvalidateEvent?.Invoke(null, null);
+        }
+
         SQLiteConnection connection = ServiceLocator.Current.GetInstance<SQLiteConnection>();
 
+        [Obsolete]
         public Task<List<Tag>> GetMainSubscriptionsAsync()
         {
-            return Task.Run(() =>
-                connection.SafeQuery<Tag>("SELECT * FROM tags WHERE Flags & ? != 0", Tag.FlagShowInMain));
+            return DoGetSubscriptionsAsync();
         }
 
         public IObservable<List<Tag>> GetMainSubscriptions()
         {
-            //return Observable.Create<List<Tag>>(observer =>
-            //{
-            //    Scheduler.CurrentThread.Schedule(async () =>
-            //    {
-            //        var data = await GetMainSubscriptionsAsync();
-            //        observer.OnNext(data);
-            //    });
-            //});
-            return Observable.Create<List<Tag>>(observer =>
-            {
-                var cancel = new CancellationDisposable();
-                Scheduler.CurrentThread.Schedule(async () =>
-                {
-                    while (!cancel.Token.IsCancellationRequested)
-                    {
-                        var data = await GetMainSubscriptionsAsync();
-                        observer.OnNext(data);
-                        await Task.Delay(2000);
-                    }
-                });
-                return cancel;
-            });
+            var first = Observable.FromAsync(DoGetSubscriptionsAsync);
+            var second = Observable
+                .FromEventPattern(typeof(TagCollectionModel), "InvalidateEvent")
+                .SelectMany(_ => Observable.FromAsync(DoGetSubscriptionsAsync));
+            return first.Concat(second);
+        }
+
+        Task<List<Tag>> DoGetSubscriptionsAsync()
+        {
+            return Task.Run(() =>
+                connection.SafeQuery<Tag>("SELECT * FROM tags WHERE Flags & ? != 0", Tag.FlagShowInMain));
         }
 
         public Task<List<TagLinkedTag>> GetTagLinkedTagsAsync(ID tagId)
