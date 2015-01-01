@@ -1,9 +1,9 @@
-﻿using HtmlAgilityPack;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using HtmlAgilityPack;
 
 namespace JoyReactor.Core.Model.Web
 {
@@ -11,13 +11,13 @@ namespace JoyReactor.Core.Model.Web
     {
         #region Constants
 
-        private const string UserAgent = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36 OPR/18.0.1284.68";
-        private const string Accept = "text/html";
+        const string UserAgent = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36 OPR/18.0.1284.68";
+        const string Accept = "text/html";
 
         #endregion
 
-        private static readonly CookieContainer DefaultCookies = new CookieContainer();
-        private static readonly Lazy<HttpClient> DefaultClient = new Lazy<HttpClient>(() =>
+        static readonly CookieContainer DefaultCookies = new CookieContainer();
+        static readonly Lazy<HttpClient> DefaultClient = new Lazy<HttpClient>(() =>
         {
             var handler = new HttpClientHandler
             {
