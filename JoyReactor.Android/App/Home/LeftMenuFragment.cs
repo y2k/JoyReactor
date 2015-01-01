@@ -1,10 +1,9 @@
-﻿using Android.Content;
+﻿using System.Collections.Specialized;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
 using JoyReactor.Core;
-using JoyReactor.Core.Model;
-using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.ViewModels;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.App.Base.Commands;
 using JoyReactor.Android.Widget;
@@ -20,22 +19,42 @@ namespace JoyReactor.Android.App.Home
 
 		ListView list;
 		Adapter adapter;
-		TagCollectionModel model = new TagCollectionModel();
 
-		public async override void OnActivityCreated (Bundle savedInstanceState)
+		TagsViewModel viewModel;
+
+		public override void OnCreate (Bundle savedInstanceState)
+		{
+			base.OnCreate (savedInstanceState);
+			RetainInstance = true;
+			viewModel = new TagsViewModel ();
+
+			adapter = new Adapter (this);
+			viewModel.Tags.CollectionChanged += HandleCollectionChanged;
+		}
+
+		public override void OnDestroy ()
+		{
+			base.OnDestroy ();
+			viewModel.Dispose ();
+		}
+
+		public override void OnActivityCreated (Bundle savedInstanceState)
 		{
 			base.OnActivityCreated (savedInstanceState);
 
-			list.Adapter = adapter = new Adapter (Activity);
-			adapter.Clear ();
-			adapter.AddAll (await model.GetMainSubscriptionsAsync ());
+			list.Adapter = adapter;
 
 			list.ItemClick += (sender, e) => { 
 				var id = e.Position < Headers.Length 
 					? Headers [e.Position].ListId 
-					: ID.Parser (adapter.GetItem (e.Position - Headers.Length).TagId);
+					: viewModel.Tags[e.Position - Headers.Length].TagId;
 				new ChangeSubscriptionCommand (id).Execute ();
 			};
+		}
+
+		void HandleCollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
+		{
+			adapter.NotifyDataSetChanged ();
 		}
 
 		public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -45,14 +64,17 @@ namespace JoyReactor.Android.App.Home
 			return v;
 		}
 
-		public class Adapter : ArrayAdapter<Tag>
+		public class Adapter : ArrayAdapter<TagsViewModel.TagItemViewModel>
 		{
-			public Adapter (Context context) : base (context, 0)
+			LeftMenuFragment fragment;
+
+			public Adapter (LeftMenuFragment fragment) : base (fragment.Activity, 0)
 			{
+				this.fragment = fragment;
 			}
 
 			public override int Count {
-				get { return base.Count + Headers.Length; }
+				get { return fragment.viewModel.Tags.Count + Headers.Length; }
 			}
 
 			public override View GetView (int position, View convertView, ViewGroup parent)
@@ -63,9 +85,9 @@ namespace JoyReactor.Android.App.Home
 					convertView.FindViewById<TextView> (Resource.Id.title).SetText (Headers [position].Title);
 					convertView.FindViewById<WebImageView> (Resource.Id.icon).ImageSource = null;
 				} else {
-					var i = GetItem (position - Headers.Length);
+					var i = fragment.viewModel.Tags [position - Headers.Length];
 					convertView.FindViewById<TextView> (Resource.Id.title).Text = i.Title;
-					convertView.FindViewById<WebImageView> (Resource.Id.icon).ImageSource = i.BestImage;
+					convertView.FindViewById<WebImageView> (Resource.Id.icon).ImageSource = i.Image;
 				}
 
 				convertView.FindViewById (Resource.Id.group).Visibility = ViewStates.Gone;
