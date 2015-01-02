@@ -22,7 +22,7 @@ namespace JoyReactor.Android.App
 
 		public class ProfileFragment : BaseFragment
 		{
-			ProfileModel model = new ProfileModel ();
+			ProfileOperation model = new ProfileOperation ();
 
 			ViewAnimator animator;
 			EditText username;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using SQLite.Net;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Database
 {
@@ -12,6 +13,15 @@ namespace JoyReactor.Core.Model.Database
 			lock (instance) {
 				return instance.InsertAll (objects);
 			}
+		}
+
+		public static Task<T> ExecuteScalarAsync<T> (this SQLiteConnection instance, string query, params object[] args)
+		{
+			return Task.Run (() => {
+				lock (instance) {
+					return instance.ExecuteScalar<T> (query, args);
+				}
+			});
 		}
 
 		public static T SafeExecuteScalar<T> (this SQLiteConnection instance, string query, params object[] args)
@@ -61,6 +71,15 @@ namespace JoyReactor.Core.Model.Database
 			lock (instance) {
 				instance.RunInTransaction (action);
 			}
+		}
+
+		public static Task RunInTransactionAsync (this SQLiteConnection instance, Action action)
+		{
+			return Task.Run (() => {
+				lock (instance) {
+					instance.RunInTransaction (action);
+				}
+			});
 		}
 	}
 }

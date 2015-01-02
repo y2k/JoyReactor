@@ -6,7 +6,9 @@ namespace JoyReactor.Core.ViewModels
 {
 	public class LoginViewModel : ViewModelBase
 	{
-		bool _isBusy;
+        #region Properties
+
+        bool _isBusy;
 
 		public bool IsBusy {
 			get { return _isBusy; }
@@ -36,7 +38,9 @@ namespace JoyReactor.Core.ViewModels
 
 		public RelayCommand LoginCommand { get; set; }
 
-		public LoginViewModel ()
+        #endregion
+
+        public LoginViewModel ()
 		{
 			LoginCommand = new FixRelayCommand (Login);
 		}
@@ -46,7 +50,7 @@ namespace JoyReactor.Core.ViewModels
 			HasError = false;
 			IsBusy = true;
 			try {
-				await new ProfileModel ().LoginAsync (Username, Password);
+				await new ProfileOperation ().LoginAsync (Username, Password);
 				MessengerInstance.Send (new NavigateToProfileMessage ());
 			} catch {
 				HasError = true;

@@ -1,0 +1,31 @@
+﻿<Page x:Class="JoyReactor.Views.ProfilePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:JoyReactor.Views"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:vm="using:JoyReactor.Core.ViewModels"
+      mc:Ignorable="d">
+    <Page.DataContext>
+        <vm:ProfileViewModel />
+    </Page.DataContext>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+            <Image Width="150"
+                   Height="150"
+                   Source="{Binding Avatar}" />
+            <TextBlock HorizontalAlignment="Center"
+                       Text="{Binding Username}" />
+            <TextBlock HorizontalAlignment="Center"
+                       Text="{Binding Rating}" />
+            <Button Content="Logout"
+                    HorizontalAlignment="Center"
+                    Command="{Binding LogoutCommand}" />
+        </StackPanel>
+        <ProgressRing Width="80"
+                      Height="80"
+                      IsActive="{Binding IsLoading}" />
+    </Grid>
+</Page>

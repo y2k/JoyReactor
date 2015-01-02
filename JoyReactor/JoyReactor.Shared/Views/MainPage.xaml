@@ -9,6 +9,9 @@
 
     <Page.BottomAppBar>
         <CommandBar>
+            <AppBarButton Icon="Account"
+                          Click="AppBarButton_Click_1"
+                          Label="Profile" />
             <AppBarButton Icon="Add"
                           Click="AppBarButton_Click"
                           Label="Tag" />
