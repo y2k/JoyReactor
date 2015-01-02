@@ -69,7 +69,7 @@ namespace JoyReactor.Core.Model.Parser
 				handler (this, information);
 		}
 
-		protected void OnNewLinkedTag(ExportLinkedTag tag)
+		protected void OnNewLinkedTag (ExportLinkedTag tag)
 		{
 			var handler = NewLinkedTag;
 			if (handler != null)
@@ -89,7 +89,7 @@ namespace JoyReactor.Core.Model.Parser
 
 		public float Rating { get; set; }
 
-		public List<TagExport> ReadingTags { get; set; }
+		public List<TagExport> ReadingTags { get; set; } = new List<TagExport>();
 
 		public class TagExport
 		{

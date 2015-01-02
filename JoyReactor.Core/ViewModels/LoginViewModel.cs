@@ -50,7 +50,7 @@ namespace JoyReactor.Core.ViewModels
 			HasError = false;
 			IsBusy = true;
 			try {
-				await new ProfileModel ().LoginAsync (Username, Password);
+				await new ProfileOperation ().LoginAsync (Username, Password);
 				MessengerInstance.Send (new NavigateToProfileMessage ());
 			} catch {
 				HasError = true;

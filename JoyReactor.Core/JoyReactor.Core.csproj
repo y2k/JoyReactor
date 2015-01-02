@@ -50,7 +50,6 @@
     <Compile Include="Model\ID.cs" />
     <Compile Include="Model\DTO\TagPost.cs" />
     <Compile Include="Model\DTO\Tag.cs" />
-    <Compile Include="Model\ProfileModel.cs" />
     <Compile Include="Model\DTO\Profile.cs" />
     <Compile Include="Model\Helper\ThreadHelper.cs" />
     <Compile Include="Model\Helper\HtmlNodeExtensions.cs" />
@@ -99,6 +98,9 @@
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="ViewModels\PostNavigationMessage.cs" />
     <Compile Include="ViewModels\FixRelayCommand.cs" />
+    <Compile Include="Model\Parser\SiteParserExtensions.cs" />
+    <Compile Include="Model\MyProfileInformation.cs" />
+    <Compile Include="Model\ProfileOperation.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
