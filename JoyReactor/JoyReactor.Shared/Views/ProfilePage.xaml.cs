@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight.Messaging;
+﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Messaging;
 using JoyReactor.Core.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,7 @@ namespace JoyReactor.Views
         {
             base.OnNavigatingFrom(e);
             Messenger.Default.Unregister(this);
+            (DataContext as ICleanup)?.Cleanup();
         }
     }
 }

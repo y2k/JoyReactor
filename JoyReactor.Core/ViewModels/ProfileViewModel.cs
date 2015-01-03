@@ -1,67 +1,100 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
+using JoyReactor.Core.Model.Helper;
+using System;
+using System.Reactive.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.ViewModels
 {
-	public class ProfileViewModel : ViewModelBase
-	{
-		#region Properties
+    public class ProfileViewModel : ViewModelBase
+    {
+        #region Properties
 
-		bool _isLoading;
+        bool _isLoading;
 
-		public bool IsLoading {
-			get { return _isLoading; }
-			set { Set (ref _isLoading, value); }
-		}
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set { Set(ref _isLoading, value); }
+        }
 
-		string _avatar;
+        string _avatar;
 
-		public string Avatar {
-			get { return _avatar; }
-			set { Set (ref _avatar, value); }
-		}
+        public string Avatar
+        {
+            get { return _avatar; }
+            set { Set(ref _avatar, value); }
+        }
 
-		string _username;
+        string _username;
 
-		public string Username {
-			get { return _username; }
-			set { Set (ref _username, value); }
-		}
+        public string Username
+        {
+            get { return _username; }
+            set { Set(ref _username, value); }
+        }
 
-		float _rating;
+        float _rating;
 
-		public float Rating {
-			get { return _rating; }
-			set { Set (ref _rating, value); }
-		}
+        public float Rating
+        {
+            get { return _rating; }
+            set { Set(ref _rating, value); }
+        }
 
-		#endregion
+        #endregion
 
-		public RelayCommand LogoutCommand { get; set; }
+        public RelayCommand LogoutCommand { get; set; }
 
-		public ProfileViewModel ()
-		{
-			LogoutCommand = new FixRelayCommand (
-				async () => await new ProfileOperation ().LogoutAsync ());
-		}
+        IDisposable subscription;
 
-		public async void Initialize ()
-		{
-			IsLoading = true;
-			var profile = new MyProfileInformation ();
-			await profile.LoadAsync ();
-			if (!profile.IsValid) {
-				MessengerInstance.Send (new NavigateToLoginMessage ());
-			} else {
-				Username = profile.Username;
-				Rating = profile.Rating;
-			}
-			IsLoading = false;
-		}
+        public ProfileViewModel()
+        {
+            LogoutCommand = new FixRelayCommand(
+                async () => await new ProfileOperation().LogoutAsync());
+        }
 
-		public class NavigateToLoginMessage
-		{
-		}
-	}
+        public void Initialize()
+        {
+            IsLoading = true;
+            subscription = ObservableFactory
+                .IntervalAsync(TimeSpan.FromMinutes(1), GetMyProfile)
+                .ObserveOn(SynchronizationContext.Current)
+                .Subscribe(UpdateProfile);
+        }
+
+        async Task<MyProfileInformation> GetMyProfile()
+        {
+            var profile = new MyProfileInformation();
+            await profile.LoadAsync();
+            return profile;
+        }
+
+        void UpdateProfile(MyProfileInformation profile)
+        {
+            IsLoading = false;
+            if (!profile.IsValid)
+            {
+                MessengerInstance.Send(new NavigateToLoginMessage());
+            }
+            else
+            {
+                Username = profile.Username;
+                Rating = profile.Rating;
+            }
+        }
+
+        public override void Cleanup()
+        {
+            base.Cleanup();
+            subscription?.Dispose();
+        }
+
+        public class NavigateToLoginMessage
+        {
+        }
+    }
 }
