@@ -11,7 +11,7 @@ namespace JoyReactor.Core.Model
 {
     public class TagCollectionModel
     {
-        public static event EventHandler InvalidateEvent;
+        static event EventHandler InvalidateEvent;
 
         public static void OnInvalidateEvent()
         {
@@ -37,18 +37,29 @@ namespace JoyReactor.Core.Model
 
         Task<List<Tag>> DoGetSubscriptionsAsync()
         {
-            return Task.Run(() =>
-                connection.SafeQuery<Tag>("SELECT * FROM tags WHERE Flags & ? != 0", Tag.FlagShowInMain));
+            return connection.QueryAsync<Tag>("SELECT * FROM tags WHERE Flags & ? != 0", Tag.FlagShowInMain);
         }
 
+        [Obsolete]
         public Task<List<TagLinkedTag>> GetTagLinkedTagsAsync(ID tagId)
         {
-            return Task.Run(() =>
-            {
-                return connection.SafeQuery<TagLinkedTag>(
-                    "SELECT * FROM tag_linked_tags WHERE ParentTagId IN (SELECT Id FROM tags WHERE TagId = ?)",
-                    MainDb.ToFlatId(tagId));
-            });
+            return DoGetTagLinkedTagsAsync(tagId);
+        }
+
+        public IObservable<List<TagLinkedTag>> GetTagLinkedTags(ID tagId)
+        {
+            var first = Observable.FromAsync(() => DoGetTagLinkedTagsAsync(tagId));
+            var second = Observable
+                .FromEventPattern(typeof(TagCollectionModel), "InvalidateEvent")
+                .SelectMany(_ => Observable.FromAsync(() => DoGetTagLinkedTagsAsync(tagId)));
+            return first.Concat(second);
+        }
+
+        Task<List<TagLinkedTag>> DoGetTagLinkedTagsAsync(ID tagId)
+        {
+            return connection.QueryAsync<TagLinkedTag>(
+                "SELECT * FROM tag_linked_tags WHERE ParentTagId IN (SELECT Id FROM tags WHERE TagId = ?)",
+                tagId.SerializeToString());
         }
     }
 }

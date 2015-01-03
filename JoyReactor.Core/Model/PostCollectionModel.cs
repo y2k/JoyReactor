@@ -92,6 +92,8 @@ namespace JoyReactor.Core.Model
 
                 parser.ExtractTag(id.Tag, id.Type, null);
                 organizer.SaveChanges();
+
+                TagCollectionModel.OnInvalidateEvent();
             });
         }
 

@@ -1,5 +1,10 @@
 ﻿using System.Collections.ObjectModel;
+using System.Reactive;
+using System;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Reactive.Linq;
 using GalaSoft.MvvmLight;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
@@ -10,20 +15,34 @@ namespace JoyReactor.Core.ViewModels
     {
         public ObservableCollection<ItemViewModel> Items { get; } = new ObservableCollection<ItemViewModel>();
 
+        IDisposable subscrition;
+
         public TagInformationViewModel()
         {
-            MessengerInstance.Register<SelectTagMessage>(this, async m => await ChangeCurrentTag(m.Id));
+            MessengerInstance.Register<SelectTagMessage>(this, m => ChangeCurrentTag(m.Id));
         }
 
-        public async Task ChangeCurrentTag(ID currentTagId)
+        public void ChangeCurrentTag(ID currentTagId)
         {
             Items.Clear();
 
-            var model = new TagCollectionModel();
-            var tags = await model.GetTagLinkedTagsAsync(currentTagId);
+            var sub = new TagCollectionModel()
+                .GetTagLinkedTags(currentTagId)
+                .ObserveOn(SynchronizationContext.Current)
+                .Subscribe(tags => Items.ReplaceAll(from s in tags select new ItemViewModel(s)));
+            ChangeTagSubscription(sub);
+        }
 
-            foreach (var s in tags)
-                Items.Add(new ItemViewModel(s));
+        public override void Cleanup()
+        {
+            base.Cleanup();
+            ChangeTagSubscription(null);
+        }
+
+        private void ChangeTagSubscription(IDisposable newSubscription)
+        {
+            subscrition?.Dispose();
+            subscrition = newSubscription;
         }
 
         public class ItemViewModel : ViewModelBase
