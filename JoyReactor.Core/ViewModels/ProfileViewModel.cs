@@ -1,11 +1,7 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
-using JoyReactor.Core.Model.Helper;
-using System;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
-using System.Threading;
+using Microsoft.Practices.ServiceLocation;
 using System.Threading.Tasks;
 
 namespace JoyReactor.Core.ViewModels
@@ -50,48 +46,27 @@ namespace JoyReactor.Core.ViewModels
 
         public RelayCommand LogoutCommand { get; set; }
 
-        IDisposable subscription;
+        IProfileService service = ServiceLocator.Current.GetInstance<IProfileService>();
 
         public ProfileViewModel()
         {
-            LogoutCommand = new FixRelayCommand(
-                async () => await new ProfileOperation().LogoutAsync());
+            LogoutCommand = new FixRelayCommand(async () => await service.Logout());
         }
 
-        public void Initialize()
+        public async Task Initialize()
         {
             IsLoading = true;
-            subscription = ObservableFactory
-                .IntervalAsync(TimeSpan.FromMinutes(1), GetMyProfile)
-                .ObserveOn(SynchronizationContext.Current)
-                .Subscribe(UpdateProfile);
-        }
-
-        async Task<MyProfileInformation> GetMyProfile()
-        {
-            var profile = new MyProfileInformation();
-            await profile.LoadAsync();
-            return profile;
-        }
-
-        void UpdateProfile(MyProfileInformation profile)
-        {
-            IsLoading = false;
-            if (!profile.IsValid)
+            try
             {
-                MessengerInstance.Send(new NavigateToLoginMessage());
-            }
-            else
-            {
+                var profile = await service.GetMyProfile();
                 Username = profile.Username;
                 Rating = profile.Rating;
             }
-        }
-
-        public override void Cleanup()
-        {
-            base.Cleanup();
-            subscription?.Dispose();
+            catch (NotLogedException)
+            {
+                MessengerInstance.Send(new NavigateToLoginMessage());
+            }
+            IsLoading = false;
         }
 
         public class NavigateToLoginMessage

@@ -41,6 +41,8 @@
     <Compile Include="Model\ImageLoader.cs" />
     <Compile Include="Model\Inject\DefaultServiceLocator.cs" />
     <Compile Include="Model\PostModel.cs" />
+    <Compile Include="Model\IProfileService.cs" />
+    <Compile Include="Model\Profiles\ProfileService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Web\IWebDownloader.cs" />
     <Compile Include="Model\Web\WebDownloader.cs" />
@@ -100,8 +102,7 @@
     <Compile Include="ViewModels\PostNavigationMessage.cs" />
     <Compile Include="ViewModels\FixRelayCommand.cs" />
     <Compile Include="Model\Parser\SiteParserExtensions.cs" />
-    <Compile Include="Model\MyProfileInformation.cs" />
-    <Compile Include="Model\ProfileOperation.cs" />
+    <Compile Include="Model\Profiles\MyProfileLoader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

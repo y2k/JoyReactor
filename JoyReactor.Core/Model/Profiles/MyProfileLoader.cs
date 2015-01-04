@@ -8,9 +8,9 @@ using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.Parser;
 
-namespace JoyReactor.Core.Model
+namespace JoyReactor.Core.Model.Profiles
 {
-	public class MyProfileInformation
+	internal class MyProfileLoader
 	{
 		public string Username { get; set; }
 
