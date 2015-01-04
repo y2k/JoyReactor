@@ -1,7 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 using JoyReactor.Core.ViewModels;
 using NUnit.Framework;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Tests.ViewModels
 {
@@ -24,19 +24,17 @@ namespace JoyReactor.Core.Tests.ViewModels
             viewmodel.Cleanup();
         }
 
-        [Test, Timeout(10000)]
-        public void Test()
+        [Test]
+        public async Task TestFailLoadProfile()
         {
-            var locker = new ManualResetEvent(false);
-            Messenger.Default.Register<ProfileViewModel.NavigateToLoginMessage>(this, m => locker.Set());
+            bool navigateToLoginRequested = false;
+            Messenger.Default.Register<ProfileViewModel.NavigateToLoginMessage>(this, m => navigateToLoginRequested = true);
 
-            SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
-            viewmodel.Initialize();
-            SynchronizationContext.SetSynchronizationContext(null);
-
+            var task = viewmodel.Initialize();
             Assert.IsTrue(viewmodel.IsLoading);
-            locker.WaitOne();
+            await task;
             Assert.IsFalse(viewmodel.IsLoading);
+            Assert.IsTrue(navigateToLoginRequested);
         }
     }
 }
