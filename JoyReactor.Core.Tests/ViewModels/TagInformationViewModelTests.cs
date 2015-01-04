@@ -5,6 +5,7 @@ using JoyReactor.Core.ViewModels;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Tests.ViewModels
@@ -18,7 +19,14 @@ namespace JoyReactor.Core.Tests.ViewModels
 			// TODO:
 			var provider = new DefaultServiceLocator (new TestModule ());
 			ServiceLocator.SetLocatorProvider (() => provider);
-		}
+            //SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
+        }
+
+        [TearDown]
+        public void TestDown()
+        {
+            //SynchronizationContext.SetSynchronizationContext(null);
+        }
 
 		Task SaveLinkedTagsToDatabase (ID id)
 		{
@@ -32,7 +40,10 @@ namespace JoyReactor.Core.Tests.ViewModels
 			var id = ID.Factory.NewTag ("комиксы");
 
 			await SaveLinkedTagsToDatabase (id);
-			await controller.ChangeCurrentTag (id);
+            SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
+            controller.ChangeCurrentTag (id);
+            SynchronizationContext.SetSynchronizationContext(null);
+            await Task.Delay(500); // TODO: заменить способ синхронизации
 
 			CollectionAssert.AreEqual (
 				new [] { 

@@ -11,7 +11,7 @@ namespace JoyReactor.Core.Model
 {
     public class TagCollectionModel
     {
-        static event EventHandler InvalidateEvent;
+        public static event EventHandler InvalidateEvent;
 
         public static void OnInvalidateEvent()
         {

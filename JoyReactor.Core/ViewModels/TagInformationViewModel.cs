@@ -1,13 +1,11 @@
-﻿using System.Collections.ObjectModel;
-using System.Reactive;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Reactive.Linq;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Threading;
 
 namespace JoyReactor.Core.ViewModels
 {
