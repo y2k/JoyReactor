@@ -1,4 +1,5 @@
-﻿using JoyReactor.Core.Model.DTO;
+﻿using GalaSoft.MvvmLight.Messaging;
+using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Inject;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.Tests.Helpers;
@@ -25,6 +26,11 @@ namespace JoyReactor.Core.Tests
         {
             var provider = new DefaultServiceLocator(new TestModule());
             ServiceLocator.SetLocatorProvider(() => provider);
+        }
+
+        public static void TearDown(object testInstance)
+        {
+            Messenger.Default.Unregister(testInstance);
         }
 
         public static SQLiteConnection GetDatabase()

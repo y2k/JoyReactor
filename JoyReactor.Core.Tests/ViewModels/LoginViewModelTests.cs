@@ -1,5 +1,7 @@
-﻿using JoyReactor.Core.ViewModels;
+﻿using GalaSoft.MvvmLight.Messaging;
+using JoyReactor.Core.ViewModels;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Tests.ViewModels
 {
@@ -15,12 +17,38 @@ namespace JoyReactor.Core.Tests.ViewModels
             viewmodel = new LoginViewModel();
         }
 
-        [Test]
-        public void Test()
+        [TearDown]
+        public void TestDown()
         {
-            viewmodel.Username = "test-username";
-            viewmodel.Password = "test-password";
-            viewmodel.LoginCommand.Execute(null);
+            TestExtensions.TearDown(this);
+        }
+
+        [Test]
+        public async Task LoginNotExistsUser()
+        {
+            viewmodel.Username = "fail-username";
+            viewmodel.Password = "fail-password";
+            var task = viewmodel.Login();
+            Assert.IsTrue(viewmodel.IsBusy);
+            await task;
+            Assert.IsFalse(viewmodel.IsBusy);
+            Assert.IsTrue(viewmodel.HasError);
+        }
+
+        [Test]
+        public async Task LoginExistsUser()
+        {
+            bool navigationToProfileRequested = false;
+            Messenger.Default.Register<LoginViewModel.NavigateToProfileMessage>(this, _ => navigationToProfileRequested = true);
+
+            viewmodel.Username = "mykie78";
+            viewmodel.Password = "success-password";
+            var task = viewmodel.Login();
+            Assert.IsTrue(viewmodel.IsBusy);
+            await task;
+            Assert.IsFalse(viewmodel.IsBusy);
+            Assert.IsFalse(viewmodel.HasError);
+            Assert.IsTrue(navigationToProfileRequested);
         }
     }
 }

@@ -16,10 +16,10 @@
                     VerticalAlignment="Center">
             <TextBox PlaceholderText="Username"
                      Margin="0,0,0,8"
-                     Text="{Binding Username}" />
+                     Text="{Binding Username, Mode=TwoWay}" />
             <TextBox PlaceholderText="Password"
                      Margin="0,0,0,8"
-                     Text="{Binding Password}" />
+                     Text="{Binding Password, Mode=TwoWay}" />
             <TextBlock Text="Error"
                        Foreground="Red"
                        Margin="0,0,0,8"

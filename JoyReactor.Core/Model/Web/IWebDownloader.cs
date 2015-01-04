@@ -1,29 +1,24 @@
-﻿using HtmlAgilityPack;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Web
 {
-	public interface IWebDownloader
+    public interface IWebDownloader
 	{
-		string GetText (Uri uri, RequestParams reqParams = null);
-
-		Stream GetResource (Uri uri, RequestParams reqParams = null);
-
-		[Obsolete]
-        DocumentReponse GetDocument(Uri uri, RequestParams reqParams = null);
-
-		IDictionary<string, string> PostForHeaders (Uri uri, RequestParams reqParams = null);
-
-		IDictionary<string, string> PostForCookies (Uri uri, RequestParams reqParams = null);
+        Task<WebResponse> ExecuteAsync(Uri uri, RequestParams reqParams = null);
 	}
 
-    public class DocumentReponse
+    public class WebResponse : IDisposable
     {
-        internal HtmlDocument Document { get; set; }
+        public IDictionary<string, string> Cookies { get; set; }
+        public Stream Data { get; set; }
 
-        internal IDictionary<string, string> Cookies { get; set; }
+        public void Dispose()
+        {
+            Data?.Dispose();
+        }
     }
 
 	public class RequestParams 
