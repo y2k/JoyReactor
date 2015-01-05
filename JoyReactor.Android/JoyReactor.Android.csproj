@@ -154,6 +154,7 @@
     <AndroidResource Include="Resources\layout\dialog_create_tag.axml" />
     <AndroidResource Include="Resources\layout\layout_activity_container.axml" />
     <AndroidResource Include="Resources\layout\ItemPostDivider.axml" />
+    <AndroidResource Include="Resources\layout\fragment_login.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>

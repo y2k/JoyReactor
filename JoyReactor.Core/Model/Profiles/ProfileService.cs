@@ -10,77 +10,83 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Profiles
 {
-    class ProfileService : IProfileService
-    {
-        public async Task<MyProfile> GetMyProfile()
-        {
-            var loader = new MyProfileLoader();
-            await loader.LoadAsync();
-            if (!loader.IsValid) throw new NotLogedException();
-            return new MyProfile { Username = loader.Username, Rating = loader.Rating };
-        }
+	class ProfileService : IProfileService
+	{
+		public async Task<MyProfile> GetMyProfile ()
+		{
+			var loader = new MyProfileLoader ();
+			await loader.LoadAsync ();
+			if (!loader.IsValid)
+				throw new NotLogedException ();
+			return new MyProfile { Username = loader.Username, Rating = loader.Rating };
+		}
 
-        #region Login
+		#region Login
 
-        public async Task Login(string username, string password)
-        {
-            var cookies = await GetParser().LoginAsync(username, password);
-            if (cookies == null || cookies.Count < 1)
-                throw new Exception("Can't login as " + username);
+		public async Task Login (string username, string password)
+		{
+			var cookies = await GetParser ().LoginAsync (username, password);
+			if (cookies == null || cookies.Count < 1)
+				throw new Exception ("Can't login as " + username);
 
-            await SaveCookieToDatabase(username, cookies);
-            await SyncListOfMyTagsWithWeb();
-        }
+			await SaveCookieToDatabase (username, cookies);
+			await SyncListOfMyTagsWithWeb ();
+		}
 
-        SiteParser GetParser()
-        {
-            return ServiceLocator.Current
-                .GetInstance<SiteParser[]>()
-                .First(s => s.ParserId == ID.SiteParser.JoyReactor);
-        }
+		SiteParser GetParser ()
+		{
+			return ServiceLocator.Current
+                .GetInstance<SiteParser[]> ()
+                .First (s => s.ParserId == ID.SiteParser.JoyReactor);
+		}
 
-        Task SaveCookieToDatabase(string username, IDictionary<string, string> c)
-        {
-            return GetDB().RunInTransactionAsync(() =>
-            {
-                ClearDatabaseFromOldData();
-                GetDB().SafeInsert(new Profile
-                {
-                    Cookie = SerializeObject(c),
-                    Site = "" + ID.SiteParser.JoyReactor,
-                    Username = username
-                });
-            });
-        }
+		Task SaveCookieToDatabase (string username, IDictionary<string, string> c)
+		{
+			return GetDB ().RunInTransactionAsync (() => {
+				ClearDatabaseFromOldData ();
+				GetDB ().SafeInsert (new Profile {
+					Cookie = SerializeObject (c),
+					Site = "" + ID.SiteParser.JoyReactor,
+					Username = username
+				});
+			});
+		}
 
-        static string SerializeObject(IDictionary<string, string> o)
-        {
-            return o.Aggregate("", (a, s) => a + (a.Length > 0 ? ";" : "") + s.Key + "=" + s.Value);
-        }
+		static string SerializeObject (IDictionary<string, string> o)
+		{
+			return o.Aggregate ("", (a, s) => a + (a.Length > 0 ? ";" : "") + s.Key + "=" + s.Value);
+		}
 
-        Task SyncListOfMyTagsWithWeb()
-        {
-            return new MyProfileLoader().LoadAsync();
-        }
+		async Task SyncListOfMyTagsWithWeb ()
+		{
+			await new MyProfileLoader ().LoadAsync ();
+			await InvaliteTagList ();
+		}
 
-        #endregion
+		#endregion
 
-        public Task Logout()
-        {
-            return GetDB().RunInTransactionAsync(ClearDatabaseFromOldData);
-        }
+		public async Task Logout ()
+		{
+			await GetDB ().RunInTransactionAsync (ClearDatabaseFromOldData);
+			await InvaliteTagList ();
+		}
 
-        SQLiteConnection GetDB()
-        {
-            return ServiceLocator.Current.GetInstance<SQLiteConnection>();
-        }
+		SQLiteConnection GetDB ()
+		{
+			return ServiceLocator.Current.GetInstance<SQLiteConnection> ();
+		}
 
-        void ClearDatabaseFromOldData()
-        {
-            GetDB().SafeExecute("DELETE FROM posts");
-            GetDB().SafeExecute("DELETE FROM tag_post");
-            GetDB().SafeExecute("DELETE FROM tags WHERE Flags & ? != 0", Tag.FlagWebRead);
-            GetDB().SafeExecute("DELETE FROM profiles");
-        }
-    }
+		Task InvaliteTagList ()
+		{
+			return Task.Run (() => TagCollectionModel.OnInvalidateEvent ());
+		}
+
+		void ClearDatabaseFromOldData ()
+		{
+			GetDB ().SafeExecute ("DELETE FROM posts");
+			GetDB ().SafeExecute ("DELETE FROM tag_post");
+			GetDB ().SafeExecute ("DELETE FROM tags WHERE Flags & ? != 0", Tag.FlagWebRead);
+			GetDB ().SafeExecute ("DELETE FROM profiles");
+		}
+	}
 }

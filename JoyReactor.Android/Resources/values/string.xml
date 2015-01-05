@@ -12,4 +12,8 @@
 	<string name="tag_name">Tag name</string>
 	<string name="example_tag">Example: Android, Anime</string>
 	<string name="required_field">Required field</string>
+	<string name="username">Username</string>
+	<string name="password">Password</string>
+	<string name="login">Login</string>
+	<string name="logout">Sign out</string>
 </resources>

@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
 using Microsoft.Practices.ServiceLocation;
 using System.Threading.Tasks;
+using System;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -62,7 +63,7 @@ namespace JoyReactor.Core.ViewModels
                 await service.Login(Username, Password);
                 MessengerInstance.Send(new NavigateToProfileMessage());
             }
-            catch
+			catch
             {
                 HasError = true;
             }

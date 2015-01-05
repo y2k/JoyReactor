@@ -1,10 +1,11 @@
 ﻿using Android.App;
-using Android.Content;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
-using JoyReactor.Core.Model;
+using GalaSoft.MvvmLight.Helpers;
+using JoyReactor.Core.ViewModels;
 using JoyReactor.Android.App.Base;
+using Messenger = GalaSoft.MvvmLight.Messaging.Messenger;
 
 namespace JoyReactor.Android.App
 {
@@ -18,55 +19,70 @@ namespace JoyReactor.Android.App
 			SupportActionBar.SetDisplayHomeAsUpEnabled (true);
 			if (bundle == null)
 				SetRootFragment (new ProfileFragment ());
+
+			Messenger.Default.Register<LoginViewModel.NavigateToProfileMessage> (
+				this, m => SetRootFragment (new ProfileFragment ()));
+			Messenger.Default.Register<ProfileViewModel.NavigateToLoginMessage> (
+				this, m => SetRootFragment (new LoginFragment ()));
+		}
+
+		protected override void OnDestroy ()
+		{
+			base.OnDestroy ();
+			Messenger.Default.Unregister (this);
 		}
 
 		public class ProfileFragment : BaseFragment
 		{
-			ProfileOperation model = new ProfileOperation ();
+			ProfileViewModel viewmodel;
 
-			ViewAnimator animator;
-			EditText username;
-			EditText password;
-			TextView profileUsername;
-			TextView profileRating;
-
-			public async override void OnActivityCreated (Bundle savedInstanceState)
+			public async override void OnCreate (Bundle savedInstanceState)
 			{
-				base.OnActivityCreated (savedInstanceState);
-
-				View.FindViewById (Resource.Id.login).Click += async (sender, e) => {
-					animator.DisplayedChild = 0;
-					await model.LoginAsync (username.Text, password.Text);
-//					await model.GetCurrentProfileAsync ();
-					StartActivity (new Intent (Activity, typeof(HomeActivity)).AddFlags (ActivityFlags.ClearTop | ActivityFlags.TaskOnHome));
-				};
-				View.FindViewById (Resource.Id.logout).Click += async (sender, e) => {
-					animator.DisplayedChild = 0;
-					await model.LogoutAsync ();
-					StartActivity (new Intent (Activity, typeof(HomeActivity)).AddFlags (ActivityFlags.ClearTop | ActivityFlags.TaskOnHome));
-				};
-
-				var t = await model.GetCurrentProfileAsync ();
-				if (t == null) {
-					// TODO
-					animator.DisplayedChild = 1;
-				} else {
-					// TODO
-					animator.DisplayedChild = 2;
-					profileUsername.Text = "Username = " + t.Username;
-					profileRating.Text = "Rating = " + t.Rating;
-				}
+				base.OnCreate (savedInstanceState);
+				RetainInstance = true;
+				await (viewmodel = new ProfileViewModel ()).Initialize ();
 			}
 
 			public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 			{
-				var v = inflater.Inflate (Resource.Layout.fragment_profile, null);
-				animator = v.FindViewById<ViewAnimator> (Resource.Id.animator);
-				username = v.FindViewById<EditText> (Resource.Id.username);
-				password = v.FindViewById<EditText> (Resource.Id.password);
-				profileUsername = v.FindViewById<TextView> (Resource.Id.profileUsername);
-				profileRating = v.FindViewById<TextView> (Resource.Id.profileRating);
-				return v;
+				var view = inflater.Inflate (Resource.Layout.fragment_profile, null);
+				var progress = view.FindViewById (Resource.Id.progress);
+				viewmodel
+					.SetBinding (() => viewmodel.IsLoading, progress, () => progress.Visibility)
+					.ConvertSourceToTarget (s => s ? ViewStates.Visible : ViewStates.Gone);
+				var username = view.FindViewById<TextView> (Resource.Id.username);
+				viewmodel.SetBinding (() => viewmodel.Username, username, () => username.Text);
+				var rating = view.FindViewById<TextView> (Resource.Id.rating);
+				viewmodel.SetBinding (() => viewmodel.Rating, rating, () => rating.Text);
+				view.FindViewById (Resource.Id.logout).SetCommand ("Click", viewmodel.LogoutCommand);
+				return view;
+			}
+		}
+
+		public class LoginFragment : BaseFragment
+		{
+			LoginViewModel viewmodel;
+
+			public override void OnCreate (Bundle savedInstanceState)
+			{
+				base.OnCreate (savedInstanceState);
+				RetainInstance = true;
+				viewmodel = new LoginViewModel ();
+			}
+
+			public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+			{
+				var view = inflater.Inflate (Resource.Layout.fragment_login, null);
+				view.FindViewById (Resource.Id.login).SetCommand ("Click", viewmodel.LoginCommand);
+				var username = view.FindViewById<EditText> (Resource.Id.username);
+				viewmodel.SetBinding (() => viewmodel.Username, username, () => username.Text, BindingMode.TwoWay);
+				var password = view.FindViewById<EditText> (Resource.Id.password);
+				viewmodel.SetBinding (() => viewmodel.Password, password, () => password.Text, BindingMode.TwoWay);
+				var progress = view.FindViewById (Resource.Id.progress);
+				viewmodel
+					.SetBinding (() => viewmodel.IsBusy, progress, () => progress.Visibility)
+					.ConvertSourceToTarget (s => s ? ViewStates.Visible : ViewStates.Gone);
+				return view;
 			}
 		}
 	}

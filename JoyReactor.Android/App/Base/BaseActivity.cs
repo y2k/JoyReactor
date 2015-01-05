@@ -51,7 +51,7 @@ namespace JoyReactor.Android.App.Base
 		public void SetRootFragment (Fragment fragment)
 		{
 			SupportFragmentManager.BeginTransaction ()
-				.Add (Resource.Id.container, fragment)
+				.Replace (Resource.Id.container, fragment)
 				.Commit ();
 		}
 

@@ -6,71 +6,75 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.ViewModels
 {
-    public class ProfileViewModel : ViewModelBase
-    {
-        #region Properties
+	public class ProfileViewModel : ViewModelBase
+	{
+		#region Properties
 
-        bool _isLoading;
+		bool _isLoading;
 
-        public bool IsLoading
-        {
-            get { return _isLoading; }
-            set { Set(ref _isLoading, value); }
-        }
+		public bool IsLoading {
+			get { return _isLoading; }
+			set { Set (ref _isLoading, value); }
+		}
 
-        string _avatar;
+		string _avatar;
 
-        public string Avatar
-        {
-            get { return _avatar; }
-            set { Set(ref _avatar, value); }
-        }
+		public string Avatar {
+			get { return _avatar; }
+			set { Set (ref _avatar, value); }
+		}
 
-        string _username;
+		string _username;
 
-        public string Username
-        {
-            get { return _username; }
-            set { Set(ref _username, value); }
-        }
+		public string Username {
+			get { return _username; }
+			set { Set (ref _username, value); }
+		}
 
-        float _rating;
+		float _rating;
 
-        public float Rating
-        {
-            get { return _rating; }
-            set { Set(ref _rating, value); }
-        }
+		public float Rating {
+			get { return _rating; }
+			set { Set (ref _rating, value); }
+		}
 
-        #endregion
+		#endregion
 
-        public RelayCommand LogoutCommand { get; set; }
+		public RelayCommand LogoutCommand { get; set; }
 
-        IProfileService service = ServiceLocator.Current.GetInstance<IProfileService>();
+		IProfileService service = ServiceLocator.Current.GetInstance<IProfileService> ();
 
-        public ProfileViewModel()
-        {
-            LogoutCommand = new FixRelayCommand(async () => await service.Logout());
-        }
+		public ProfileViewModel ()
+		{
+			LogoutCommand = new FixRelayCommand (Logout);
+		}
 
-        public async Task Initialize()
-        {
-            IsLoading = true;
-            try
-            {
-                var profile = await service.GetMyProfile();
-                Username = profile.Username;
-                Rating = profile.Rating;
-            }
-            catch (NotLogedException)
-            {
-                MessengerInstance.Send(new NavigateToLoginMessage());
-            }
-            IsLoading = false;
-        }
+		public async Task Initialize ()
+		{
+			IsLoading = true;
+			try {
+				var profile = await service.GetMyProfile ();
+				Username = profile.Username;
+				Rating = profile.Rating;
+			} catch (NotLogedException) {
+				NavigateToLogin ();
+			}
+			IsLoading = false;
+		}
 
-        public class NavigateToLoginMessage
-        {
-        }
-    }
+		async void Logout ()
+		{
+			await service.Logout ();
+			NavigateToLogin ();
+		}
+
+		void NavigateToLogin ()
+		{
+			MessengerInstance.Send (new NavigateToLoginMessage ());
+		}
+
+		public class NavigateToLoginMessage
+		{
+		}
+	}
 }
