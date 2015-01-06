@@ -102,6 +102,8 @@
     <Compile Include="ViewModels\FixRelayCommand.cs" />
     <Compile Include="Model\Parser\SiteParserExtensions.cs" />
     <Compile Include="Model\Profiles\MyProfileLoader.cs" />
+    <Compile Include="ViewModels\MessageThreadsViewModel.cs" />
+    <Compile Include="ViewModels\MessagesViewModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -170,4 +172,7 @@
     <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
     <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
   </Target>
+  <ItemGroup>
+    <Folder Include="Model\Messages\" />
+  </ItemGroup>
 </Project>

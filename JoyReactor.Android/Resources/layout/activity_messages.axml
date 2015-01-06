@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SlidingPaneLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/slidePanel"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <fragment
+        android:id="@+id/threadsFragment"
+        class="JoyReactor.Android.App.MessageActivity.ThreadListFragment"
+        android:layout_width="300dp"
+        android:layout_height="match_parent" />
+    <fragment
+        android:id="@+id/messagesFragment"
+        class="JoyReactor.Android.App.MessageActivity.MessageListFragment"
+        android:layout_width="400dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent" />
+</android.support.v4.widget.SlidingPaneLayout>

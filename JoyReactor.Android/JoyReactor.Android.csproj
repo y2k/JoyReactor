@@ -124,6 +124,7 @@
     <Compile Include="App\ProfileActivity.cs" />
     <Compile Include="App\Posts\PostActivity.cs" />
     <Compile Include="App\Posts\PostFragment.cs" />
+    <Compile Include="App\MessageActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -155,6 +156,8 @@
     <AndroidResource Include="Resources\layout\layout_activity_container.axml" />
     <AndroidResource Include="Resources\layout\ItemPostDivider.axml" />
     <AndroidResource Include="Resources\layout\fragment_login.axml" />
+    <AndroidResource Include="Resources\layout\activity_messages.axml" />
+    <AndroidResource Include="Resources\layout\item_message_thread.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>

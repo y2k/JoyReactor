@@ -45,6 +45,9 @@ namespace JoyReactor.Android.App
 			case Resource.Id.profile:
 				StartActivity (typeof(ProfileActivity));
 				return true;
+			case Resource.Id.messages:
+				StartActivity (typeof(MessageActivity));
+				return true;
 			case Resource.Id.addTag:
 				new CreateTagDialog ().Show (SupportFragmentManager, null);
 				return true;
