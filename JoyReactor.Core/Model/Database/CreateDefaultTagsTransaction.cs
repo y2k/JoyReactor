@@ -43,7 +43,7 @@ namespace JoyReactor.Core.Model.Database
 
         string ToFlatId(ID id)
         {
-            return MainDb.ToFlatId(id);
+			return id.SerializeToString ();
         }
     }
 }

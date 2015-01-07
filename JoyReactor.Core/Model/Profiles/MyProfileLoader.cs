@@ -10,7 +10,7 @@ using JoyReactor.Core.Model.Parser;
 
 namespace JoyReactor.Core.Model.Profiles
 {
-	internal class MyProfileLoader
+	class MyProfileLoader
 	{
 		public string Username { get; set; }
 

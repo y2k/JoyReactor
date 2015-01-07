@@ -109,8 +109,8 @@ namespace JoyReactor.Core.Tests
                 sumCommentRating += s.Rating;
 
                 Assert.IsTrue(
-                    s.Created <= 1577836800000L.DateTimeFromUnixTimestamp()
-                    && s.Created >= 1262304000000L.DateTimeFromUnixTimestamp(),
+                    s.Created <= 1577836800000L.DateTimeFromUnixTimestampMs()
+                    && s.Created >= 1262304000000L.DateTimeFromUnixTimestampMs(),
                     "Comment created = " + s.Created);
                 Assert.IsTrue(Regex.IsMatch(s.Id, "\\d+"), "Comment id = " + s.Id);
                 comIds.Add(s.Id);
@@ -176,8 +176,8 @@ namespace JoyReactor.Core.Tests
                 sumCommentRating += s.Rating;
 
                 Assert.IsTrue(
-                    s.Created <= 1577836800000L.DateTimeFromUnixTimestamp()
-                    && s.Created >= 1262304000000L.DateTimeFromUnixTimestamp(),
+                    s.Created <= 1577836800000L.DateTimeFromUnixTimestampMs()
+                    && s.Created >= 1262304000000L.DateTimeFromUnixTimestampMs(),
                     "Comment created = " + s.Created);
                 Assert.IsTrue(Regex.IsMatch(s.Id, "\\d+"), "Comment id = " + s.Id);
                 comIds.Add(s.Id);
@@ -242,8 +242,8 @@ namespace JoyReactor.Core.Tests
                 sumCommentRating += s.Rating;
 
                 Assert.IsTrue(
-                    s.Created <= 1577836800000L.DateTimeFromUnixTimestamp()
-                    && s.Created >= 1262304000000L.DateTimeFromUnixTimestamp(),
+                    s.Created <= 1577836800000L.DateTimeFromUnixTimestampMs()
+                    && s.Created >= 1262304000000L.DateTimeFromUnixTimestampMs(),
                     "Comment created = " + s.Created);
                 Assert.IsTrue(Regex.IsMatch(s.Id, "\\d+"), "Comment id = " + s.Id);
                 comIds.Add(s.Id);

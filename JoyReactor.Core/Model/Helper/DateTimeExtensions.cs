@@ -9,9 +9,14 @@ namespace JoyReactor.Core.Model.Helper
 			return (long)((dateTime - new DateTime (1970, 1, 1).ToLocalTime ()).TotalSeconds);
 		}
 
-		public static DateTime DateTimeFromUnixTimestamp (this long timestamp)
+		public static DateTime DateTimeFromUnixTimestampMs (this long timestamp)
 		{
 			return new DateTime (1970, 1, 1).ToLocalTime () + TimeSpan.FromMilliseconds (timestamp);
+		}
+
+		public static DateTime DateTimeFromUnixTimestamp (this long timestamp)
+		{
+			return DateTimeFromUnixTimestampMs (1000 * timestamp);
 		}
 	}
 }

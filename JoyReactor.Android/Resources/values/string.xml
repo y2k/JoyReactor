@@ -16,4 +16,5 @@
 	<string name="password">Password</string>
 	<string name="login">Login</string>
 	<string name="logout">Sign out</string>
+	<string name="activity_private_messages">Private messages</string>
 </resources>

@@ -158,6 +158,8 @@
     <AndroidResource Include="Resources\layout\fragment_login.axml" />
     <AndroidResource Include="Resources\layout\activity_messages.axml" />
     <AndroidResource Include="Resources\layout\item_message_thread.axml" />
+    <AndroidResource Include="Resources\layout\item_message.axml" />
+    <AndroidResource Include="Resources\layout\fragment_message_threads.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>

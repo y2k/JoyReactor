@@ -8,7 +8,7 @@
     <item
         android:id="@+id/messages"
         android:showAsAction="never"
-        android:title="Private messages"/>
+        android:title="@string/activity_private_messages"/>
     <item
         android:id="@+id/addTag"
         android:showAsAction="never"

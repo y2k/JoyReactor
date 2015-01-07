@@ -1,12 +1,19 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Threading;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Microsoft.Practices.ServiceLocation;
+using JoyReactor.Core.Model;
 
 namespace JoyReactor.Core.ViewModels
 {
 	public class MessageThreadsViewModel : ViewModelBase
 	{
-		public ObservableCollection<MessageThreadItem> Threads { get; } = new ObservableCollection<MessageThreadItem> ();
+		public ObservableCollection<ItemViewModel> Threads { get; } = new ObservableCollection<ItemViewModel> ();
 
 		bool _isBusy;
 
@@ -15,19 +22,38 @@ namespace JoyReactor.Core.ViewModels
 			set { Set (ref _isBusy, value); }
 		}
 
+		IDisposable subscription;
+
 		public void Initialize ()
 		{
-			//
-			#if DEBUG
-			Threads.Add (new MessageThreadItem { Username = "Songe", LastMessage = "Привет" });
-			Threads.Add (new MessageThreadItem { Username = "Felost", LastMessage = "Zettai Ryouiki разное" });
-			Threads.Add (new MessageThreadItem { Username = "ikari", LastMessage = "Доставило сочетание XD" });
-			Threads.Add (new MessageThreadItem { Username = "janklodvandam", LastMessage = "Фэндом соника на джое." });
-			Threads.Add (new MessageThreadItem { Username = "MADba11", LastMessage = "Gone too fast." });
-			#endif
+			IsBusy = true;
+			subscription = ServiceLocator.Current
+				.GetInstance<IMessageService> ()
+				.GetThreads ()
+				.ObserveOn (SynchronizationContext.Current)
+				.Subscribe (onNext: OnNext, onError: OnError);
 		}
 
-		public class MessageThreadItem: ViewModelBase
+		void OnNext (List<MessageThreadItem> threads)
+		{
+			IsBusy = false;
+			Threads.ReplaceAll (from s in threads
+			                    select new ItemViewModel (s));
+		}
+
+		void OnError (Exception e)
+		{
+			// TODO
+			IsBusy = false;
+		}
+
+		public override void Cleanup ()
+		{
+			base.Cleanup ();
+			subscription.Dispose ();
+		}
+
+		public class ItemViewModel : ViewModelBase
 		{
 			public string Username { get; set; }
 
@@ -35,8 +61,11 @@ namespace JoyReactor.Core.ViewModels
 
 			public RelayCommand OpenThreadCommand { get; set; }
 
-			public MessageThreadItem ()
+			public ItemViewModel (MessageThreadItem item)
 			{
+				Username = item.Username;
+				LastMessage = item.LastMessage;
+
 				OpenThreadCommand = new FixRelayCommand (() =>
 					MessengerInstance.Send (new MessagesViewModel.SelectThreadMessage { Username = Username }));
 			}

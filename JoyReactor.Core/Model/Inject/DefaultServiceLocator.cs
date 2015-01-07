@@ -1,15 +1,16 @@
-﻿using Autofac;
+﻿using System;
+using System.Collections.Generic;
+using Autofac;
+using Microsoft.Practices.ServiceLocation;
+using Refractored.Xam.Settings;
+using SQLite.Net;
 using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.Helper;
+using JoyReactor.Core.Model.Messages;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model.Profiles;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.Model.Web.Parser;
-using Microsoft.Practices.ServiceLocation;
-using Refractored.Xam.Settings;
-using SQLite.Net;
-using System;
-using System.Collections.Generic;
 
 namespace JoyReactor.Core.Model.Inject
 {
@@ -64,6 +65,7 @@ namespace JoyReactor.Core.Model.Inject
                 b.Register(_ => CrossSettings.Current).AsSelf();
 
                 b.RegisterType<ProfileService>().As<IProfileService>();
+				b.RegisterType<MessageService> ().As<IMessageService> ();
             }
         }
 

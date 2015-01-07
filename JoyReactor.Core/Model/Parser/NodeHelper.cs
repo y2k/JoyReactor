@@ -1,14 +1,12 @@
-﻿using HtmlAgilityPack;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using HtmlAgilityPack;
 
 namespace JoyReactor.Core.Model.Web.Parser
 {
-	internal static class NodeHelper
+	static class NodeHelper
 	{
 		public static IEnumerable<HtmlNode> Select (this HtmlNode root, string xpath)
 		{
@@ -53,12 +51,10 @@ namespace JoyReactor.Core.Model.Web.Parser
 			throw new InvalidOperationException ("Can't parse XPATH = " + xpath);
 		}
 
-		private static bool ContainsClass (this HtmlNode node, string className)
+		static bool ContainsClass (this HtmlNode node, string className)
 		{
 			var classValue = node.Attr ("class");
-			return classValue == null
-				? false
-				: classValue.Split (' ').Any (s => s == className);
+			return classValue != null && classValue.Split (' ').Any (s => s == className);
 		}
 
 		public static string AbsUrl (this HtmlNode node, Uri baseUrl, string attrName)

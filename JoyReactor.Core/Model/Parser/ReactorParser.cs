@@ -204,7 +204,7 @@ namespace JoyReactor.Core.Model.Parser
             p.Title = TITLE.FirstString(html);
             if (string.IsNullOrWhiteSpace(p.Title))
                 p.Title = null;
-            p.Created = (CREATED.FirstLong(html) * 1000L).DateTimeFromUnixTimestamp();
+            p.Created = (CREATED.FirstLong(html) * 1000L).DateTimeFromUnixTimestampMs();
             p.Rating = RATING.FirstFloat(html, CultureInfo.InvariantCulture);
 
             var attachments = new List<ExportAttachment>();
@@ -290,7 +290,7 @@ namespace JoyReactor.Core.Model.Parser
 
             c.Id = COMMENT_ID.FirstString(s);
             c.Content = TEXT.FirstString(s)?.Replace("<br>", Environment.NewLine);
-            c.Created = (TIMESTAMP.FirstLong(s) * 1000L).DateTimeFromUnixTimestamp();
+            c.Created = (TIMESTAMP.FirstLong(s) * 1000L).DateTimeFromUnixTimestampMs();
             c.Rating = COMMENT_RATING.FirstFloat(s, CultureInfo.InvariantCulture);
 
             c.User = new ExportUser

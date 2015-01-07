@@ -1,0 +1,70 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Practices.ServiceLocation;
+using SQLite.Net;
+using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Database;
+using RawMessage = JoyReactor.Core.Model.Messages.MessagerFetcher.RawMessage;
+
+namespace JoyReactor.Core.Model.Messages
+{
+	public class MessageStorage : MessagerFetcher.IMessageStorage
+	{
+		SQLiteConnection db = ServiceLocator.Current.GetInstance<SQLiteConnection> ();
+
+		public Task<List<MessageThreadItem>> GetThreadsWithAdditionInformationAsync ()
+		{
+			throw new System.NotImplementedException ();
+		}
+
+		public Task ClearAsync ()
+		{
+			return db.RunInTransactionAsync (() => {
+				db.Execute ("DELETE FROM message_threads");
+				db.Execute ("DELETE FROM messages");
+			});
+		}
+
+		public Task SaveAsync (List<RawMessage> messages)
+		{
+			return db.RunInTransactionAsync (() => {
+				SyncThreads (messages);
+				SyncMessages (messages);
+			});
+		}
+
+		void SyncThreads (List<RawMessage> messages)
+		{
+			var threads = GetThreadsFromMessages (messages);
+			foreach (var s in threads)
+				db.Insert (s);
+		}
+
+		IEnumerable<PrivateMessageThread> GetThreadsFromMessages (List<RawMessage> messages)
+		{
+			return from s in messages
+			       group s by s.UserName into t
+			       let thread = t.First ()
+			       select new PrivateMessageThread { UserName = thread.UserName, UserImage = thread.UserImage };
+		}
+
+		void SyncMessages (List<RawMessage> messages)
+		{
+			foreach (var s in messages)
+				db.Insert (new PrivateMessage {
+					ThreadId = GetThreadForUser (s.UserName),
+					Created = s.Created,
+					Message = s.Message,
+					Mode = s.Mode == RawMessage.MessageMode.Outbox
+						? PrivateMessage.ModeOutbox
+						: PrivateMessage.ModeInbox,
+				});
+		}
+
+		int GetThreadForUser (string username)
+		{
+			return db.SafeExecuteScalar<int> ("SELECT Id FROM message_threads WHERE UserName = ?", username);
+		}
+	}
+}

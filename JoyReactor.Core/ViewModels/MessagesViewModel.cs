@@ -6,7 +6,7 @@ namespace JoyReactor.Core.ViewModels
 {
 	public class MessagesViewModel : ViewModelBase
 	{
-		public ObservableCollection<MessageItem> Messages { get; } = new ObservableCollection<MessageItem>();
+		public ObservableCollection<Item> Messages { get; } = new ObservableCollection<Item>();
 
 		bool _isBusy;
 
@@ -27,15 +27,20 @@ namespace JoyReactor.Core.ViewModels
 			var rand = new Random ();
 			Messages.Clear ();
 			for (int i = rand.Next (30); i >= 0; i--)
-				Messages.Add (new MessageItem { Message = "Test message " + rand.NextDouble () });
+				Messages.Add (new Item { 
+					Created = DateTime.Now + TimeSpan.FromHours (rand.Next (-1000, 1000)),
+					Message = "Test message " + rand.NextDouble ()
+				});
 			#endif
 		}
 
-		public class MessageItem
+		public class Item : ViewModelBase
 		{
 			public string Message { get; set; }
 
 			public DateTime Created { get; set; }
+
+			public bool IsMine { get; set; }
 		}
 
 		public class SelectThreadMessage

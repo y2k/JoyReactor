@@ -114,7 +114,7 @@ namespace JoyReactor.Core.Model.Web.Parser
 			var id = Regex.Match (node.Id, @"p(\d+)").Groups [1].Value;
 			comment.Content = document.GetElementbyId ("m" + id).InnerHtml;
 			var utc = node.Select ("span.dateTime.postNum").First ().Attr ("data-utc");
-			comment.Created = (long.Parse (utc) * 1000L).DateTimeFromUnixTimestamp ();
+			comment.Created = (long.Parse (utc) * 1000L).DateTimeFromUnixTimestampMs ();
 
 			return comment;
 		}
@@ -125,7 +125,7 @@ namespace JoyReactor.Core.Model.Web.Parser
 			var data = new ExportPostInformation ();
 			data.Content = document.GetElementbyId ("m" + thread.Id).InnerHtml;
 			var utc = node.Select ("span.dateTime.postNum").First ().Attr ("data-utc");
-			data.Created = (long.Parse (utc) * 1000L).DateTimeFromUnixTimestamp ();
+			data.Created = (long.Parse (utc) * 1000L).DateTimeFromUnixTimestampMs ();
 			data.User = GetUser (node);
 			data.Attachments = GetAttachments (node);
 			OnNewPostInformation (data);

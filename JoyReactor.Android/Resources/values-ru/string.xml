@@ -16,4 +16,5 @@
 	<string name="password">Пароль</string>
 	<string name="login">Войти</string>
 	<string name="logout">Выйти</string>
+	<string name="activity_private_messages">Личные сообщения</string>
 </resources>

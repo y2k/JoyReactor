@@ -12,6 +12,8 @@ namespace JoyReactor.Core.Model.Profiles
 {
 	class ProfileService : IProfileService
 	{
+		IAuthStorage storage = new AuthStorage ();
+
 		public async Task<MyProfile> GetMyProfile ()
 		{
 			var loader = new MyProfileLoader ();
@@ -29,7 +31,7 @@ namespace JoyReactor.Core.Model.Profiles
 			if (cookies == null || cookies.Count < 1)
 				throw new Exception ("Can't login as " + username);
 
-			await SaveCookieToDatabase (username, cookies);
+			await storage.SaveCookieToDatabase (username, cookies);
 			await SyncListOfMyTagsWithWeb ();
 		}
 
@@ -40,22 +42,22 @@ namespace JoyReactor.Core.Model.Profiles
                 .First (s => s.ParserId == ID.SiteParser.JoyReactor);
 		}
 
-		Task SaveCookieToDatabase (string username, IDictionary<string, string> c)
-		{
-			return GetDB ().RunInTransactionAsync (() => {
-				ClearDatabaseFromOldData ();
-				GetDB ().SafeInsert (new Profile {
-					Cookie = SerializeObject (c),
-					Site = "" + ID.SiteParser.JoyReactor,
-					Username = username
-				});
-			});
-		}
-
-		static string SerializeObject (IDictionary<string, string> o)
-		{
-			return o.Aggregate ("", (a, s) => a + (a.Length > 0 ? ";" : "") + s.Key + "=" + s.Value);
-		}
+		//		Task SaveCookieToDatabase (string username, IDictionary<string, string> c)
+		//		{
+		//			return GetDB ().RunInTransactionAsync (() => {
+		//				ClearDatabaseFromOldData ();
+		//				GetDB ().SafeInsert (new Profile {
+		//					Cookie = SerializeObject (c),
+		//					Site = "" + ID.SiteParser.JoyReactor,
+		//					Username = username
+		//				});
+		//			});
+		//		}
+		//
+		//		static string SerializeObject (IDictionary<string, string> o)
+		//		{
+		//			return o.Aggregate ("", (a, s) => a + (a.Length > 0 ? ";" : "") + s.Key + "=" + s.Value);
+		//		}
 
 		async Task SyncListOfMyTagsWithWeb ()
 		{
@@ -87,6 +89,12 @@ namespace JoyReactor.Core.Model.Profiles
 			GetDB ().SafeExecute ("DELETE FROM tag_post");
 			GetDB ().SafeExecute ("DELETE FROM tags WHERE Flags & ? != 0", Tag.FlagWebRead);
 			GetDB ().SafeExecute ("DELETE FROM profiles");
+		}
+
+		internal interface IAuthStorage
+		{
+
+			Task SaveCookieToDatabase (string username, IDictionary<string, string> cookies);
 		}
 	}
 }
