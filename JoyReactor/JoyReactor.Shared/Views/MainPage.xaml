@@ -9,9 +9,12 @@
 
     <Page.BottomAppBar>
         <CommandBar>
-            <AppBarButton Icon="Account"
+            <AppBarButton Icon="ContactPresence"
                           Click="AppBarButton_Click_1"
                           Label="Profile" />
+            <AppBarButton Icon="Message"
+                          Click="AppBarButton_Click_2"
+                          Label="Private messages" />
             <AppBarButton Icon="Add"
                           Click="AppBarButton_Click"
                           Label="Tag" />

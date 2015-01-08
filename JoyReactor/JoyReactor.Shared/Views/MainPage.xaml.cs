@@ -39,5 +39,10 @@ namespace JoyReactor.Views
         {
             Frame.Navigate(typeof(ProfilePage));
         }
+
+        private void AppBarButton_Click_2(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(PrivateMessagesPage));
+        }
     }
 }
