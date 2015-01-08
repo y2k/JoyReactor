@@ -16,11 +16,12 @@
                 <HubSection.ContentTemplate>
                     <DataTemplate>
                         <Grid Width="300">
-                            <ListView ItemsSource="{Binding Threads}">
+                            <ListView ItemsSource="{Binding Threads}"
+                                      SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel>
-                                            <TextBlock Text="{Binding Username}" />
+                                            <TextBlock Text="{Binding UserName}" />
                                             <TextBlock Text="{Binding LastMessage}" />
                                         </StackPanel>
                                     </DataTemplate>

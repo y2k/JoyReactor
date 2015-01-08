@@ -8,7 +8,7 @@ namespace JoyReactor.Core.Model.Messages
 {
 	public class MessageService : IMessageService
 	{
-		public IObservable<List<MessageThreadItem>> GetThreads ()
+		public IObservable<List<MessageThreadItem>> GetMessageThreads ()
 		{
 			return Observable.FromAsync (GetThreadsAsync);
 		}

@@ -6,7 +6,7 @@ namespace JoyReactor.Core.Model
 {
 	public interface IMessageService
 	{
-		IObservable<List<MessageThreadItem>> GetThreads ();
+		IObservable<List<MessageThreadItem>> GetMessageThreads ();
 
 		IObservable<List<PrivateMessage>> GetMessages (string username);
 	}

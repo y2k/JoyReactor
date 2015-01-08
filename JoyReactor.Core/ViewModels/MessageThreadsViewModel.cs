@@ -8,67 +8,65 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Core.Model;
+using System.ComponentModel;
 
 namespace JoyReactor.Core.ViewModels
 {
-	public class MessageThreadsViewModel : ViewModelBase
-	{
-		public ObservableCollection<ItemViewModel> Threads { get; } = new ObservableCollection<ItemViewModel> ();
+    public class MessageThreadsViewModel : ViewModelBase
+    {
+        public ObservableCollection<MessageThreadItem> Threads { get; } = new ObservableCollection<MessageThreadItem>();
 
-		bool _isBusy;
+        bool _isBusy;
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            set { Set(ref _isBusy, value); }
+        }
 
-		public bool IsBusy {
-			get { return _isBusy; }
-			set { Set (ref _isBusy, value); }
-		}
+        public int _selectedIndex = -1;
+        public int SelectedIndex
+        {
+            get { return _selectedIndex; }
+            set { Set(ref _selectedIndex, value); }
+        }
 
-		IDisposable subscription;
+        IDisposable subscription;
 
-		public void Initialize ()
-		{
-			IsBusy = true;
-			subscription = ServiceLocator.Current
-				.GetInstance<IMessageService> ()
-				.GetThreads ()
-				.ObserveOn (SynchronizationContext.Current)
-				.Subscribe (onNext: OnNext, onError: OnError);
-		}
+        public void Initialize()
+        {
+            IsBusy = true;
+            subscription = ServiceLocator.Current
+                .GetInstance<IMessageService>()
+                .GetMessageThreads()
+                .ObserveOn(SynchronizationContext.Current)
+                .Subscribe(onNext: OnNext, onError: OnError);
 
-		void OnNext (List<MessageThreadItem> threads)
-		{
-			IsBusy = false;
-			Threads.ReplaceAll (from s in threads
-			                    select new ItemViewModel (s));
-		}
+            PropertyChanged += MessageThreadsViewModel_PropertyChanged;
+        }
 
-		void OnError (Exception e)
-		{
-			// TODO
-			IsBusy = false;
-		}
+        void MessageThreadsViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == GetPropertyName(() => SelectedIndex) && SelectedIndex >= 0)
+                MessengerInstance.Send(new MessagesViewModel.SelectThreadMessage { Username = Threads[SelectedIndex].UserName });
+        }
 
-		public override void Cleanup ()
-		{
-			base.Cleanup ();
-			subscription.Dispose ();
-		}
+        void OnNext(List<MessageThreadItem> threads)
+        {
+            IsBusy = false;
+            Threads.ReplaceAll(threads);
+        }
 
-		public class ItemViewModel : ViewModelBase
-		{
-			public string Username { get; set; }
+        void OnError(Exception e)
+        {
+            // TODO
+            IsBusy = false;
+        }
 
-			public string LastMessage { get; set; }
-
-			public RelayCommand OpenThreadCommand { get; set; }
-
-			public ItemViewModel (MessageThreadItem item)
-			{
-				Username = item.UserName;
-				LastMessage = item.LastMessage;
-
-				OpenThreadCommand = new FixRelayCommand (() =>
-					MessengerInstance.Send (new MessagesViewModel.SelectThreadMessage { Username = Username }));
-			}
-		}
-	}
+        public override void Cleanup()
+        {
+            base.Cleanup();
+            subscription.Dispose();
+            PropertyChanged -= MessageThreadsViewModel_PropertyChanged;
+        }
+    }
 }
