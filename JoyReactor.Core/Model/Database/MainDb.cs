@@ -64,7 +64,8 @@ namespace JoyReactor.Core.Model.Database
 			db.CreateTable<Comment> ();
 			db.CreateTable<Attachment> ();
 			db.CreateTable<CommentLink> ();
-			db.CreateTable<MessageThreadItem> ();
+
+			db.CreateTable<PrivateMessageThread> ();
 			db.CreateTable<PrivateMessage> ();
 
 			new CreateDefaultTagsTransaction (db).Execute ();

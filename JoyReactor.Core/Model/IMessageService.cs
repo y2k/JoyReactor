@@ -13,7 +13,9 @@ namespace JoyReactor.Core.Model
 
 	public class MessageThreadItem
 	{
-		public string Username { get; set; }
+		public string UserName { get; set; }
+
+		public string UserImage { get; set; }
 
 		public string LastMessage { get; set; }
 	}

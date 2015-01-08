@@ -63,7 +63,7 @@ namespace JoyReactor.Core.ViewModels
 
 			public ItemViewModel (MessageThreadItem item)
 			{
-				Username = item.Username;
+				Username = item.UserName;
 				LastMessage = item.LastMessage;
 
 				OpenThreadCommand = new FixRelayCommand (() =>

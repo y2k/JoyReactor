@@ -16,7 +16,7 @@ namespace JoyReactor.Core.Model.Messages
 		async Task<List<MessageThreadItem>> GetThreadsAsync ()
 		{
 			var storage = new MessageStorage ();
-			await new MessagerFetcher (storage, null).FetchAsync ();
+			await new MessagerFetcher (storage, new ReactorMessageParser ()).FetchAsync ();
 			return await storage.GetThreadsWithAdditionInformationAsync ();
 		}
 

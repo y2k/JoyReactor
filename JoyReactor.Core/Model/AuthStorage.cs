@@ -16,32 +16,37 @@ namespace JoyReactor.Core.Model
 
 		public Task SaveCookieToDatabase (string username, IDictionary<string, string> cookies)
 		{
-			return db.RunInTransactionAsync (() => db.Insert (new Profile {
+			return db.InsertAsync (CreateProfile (username, cookies));
+		}
+
+		Profile CreateProfile (string username, IDictionary<string, string> cookies)
+		{
+			return new Profile {
 				Cookie = SerializeObject (cookies),
 				Site = "" + ID.SiteParser.JoyReactor,
 				Username = username
-			}));
+			};
 		}
 
-		string SerializeObject (IDictionary<string, string> o)
+		string SerializeObject (IDictionary<string, string> cookies)
 		{
-			return o.Aggregate ("", (a, s) => a + (a.Length > 0 ? ";" : "") + s.Key + "=" + s.Value);
+			return cookies.Aggregate ("", (a, s) => a + (a.Length > 0 ? ";" : "") + s.Key + "=" + s.Value);
 		}
 
-		public Task<IDictionary<string, string>> GetCookiesAsync ()
+		public async Task<IDictionary<string, string>> GetCookiesAsync ()
 		{
-//			return Task.Run (() => db
-//				.SafeQuery ("SELECT * FROM profiles WHERE Site = ?", "" + ID.SiteParser.JoyReactor)
-//				.Select (s => new Dictionary<string,string> ())
-//				.First ());
+			var cookies = await db.ExecuteScalarAsync<string> (
+				              "SELECT Cookie FROM profiles WHERE Site = ?", 
+				              "" + ID.SiteParser.JoyReactor);
+			return DeserializeCookies (cookies);
+		}
 
-			var cookie = await db.ExecuteScalarAsync<string> (
-				"SELECT Cookie FROM profiles WHERE Site = ?", "" + ID.SiteParser.JoyReactor);
-
-//			var profile = await db
-//				.QueryAsync ("SELECT * FROM profiles WHERE Site = ?", "" + ID.SiteParser.JoyReactor)
-//				.ContinueWith(s=>new Dictionary<string,string>()
-//				;
+		IDictionary<string,string> DeserializeCookies (string flatCookies)
+		{
+			return flatCookies
+				.Split (';')
+				.Select (s => s.Split ('='))
+				.ToDictionary (s => s [0], s => s [1]);
 		}
 	}
 }

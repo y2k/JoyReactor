@@ -15,7 +15,17 @@ namespace JoyReactor.Core.Model.Messages
 
 		public Task<List<MessageThreadItem>> GetThreadsWithAdditionInformationAsync ()
 		{
-			throw new System.NotImplementedException ();
+			return db.QueryAsync<MessageThreadItem> (
+				"SELECT * FROM ( " +
+				"SELECT " +
+				" t.Id AS Id, " +
+				" t.UserName AS UserName, " +
+				" t.UserImage AS UserImage, " +
+				" m.Message AS LastMessage " +
+				"FROM message_threads t " +
+				"LEFT JOIN messages m ON t.Id = m.ThreadId " +
+				"ORDER BY m.Created " +
+				") GROUP BY Id ");
 		}
 
 		public Task ClearAsync ()

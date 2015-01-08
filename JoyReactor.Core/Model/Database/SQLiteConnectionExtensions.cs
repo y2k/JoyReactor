@@ -38,6 +38,15 @@ namespace JoyReactor.Core.Model.Database
 			}
 		}
 
+		public static Task<int> InsertAsync (this SQLiteConnection instance, object obj)
+		{
+			return Task.Run (() => {
+				lock (instance) {
+					return instance.Insert (obj);
+				}
+			});
+		}
+
 		public static int SafeInsert (this SQLiteConnection instance, object obj)
 		{
 			lock (instance) {
