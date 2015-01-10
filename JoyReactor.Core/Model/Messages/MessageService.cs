@@ -6,23 +6,31 @@ using JoyReactor.Core.Model.DTO;
 
 namespace JoyReactor.Core.Model.Messages
 {
-	public class MessageService : IMessageService
-	{
-		public IObservable<List<MessageThreadItem>> GetMessageThreads ()
-		{
-			return Observable.FromAsync (GetThreadsAsync);
-		}
+    public class MessageService : IMessageService
+    {
+        IMessageStorage storage = new MessageStorage();
 
-		async Task<List<MessageThreadItem>> GetThreadsAsync ()
-		{
-			var storage = new MessageStorage ();
-			await new MessagerFetcher (storage, new ReactorMessageParser ()).FetchAsync ();
-			return await storage.GetThreadsWithAdditionInformationAsync ();
-		}
+        public IObservable<List<MessageThreadItem>> GetMessageThreads()
+        {
+            return Observable.FromAsync(GetThreadsAsync);
+        }
 
-		public IObservable<List<PrivateMessage>> GetMessages (string username)
-		{
-			throw new NotImplementedException ();
-		}
-	}
+        async Task<List<MessageThreadItem>> GetThreadsAsync()
+        {
+            await new MessageFetcher().FetchAsync();
+            return await storage.GetThreadsWithAdditionInformationAsync();
+        }
+
+        public IObservable<List<PrivateMessage>> GetMessages(string username)
+        {
+            return Observable.FromAsync(() => storage.GetMessagesAsync(username));
+        }
+
+        public interface IMessageStorage
+        {
+            Task<List<MessageThreadItem>> GetThreadsWithAdditionInformationAsync();
+
+            Task<List<PrivateMessage>> GetMessagesAsync(string username);
+        }
+    }
 }

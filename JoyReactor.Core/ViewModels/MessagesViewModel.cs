@@ -1,51 +1,70 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight;
+using Microsoft.Practices.ServiceLocation;
+using JoyReactor.Core.Model;
+using JoyReactor.Core.Model.DTO;
+using System.Reactive.Linq;
+using System.Threading;
+using System.Collections.Generic;
 
 namespace JoyReactor.Core.ViewModels
 {
-	public class MessagesViewModel : ViewModelBase
-	{
-		public ObservableCollection<Item> Messages { get; } = new ObservableCollection<Item>();
+    public class MessagesViewModel : ViewModelBase
+    {
+        public ObservableCollection<PrivateMessage> Messages { get; } = new ObservableCollection<PrivateMessage>();
 
-		bool _isBusy;
+        bool _isBusy;
 
-		public bool IsBusy {
-			get { return _isBusy; }
-			set { Set (ref _isBusy, value); }
-		}
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            set { Set(ref _isBusy, value); }
+        }
 
-		public MessagesViewModel ()
-		{
-			MessengerInstance.Register<SelectThreadMessage> (this, m => SwitchUser (m.Username));
-		}
+        IMessageService service = ServiceLocator.Current.GetInstance<IMessageService>();
 
-		void SwitchUser (string username)
-		{
-			// TODO
-			#if DEBUG
-			var rand = new Random ();
-			Messages.Clear ();
-			for (int i = rand.Next (30); i >= 0; i--)
-				Messages.Add (new Item { 
-					Created = DateTime.Now + TimeSpan.FromHours (rand.Next (-1000, 1000)),
-					Message = "Test message " + rand.NextDouble ()
-				});
-			#endif
-		}
+        public MessagesViewModel()
+        {
+            MessengerInstance.Register<SelectThreadMessage>(this, m => SwitchUser(m.Username));
+        }
 
-		public class Item : ViewModelBase
-		{
-			public string Message { get; set; }
+        void SwitchUser(string username)
+        {
+            Messages.Clear();
+            IsBusy = true;
 
-			public DateTime Created { get; set; }
+            service
+                .GetMessages(username)
+                .SubscribeOn(SynchronizationContext.Current)
+                .Subscribe(OnNext, OnError);
+        }
 
-			public bool IsMine { get; set; }
-		}
+        void OnNext(List<PrivateMessage> messages)
+        {
+            // TODO
+            IsBusy = false;
+            Messages.ReplaceAll(messages);
+        }
 
-		public class SelectThreadMessage
-		{
-			public string Username { get; set; }
-		}
-	}
+        void OnError(Exception error)
+        {
+            // TODO
+            IsBusy = false;
+        }
+
+        public class Item : ViewModelBase
+        {
+            public string Message { get; set; }
+
+            public DateTime Created { get; set; }
+
+            public bool IsMine { get; set; }
+        }
+
+        public class SelectThreadMessage
+        {
+            public string Username { get; set; }
+        }
+    }
 }

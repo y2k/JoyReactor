@@ -40,6 +40,10 @@ namespace JoyReactor.Core.Tests.Helpers
 
             ["http://joyreactor.cc/login"] = "joyreactor_login_get.html",
             ["http://joyreactor.cc/user/mykie78"] = "joyreactor_user_mykie78.html",
+
+            ["http://joyreactor.cc/private/list/1"] = "joyreactor_prive_message.html",
+            ["http://joyreactor.cc/private/list/2"] = "joyreactor_prive_message_2.html",
+            ["http://joyreactor.cc/private/list/3"] = "joyreactor_feed.html",
         };
 
         IDictionary<string, string> PostCookies = new Dictionary<string, string>()

@@ -1,11 +1,14 @@
-﻿using Autofac;
+﻿using System.Drawing;
+using System.IO;
+using Autofac;
 using JoyReactor.Core.Model.Web;
-using JoyReactor.Core.Tests.Xam.Pluging.Settings;
 using Refractored.Xam.Settings.Abstractions;
 using SQLite.Net;
-using System.Drawing;
-using System.IO;
 using XamarinCommons.Image;
+using JoyReactor.Core.Tests.Xam.Pluging.Settings;
+using JoyReactor.Core.Model.Messages;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Tests.Helpers
 {
@@ -18,13 +21,22 @@ namespace JoyReactor.Core.Tests.Helpers
             b.RegisterInstance(new MockSettings()).As<ISettings>();
 
             b.RegisterType<StubImageDecoder>().As<ImageDecoder>();
+            b.RegisterType<MockAuthStorage>().As<ReactorMessageParser.IAuthStorage>();
+        }
+
+        class MockAuthStorage : ReactorMessageParser.IAuthStorage
+        {
+            public Task<IDictionary<string, string>> GetCookiesAsync()
+            {
+                return Task.FromResult<IDictionary<string, string>>(new Dictionary<string, string>());
+            }
         }
 
         class StubImageDecoder : ImageDecoder
         {
             public override object DecoderStream(Stream stream)
             {
-                return Bitmap.FromStream(stream);
+                return Image.FromStream(stream);
             }
 
             public override int GetImageSize(object commonImage)

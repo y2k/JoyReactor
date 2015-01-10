@@ -26,7 +26,7 @@ namespace JoyReactor.Core.Tests.Helpers
                 case PlatformID.Win32NT:
                     return new SQLitePlatformWin32();
             }
-            throw new Exception("Not supported platform: " + Environment.OSVersion.Platform);
+            throw new Exception("Not supported OS: " + Environment.OSVersion.Platform);
         }
     }
 }

@@ -4,16 +4,10 @@ using System;
 
 namespace JoyReactor.Core.Model.Messages
 {
-	public class MessagerFetcher
+	public class MessageFetcher
 	{
-		IMessageStorage storage;
-		IMessageParser parser;
-
-		public MessagerFetcher (IMessageStorage storage, IMessageParser parser)
-		{
-			this.parser = parser;
-			this.storage = storage;
-		}
+        IMessageStorage storage = new MessageStorage();
+        IMessageParser parser = new ReactorMessageParser();
 
 		public async Task FetchAsync ()
 		{
