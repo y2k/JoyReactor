@@ -50,6 +50,9 @@ namespace JoyReactor.Core.Model.Web
 			}
 			if (reqParams.Referer != null)
 				req.Headers.Referrer = reqParams.Referer;
+            if (reqParams.AdditionHeaders != null)
+                foreach (var s in reqParams.AdditionHeaders)
+                    req.Headers.Add(s.Key, s.Value);
 		}
 
 		Dictionary<string,string> GetCookies (Uri uri, HttpClientHandler handler)

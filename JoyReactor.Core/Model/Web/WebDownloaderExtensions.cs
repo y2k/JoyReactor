@@ -27,7 +27,12 @@ namespace JoyReactor.Core.Model.Web
 			}
 		}
 
-		[Obsolete]
+        public static async Task PostAsync(this IWebDownloader instance, Uri uri, RequestParams requestParams)
+        {
+            using (var response = await instance.ExecuteAsync(uri, requestParams)) { }
+        }
+
+        [Obsolete]
 		public static Stream GetResource (this IWebDownloader instance, Uri uri, RequestParams reqParams = null)
 		{
 			return instance.ExecuteAsync (uri, reqParams).Result.Data;

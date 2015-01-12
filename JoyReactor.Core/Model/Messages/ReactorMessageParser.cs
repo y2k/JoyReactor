@@ -19,8 +19,8 @@ namespace JoyReactor.Core.Model.Messages
         public async Task<List<RawMessage>> LoadNextPageAsync(int page)
         {
             var doc = await downloader.GetDocumentAsync(
-                 GenerateUri(page), 
-                 new RequestParams { Cookies = await auth.GetCookiesAsync() });
+                GenerateUri(page), 
+                new RequestParams { Cookies = await auth.GetCookiesAsync() });
             return doc.DocumentNode
 				.Select("div.article")
 				.Select(ConvertToMessage)
@@ -57,6 +57,26 @@ namespace JoyReactor.Core.Model.Messages
             return node.Select("div.mess_reply").Any()
 				? RawMessage.MessageMode.Inbox
 				: RawMessage.MessageMode.Outbox;
+        }
+
+        public async Task SendMessageToUser(string username, string message)
+        {
+            await downloader.PostAsync(
+                new Uri("http://joyreactor.cc/private/create"),
+                new RequestParams
+                {
+                    Form = new Dictionary<string, string>
+                    {
+                        ["username"] = username,
+                        ["text"] = message,
+                    },
+                    AdditionHeaders = new Dictionary<string, string>
+                    {
+                        ["X-Requested-With"] = "XMLHttpRequest",
+                        ["Referer"] = "http://joyreactor.cc/private/list",
+                    },
+                    Cookies = await auth.GetCookiesAsync(),
+                });
         }
 
         public interface IAuthStorage

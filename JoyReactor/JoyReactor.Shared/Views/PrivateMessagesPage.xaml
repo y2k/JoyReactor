@@ -40,6 +40,10 @@
                 <HubSection.ContentTemplate>
                     <DataTemplate>
                         <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
                             <ListView Width="300"
                                       ItemsSource="{Binding Messages}">
                                 <ListView.ItemTemplate>
@@ -52,7 +56,10 @@
                                 </ListView.ItemTemplate>
                             </ListView>
                             <ProgressBar IsIndeterminate="True"
+                                         Grid.RowSpan="2"
                                          Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" />
+                            <TextBox PlaceholderText="New message"
+                                     Grid.Row="1" />
                         </Grid>
                     </DataTemplate>
                 </HubSection.ContentTemplate>
