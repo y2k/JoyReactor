@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using JoyReactor.Core.Model.DTO;
 
 namespace JoyReactor.Core.Model
@@ -9,6 +10,8 @@ namespace JoyReactor.Core.Model
 		IObservable<List<MessageThreadItem>> GetMessageThreads ();
 
 		IObservable<List<PrivateMessage>> GetMessages (string username);
+
+        Task SendMessage(string username, string message);
 	}
 
 	public class MessageThreadItem

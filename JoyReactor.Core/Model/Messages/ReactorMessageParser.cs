@@ -8,6 +8,7 @@ using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.Model.Web.Parser;
 using RawMessage = JoyReactor.Core.Model.Messages.MessageFetcher.RawMessage;
+using System.Net;
 
 namespace JoyReactor.Core.Model.Messages
 {
@@ -36,7 +37,11 @@ namespace JoyReactor.Core.Model.Messages
         {
             return new RawMessage
             {
-                Message = node.Select("div.mess_text").First().InnerText.Trim(' ', '\r', '\n'),
+                Message = node.Select("div.mess_text")
+                    .Select(s => s.InnerText)
+                    .Select(WebUtility.HtmlDecode)
+                    .Select(s => s.Trim(' ', '\r', '\n'))
+                    .First(),
                 Created = node
 					.Select("div.mess_date > span")
 					.Select(s => s.Attr("data-time"))

@@ -65,7 +65,7 @@ namespace JoyReactor.Core.ViewModels
 		public override void Cleanup()
 		{
 			base.Cleanup();
-			subscription.Dispose();
+			subscription?.Dispose();
 			PropertyChanged -= MessageThreadsViewModel_PropertyChanged;
 		}
 	}

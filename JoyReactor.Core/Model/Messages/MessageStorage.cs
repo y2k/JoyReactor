@@ -55,16 +55,17 @@ namespace JoyReactor.Core.Model.Messages
 
         IEnumerable<PrivateMessageThread> GetThreadsFromMessages(List<RawMessage> messages)
         {
-            return from s in messages
-                            group s by s.UserName into t
-                            let thread = t.First()
-                            select new PrivateMessageThread { UserName = thread.UserName, UserImage = thread.UserImage };
+            return  from s in messages
+                    group s by s.UserName into t
+                    let thread = t.First()
+                    select new PrivateMessageThread { UserName = thread.UserName, UserImage = thread.UserImage };
         }
 
         void SyncMessages(List<RawMessage> messages)
         {
             foreach (var s in messages)
-                db.Insert(new PrivateMessage
+                db.Insert(
+                    new PrivateMessage
                     {
                         ThreadId = GetThreadForUser(s.UserName),
                         Created = s.Created,

@@ -68,6 +68,7 @@ namespace JoyReactor.Core.Model.Inject
                 b.RegisterType<MessageService>().As<IMessageService>();
 
                 b.RegisterType<AuthStorage>().As<ProfileService.IAuthStorage>();
+                b.RegisterType<AuthStorage>().As<ReactorMessageParser.IAuthStorage>();
             }
         }
 

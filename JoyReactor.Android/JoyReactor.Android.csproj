@@ -27,7 +27,7 @@
     <WarningLevel>4</WarningLevel>
     <AndroidLinkMode>None</AndroidLinkMode>
     <ConsolePause>false</ConsolePause>
-    <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
+    <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -160,6 +160,7 @@
     <AndroidResource Include="Resources\layout\item_message_thread.axml" />
     <AndroidResource Include="Resources\layout\item_message.axml" />
     <AndroidResource Include="Resources\layout\fragment_message_threads.axml" />
+    <AndroidResource Include="Resources\layout\fragment_messages.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>

@@ -23,6 +23,7 @@ namespace JoyReactor.Core.ViewModels
         }
 
         IMessageService service = ServiceLocator.Current.GetInstance<IMessageService>();
+        IDisposable subscription;
 
         public MessagesViewModel()
         {
@@ -34,7 +35,8 @@ namespace JoyReactor.Core.ViewModels
             Messages.Clear();
             IsBusy = true;
 
-            service
+            subscription?.Dispose();
+            subscription = service
                 .GetMessages(username)
                 .SubscribeOn(SynchronizationContext.Current)
                 .Subscribe(OnNext, OnError);
@@ -43,8 +45,8 @@ namespace JoyReactor.Core.ViewModels
         void OnNext(List<PrivateMessage> messages)
         {
             // TODO
-            IsBusy = false;
             Messages.ReplaceAll(messages);
+            IsBusy = false;
         }
 
         void OnError(Exception error)
@@ -53,13 +55,10 @@ namespace JoyReactor.Core.ViewModels
             IsBusy = false;
         }
 
-        public class Item : ViewModelBase
+        public override void Cleanup()
         {
-            public string Message { get; set; }
-
-            public DateTime Created { get; set; }
-
-            public bool IsMine { get; set; }
+            base.Cleanup();
+            subscription?.Dispose();
         }
 
         public class SelectThreadMessage

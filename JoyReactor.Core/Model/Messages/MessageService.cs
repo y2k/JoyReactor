@@ -26,6 +26,11 @@ namespace JoyReactor.Core.Model.Messages
             return Observable.FromAsync(() => storage.GetMessagesAsync(username));
         }
 
+        public Task SendMessage(string username, string message)
+        {
+            return new ReactorMessageParser().SendMessageToUser(username, message);
+        }
+
         public interface IMessageStorage
         {
             Task<List<MessageThreadItem>> GetThreadsWithAdditionInformationAsync();
