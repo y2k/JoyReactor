@@ -38,7 +38,7 @@ namespace JoyReactor.Core.ViewModels
             subscription?.Dispose();
             subscription = service
                 .GetMessages(username)
-                .SubscribeOn(SynchronizationContext.Current)
+                .ObserveOn(SynchronizationContext.Current)
                 .Subscribe(OnNext, OnError);
         }
 

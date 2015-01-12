@@ -33,7 +33,7 @@ namespace JoyReactor.Core.ViewModels
 
         void TagsViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "SelectedTag")
+            if (e.PropertyName == "SelectedTag" && SelectedTag >= 0)
                 MessengerInstance.Send(new SelectTagMessage { Id = ID.Parser(Tags[SelectedTag].tag.TagId) });
         }
 
