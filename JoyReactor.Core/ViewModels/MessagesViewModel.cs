@@ -7,6 +7,7 @@ using JoyReactor.Core.Model.DTO;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Collections.Generic;
+using GalaSoft.MvvmLight.Command;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -15,19 +16,37 @@ namespace JoyReactor.Core.ViewModels
         public ObservableCollection<PrivateMessage> Messages { get; } = new ObservableCollection<PrivateMessage>();
 
         bool _isBusy;
-
         public bool IsBusy
         {
             get { return _isBusy; }
             set { Set(ref _isBusy, value); }
         }
 
-        IMessageService service = ServiceLocator.Current.GetInstance<IMessageService>();
+        string _newMessage;
+        public string NewMessage
+        {
+            get { return _newMessage; }
+            set { Set(ref _newMessage, value); }
+        }
+
+        public RelayCommand CreateMessageCommand { get; set; }
+
         IDisposable subscription;
+        string currentUserName;
 
         public MessagesViewModel()
         {
             MessengerInstance.Register<SelectThreadMessage>(this, m => SwitchUser(m.Username));
+            CreateMessageCommand = new FixRelayCommand(CreateNewMessage);
+        }
+
+        private async void CreateNewMessage()
+        {
+            IsBusy = true;
+            await ServiceLocator.Current.GetInstance<IMessageService>()
+                .SendMessage(currentUserName, NewMessage);
+            NewMessage = null;
+            IsBusy = false;
         }
 
         void SwitchUser(string username)
@@ -36,8 +55,8 @@ namespace JoyReactor.Core.ViewModels
             IsBusy = true;
 
             subscription?.Dispose();
-            subscription = service
-                .GetMessages(username)
+            subscription = ServiceLocator.Current.GetInstance<IMessageService>()
+                .GetMessages(currentUserName = username)
                 .ObserveOn(SynchronizationContext.Current)
                 .Subscribe(OnNext, OnError);
         }

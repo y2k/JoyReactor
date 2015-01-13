@@ -9,7 +9,8 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Hub Header="Private messages">
-            <HubSection x:Name="ThreadsHubSection">
+            <HubSection x:Name="ThreadsHubSection"
+                        VerticalContentAlignment="Stretch">
                 <HubSection.DataContext>
                     <vm:MessageThreadsViewModel />
                 </HubSection.DataContext>
@@ -28,12 +29,14 @@
                                 </ListView.ItemTemplate>
                             </ListView>
                             <ProgressBar IsIndeterminate="True"
+                                         VerticalAlignment="Top"
                                          Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" />
                         </Grid>
                     </DataTemplate>
                 </HubSection.ContentTemplate>
             </HubSection>
-            <HubSection x:Name="MessagesHubSection">
+            <HubSection x:Name="MessagesHubSection"
+                        VerticalContentAlignment="Stretch">
                 <HubSection.DataContext>
                     <vm:MessagesViewModel />
                 </HubSection.DataContext>
@@ -44,12 +47,18 @@
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
                             <ListView Width="300"
+                                      Grid.ColumnSpan="2"
                                       ItemsSource="{Binding Messages}">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel>
-                                            <TextBlock Text="{Binding Message}" />
+                                            <TextBlock Text="{Binding Message}"
+                                                       TextWrapping="Wrap" />
                                             <TextBlock Text="{Binding Created}" />
                                         </StackPanel>
                                     </DataTemplate>
@@ -57,9 +66,17 @@
                             </ListView>
                             <ProgressBar IsIndeterminate="True"
                                          Grid.RowSpan="2"
-                                         Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                         VerticalAlignment="Top"
+                                         Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
+                                         Grid.ColumnSpan="2" />
                             <TextBox PlaceholderText="New message"
+                                     Text="{Binding NewMessage, Mode=TwoWay}"
+                                     VerticalAlignment="Center"
                                      Grid.Row="1" />
+                            <Button Content="OK"
+                                    Command="{Binding CreateMessageCommand}"
+                                    Grid.Column="1"
+                                    Grid.Row="1" />
                         </Grid>
                     </DataTemplate>
                 </HubSection.ContentTemplate>
