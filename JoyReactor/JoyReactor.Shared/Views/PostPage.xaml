@@ -5,8 +5,12 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:v="using:JoyReactor.Views"
-      DataContext="{Binding Source={StaticResource Locator}, Path=Post}"
+      xmlns:vm="using:JoyReactor.Core.ViewModels"
       mc:Ignorable="d">
+
+    <Page.DataContext>
+        <vm:PostViewModel />
+    </Page.DataContext>
 
     <Page.BottomAppBar>
         <CommandBar>
@@ -22,6 +26,12 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <ListView SelectionMode="None"
                   ItemsSource="{Binding ViewModelParts}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment"
+                            Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.ItemTemplateSelector>
                 <v:PostItemTemplateSelector>
                     <v:PostItemTemplateSelector.PosterTemplate>
@@ -33,14 +43,25 @@
                     </v:PostItemTemplateSelector.PosterTemplate>
                     <v:PostItemTemplateSelector.CommentTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
                                 <Grid Width="40"
                                       Visibility="{Binding IsRoot, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}" />
                                 <TextBlock Text="{Binding ChildCount}"
+                                           Grid.Column="1"
                                            VerticalAlignment="Center" />
-                                <Button Content="{Binding Text}"
-                                        Command="{Binding NavigateCommand}" />
-                            </StackPanel>
+                                <Button Command="{Binding NavigateCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Grid.Column="2">
+                                    <TextBlock Text="{Binding Text}"
+                                               TextWrapping="Wrap" />
+                                </Button>
+                            </Grid>
                         </DataTemplate>
                     </v:PostItemTemplateSelector.CommentTemplate>
                 </v:PostItemTemplateSelector>

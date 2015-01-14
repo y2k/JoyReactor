@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:vm="using:JoyReactor.Core.ViewModels"
+      xmlns:v="using:JoyReactor.Views"
       mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -53,16 +54,38 @@
                             </Grid.ColumnDefinitions>
                             <ListView Width="300"
                                       Grid.ColumnSpan="2"
+                                      SelectionMode="None"
                                       ItemsSource="{Binding Messages}">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel>
-                                            <TextBlock Text="{Binding Message}"
-                                                       TextWrapping="Wrap" />
-                                            <TextBlock Text="{Binding Created}" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment"
+                                                Value="Stretch" />
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplateSelector>
+                                    <v:PrivateMessageTemplateSelector>
+                                        <v:PrivateMessageTemplateSelector.InboxTempalte>
+                                            <DataTemplate>
+                                                <StackPanel Background="#FF404040"
+                                                            Margin="0,0,50,0">
+                                                    <TextBlock Text="{Binding Message}"
+                                                               TextWrapping="Wrap" />
+                                                    <TextBlock Text="{Binding Created}" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </v:PrivateMessageTemplateSelector.InboxTempalte>
+                                        <v:PrivateMessageTemplateSelector.OutboxTempate>
+                                            <DataTemplate>
+                                                <StackPanel Background="#FF404040"
+                                                            Margin="50,0,0,0">
+                                                    <TextBlock Text="{Binding Message}"
+                                                               TextWrapping="Wrap" />
+                                                    <TextBlock Text="{Binding Created}" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </v:PrivateMessageTemplateSelector.OutboxTempate>
+                                    </v:PrivateMessageTemplateSelector>
+                                </ListView.ItemTemplateSelector>
                             </ListView>
                             <ProgressBar IsIndeterminate="True"
                                          Grid.RowSpan="2"

@@ -6,6 +6,7 @@ using SQLite.Net;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Database;
 using RawMessage = JoyReactor.Core.Model.Messages.MessageFetcher.RawMessage;
+using System;
 
 namespace JoyReactor.Core.Model.Messages
 {
@@ -92,6 +93,12 @@ namespace JoyReactor.Core.Model.Messages
                 "   WHERE UserName = ?) " +
                 "ORDER BY Created", 
                 username);
+        }
+
+        public async Task PutMessageAsync(string username, PrivateMessage message)
+        {
+            message.ThreadId = GetThreadForUser(username);
+            await db.InsertAsync(message);
         }
     }
 }

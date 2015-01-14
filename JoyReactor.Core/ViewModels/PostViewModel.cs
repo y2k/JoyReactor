@@ -22,6 +22,26 @@ namespace JoyReactor.Core.ViewModels
 
         public RelayCommand OpenGalleryCommand { get; set; }
 
+        public PostViewModel()
+        {
+#if DEBUG
+            if (IsInDesignMode)
+            {
+
+                var items = Enumerable
+                    .Range(1, 10)
+                    .Select(s => Enumerable.Range(0, 2 * s))
+                    .Select(s => s.Select(_ => "Тестовый текст - "))
+                    .Select(s => s.Aggregate((a, b) => a + b))
+                    .Select(s => new CommentViewModel { Text = s });
+                ViewModelParts.AddRange(items);
+
+                //for (int i = 1; i <= 10; i++)
+                //    ViewModelParts.Add(new CommentViewModel { Text = Enumerable.Range(0, i).Select(_ => "Тестовый текст - ").Aggregate((a, b) => a + b) });
+            }
+#endif
+        }
+
         public async Task Initialize(int postId)
         {
             OpenGalleryCommand = new FixRelayCommand(() =>
@@ -83,6 +103,8 @@ namespace JoyReactor.Core.ViewModels
             public string Text { get; set; }
 
             public int ChildCount { get; set; }
+
+            public CommentViewModel() { }
 
             public CommentViewModel(PostViewModel parent, CommentWithChildCount comment)
             {

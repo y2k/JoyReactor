@@ -39,6 +39,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Views\PrivateMessagesPage.xaml.cs">
       <DependentUpon>PrivateMessagesPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\PrivateMessageTemplateSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\ProfilePage.xaml.cs">
       <DependentUpon>ProfilePage.xaml</DependentUpon>
     </Compile>
