@@ -91,17 +91,7 @@ namespace JoyReactor.Android.App
             {
                 var view = inflater.Inflate(Resource.Layout.fragment_messages, null);
                 var list = view.FindViewById<ListView>(Resource.Id.list);
-                list.Adapter = new ObservableAdapter<PrivateMessage>
-                {
-                    DataSource = viewmodel.Messages,
-                    GetTemplateDelegate = (i, s, v) =>
-                    {
-                        v = v ?? View.Inflate(Activity, Resource.Layout.item_message, null);
-                        v.FindViewById<TextView>(Resource.Id.message).Text = s.Message;
-                        v.FindViewById<TextView>(Resource.Id.created).Text = s.Created.ToLongDateString() + " " + s.Created.ToLongTimeString();
-                        return v;
-                    },
-                };
+                list.Adapter = new MessageAdapter(viewmodel.Messages);
                 var newMessage = view.FindViewById<EditText>(Resource.Id.newMessage);
                 viewmodel.SetBinding(() => viewmodel.NewMessage, newMessage, () => newMessage.Text, BindingMode.TwoWay);
                 view.FindViewById(Resource.Id.createMessage).SetCommand("Click", viewmodel.CreateMessageCommand);
@@ -110,7 +100,13 @@ namespace JoyReactor.Android.App
 
             class MessageAdapter : BaseAdapter<PrivateMessage>
             {
-                ObservableCollection<PrivateMessage> DataSource { get; set; }
+                ObservableCollection<PrivateMessage> dataSource { get; set; }
+
+                internal MessageAdapter(ObservableCollection<PrivateMessage> dataSource)
+                {
+                    this.dataSource = dataSource;
+                    dataSource.CollectionChanged += (sender, e) => NotifyDataSetChanged();
+                }
 
                 public override long GetItemId(int position)
                 {
@@ -119,12 +115,25 @@ namespace JoyReactor.Android.App
 
                 public override View GetView(int position, View convertView, ViewGroup parent)
                 {
-                    throw new System.NotImplementedException();
+                    if (convertView == null)
+                        convertView = CreateView(position);
+                    var s = dataSource[position];
+                    convertView.FindViewById<TextView>(Resource.Id.message).Text = s.Message;
+                    convertView.FindViewById<TextView>(Resource.Id.created).Text = s.Created.ToLongDateString() + " " + s.Created.ToLongTimeString();
+                    return convertView;
+                }
+
+                View CreateView(int position)
+                {
+                    var resId = GetItemViewType(position) == 0 
+                        ? Resource.Layout.item_message_inbox 
+                        : Resource.Layout.item_message_outbox;
+                    return View.Inflate(App.Instance, resId, null);
                 }
 
                 public override int Count
                 {
-                    get { return DataSource.Count; }
+                    get { return dataSource.Count; }
                 }
 
                 public override PrivateMessage this [int index]
@@ -134,7 +143,7 @@ namespace JoyReactor.Android.App
 
                 public override int GetItemViewType(int position)
                 {
-                    return base.GetItemViewType(position);
+                    return dataSource[position].Mode == PrivateMessage.ModeInbox ? 0 : 1;
                 }
 
                 public override int ViewTypeCount

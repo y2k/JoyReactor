@@ -157,15 +157,15 @@
     <AndroidResource Include="Resources\layout\fragment_login.axml" />
     <AndroidResource Include="Resources\layout\activity_messages.axml" />
     <AndroidResource Include="Resources\layout\item_message_thread.axml" />
-    <AndroidResource Include="Resources\layout\item_message.axml" />
     <AndroidResource Include="Resources\layout\fragment_message_threads.axml" />
     <AndroidResource Include="Resources\layout\fragment_messages.axml" />
-    <AndroidResource Include="Resources\layout\item_my_message.axml" />
     <AndroidResource Include="Resources\mipmap-hdpi\ic_launcher.png" />
     <AndroidResource Include="Resources\mipmap-mdpi\ic_launcher.png" />
     <AndroidResource Include="Resources\mipmap-xhdpi\ic_launcher.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\layout\item_message_inbox.axml" />
+    <AndroidResource Include="Resources\layout\item_message_outbox.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
