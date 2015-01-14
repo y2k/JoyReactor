@@ -8,6 +8,7 @@ using JoyReactor.Core.ViewModels;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
+using System.Collections.ObjectModel;
 
 namespace JoyReactor.Android.App
 {
@@ -88,8 +89,9 @@ namespace JoyReactor.Android.App
 
             public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
             {
-                var view = inflater.Inflate(Resource.Layout.fragment_message_threads, null);
-                view.FindViewById<ListView>(Resource.Id.list).Adapter = new ObservableAdapter<PrivateMessage>
+                var view = inflater.Inflate(Resource.Layout.fragment_messages, null);
+                var list = view.FindViewById<ListView>(Resource.Id.list);
+                list.Adapter = new ObservableAdapter<PrivateMessage>
                 {
                     DataSource = viewmodel.Messages,
                     GetTemplateDelegate = (i, s, v) =>
@@ -100,7 +102,45 @@ namespace JoyReactor.Android.App
                         return v;
                     },
                 };
+                var newMessage = view.FindViewById<EditText>(Resource.Id.newMessage);
+                viewmodel.SetBinding(() => viewmodel.NewMessage, newMessage, () => newMessage.Text, BindingMode.TwoWay);
+                view.FindViewById(Resource.Id.createMessage).SetCommand("Click", viewmodel.CreateMessageCommand);
                 return view;
+            }
+
+            class MessageAdapter : BaseAdapter<PrivateMessage>
+            {
+                ObservableCollection<PrivateMessage> DataSource { get; set; }
+
+                public override long GetItemId(int position)
+                {
+                    return position;
+                }
+
+                public override View GetView(int position, View convertView, ViewGroup parent)
+                {
+                    throw new System.NotImplementedException();
+                }
+
+                public override int Count
+                {
+                    get { return DataSource.Count; }
+                }
+
+                public override PrivateMessage this [int index]
+                {
+                    get { throw new System.NotImplementedException(); }
+                }
+
+                public override int GetItemViewType(int position)
+                {
+                    return base.GetItemViewType(position);
+                }
+
+                public override int ViewTypeCount
+                {
+                    get { return 2; }
+                }
             }
         }
 
