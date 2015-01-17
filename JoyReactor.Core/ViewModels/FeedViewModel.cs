@@ -51,9 +51,9 @@ namespace JoyReactor.Core.ViewModels
 
         public FeedViewModel()
         {
-            RefreshCommand = new RelayCommand(OnRefreshInvoked);
-            MoreCommand = new RelayCommand(OnButtonMoreClicked);
-            ApplyCommand = new RelayCommand(OnApplyButtonClicked);
+            RefreshCommand = new RelayCommand(ReloadFeed);
+            MoreCommand = new RelayCommand(LoadNextPage);
+            ApplyCommand = new RelayCommand(ApplyNewPosts);
             ChangeCurrentListIdCommand = new RelayCommand<ID>(LoadFirstPage);
 
             MessengerInstance.Register<SelectTagMessage>(this, s => ChangeCurrentListIdCommand.Execute(s.Id));
@@ -70,7 +70,7 @@ namespace JoyReactor.Core.ViewModels
             IsBusy = false;
         }
 
-        async void OnRefreshInvoked()
+        async void ReloadFeed()
         {
             IsBusy = true;
             if (HasNewItems)
@@ -86,13 +86,13 @@ namespace JoyReactor.Core.ViewModels
             IsBusy = false;
         }
 
-        async void OnApplyButtonClicked()
+        async void ApplyNewPosts()
         {
             await model.ApplyNewItems(id);
             await ReloadDataFromDatabase(true);
         }
 
-        async void OnButtonMoreClicked()
+        async void LoadNextPage()
         {
             IsBusy = true;
             await model.SyncNextPage(id);
@@ -136,7 +136,7 @@ namespace JoyReactor.Core.ViewModels
             if (posts.Count > 0 && data.DividerPosition >= 0)
             {
                 var divider = showDivider
-                    ? new DividerViewModel(OnButtonMoreClicked)
+                    ? new DividerViewModel(LoadNextPage)
                     : new DividerViewModel(() => { });
                 posts.Insert(data.DividerPosition, divider);
             }

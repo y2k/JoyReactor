@@ -7,6 +7,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using JoyReactor.Core.Model.Parser.Data;
 
 namespace JoyReactor.Core.Tests
 {
@@ -20,6 +21,17 @@ namespace JoyReactor.Core.Tests
         {
             ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator(new TestModule()));
             parser = new ReactorParser { Cookies = new Dictionary<string, string>() };
+        }
+
+        [Test]
+        public void TestFavoriteUserY2k()
+        {
+            var posts = new List<ExportPost>();
+            parser.NewPost += (sender, e) => posts.Add(e);
+
+            parser.ExtractTag("_y2k", ID.TagType.Favorite, null);
+
+            Assert.AreEqual(3, posts.Count);
         }
 
         [Test]
@@ -289,9 +301,10 @@ namespace JoyReactor.Core.Tests
         private static void TestCommentTextNotContainsTag(string text)
         {
             var t = text == null ? null : text.ToLower();
-            Assert.IsFalse(t != null && new string[] {
-                "<br>", "<br />", "<p>", "<a ", "</a>"
-            }.Any(a => t.Contains(a)), "Comment = " + text);
+            Assert.IsFalse(t != null && new string[]
+                {
+                    "<br>", "<br />", "<p>", "<a ", "</a>"
+                }.Any(a => t.Contains(a)), "Comment = " + text);
         }
     }
 }

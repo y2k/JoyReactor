@@ -7,8 +7,6 @@ namespace JoyReactor.Core.Model.Parser
 {
 	public abstract class SiteParser
 	{
-		public IDictionary<string, string> Cookies { get; set; }
-
 		public abstract ID.SiteParser ParserId { get; }
 
 		public virtual IDictionary<string, string> Login (string username, string password)

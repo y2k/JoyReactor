@@ -205,6 +205,15 @@
     <None Include="FakeWebResponses\joyreactor_prive_message.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="FakeWebResponses\joyreactor_favorite_mykie78.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FakeWebResponses\joyreactor_favorite_mykie78_2.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FakeWebResponses\joyreactor_user_y2k_favorite.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="FakeWebResponses\joyreactor_page4312.html">

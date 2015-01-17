@@ -1,9 +1,8 @@
-﻿using JoyReactor.Core.Model.DTO;
-using JoyReactor.Core.ViewModels;
-using NUnit.Framework;
-using System.Collections;
+﻿using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
+using JoyReactor.Core.ViewModels;
+using NUnit.Framework;
 
 namespace JoyReactor.Core.Tests.ViewModels
 {
@@ -19,6 +18,12 @@ namespace JoyReactor.Core.Tests.ViewModels
         {
             TestExtensions.SetUp();
             vm = new FeedViewModel();
+        }
+
+        [Test]
+        public async void TestFavorite() {
+            testId = ID.Factory.New(ID.IdConst.ReactorFavorite);
+            await LoadFirstPage();
         }
 
         [Test]

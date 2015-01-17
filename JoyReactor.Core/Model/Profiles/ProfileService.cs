@@ -93,7 +93,6 @@ namespace JoyReactor.Core.Model.Profiles
 
 		internal interface IAuthStorage
 		{
-
 			Task SaveCookieToDatabase (string username, IDictionary<string, string> cookies);
 		}
 	}

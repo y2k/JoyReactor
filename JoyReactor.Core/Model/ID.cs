@@ -11,7 +11,6 @@ namespace JoyReactor.Core
 			ReactorBest,
 			ReactorAll,
 			ReactorFavorite
-
 		}
 
 		const char Divider = '-';
@@ -34,7 +33,6 @@ namespace JoyReactor.Core
 			Chan4,
 			Chan7,
 			Chan2
-
 		}
 
 		public enum TagType
@@ -43,7 +41,6 @@ namespace JoyReactor.Core
 			Good,
 			All,
 			Favorite
-
 		}
 
 		public string SerializeToString ()

@@ -44,6 +44,12 @@ namespace JoyReactor.Core.Tests.Helpers
             ["http://joyreactor.cc/private/list/1"] = "joyreactor_prive_message.html",
             ["http://joyreactor.cc/private/list/2"] = "joyreactor_prive_message_2.html",
             ["http://joyreactor.cc/private/list/3"] = "joyreactor_feed.html",
+
+            ["http://joyreactor.cc/user/mykie78/favorite"] = "joyreactor_favorite_mykie78.html",
+            ["http://joyreactor.cc/user/mykie78/favorite/0"] = "joyreactor_favorite_mykie78.html",
+            ["http://joyreactor.cc/user/mykie78/favorite/1"] = "joyreactor_favorite_mykie78_2.html",
+
+            ["http://joyreactor.cc/user/_y2k/favorite"] = "joyreactor_user_y2k_favorite.html",
         };
 
         IDictionary<string, string> PostCookies = new Dictionary<string, string>()

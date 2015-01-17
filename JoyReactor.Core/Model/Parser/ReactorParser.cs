@@ -5,12 +5,13 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using HtmlAgilityPack;
-using Microsoft.Practices.ServiceLocation;
 using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Parser.Data;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.Model.Web.Parser.Data;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Parser
 {
@@ -71,7 +72,10 @@ namespace JoyReactor.Core.Model.Parser
 
         #endregion
 
+        IAuthStorage authStorage = ServiceLocator.Current.GetInstance<IAuthStorage>();
         IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
+
+        IDictionary<string, string> cookies;
 
         #region Public methods
 
@@ -404,7 +408,8 @@ namespace JoyReactor.Core.Model.Parser
 
         public override void ExtractTag(string tag, ID.TagType type, int? currentPageId)
         {
-            Cookies.Add("showVideoGif2", "1");
+            var cookies = authStorage.GetCookiesAsync().Result;
+            cookies.Add("showVideoGif2", "1");
             var html = DownloadTagPageWithCheckDomain(tag, type, currentPageId);
 
             ExtractTagInformation(html);
@@ -448,7 +453,7 @@ namespace JoyReactor.Core.Model.Parser
         string DownloadTagPage(string tag, ID.TagType type, int? currentPageId)
         {
             var url = GenerateUrl(type, tag, currentPageId);
-            return downloader.GetText(url, new RequestParams { Cookies = Cookies, UseForeignProxy = true });
+            return downloader.GetText(url, new RequestParams { Cookies = cookies, UseForeignProxy = true });
         }
 
         bool IsPageFromSecretSite(string html)
@@ -491,6 +496,9 @@ namespace JoyReactor.Core.Model.Parser
             StringBuilder url = new StringBuilder("http://" + new ReactorDomainDetector().GetDomainForTag(tag));
             if (type == ID.TagType.Favorite)
             {
+                // TODO: перевести на асинхронную модель
+                if (tag == null)
+                    tag = authStorage.GetCurrentUserNameAsync().Result;
                 url.Append("/user/").Append(Uri.EscapeDataString(tag)).Append("/favorite");
             }
             else
@@ -577,5 +585,12 @@ namespace JoyReactor.Core.Model.Parser
         }
 
         #endregion
+
+        public interface IAuthStorage
+        {
+            Task<string> GetCurrentUserNameAsync();
+
+            Task<IDictionary<string, string>> GetCookiesAsync();
+        }
     }
 }

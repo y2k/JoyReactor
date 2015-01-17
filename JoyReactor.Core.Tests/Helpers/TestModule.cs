@@ -9,6 +9,7 @@ using JoyReactor.Core.Tests.Xam.Pluging.Settings;
 using JoyReactor.Core.Model.Messages;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JoyReactor.Core.Model.Parser;
 
 namespace JoyReactor.Core.Tests.Helpers
 {
@@ -22,13 +23,19 @@ namespace JoyReactor.Core.Tests.Helpers
 
             b.RegisterType<StubImageDecoder>().As<ImageDecoder>();
             b.RegisterType<MockAuthStorage>().As<ReactorMessageParser.IAuthStorage>();
+            b.RegisterType<MockAuthStorage>().As<ReactorParser.IAuthStorage>();
         }
 
-        class MockAuthStorage : ReactorMessageParser.IAuthStorage
+        class MockAuthStorage : ReactorMessageParser.IAuthStorage, ReactorParser.IAuthStorage
         {
             public Task<IDictionary<string, string>> GetCookiesAsync()
             {
                 return Task.FromResult<IDictionary<string, string>>(new Dictionary<string, string>());
+            }
+
+            public Task<string> GetCurrentUserNameAsync()
+            {
+                return Task.FromResult("mykie78");
             }
         }
 
