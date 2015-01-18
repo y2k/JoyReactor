@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using JoyReactor.Core.Model.Parser.Data;
+using System;
 
 namespace JoyReactor.Core.Tests
 {
@@ -20,7 +21,27 @@ namespace JoyReactor.Core.Tests
         public void SetUp()
         {
             ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator(new TestModule()));
-            parser = new ReactorParser { Cookies = new Dictionary<string, string>() };
+            parser = new ReactorParser();
+        }
+
+        [Test]
+        public void TestProfileOfUserEksFoxX()
+        {
+            var profile = parser.Profile("eksFox_X");
+
+            Assert.AreEqual("eksFox_X", profile.UserName);
+            Assert.AreEqual(new Uri("http://img0.joyreactor.cc/pics/avatar/user/19639"), profile.UserImage);
+            Assert.AreEqual(671.6f, profile.Rating);
+
+            Assert.AreEqual(4, profile.Stars);
+            Assert.AreEqual(0.4f, profile.NextStarProgress);
+            Assert.AreEqual(13, profile.Awards.Count);
+
+            foreach (var s in profile.Awards)
+            {
+                Assert.IsTrue(s.Name == s.Name.Trim() && s.Name.Length > 5, "Award name = " + s.Name);
+                Assert.IsTrue(Regex.IsMatch(s.Image, @"http://img0.joyreactor.cc/pics/award/\d+"), "Award image = " + s.Image);
+            }
         }
 
         [Test]
@@ -47,7 +68,7 @@ namespace JoyReactor.Core.Tests
             parser.ExtractTag(null, ID.TagType.Good, null);
             Assert.AreEqual(10, postIds.Count);
 
-            parser = new ReactorParser { Cookies = new Dictionary<string, string>() };
+            parser = new ReactorParser();
             parser.NewPost += (sender, e) =>
             {
                 Assert.IsNotNull(e);
@@ -57,7 +78,7 @@ namespace JoyReactor.Core.Tests
             parser.ExtractTag(null, ID.TagType.Good, 4313);
             Assert.AreEqual(20, postIds.Count);
 
-            parser = new ReactorParser { Cookies = new Dictionary<string, string>() };
+            parser = new ReactorParser();
             parser.NewPost += (sender, e) =>
             {
                 Assert.IsNotNull(e);
@@ -298,7 +319,7 @@ namespace JoyReactor.Core.Tests
             Assert.IsTrue(commenCount - notRootCommentCount >= 16, "Root comment count = " + (commenCount - notRootCommentCount));
         }
 
-        private static void TestCommentTextNotContainsTag(string text)
+        static void TestCommentTextNotContainsTag(string text)
         {
             var t = text == null ? null : text.ToLower();
             Assert.IsFalse(t != null && new string[]

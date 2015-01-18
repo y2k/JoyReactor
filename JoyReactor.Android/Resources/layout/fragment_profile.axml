@@ -7,6 +7,11 @@
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <JoyReactor.Android.Widget.WebImageView
+            android:id="@+id/avatar"
+            android:scaleType="centerCrop"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
         <TextView
             android:id="@+id/username"
             android:layout_width="wrap_content"

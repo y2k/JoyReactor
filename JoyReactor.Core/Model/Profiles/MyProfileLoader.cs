@@ -10,62 +10,72 @@ using JoyReactor.Core.Model.Parser;
 
 namespace JoyReactor.Core.Model.Profiles
 {
-	class MyProfileLoader
-	{
-		public string Username { get; set; }
+    class MyProfileLoader
+    {
+        public string UserName { get; set; }
 
-		public float Rating { get; set; }
+        public Uri UserImage { get; set; }
 
-		public bool IsValid { get; set; }
+        public float Rating { get; set; }
 
-		public async Task LoadAsync ()
-		{
-			string name = await GetMyUsername ();
-			if (name == null) {
-				IsValid = false;
-			} else {
-				var profile = await GetParser ().ProfileAsync (name);
-				await UpdateMyTagsFromWeb (profile.ReadingTags);
+        public bool IsValid { get; set; }
 
-				Username = profile.Username;
-				Rating = profile.Rating;
-				IsValid = true;
-			}
-		}
+        public async Task LoadAsync()
+        {
+            string name = await GetMyUsername();
+            if (name == null)
+            {
+                IsValid = false;
+            }
+            else
+            {
+                var profile = await GetParser().ProfileAsync(name);
+                await UpdateMyTagsFromWeb(profile.ReadingTags);
 
-		Task<string> GetMyUsername ()
-		{
-			return GetDB ().ExecuteScalarAsync<string> (
-				"SELECT Username FROM profiles WHERE Site = ?", "" + ID.SiteParser.JoyReactor);
-		}
+                UserName = profile.UserName;
+                UserImage = profile.UserImage;
+                Rating = profile.Rating;
+                IsValid = true;
+            }
+        }
 
-		SQLiteConnection GetDB ()
-		{
-			return ServiceLocator.Current.GetInstance<SQLiteConnection> ();
-		}
+        Task<string> GetMyUsername()
+        {
+            return GetDB().ExecuteScalarAsync<string>(
+                "SELECT Username FROM profiles WHERE Site = ?", "" + ID.SiteParser.JoyReactor);
+        }
 
-		SiteParser GetParser ()
-		{
-			return ServiceLocator.Current
-				.GetInstance<SiteParser[]> ()
-				.First (s => s.ParserId == ID.SiteParser.JoyReactor);
-		}
+        SQLiteConnection GetDB()
+        {
+            return ServiceLocator.Current.GetInstance<SQLiteConnection>();
+        }
 
-		Task UpdateMyTagsFromWeb (List<ProfileExport.TagExport> tags)
-		{
-			return GetDB ().RunInTransactionAsync (() => {
-				foreach (var t in tags) {
-					var id = ID.Factory.NewTag (t.Tag).SerializeToString ();
-					int c = GetDB ().ExecuteScalar<int> ("SELECT COUNT(*) FROM tags WHERE TagId = ?", id);
-					if (c == 0) {
-						GetDB ().Insert (new Tag {
-							Flags = Tag.FlagWebRead | Tag.FlagShowInMain,
-							TagId = id,
-							Title = t.Title,
-						});
-					}
-				}
-			});
-		}
-	}
+        SiteParser GetParser()
+        {
+            return ServiceLocator.Current
+				.GetInstance<SiteParser[]>()
+				.First(s => s.ParserId == ID.SiteParser.JoyReactor);
+        }
+
+        Task UpdateMyTagsFromWeb(List<ProfileExport.TagExport> tags)
+        {
+            return GetDB().RunInTransactionAsync(() =>
+                {
+                    foreach (var t in tags)
+                    {
+                        var id = ID.Factory.NewTag(t.Tag).SerializeToString();
+                        int c = GetDB().ExecuteScalar<int>("SELECT COUNT(*) FROM tags WHERE TagId = ?", id);
+                        if (c == 0)
+                        {
+                            GetDB().Insert(new Tag
+                                {
+                                    Flags = Tag.FlagWebRead | Tag.FlagShowInMain,
+                                    TagId = id,
+                                    Title = t.Title,
+                                });
+                        }
+                    }
+                });
+        }
+    }
 }

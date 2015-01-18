@@ -214,6 +214,9 @@
     <None Include="FakeWebResponses\joyreactor_user_y2k_favorite.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="FakeWebResponses\joyreactor_user_eksFox_X.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="FakeWebResponses\joyreactor_page4312.html">

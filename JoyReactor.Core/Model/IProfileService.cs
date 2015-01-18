@@ -14,10 +14,14 @@ namespace JoyReactor.Core.Model
 
     public class MyProfile
     {
-        public string Username { get; set; }
+        public string UserName { get; set; }
+
+        public string UserImage { get; set; }
 
         public float Rating { get; set; }
     }
 
-    public class NotLogedException : Exception { }
+    public class NotLogedException : Exception
+    {
+    }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 
-namespace JoyReactor.Core.Model.Web.Parser
+namespace JoyReactor.Core.Model.Parser
 {
 	static class NodeHelper
 	{
@@ -20,26 +20,26 @@ namespace JoyReactor.Core.Model.Web.Parser
 				return root.Descendants ()
 				.Where (s => s.Name == m.Groups [1].Value);
 
-			m = Regex.Match (xpath, "^(\\w+)\\.(\\w+) (\\w+)\\.(\\w+)$");
+			m = Regex.Match (xpath, @"^(\w+)\.(\w+) (\w+)\.(\w+)$");
 			if (m.Success)
 				return root.Descendants ()
 					.Where (s => s.Name == m.Groups [1].Value && s.ContainsClass (m.Groups [2].Value))
 	                .SelectMany (s => s.Descendants ())
 					.Where (s => s.Name == m.Groups [3].Value && s.ContainsClass (m.Groups [4].Value));
 
-			m = Regex.Match (xpath, "^(\\w+)\\.(\\w+) > (\\w+)$");
+            m = Regex.Match (xpath, @"^([\w-]+)\.([\w-]+) > ([\w-]+)$");
 			if (m.Success)
 				return root.Descendants ()
                 .Where (s => s.Name == m.Groups [1].Value && s.Attributes.Any (a => a.Name == "class" && a.Value.Contains (m.Groups [2].Value)))
                 .SelectMany (s => s.ChildNodes)
                 .Where (s => s.Name == m.Groups [3].Value);
 
-			m = Regex.Match (xpath, "^(\\w+)\\[(\\w+)=(\\w+)\\]$");
+			m = Regex.Match (xpath, @"^(\w+)\[(\w+)=(\w+)\]$");
 			if (m.Success)
 				return root.Descendants ()
                 .Where (s => s.Name == m.Groups [1].Value && s.Attributes.Any (a => a.Name == m.Groups [2].Value && a.Value == m.Groups [3].Value));
 
-			m = Regex.Match (xpath, "^(\\w+)\\.(\\w+)\\.(\\w+)$");
+			m = Regex.Match (xpath, @"^(\w+)\.(\w+)\.(\w+)$");
 			if (m.Success)
 				return root.Descendants ()
 					.Where (s => s.Name == m.Groups [1].Value)

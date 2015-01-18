@@ -116,14 +116,27 @@ namespace JoyReactor.Core.Model.Parser
             var doc = downloader.Get(url);
 
             var p = new ProfileExport();
-            p.Username = username;
+            p.UserName = username;
 
             var sidebar = doc.GetElementbyId("sidebar");
             var div = sidebar.Descendants("div")
                 .Where(s => s.GetClass() == "user")
                 .SelectMany(s => s.ChildNodes)
                 .First(s => s.Name == "img");
-            p.Image = new Uri(div.Attributes["src"].Value);
+            p.UserImage = new Uri(div.Attributes["src"].Value);
+
+            p.Stars = sidebar.Select("div.star-0").Count();
+            p.NextStarProgress = sidebar
+                .Select("div.poll_res_bg_active")
+                .Select(s => s.Attr("style"))
+                .Select(s => Regex.Match(s, ":(\\d+)").Groups[1].Value)
+                .Select(s => float.Parse(s) / 100f)
+                .First();
+
+            p.Awards = sidebar
+                .Select("div.user-awards > img")
+                .Select(s => new ProfileExport.Award { Image = s.Attr("src"), Name = s.Attr("alt") })
+                .ToList();
 
             div = doc.GetElementbyId("rating-text").ChildNodes.First(s => s.Name == "b");
             var n = sProfileRating.Match(div.InnerText.Replace(" ", "")).Groups[1].Value;

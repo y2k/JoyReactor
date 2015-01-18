@@ -50,9 +50,11 @@ namespace JoyReactor.Core.Tests.Helpers
             ["http://joyreactor.cc/user/mykie78/favorite/1"] = "joyreactor_favorite_mykie78_2.html",
 
             ["http://joyreactor.cc/user/_y2k/favorite"] = "joyreactor_user_y2k_favorite.html",
+
+            ["http://joyreactor.cc/user/eksFox_X"] = "joyreactor_user_eksFox_X.html",
         };
 
-        IDictionary<string, string> PostCookies = new Dictionary<string, string>()
+        IDictionary<string, string> CookieResultsForPosts = new Dictionary<string, string>()
         {
             ["http://joyreactor.cc/login"] = "joyreactor=ver3b7f680bd57a4df5fcf550da37f93cd88:c80305a37b42b62ca85a1c8bf77a23cfaa941856;remember=5f513a0567f134f877210952f511702f",
         };
@@ -74,33 +76,8 @@ namespace JoyReactor.Core.Tests.Helpers
 
         private IDictionary<string, string> GetCookies(Uri uri)
         {
-            var res = PostCookies["" + uri];
+            var res = CookieResultsForPosts["" + uri];
             return res.Split(';').Select(s => s.Split('=')).ToDictionary(s => s[0], s => s[1]);
-        }
-
-        public Stream GetResource(Uri uri, RequestParams reqParams = null)
-        {
-            return File.OpenRead(GetPathToFile(uri));
-        }
-
-        public string GetText(Uri uri, RequestParams reqParams = null)
-        {
-            return File.ReadAllText(GetPathToFile(uri));
-        }
-
-        public DocumentReponse GetDocument(Uri uri, RequestParams reqParams = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IDictionary<string, string> PostForHeaders(Uri uri, RequestParams reqParams = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IDictionary<string, string> PostForCookies(Uri uri, RequestParams reqParams = null)
-        {
-            throw new NotImplementedException();
         }
 
         #endregion

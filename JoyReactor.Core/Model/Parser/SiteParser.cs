@@ -5,159 +5,177 @@ using JoyReactor.Core.Model.Parser.Data;
 
 namespace JoyReactor.Core.Model.Parser
 {
-	public abstract class SiteParser
-	{
-		public abstract ID.SiteParser ParserId { get; }
+    public abstract class SiteParser
+    {
+        public abstract ID.SiteParser ParserId { get; }
 
-		public virtual IDictionary<string, string> Login (string username, string password)
-		{
-			throw new NotImplementedException ();
-		}
+        public virtual IDictionary<string, string> Login(string username, string password)
+        {
+            throw new NotImplementedException();
+        }
 
-		public virtual ProfileExport Profile (string username)
-		{
-			throw new NotImplementedException ();
-		}
+        public virtual ProfileExport Profile(string username)
+        {
+            throw new NotImplementedException();
+        }
 
-		// ==============================================================================
+        // ==============================================================================
 
-		public virtual void ExtractPost (string postId)
-		{
-			throw new NotImplementedException ();
-		}
+        public virtual void ExtractPost(string postId)
+        {
+            throw new NotImplementedException();
+        }
 
-		public virtual void ExtractTag (string tag, ID.TagType type, int? currentPageId)
-		{
-			throw new NotImplementedException ();
-		}
+        public virtual void ExtractTag(string tag, ID.TagType type, int? currentPageId)
+        {
+            throw new NotImplementedException();
+        }
 
-		#region Events
+        #region Events
 
-		public event EventHandler<ExportPostInformation> NewPostInformation;
-		public event EventHandler<ExportPostComment> NewComment;
-		public event EventHandler<ExportPost> NewPost;
-		public event EventHandler<ExportTagInformation> NewTagInformation;
-		public event EventHandler<ExportLinkedTag> NewLinkedTag;
+        public event EventHandler<ExportPostInformation> NewPostInformation;
+        public event EventHandler<ExportPostComment> NewComment;
+        public event EventHandler<ExportPost> NewPost;
+        public event EventHandler<ExportTagInformation> NewTagInformation;
+        public event EventHandler<ExportLinkedTag> NewLinkedTag;
 
-		protected void OnNewComment (ExportPostComment comment)
-		{
-			var handler = NewComment;
-			if (handler != null)
-				handler (this, comment);
-		}
+        protected void OnNewComment(ExportPostComment comment)
+        {
+            var handler = NewComment;
+            if (handler != null)
+                handler(this, comment);
+        }
 
-		protected void OnNewPostInformation (ExportPostInformation postInfo)
-		{
-			var handler = NewPostInformation;
-			if (handler != null)
-				handler (this, postInfo);
-		}
+        protected void OnNewPostInformation(ExportPostInformation postInfo)
+        {
+            var handler = NewPostInformation;
+            if (handler != null)
+                handler(this, postInfo);
+        }
 
-		protected void OnNewPost (ExportPost post)
-		{
-			var handler = NewPost;
-			if (handler != null)
-				handler (this, post);
-		}
+        protected void OnNewPost(ExportPost post)
+        {
+            var handler = NewPost;
+            if (handler != null)
+                handler(this, post);
+        }
 
-		protected void OnNewTagInformation (ExportTagInformation information)
-		{
-			var handler = NewTagInformation;
-			if (handler != null)
-				handler (this, information);
-		}
+        protected void OnNewTagInformation(ExportTagInformation information)
+        {
+            var handler = NewTagInformation;
+            if (handler != null)
+                handler(this, information);
+        }
 
-		protected void OnNewLinkedTag (ExportLinkedTag tag)
-		{
-			var handler = NewLinkedTag;
-			if (handler != null)
-				handler (this, tag);
-		}
+        protected void OnNewLinkedTag(ExportLinkedTag tag)
+        {
+            var handler = NewLinkedTag;
+            if (handler != null)
+                handler(this, tag);
+        }
 
-		#endregion
+        #endregion
 
-		// ==============================================================================
-	}
+        // ==============================================================================
+    }
 
-	public class ProfileExport
-	{
-		public string Username { get; set; }
+    public class ProfileExport
+    {
+        public string UserName { get; set; }
 
-		public Uri Image { get; set; }
+        public Uri UserImage { get; set; }
 
-		public float Rating { get; set; }
+        public float Rating { get; set; }
 
-		public List<TagExport> ReadingTags { get; set; } = new List<TagExport>();
+        public List<TagExport> ReadingTags { get; set; } = new List<TagExport>();
 
-		public class TagExport
-		{
-			public string Tag { get; set; }
+        public int Stars { get; set; }
 
-			public string Title { get; set; }
-		}
-	}
+        public float NextStarProgress { get; set; }
 
-	public class CollectionExportState
-	{
-		public enum ExportState
-		{
-			Begin,
-			TagInfo,
-			PostItem,
-			LikendTag}
+        public List<Award> Awards { get; set; } = new List<Award>();
 
-		;
+        public class TagExport
+        {
+            public string Tag { get; set; }
 
-		public ExportState State { get; set; }
+            public string Title { get; set; }
 
-		public ExportTagInformation TagInfo { get; set; }
+            public override string ToString()
+            {
+                return string.Format("[TagExport: Tag={0}, Title={1}]", Tag, Title);
+            }
+        }
 
-		public ExportPost Post { get; set; }
+        public class Award
+        {
+            public string Name { get; set; }
 
-		public ExportLinkedTag LinkedTag { get; set; }
-	}
+            public string Image { get; set; }
+        }
+    }
 
-	public class PostExportState
-	{
-		public enum ExportState
-		{
-			Begin,
-			Info,
-			Comment,
-			Tag,
-			LinkedTag,
-			LinkedPost
-		}
+    public class CollectionExportState
+    {
+        public enum ExportState
+        {
+            Begin,
+            TagInfo,
+            PostItem,
+            LikendTag}
 
-		public ExportState State { get; set; }
+        ;
 
-		[Obsolete]
-		public string Image { get; set; }
+        public ExportState State { get; set; }
 
-		[Obsolete]
-		public int ImageWidth { get; set; }
+        public ExportTagInformation TagInfo { get; set; }
 
-		[Obsolete]
-		public int ImageHeight { get; set; }
+        public ExportPost Post { get; set; }
 
-		public ExportPostAttachment[] Attachments { get; set; }
+        public ExportLinkedTag LinkedTag { get; set; }
+    }
 
-		public string UserName { get; set; }
+    public class PostExportState
+    {
+        public enum ExportState
+        {
+            Begin,
+            Info,
+            Comment,
+            Tag,
+            LinkedTag,
+            LinkedPost
+        }
 
-		public string UserImage { get; set; }
+        public ExportState State { get; set; }
 
-		public string Title { get; set; }
+        [Obsolete]
+        public string Image { get; set; }
 
-		public string Content { get; set; }
+        [Obsolete]
+        public int ImageWidth { get; set; }
 
-		public long Created { get; set; }
+        [Obsolete]
+        public int ImageHeight { get; set; }
 
-		public float Rating { get; set; }
+        public ExportPostAttachment[] Attachments { get; set; }
 
-		public string Coub { get; set; }
+        public string UserName { get; set; }
 
-		public ExportComment Comment { get; set; }
+        public string UserImage { get; set; }
 
-		public ExportPreviewPost LinkedPost { get; set; }
-	}
+        public string Title { get; set; }
+
+        public string Content { get; set; }
+
+        public long Created { get; set; }
+
+        public float Rating { get; set; }
+
+        public string Coub { get; set; }
+
+        public ExportComment Comment { get; set; }
+
+        public ExportPreviewPost LinkedPost { get; set; }
+    }
 }

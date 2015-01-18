@@ -26,7 +26,7 @@ namespace JoyReactor.Core.ViewModels
 
 		string _username;
 
-		public string Username {
+		public string UserName {
 			get { return _username; }
 			set { Set (ref _username, value); }
 		}
@@ -54,7 +54,8 @@ namespace JoyReactor.Core.ViewModels
 			IsLoading = true;
 			try {
 				var profile = await service.GetMyProfile ();
-				Username = profile.Username;
+				UserName = profile.UserName;
+                Avatar = profile.UserImage;
 				Rating = profile.Rating;
 			} catch (NotLogedException) {
 				NavigateToLogin ();
