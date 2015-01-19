@@ -25,9 +25,9 @@ namespace JoyReactor.Core.Tests
         }
 
         [Test]
-        public void TestProfileOfUserEksFoxX()
+        public async void TestProfileOfUserEksFoxX()
         {
-            var profile = parser.Profile("eksFox_X");
+            var profile = await parser.ProfileAsync("eksFox_X");
 
             Assert.AreEqual("eksFox_X", profile.UserName);
             Assert.AreEqual(new Uri("http://img0.joyreactor.cc/pics/avatar/user/19639"), profile.UserImage);

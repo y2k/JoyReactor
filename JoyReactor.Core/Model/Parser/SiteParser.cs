@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using JoyReactor.Core.Model.Web.Parser.Data;
 using JoyReactor.Core.Model.Parser.Data;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Parser
 {
@@ -9,12 +10,12 @@ namespace JoyReactor.Core.Model.Parser
     {
         public abstract ID.SiteParser ParserId { get; }
 
-        public virtual IDictionary<string, string> Login(string username, string password)
+        public virtual Task<IDictionary<string, string>> LoginAsync(string username, string password)
         {
             throw new NotImplementedException();
         }
 
-        public virtual ProfileExport Profile(string username)
+        public virtual Task<ProfileExport> ProfileAsync(string username)
         {
             throw new NotImplementedException();
         }

@@ -48,6 +48,15 @@ namespace JoyReactor.Core.Model.Web
 			}
 		}
 
+        public static async Task<IDictionary<string, string>> PostForCookiesAsync (this IWebDownloader instance, Uri uri, RequestParams reqParams = null)
+        {
+            if (reqParams == null || reqParams.Form == null)
+                throw new Exception ();
+            using (var response = await instance.ExecuteAsync (uri, reqParams)) {
+                return response.Cookies;
+            }
+        }
+
 		[Obsolete]
 		public static string GetText (this IWebDownloader instance, Uri uri, RequestParams reqParams = null)
 		{

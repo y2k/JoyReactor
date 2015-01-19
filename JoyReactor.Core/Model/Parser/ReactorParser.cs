@@ -12,6 +12,7 @@ using JoyReactor.Core.Model.Parser.Data;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.Model.Web.Parser.Data;
 using Microsoft.Practices.ServiceLocation;
+using System.IO;
 
 namespace JoyReactor.Core.Model.Parser
 {
@@ -84,25 +85,25 @@ namespace JoyReactor.Core.Model.Parser
             get { return ID.SiteParser.JoyReactor; }
         }
 
-        public override IDictionary<string, string> Login(string username, string password)
+        public override async Task<IDictionary<string, string>> LoginAsync(string username, string password)
         {
-            var doc = downloader.GetDocument(new Uri("http://joyreactor.cc/login"));
-            var csrf = doc.Document.GetElementbyId("signin__csrf_token").Attributes["value"].Value;
+            var loginPage = await downloader.ExecuteAsync(new Uri("http://joyreactor.cc/login"));
+            var csrf = ExtractCsrf(loginPage.Data);
 
-            var hs = downloader.PostForCookies(
-                         new Uri("http://joyreactor.cc/login"),
-                         new RequestParams
-                         {
-                             Cookies = doc.Cookies,
-                             Referer = new Uri("http://joyreactor.cc/login"),
-                             Form = new Dictionary<string, string>
-                             {
-                                 ["signin[username]"] = username,
-                                 ["signin[password]"] = password,
-                                 ["signin[remember]"] = "on",
-                                 ["signin[_csrf_token]"] = csrf,
-                             }
-                         });
+            var hs = await downloader.PostForCookiesAsync(
+                        new Uri("http://joyreactor.cc/login"),
+                        new RequestParams
+                        {
+                            Cookies = loginPage.Cookies,
+                            Referer = new Uri("http://joyreactor.cc/login"),
+                            Form = new Dictionary<string, string>
+                            {
+                                ["signin[username]"] = username,
+                                ["signin[password]"] = password,
+                                ["signin[remember]"] = "on",
+                                ["signin[_csrf_token]"] = csrf,
+                            }
+                        });
 
             if (!hs.ContainsKey("joyreactor"))
                 throw new Exception();
@@ -110,10 +111,20 @@ namespace JoyReactor.Core.Model.Parser
             return hs;
         }
 
-        public override ProfileExport Profile(string username)
+        string ExtractCsrf(Stream data)
+        {
+            using (data)
+            {
+                var doc = new HtmlDocument();
+                doc.Load(data);
+                return doc.GetElementbyId("signin__csrf_token").Attributes["value"].Value;
+            }
+        }
+
+        public override async Task<ProfileExport> ProfileAsync(string username)
         {
             var url = new Uri("http://joyreactor.cc/user/" + Uri.EscapeDataString(username));
-            var doc = downloader.Get(url);
+            var doc = await downloader.GetDocumentAsync(url);
 
             var p = new ProfileExport();
             p.UserName = username;
