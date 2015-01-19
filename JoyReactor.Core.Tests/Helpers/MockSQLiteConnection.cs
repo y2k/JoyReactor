@@ -12,7 +12,7 @@ namespace JoyReactor.Core.Tests.Helpers
         public static SQLiteConnection Create()
         {
             var db = new SQLiteConnection(GetPlatfrom(), ":memory:");
-            MainDb.InitializeDatabase(db);
+            SQLiteConnectionFactory.InitializeDatabase(db);
             return db;
         }
 

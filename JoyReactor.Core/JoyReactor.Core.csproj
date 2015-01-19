@@ -34,12 +34,13 @@
   <ItemGroup>
     <Compile Include="Model\Constants.cs" />
     <Compile Include="Model\Database\CreateDefaultTagsTransaction.cs" />
+    <Compile Include="Model\Database\CreateTablesTransaction.cs" />
     <Compile Include="Model\DTO\Comment.cs" />
     <Compile Include="Model\DTO\Attachment.cs" />
     <Compile Include="Model\DTO\CommentWithChildCount.cs" />
     <Compile Include="Model\Helper\ObservableFactory.cs" />
     <Compile Include="Model\ImageLoader.cs" />
-    <Compile Include="Model\Inject\DefaultServiceLocator.cs" />
+    <Compile Include="Model\DefaultServiceLocator.cs" />
     <Compile Include="Model\PostModel.cs" />
     <Compile Include="Model\IProfileService.cs" />
     <Compile Include="Model\Profiles\ProfileService.cs" />
@@ -50,7 +51,7 @@
     <Compile Include="Model\Helper\RegexExtensions.cs" />
     <Compile Include="Model\PostCollectionModel.cs" />
     <Compile Include="Model\DTO\Post.cs" />
-    <Compile Include="Model\Database\MainDb.cs" />
+    <Compile Include="Model\Database\SQLiteConnectionFactory.cs" />
     <Compile Include="Model\ID.cs" />
     <Compile Include="Model\DTO\TagPost.cs" />
     <Compile Include="Model\DTO\Tag.cs" />
@@ -180,7 +181,5 @@
     <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
     <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
   </Target>
-  <ItemGroup>
-    <Folder Include="Model\Messages\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

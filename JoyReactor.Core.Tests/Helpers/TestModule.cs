@@ -1,15 +1,15 @@
-﻿using System.Drawing;
-using System.IO;
-using Autofac;
+﻿using Autofac;
+using JoyReactor.Core.Model.Messages;
+using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model.Web;
+using JoyReactor.Core.Tests.Xam.Pluging.Settings;
 using Refractored.Xam.Settings.Abstractions;
 using SQLite.Net;
-using XamarinCommons.Image;
-using JoyReactor.Core.Tests.Xam.Pluging.Settings;
-using JoyReactor.Core.Model.Messages;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Threading.Tasks;
-using JoyReactor.Core.Model.Parser;
+using XamarinCommons.Image;
 
 namespace JoyReactor.Core.Tests.Helpers
 {

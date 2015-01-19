@@ -1,4 +1,4 @@
-﻿using JoyReactor.Core.Model.Inject;
+﻿using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Tests.Helpers;
 using Microsoft.Practices.ServiceLocation;

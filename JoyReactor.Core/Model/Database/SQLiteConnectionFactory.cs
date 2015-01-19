@@ -1,38 +1,39 @@
-﻿using System;
-using Microsoft.Practices.ServiceLocation;
+﻿using Microsoft.Practices.ServiceLocation;
 using PCLStorage;
 using SQLite.Net;
 using SQLite.Net.Interop;
-using JoyReactor.Core.Model.DTO;
+using System;
 
 namespace JoyReactor.Core.Model.Database
 {
-	public class MainDb
+    public class SQLiteConnectionFactory
 	{
 		const string DatabaseName = "net.itwister.joyreactor.main.db";
 		const int DatabaseVersion = 1;
 
-		static volatile SQLiteConnection instance;
+		static volatile SQLiteConnection Instance;
 		static object syncRoot = new object ();
 
-		public static SQLiteConnection Instance {
-			get {
-				if (instance == null) {
-					lock (syncRoot) {
-						if (instance == null) {
-							var path = PortablePath.Combine (FileSystem.Current.LocalStorage.Path, DatabaseName);
-							var platform = ServiceLocator.Current.GetInstance<ISQLitePlatform> ();
-							instance = new SQLiteConnection (platform, path);
-							InitializeDatabase (instance);
-						}
-					}
-				}
+        public static SQLiteConnection Create()
+        {
+            if (Instance == null)
+            {
+                lock (syncRoot)
+                {
+                    if (Instance == null)
+                    {
+                        var path = PortablePath.Combine(FileSystem.Current.LocalStorage.Path, DatabaseName);
+                        var platform = ServiceLocator.Current.GetInstance<ISQLitePlatform>();
+                        var localInstance = new SQLiteConnection(platform, path);
+                        InitializeDatabase(localInstance);
+                        Instance = localInstance;
+                    }
+                }
+            }
+            return Instance;
+        }
 
-				return instance;
-			}
-		}
-
-		[Obsolete]
+        [Obsolete]
 		public static string ToFlatId (ID id)
 		{
 			return id.SerializeToString ();
@@ -55,20 +56,8 @@ namespace JoyReactor.Core.Model.Database
 
 		static void OnCreate (SQLiteConnection db)
 		{
-			db.CreateTable<Post> ();
-			db.CreateTable<Profile> ();
-			db.CreateTable<Tag> ();
-			db.CreateTable<TagPost> ();
-			db.CreateTable<Profile> ();
-			db.CreateTable<TagLinkedTag> ();
-			db.CreateTable<Comment> ();
-			db.CreateTable<Attachment> ();
-			db.CreateTable<CommentLink> ();
-
-			db.CreateTable<PrivateMessageThread> ();
-			db.CreateTable<PrivateMessage> ();
-
-			new CreateDefaultTagsTransaction (db).Execute ();
+            new CreateTablesTransaction(db).Execute();
+            new CreateDefaultTagsTransaction (db).Execute ();
 		}
 
 		protected static void OnUpdate (int oldVersion, int newVersion)

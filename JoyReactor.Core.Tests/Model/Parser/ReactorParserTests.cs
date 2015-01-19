@@ -1,14 +1,14 @@
-﻿using JoyReactor.Core.Model.Helper;
-using JoyReactor.Core.Model.Inject;
+﻿using JoyReactor.Core.Model;
+using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Parser;
+using JoyReactor.Core.Model.Parser.Data;
 using JoyReactor.Core.Tests.Helpers;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using JoyReactor.Core.Model.Parser.Data;
-using System;
 
 namespace JoyReactor.Core.Tests
 {

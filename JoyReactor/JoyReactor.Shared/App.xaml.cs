@@ -1,4 +1,5 @@
-﻿using JoyReactor.Core.Model.Inject;
+﻿using JoyReactor.Core;
+using JoyReactor.Core.Model;
 using JoyReactor.Core.ViewModels;
 using JoyReactor.Models;
 using JoyReactor.Views;
@@ -20,7 +21,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using JoyReactor.Core;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 

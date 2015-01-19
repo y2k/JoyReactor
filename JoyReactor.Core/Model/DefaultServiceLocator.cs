@@ -12,7 +12,7 @@ using JoyReactor.Core.Model.Profiles;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.Model.Web.Parser;
 
-namespace JoyReactor.Core.Model.Inject
+namespace JoyReactor.Core.Model
 {
     public class DefaultServiceLocator : ServiceLocatorImplBase
     {
@@ -53,7 +53,7 @@ namespace JoyReactor.Core.Model.Inject
             {
                 b.RegisterType<Log.DumpLogger>().As<Log.ILogger>();
                 b.RegisterType<WebDownloader>().As<IWebDownloader>();
-                b.Register(_ => MainDb.Instance).As<SQLiteConnection>();
+                b.Register(_ => SQLiteConnectionFactory.Instance).As<SQLiteConnection>();
 
                 b.RegisterType<ReactorParser>().As<SiteParser>();
                 b.RegisterType<Chan2Parser>().As<SiteParser>();
