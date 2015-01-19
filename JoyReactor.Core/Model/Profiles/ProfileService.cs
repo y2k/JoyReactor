@@ -1,12 +1,9 @@
-﻿using JoyReactor.Core.Model.Database;
-using JoyReactor.Core.Model.DTO;
-using JoyReactor.Core.Model.Parser;
-using Microsoft.Practices.ServiceLocation;
-using SQLite.Net;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JoyReactor.Core.Model.Parser;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Profiles
 {
@@ -42,23 +39,6 @@ namespace JoyReactor.Core.Model.Profiles
                 .First(s => s.ParserId == ID.SiteParser.JoyReactor);
         }
 
-        //		Task SaveCookieToDatabase (string username, IDictionary<string, string> c)
-        //		{
-        //			return GetDB ().RunInTransactionAsync (() => {
-        //				ClearDatabaseFromOldData ();
-        //				GetDB ().SafeInsert (new Profile {
-        //					Cookie = SerializeObject (c),
-        //					Site = "" + ID.SiteParser.JoyReactor,
-        //					Username = username
-        //				});
-        //			});
-        //		}
-        //
-        //		static string SerializeObject (IDictionary<string, string> o)
-        //		{
-        //			return o.Aggregate ("", (a, s) => a + (a.Length > 0 ? ";" : "") + s.Key + "=" + s.Value);
-        //		}
-
         async Task SyncListOfMyTagsWithWeb()
         {
             await new MyProfileLoader().LoadAsync();
@@ -69,13 +49,8 @@ namespace JoyReactor.Core.Model.Profiles
 
         public async Task Logout()
         {
-            await GetDB().RunInTransactionAsync(ClearDatabaseFromOldData);
+            await storage.ClearDatabase();
             await InvaliteTagList();
-        }
-
-        SQLiteConnection GetDB()
-        {
-            return ServiceLocator.Current.GetInstance<SQLiteConnection>();
         }
 
         Task InvaliteTagList()
@@ -83,17 +58,11 @@ namespace JoyReactor.Core.Model.Profiles
             return Task.Run(() => TagCollectionModel.OnInvalidateEvent());
         }
 
-        void ClearDatabaseFromOldData()
-        {
-            GetDB().SafeExecute("DELETE FROM posts");
-            GetDB().SafeExecute("DELETE FROM tag_post");
-            GetDB().SafeExecute("DELETE FROM tags WHERE Flags & ? != 0", Tag.FlagWebRead);
-            GetDB().SafeExecute("DELETE FROM profiles");
-        }
-
         internal interface IAuthStorage
         {
             Task SaveCookieToDatabase(string username, IDictionary<string, string> cookies);
+
+            Task ClearDatabase();
         }
     }
 }

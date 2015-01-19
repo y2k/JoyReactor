@@ -15,6 +15,17 @@ namespace JoyReactor.Core.Model
     {
         SQLiteConnection db = ServiceLocator.Current.GetInstance<SQLiteConnection>();
 
+        public Task ClearDatabase()
+        {
+            return db.RunInTransactionAsync(() =>
+                {
+                    db.SafeExecute("DELETE FROM posts");
+                    db.SafeExecute("DELETE FROM tag_post");
+                    db.SafeExecute("DELETE FROM tags WHERE Flags & ? != 0", Tag.FlagWebRead);
+                    db.SafeExecute("DELETE FROM profiles");
+                });
+        }
+
         public Task SaveCookieToDatabase(string username, IDictionary<string, string> cookies)
         {
             return db.InsertAsync(CreateProfile(username, cookies));
@@ -38,8 +49,8 @@ namespace JoyReactor.Core.Model
         public async Task<IDictionary<string, string>> GetCookiesAsync()
         {
             var cookies = await db.ExecuteScalarAsync<string>(
-                     "SELECT Cookie FROM profiles WHERE Site = ?", 
-                     "" + ID.SiteParser.JoyReactor);
+                              "SELECT Cookie FROM profiles WHERE Site = ?", 
+                              "" + ID.SiteParser.JoyReactor);
             if (cookies == null)
                 return new Dictionary<string, string>();
             return DeserializeCookies(cookies);
