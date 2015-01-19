@@ -10,7 +10,7 @@ namespace JoyReactor.Core.Model.Messages
     {
         IMessageStorage storage = new MessageStorage();
 
-        private static event EventHandler MessagesChanged;
+        public static event EventHandler MessagesChanged;
 
         public IObservable<List<MessageThreadItem>> GetMessageThreads()
         {

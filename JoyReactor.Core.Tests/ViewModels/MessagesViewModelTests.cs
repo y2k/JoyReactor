@@ -27,6 +27,7 @@ namespace JoyReactor.Core.Tests.ViewModels
         }
 
         [Test]
+        [Timeout(1000)]
         public async void TestUserY2k()
         {
             await AssertUser("_y2k");
@@ -48,6 +49,7 @@ namespace JoyReactor.Core.Tests.ViewModels
         }
 
         [Test]
+        [Timeout(1000)]
         public async void TestNotExistsUser()
         {
             await AssertUser("not-exists-user");

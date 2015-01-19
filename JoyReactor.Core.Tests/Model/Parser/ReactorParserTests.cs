@@ -129,7 +129,7 @@ namespace JoyReactor.Core.Tests
                 wasInfo = true;
 
                 Assert.AreEqual("mr.viridis", s.User.Name);
-                Assert.AreEqual("http://img0.joyreactor.cc/pics/post/-770859.jpeg", s.Attachments[0].Image);
+                Assert.AreEqual("http://img0.joyreactor.com/pics/post/-770859.jpeg", s.Attachments[0].Image);
                 Assert.AreEqual(551, s.Attachments[0].Width);
                 Assert.AreEqual(817, s.Attachments[0].Height);
                 Assert.AreEqual("http://img0.joyreactor.cc/images/default_avatar.jpeg", s.User.Avatar);

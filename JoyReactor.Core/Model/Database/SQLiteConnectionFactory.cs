@@ -33,12 +33,6 @@ namespace JoyReactor.Core.Model.Database
             return Instance;
         }
 
-        [Obsolete]
-		public static string ToFlatId (ID id)
-		{
-			return id.SerializeToString ();
-		}
-
 		public static void InitializeDatabase (SQLiteConnection db)
 		{
 			int ver = GetUserVesion (db);

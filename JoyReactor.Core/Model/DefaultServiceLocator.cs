@@ -53,7 +53,7 @@ namespace JoyReactor.Core.Model
             {
                 b.RegisterType<Log.DumpLogger>().As<Log.ILogger>();
                 b.RegisterType<WebDownloader>().As<IWebDownloader>();
-                b.Register(_ => SQLiteConnectionFactory.Instance).As<SQLiteConnection>();
+                b.Register(_ => SQLiteConnectionFactory.Create()).As<SQLiteConnection>();
 
                 b.RegisterType<ReactorParser>().As<SiteParser>();
                 b.RegisterType<Chan2Parser>().As<SiteParser>();
