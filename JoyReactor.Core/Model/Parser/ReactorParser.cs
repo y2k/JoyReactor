@@ -379,7 +379,6 @@ namespace JoyReactor.Core.Model.Parser
                 if (image != null)
                 {
                     image = Regex.Replace(image, @"/pics/post/.+-(\d+\.[\d\w]+)", "/pics/post/-$1");
-                    //                image = Regex.Replace(image, "(http[s]?)://.+?/", "$1://joyreactor.com/");
                     image = Regex.Replace(image, @"(http[s]?://.*?)[^\.]+\.[^\./]+/", "$1joyreactor.com/");
 
                     attachments.Add(
