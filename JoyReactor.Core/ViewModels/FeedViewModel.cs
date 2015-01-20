@@ -2,11 +2,14 @@
 using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Feed;
+using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Reactive.Linq;
+using System.Threading;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -46,88 +49,62 @@ namespace JoyReactor.Core.ViewModels
 
         #endregion
 
-        PostCollectionModel model = new PostCollectionModel();
+        IFeedService service = ServiceLocator.Current.GetInstance<IFeedService>();
+        IDisposable subscription;
         ID id;
 
         public FeedViewModel()
         {
             RefreshCommand = new RelayCommand(ReloadFeed);
             MoreCommand = new RelayCommand(LoadNextPage);
-            ApplyCommand = new RelayCommand(ApplyNewPosts);
-            ChangeCurrentListIdCommand = new RelayCommand<ID>(LoadFirstPage);
+            ApplyCommand = new RelayCommand(async () => await service.ApplyNewItemsAsync(id));
+            ChangeCurrentListIdCommand = new RelayCommand<ID>(Initialize);
 
             MessengerInstance.Register<SelectTagMessage>(this, s => ChangeCurrentListIdCommand.Execute(s.Id));
         }
 
-        async void LoadFirstPage(ID newId)
+        void Initialize(ID newId)
         {
             id = newId;
-
             IsBusy = true;
-            await ReloadDataFromDatabase(false);
-            await model.SyncFirstPage(id);
-            await ReloadDataFromDatabaseWithCheck();
-            IsBusy = false;
+
+            subscription?.Dispose();
+            subscription = service
+                .Get(id)
+                .ObserveOn(SynchronizationContext.Current)
+                .Subscribe(data =>
+                {
+                    IsBusy = false;
+
+                    HasNewItems = data.NewItemsCount > 0;
+                    if (!HasNewItems)
+                    {
+                        var newPosts = ConvertToViewModelItemList(true, data);
+                        for (int i = Posts.Count - 1; i >= newPosts.Count; i--)
+                            Posts.RemoveAt(i);
+                        for (int i = Posts.Count; i < newPosts.Count; i++)
+                            Posts.Add(null);
+                        for (int i = 0; i < newPosts.Count; i++)
+                            Posts[i] = newPosts[i];
+                    }
+                });
         }
 
         async void ReloadFeed()
         {
             IsBusy = true;
             if (HasNewItems)
-            {
-                await model.ApplyNewItems(id);
-            }
+                await service.ApplyNewItemsAsync(id);
             else
-            {
-                await model.Reset(id);
-                await model.SyncFirstPage(id);
-            }
-            await ReloadDataFromDatabase(true);
+                await service.ResetAsync(id);
             IsBusy = false;
-        }
-
-        async void ApplyNewPosts()
-        {
-            await model.ApplyNewItems(id);
-            await ReloadDataFromDatabase(true);
         }
 
         async void LoadNextPage()
         {
             IsBusy = true;
-            await model.SyncNextPage(id);
-            await ReloadDataFromDatabase(true);
+            await service.LoadNextPage(id);
             IsBusy = false;
-        }
-
-        async Task ReloadDataFromDatabaseWithCheck()
-        {
-            var data = await model.Get(id);
-            HasNewItems = data.NewItemsCount > 0;
-            if (!HasNewItems)
-            {
-                var newPosts = ConvertToViewModelItemList(true, data);
-                for (int i = Posts.Count - 1; i >= newPosts.Count; i--)
-                    Posts.RemoveAt(i);
-                for (int i = Posts.Count; i < newPosts.Count; i++)
-                    Posts.Add(null);
-                for (int i = 0; i < newPosts.Count; i++)
-                    Posts[i] = newPosts[i];
-            }
-        }
-
-        async Task ReloadDataFromDatabase(bool showDivider)
-        {
-            var data = await model.Get(id);
-            HasNewItems = data.NewItemsCount > 0;
-
-            var newPosts = ConvertToViewModelItemList(showDivider, data);
-            for (int i = Posts.Count - 1; i >= newPosts.Count; i--)
-                Posts.RemoveAt(i);
-            for (int i = Posts.Count; i < newPosts.Count; i++)
-                Posts.Add(null);
-            for (int i = 0; i < newPosts.Count; i++)
-                Posts[i] = newPosts[i];
         }
 
         List<ViewModelBase> ConvertToViewModelItemList(bool showDivider, PostCollectionState data)
