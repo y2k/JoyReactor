@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using JoyReactor.Core.Model.Database;
+using JoyReactor.Core.Model.DTO;
 using Microsoft.Practices.ServiceLocation;
 using SQLite.Net;
-using JoyReactor.Core.Model.DTO;
-using JoyReactor.Core.Model.Database;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using RawMessage = JoyReactor.Core.Model.Messages.MessageFetcher.RawMessage;
-using System;
 
 namespace JoyReactor.Core.Model.Messages
 {
