@@ -112,7 +112,6 @@
     <Compile Include="Model\Messages\ReactorMessageParser.cs" />
     <Compile Include="Model\AuthStorage.cs" />
     <Compile Include="Model\Messages\MessageFetcher.cs" />
-    <Compile Include="Model\Database\SQLiteStorage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
