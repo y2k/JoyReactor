@@ -1,19 +1,18 @@
-﻿using JoyReactor.Core.Model.Parser;
-using System;
+﻿using System;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Feed
 {
-    class FeedService
+    class FeedService : IFeedService
     {
-        internal static event EventHandler FeedChanged;
+        internal static event Action FeedChanged;
 
         IStorage storage;
         IFeedProvider provider;
 
-        internal IObservable<PostCollectionState> Get(ID id)
+        public IObservable<PostCollectionState> Get(ID id)
         {
             UpdateAsync(id);
 
@@ -25,18 +24,47 @@ namespace JoyReactor.Core.Model.Feed
 
         private async void UpdateAsync(ID id)
         {
-            await provider.UpdateAsync(id);
-            FeedChanged?.Invoke(null, null);
+            await provider.UpdateFirstPageAsync(id);
+            InvalidateFeed();
+        }
+
+        public async Task ApplyNewItemsAsync(ID id)
+        {
+            await storage.ApplyNewItemsAsync(id);
+            InvalidateFeed();
+        }
+
+        public async Task ResetAsync(ID id)
+        {
+            await storage.ClearTagFromPostsAsync(id);
+            await provider.UpdateFirstPageAsync(id);
+            InvalidateFeed();
+        }
+
+        public async Task LoadNextPage(ID id)
+        {
+            await provider.UpdateNextPageAsync(id);
+            InvalidateFeed();
+        }
+
+        private static void InvalidateFeed()
+        {
+            FeedChanged?.Invoke();
         }
 
         internal interface IStorage
         {
             Task<PostCollectionState> GetPostsAsync(ID id);
+
+            Task ApplyNewItemsAsync(ID id);
+            Task ClearTagFromPostsAsync(ID id);
         }
 
         internal interface IFeedProvider
         {
-            Task UpdateAsync(ID id);
+            Task UpdateFirstPageAsync(ID id);
+
+            Task UpdateNextPageAsync(ID id);
         }
     }
 }

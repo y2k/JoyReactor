@@ -39,6 +39,7 @@
     <Compile Include="Model\DTO\Attachment.cs" />
     <Compile Include="Model\DTO\CommentWithChildCount.cs" />
     <Compile Include="Model\Feed\FeedService.cs" />
+    <Compile Include="Model\Feed\IFeedService.cs" />
     <Compile Include="Model\Feed\Storage.cs" />
     <Compile Include="Model\Helper\ObservableFactory.cs" />
     <Compile Include="Model\ImageLoader.cs" />

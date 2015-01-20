@@ -1,8 +1,10 @@
 ﻿using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
 using SQLite.Net;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model
 {
@@ -46,9 +48,15 @@ namespace JoyReactor.Core.Model
                 newUniqePostIds.Add(newid);
         }
 
+        [Obsolete]
         public void SaveChanges()
         {
-            db.SafeRunInTransaction(() =>
+            SaveChangesAsync().Wait();
+        }
+
+        public Task SaveChangesAsync()
+        {
+            return db.RunInTransactionAsync(() =>
             {
                 db.SafeExecute("DELETE FROM tag_post WHERE TagId = ?", tagId);
 

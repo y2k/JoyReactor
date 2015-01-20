@@ -4,12 +4,14 @@ using JoyReactor.Core.Model.Parser.Data;
 using Microsoft.Practices.ServiceLocation;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace JoyReactor.Core.Model.Feed
 {
     class FeedProvider : FeedService.IFeedProvider
     {
         IStorage storage;
+
         ID id;
 
         public FeedProvider(ID id)
@@ -17,7 +19,9 @@ namespace JoyReactor.Core.Model.Feed
             this.id = id;
         }
 
-        public async Task UpdateAsync(ID id)
+        #region UpdateFirstPageAsync
+
+        public async Task UpdateFirstPageAsync(ID id)
         {
             await storage.CreateTagIfNotExistsAsync(id);
             await storage.ClearOldLinkedTagsAsync(id);
@@ -36,7 +40,7 @@ namespace JoyReactor.Core.Model.Feed
             parser.NewLinkedTag += async (sender, e) => await SaveLinkedTag(id, e);
 
             parser.ExtractTag(id.Tag, id.Type, null);
-            organizer.SaveChanges();
+            await organizer.SaveChangesAsync();
 
             TagCollectionModel.OnInvalidateEvent();
         }
@@ -84,6 +88,22 @@ namespace JoyReactor.Core.Model.Feed
             };
         }
 
+        #endregion
+
+        public async Task UpdateNextPageAsync(ID id)
+        {
+            var parser = GetParserForTag(id);
+            var organizer = new NextPagePostSorter(id.SerializeToString());
+            parser.NewPost += (sender, post) =>
+            {
+                var newid = SavePostToDatabase(id, post);
+                organizer.AddNewPost(newid);
+            };
+            parser.NewTagInformation += async (_, information) => await storage.UpdateNextPageForTagAsync(id, information.NextPage);
+            parser.ExtractTag(id.Tag, id.Type, await storage.GetNextPageForTagAsync(id));
+            await organizer.SaveChangesAsync();
+        }
+
         internal interface IStorage
         {
             Task CreateTagIfNotExistsAsync(ID id);
@@ -95,6 +115,8 @@ namespace JoyReactor.Core.Model.Feed
             Task SavePostToDatabaseAsync(ID id, Post post);
 
             Task SaveLinkedTagAsync(ID id, TagLinkedTag linkedTag);
+
+            Task<int> GetNextPageForTagAsync(ID id);
         }
     }
 }

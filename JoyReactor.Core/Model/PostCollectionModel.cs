@@ -281,12 +281,6 @@ namespace JoyReactor.Core.Model
 
         #region Private methods
 
-        //        IDictionary<string, string> GetSiteCookies(ID id)
-        //        {
-        //            var p = connection.SafeDeferredQuery<Profile>("SELECT * FROM profiles WHERE Site = ?", "" + id.Site).FirstOrDefault();
-        //            return p == null ? new Dictionary<string, string>() : DeserializeObject<Dictionary<string, string>>(p.Cookie);
-        //        }
-
         static long TimestampNow()
         {
             return DateTime.Now.ToFileTimeUtc() / 10000L;
