@@ -2,15 +2,16 @@
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Feed
 {
     class FeedService : IFeedService
     {
-        internal static event Action FeedChanged;
+        internal static event EventHandler FeedChanged;
 
-        IStorage storage;
-        IFeedProvider provider;
+        IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
+        IFeedProvider provider = ServiceLocator.Current.GetInstance<IFeedProvider>();
 
         public IObservable<PostCollectionState> Get(ID id)
         {
@@ -49,7 +50,7 @@ namespace JoyReactor.Core.Model.Feed
 
         private static void InvalidateFeed()
         {
-            FeedChanged?.Invoke();
+            FeedChanged?.Invoke(null, null);
         }
 
         internal interface IStorage

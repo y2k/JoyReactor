@@ -10,14 +10,7 @@ namespace JoyReactor.Core.Model.Feed
 {
     class FeedProvider : FeedService.IFeedProvider
     {
-        IStorage storage;
-
-        ID id;
-
-        public FeedProvider(ID id)
-        {
-            this.id = id;
-        }
+        IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
 
         #region UpdateFirstPageAsync
 
@@ -39,7 +32,7 @@ namespace JoyReactor.Core.Model.Feed
 
             parser.NewLinkedTag += async (sender, e) => await SaveLinkedTag(id, e);
 
-            parser.ExtractTag(id.Tag, id.Type, null);
+            await Task.Run(() => parser.ExtractTag(id.Tag, id.Type, null));
             await organizer.SaveChangesAsync();
 
             TagCollectionModel.OnInvalidateEvent();
@@ -99,8 +92,11 @@ namespace JoyReactor.Core.Model.Feed
                 var newid = SavePostToDatabase(id, post);
                 organizer.AddNewPost(newid);
             };
-            parser.NewTagInformation += async (_, information) => await storage.UpdateNextPageForTagAsync(id, information.NextPage);
-            parser.ExtractTag(id.Tag, id.Type, await storage.GetNextPageForTagAsync(id));
+            parser.NewTagInformation += 
+                async (_, information) => await storage.UpdateNextPageForTagAsync(id, information.NextPage);
+
+            int nextPage = await storage.GetNextPageForTagAsync(id);
+            await Task.Run(() => parser.ExtractTag(id.Tag, id.Type, nextPage));
             await organizer.SaveChangesAsync();
         }
 

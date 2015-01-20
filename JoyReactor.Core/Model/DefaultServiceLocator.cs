@@ -11,6 +11,7 @@ using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model.Profiles;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.Model.Web.Parser;
+using JoyReactor.Core.Model.Feed;
 
 namespace JoyReactor.Core.Model
 {
@@ -70,6 +71,11 @@ namespace JoyReactor.Core.Model
                 b.RegisterType<AuthStorage>().As<ProfileService.IAuthStorage>();
                 b.RegisterType<AuthStorage>().As<ReactorMessageParser.IAuthStorage>();
                 b.RegisterType<AuthStorage>().As<JoyReactorSiteApi.IAuthStorage>();
+
+                b.RegisterType<Storage>().As<FeedService.IStorage>();
+                b.RegisterType<Storage>().As<FeedProvider.IStorage>();
+                b.RegisterType<FeedProvider>().As<FeedService.IFeedProvider>();
+                b.RegisterType<FeedService>().As<IFeedService>();
             }
         }
 
