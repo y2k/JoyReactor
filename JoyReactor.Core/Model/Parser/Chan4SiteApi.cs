@@ -11,7 +11,7 @@ using JoyReactor.Core.Model.Web.Parser.Data;
 
 namespace JoyReactor.Core.Model.Web.Parser
 {
-	public class Chan4Parser : SiteParser
+	public class Chan4Parser : SiteApi
 	{
 		IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader> ();
 		Uri baseUrl;

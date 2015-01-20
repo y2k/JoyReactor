@@ -11,7 +11,7 @@ using JoyReactor.Core.Model.Parser;
 
 namespace JoyReactor.Core.Model
 {
-    class AuthStorage : ProfileService.IAuthStorage, ReactorMessageParser.IAuthStorage, ReactorParser.IAuthStorage
+    class AuthStorage : ProfileService.IAuthStorage, ReactorMessageParser.IAuthStorage, JoyReactorSiteApi.IAuthStorage
     {
         SQLiteConnection db = ServiceLocator.Current.GetInstance<SQLiteConnection>();
 

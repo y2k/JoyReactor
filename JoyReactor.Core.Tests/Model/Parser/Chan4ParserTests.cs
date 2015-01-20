@@ -12,7 +12,7 @@ namespace JoyReactor.Core.Tests
 	[TestFixture]
 	public class Chan4ParserTests
 	{
-		private SiteParser parser;
+		private SiteApi parser;
 
 		[Test]
 		public void TestGetThread572092321 ()

@@ -13,7 +13,7 @@ using JoyReactor.Core.Model.Web.Parser.Data;
 
 namespace JoyReactor.Core.Model.Web.Parser
 {
-	public class Chan7Parser : SiteParser
+	public class Chan7Parser : SiteApi
 	{
 		/// <summary>
 		/// 14/05/06(Tue)10:40

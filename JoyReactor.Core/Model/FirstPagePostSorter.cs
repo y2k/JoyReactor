@@ -7,76 +7,86 @@ using System.Linq;
 namespace JoyReactor.Core.Model
 {
     public class FirstPagePostSorter
-	{
-		List<int> newUniqePostIds = new List<int> ();
-		List<int> newDublicatePosts = new List<int> ();
-		List<int> currentPostIds;
-		SQLiteConnection db;
-		int tagId;
+    {
+        List<int> newUniqePostIds = new List<int>();
+        List<int> newDublicatePosts = new List<int>();
+        List<int> currentPostIds;
+        SQLiteConnection db;
+        int tagId;
 
-		public FirstPagePostSorter (SQLiteConnection db, string tagId)
-		{
-			this.db = db;
-			LoadTagId (tagId);
-			LoadPostIdsForTag ();
-		}
+        public FirstPagePostSorter(string tagId) : this(SQLiteConnectionFactory.Create(), tagId) { }
 
-		void LoadTagId (string textTagId)
-		{
-			tagId = db.SafeExecuteScalar<int> ("SELECT Id FROM tags WHERE TagId = ?", textTagId);
-		}
+        public FirstPagePostSorter(SQLiteConnection db, string tagId)
+        {
+            this.db = db;
+            LoadTagId(tagId);
+            LoadPostIdsForTag();
+        }
 
-		void LoadPostIdsForTag ()
-		{
-			currentPostIds = db
-				.SafeQuery<TagPost> (
-				"SELECT PostId FROM tag_post WHERE TagId = ? AND (Status = ? OR Status = ?)",
-				tagId, TagPost.StatusActual, TagPost.StatusOld)
-				.Select (s => s.PostId)
-				.ToList ();
-		}
+        void LoadTagId(string textTagId)
+        {
+            tagId = db.SafeExecuteScalar<int>("SELECT Id FROM tags WHERE TagId = ?", textTagId);
+        }
 
-		public void AddNewPost (int newid)
-		{
-			if (currentPostIds.Contains (newid))
-				newDublicatePosts.Add (newid);
-			else
-				newUniqePostIds.Add (newid);
-		}
+        void LoadPostIdsForTag()
+        {
+            currentPostIds = db
+                .SafeQuery<TagPost>(
+                "SELECT PostId FROM tag_post WHERE TagId = ? AND (Status = ? OR Status = ?)",
+                tagId, TagPost.StatusActual, TagPost.StatusOld)
+                .Select(s => s.PostId)
+                .ToList();
+        }
 
-		public void SaveChanges ()
-		{
-			db.SafeRunInTransaction (() => {
-				db.SafeExecute ("DELETE FROM tag_post WHERE TagId = ?", tagId);
+        public void AddNewPost(int newid)
+        {
+            if (currentPostIds.Contains(newid))
+                newDublicatePosts.Add(newid);
+            else
+                newUniqePostIds.Add(newid);
+        }
 
-				if (IsFirstExecution) {
-					foreach (var id in newUniqePostIds)
-						db.SafeInsert (new TagPost { 
-							TagId = tagId, 
-							PostId = id,
-							Status = TagPost.StatusActual
-						});
-				} else {
-					foreach (var id in newUniqePostIds)
-						db.SafeInsert (new TagPost { 
-							TagId = tagId, 
-							PostId = id,
-							Status = TagPost.StatusPending
-						});
-					foreach (var id in currentPostIds)
-						db.SafeInsert (new TagPost {
-							TagId = tagId,
-							PostId = id, 
-							Status = newDublicatePosts.Contains (id)
-								? TagPost.StatusActual
-								: TagPost.StatusOld,
-						});
-				}
-			});
-		}
+        public void SaveChanges()
+        {
+            db.SafeRunInTransaction(() =>
+            {
+                db.SafeExecute("DELETE FROM tag_post WHERE TagId = ?", tagId);
 
-		bool IsFirstExecution {
-			get { return currentPostIds.Count <= 0; }
-		}
-	}
+                if (IsFirstExecution)
+                {
+                    foreach (var id in newUniqePostIds)
+                        db.SafeInsert(new TagPost
+                        {
+                            TagId = tagId,
+                            PostId = id,
+                            Status = TagPost.StatusActual
+                        });
+                }
+                else
+                {
+                    foreach (var id in newUniqePostIds)
+                        db.SafeInsert(new TagPost
+                        {
+                            TagId = tagId,
+                            PostId = id,
+                            Status = TagPost.StatusPending
+                        });
+                    foreach (var id in currentPostIds)
+                        db.SafeInsert(new TagPost
+                        {
+                            TagId = tagId,
+                            PostId = id,
+                            Status = newDublicatePosts.Contains(id)
+                                ? TagPost.StatusActual
+                                : TagPost.StatusOld,
+                        });
+                }
+            });
+        }
+
+        bool IsFirstExecution
+        {
+            get { return currentPostIds.Count <= 0; }
+        }
+    }
 }

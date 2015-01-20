@@ -23,10 +23,10 @@ namespace JoyReactor.Core.Tests.Helpers
 
             b.RegisterType<StubImageDecoder>().As<ImageDecoder>();
             b.RegisterType<MockAuthStorage>().As<ReactorMessageParser.IAuthStorage>();
-            b.RegisterType<MockAuthStorage>().As<ReactorParser.IAuthStorage>();
+            b.RegisterType<MockAuthStorage>().As<JoyReactorSiteApi.IAuthStorage>();
         }
 
-        class MockAuthStorage : ReactorMessageParser.IAuthStorage, ReactorParser.IAuthStorage
+        class MockAuthStorage : ReactorMessageParser.IAuthStorage, JoyReactorSiteApi.IAuthStorage
         {
             public Task<IDictionary<string, string>> GetCookiesAsync()
             {

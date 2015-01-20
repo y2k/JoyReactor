@@ -131,9 +131,9 @@ namespace JoyReactor.Core.Model
             });
         }
 
-        SiteParser GetSiteParserForPost(Post p)
+        SiteApi GetSiteParserForPost(Post p)
         {
-            var parsers = ServiceLocator.Current.GetInstance<SiteParser[]>();
+            var parsers = ServiceLocator.Current.GetInstance<SiteApi[]>();
             var parserId = (ID.SiteParser)Enum.Parse(typeof(ID.SiteParser), p.PostId.Split('-')[0]);
             return parsers.First(s => s.ParserId == parserId);
         }

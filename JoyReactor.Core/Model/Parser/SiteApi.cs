@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Parser
 {
-    public abstract class SiteParser
+    public abstract class SiteApi
     {
         public abstract ID.SiteParser ParserId { get; }
 

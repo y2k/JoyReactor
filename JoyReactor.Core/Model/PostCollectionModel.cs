@@ -76,7 +76,6 @@ namespace JoyReactor.Core.Model
                     ClearOldLinkedTags(id);
 
                     var parser = GetParserForTag(id);
-//                    parser.Cookies = GetSiteCookies(id);
                     parser.NewTagInformation += (sender, information) =>
                         UpdateTagInformation(id.SerializeToString(), information);
 
@@ -119,9 +118,9 @@ namespace JoyReactor.Core.Model
             connection.SafeInsert(dbTag);
         }
 
-        SiteParser GetParserForTag(ID id)
+        SiteApi GetParserForTag(ID id)
         {
-            var parsers = ServiceLocator.Current.GetInstance<SiteParser[]>();
+            var parsers = ServiceLocator.Current.GetInstance<SiteApi[]>();
             return parsers.First(s => s.ParserId == id.Site);
         }
 
@@ -139,15 +138,15 @@ namespace JoyReactor.Core.Model
         void ClearDatabaseFromPosts(ID id)
         {
             connection.SafeExecute(
-                "UPDATE tags SET Timestamp = ? WHERE TagId = ?", 
+                "UPDATE tags SET Timestamp = ? WHERE TagId = ?",
                 TimestampNow(), id.SerializeToString());
             // Удаление постов тега
             connection.SafeExecute(
-                "DELETE FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)", 
+                "DELETE FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)",
                 id.SerializeToString());
             // Удаление связанных тегов
             connection.SafeExecute(
-                "DELETE FROM tag_linked_tags WHERE ParentTagId IN (SELECT Id FROM tags WHERE TagId = ?)", 
+                "DELETE FROM tag_linked_tags WHERE ParentTagId IN (SELECT Id FROM tags WHERE TagId = ?)",
                 id.SerializeToString());
         }
 
@@ -155,10 +154,10 @@ namespace JoyReactor.Core.Model
         {
             if (!IsTagExists(id.SerializeToString()))
                 connection.SafeInsert(new Tag
-                    {
-                        TagId = id.SerializeToString(),
-                        Flags = Tag.FlagSystem
-                    });
+                {
+                    TagId = id.SerializeToString(),
+                    Flags = Tag.FlagSystem
+                });
         }
 
         bool IsTagExists(string flatTagId)
@@ -171,7 +170,7 @@ namespace JoyReactor.Core.Model
             return Task.Run(() =>
                 {
                     var parser = GetParserForTag(id);
-//                    parser.Cookies = GetSiteCookies(id);
+                    //                    parser.Cookies = GetSiteCookies(id);
                     var organizer = new NextPagePostSorter(connection, id.SerializeToString());
                     parser.NewPost += (sender, post) =>
                     {
@@ -209,10 +208,10 @@ namespace JoyReactor.Core.Model
                     connection.SafeRunInTransaction(() =>
                         {
                             var tagId = connection.SafeQuery<TagPost>(
-                                            "SELECT Id FROM tags WHERE TagId = ?", 
+                                            "SELECT Id FROM tags WHERE TagId = ?",
                                             id.SerializeToString()).First().Id;
                             var links = connection.SafeQuery<TagPost>(
-                                            "SELECT * FROM tag_post WHERE TagId = ?", 
+                                            "SELECT * FROM tag_post WHERE TagId = ?",
                                             tagId);
                             links.Sort(new TagPostComparer());
                             connection.SafeExecute("DELETE FROM tag_post WHERE TagId = ?", tagId);
@@ -282,11 +281,11 @@ namespace JoyReactor.Core.Model
 
         #region Private methods
 
-//        IDictionary<string, string> GetSiteCookies(ID id)
-//        {
-//            var p = connection.SafeDeferredQuery<Profile>("SELECT * FROM profiles WHERE Site = ?", "" + id.Site).FirstOrDefault();
-//            return p == null ? new Dictionary<string, string>() : DeserializeObject<Dictionary<string, string>>(p.Cookie);
-//        }
+        //        IDictionary<string, string> GetSiteCookies(ID id)
+        //        {
+        //            var p = connection.SafeDeferredQuery<Profile>("SELECT * FROM profiles WHERE Site = ?", "" + id.Site).FirstOrDefault();
+        //            return p == null ? new Dictionary<string, string>() : DeserializeObject<Dictionary<string, string>>(p.Cookie);
+        //        }
 
         static long TimestampNow()
         {

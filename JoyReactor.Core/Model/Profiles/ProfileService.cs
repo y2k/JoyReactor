@@ -32,10 +32,10 @@ namespace JoyReactor.Core.Model.Profiles
             await SyncListOfMyTagsWithWeb();
         }
 
-        SiteParser GetParser()
+        SiteApi GetParser()
         {
             return ServiceLocator.Current
-                .GetInstance<SiteParser[]>()
+                .GetInstance<SiteApi[]>()
                 .First(s => s.ParserId == ID.SiteParser.JoyReactor);
         }
 

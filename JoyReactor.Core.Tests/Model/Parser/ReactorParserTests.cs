@@ -15,13 +15,13 @@ namespace JoyReactor.Core.Tests
     [TestFixture]
     public class ReactorParserTests
     {
-        SiteParser parser;
+        SiteApi parser;
 
         [SetUp]
         public void SetUp()
         {
             ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator(new TestModule()));
-            parser = new ReactorParser();
+            parser = new JoyReactorSiteApi();
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace JoyReactor.Core.Tests
             parser.ExtractTag(null, ID.TagType.Good, null);
             Assert.AreEqual(10, postIds.Count);
 
-            parser = new ReactorParser();
+            parser = new JoyReactorSiteApi();
             parser.NewPost += (sender, e) =>
             {
                 Assert.IsNotNull(e);
@@ -78,7 +78,7 @@ namespace JoyReactor.Core.Tests
             parser.ExtractTag(null, ID.TagType.Good, 4313);
             Assert.AreEqual(20, postIds.Count);
 
-            parser = new ReactorParser();
+            parser = new JoyReactorSiteApi();
             parser.NewPost += (sender, e) =>
             {
                 Assert.IsNotNull(e);

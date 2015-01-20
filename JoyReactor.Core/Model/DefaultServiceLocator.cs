@@ -55,10 +55,10 @@ namespace JoyReactor.Core.Model
                 b.RegisterType<WebDownloader>().As<IWebDownloader>();
                 b.Register(_ => SQLiteConnectionFactory.Create()).As<SQLiteConnection>();
 
-                b.RegisterType<ReactorParser>().As<SiteParser>();
-                b.RegisterType<Chan2Parser>().As<SiteParser>();
-                b.RegisterType<Chan4Parser>().As<SiteParser>();
-                b.RegisterType<Chan7Parser>().As<SiteParser>();
+                b.RegisterType<JoyReactorSiteApi>().As<SiteApi>();
+                b.RegisterType<Chan2SiteApi>().As<SiteApi>();
+                b.RegisterType<Chan4Parser>().As<SiteApi>();
+                b.RegisterType<Chan7Parser>().As<SiteApi>();
 
                 b.RegisterType<ImageModel>().AsSelf().SingleInstance();
 
@@ -69,7 +69,7 @@ namespace JoyReactor.Core.Model
 
                 b.RegisterType<AuthStorage>().As<ProfileService.IAuthStorage>();
                 b.RegisterType<AuthStorage>().As<ReactorMessageParser.IAuthStorage>();
-                b.RegisterType<AuthStorage>().As<ReactorParser.IAuthStorage>();
+                b.RegisterType<AuthStorage>().As<JoyReactorSiteApi.IAuthStorage>();
             }
         }
 

@@ -13,7 +13,7 @@ using JoyReactor.Core.Model.Web.Parser.Data;
 
 namespace JoyReactor.Core.Model.Parser
 {
-    public class Chan2Parser : SiteParser
+    public class Chan2SiteApi : SiteApi
     {
         static readonly Regex IMAGE_SIZE = new Regex(@"(\d+)x(\d+)");
 

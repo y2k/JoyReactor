@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Parser
 {
-    public class ReactorParser : SiteParser
+    public class JoyReactorSiteApi : SiteApi
     {
         #region Constants
 
@@ -99,13 +99,13 @@ namespace JoyReactor.Core.Model.Parser
             IAuthStorage authStorage = ServiceLocator.Current.GetInstance<IAuthStorage>();
             IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
 
-            ReactorParser parser;
+            JoyReactorSiteApi parser;
             string tag;
             ID.TagType type;
             int? currentPageId;
             IDictionary<string, string> cookies;
 
-            internal TagProvider(ReactorParser parser, string tag, ID.TagType type, int? currentPageId)
+            internal TagProvider(JoyReactorSiteApi parser, string tag, ID.TagType type, int? currentPageId)
             {
                 this.parser = parser;
                 this.tag = tag;
@@ -295,9 +295,9 @@ namespace JoyReactor.Core.Model.Parser
             IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
 
             string postId;
-            ReactorParser parser;
+            JoyReactorSiteApi parser;
 
-            public PostProvider(ReactorParser parser, string postId)
+            public PostProvider(JoyReactorSiteApi parser, string postId)
             {
                 this.parser = parser;
                 this.postId = postId;

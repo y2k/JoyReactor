@@ -11,7 +11,7 @@ namespace JoyReactor.Core.Tests
     [TestFixture]
 	public class Chan7ParserTests
 	{
-		private SiteParser parser;
+		private SiteApi parser;
 
 		[SetUp]
 		public void SetUp ()

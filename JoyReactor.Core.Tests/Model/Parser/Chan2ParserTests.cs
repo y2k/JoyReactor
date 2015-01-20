@@ -9,13 +9,13 @@ namespace JoyReactor.Core.Tests
     [TestFixture]
 	public class Chan2ParserTests
 	{
-		SiteParser parser;
+		SiteApi parser;
 
 		[SetUp]
 		public void SetUp ()
 		{
 			ServiceLocator.SetLocatorProvider (() => new DefaultServiceLocator (new TestModule ()));
-			parser = new Chan2Parser ();
+			parser = new Chan2SiteApi ();
 		}
 
 		[Test]

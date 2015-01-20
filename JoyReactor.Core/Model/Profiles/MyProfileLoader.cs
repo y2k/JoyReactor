@@ -50,10 +50,10 @@ namespace JoyReactor.Core.Model.Profiles
             return ServiceLocator.Current.GetInstance<SQLiteConnection>();
         }
 
-        SiteParser GetParser()
+        SiteApi GetParser()
         {
             return ServiceLocator.Current
-				.GetInstance<SiteParser[]>()
+				.GetInstance<SiteApi[]>()
 				.First(s => s.ParserId == ID.SiteParser.JoyReactor);
         }
 
