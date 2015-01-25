@@ -305,19 +305,11 @@ namespace JoyReactor.Core.Model.Parser
 
             internal void Compute()
             {
-                var html = DownloadPostPageWithDomainCheck(postId);
-                var doc = new HtmlDocument();
-                doc.LoadHtml(html);
+                var uri = new Uri("http://joyreactor.cc/post/" + postId);
+                var html = downloader.GetText(uri, new RequestParams { UseForeignProxy = true });
 
                 ExportPostInformation(html);
                 ExportComments(html);
-            }
-
-            string DownloadPostPageWithDomainCheck(string postId)
-            {
-                var domain = new ReactorDomainDetector().GetDomainForType(ReactorDomainDetector.TagType.Secret);
-                var uri = new Uri(string.Format("http://{0}/post/{1}", domain, postId));
-                return downloader.GetText(uri, new RequestParams { UseForeignProxy = true });
             }
 
             void ExportPostInformation(string html)
