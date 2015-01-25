@@ -63,11 +63,11 @@ namespace JoyReactor.Core.Model.Web
 
 		class DefaultProxy : IWebProxy
 		{
-			public ICredentials Credentials { get; set; }
+			public ICredentials Credentials { get; set; } = new NetworkCredential("joyreactor-dev", "4ECB7AAA-4696-4392-84B7-58EBB95A4F51");
 
 			public Uri GetProxy (Uri destination)
 			{
-				return new Uri ("http://109.201.140.42:8118/");
+				return new Uri ("http://109.201.140.42:8080/");
 			}
 
 			public bool IsBypassed (Uri host)
