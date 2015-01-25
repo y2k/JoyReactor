@@ -35,9 +35,6 @@ namespace JoyReactor.Core.ViewModels
                     .Select(s => s.Aggregate((a, b) => a + b))
                     .Select(s => new CommentViewModel { Text = s });
                 ViewModelParts.AddRange(items);
-
-                //for (int i = 1; i <= 10; i++)
-                //    ViewModelParts.Add(new CommentViewModel { Text = Enumerable.Range(0, i).Select(_ => "Тестовый текст - ").Aggregate((a, b) => a + b) });
             }
 #endif
         }
@@ -103,6 +100,8 @@ namespace JoyReactor.Core.ViewModels
             public string Text { get; set; }
 
             public int ChildCount { get; set; }
+
+            public ICollection<string> Images { get; set; }
 
             public CommentViewModel() { }
 
