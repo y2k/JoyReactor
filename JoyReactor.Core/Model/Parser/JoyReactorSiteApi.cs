@@ -115,7 +115,7 @@ namespace JoyReactor.Core.Model.Parser
 
             internal void Compute()
             {
-                var cookies = authStorage.GetCookiesAsync().Result;
+                cookies = authStorage.GetCookiesAsync().Result;
                 cookies.Add("showVideoGif2", "1");
                 var html = DownloadTagPageWithCheckDomain(tag, type, currentPageId);
 
@@ -156,11 +156,13 @@ namespace JoyReactor.Core.Model.Parser
                 }
                 return html;
             }
+
             string DownloadTagPage(string tag, ID.TagType type, int? currentPageId)
             {
                 var url = GenerateUrl(type, tag, currentPageId);
                 return downloader.GetText(url, new RequestParams { Cookies = cookies, UseForeignProxy = true });
             }
+
             Uri GenerateUrl(ID.TagType type, string tag, int? currentPage)
             {
                 StringBuilder url = new StringBuilder("http://" + new ReactorDomainDetector().GetDomainForTag(tag));

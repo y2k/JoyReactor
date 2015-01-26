@@ -65,6 +65,13 @@ namespace JoyReactor.Core.Model.Web
 			}
 		}
 
+        public static async Task<string> GetTextAsync (this IWebDownloader instance, Uri uri, RequestParams reqParams = null)
+        {
+            using (var response = await instance.ExecuteAsync (uri, reqParams)) {
+                return await new StreamReader(response.Data).ReadToEndAsync();
+            }
+        }
+
 		[Obsolete]
 		public static HtmlDocument Get (this IWebDownloader instance, Uri uri)
 		{
