@@ -15,11 +15,7 @@ namespace JoyReactor.Core.Model.Database
         public void Execute()
         {
             InsertSystem(ID.Factory.New(ID.IdConst.ReactorGood), "JoyReactor");
-#if DEBUG
-            InsertMain(ID.Factory.New(ID.SiteParser.Chan2, "b"), "2ch / b");
-            InsertMain(ID.Factory.New(ID.SiteParser.Chan4, "b"), "4chan / b");
-            InsertMain(ID.Factory.New(ID.SiteParser.Chan7, "b"), "7chan / b");
-#endif
+
             InsertMain(ID.Factory.NewTag("anime"), "Anime", "http://img1.joyreactor.cc/pics/avatar/tag/2851");
             InsertMain(ID.Factory.NewTag("cosplay"), "Cosplay", "http://img8.joyreactor.cc/pics/avatar/tag/518");
             InsertMain(ID.Factory.NewTag("dev"), "Dev", "http://img0.joyreactor.cc/pics/avatar/tag/2");

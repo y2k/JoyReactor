@@ -57,9 +57,6 @@ namespace JoyReactor.Core.Model
                 b.Register(_ => SQLiteConnectionFactory.Create()).As<SQLiteConnection>();
 
                 b.RegisterType<JoyReactorSiteApi>().As<SiteApi>();
-                b.RegisterType<Chan2SiteApi>().As<SiteApi>();
-                b.RegisterType<Chan4Parser>().As<SiteApi>();
-                b.RegisterType<Chan7Parser>().As<SiteApi>();
 
                 b.RegisterType<ImageModel>().AsSelf().SingleInstance();
 

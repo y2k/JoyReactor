@@ -69,14 +69,9 @@
     <Compile Include="Model\DTO\CommentLink.cs" />
     <Compile Include="Model\Helper\Log.cs" />
     <Compile Include="Model\Helper\DateTimeExtensions.cs" />
-    <Compile Include="Model\Parser\Chan2SiteApi.cs" />
-    <Compile Include="Model\Parser\ChanPostLinker.cs" />
-    <Compile Include="Model\Parser\Chan4SiteApi.cs" />
-    <Compile Include="Model\Parser\Chan7SiteApi.cs" />
     <Compile Include="Model\Parser\NodeHelper.cs" />
     <Compile Include="Model\Parser\JoyReactorSiteApi.cs" />
     <Compile Include="Model\Parser\SiteApi.cs" />
-    <Compile Include="Model\Parser\ThreadId.cs" />
     <Compile Include="Model\Parser\Data\ExportAttachment.cs" />
     <Compile Include="Model\Parser\Data\ExportComment.cs" />
     <Compile Include="Model\Parser\Data\ExportLinkedTag.cs" />

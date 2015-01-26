@@ -112,15 +112,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\ImageLoaderTests.cs" />
-    <Compile Include="Model\Parser\Chan2ParserTests.cs" />
-    <Compile Include="Model\Parser\Chan7ParserTests.cs" />
     <Compile Include="Model\Parser\ReactorParserTests.cs" />
-    <Compile Include="Model\Parser\Chan4ParserTests.cs" />
     <Compile Include="Helpers\TestModule.cs" />
     <Compile Include="Helpers\MockWebDownloader.cs" />
     <Compile Include="Model\PostModelTests.cs" />
     <Compile Include="Helpers\MockSQLiteConnection.cs" />
-    <Compile Include="Model\Parser\ChanPostLinkerTests.cs" />
     <Compile Include="Model\PostCollectionModelTests.cs" />
     <Compile Include="ViewModels\GalleryViewModelTests.cs" />
     <Compile Include="ViewModels\LoginViewModelTests.cs" />
