@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using Autofac;
-using Microsoft.Practices.ServiceLocation;
-using Refractored.Xam.Settings;
-using SQLite.Net;
+﻿using Autofac;
 using JoyReactor.Core.Model.Database;
+using JoyReactor.Core.Model.Feed;
 using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Messages;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model.Profiles;
 using JoyReactor.Core.Model.Web;
-using JoyReactor.Core.Model.Web.Parser;
-using JoyReactor.Core.Model.Feed;
+using Microsoft.Practices.ServiceLocation;
+using Refractored.Xam.Settings;
+using SQLite.Net;
+using System;
+using System.Collections.Generic;
 
 namespace JoyReactor.Core.Model
 {
@@ -56,8 +55,6 @@ namespace JoyReactor.Core.Model
                 b.RegisterType<WebDownloader>().As<IWebDownloader>();
                 b.Register(_ => SQLiteConnectionFactory.Create()).As<SQLiteConnection>();
 
-                b.RegisterType<JoyReactorSiteApi>().As<SiteApi>();
-
                 b.RegisterType<ImageModel>().AsSelf().SingleInstance();
 
                 b.Register(_ => CrossSettings.Current).AsSelf();
@@ -67,12 +64,10 @@ namespace JoyReactor.Core.Model
 
                 b.RegisterType<AuthStorage>().As<ProfileService.IAuthStorage>();
                 b.RegisterType<AuthStorage>().As<ReactorMessageParser.IAuthStorage>();
-                b.RegisterType<AuthStorage>().As<JoyReactorSiteApi.IAuthStorage>();
+                b.RegisterType<AuthStorage>().As<JoyReactorProvider.IAuthStorage>();
 
-                b.RegisterType<Storage>().As<FeedService.IStorage>();
-                b.RegisterType<Storage>().As<FeedProvider.IStorage>();
-                b.RegisterType<FeedProvider>().As<FeedService.IFeedProvider>();
-                b.RegisterType<FeedService>().As<IFeedService>();
+                b.RegisterType<SQLiteStorage>().As<FeedService.IStorage>();
+                b.RegisterType<SQLiteStorage>().As<JoyReactorProvider.IStorage>();
             }
         }
 

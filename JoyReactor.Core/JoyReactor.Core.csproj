@@ -32,21 +32,21 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Model\Constants.cs" />
     <Compile Include="Model\Database\CreateDefaultTagsTransaction.cs" />
     <Compile Include="Model\Database\CreateTablesTransaction.cs" />
     <Compile Include="Model\DTO\Comment.cs" />
     <Compile Include="Model\DTO\Attachment.cs" />
     <Compile Include="Model\DTO\CommentWithChildCount.cs" />
     <Compile Include="Model\Feed\FeedService.cs" />
-    <Compile Include="Model\Feed\IFeedService.cs" />
-    <Compile Include="Model\Feed\Storage.cs" />
+    <Compile Include="Model\Database\SQLiteStorage.cs" />
     <Compile Include="Model\Helper\ObservableFactory.cs" />
     <Compile Include="Model\ImageLoader.cs" />
     <Compile Include="Model\DefaultServiceLocator.cs" />
     <Compile Include="Model\Feed\FeedProvider.cs" />
+    <Compile Include="Model\PostCollectionState.cs" />
     <Compile Include="Model\PostModel.cs" />
     <Compile Include="Model\IProfileService.cs" />
+    <Compile Include="Model\PostService.cs" />
     <Compile Include="Model\Profiles\ProfileService.cs" />
     <Compile Include="Model\Web\WebDownloaderExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,21 +70,9 @@
     <Compile Include="Model\Helper\Log.cs" />
     <Compile Include="Model\Helper\DateTimeExtensions.cs" />
     <Compile Include="Model\Helper\NodeHelper.cs" />
-    <Compile Include="Model\Parser\JoyReactorSiteApi.cs" />
-    <Compile Include="Model\Parser\SiteApi.cs" />
-    <Compile Include="Model\Parser\Data\ExportAttachment.cs" />
-    <Compile Include="Model\Parser\Data\ExportComment.cs" />
-    <Compile Include="Model\Parser\Data\ExportLinkedTag.cs" />
-    <Compile Include="Model\Parser\Data\ExportPost.cs" />
-    <Compile Include="Model\Parser\Data\ExportPostAttachment.cs" />
-    <Compile Include="Model\Parser\Data\ExportPostComment.cs" />
-    <Compile Include="Model\Parser\Data\ExportPostInformation.cs" />
-    <Compile Include="Model\Parser\Data\ExportPreviewPost.cs" />
-    <Compile Include="Model\Parser\Data\ExportUser.cs" />
     <Compile Include="Model\NextPagePostSorter.cs" />
     <Compile Include="Model\FirstPagePostSorter.cs" />
     <Compile Include="Model\ImageModel.cs" />
-    <Compile Include="Model\Parser\Data\ExportTagInformation.cs" />
     <Compile Include="Model\Parser\ReactorDomainDetector.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="ViewModels\CreateTagViewModel.cs" />

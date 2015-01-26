@@ -49,15 +49,14 @@ namespace JoyReactor.Core.ViewModels
 
         #endregion
 
-        IFeedService service = ServiceLocator.Current.GetInstance<IFeedService>();
+        FeedService service;
         IDisposable subscription;
-        ID id;
 
         public FeedViewModel()
         {
             RefreshCommand = new RelayCommand(ReloadFeed);
             MoreCommand = new RelayCommand(LoadNextPage);
-            ApplyCommand = new RelayCommand(async () => await service.ApplyNewItemsAsync(id));
+            ApplyCommand = new RelayCommand(async () => await service.ApplyNewItemsAsync());
             ChangeCurrentListIdCommand = new RelayCommand<ID>(Initialize);
 
             MessengerInstance.Register<SelectTagMessage>(this, s => ChangeCurrentListIdCommand.Execute(s.Id));
@@ -65,12 +64,12 @@ namespace JoyReactor.Core.ViewModels
 
         void Initialize(ID newId)
         {
-            id = newId;
+            service = FeedService.Create(newId);
             IsBusy = true;
 
             subscription?.Dispose();
             subscription = service
-                .Get(id)
+                .Get()
                 .ObserveOn(SynchronizationContext.Current)
                 .Subscribe(data =>
                 {
@@ -94,16 +93,16 @@ namespace JoyReactor.Core.ViewModels
         {
             IsBusy = true;
             if (HasNewItems)
-                await service.ApplyNewItemsAsync(id);
+                await service.ApplyNewItemsAsync();
             else
-                await service.ResetAsync(id);
+                await service.ResetAsync();
             IsBusy = false;
         }
 
         async void LoadNextPage()
         {
             IsBusy = true;
-            await service.LoadNextPage(id);
+            await service.LoadNextPage();
             IsBusy = false;
         }
 

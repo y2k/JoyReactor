@@ -1,14 +1,16 @@
-﻿using JoyReactor.Core.Model.Database;
-using JoyReactor.Core.Model.DTO;
+﻿using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Feed;
+using JoyReactor.Core.Model.Parser;
 using Microsoft.Practices.ServiceLocation;
 using SQLite.Net;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
-namespace JoyReactor.Core.Model.Feed
+namespace JoyReactor.Core.Model.Database
 {
-    class Storage : FeedService.IStorage, FeedProvider.IStorage
+    class SQLiteStorage : FeedService.IStorage, JoyReactorProvider.IStorage
     {
         SQLiteConnection db = ServiceLocator.Current.GetInstance<SQLiteConnection>();
 
@@ -142,6 +144,71 @@ namespace JoyReactor.Core.Model.Feed
         public Task ClearTagFromPostsAsync(ID id)
         {
             return db.ExecuteAsync("DELETE FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)", id.SerializeToString());
+        }
+
+        async Task JoyReactorProvider.IStorage.SaveNewOrUpdatePostAsync(Post post)
+        {
+            post.Id = await db.ExecuteScalarAsync<int>("SELECT Id FROM posts WHERE PostId = ?", post.PostId);
+            if (post.Id == 0) await db.InsertAsync(post);
+            else await db.UpdateAsync(post);
+        }
+
+        async Task JoyReactorProvider.IStorage.UpdateTagInformationAsync(ID id, string image, int nextPage, bool hasNextPage)
+        {
+            var t = (await db.QueryAsync<Tag>("SELECT * FROM tags WHERE TagId = ?", id.SerializeToString())).FirstOrDefault()
+                    ?? new Tag { BestImage = image, TagId = id.SerializeToString() };
+            t.NextPage = nextPage;
+            if (t.Id == 0) await db.InsertAsync(t);
+            else await db.UpdateAsync(t);
+        }
+
+        async Task JoyReactorProvider.IStorage.ReplacePostAttachments(string postId, IEnumerable<Attachment> attachments)
+        {
+            var parentId = await db.ExecuteScalarAsync<int>("SELECT Id FROM posts WHERE PostId = ?", postId);
+            await db.ExecuteAsync("DELETE FROM attachments WHERE ParentId = ? AND ParentType = ?", parentId, Attachment.ParentPost);
+            foreach (var a in attachments)
+            {
+                a.ParentId = parentId;
+                a.ParentType = Attachment.ParentPost;
+                await db.InsertAsync(a);
+            }
+        }
+
+        Task JoyReactorProvider.IStorage.RemovePostComments(string postId)
+        {
+            return db.ExecuteAsync("DELETE FROM comments WHERE PostId IN (SELECT Id FROM posts WHERE PostId = ?)");
+        }
+
+        Task JoyReactorProvider.IStorage.SaveNewPostCommentAsync(string postId, string parrentCommentId, Comment comment, string[] attachments)
+        {
+            throw new NotImplementedException();
+        }
+
+        async Task JoyReactorProvider.IStorage.SaveNewOrUpdateProfileAsync(Profile profile)
+        {
+            await db.ExecuteAsync("DELETE FROM profiles");
+            await db.InsertAsync(profile);
+        }
+
+        Task JoyReactorProvider.IStorage.ReplaceCurrentUserReadingTagsAsync(IEnumerable<string> readingTags)
+        {
+            return db.RunInTransactionAsync(() =>
+            {
+                foreach (var t in readingTags)
+                {
+                    var id = ID.Factory.NewTag(t).SerializeToString();
+                    int c = db.ExecuteScalar<int>("SELECT COUNT(*) FROM tags WHERE TagId = ?", id);
+                    if (c == 0)
+                    {
+                        db.Insert(new Tag
+                        {
+                            Flags = Tag.FlagWebRead | Tag.FlagShowInMain,
+                            TagId = id,
+                            Title = t,
+                        });
+                    }
+                }
+            });
         }
     }
 }

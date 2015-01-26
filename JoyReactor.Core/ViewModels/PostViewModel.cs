@@ -4,7 +4,10 @@ using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JoyReactor.Core.ViewModels
@@ -21,6 +24,8 @@ namespace JoyReactor.Core.ViewModels
         }
 
         public RelayCommand OpenGalleryCommand { get; set; }
+
+        PostService service;
 
         public PostViewModel()
         {
@@ -39,23 +44,36 @@ namespace JoyReactor.Core.ViewModels
 #endif
         }
 
-        public async Task Initialize(int postId)
+        public void Initiazlie(int postId)
         {
-            OpenGalleryCommand = new FixRelayCommand(() =>
-                  MessengerInstance.Send(new GalleryNavigationMessage { PostId = postId }));
+            service = PostService.Create(postId);
 
-            IsBusy = true;
-            ViewModelParts.Clear();
-
-            var post = await new PostModel().GetPostAsync(postId);
-            var attachments = await new PostModel().GetPostAttachmentsAsync(postId);
-
-            var poster = attachments.Select(s => s.PreviewImageUrl).FirstOrDefault();
-            ViewModelParts.Add(new PosterViewModel { Image = poster });
-            ViewModelParts.AddRange(ConvertToViewModels(await new PostModel().GetChildCommentsAsync(postId, 0)));
-
-            IsBusy = false;
+            service
+                .GetInformation()
+                .SubscribeOn(SynchronizationContext.Current)
+                .Subscribe(post =>
+                {
+                    // TODO:
+                });
         }
+
+        //public async Task Initialize(int postId)
+        //{
+        //    OpenGalleryCommand = new FixRelayCommand(() =>
+        //          MessengerInstance.Send(new GalleryNavigationMessage { PostId = postId }));
+
+        //    IsBusy = true;
+        //    ViewModelParts.Clear();
+
+        //    var post = await new PostModel().GetPostAsync(postId);
+        //    var attachments = await new PostModel().GetPostAttachmentsAsync(postId);
+
+        //    var poster = attachments.Select(s => s.PreviewImageUrl).FirstOrDefault();
+        //    ViewModelParts.Add(new PosterViewModel { Image = poster });
+        //    ViewModelParts.AddRange(ConvertToViewModels(await new PostModel().GetChildCommentsAsync(postId, 0)));
+
+        //    IsBusy = false;
+        //}
 
         IEnumerable<CommentViewModel> ConvertToViewModels(IEnumerable<CommentWithChildCount> comments)
         {

@@ -16,6 +16,17 @@ namespace JoyReactor.Core.Model.Parser
 {
     class JoyReactorProvider
     {
+        JoyReactorProvider() { }
+
+        #region New instance factory
+
+        internal static JoyReactorProvider Create()
+        {
+            return new JoyReactorProvider();
+        }
+
+        #endregion
+
         public Task LoadTagAsync(ID id, int? currentPage)
         {
             return new TagProvider(id, currentPage).ComputeAsync();
@@ -31,9 +42,9 @@ namespace JoyReactor.Core.Model.Parser
             return new LoginProvider(username, password).ComputeAsync();
         }
 
-        public Task LoadProfileAsync(string username)
+        public Task LoadCurrentUserProfileAsync()
         {
-            return new ProfileProvider(username).ComputeAsync();
+            return new ProfileProvider().ComputeAsync();
         }
 
         class TagProvider
@@ -130,7 +141,7 @@ namespace JoyReactor.Core.Model.Parser
                 var image = imageRx.FirstString(pageHtml);
                 var nextPage = GetNextPageOfTagList();
                 var hasNextPage = GetNextPageOfTagList() > 0;
-                return storage.UpdateTagInformationAsync(image, nextPage, hasNextPage);
+                return storage.UpdateTagInformationAsync(id, image, nextPage, hasNextPage);
             }
 
             int GetNextPageOfTagList()
@@ -547,16 +558,12 @@ namespace JoyReactor.Core.Model.Parser
         {
             IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
             IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
+            IAuthStorage authStorage = ServiceLocator.Current.GetInstance<IAuthStorage>();
 
-            string username;
-
-            internal ProfileProvider(string username)
-            {
-                this.username = username;
-            }
 
             public async Task ComputeAsync()
             {
+                var username = await authStorage.GetCurrentUserNameAsync();
                 var url = new Uri("http://joyreactor.cc/user/" + Uri.EscapeDataString(username));
                 var doc = await downloader.GetDocumentAsync(url);
 
@@ -568,7 +575,7 @@ namespace JoyReactor.Core.Model.Parser
                     .Where(s => s.GetClass() == "user")
                     .SelectMany(s => s.ChildNodes)
                     .First(s => s.Name == "img");
-                p.UserImage = new Uri(div.Attributes["src"].Value);
+                p.UserImage = div.Attributes["src"].Value;
 
                 p.Stars = sidebar.Select("div.star-0").Count();
                 p.NextStarProgress = sidebar
@@ -589,19 +596,24 @@ namespace JoyReactor.Core.Model.Parser
                 //    .Select("div.user-awards > img")
                 //    .Select(s => new ProfileExport.Award { Image = s.Attr("src"), Name = s.Attr("alt") })
                 //    .ToList();
-                //
-                //div = sidebar.ChildNodes.Where(s => s.HasChildNodes).FirstOrDefault(s => "Читает" == s.ChildNodes[0].InnerText);
-                //if (div != null)
-                //{
-                //    var profileTagRx = new Regex("/tag/(.+)");
-                //    p.ReadingTags = div.Descendants("a").Select(s => new ProfileExport.TagExport
-                //    {
-                //        Title = s.InnerText,
-                //        Tag = Uri.UnescapeDataString(Uri.UnescapeDataString(profileTagRx.FirstString(s.GetHref()))).Replace('+', ' '),
-                //    }).ToList();
-                //}
+
+                div = sidebar.ChildNodes.Where(s => s.HasChildNodes).FirstOrDefault(s => "Читает" == s.ChildNodes[0].InnerText);
+                if (div != null)
+                {
+                    var profileTagRx = new Regex("/tag/(.+)");
+                    var readingTags = div.Descendants("a").Select(s => UnescapeTagName(profileTagRx.FirstString(s.GetHref())));
+                    await storage.ReplaceCurrentUserReadingTagsAsync(readingTags);
+                }
 
                 await storage.SaveNewOrUpdateProfileAsync(p);
+            }
+
+            private static string UnescapeTagName(string tag)
+            {
+                return tag
+                    .UnescapeDataString()
+                    .UnescapeDataString()
+                    .Replace('+', ' ');
             }
         }
 
@@ -609,7 +621,7 @@ namespace JoyReactor.Core.Model.Parser
         {
             Task SaveNewOrUpdatePostAsync(Post post);
 
-            Task UpdateTagInformationAsync(string image, int nextPage, bool hasNextPage);
+            Task UpdateTagInformationAsync(ID id, string image, int nextPage, bool hasNextPage);
 
             Task ReplacePostAttachments(string postId, IEnumerable<Attachment> attachments);
 
@@ -618,6 +630,8 @@ namespace JoyReactor.Core.Model.Parser
             Task SaveNewPostCommentAsync(string postId, string parrentCommentId, Comment comment, string[] attachments);
 
             Task SaveNewOrUpdateProfileAsync(Profile profile);
+
+            Task ReplaceCurrentUserReadingTagsAsync(IEnumerable<string> readingTags);
         }
 
         internal interface IAuthStorage

@@ -6,16 +6,29 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Feed
 {
-    class FeedService : IFeedService
+    class FeedService
     {
+        ID id;
+
+        #region Instance factory
+
+        FeedService() { }
+
+        internal static FeedService Create(ID id)
+        {
+            return new FeedService { id = id };
+        }
+
+        #endregion
+
         internal static event EventHandler FeedChanged;
 
         IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
         IFeedProvider provider = ServiceLocator.Current.GetInstance<IFeedProvider>();
 
-        public IObservable<PostCollectionState> Get(ID id)
+        public IObservable<PostCollectionState> Get()
         {
-            UpdateAsync(id);
+            RequestSyncFeedInBackgroundThread();
 
             return Observable
                 .FromEventPattern(typeof(FeedService), "FeedChanged")
@@ -23,26 +36,26 @@ namespace JoyReactor.Core.Model.Feed
                 .SelectMany(Observable.FromAsync(() => storage.GetPostsAsync(id)));
         }
 
-        private async void UpdateAsync(ID id)
+        private async void RequestSyncFeedInBackgroundThread()
         {
             await provider.UpdateFirstPageAsync(id);
             InvalidateFeed();
         }
 
-        public async Task ApplyNewItemsAsync(ID id)
+        public async Task ApplyNewItemsAsync()
         {
             await storage.ApplyNewItemsAsync(id);
             InvalidateFeed();
         }
 
-        public async Task ResetAsync(ID id)
+        public async Task ResetAsync()
         {
             await storage.ClearTagFromPostsAsync(id);
             await provider.UpdateFirstPageAsync(id);
             InvalidateFeed();
         }
 
-        public async Task LoadNextPage(ID id)
+        public async Task LoadNextPage()
         {
             await provider.UpdateNextPageAsync(id);
             InvalidateFeed();

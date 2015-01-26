@@ -4,16 +4,21 @@ using SQLite.Net.Attributes;
 namespace JoyReactor.Core.Model.DTO
 {
     [Table("profiles")]
-	public class Profile
-	{
-		[PrimaryKey]
-		public string Site { get; set; }
+    public class Profile
+    {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
 
-		public string UserName { get; set; }
-		public string Cookie { get; set; }
-        public Uri UserImage { get; internal set; }
-        public int Stars { get; internal set; }
-        public float NextStarProgress { get; internal set; }
-        public float Rating { get; internal set; }
+        public string UserName { get; set; }
+
+        public string UserImage { get; set; }
+
+        public string Cookie { get; set; }
+
+        public int Stars { get; set; }
+
+        public float NextStarProgress { get; set; }
+
+        public float Rating { get; set; }
     }
 }

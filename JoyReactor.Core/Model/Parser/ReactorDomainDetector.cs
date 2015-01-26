@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Refractored.Xam.Settings;
+﻿using Microsoft.Practices.ServiceLocation;
 using Refractored.Xam.Settings.Abstractions;
-using Microsoft.Practices.ServiceLocation;
+using System.Collections.Generic;
 
 namespace JoyReactor.Core.Model.Parser
 {
-	public class ReactorDomainDetector
+    public class ReactorDomainDetector
 	{
 		static Dictionary<TagType, string> DomainsForTypes = new Dictionary<TagType, string> {
 			[TagType.Normal] = "joyreactor.cc",

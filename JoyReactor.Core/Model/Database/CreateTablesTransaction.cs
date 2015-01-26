@@ -15,14 +15,14 @@ namespace JoyReactor.Core.Model.Database
         public void Execute()
         {
             db.CreateTable<Post>();
-            db.CreateTable<Profile>();
             db.CreateTable<Tag>();
             db.CreateTable<TagPost>();
-            db.CreateTable<Profile>();
             db.CreateTable<TagLinkedTag>();
             db.CreateTable<Comment>();
             db.CreateTable<Attachment>();
             db.CreateTable<CommentLink>();
+
+            db.CreateTable<Profile>();
 
             db.CreateTable<PrivateMessageThread>();
             db.CreateTable<PrivateMessage>();

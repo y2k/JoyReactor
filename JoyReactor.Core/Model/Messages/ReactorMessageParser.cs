@@ -1,13 +1,12 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using JoyReactor.Core.Model.Helper;
+using JoyReactor.Core.Model.Web;
+using Microsoft.Practices.ServiceLocation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using HtmlAgilityPack;
-using JoyReactor.Core.Model.Helper;
-using JoyReactor.Core.Model.Parser;
-using JoyReactor.Core.Model.Web;
-using Microsoft.Practices.ServiceLocation;
 using RawMessage = JoyReactor.Core.Model.Messages.MessageFetcher.RawMessage;
 
 namespace JoyReactor.Core.Model.Messages
