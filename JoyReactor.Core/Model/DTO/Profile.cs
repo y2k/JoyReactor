@@ -1,4 +1,5 @@
-﻿using SQLite.Net.Attributes;
+﻿using System;
+using SQLite.Net.Attributes;
 
 namespace JoyReactor.Core.Model.DTO
 {
@@ -8,8 +9,11 @@ namespace JoyReactor.Core.Model.DTO
 		[PrimaryKey]
 		public string Site { get; set; }
 
-		public string Username { get; set; }
-
+		public string UserName { get; set; }
 		public string Cookie { get; set; }
-	}
+        public Uri UserImage { get; internal set; }
+        public int Stars { get; internal set; }
+        public float NextStarProgress { get; internal set; }
+        public float Rating { get; internal set; }
+    }
 }

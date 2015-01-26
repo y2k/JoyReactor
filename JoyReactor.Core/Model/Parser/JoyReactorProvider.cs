@@ -1,11 +1,13 @@
-﻿using JoyReactor.Core.Model.DTO;
+﻿using HtmlAgilityPack;
+using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Web;
 using Microsoft.Practices.ServiceLocation;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -16,12 +18,22 @@ namespace JoyReactor.Core.Model.Parser
     {
         public Task LoadTagAsync(ID id, int? currentPage)
         {
-            return new TagProvider(id, currentPage).Compute();
+            return new TagProvider(id, currentPage).ComputeAsync();
         }
 
-        public Task LoagPostAsync(string postId)
+        public Task LoadPostAsync(string postId)
         {
-            return new PostProvider(postId).Compute();
+            return new PostProvider(postId).ComputeAsync();
+        }
+
+        public Task LoginAsync(string username, string password)
+        {
+            return new LoginProvider(username, password).ComputeAsync();
+        }
+
+        public Task LoadProfileAsync(string username)
+        {
+            return new ProfileProvider(username).ComputeAsync();
         }
 
         class TagProvider
@@ -40,7 +52,7 @@ namespace JoyReactor.Core.Model.Parser
                 this.id = id;
             }
 
-            internal async Task Compute()
+            internal async Task ComputeAsync()
             {
                 pageHtml = await DownloadTagPageWithCheckDomainAsync();
                 await ExtractTagInformationAsync();
@@ -257,7 +269,7 @@ namespace JoyReactor.Core.Model.Parser
                 this.postId = postId;
             }
 
-            internal async Task Compute()
+            internal async Task ComputeAsync()
             {
                 await DownloadHtmlPageAsync();
 
@@ -480,6 +492,119 @@ namespace JoyReactor.Core.Model.Parser
             #endregion
         }
 
+        private class LoginProvider
+        {
+            IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
+            IAuthStorage authStorage = ServiceLocator.Current.GetInstance<IAuthStorage>();
+
+            string username;
+            string password;
+
+            internal LoginProvider(string username, string password)
+            {
+                this.username = username;
+                this.password = password;
+            }
+
+            public async Task ComputeAsync()
+            {
+                var loginPage = await downloader.ExecuteAsync(new Uri("http://joyreactor.cc/login"));
+                var csrf = ExtractCsrf(loginPage.Data);
+
+                var hs = await downloader.PostForCookiesAsync(
+                            new Uri("http://joyreactor.cc/login"),
+                            new RequestParams
+                            {
+                                Cookies = loginPage.Cookies,
+                                Referer = new Uri("http://joyreactor.cc/login"),
+                                Form = new Dictionary<string, string>
+                                {
+                                    ["signin[username]"] = username,
+                                    ["signin[password]"] = password,
+                                    ["signin[remember]"] = "on",
+                                    ["signin[_csrf_token]"] = csrf,
+                                }
+                            });
+
+                if (!hs.ContainsKey("joyreactor"))
+                    throw new Exception();
+
+                await authStorage.SaveCookieToDatabaseAsync(username, hs);
+            }
+
+            string ExtractCsrf(Stream data)
+            {
+                using (data)
+                {
+                    var doc = new HtmlDocument();
+                    doc.Load(data);
+                    return doc.GetElementbyId("signin__csrf_token").Attributes["value"].Value;
+                }
+            }
+        }
+
+        private class ProfileProvider
+        {
+            IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
+            IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
+
+            string username;
+
+            internal ProfileProvider(string username)
+            {
+                this.username = username;
+            }
+
+            public async Task ComputeAsync()
+            {
+                var url = new Uri("http://joyreactor.cc/user/" + Uri.EscapeDataString(username));
+                var doc = await downloader.GetDocumentAsync(url);
+
+                var p = new Profile();
+                p.UserName = username;
+
+                var sidebar = doc.GetElementbyId("sidebar");
+                var div = sidebar.Descendants("div")
+                    .Where(s => s.GetClass() == "user")
+                    .SelectMany(s => s.ChildNodes)
+                    .First(s => s.Name == "img");
+                p.UserImage = new Uri(div.Attributes["src"].Value);
+
+                p.Stars = sidebar.Select("div.star-0").Count();
+                p.NextStarProgress = sidebar
+                    .Select("div.poll_res_bg_active")
+                    .Select(s => s.Attr("style"))
+                    .Select(s => Regex.Match(s, ":(\\d+)").Groups[1].Value)
+                    .Select(s => float.Parse(s) / 100f)
+                    .First();
+
+                div = doc.GetElementbyId("rating-text").ChildNodes.First(s => s.Name == "b");
+
+                var profileRatingRx = new Regex("([\\d\\.]+)");
+                var n = profileRatingRx.Match(div.InnerText.Replace(" ", "")).Groups[1].Value;
+                p.Rating = float.Parse(n, CultureInfo.InvariantCulture);
+
+                // TODO: Добавить обработку новых полей профиля сразу после рефакторинга
+                //p.Awards = sidebar
+                //    .Select("div.user-awards > img")
+                //    .Select(s => new ProfileExport.Award { Image = s.Attr("src"), Name = s.Attr("alt") })
+                //    .ToList();
+                //
+                //div = sidebar.ChildNodes.Where(s => s.HasChildNodes).FirstOrDefault(s => "Читает" == s.ChildNodes[0].InnerText);
+                //if (div != null)
+                //{
+                //    var profileTagRx = new Regex("/tag/(.+)");
+                //    p.ReadingTags = div.Descendants("a").Select(s => new ProfileExport.TagExport
+                //    {
+                //        Title = s.InnerText,
+                //        Tag = Uri.UnescapeDataString(Uri.UnescapeDataString(profileTagRx.FirstString(s.GetHref()))).Replace('+', ' '),
+                //    }).ToList();
+                //}
+
+                await storage.SaveNewOrUpdateProfileAsync(p);
+            }
+        }
+
         internal interface IStorage
         {
             Task SaveNewOrUpdatePostAsync(Post post);
@@ -491,6 +616,8 @@ namespace JoyReactor.Core.Model.Parser
             Task RemovePostComments(string postId);
 
             Task SaveNewPostCommentAsync(string postId, string parrentCommentId, Comment comment, string[] attachments);
+
+            Task SaveNewOrUpdateProfileAsync(Profile profile);
         }
 
         internal interface IAuthStorage
@@ -498,6 +625,8 @@ namespace JoyReactor.Core.Model.Parser
             Task<string> GetCurrentUserNameAsync();
 
             Task<IDictionary<string, string>> GetCookiesAsync();
+
+            Task SaveCookieToDatabaseAsync(string username, IDictionary<string, string> cookies);
         }
     }
 }

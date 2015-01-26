@@ -69,7 +69,7 @@
     <Compile Include="Model\DTO\CommentLink.cs" />
     <Compile Include="Model\Helper\Log.cs" />
     <Compile Include="Model\Helper\DateTimeExtensions.cs" />
-    <Compile Include="Model\Parser\NodeHelper.cs" />
+    <Compile Include="Model\Helper\NodeHelper.cs" />
     <Compile Include="Model\Parser\JoyReactorSiteApi.cs" />
     <Compile Include="Model\Parser\SiteApi.cs" />
     <Compile Include="Model\Parser\Data\ExportAttachment.cs" />

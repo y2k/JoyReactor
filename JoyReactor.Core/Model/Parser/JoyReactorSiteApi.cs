@@ -87,13 +87,6 @@ namespace JoyReactor.Core.Model.Parser
             new TagProvider(this, tag, type, currentPageId).Compute();
         }
 
-        public interface IAuthStorage
-        {
-            Task<string> GetCurrentUserNameAsync();
-
-            Task<IDictionary<string, string>> GetCookiesAsync();
-        }
-
         private class TagProvider
         {
             IAuthStorage authStorage = ServiceLocator.Current.GetInstance<IAuthStorage>();
@@ -608,6 +601,13 @@ namespace JoyReactor.Core.Model.Parser
 
                 return p;
             }
+        }
+
+        public interface IAuthStorage
+        {
+            Task<string> GetCurrentUserNameAsync();
+
+            Task<IDictionary<string, string>> GetCookiesAsync();
         }
     }
 }

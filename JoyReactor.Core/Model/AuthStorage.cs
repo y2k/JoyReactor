@@ -37,7 +37,7 @@ namespace JoyReactor.Core.Model
             {
                 Cookie = SerializeObject(cookies),
                 Site = "" + ID.SiteParser.JoyReactor,
-                Username = username
+                UserName = username
             };
         }
 

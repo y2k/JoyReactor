@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 
-namespace JoyReactor.Core.Model.Parser
+namespace JoyReactor.Core.Model.Helper
 {
-	static class NodeHelper
+    static class NodeHelper
 	{
 		public static IEnumerable<HtmlNode> Select (this HtmlNode root, string xpath)
 		{

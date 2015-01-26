@@ -12,7 +12,7 @@ namespace JoyReactor.Core.Model
         /// Время устаревания страницы списка постов (милисекунды)
         /// </summary>
         public const long TagLifeTime = 5 * 60 * 1000; // 5 минут (для отладки)
-
+        
         /// <summary>
         /// Время устаревания содержимого поста (в милисекундах)
         /// </summary>
