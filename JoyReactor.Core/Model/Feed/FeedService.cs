@@ -58,6 +58,7 @@ namespace JoyReactor.Core.Model.Feed
         {
             var sorter = new OrderedListStorage(id, isFirstPage);
             await JoyReactorProvider.Create().LoadTagAndPostListAsync(id, sorter);
+            await InvalidateFeedAsync();
         }
 
         private static Task InvalidateFeedAsync()
