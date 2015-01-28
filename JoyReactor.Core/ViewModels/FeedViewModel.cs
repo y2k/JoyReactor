@@ -70,7 +70,7 @@ namespace JoyReactor.Core.ViewModels
             subscription?.Dispose();
             subscription = service
                 .Get()
-                .SubscribeOnMain(data =>
+                .SubscribeOnUi(data =>
                 {
                     IsBusy = false;
 

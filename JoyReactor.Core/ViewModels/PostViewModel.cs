@@ -47,17 +47,18 @@ namespace JoyReactor.Core.ViewModels
         public void Initialize(int postId)
         {
             postService = new PostService(postId);
-            commentService = CommentService.Create(postId);
+            commentService = new CommentService(postId);
 
-            postService.Get()
-                .SubscribeOnMain(post =>
+            postService
+                .Get()
+                .SubscribeOnUi(post =>
                 {
-                    // TODO:
                     var poster = post.Attachments.Select(s => s.PreviewImageUrl).FirstOrDefault();
                     ViewModelParts.ReplaceAt(0, new PosterViewModel { Image = poster });
                 });
-            commentService.Get()
-                .SubscribeOnMain(comments =>
+            commentService
+                .Get()
+                .SubscribeOnUi(comments =>
                 {
                     ViewModelParts.ReplaceAll(1, ConvertToViewModels(comments));
                 });
@@ -87,7 +88,7 @@ namespace JoyReactor.Core.ViewModels
                 yield return new CommentViewModel(this, s);
         }
 
-        async void ChangeRootComment(Comment comment, bool isRoot)
+        void ChangeRootComment(Comment comment, bool isRoot)
         {
             if (isRoot)
             {
@@ -96,12 +97,14 @@ namespace JoyReactor.Core.ViewModels
                 //ViewModelParts.ReplaceAll(1, ConvertToViewModels(comments));
                 //if (parent != null)
                 //    ViewModelParts.Insert(1, new CommentViewModel(this, parent) { IsRoot = true });
+                commentService.NavigateToUp();
             }
             else
             {
                 //var childs = await new PostModel().GetChildCommentsAsync(comment.PostId, comment.Id);
                 //ViewModelParts.ReplaceAll(1, ConvertToViewModels(childs));
                 //ViewModelParts.Insert(1, new CommentViewModel(this, comment) { IsRoot = true });
+                commentService.NavigateTo(comment.Id);
             }
         }
 
@@ -133,8 +136,7 @@ namespace JoyReactor.Core.ViewModels
             {
                 Text = comment.Text;
                 ChildCount = comment.ChildCount;
-                NavigateCommand = new FixRelayCommand(() =>
-                   parent.ChangeRootComment(comment, IsRoot));
+                NavigateCommand = new FixRelayCommand(() => parent.ChangeRootComment(comment, IsRoot));
             }
         }
 
@@ -146,6 +148,10 @@ namespace JoyReactor.Core.ViewModels
         internal interface ICommentService
         {
             IObservable<List<Comment>> Get();
+
+            void NavigateTo(int commentId);
+
+            void NavigateToUp();
         }
     }
 }
