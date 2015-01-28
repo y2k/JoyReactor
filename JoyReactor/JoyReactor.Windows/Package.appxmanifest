@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="JoyReactor.Windows.App">
-      <m2:VisualElements DisplayName="JoyReactor" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="JoyReactor.Windows" ForegroundText="light" BackgroundColor="#464646">
+      <m2:VisualElements DisplayName="JoyReactor" Square150x150Logo="Assets\144kh144.png" Square30x30Logo="Assets\SmallLogo.png" Description="JoyReactor.Windows" ForegroundText="light" BackgroundColor="#464646">
         <m2:SplashScreen Image="Assets\SplashScreen.png" />
       </m2:VisualElements>
     </Application>
