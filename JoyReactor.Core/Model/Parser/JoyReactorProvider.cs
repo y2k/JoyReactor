@@ -324,8 +324,8 @@ namespace JoyReactor.Core.Model.Parser
 
             async Task SavePostAttachments()
             {
-                var attachments = ExportPostImages().Union(ExportPostCoubs());
-                await storage.ReplacePostAttachments(null, attachments);
+                var attachments = await Task.Run(() => ExportPostImages().Union(ExportPostCoubs()).ToList());
+                await storage.ReplacePostAttachments(postId, attachments);
             }
 
             IEnumerable<Attachment> ExportPostImages()
@@ -428,7 +428,7 @@ namespace JoyReactor.Core.Model.Parser
                             return position;
                     }
 
-                    string commentId = await GetComment(html, position, end, parentId);
+                    string commentId = await SaveComment(html, position, end, parentId);
 
                     end = SkipHtmlTag(html, end + 1);
                     end = await ReadChildComments(html, end, commentId);
@@ -471,7 +471,7 @@ namespace JoyReactor.Core.Model.Parser
                 return level < 0 ? -1 : html.IndexOf('>', position);
             }
 
-            async Task<string> GetComment(string html, int start, int end, string parentId)
+            async Task<string> SaveComment(string html, int start, int end, string parentId)
             {
                 var s = html.Substring(start, end + 1 - start);
                 var c = new Comment();
@@ -632,7 +632,7 @@ namespace JoyReactor.Core.Model.Parser
 
             Task UpdateTagInformationAsync(ID id, string image, int nextPage, bool hasNextPage);
 
-            Task ReplacePostAttachments(string postId, IEnumerable<Attachment> attachments);
+            Task ReplacePostAttachments(string postId, List<Attachment> attachments);
 
             Task RemovePostComments(string postId);
 

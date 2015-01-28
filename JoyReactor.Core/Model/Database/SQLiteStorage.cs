@@ -162,16 +162,19 @@ namespace JoyReactor.Core.Model.Database
             else await db.UpdateAsync(t);
         }
 
-        async Task JoyReactorProvider.IStorage.ReplacePostAttachments(string postId, IEnumerable<Attachment> attachments)
+        Task JoyReactorProvider.IStorage.ReplacePostAttachments(string postId, List<Attachment> attachments)
         {
-            var parentId = await db.ExecuteScalarAsync<int>("SELECT Id FROM posts WHERE PostId = ?", postId);
-            await db.ExecuteAsync("DELETE FROM attachments WHERE ParentId = ? AND ParentType = ?", parentId, Attachment.ParentPost);
-            foreach (var a in attachments)
+            return db.RunInTransactionAsync(() =>
             {
-                a.ParentId = parentId;
-                a.ParentType = Attachment.ParentPost;
-                await db.InsertAsync(a);
-            }
+                var parentId = db.ExecuteScalar<int>("SELECT Id FROM posts WHERE PostId = ?", postId);
+                db.Execute("DELETE FROM attachments WHERE ParentId = ? AND ParentType = ?", parentId, Attachment.ParentPost);
+                foreach (var a in attachments)
+                {
+                    a.ParentId = parentId;
+                    a.ParentType = Attachment.ParentPost;
+                    db.Insert(a);
+                }
+            });
         }
 
         Task JoyReactorProvider.IStorage.RemovePostComments(string postId)
@@ -181,7 +184,24 @@ namespace JoyReactor.Core.Model.Database
 
         Task JoyReactorProvider.IStorage.SaveNewPostCommentAsync(string postId, string parrentCommentId, Comment comment, string[] attachments)
         {
-            throw new NotImplementedException();
+            return db.RunInTransactionAsync(() =>
+            {
+                db.Insert(comment);
+                db.Insert(new CommentLink
+                {
+                    CommentId = comment.Id,
+                    ParentCommentId = db.ExecuteScalar<int>("SELECT Id FROM comments WHERE PostId = ? AND CommentId = ?", postId, parrentCommentId),
+                });
+
+                foreach (var a in attachments)
+                    db.Insert(new Attachment
+                    {
+                        ParentType = Attachment.ParentComment,
+                        ParentId = comment.Id,
+                        Type = Attachment.TypeImage,
+                        Url = a,
+                    });
+            });
         }
 
         async Task JoyReactorProvider.IStorage.SaveNewOrUpdateProfileAsync(Profile profile)
