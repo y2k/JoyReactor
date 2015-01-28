@@ -62,12 +62,14 @@ namespace JoyReactor.Core.Model
                 b.RegisterType<ProfileService>().As<IProfileService>();
                 b.RegisterType<MessageService>().As<IMessageService>();
 
-                b.RegisterType<AuthStorage>().As<ProfileService.IAuthStorage>();
-                b.RegisterType<AuthStorage>().As<ReactorMessageParser.IAuthStorage>();
-                b.RegisterType<AuthStorage>().As<JoyReactorProvider.IAuthStorage>();
+                b.RegisterType<SQLiteAuthStorage>().As<ProfileService.IAuthStorage>();
+                b.RegisterType<SQLiteAuthStorage>().As<ReactorMessageParser.IAuthStorage>();
+                b.RegisterType<SQLiteAuthStorage>().As<JoyReactorProvider.IAuthStorage>();
 
                 b.RegisterType<SQLiteStorage>().As<FeedService.IStorage>();
                 b.RegisterType<SQLiteStorage>().As<JoyReactorProvider.IStorage>();
+
+                b.RegisterType<OrderedListStorage>().As<JoyReactorProvider.IListStorage>();
             }
         }
 

@@ -27,9 +27,9 @@ namespace JoyReactor.Core.Model.Parser
 
         #endregion
 
-        public Task LoadTagAndPostListAsync(ID id, int? currentPage)
+        public Task LoadTagAndPostListAsync(ID id, IListStorage listStorage)
         {
-            return new TagProvider(id, currentPage).ComputeAsync();
+            return new TagProvider(id, listStorage).ComputeAsync();
         }
 
         public Task LoadPostAsync(string postId)
@@ -53,14 +53,14 @@ namespace JoyReactor.Core.Model.Parser
             IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
             IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
 
+            IListStorage listStorage;
             ID id;
-            int? currentPage;
             string pageHtml;
 
-            public TagProvider(ID id, int? currentPage)
+            public TagProvider(ID id, IListStorage listStorage)
             {
-                this.currentPage = currentPage;
                 this.id = id;
+                this.listStorage = listStorage;
             }
 
             internal async Task ComputeAsync()
@@ -114,8 +114,8 @@ namespace JoyReactor.Core.Model.Parser
                         url.Append(id.Tag == null ? "/all" : "/new");
                 }
 
-                if ((currentPage ?? 0) > 0)
-                    url.Append("/").Append(currentPage);
+                int currentPage = await storage.GetNextPageForTagAsync(id);
+                if (currentPage > 0) url.Append("/").Append(currentPage);
                 return new Uri("" + url);
             }
 
@@ -158,6 +158,7 @@ namespace JoyReactor.Core.Model.Parser
             {
                 foreach (var htmlPost in GetPostHtmlList())
                     await SavePostAsync(htmlPost);
+                await listStorage.CommitAsync();
             }
 
             IEnumerable<string> GetPostHtmlList()
@@ -261,6 +262,7 @@ namespace JoyReactor.Core.Model.Parser
                 }
 
                 await storage.SaveNewOrUpdatePostAsync(p);
+                listStorage.AddPost(p);
             }
 
             #endregion
@@ -617,6 +619,13 @@ namespace JoyReactor.Core.Model.Parser
             }
         }
 
+        internal interface IListStorage
+        {
+            void AddPost(Post post);
+
+            Task CommitAsync();
+        }
+
         internal interface IStorage
         {
             Task SaveNewOrUpdatePostAsync(Post post);
@@ -632,6 +641,8 @@ namespace JoyReactor.Core.Model.Parser
             Task SaveNewOrUpdateProfileAsync(Profile profile);
 
             Task ReplaceCurrentUserReadingTagsAsync(IEnumerable<string> readingTags);
+
+            Task<int> GetNextPageForTagAsync(ID id);
         }
 
         internal interface IAuthStorage

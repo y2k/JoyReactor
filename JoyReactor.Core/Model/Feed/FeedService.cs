@@ -1,13 +1,18 @@
-﻿using System;
+﻿using JoyReactor.Core.Model.Parser;
+using JoyReactor.Core.ViewModels;
+using Microsoft.Practices.ServiceLocation;
+using System;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Feed
 {
-    class FeedService
+    class FeedService : FeedViewModel.IFeedService
     {
+        internal static event EventHandler FeedChanged;
+
+        IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
         ID id;
 
         #region Instance factory
@@ -21,49 +26,43 @@ namespace JoyReactor.Core.Model.Feed
 
         #endregion
 
-        internal static event EventHandler FeedChanged;
-
-        IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
-        //IFeedProvider provider = ServiceLocator.Current.GetInstance<IFeedProvider>();
+        public async Task ApplyNewItemsAsync()
+        {
+            await storage.ApplyNewItemsAsync(id);
+            await InvalidateFeedAsync();
+        }
 
         public IObservable<PostCollectionState> Get()
         {
-            RequestSyncFeedInBackgroundThread();
-
+#pragma warning disable CS4014
+            SyncPage(true);
+#pragma warning restore CS4014
             return Observable
                 .FromEventPattern(typeof(FeedService), "FeedChanged")
                 .StartWith((EventPattern<object>)null)
                 .SelectMany(Observable.FromAsync(() => storage.GetPostsAsync(id)));
         }
 
-        private async void RequestSyncFeedInBackgroundThread()
-        {
-            await provider.UpdateFirstPageAsync(id);
-            InvalidateFeed();
-        }
-
-        public async Task ApplyNewItemsAsync()
-        {
-            await storage.ApplyNewItemsAsync(id);
-            InvalidateFeed();
-        }
-
         public async Task ResetAsync()
         {
             await storage.ClearTagFromPostsAsync(id);
-            await provider.UpdateFirstPageAsync(id);
-            InvalidateFeed();
+            await SyncPage(true);
         }
 
-        public async Task LoadNextPage()
+        public Task SyncNextPageAsync()
         {
-            await provider.UpdateNextPageAsync(id);
-            InvalidateFeed();
+            return SyncPage(false);
         }
 
-        private static void InvalidateFeed()
+        private async Task SyncPage(bool isFirstPage)
         {
-            FeedChanged?.Invoke(null, null);
+            var sorter = new OrderedListStorage(id, isFirstPage);
+            await JoyReactorProvider.Create().LoadTagAndPostListAsync(id, sorter);
+        }
+
+        private static Task InvalidateFeedAsync()
+        {
+            return Task.Run(() => FeedChanged?.Invoke(null, null));
         }
 
         internal interface IStorage
@@ -71,14 +70,8 @@ namespace JoyReactor.Core.Model.Feed
             Task<PostCollectionState> GetPostsAsync(ID id);
 
             Task ApplyNewItemsAsync(ID id);
+
             Task ClearTagFromPostsAsync(ID id);
         }
-
-        //internal interface IFeedProvider
-        //{
-        //    Task UpdateFirstPageAsync(ID id);
-
-        //    Task UpdateNextPageAsync(ID id);
-        //}
     }
 }

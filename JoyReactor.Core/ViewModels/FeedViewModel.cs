@@ -64,7 +64,7 @@ namespace JoyReactor.Core.ViewModels
 
         void Initialize(ID newId)
         {
-            service = FeedService.Create(newId) as IFeedService;
+            service = FeedService.Create(newId);
             IsBusy = true;
 
             subscription?.Dispose();
@@ -103,7 +103,7 @@ namespace JoyReactor.Core.ViewModels
         async void LoadNextPage()
         {
             IsBusy = true;
-            await service.LoadNextPage();
+            await service.SyncNextPageAsync();
             IsBusy = false;
         }
 
@@ -183,7 +183,7 @@ namespace JoyReactor.Core.ViewModels
 
             IObservable<PostCollectionState> Get();
 
-            Task LoadNextPage();
+            Task SyncNextPageAsync();
 
             Task ResetAsync();
         }

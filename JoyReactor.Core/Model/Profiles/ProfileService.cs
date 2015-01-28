@@ -1,13 +1,13 @@
-﻿using JoyReactor.Core.Model.DTO;
+﻿using JoyReactor.Core.Model.Database;
+using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Parser;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Profiles
 {
     class ProfileService : IProfileService
     {
-        IAuthStorage storage = new AuthStorage();
+        IAuthStorage storage = new SQLiteAuthStorage();
         JoyReactorProvider provider = JoyReactorProvider.Create();
 
         public async Task<Profile> GetMyProfile()

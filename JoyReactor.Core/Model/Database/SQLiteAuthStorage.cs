@@ -1,5 +1,4 @@
-﻿using JoyReactor.Core.Model.Database;
-using JoyReactor.Core.Model.DTO;
+﻿using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Messages;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model.Profiles;
@@ -9,9 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace JoyReactor.Core.Model
+namespace JoyReactor.Core.Model.Database
 {
-    class AuthStorage : ProfileService.IAuthStorage, ReactorMessageParser.IAuthStorage, JoyReactorProvider.IAuthStorage
+    class SQLiteAuthStorage : ProfileService.IAuthStorage, ReactorMessageParser.IAuthStorage, JoyReactorProvider.IAuthStorage
     {
         SQLiteConnection db = ServiceLocator.Current.GetInstance<SQLiteConnection>();
 
@@ -34,7 +33,7 @@ namespace JoyReactor.Core.Model
         public async Task<IDictionary<string, string>> GetCookiesAsync()
         {
             var cookies = await db.ExecuteScalarAsync<string>(
-                              "SELECT Cookie FROM profiles WHERE Site = ?",
+                              "SELECT Cookie FROM profiles LIMIT 1",
                               "" + ID.SiteParser.JoyReactor);
             if (cookies == null)
                 return new Dictionary<string, string>();
@@ -52,7 +51,7 @@ namespace JoyReactor.Core.Model
         public Task<string> GetCurrentUserNameAsync()
         {
             return db.ExecuteScalarAsync<string>(
-                "SELECT Username FROM profiles WHERE Site = ?",
+                "SELECT Username FROM profiles LIMIT 1",
                 "" + ID.SiteParser.JoyReactor);
         }
 
