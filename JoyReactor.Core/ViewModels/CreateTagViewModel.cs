@@ -61,7 +61,7 @@ namespace JoyReactor.Core.ViewModels
         {
             IsBusy = true;
             Name = Name.Trim();
-            await new PostModel().CreateTag(Name);
+            await PostService.Create().CreateTagAsync(Name);
             IsBusy = false;
             IsComplete = true;
             MessengerInstance.Send(new CloseMessage());

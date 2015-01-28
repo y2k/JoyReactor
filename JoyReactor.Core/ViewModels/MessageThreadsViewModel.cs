@@ -1,12 +1,13 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight;
+using JoyReactor.Core.Model;
+using JoyReactor.Core.Model.Helper;
+using Microsoft.Practices.ServiceLocation;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using System.Threading;
-using GalaSoft.MvvmLight;
-using Microsoft.Practices.ServiceLocation;
-using JoyReactor.Core.Model;
 
 namespace JoyReactor.Core.ViewModels
 {

@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Helper;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;

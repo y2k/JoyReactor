@@ -20,11 +20,21 @@ namespace JoyReactor.Core.Model
             return new PostService() { postId = postId };
         }
 
-        internal IObservable<Post> GetInformation()
+        internal static PostService Create()
+        {
+            return new PostService();
+        }
+
+        #endregion
+
+        internal IObservable<Post> Get()
         {
             throw new NotImplementedException();
         }
 
-        #endregion
+        internal Task CreateTagAsync(string name)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -32,13 +32,14 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Model\CommentService.cs" />
     <Compile Include="Model\Database\CreateDefaultTagsTransaction.cs" />
     <Compile Include="Model\Database\CreateTablesTransaction.cs" />
     <Compile Include="Model\DTO\Comment.cs" />
     <Compile Include="Model\DTO\Attachment.cs" />
-    <Compile Include="Model\DTO\CommentWithChildCount.cs" />
     <Compile Include="Model\Feed\FeedService.cs" />
     <Compile Include="Model\Database\SQLiteStorage.cs" />
+    <Compile Include="Model\Helper\ObservableExtensions.cs" />
     <Compile Include="Model\Helper\ObservableFactory.cs" />
     <Compile Include="Model\ImageLoader.cs" />
     <Compile Include="Model\DefaultServiceLocator.cs" />
@@ -79,7 +80,7 @@
     <Compile Include="ViewModels\FeedViewModel.cs" />
     <Compile Include="ViewModels\GalleryViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
-    <Compile Include="ViewModels\ObservableCollectionExtensions.cs" />
+    <Compile Include="Model\Helper\ObservableCollectionExtensions.cs" />
     <Compile Include="ViewModels\PostViewModel.cs" />
     <Compile Include="ViewModels\ProfileViewModel.cs" />
     <Compile Include="ViewModels\SelectTagMessage.cs" />

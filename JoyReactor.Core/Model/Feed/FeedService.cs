@@ -24,7 +24,7 @@ namespace JoyReactor.Core.Model.Feed
         internal static event EventHandler FeedChanged;
 
         IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
-        IFeedProvider provider = ServiceLocator.Current.GetInstance<IFeedProvider>();
+        //IFeedProvider provider = ServiceLocator.Current.GetInstance<IFeedProvider>();
 
         public IObservable<PostCollectionState> Get()
         {
@@ -74,11 +74,11 @@ namespace JoyReactor.Core.Model.Feed
             Task ClearTagFromPostsAsync(ID id);
         }
 
-        internal interface IFeedProvider
-        {
-            Task UpdateFirstPageAsync(ID id);
+        //internal interface IFeedProvider
+        //{
+        //    Task UpdateFirstPageAsync(ID id);
 
-            Task UpdateNextPageAsync(ID id);
-        }
+        //    Task UpdateNextPageAsync(ID id);
+        //}
     }
 }

@@ -1,5 +1,6 @@
 ﻿using SQLite.Net.Attributes;
 using System;
+using System.Collections.Generic;
 
 namespace JoyReactor.Core.Model.DTO
 {
@@ -20,5 +21,10 @@ namespace JoyReactor.Core.Model.DTO
 
         public string UserName { get; set; }
         public string UserImage { get; set; }
+
+        [Ignore]
+        public int ChildCount { get; set; }
+        [Ignore]
+        public List<string> Attachments { get; set; }
     }
 }

@@ -1,14 +1,13 @@
 ﻿using GalaSoft.MvvmLight;
+using System;
 using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Helper;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -25,7 +24,8 @@ namespace JoyReactor.Core.ViewModels
 
         public RelayCommand OpenGalleryCommand { get; set; }
 
-        PostService service;
+        PostService postService;
+        CommentService commentService;
 
         public PostViewModel()
         {
@@ -44,16 +44,24 @@ namespace JoyReactor.Core.ViewModels
 #endif
         }
 
-        public void Initiazlie(int postId)
+        public void Initialize(int postId)
         {
-            service = PostService.Create(postId);
+            postService = PostService.Create(postId);
+            commentService = CommentService.Create(postId);
 
-            service
-                .GetInformation()
-                .SubscribeOn(SynchronizationContext.Current)
-                .Subscribe(post =>
+            postService
+                .Get()
+                .SubscribeOnMain(post =>
                 {
                     // TODO:
+                    var poster = post.Attachments.Select(s => s.PreviewImageUrl).FirstOrDefault();
+                    ViewModelParts.ReplaceAt(0, new PosterViewModel { Image = poster });
+                });
+            commentService
+                .Get()
+                .SubscribeOnMain(comments =>
+                {
+                    ViewModelParts.ReplaceAll(1, ConvertToViewModels(comments));
                 });
         }
 
@@ -61,42 +69,43 @@ namespace JoyReactor.Core.ViewModels
         //{
         //    OpenGalleryCommand = new FixRelayCommand(() =>
         //          MessengerInstance.Send(new GalleryNavigationMessage { PostId = postId }));
-
+        //
         //    IsBusy = true;
         //    ViewModelParts.Clear();
-
+        //
         //    var post = await new PostModel().GetPostAsync(postId);
         //    var attachments = await new PostModel().GetPostAttachmentsAsync(postId);
-
+        //
         //    var poster = attachments.Select(s => s.PreviewImageUrl).FirstOrDefault();
         //    ViewModelParts.Add(new PosterViewModel { Image = poster });
         //    ViewModelParts.AddRange(ConvertToViewModels(await new PostModel().GetChildCommentsAsync(postId, 0)));
-
+        //
         //    IsBusy = false;
         //}
 
-        IEnumerable<CommentViewModel> ConvertToViewModels(IEnumerable<CommentWithChildCount> comments)
+        IEnumerable<CommentViewModel> ConvertToViewModels(IEnumerable<Comment> comments)
         {
             foreach (var s in comments)
                 yield return new CommentViewModel(this, s);
         }
 
-        async void ChangeRootComment(CommentWithChildCount comment, bool isRoot)
+        async void ChangeRootComment(Comment comment, bool isRoot)
         {
-            if (isRoot)
-            {
-                var comments = await new PostModel().GetCommentsWithSameParentAsync(comment.PostId, comment.Id);
-                var parent = await new PostModel().GetParentCommentAsync(comment.PostId, comment.Id);
-                ViewModelParts.ReplaceAll(1, ConvertToViewModels(comments));
-                if (parent != null)
-                    ViewModelParts.Insert(1, new CommentViewModel(this, parent) { IsRoot = true });
-            }
-            else
-            {
-                var childs = await new PostModel().GetChildCommentsAsync(comment.PostId, comment.Id);
-                ViewModelParts.ReplaceAll(1, ConvertToViewModels(childs));
-                ViewModelParts.Insert(1, new CommentViewModel(this, comment) { IsRoot = true });
-            }
+            //if (isRoot)
+            //{
+            //    var comments = await new PostModel().GetCommentsWithSameParentAsync(comment.PostId, comment.Id);
+            //    var parent = await new PostModel().GetParentCommentAsync(comment.PostId, comment.Id);
+            //    ViewModelParts.ReplaceAll(1, ConvertToViewModels(comments));
+            //    if (parent != null)
+            //        ViewModelParts.Insert(1, new CommentViewModel(this, parent) { IsRoot = true });
+            //}
+            //else
+            //{
+            //    var childs = await new PostModel().GetChildCommentsAsync(comment.PostId, comment.Id);
+            //    ViewModelParts.ReplaceAll(1, ConvertToViewModels(childs));
+            //    ViewModelParts.Insert(1, new CommentViewModel(this, comment) { IsRoot = true });
+            //}
+            throw new NotImplementedException();
         }
 
         public class PosterViewModel : ViewModelBase
@@ -123,7 +132,7 @@ namespace JoyReactor.Core.ViewModels
 
             public CommentViewModel() { }
 
-            public CommentViewModel(PostViewModel parent, CommentWithChildCount comment)
+            public CommentViewModel(PostViewModel parent, Comment comment)
             {
                 Text = comment.Text;
                 ChildCount = comment.ChildCount;

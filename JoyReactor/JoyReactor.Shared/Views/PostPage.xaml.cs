@@ -23,10 +23,10 @@ namespace JoyReactor.Views
             Frame.GoBack();
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            await ((PostViewModel)DataContext).Initialize((int)e.Parameter);
+            ((PostViewModel)DataContext).Initialize((int)e.Parameter);
             Messenger.Default.Register<GalleryNavigationMessage>(this, m =>
                 Frame.Navigate(typeof(GalleryPage), m.PostId));
         }

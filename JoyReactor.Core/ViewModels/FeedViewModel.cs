@@ -3,13 +3,13 @@ using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Feed;
-using Microsoft.Practices.ServiceLocation;
+using JoyReactor.Core.Model.Helper;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -49,7 +49,7 @@ namespace JoyReactor.Core.ViewModels
 
         #endregion
 
-        FeedService service;
+        IFeedService service;
         IDisposable subscription;
 
         public FeedViewModel()
@@ -64,29 +64,30 @@ namespace JoyReactor.Core.ViewModels
 
         void Initialize(ID newId)
         {
-            service = FeedService.Create(newId);
+            service = FeedService.Create(newId) as IFeedService;
             IsBusy = true;
 
             subscription?.Dispose();
             subscription = service
                 .Get()
-                .ObserveOn(SynchronizationContext.Current)
-                .Subscribe(data =>
+                .SubscribeOnMain(data =>
                 {
                     IsBusy = false;
 
                     HasNewItems = data.NewItemsCount > 0;
-                    if (!HasNewItems)
-                    {
-                        var newPosts = ConvertToViewModelItemList(true, data);
-                        for (int i = Posts.Count - 1; i >= newPosts.Count; i--)
-                            Posts.RemoveAt(i);
-                        for (int i = Posts.Count; i < newPosts.Count; i++)
-                            Posts.Add(null);
-                        for (int i = 0; i < newPosts.Count; i++)
-                            Posts[i] = newPosts[i];
-                    }
+                    if (!HasNewItems) UpdatePosts(data);
                 });
+        }
+
+        private void UpdatePosts(PostCollectionState data)
+        {
+            var newPosts = ConvertToViewModelItemList(true, data);
+            for (int i = Posts.Count - 1; i >= newPosts.Count; i--)
+                Posts.RemoveAt(i);
+            for (int i = Posts.Count; i < newPosts.Count; i++)
+                Posts.Add(null);
+            for (int i = 0; i < newPosts.Count; i++)
+                Posts[i] = newPosts[i];
         }
 
         async void ReloadFeed()
@@ -149,6 +150,11 @@ namespace JoyReactor.Core.ViewModels
                 var o = obj as ContentViewModel;
                 return o != null && post.PostId == o.post.PostId;
             }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
         }
 
         public class DividerViewModel : ViewModelBase
@@ -164,6 +170,22 @@ namespace JoyReactor.Core.ViewModels
             {
                 return obj is DividerViewModel;
             }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
+        }
+
+        internal interface IFeedService
+        {
+            Task ApplyNewItemsAsync();
+
+            IObservable<PostCollectionState> Get();
+
+            Task LoadNextPage();
+
+            Task ResetAsync();
         }
     }
 }

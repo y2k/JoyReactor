@@ -1,4 +1,5 @@
 ﻿using SQLite.Net.Attributes;
+using System.Collections.Generic;
 
 namespace JoyReactor.Core.Model.DTO
 {
@@ -27,5 +28,8 @@ namespace JoyReactor.Core.Model.DTO
         public long Timestamp { get; set; }
 
 		public string Content { get; set; }
+
+        [Ignore]
+        public List<Attachment> Attachments { get; set; }
     }
 }

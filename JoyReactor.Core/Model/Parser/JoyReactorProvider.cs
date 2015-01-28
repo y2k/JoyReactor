@@ -16,9 +16,9 @@ namespace JoyReactor.Core.Model.Parser
 {
     class JoyReactorProvider
     {
-        JoyReactorProvider() { }
-
         #region New instance factory
+
+        JoyReactorProvider() { }
 
         internal static JoyReactorProvider Create()
         {
@@ -27,7 +27,7 @@ namespace JoyReactor.Core.Model.Parser
 
         #endregion
 
-        public Task LoadTagAsync(ID id, int? currentPage)
+        public Task LoadTagAndPostListAsync(ID id, int? currentPage)
         {
             return new TagProvider(id, currentPage).ComputeAsync();
         }
