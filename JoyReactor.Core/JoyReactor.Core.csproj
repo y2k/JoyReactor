@@ -38,16 +38,13 @@
     <Compile Include="Model\DTO\Comment.cs" />
     <Compile Include="Model\DTO\Attachment.cs" />
     <Compile Include="Model\Feed\FeedService.cs" />
-    <Compile Include="Model\Feed\OldFeedService.cs" />
     <Compile Include="Model\Database\SQLiteStorage.cs" />
     <Compile Include="Model\Feed\OrderedListStorage.cs" />
     <Compile Include="Model\Helper\ObservableExtensions.cs" />
     <Compile Include="Model\Helper\ObservableFactory.cs" />
     <Compile Include="Model\ImageLoader.cs" />
     <Compile Include="Model\DefaultServiceLocator.cs" />
-    <Compile Include="Model\Feed\FeedProvider.cs" />
     <Compile Include="Model\PostCollectionState.cs" />
-    <Compile Include="Model\PostModel.cs" />
     <Compile Include="Model\IProfileService.cs" />
     <Compile Include="Model\PostService.cs" />
     <Compile Include="Model\Profiles\ProfileService.cs" />
@@ -56,7 +53,6 @@
     <Compile Include="Model\Web\IWebDownloader.cs" />
     <Compile Include="Model\Web\WebDownloader.cs" />
     <Compile Include="Model\Helper\RegexExtensions.cs" />
-    <Compile Include="Model\PostCollectionModel.cs" />
     <Compile Include="Model\DTO\Post.cs" />
     <Compile Include="Model\Database\SQLiteConnectionFactory.cs" />
     <Compile Include="Model\ID.cs" />
@@ -91,7 +87,6 @@
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="ViewModels\PostNavigationMessage.cs" />
     <Compile Include="ViewModels\FixRelayCommand.cs" />
-    <Compile Include="Model\Profiles\MyProfileLoader.cs" />
     <Compile Include="ViewModels\MessageThreadsViewModel.cs" />
     <Compile Include="ViewModels\MessagesViewModel.cs" />
     <Compile Include="Model\IMessageService.cs" />
