@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SQLite.Net;
+using System;
 using System.Collections;
-using SQLite.Net;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Database
@@ -115,6 +116,16 @@ namespace JoyReactor.Core.Model.Database
                 lock (instance)
                 {
                     return instance.Query<T>(query, args);
+                }
+            });
+        }
+        public static Task<T> QueryFirstAsync<T>(this SQLiteConnection instance, string query, params object[] args) where T : new()
+        {
+            return Task.Run(() =>
+            {
+                lock (instance)
+                {
+                    return instance.Query<T>(query, args).FirstOrDefault();
                 }
             });
         }

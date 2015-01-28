@@ -1,9 +1,9 @@
 ﻿using GalaSoft.MvvmLight;
-using System;
 using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -24,8 +24,8 @@ namespace JoyReactor.Core.ViewModels
 
         public RelayCommand OpenGalleryCommand { get; set; }
 
-        PostService postService;
-        CommentService commentService;
+        IPostService postService;
+        ICommentService commentService;
 
         public PostViewModel()
         {
@@ -46,19 +46,17 @@ namespace JoyReactor.Core.ViewModels
 
         public void Initialize(int postId)
         {
-            postService = PostService.Create(postId);
+            postService = new PostService(postId);
             commentService = CommentService.Create(postId);
 
-            postService
-                .Get()
+            postService.Get()
                 .SubscribeOnMain(post =>
                 {
                     // TODO:
                     var poster = post.Attachments.Select(s => s.PreviewImageUrl).FirstOrDefault();
                     ViewModelParts.ReplaceAt(0, new PosterViewModel { Image = poster });
                 });
-            commentService
-                .Get()
+            commentService.Get()
                 .SubscribeOnMain(comments =>
                 {
                     ViewModelParts.ReplaceAll(1, ConvertToViewModels(comments));
@@ -91,21 +89,20 @@ namespace JoyReactor.Core.ViewModels
 
         async void ChangeRootComment(Comment comment, bool isRoot)
         {
-            //if (isRoot)
-            //{
-            //    var comments = await new PostModel().GetCommentsWithSameParentAsync(comment.PostId, comment.Id);
-            //    var parent = await new PostModel().GetParentCommentAsync(comment.PostId, comment.Id);
-            //    ViewModelParts.ReplaceAll(1, ConvertToViewModels(comments));
-            //    if (parent != null)
-            //        ViewModelParts.Insert(1, new CommentViewModel(this, parent) { IsRoot = true });
-            //}
-            //else
-            //{
-            //    var childs = await new PostModel().GetChildCommentsAsync(comment.PostId, comment.Id);
-            //    ViewModelParts.ReplaceAll(1, ConvertToViewModels(childs));
-            //    ViewModelParts.Insert(1, new CommentViewModel(this, comment) { IsRoot = true });
-            //}
-            throw new NotImplementedException();
+            if (isRoot)
+            {
+                //var comments = await new PostModel().GetCommentsWithSameParentAsync(comment.PostId, comment.Id);
+                //var parent = await new PostModel().GetParentCommentAsync(comment.PostId, comment.Id);
+                //ViewModelParts.ReplaceAll(1, ConvertToViewModels(comments));
+                //if (parent != null)
+                //    ViewModelParts.Insert(1, new CommentViewModel(this, parent) { IsRoot = true });
+            }
+            else
+            {
+                //var childs = await new PostModel().GetChildCommentsAsync(comment.PostId, comment.Id);
+                //ViewModelParts.ReplaceAll(1, ConvertToViewModels(childs));
+                //ViewModelParts.Insert(1, new CommentViewModel(this, comment) { IsRoot = true });
+            }
         }
 
         public class PosterViewModel : ViewModelBase
@@ -139,6 +136,16 @@ namespace JoyReactor.Core.ViewModels
                 NavigateCommand = new FixRelayCommand(() =>
                    parent.ChangeRootComment(comment, IsRoot));
             }
+        }
+
+        internal interface IPostService
+        {
+            IObservable<Post> Get();
+        }
+
+        internal interface ICommentService
+        {
+            IObservable<List<Comment>> Get();
         }
     }
 }

@@ -1,40 +1,44 @@
 ﻿using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Parser;
+using JoyReactor.Core.ViewModels;
+using Microsoft.Practices.ServiceLocation;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model
 {
-    class PostService
+    class PostService : PostViewModel.IPostService
     {
+        IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
+        internal event EventHandler PostChanged;
         int postId;
 
-        #region New instance factory
-
-        PostService() { }
-
-        internal static PostService Create(int postId)
+        internal PostService(int postId)
         {
-            return new PostService() { postId = postId };
+            this.postId = postId;
         }
 
-        internal static PostService Create()
+        public IObservable<Post> Get()
         {
-            return new PostService();
+            SyncPost();
+            return Observable
+                .FromEventPattern(this, "PostChanged")
+                .StartWith((EventPattern<object>)null)
+                .SelectMany(Observable.FromAsync(() => storage.GetPostWithAttachmentsAsync(postId)));
         }
 
-        #endregion
-
-        internal IObservable<Post> Get()
+        async void SyncPost()
         {
-            throw new NotImplementedException();
+            var post = await storage.GetPostWithAttachmentsAsync(postId);
+            await JoyReactorProvider.Create().LoadPostAsync(post.PostId);
+            PostChanged?.Invoke(null, null);
         }
 
-        internal Task CreateTagAsync(string name)
+        internal interface IStorage
         {
-            throw new NotImplementedException();
+            Task<Post> GetPostWithAttachmentsAsync(int postId);
         }
     }
 }

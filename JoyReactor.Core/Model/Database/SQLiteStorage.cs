@@ -10,7 +10,7 @@ using System;
 
 namespace JoyReactor.Core.Model.Database
 {
-    class SQLiteStorage : FeedService.IStorage, JoyReactorProvider.IStorage
+    class SQLiteStorage : FeedService.IStorage, JoyReactorProvider.IStorage, PostService.IStorage
     {
         SQLiteConnection db = ServiceLocator.Current.GetInstance<SQLiteConnection>();
 
@@ -209,6 +209,15 @@ namespace JoyReactor.Core.Model.Database
                     }
                 }
             });
+        }
+
+        async Task<Post> PostService.IStorage.GetPostWithAttachmentsAsync(int postId)
+        {
+            var post = await db.QueryFirstAsync<Post>("SELECT * FROM posts WHERE id = ?", postId);
+            post.Attachments = await db.QueryAsync<Attachment>(
+                "SELECT * FROM attachments WHERE ParentType = ? AND ParentId = ?",
+                Attachment.ParentPost, postId);
+            return post;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -61,7 +62,10 @@ namespace JoyReactor.Core.ViewModels
         {
             IsBusy = true;
             Name = Name.Trim();
-            await PostService.Create().CreateTagAsync(Name);
+
+            await Task.Delay(1000); // TODO:
+            //await PostService.Create().CreateTagAsync(Name);
+
             IsBusy = false;
             IsComplete = true;
             MessengerInstance.Send(new CloseMessage());
