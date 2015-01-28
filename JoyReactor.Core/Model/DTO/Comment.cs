@@ -23,6 +23,8 @@ namespace JoyReactor.Core.Model.DTO
         public string UserImage { get; set; }
 
         [Ignore]
+        public int ParentCommentId { get; set; }
+        [Ignore]
         public int ChildCount { get; set; }
         [Ignore]
         public List<string> Attachments { get; set; }

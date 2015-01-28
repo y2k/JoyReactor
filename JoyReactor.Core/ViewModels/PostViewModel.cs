@@ -56,11 +56,22 @@ namespace JoyReactor.Core.ViewModels
                     var poster = post.Attachments.Select(s => s.PreviewImageUrl).FirstOrDefault();
                     ViewModelParts.ReplaceAt(0, new PosterViewModel { Image = poster });
                 });
+            ReloadCommentList(0);
+        }
+
+        private void ReloadCommentList(int commentId)
+        {
             commentService
-                .Get()
+                .Get(commentId)
                 .SubscribeOnUi(comments =>
                 {
-                    ViewModelParts.ReplaceAll(1, ConvertToViewModels(comments));
+                    ViewModelParts.ReplaceAll(1, new ViewModelBase[0]);
+                    if (comments.Count >= 2 && comments[0].Id == comments[1].ParentCommentId)
+                    {
+                        ViewModelParts.Insert(1, new CommentViewModel(this, comments[0]) { IsRoot = true });
+                        comments.RemoveAt(0);
+                    }
+                    ViewModelParts.AddRange(ConvertToViewModels(comments));
                 });
         }
 
@@ -97,14 +108,14 @@ namespace JoyReactor.Core.ViewModels
                 //ViewModelParts.ReplaceAll(1, ConvertToViewModels(comments));
                 //if (parent != null)
                 //    ViewModelParts.Insert(1, new CommentViewModel(this, parent) { IsRoot = true });
-                commentService.NavigateToUp();
+                ReloadCommentList(comment.ParentCommentId);
             }
             else
             {
                 //var childs = await new PostModel().GetChildCommentsAsync(comment.PostId, comment.Id);
                 //ViewModelParts.ReplaceAll(1, ConvertToViewModels(childs));
                 //ViewModelParts.Insert(1, new CommentViewModel(this, comment) { IsRoot = true });
-                commentService.NavigateTo(comment.Id);
+                ReloadCommentList(comment.Id);
             }
         }
 
@@ -147,11 +158,7 @@ namespace JoyReactor.Core.ViewModels
 
         internal interface ICommentService
         {
-            IObservable<List<Comment>> Get();
-
-            void NavigateTo(int commentId);
-
-            void NavigateToUp();
+            IObservable<List<Comment>> Get(int comment);
         }
     }
 }

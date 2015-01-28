@@ -10,7 +10,7 @@ using System;
 
 namespace JoyReactor.Core.Model.Database
 {
-    class SQLiteStorage : FeedService.IStorage, JoyReactorProvider.IStorage, PostService.IStorage
+    class SQLiteStorage : FeedService.IStorage, JoyReactorProvider.IStorage, PostService.IStorage, CommentService.IStorage
     {
         SQLiteConnection db = ServiceLocator.Current.GetInstance<SQLiteConnection>();
 
@@ -238,6 +238,27 @@ namespace JoyReactor.Core.Model.Database
                 "SELECT * FROM attachments WHERE ParentType = ? AND ParentId = ?",
                 Attachment.ParentPost, postId);
             return post;
+        }
+
+        Task<List<Comment>> CommentService.IStorage.GetChildCommentsAsync(int postId, int commentId)
+        {
+            if (commentId == 0)
+            {
+                return db.QueryAsync<Comment>(
+                    "SELECT c.*, (SELECT COUNT(*) FROM comment_links WHERE ParentCommentId = c.Id) AS ChildCount " +
+                    "FROM comments c " +
+                    "WHERE c.PostId = ? AND c.Id NOT IN (SELECT CommentId FROM comment_links) " +
+                    "ORDER BY c.Rating DESC, ChildCount DESC ",
+                    postId);
+            }
+            else
+            {
+                return db.QueryAsync<Comment>(
+                    "SELECT c.*, (SELECT COUNT(*) FROM comment_links WHERE ParentCommentId = c.Id) AS ChildCount FROM comments c WHERE c.PostId = ? AND c.Id IN (" +
+                    "   SELECT CommentId FROM comment_links WHERE ParentCommentId = ?) " +
+                    "ORDER BY c.Rating DESC, ChildCount DESC",
+                    postId, commentId);
+            }
         }
     }
 }

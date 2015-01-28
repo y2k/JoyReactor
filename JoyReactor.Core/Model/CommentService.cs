@@ -20,17 +20,17 @@ namespace JoyReactor.Core.Model
             this.postId = postId;
         }
 
-        public IObservable<List<Comment>> Get()
+        public IObservable<List<Comment>> Get(int commentId)
         {
             return Observable
                 .FromEventPattern(this, "PostChanged")
                 .StartWith((EventPattern<object>)null)
-                .SelectMany(Observable.FromAsync(() => storage.GetCommentsAsync()));
+                .SelectMany(Observable.FromAsync(() => storage.GetChildCommentsAsync(postId, commentId)));
         }
 
         internal interface IStorage
         {
-            Task<List<Comment>> GetCommentsAsync();
+            Task<List<Comment>> GetChildCommentsAsync(int postId, int commentId);
         }
     }
 }
