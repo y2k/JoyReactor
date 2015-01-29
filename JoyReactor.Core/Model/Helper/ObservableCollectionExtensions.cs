@@ -30,8 +30,8 @@ namespace JoyReactor.Core.Model.Helper
         public static void ReplaceAt<T>(this ObservableCollection<T> collection, int position, T newItem)
         {
             if (position >= collection.Count)
-                collection.AddRange(Enumerable.Range(0, position).Select(s => default(T)));
-            collection.Insert(position, newItem);
+                collection.AddRange(Enumerable.Range(0, position + 1).Select(s => default(T)));
+            collection[position] = newItem;
         }
     }
 }
