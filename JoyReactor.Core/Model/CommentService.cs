@@ -11,7 +11,6 @@ namespace JoyReactor.Core.Model
 {
     class CommentService : PostViewModel.ICommentService
     {
-        internal event EventHandler PostChanged;
         IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
         int postId;
 
@@ -23,7 +22,7 @@ namespace JoyReactor.Core.Model
         public IObservable<List<Comment>> Get(int commentId)
         {
             return Observable
-                .FromEventPattern(this, "PostChanged")
+                .FromEventPattern(typeof(PostService), "PostChanged")
                 .StartWith((EventPattern<object>)null)
                 .SelectMany(Observable.FromAsync(() => storage.GetChildCommentsAsync(postId, commentId)));
         }

@@ -12,7 +12,7 @@ namespace JoyReactor.Core.Model
     class PostService : PostViewModel.IPostService
     {
         IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
-        internal event EventHandler PostChanged;
+        internal static event EventHandler PostChanged;
         int postId;
 
         internal PostService(int postId)
@@ -24,7 +24,7 @@ namespace JoyReactor.Core.Model
         {
             SyncPost();
             return Observable
-                .FromEventPattern(this, "PostChanged")
+                .FromEventPattern(typeof(PostService), "PostChanged")
                 .StartWith((EventPattern<object>)null)
                 .SelectMany(Observable.FromAsync(() => storage.GetPostWithAttachmentsAsync(postId)));
         }

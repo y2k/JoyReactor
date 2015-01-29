@@ -69,6 +69,7 @@ namespace JoyReactor.Core.Model
                 b.RegisterType<SQLiteStorage>().As<FeedService.IStorage>();
                 b.RegisterType<SQLiteStorage>().As<JoyReactorProvider.IStorage>();
                 b.RegisterType<SQLiteStorage>().As<PostService.IStorage>();
+                b.RegisterType<SQLiteStorage>().As<CommentService.IStorage>();
 
                 b.RegisterType<OrderedListStorage>().As<JoyReactorProvider.IListStorage>();
             }

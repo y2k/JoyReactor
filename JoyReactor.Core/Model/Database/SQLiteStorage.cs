@@ -245,7 +245,10 @@ namespace JoyReactor.Core.Model.Database
             if (commentId == 0)
             {
                 return db.QueryAsync<Comment>(
-                    "SELECT c.*, (SELECT COUNT(*) FROM comment_links WHERE ParentCommentId = c.Id) AS ChildCount " +
+                    "SELECT " +
+                    "c.*, " +
+                    "(SELECT COUNT(*) FROM comment_links WHERE ParentCommentId = c.Id) AS ChildCount, " +
+                    "(SELECT ParentCommentId FROM comment_links WHERE CommentId = c.Id) AS ParentCommentId " +
                     "FROM comments c " +
                     "WHERE c.PostId = ? AND c.Id NOT IN (SELECT CommentId FROM comment_links) " +
                     "ORDER BY c.Rating DESC, ChildCount DESC ",
@@ -254,7 +257,11 @@ namespace JoyReactor.Core.Model.Database
             else
             {
                 return db.QueryAsync<Comment>(
-                    "SELECT c.*, (SELECT COUNT(*) FROM comment_links WHERE ParentCommentId = c.Id) AS ChildCount FROM comments c WHERE c.PostId = ? AND c.Id IN (" +
+                    "SELECT " +
+                    "c.*, " +
+                    "(SELECT COUNT(*) FROM comment_links WHERE ParentCommentId = c.Id) AS ChildCount, " +
+                    "(SELECT ParentCommentId FROM comment_links WHERE CommentId = c.Id) AS ParentCommentId " +
+                    "FROM comments c WHERE c.PostId = ? AND c.Id IN (" +
                     "   SELECT CommentId FROM comment_links WHERE ParentCommentId = ?) " +
                     "ORDER BY c.Rating DESC, ChildCount DESC",
                     postId, commentId);
