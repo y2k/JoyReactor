@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.ViewModels;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Messages
 {
-    public class MessageService : IMessageService
+    public class MessageService : MessageThreadsViewModel.IMessageService, MessagesViewModel.IMessageService
     {
-        IMessageStorage storage = new MessageStorage();
+        IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
 
         public static event EventHandler MessagesChanged;
 
@@ -46,7 +48,7 @@ namespace JoyReactor.Core.Model.Messages
             MessagesChanged?.Invoke(null, null);
         }
 
-        public interface IMessageStorage
+        public interface IStorage
         {
             Task<List<MessageThreadItem>> GetThreadsWithAdditionInformationAsync();
 

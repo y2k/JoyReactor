@@ -6,6 +6,7 @@ using JoyReactor.Core.Model.Messages;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model.Profiles;
 using JoyReactor.Core.Model.Web;
+using JoyReactor.Core.ViewModels;
 using Microsoft.Practices.ServiceLocation;
 using Refractored.Xam.Settings;
 using SQLite.Net;
@@ -60,7 +61,12 @@ namespace JoyReactor.Core.Model
                 b.Register(_ => CrossSettings.Current).AsSelf();
 
                 b.RegisterType<ProfileService>().As<IProfileService>();
-                b.RegisterType<MessageService>().As<IMessageService>();
+
+                b.RegisterType<SQLiteMessageStorage>().As<MessageService.IStorage>();
+                b.RegisterType<SQLiteMessageStorage>().As<MessageFetcher.IStorage>();
+
+                b.RegisterType<MessageService>().As<MessageThreadsViewModel.IMessageService>();
+                b.RegisterType<MessageService>().As<MessagesViewModel.IMessageService>();
 
                 b.RegisterType<SQLiteAuthStorage>().As<ProfileService.IAuthStorage>();
                 b.RegisterType<SQLiteAuthStorage>().As<ReactorMessageParser.IAuthStorage>();

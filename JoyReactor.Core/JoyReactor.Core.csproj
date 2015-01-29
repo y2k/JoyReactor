@@ -37,6 +37,7 @@
     <Compile Include="Model\Database\CreateTablesTransaction.cs" />
     <Compile Include="Model\DTO\Comment.cs" />
     <Compile Include="Model\DTO\Attachment.cs" />
+    <Compile Include="Model\DTO\MessageThreadItem.cs" />
     <Compile Include="Model\Feed\FeedService.cs" />
     <Compile Include="Model\Database\SQLiteStorage.cs" />
     <Compile Include="Model\Feed\OrderedListStorage.cs" />
@@ -88,9 +89,8 @@
     <Compile Include="ViewModels\FixRelayCommand.cs" />
     <Compile Include="ViewModels\MessageThreadsViewModel.cs" />
     <Compile Include="ViewModels\MessagesViewModel.cs" />
-    <Compile Include="Model\IMessageService.cs" />
     <Compile Include="Model\Messages\MessageService.cs" />
-    <Compile Include="Model\Messages\MessageStorage.cs" />
+    <Compile Include="Model\Database\SQLiteMessageStorage.cs" />
     <Compile Include="Model\DTO\PrivateMessage.cs" />
     <Compile Include="Model\DTO\PrivateMessageThread.cs" />
     <Compile Include="Model\Messages\ReactorMessageParser.cs" />

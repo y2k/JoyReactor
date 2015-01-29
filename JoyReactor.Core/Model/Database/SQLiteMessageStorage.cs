@@ -1,5 +1,5 @@
-﻿using JoyReactor.Core.Model.Database;
-using JoyReactor.Core.Model.DTO;
+﻿using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Messages;
 using Microsoft.Practices.ServiceLocation;
 using SQLite.Net;
 using System.Collections.Generic;
@@ -7,9 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using RawMessage = JoyReactor.Core.Model.Messages.MessageFetcher.RawMessage;
 
-namespace JoyReactor.Core.Model.Messages
+namespace JoyReactor.Core.Model.Database
 {
-    public class MessageStorage : MessageFetcher.IMessageStorage, MessageService.IMessageStorage
+    public class SQLiteMessageStorage : MessageFetcher.IStorage, MessageService.IStorage
     {
         SQLiteConnection db = ServiceLocator.Current.GetInstance<SQLiteConnection>();
 

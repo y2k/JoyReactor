@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using JoyReactor.Core.Model.DTO;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Messages
 {
 	public class MessageFetcher
 	{
-        IMessageStorage storage = new MessageStorage();
+        IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
         IMessageParser parser = new ReactorMessageParser();
 
 		public async Task FetchAsync ()
@@ -28,7 +30,7 @@ namespace JoyReactor.Core.Model.Messages
 			return buffer;
 		}
 
-		public interface IMessageStorage
+		public interface IStorage
 		{
 			Task ClearAsync ();
 

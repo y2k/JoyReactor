@@ -12,5 +12,12 @@ namespace JoyReactor.Core.Model.Helper
                 .ObserveOn(SynchronizationContext.Current)
                 .Subscribe(onNext);
         }
+
+        internal static IDisposable SubscribeOnUi<T>(this IObservable<T> source, Action<T> onNext, Action<Exception> onError)
+        {
+            return source
+                .ObserveOn(SynchronizationContext.Current)
+                .Subscribe(onNext, onError);
+        }
     }
 }

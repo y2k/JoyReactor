@@ -1,6 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
 using Microsoft.Practices.ServiceLocation;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -84,6 +84,13 @@ namespace JoyReactor.Core.ViewModels
         public class SelectThreadMessage
         {
             public string Username { get; set; }
+        }
+
+        internal interface IMessageService
+        {
+            IObservable<List<PrivateMessage>> GetMessages(string username);
+
+            Task SendMessage(string username, string message);
         }
     }
 }
