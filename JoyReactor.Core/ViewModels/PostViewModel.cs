@@ -75,48 +75,10 @@ namespace JoyReactor.Core.ViewModels
                 });
         }
 
-        //public async Task Initialize(int postId)
-        //{
-        //    OpenGalleryCommand = new FixRelayCommand(() =>
-        //          MessengerInstance.Send(new GalleryNavigationMessage { PostId = postId }));
-        //
-        //    IsBusy = true;
-        //    ViewModelParts.Clear();
-        //
-        //    var post = await new PostModel().GetPostAsync(postId);
-        //    var attachments = await new PostModel().GetPostAttachmentsAsync(postId);
-        //
-        //    var poster = attachments.Select(s => s.PreviewImageUrl).FirstOrDefault();
-        //    ViewModelParts.Add(new PosterViewModel { Image = poster });
-        //    ViewModelParts.AddRange(ConvertToViewModels(await new PostModel().GetChildCommentsAsync(postId, 0)));
-        //
-        //    IsBusy = false;
-        //}
-
         IEnumerable<CommentViewModel> ConvertToViewModels(IEnumerable<Comment> comments)
         {
             foreach (var s in comments)
                 yield return new CommentViewModel(this, s);
-        }
-
-        void ChangeRootComment(Comment comment, bool isRoot)
-        {
-            if (isRoot)
-            {
-                //var comments = await new PostModel().GetCommentsWithSameParentAsync(comment.PostId, comment.Id);
-                //var parent = await new PostModel().GetParentCommentAsync(comment.PostId, comment.Id);
-                //ViewModelParts.ReplaceAll(1, ConvertToViewModels(comments));
-                //if (parent != null)
-                //    ViewModelParts.Insert(1, new CommentViewModel(this, parent) { IsRoot = true });
-                ReloadCommentList(comment.ParentCommentId);
-            }
-            else
-            {
-                //var childs = await new PostModel().GetChildCommentsAsync(comment.PostId, comment.Id);
-                //ViewModelParts.ReplaceAll(1, ConvertToViewModels(childs));
-                //ViewModelParts.Insert(1, new CommentViewModel(this, comment) { IsRoot = true });
-                ReloadCommentList(comment.Id);
-            }
         }
 
         public class PosterViewModel : ViewModelBase
@@ -147,7 +109,7 @@ namespace JoyReactor.Core.ViewModels
             {
                 Text = comment.Text;
                 ChildCount = comment.ChildCount;
-                NavigateCommand = new FixRelayCommand(() => parent.ChangeRootComment(comment, IsRoot));
+                NavigateCommand = new FixRelayCommand(() => parent.ReloadCommentList(IsRoot ? comment.ParentCommentId : comment.Id));
             }
         }
 

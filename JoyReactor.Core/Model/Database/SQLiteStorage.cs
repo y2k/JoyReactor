@@ -6,6 +6,7 @@ using SQLite.Net;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace JoyReactor.Core.Model.Database
 {
@@ -260,6 +261,16 @@ namespace JoyReactor.Core.Model.Database
                     "ORDER BY c.Rating DESC, ChildCount DESC",
                     commentId);
             }
+        }
+
+        Task<Comment> CommentService.IStorage.GetCommentAsync(int commentId)
+        {
+            return db.QueryFirstAsync<Comment>(
+                "SELECT " +
+                "c.*, " +
+                "(SELECT COUNT(*) FROM comments WHERE ParentCommentId = c.Id) AS ChildCount " +
+                "FROM comments c " +
+                "WHERE c.Id = ? ", commentId);
         }
     }
 }

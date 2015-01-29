@@ -24,12 +24,21 @@ namespace JoyReactor.Core.Model
             return Observable
                 .FromEventPattern(typeof(PostService), "PostChanged")
                 .StartWith((EventPattern<object>)null)
-                .SelectMany(Observable.FromAsync(() => storage.GetChildCommentsAsync(postId, commentId)));
+                .SelectMany(Observable.FromAsync(() => GetComments(commentId)));
+        }
+
+        async Task<List<Comment>> GetComments(int commentId)
+        {
+            var comments = await storage.GetChildCommentsAsync(postId, commentId);
+            if (commentId != 0) comments.Insert(0, await storage.GetCommentAsync(commentId));
+            return comments;
         }
 
         internal interface IStorage
         {
             Task<List<Comment>> GetChildCommentsAsync(int postId, int commentId);
+
+            Task<Comment> GetCommentAsync(int commentId);
         }
     }
 }
