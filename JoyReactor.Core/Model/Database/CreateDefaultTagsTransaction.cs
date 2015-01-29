@@ -29,17 +29,12 @@ namespace JoyReactor.Core.Model.Database
 
         void InsertSystem(ID id, string title)
         {
-            db.Insert(new Tag { TagId = ToFlatId(id), Title = title, Flags = Tag.FlagSystem });
+            db.Insert(new Tag { TagId = id.SerializeToString(), Title = title, Flags = Tag.FlagSystem });
         }
 
         void InsertMain(ID id, string title, string bestImage = null)
         {
-            db.Insert(new Tag { TagId = ToFlatId(id), Title = title, Flags = Tag.FlagShowInMain, BestImage = bestImage });
-        }
-
-        string ToFlatId(ID id)
-        {
-			return id.SerializeToString ();
+            db.Insert(new Tag { TagId = id.SerializeToString(), Title = title, Flags = Tag.FlagShowInMain, BestImage = bestImage });
         }
     }
 }

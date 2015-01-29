@@ -32,9 +32,7 @@ namespace JoyReactor.Core.Model.Database
 
         public async Task<IDictionary<string, string>> GetCookiesAsync()
         {
-            var cookies = await db.ExecuteScalarAsync<string>(
-                              "SELECT Cookie FROM profiles LIMIT 1",
-                              "" + ID.SiteParser.JoyReactor);
+            var cookies = await db.ExecuteScalarAsync<string>("SELECT Cookie FROM profiles LIMIT 1");
             if (cookies == null)
                 return new Dictionary<string, string>();
             return DeserializeCookies(cookies);

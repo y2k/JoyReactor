@@ -1,6 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using JoyReactor.Core.Model;
+using Microsoft.Practices.ServiceLocation;
 using System.Threading.Tasks;
 
 namespace JoyReactor.Core.ViewModels
@@ -62,10 +62,7 @@ namespace JoyReactor.Core.ViewModels
         {
             IsBusy = true;
             Name = Name.Trim();
-
-            await Task.Delay(1000); // TODO:
-            //await PostService.Create().CreateTagAsync(Name);
-
+            await ServiceLocator.Current.GetInstance<IPostService>().CreateTagAsync(Name);
             IsBusy = false;
             IsComplete = true;
             MessengerInstance.Send(new CloseMessage());
@@ -73,6 +70,11 @@ namespace JoyReactor.Core.ViewModels
 
         public class CloseMessage
         {
+        }
+
+        internal interface IPostService
+        {
+            Task CreateTagAsync(string tagName);
         }
     }
 }

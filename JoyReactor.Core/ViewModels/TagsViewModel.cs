@@ -42,8 +42,7 @@ namespace JoyReactor.Core.ViewModels
         {
             scheduledTask = new TagCollectionModel()
                 .GetMainSubscriptions()
-                .ObserveOn(SynchronizationContext.Current)
-                .Subscribe(tags =>
+                .SubscribeOnUi(tags =>
                 {
                     Tags.ReplaceAll(tags.Select(s => new TagItemViewModel(s)).ToList());
                     Tags.Insert(0, CreateFeaturedViewModel());

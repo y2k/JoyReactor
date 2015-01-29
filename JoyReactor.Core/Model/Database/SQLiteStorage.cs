@@ -272,5 +272,15 @@ namespace JoyReactor.Core.Model.Database
                 "FROM comments c " +
                 "WHERE c.Id = ? ", commentId);
         }
+
+        Task PostService.IStorage.CreateMainTagAsync(string name)
+        {
+            return db.InsertAsync(new Tag
+            {
+                TagId = ID.Factory.NewTag(name.ToLower()).SerializeToString(),
+                Title = name,
+                Flags = Tag.FlagShowInMain
+            });
+        }
     }
 }

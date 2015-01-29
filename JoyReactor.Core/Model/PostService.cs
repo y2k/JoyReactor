@@ -1,4 +1,5 @@
 ﻿using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Feed;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.ViewModels;
 using Microsoft.Practices.ServiceLocation;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model
 {
-    class PostService : PostViewModel.IPostService
+    class PostService : PostViewModel.IPostService, CreateTagViewModel.IPostService
     {
         IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
         internal static event EventHandler PostChanged;
@@ -19,6 +20,8 @@ namespace JoyReactor.Core.Model
         {
             this.postId = postId;
         }
+
+        public PostService() { }
 
         public IObservable<Post> Get()
         {
@@ -36,9 +39,17 @@ namespace JoyReactor.Core.Model
             PostChanged?.Invoke(null, null);
         }
 
+        public async Task CreateTagAsync(string name)
+        {
+            await storage.CreateMainTagAsync(name);
+            TagCollectionModel.OnInvalidateEvent();
+        }
+
         internal interface IStorage
         {
             Task<Post> GetPostWithAttachmentsAsync(int postId);
+
+            Task CreateMainTagAsync(string name);
         }
     }
 }

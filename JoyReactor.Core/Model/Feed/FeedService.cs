@@ -61,7 +61,7 @@ namespace JoyReactor.Core.Model.Feed
             await InvalidateFeedAsync();
         }
 
-        private static Task InvalidateFeedAsync()
+        internal static Task InvalidateFeedAsync()
         {
             return Task.Run(() => FeedChanged?.Invoke(null, null));
         }
