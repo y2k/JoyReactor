@@ -20,7 +20,6 @@ namespace JoyReactor.Core.Model.Database
             db.CreateTable<TagLinkedTag>();
             db.CreateTable<Comment>();
             db.CreateTable<Attachment>();
-            db.CreateTable<CommentLink>();
 
             db.CreateTable<Profile>();
 

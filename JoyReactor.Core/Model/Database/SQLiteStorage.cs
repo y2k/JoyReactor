@@ -6,7 +6,6 @@ using SQLite.Net;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System;
 
 namespace JoyReactor.Core.Model.Database
 {
@@ -182,16 +181,13 @@ namespace JoyReactor.Core.Model.Database
             return db.ExecuteAsync("DELETE FROM comments WHERE PostId IN (SELECT Id FROM posts WHERE PostId = ?)");
         }
 
-        Task JoyReactorProvider.IStorage.SaveNewPostCommentAsync(string postId, string parrentCommentId, Comment comment, string[] attachments)
+        Task JoyReactorProvider.IStorage.SaveNewPostCommentAsync(string postId, int parrentCommentId, Comment comment, string[] attachments)
         {
             return db.RunInTransactionAsync(() =>
             {
+                comment.ParentCommentId = parrentCommentId;
+                comment.PostId = db.ExecuteScalar<int>("SELECT Id FROM posts WHERE PostId = ?", postId);
                 db.Insert(comment);
-                db.Insert(new CommentLink
-                {
-                    CommentId = comment.Id,
-                    ParentCommentId = db.ExecuteScalar<int>("SELECT Id FROM comments WHERE PostId = ? AND CommentId = ?", postId, parrentCommentId),
-                });
 
                 foreach (var a in attachments)
                     db.Insert(new Attachment
@@ -247,10 +243,9 @@ namespace JoyReactor.Core.Model.Database
                 return db.QueryAsync<Comment>(
                     "SELECT " +
                     "c.*, " +
-                    "(SELECT COUNT(*) FROM comment_links WHERE ParentCommentId = c.Id) AS ChildCount, " +
-                    "(SELECT ParentCommentId FROM comment_links WHERE CommentId = c.Id) AS ParentCommentId " +
+                    "(SELECT COUNT(*) FROM comments WHERE ParentCommentId = c.Id) AS ChildCount " +
                     "FROM comments c " +
-                    "WHERE c.PostId = ? AND c.Id NOT IN (SELECT CommentId FROM comment_links) " +
+                    "WHERE c.PostId = ? AND c.ParentCommentId = 0 " +
                     "ORDER BY c.Rating DESC, ChildCount DESC ",
                     postId);
             }
@@ -259,12 +254,11 @@ namespace JoyReactor.Core.Model.Database
                 return db.QueryAsync<Comment>(
                     "SELECT " +
                     "c.*, " +
-                    "(SELECT COUNT(*) FROM comment_links WHERE ParentCommentId = c.Id) AS ChildCount, " +
-                    "(SELECT ParentCommentId FROM comment_links WHERE CommentId = c.Id) AS ParentCommentId " +
-                    "FROM comments c WHERE c.PostId = ? AND c.Id IN (" +
-                    "   SELECT CommentId FROM comment_links WHERE ParentCommentId = ?) " +
+                    "(SELECT COUNT(*) FROM comments WHERE ParentCommentId = c.Id) AS ChildCount " +
+                    "FROM comments c " +
+                    "WHERE c.ParentCommentId = ? " +
                     "ORDER BY c.Rating DESC, ChildCount DESC",
-                    postId, commentId);
+                    commentId);
             }
         }
     }

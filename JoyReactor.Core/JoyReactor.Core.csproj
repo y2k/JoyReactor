@@ -65,7 +65,6 @@
     <Compile Include="Model\Helper\HtmlUtils.cs" />
     <Compile Include="Model\Database\SQLiteConnectionExtensions.cs" />
     <Compile Include="Model\DTO\PostCollection.cs" />
-    <Compile Include="Model\DTO\CommentLink.cs" />
     <Compile Include="Model\Helper\Log.cs" />
     <Compile Include="Model\Helper\DateTimeExtensions.cs" />
     <Compile Include="Model\Helper\NodeHelper.cs" />

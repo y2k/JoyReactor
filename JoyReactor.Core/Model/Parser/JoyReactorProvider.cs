@@ -408,10 +408,10 @@ namespace JoyReactor.Core.Model.Parser
                 int pos = htmlPage.IndexOf(COMMENT_START) + COMMENT_START.Length;
 
                 pos = SkipHtmlTag(htmlPage, pos);
-                await ReadChildComments(htmlPage, pos, null);
+                await ReadChildComments(htmlPage, pos, 0);
             }
 
-            async Task<int> ReadChildComments(string html, int position, string parentId)
+            async Task<int> ReadChildComments(string html, int position, int parentId)
             {
                 int end;
                 int initPosition = position;
@@ -428,7 +428,7 @@ namespace JoyReactor.Core.Model.Parser
                             return position;
                     }
 
-                    string commentId = await SaveComment(html, position, end, parentId);
+                    var commentId = await SaveComment(html, position, end, parentId);
 
                     end = SkipHtmlTag(html, end + 1);
                     end = await ReadChildComments(html, end, commentId);
@@ -471,13 +471,10 @@ namespace JoyReactor.Core.Model.Parser
                 return level < 0 ? -1 : html.IndexOf('>', position);
             }
 
-            async Task<string> SaveComment(string html, int start, int end, string parentId)
+            async Task<int> SaveComment(string html, int start, int end, int parentId)
             {
                 var s = html.Substring(start, end + 1 - start);
                 var c = new Comment();
-
-                var COMMENT_ID = new Regex("comment_txt_\\d+_(\\d+)");
-                c.CommentId = COMMENT_ID.FirstString(s);
 
                 var TEXT = new Regex("comment_txt_\\d+_\\d+\">\\s*<span>(.*?)</span>", RegexOptions.Singleline);
                 c.Text = TEXT.FirstString(s)?.Replace("<br>", Environment.NewLine);
@@ -499,7 +496,7 @@ namespace JoyReactor.Core.Model.Parser
 
                 await storage.SaveNewPostCommentAsync(postId, parentId, c, attchs);
 
-                return c.CommentId;
+                return c.Id;
             }
 
             #endregion
@@ -636,7 +633,7 @@ namespace JoyReactor.Core.Model.Parser
 
             Task RemovePostComments(string postId);
 
-            Task SaveNewPostCommentAsync(string postId, string parrentCommentId, Comment comment, string[] attachments);
+            Task SaveNewPostCommentAsync(string postId, int parrentCommentId, Comment comment, string[] attachments);
 
             Task SaveNewOrUpdateProfileAsync(Profile profile);
 
