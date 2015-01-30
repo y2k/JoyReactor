@@ -12,7 +12,7 @@ using XamarinCommons.Image;
 
 namespace JoyReactor.AndroidTv
 {
-	[Activity (Label = "@string/app_name", MainLauncher = true, Icon = "@drawable/ic_launcher", Theme = "@style/Theme.Leanback")]
+	[Activity (Label = "@string/app_name", MainLauncher = true, Icon = "@drawable/ic_launcher")]
 	[IntentFilter(new [] { Intent.ActionMain }, Categories = new [] { Intent.CategoryLeanbackLauncher })]
 	public class MainActivity : Activity
 	{

@@ -3,7 +3,8 @@ using Android.OS;
 using Android.Support.V17.Leanback.App;
 using Android.Support.V17.Leanback.Widget;
 using JoyReactor.Core.ViewModels;
-using JoyReactor.Core;
+using Android.Support.V4.App;
+using Android.Content;
 
 namespace JoyReactor.AndroidTv
 {
@@ -20,6 +21,16 @@ namespace JoyReactor.AndroidTv
             Adapter = new ArrayObjectAdapterImpl { Items = tagsViewModel.Tags };
 
             tagsViewModel.Tags.CollectionChanged += (sender, e) => ((ArrayObjectAdapterImpl)Adapter).NotifyDataChanged();
+
+            base.OnActivityCreated(savedInstanceState);
+            ItemViewClicked += (sender, e) => {
+                Intent intent = new Intent(Activity, typeof(PostActivity));
+                Bundle bundle = ActivityOptionsCompat.MakeSceneTransitionAnimation(
+                    Activity,
+                    ((ImageCardView) e.ItemViewHolder.View).MainImageView,
+                    PostActivity.SharedElementName).ToBundle();
+                Activity.StartActivity(intent, bundle);
+            };
         }
 
         public override void OnDestroy()
