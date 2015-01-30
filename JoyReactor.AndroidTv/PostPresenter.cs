@@ -2,13 +2,17 @@
 using Android.Graphics;
 using Android.Support.V17.Leanback.Widget;
 using Android.Views;
-using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.ViewModels;
+using GalaSoft.MvvmLight;
+using JoyReactor.Core.Model;
+using Microsoft.Practices.ServiceLocation;
+using Android.Graphics.Drawables;
 
 namespace JoyReactor.AndroidTv
 {
     class PostPresenter : Presenter
     {
-        static readonly Random Rand = new Random();
+        ImageModel iModel = ServiceLocator.Current.GetInstance<ImageModel> ();
 
         public override void OnUnbindViewHolder(ViewHolder viewHolder)
         {
@@ -22,21 +26,26 @@ namespace JoyReactor.AndroidTv
 
         public override void OnBindViewHolder(ViewHolder viewHolder, Java.Lang.Object item)
         {
-            var tag = ((PostWrapper)item).Tag;
-            var image = (ImageCardView)viewHolder.View;
-            image.SetBackgroundColor(Color.HSVToColor(new []
-                {
-                    360 * (float)Rand.NextDouble(),
-                    (float)Rand.NextDouble() / 2 + 0.5f,
-                    (float)Rand.NextDouble() / 2 + 0.5f
-                }));
-            image.TitleText = tag.Title;
-            image.SetMainImageDimensions(313, 176);
+            var tag = ((PostWrapper)item).Post as FeedViewModel.ContentViewModel;
+            if (tag != null)
+            {
+                var image = (ImageCardView)viewHolder.View;
+                image.TitleText = tag.Title;
+                image.ContentText = "User: " + tag.UserName;
+                image.SetMainImageDimensions(313, 176);
+
+                image.MainImage = null;
+                iModel.Load(
+                    viewHolder, 
+                    tag.Image == null ? null : new Uri(tag.Image), 
+                    300, 
+                    bitmap => image.MainImage = bitmap == null ? null : new BitmapDrawable((Bitmap)bitmap));
+            }
         }
 
         internal class PostWrapper : Java.Lang.Object
         {
-            internal Tag Tag { get; set; }
+            internal ViewModelBase Post { get; set; }
         }
     }
 }

@@ -81,6 +81,12 @@
     <Reference Include="PCLStorage">
       <HintPath>..\..\packages\PCLStorage.1.0.0\lib\monoandroid\PCLStorage.dll</HintPath>
     </Reference>
+    <Reference Include="Refractored.Xam.Settings.Abstractions">
+      <HintPath>..\packages\Xam.Plugins.Settings.1.4.0.1\lib\MonoAndroid10\Refractored.Xam.Settings.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Refractored.Xam.Settings">
+      <HintPath>..\packages\Xam.Plugins.Settings.1.4.0.1\lib\MonoAndroid10\Refractored.Xam.Settings.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -88,12 +94,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MainFragment.cs" />
     <Compile Include="PostPresenter.cs" />
+    <Compile Include="PostViewModelHolder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="packages.config" />
     <None Include="Properties\AndroidManifest.xml" />
+    <None Include="Properties\_SettingsStarted.txt" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml" />

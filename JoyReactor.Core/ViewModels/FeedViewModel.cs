@@ -62,7 +62,7 @@ namespace JoyReactor.Core.ViewModels
             MessengerInstance.Register<SelectTagMessage>(this, s => ChangeCurrentListIdCommand.Execute(s.Id));
         }
 
-        void Initialize(ID newId)
+        public void Initialize(ID newId)
         {
             service = FeedService.Create(newId);
             IsBusy = true;
@@ -74,8 +74,9 @@ namespace JoyReactor.Core.ViewModels
                 {
                     IsBusy = false;
 
-                    HasNewItems = data.NewItemsCount > 0;
-                    if (!HasNewItems) UpdatePosts(data);
+                    //HasNewItems = data.NewItemsCount > 0;
+                    //if (!HasNewItems) UpdatePosts(data);
+                    UpdatePosts(data);
                 });
         }
 

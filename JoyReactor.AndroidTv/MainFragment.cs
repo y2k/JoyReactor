@@ -17,15 +17,15 @@ namespace JoyReactor.AndroidTv
 {
 	public class MainFragment : BrowseFragment
 	{
-		TagsViewModel viewmodel;
+		TagsViewModel tagsViewModel;
 
 		public override void OnCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
 			RetainInstance = true;
 
-			viewmodel = new TagsViewModel();
-			viewmodel.Tags.CollectionChanged += HandleCollectionChanged;
+            tagsViewModel = new TagsViewModel();
+			tagsViewModel.Tags.CollectionChanged += HandleCollectionChanged;
 
 			Adapter = new ArrayObjectAdapter(new ListRowPresenter());
 		}
@@ -33,23 +33,14 @@ namespace JoyReactor.AndroidTv
 		void HandleCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			if (e.Action == NotifyCollectionChangedAction.Add)
-			{
 				foreach (var i in e.NewItems.Cast<TagsViewModel.TagItemViewModel>())
-				{
-					ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new PostPresenter());
-					for (int j = 0; j < 10; j++)
-						listRowAdapter.Add(new PostPresenter.PostWrapper());
-
-					HeaderItem header = new HeaderItem(i.Title, null);
-					((ArrayObjectAdapter)Adapter).Add(new ListRow(header, listRowAdapter));
-				}
-			}
+                    new PostViewModelHolder(i, (ArrayObjectAdapter)Adapter);
 		}
 
 		public override void OnDestroy()
 		{
 			base.OnDestroy();
-			viewmodel.Dispose();
+			tagsViewModel.Dispose();
 		}
 
 		#region App initialize
