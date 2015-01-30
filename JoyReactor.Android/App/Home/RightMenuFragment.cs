@@ -78,7 +78,7 @@ namespace JoyReactor.Android.App.Home
 
 			public override int Count {
 				get {
-					return Source?.Count ?? 0;
+					return Source == null ? 0 : Source.Count;
 				}
 			}
 
