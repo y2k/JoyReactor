@@ -3,8 +3,8 @@ using Android.OS;
 using Android.Support.V17.Leanback.App;
 using Android.Support.V17.Leanback.Widget;
 using JoyReactor.Core.ViewModels;
-using Android.Support.V4.App;
 using Android.Content;
+using Messenger = GalaSoft.MvvmLight.Messaging.Messenger;
 
 namespace JoyReactor.AndroidTv
 {
@@ -15,7 +15,6 @@ namespace JoyReactor.AndroidTv
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            RetainInstance = true;
 
             tagsViewModel = new TagsViewModel();
             Adapter = new ArrayObjectAdapterImpl { Items = tagsViewModel.Tags };
@@ -24,13 +23,15 @@ namespace JoyReactor.AndroidTv
 
             base.OnActivityCreated(savedInstanceState);
             ItemViewClicked += (sender, e) => {
-                Intent intent = new Intent(Activity, typeof(PostActivity));
-                Bundle bundle = ActivityOptionsCompat.MakeSceneTransitionAnimation(
-                    Activity,
-                    ((ImageCardView) e.ItemViewHolder.View).MainImageView,
-                    PostActivity.SharedElementName).ToBundle();
-                Activity.StartActivity(intent, bundle);
+                var item = ((PostPresenter.PostWrapper)e.Item).Post as FeedViewModel.ContentViewModel;
+                if (item != null) item.OpenPostCommand.Execute(null);
             };
+
+            Messenger.Default.Register<PostNavigationMessage>(this, msg => {
+                Intent intent = new Intent(Activity, typeof(PostActivity));
+                intent.PutExtra(PostActivity.PostId, msg.PostId);
+                Activity.StartActivity(intent);
+            });
         }
 
         public override void OnDestroy()

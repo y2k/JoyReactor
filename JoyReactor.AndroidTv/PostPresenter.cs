@@ -39,7 +39,7 @@ namespace JoyReactor.AndroidTv
             else
             {
                 image.TitleText = tag.Title;
-                image.ContentText = "User: " + tag.UserName;
+                image.ContentText = tag.UserName;
                 image.SetMainImageDimensions(ComputeItemWidth(tag), RowHeight);
 
                 image.MainImage = null;
