@@ -203,6 +203,8 @@ namespace JoyReactor.Core.Model.Database
 
         async Task JoyReactorProvider.IStorage.SaveNewOrUpdateProfileAsync(Profile profile)
         {
+            // TODO: придумать способ получше, что бы сохранять куки при обновление профиля
+            profile.Cookie = await db.ExecuteScalarAsync<string>("SELECT Cookie FROM profiles");
             await db.ExecuteAsync("DELETE FROM profiles");
             await db.InsertAsync(profile);
         }

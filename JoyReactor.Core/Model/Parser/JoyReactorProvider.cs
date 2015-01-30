@@ -559,10 +559,11 @@ namespace JoyReactor.Core.Model.Parser
             IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
             IAuthStorage authStorage = ServiceLocator.Current.GetInstance<IAuthStorage>();
 
-
             public async Task ComputeAsync()
             {
                 var username = await authStorage.GetCurrentUserNameAsync();
+                if (username == null)
+                    throw new NotLogedException();
                 var url = new Uri("http://joyreactor.cc/user/" + Uri.EscapeDataString(username));
                 var doc = await downloader.GetDocumentAsync(url);
 

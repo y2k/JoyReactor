@@ -9,19 +9,19 @@ namespace JoyReactor.Android.App.Gallery
 	[Activity (Label = "FullscreenGalleryActivity")]			
 	public class FullscreenGalleryActivity : BaseActivity
 	{
-		ViewPager pager;
-		PostModel model = new PostModel();
-
-		protected override void OnCreate (Bundle bundle)
-		{
-			base.OnCreate (bundle);
-
-			// Create your application here
-			SetContentView (pager = new ViewPager (this));
-
-			pager.PageSelected += (sender, e) => {
-				//
-			};
-		}
+//		ViewPager pager;
+//		PostModel model = new PostModel();
+//
+//		protected override void OnCreate (Bundle bundle)
+//		{
+//			base.OnCreate (bundle);
+//
+//			// Create your application here
+//			SetContentView (pager = new ViewPager (this));
+//
+//			pager.PageSelected += (sender, e) => {
+//				//
+//			};
+//		}
 	}
 }

@@ -15,22 +15,22 @@ namespace JoyReactor.Android.App.Gallery
 	[Activity (Label = "Gallery", ParentActivity = typeof(HomeActivity))]			
 	public class GalleryActivity : BaseActivity
 	{
-		PostModel model = new PostModel ();
-			
-		GridView list;
+//		PostModel model = new PostModel ();
+//			
+//		GridView list;
 
 		protected async override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
 
-			SetContentView (Resource.Layout.activity_gallery);
-			list = FindViewById<GridView> (Resource.Id.list);
-
-			GalleryAdapter a;
-			list.Adapter = a = new GalleryAdapter (this);
-
-			var s = await model.GetAttachmentsAsync (Intent.Extras.GetInt (Arg1));
-			a.AddAll (s);
+//			SetContentView (Resource.Layout.activity_gallery);
+//			list = FindViewById<GridView> (Resource.Id.list);
+//
+//			GalleryAdapter a;
+//			list.Adapter = a = new GalleryAdapter (this);
+//
+//			var s = await model.GetAttachmentsAsync (Intent.Extras.GetInt (Arg1));
+//			a.AddAll (s);
 		}
 
 		class GalleryAdapter : ArrayAdapter<Attachment>
