@@ -1,26 +1,27 @@
-﻿using System.Collections.Specialized;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Android.Support.V17.Leanback.Widget;
 using GalaSoft.MvvmLight;
 using JoyReactor.Core.ViewModels;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace JoyReactor.AndroidTv
 {
     class PostViewModelHolder
     {
-        readonly ArrayObjectAdapterImpl listRowAdapter;
+        ArrayObjectAdapterImpl listRowAdapter;
+        TagsViewModel.TagItemViewModel tag;
 
-        public PostViewModelHolder(TagsViewModel.TagItemViewModel tag, ArrayObjectAdapter adapter)
+        public PostViewModelHolder(TagsViewModel.TagItemViewModel tag)
+        {
+            this.tag = tag;
+        }
+
+        internal ListRow CreateRow() 
         {
             var feedViewModel = new FeedViewModel();
             feedViewModel.Posts.CollectionChanged += (sender, e) => listRowAdapter.NotifyDataChanged();
             listRowAdapter = new ArrayObjectAdapterImpl { Items = feedViewModel.Posts };
-
             feedViewModel.Initialize(tag.TagId);
-
-            adapter.Add(new ListRow(new HeaderItem(tag.Title, null), listRowAdapter));
+            return new ListRow(new HeaderItem(tag.Title, null), listRowAdapter);
         }
 
         class ArrayObjectAdapterImpl : ObjectAdapter {
@@ -33,8 +34,6 @@ namespace JoyReactor.AndroidTv
                 NotifyChanged();
             }
 
-            #region implemented abstract members of ObjectAdapter
-
             public override Java.Lang.Object Get(int position)
             {
                 return new PostPresenter.PostWrapper { Post = Items[position] };
@@ -44,8 +43,6 @@ namespace JoyReactor.AndroidTv
             {
                 return Items.Count;
             }
-
-            #endregion
         }
     }
 }

@@ -1,6 +1,14 @@
-﻿using Android.App;
-using Android.OS;
+﻿using System.IO;
+using Android.App;
 using Android.Content;
+using Android.Graphics;
+using Android.OS;
+using Autofac;
+using JoyReactor.Core.Model;
+using Microsoft.Practices.ServiceLocation;
+using SQLite.Net.Interop;
+using SQLite.Net.Platform.XamarinAndroid;
+using XamarinCommons.Image;
 
 namespace JoyReactor.AndroidTv
 {
@@ -15,5 +23,38 @@ namespace JoyReactor.AndroidTv
 			if (bundle == null)
 				FragmentManager.BeginTransaction ().Add (Resource.Id.container, new MainFragment ()).Commit ();
 		}
+
+
+        #region App initialize
+
+        static MainActivity()
+        {
+            var locator = new DefaultServiceLocator(new AndroidInjectModule());
+            ServiceLocator.SetLocatorProvider(() => locator);
+        }
+
+        class AndroidInjectModule : Module
+        {
+            protected override void Load(ContainerBuilder builder)
+            {
+                builder.RegisterType<BitmapImageDecoder>().As<ImageDecoder>();
+                builder.RegisterType<SQLitePlatformAndroid>().As<ISQLitePlatform>();
+            }
+
+            class BitmapImageDecoder : ImageDecoder
+            {
+                public override int GetImageSize(object commonImage)
+                {
+                    return commonImage == null ? 0 : ((Bitmap)commonImage).ByteCount;
+                }
+
+                public override object DecoderStream(Stream stream)
+                {
+                    return BitmapFactory.DecodeStream(stream);
+                }
+            }
+        }
+
+        #endregion
 	}
 }
