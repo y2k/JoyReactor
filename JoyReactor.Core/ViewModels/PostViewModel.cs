@@ -12,7 +12,7 @@ namespace JoyReactor.Core.ViewModels
 {
     public class PostViewModel : ViewModelBase
     {
-        public ObservableCollection<ViewModelBase> ViewModelParts { get; } = new ObservableCollection<ViewModelBase>();
+        public ObservableCollection<object> ViewModelParts { get; } = new ObservableCollection<object>();
 
         bool _isBusy;
         public bool IsBusy
@@ -57,7 +57,7 @@ namespace JoyReactor.Core.ViewModels
                 .SubscribeOnUi(post =>
                 {
                     var poster = post.Attachments.Select(s => s.PreviewImageUrl).FirstOrDefault();
-                    ViewModelParts.ReplaceAt(0, new PosterViewModel { Image = poster });
+                    ViewModelParts.ReplaceAt(0, post);
                 });
             ReloadCommentList(0);
         }
@@ -90,16 +90,6 @@ namespace JoyReactor.Core.ViewModels
             base.Cleanup();
             postSubscription?.Dispose();
             commentSubscription?.Dispose();
-        }
-
-        public class PosterViewModel : ViewModelBase
-        {
-            string _image;
-            public string Image
-            {
-                get { return _image; }
-                set { Set(ref _image, value); }
-            }
         }
 
         public class CommentViewModel : ViewModelBase
