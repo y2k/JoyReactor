@@ -21,6 +21,11 @@ namespace JoyReactor.Core.Model
                 callback(image);
         }
 
+        public void Load(object token, string originalUri, int maxWidth, Action<object> callback)
+        {
+            Load(token, originalUri == null ? null : new Uri(originalUri), maxWidth, callback);
+        }
+
         public string CreateThumbnailUrl(string url, int px)
         {
             return url == null ? null : "" + CreateThumbnailUrl(new Uri(url), px);

@@ -36,13 +36,13 @@ namespace JoyReactor.AndroidTv
                 Activity.StartActivity(intent);
             });
 
-            Title = "JoyReactor";
+            Title = "JoyReactor (github.com/y2k)";
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
-            tagsViewModel.Dispose();
+            tagsViewModel.Cleanup();
         }
 
         class ArrayObjectAdapterImpl : ObjectAdapter

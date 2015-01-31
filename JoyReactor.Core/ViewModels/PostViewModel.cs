@@ -26,6 +26,9 @@ namespace JoyReactor.Core.ViewModels
         IPostService postService;
         ICommentService commentService;
 
+        IDisposable postSubscription;
+        IDisposable commentSubscription;
+
         public PostViewModel()
         {
 #if DEBUG
@@ -48,7 +51,8 @@ namespace JoyReactor.Core.ViewModels
             postService = new PostService(postId);
             commentService = new CommentService(postId);
 
-            postService
+            postSubscription?.Dispose();
+            postSubscription = postService
                 .Get()
                 .SubscribeOnUi(post =>
                 {
@@ -60,7 +64,8 @@ namespace JoyReactor.Core.ViewModels
 
         void ReloadCommentList(int commentId)
         {
-            commentService
+            commentSubscription?.Dispose();
+            commentSubscription = commentService
                 .Get(commentId)
                 .SubscribeOnUi(comments =>
                 {
@@ -78,6 +83,13 @@ namespace JoyReactor.Core.ViewModels
         {
             foreach (var s in comments)
                 yield return new CommentViewModel(this, s);
+        }
+
+        public override void Cleanup()
+        {
+            base.Cleanup();
+            postSubscription?.Dispose();
+            commentSubscription?.Dispose();
         }
 
         public class PosterViewModel : ViewModelBase

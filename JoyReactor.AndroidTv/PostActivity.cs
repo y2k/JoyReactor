@@ -1,8 +1,11 @@
-﻿using Android.App;
+﻿using System.Linq;
+using Android.App;
+using Android.Graphics;
 using Android.OS;
 using Android.Support.V17.Leanback.App;
-using JoyReactor.Core.ViewModels;
 using Android.Support.V17.Leanback.Widget;
+using JoyReactor.Core.Model;
+using JoyReactor.Core.ViewModels;
 
 namespace JoyReactor.AndroidTv
 {
@@ -15,51 +18,77 @@ namespace JoyReactor.AndroidTv
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-            SetContentView (Resource.Layout.Main);
+            SetContentView(Resource.Layout.Main);
             if (bundle == null)
-                FragmentManager.BeginTransaction ().Add (Resource.Id.container, new PostFragment ()).Commit ();
+                FragmentManager.BeginTransaction().Add(Resource.Id.container, new PostFragment()).Commit();
 
             // Create your application here
         }
 
-        public class PostFragment : DetailsFragment {
+        public class PostFragment : DetailsFragment
+        {
  
             PostViewModel viewmodel;
+            DetailsOverviewRow deltailsRow;
 
             public override void OnCreate(Bundle savedInstanceState)
             {
                 base.OnCreate(savedInstanceState);
 
-                viewmodel = new PostViewModel();
-                viewmodel.Initialize(Activity.Intent.GetIntExtra(PostId, 0));
-
                 CreateUi();
+                viewmodel = new PostViewModel();
 
+                viewmodel.ViewModelParts.CollectionChanged += (sender, e) =>
+                {
+                    if (e.NewItems != null)
+                        foreach (var i in e.NewItems.OfType<PostViewModel.PosterViewModel>().Where(s => s != null))
+                            new ImageModel().Load(
+                                deltailsRow, 
+                                i.Image, 
+                                300, 
+                                bitmap => 
+                                    deltailsRow.SetImageBitmap(Activity, (Bitmap)bitmap));
+                };
+
+                viewmodel.Initialize(Activity.Intent.GetIntExtra(PostId, 0));
             }
 
             void CreateUi()
             {
-                var row = new DetailsOverviewRow(null);
-                row.AddAction(new Action(1, "Action"));
+                var dor = new DetailsOverviewRowPresenter(new DetailsDescriptionPresenter()) { StyleLarge = true };
 
+                var adapter = new ArrayObjectAdapter(dor);
+                Adapter = adapter;
 
-                var ps = new ClassPresenterSelector();
-                var dor = new DetailsOverviewRowPresenter(new DetailsDescriptionPresenter());
+                deltailsRow = new DetailsOverviewRow(new DetailsDescriptionPresenter.Wrapper());
+
+                deltailsRow.SetImageBitmap(Activity, Bitmap.CreateBitmap(200, 200, Bitmap.Config.Argb8888));
+
+                deltailsRow.AddAction(new Action(1, "Fullscreen"));
+                deltailsRow.AddAction(new Action(2, "Rate"));
+                adapter.Add(deltailsRow);
             }
 
-            class DetailsDescriptionPresenter : Presenter {
+            public override void OnDestroy()
+            {
+                base.OnDestroy();
+                viewmodel.Cleanup();
+            }
 
-                public override void OnBindViewHolder(ViewHolder viewHolder, Java.Lang.Object item)
+            class DetailsDescriptionPresenter : AbstractDetailsDescriptionPresenter
+            {
+
+                protected override void OnBindDescription(ViewHolder vh, Java.Lang.Object item)
                 {
-                    throw new System.NotImplementedException();
+                    vh.Body.Text = "Body";
+                    vh.Subtitle.Text = "Subtitle";
+                    vh.Title.Text = "Title";
                 }
-                public override ViewHolder OnCreateViewHolder(Android.Views.ViewGroup parent)
+
+                internal class Wrapper : Java.Lang.Object
                 {
-                    throw new System.NotImplementedException();
-                }
-                public override void OnUnbindViewHolder(ViewHolder viewHolder)
-                {
-                    throw new System.NotImplementedException();
+
+                    internal PostViewModel.PosterViewModel Post { get; set; }
                 }
             }
         }

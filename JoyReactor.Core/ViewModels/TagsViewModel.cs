@@ -11,7 +11,7 @@ using System.Threading;
 
 namespace JoyReactor.Core.ViewModels
 {
-    public class TagsViewModel : ViewModelBase, IDisposable
+    public class TagsViewModel : ViewModelBase
     {
         public ObservableCollection<TagItemViewModel> Tags { get; } = new ObservableCollection<TagItemViewModel>();
 
@@ -49,8 +49,9 @@ namespace JoyReactor.Core.ViewModels
                 });
         }
 
-        public void Dispose()
+        public override void Cleanup()
         {
+            base.Cleanup();
             scheduledTask?.Dispose();
         }
 
