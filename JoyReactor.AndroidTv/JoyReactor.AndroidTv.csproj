@@ -96,6 +96,7 @@
     <Compile Include="PostPresenter.cs" />
     <Compile Include="PostViewModelHolder.cs" />
     <Compile Include="PostActivity.cs" />
+    <Compile Include="GridItemPresenter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

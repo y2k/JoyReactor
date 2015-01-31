@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reactive.Linq;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -59,7 +58,7 @@ namespace JoyReactor.Core.ViewModels
             ReloadCommentList(0);
         }
 
-        private void ReloadCommentList(int commentId)
+        void ReloadCommentList(int commentId)
         {
             commentService
                 .Get(commentId)

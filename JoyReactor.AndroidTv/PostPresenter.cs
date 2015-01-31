@@ -34,7 +34,8 @@ namespace JoyReactor.AndroidTv
                 image.TitleText = null;
                 image.ContentText = null;
                 image.SetMainImageDimensions(RowHeight, RowHeight);
-                image.MainImage = null;
+
+                LoadImage(null, image);
             }
             else
             {
@@ -42,13 +43,15 @@ namespace JoyReactor.AndroidTv
                 image.ContentText = tag.UserName;
                 image.SetMainImageDimensions(ComputeItemWidth(tag), RowHeight);
 
-                image.MainImage = null;
-                iModel.Load(
-                    viewHolder, 
-                    tag.Image == null ? null : new Uri(tag.Image), 
-                    RowHeight, 
-                    bitmap => image.MainImage = bitmap == null ? null : new BitmapDrawable((Bitmap)bitmap));
+                LoadImage(tag.Image, image);
             }
+        }
+
+        void LoadImage(string imageUrl, ImageCardView image)
+        {
+            image.MainImage = null;
+            var loadUrl = imageUrl ?? "http://d1luk0418egahw.cloudfront.net/static/images/guide/NoImage_592x444.jpg";
+            iModel.Load(image, new Uri(loadUrl), RowHeight, bitmap => image.MainImage = bitmap == null ? null : new BitmapDrawable((Bitmap)bitmap));
         }
 
         static int ComputeItemWidth(FeedViewModel.ContentViewModel tag)

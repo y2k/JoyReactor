@@ -21,17 +21,22 @@ namespace JoyReactor.AndroidTv
 
             tagsViewModel.Tags.CollectionChanged += (sender, e) => ((ArrayObjectAdapterImpl)Adapter).NotifyDataChanged();
 
-            base.OnActivityCreated(savedInstanceState);
-            ItemViewClicked += (sender, e) => {
+            OnActivityCreated(savedInstanceState);
+            ItemViewClicked += (sender, e) =>
+            {
                 var item = ((PostPresenter.PostWrapper)e.Item).Post as FeedViewModel.ContentViewModel;
-                if (item != null) item.OpenPostCommand.Execute(null);
+                if (item != null)
+                    item.OpenPostCommand.Execute(null);
             };
 
-            Messenger.Default.Register<PostNavigationMessage>(this, msg => {
+            Messenger.Default.Register<PostNavigationMessage>(this, msg =>
+            {
                 Intent intent = new Intent(Activity, typeof(PostActivity));
                 intent.PutExtra(PostActivity.PostId, msg.PostId);
                 Activity.StartActivity(intent);
             });
+
+            Title = "JoyReactor";
         }
 
         public override void OnDestroy()
@@ -42,9 +47,7 @@ namespace JoyReactor.AndroidTv
 
         class ArrayObjectAdapterImpl : ObjectAdapter
         {
-
             internal IList<TagsViewModel.TagItemViewModel> Items { get; set; }
-
             Dictionary<string, ListRow> cache = new Dictionary<string, ListRow>();
 
             internal ArrayObjectAdapterImpl()
@@ -59,15 +62,26 @@ namespace JoyReactor.AndroidTv
 
             public override Java.Lang.Object Get(int position)
             {
-                var i = Items[position];
-                if (!cache.ContainsKey(i.TagId.SerializeToString()))
-                    cache[i.TagId.SerializeToString()] = new PostViewModelHolder(i).CreateRow();
-                return cache[i.TagId.SerializeToString()];
+                if (position < Items.Count)
+                {
+                    var i = Items[position];
+                    if (!cache.ContainsKey(i.TagId.SerializeToString()))
+                        cache[i.TagId.SerializeToString()] = new PostViewModelHolder(i).CreateRow();
+                    return cache[i.TagId.SerializeToString()];
+                }
+                else
+                {
+                    GridItemPresenter mGridPresenter = new GridItemPresenter();
+                    ArrayObjectAdapter gridRowAdapter = new ArrayObjectAdapter(mGridPresenter);
+                    gridRowAdapter.Add(new Java.Lang.String("Profile"));
+                    gridRowAdapter.Add(new Java.Lang.String("Prive messages"));
+                    return new ListRow(new HeaderItem("PREFERENCES", null), gridRowAdapter);
+                }
             }
 
             public override int Size()
             {
-                return Items.Count;
+                return Items.Count + 1;
             }
         }
     }
