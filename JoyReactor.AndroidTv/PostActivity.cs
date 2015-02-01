@@ -142,7 +142,7 @@ namespace JoyReactor.AndroidTv
                     {
                         var relatedPost = ((Wrapper)item).Item;
                         var image = ((ImageCardView)viewHolder.View);
-                        image.SetMainImageDimensions(200, 200);
+                        image.SetMainImageDimensions(300, 300);
                         loader.Load(image, relatedPost.Image, 300, 
                             bitmap => image.MainImage = bitmap == null ? null : new BitmapDrawable((Bitmap)bitmap));
                     }
