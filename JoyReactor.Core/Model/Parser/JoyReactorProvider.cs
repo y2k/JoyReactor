@@ -270,7 +270,6 @@ namespace JoyReactor.Core.Model.Parser
 
         class PostProvider
         {
-            IAuthStorage authStorage = ServiceLocator.Current.GetInstance<IAuthStorage>();
             IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
             IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
 
@@ -288,6 +287,7 @@ namespace JoyReactor.Core.Model.Parser
 
                 await SavePostInformation();
                 await SavePostAttachments();
+                await SaveRelatedPosts();
                 await ExportComments();
             }
 
@@ -394,6 +394,22 @@ namespace JoyReactor.Core.Model.Parser
                         PreviewImageHeight = int.Parse(m.Groups[3].Value),
                     };
                 }
+            }
+
+            async Task SaveRelatedPosts() {
+                var posts = await GetRelatedPosts();
+                await storage.SaveRelatedPostsAsync(postId, posts);
+            }
+
+            Task<List<RelatedPost>> GetRelatedPosts() {
+                return Task.Run(() =>
+                {
+                    return new Regex(@"<td class=""similar_post""><a href=""/post/(\d+)""><img src=""([^""]+)")
+                        .Matches(htmlPage)
+                        .OfType<Match>()
+                        .Select(s => new RelatedPost { Image = s.Groups[1].Value })
+                        .ToList();
+                });
             }
 
             #endregion
@@ -641,6 +657,8 @@ namespace JoyReactor.Core.Model.Parser
             Task ReplaceCurrentUserReadingTagsAsync(IEnumerable<string> readingTags);
 
             Task<int> GetNextPageForTagAsync(ID id);
+
+            Task SaveRelatedPostsAsync(string postId, List<RelatedPost> posts);
         }
 
         internal interface IAuthStorage

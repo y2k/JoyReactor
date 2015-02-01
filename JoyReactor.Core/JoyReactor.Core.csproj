@@ -32,7 +32,6 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Model\CommentService.cs" />
     <Compile Include="Model\Database\CreateDefaultTagsTransaction.cs" />
     <Compile Include="Model\Database\CreateTablesTransaction.cs" />
     <Compile Include="Model\DTO\Comment.cs" />
@@ -65,7 +64,6 @@
     <Compile Include="Model\TagCollectionModel.cs" />
     <Compile Include="Model\Helper\HtmlUtils.cs" />
     <Compile Include="Model\Database\SQLiteConnectionExtensions.cs" />
-    <Compile Include="Model\DTO\PostCollection.cs" />
     <Compile Include="Model\Helper\Log.cs" />
     <Compile Include="Model\Helper\DateTimeExtensions.cs" />
     <Compile Include="Model\Helper\NodeHelper.cs" />
@@ -97,6 +95,7 @@
     <Compile Include="Model\Database\SQLiteAuthStorage.cs" />
     <Compile Include="Model\Messages\MessageFetcher.cs" />
     <Compile Include="Model\Parser\JoyReactorProvider.cs" />
+    <Compile Include="Model\DTO\RelatedPost.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

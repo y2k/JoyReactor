@@ -7,6 +7,7 @@ using System;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace JoyReactor.Core.Model
 {
@@ -16,25 +17,48 @@ namespace JoyReactor.Core.Model
         internal static event EventHandler PostChanged;
         int postId;
 
+        internal PostService() { }
+
         internal PostService(int postId)
         {
             this.postId = postId;
         }
 
-        public PostService() { }
+        public IObservable<List<Comment>> Get(int commentId)
+        {
+            return CreateEventObserver()
+                .SelectMany(Observable.FromAsync(() => GetComments(commentId)));
+        }
+
+        async Task<List<Comment>> GetComments(int commentId)
+        {
+            var comments = await storage.GetChildCommentsAsync(postId, commentId);
+            if (commentId != 0) comments.Insert(0, await storage.GetCommentAsync(commentId));
+            return comments;
+        }
 
         public IObservable<Post> Get()
         {
             SyncPost();
+            return CreateEventObserver().SelectMany(Observable.FromAsync(GetPostAsync));
+        }
+
+        IObservable<EventPattern<object>> CreateEventObserver() {
             return Observable
                 .FromEventPattern(typeof(PostService), "PostChanged")
-                .StartWith((EventPattern<object>)null)
-                .SelectMany(Observable.FromAsync(() => storage.GetPostWithAttachmentsAsync(postId)));
+                .StartWith((EventPattern<object>)null);
+        }
+
+        async Task<Post> GetPostAsync() {
+            var post = await storage.GetPostAsync(postId);
+            post.RelatedPosts = await storage.GetRelatedPostsAsync(postId);
+            post.Attachments = await storage.GetAttachmentsAsync(postId);
+            return post;
         }
 
         async void SyncPost()
         {
-            var post = await storage.GetPostWithAttachmentsAsync(postId);
+            var post = await storage.GetPostAsync(postId);
             await JoyReactorProvider.Create().LoadPostAsync(post.PostId);
             PostChanged?.Invoke(null, null);
         }
@@ -47,9 +71,17 @@ namespace JoyReactor.Core.Model
 
         internal interface IStorage
         {
-            Task<Post> GetPostWithAttachmentsAsync(int postId);
+            Task<Post> GetPostAsync(int postId);
+
+            Task<List<Attachment>> GetAttachmentsAsync(int postId);
 
             Task CreateMainTagAsync(string name);
+
+            Task<List<RelatedPost>> GetRelatedPostsAsync(int postId);
+
+            Task<List<Comment>> GetChildCommentsAsync(int postId, int commentId);
+
+            Task<Comment> GetCommentAsync(int commentId);
         }
     }
 }

@@ -25,6 +25,8 @@ namespace JoyReactor.Core.Model.Database
 
             db.CreateTable<PrivateMessageThread>();
             db.CreateTable<PrivateMessage>();
+
+            db.CreateTable<RelatedPost>();
         }
     }
 }

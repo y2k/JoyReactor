@@ -1,18 +1,20 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace JoyReactor.Core.ViewModels
 {
     public class PostViewModel : ViewModelBase
     {
         public ObservableCollection<object> ViewModelParts { get; } = new ObservableCollection<object>();
+
+        public ObservableCollection<RelatedPost> RelatedPost { get; } = new ObservableCollection<RelatedPost>();
 
         bool _isBusy;
         public bool IsBusy
@@ -24,7 +26,6 @@ namespace JoyReactor.Core.ViewModels
         public RelayCommand OpenGalleryCommand { get; set; }
 
         IPostService postService;
-        ICommentService commentService;
 
         IDisposable postSubscription;
         IDisposable commentSubscription;
@@ -34,7 +35,6 @@ namespace JoyReactor.Core.ViewModels
 #if DEBUG
             if (IsInDesignMode)
             {
-
                 var items = Enumerable
                     .Range(1, 10)
                     .Select(s => Enumerable.Range(0, 2 * s))
@@ -49,15 +49,13 @@ namespace JoyReactor.Core.ViewModels
         public void Initialize(int postId)
         {
             postService = new PostService(postId);
-            commentService = new CommentService(postId);
 
             postSubscription?.Dispose();
             postSubscription = postService
                 .Get()
-                .SubscribeOnUi(post =>
-                {
-                    var poster = post.Attachments.Select(s => s.PreviewImageUrl).FirstOrDefault();
+                .SubscribeOnUi(post => {
                     ViewModelParts.ReplaceAt(0, post);
+                    RelatedPost.ReplaceAll(post.RelatedPosts);
                 });
             ReloadCommentList(0);
         }
@@ -65,7 +63,7 @@ namespace JoyReactor.Core.ViewModels
         void ReloadCommentList(int commentId)
         {
             commentSubscription?.Dispose();
-            commentSubscription = commentService
+            commentSubscription = postService
                 .Get(commentId)
                 .SubscribeOnUi(comments =>
                 {
@@ -117,10 +115,7 @@ namespace JoyReactor.Core.ViewModels
         internal interface IPostService
         {
             IObservable<Post> Get();
-        }
 
-        internal interface ICommentService
-        {
             IObservable<List<Comment>> Get(int comment);
         }
     }

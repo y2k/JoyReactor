@@ -5,11 +5,9 @@ using Android.OS;
 using Android.Support.V17.Leanback.App;
 using Android.Support.V17.Leanback.Widget;
 using JoyReactor.Core.Model;
-using JoyReactor.Core.ViewModels;
-using System.Threading.Tasks;
-using Android.Graphics.Drawables;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
+using JoyReactor.Core.ViewModels;
 
 namespace JoyReactor.AndroidTv
 {
