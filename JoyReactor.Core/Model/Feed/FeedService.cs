@@ -61,7 +61,7 @@ namespace JoyReactor.Core.Model.Feed
         {
             // TODO:
 
-//            await Task.Delay(TimeSpan.FromSeconds(Math.Max(0, Interlocked.Increment(ref GlobalDelay))));
+//            await Task.Delay(TimeSpan.FromSeconds(Math.Max(0, 2 * Interlocked.Increment(ref GlobalDelay))));
 //
 //            var sorter = new OrderedListStorage(id, isFirstPage);
 //            await JoyReactorProvider.Create().LoadTagAndPostListAsync(id, sorter);
