@@ -74,7 +74,7 @@ namespace JoyReactor.AndroidTv
                     GridItemPresenter mGridPresenter = new GridItemPresenter();
                     ArrayObjectAdapter gridRowAdapter = new ArrayObjectAdapter(mGridPresenter);
                     gridRowAdapter.Add(new Java.Lang.String("Profile"));
-                    gridRowAdapter.Add(new Java.Lang.String("Prive messages"));
+                    gridRowAdapter.Add(new Java.Lang.String("Private messages"));
                     return new ListRow(new HeaderItem("PREFERENCES", null), gridRowAdapter);
                 }
             }

@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
 using Android.App;
 using Android.Graphics;
+using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Support.V17.Leanback.App;
 using Android.Support.V17.Leanback.Widget;
@@ -37,19 +39,20 @@ namespace JoyReactor.AndroidTv
             {
                 base.OnCreate(savedInstanceState);
 
-                CreateUi();
                 viewmodel = new PostViewModel();
+                CreateUi();
 
                 viewmodel.ViewModelParts.CollectionChanged += (sender, e) =>
                 {
                     if (e.NewItems != null)
                         foreach (var i in e.NewItems.OfType<Post>())
                         {
-                            adapter.Clear();
-                            deltailsRow = new DetailsOverviewRow(new DetailsDescriptionPresenter.Wrapper { Post = i });
+                            deltailsRow = new DetailsOverviewRow(new PostInformationPresenter.Wrapper { Post = i });
                             deltailsRow.AddAction(new Action(1, "Fullscreen"));
                             deltailsRow.AddAction(new Action(2, "Rate"));
-                            adapter.Add(deltailsRow);
+
+                            adapter.RemoveItems(0, 1);
+                            adapter.Add(0, deltailsRow);
 
                             ReloadImage(i);
                         }
@@ -69,14 +72,19 @@ namespace JoyReactor.AndroidTv
 
             void CreateUi()
             {
-                var dor = new DetailsOverviewRowPresenter(new DetailsDescriptionPresenter()) { StyleLarge = true };
+                var ps = new ClassPresenterSelector();
+                var dor = new DetailsOverviewRowPresenter(new PostInformationPresenter()) { StyleLarge = true };
+                ps.AddClassPresenter(Java.Lang.Class.FromType(typeof(DetailsOverviewRow)), dor);
+                ps.AddClassPresenter(Java.Lang.Class.FromType(typeof(ListRow)), new ListRowPresenter());
 
-                Adapter = adapter = new ArrayObjectAdapter(dor);
+                Adapter = adapter = new ArrayObjectAdapter(ps);
 
-                deltailsRow = new DetailsOverviewRow(new DetailsDescriptionPresenter.Wrapper());
+                deltailsRow = new DetailsOverviewRow(new PostInformationPresenter.Wrapper());
                 deltailsRow.AddAction(new Action(1, "Fullscreen"));
                 deltailsRow.AddAction(new Action(2, "Rate"));
+
                 adapter.Add(deltailsRow);
+                adapter.Add(new ListRow(new HeaderItem("Related Posts", null), new RelatedPostAdapter(viewmodel.RelatedPost)));
             }
 
             public override void OnDestroy()
@@ -85,7 +93,7 @@ namespace JoyReactor.AndroidTv
                 viewmodel.Cleanup();
             }
 
-            class DetailsDescriptionPresenter : AbstractDetailsDescriptionPresenter
+            class PostInformationPresenter : AbstractDetailsDescriptionPresenter
             {
                 protected override void OnBindDescription(ViewHolder vh, Java.Lang.Object item)
                 {
@@ -101,6 +109,59 @@ namespace JoyReactor.AndroidTv
                 internal class Wrapper : Java.Lang.Object
                 {
                     internal Post Post { get; set; }
+                }
+            }
+
+            class RelatedPostAdapter : ObjectAdapter
+            {
+                ObservableCollection<RelatedPost> posts;
+
+                internal RelatedPostAdapter(ObservableCollection<RelatedPost> posts)
+                    : base(new RelatedPostPresenter())
+                {
+                    this.posts = posts;
+                    posts.CollectionChanged += (sender, e) => 
+                        NotifyChanged();
+                }
+
+                public override Java.Lang.Object Get(int position)
+                {
+                    return new RelatedPostPresenter.Wrapper { Item = posts[position] };
+                }
+
+                public override int Size()
+                {
+                    return posts.Count;
+                }
+
+                class RelatedPostPresenter : Presenter
+                {
+                    ImageModel loader = new ImageModel();
+
+                    public override void OnBindViewHolder(ViewHolder viewHolder, Java.Lang.Object item)
+                    {
+                        var relatedPost = ((Wrapper)item).Item;
+                        var image = ((ImageCardView)viewHolder.View);
+                        image.SetMainImageDimensions(200, 200);
+                        loader.Load(image, relatedPost.Image, 300, 
+                            bitmap => image.MainImage = bitmap == null ? null : new BitmapDrawable((Bitmap)bitmap));
+                    }
+
+                    public override ViewHolder OnCreateViewHolder(Android.Views.ViewGroup parent)
+                    {
+                        var image = new ImageCardView(parent.Context) { Focusable = true };
+                        return new ViewHolder(image);
+                    }
+
+                    public override void OnUnbindViewHolder(ViewHolder viewHolder)
+                    {
+                        // Ignore
+                    }
+
+                    internal class Wrapper : Java.Lang.Object
+                    {
+                        internal RelatedPost Item { get; set; }
+                    }
                 }
             }
         }

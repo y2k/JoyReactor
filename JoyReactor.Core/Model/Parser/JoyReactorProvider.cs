@@ -304,7 +304,8 @@ namespace JoyReactor.Core.Model.Parser
                 var p = new Post();
 
                 var USER_NAME = new Regex("href=\"[^\"]+user/([^\"/]+)\"", RegexOptions.Singleline);
-                p.UserName = Uri.UnescapeDataString(Uri.UnescapeDataString(USER_NAME.FirstString(htmlPage))).Replace('+', ' ');
+//                p.UserName = Uri.UnescapeDataString(Uri.UnescapeDataString(USER_NAME.FirstString(htmlPage))).Replace('+', ' ');
+                p.UserName = USER_NAME.FirstString(htmlPage)?.UnescapeDataString().UnescapeDataString().Replace('+', ' ');
 
                 var USER_IMAGE = new Regex("src=\"([^\"]+)\" class=\"avatar\"");
                 p.UserImage = USER_IMAGE.FirstString(htmlPage);
@@ -407,7 +408,7 @@ namespace JoyReactor.Core.Model.Parser
                     return new Regex(@"<td class=""similar_post""><a href=""/post/(\d+)""><img src=""([^""]+)")
                         .Matches(htmlPage)
                         .OfType<Match>()
-                        .Select(s => new RelatedPost { Image = s.Groups[1].Value })
+                        .Select(s => new RelatedPost { Image = s.Groups[2].Value })
                         .ToList();
                 });
             }
@@ -502,7 +503,9 @@ namespace JoyReactor.Core.Model.Parser
                 c.Rating = COMMENT_RATING.FirstFloat(s, CultureInfo.InvariantCulture);
 
                 var USER_NAME = new Regex("href=\"[^\"]+user/([^\"/]+)\"", RegexOptions.Singleline);
-                c.UserName = Uri.UnescapeDataString(Uri.UnescapeDataString(USER_NAME.FirstString(s))).Replace('+', ' ');
+//                c.UserName = Uri.UnescapeDataString(Uri.UnescapeDataString(USER_NAME.FirstString(s))).Replace('+', ' ');
+                c.UserName = USER_NAME.FirstString(s)?.UnescapeDataString().UnescapeDataString().Replace('+', ' ');
+
                 var USER_ID = new Regex("userId=\"(\\d+)\"");
                 c.UserImage = "http://img0.joyreactor.cc/pics/avatar/user/" + USER_ID.FirstString(s);
 

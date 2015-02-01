@@ -5,6 +5,7 @@ using System;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace JoyReactor.Core.Model.Feed
 {
@@ -54,11 +55,19 @@ namespace JoyReactor.Core.Model.Feed
             return SyncPage(false);
         }
 
+        static long GlobalDelay;
+
         private async Task SyncPage(bool isFirstPage)
         {
-            var sorter = new OrderedListStorage(id, isFirstPage);
-            await JoyReactorProvider.Create().LoadTagAndPostListAsync(id, sorter);
-            await InvalidateFeedAsync();
+            // TODO:
+
+//            await Task.Delay(TimeSpan.FromSeconds(Math.Max(0, Interlocked.Increment(ref GlobalDelay))));
+//
+//            var sorter = new OrderedListStorage(id, isFirstPage);
+//            await JoyReactorProvider.Create().LoadTagAndPostListAsync(id, sorter);
+//            await InvalidateFeedAsync();
+//
+//            Interlocked.Decrement(ref GlobalDelay);
         }
 
         internal static Task InvalidateFeedAsync()

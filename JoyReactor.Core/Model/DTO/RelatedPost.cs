@@ -8,7 +8,7 @@ namespace JoyReactor.Core.Model.DTO
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
-        public int ParentPost { get; set; }
+        public int ParentPostId { get; set; }
 
         public string Image { get; set; }
     }

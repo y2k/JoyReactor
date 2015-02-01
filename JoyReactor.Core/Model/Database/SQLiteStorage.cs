@@ -279,7 +279,7 @@ namespace JoyReactor.Core.Model.Database
 
         Task<List<RelatedPost>> PostService.IStorage.GetRelatedPostsAsync(int postId)
         {
-            return db.QueryAsync<RelatedPost>("SELECT * FROM related_posts WHERE PostId = ?", postId);
+            return db.QueryAsync<RelatedPost>("SELECT * FROM related_posts WHERE ParentPostId = ?", postId);
         }
 
         Task<Post> PostService.IStorage.GetPostAsync(int postId)
@@ -299,10 +299,10 @@ namespace JoyReactor.Core.Model.Database
             return db.RunInTransactionAsync(() =>
                 {
                     var id = db.ExecuteScalar<int>("SELECT Id FROM posts WHERE PostId = ?", postId);
-                    db.Execute("DELETE FROM related_posts WHERE ParentPost = ?", id);
+                    db.Execute("DELETE FROM related_posts WHERE ParentPostId = ?", id);
                     foreach (var p in posts)
                     {
-                        p.ParentPost = id;
+                        p.ParentPostId = id;
                         db.Insert(p);
                     }
                 });
