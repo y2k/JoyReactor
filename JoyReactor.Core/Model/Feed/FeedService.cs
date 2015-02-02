@@ -59,15 +59,9 @@ namespace JoyReactor.Core.Model.Feed
 
         private async Task SyncPage(bool isFirstPage)
         {
-            // TODO:
-
-//            await Task.Delay(TimeSpan.FromSeconds(Math.Max(0, 2 * Interlocked.Increment(ref GlobalDelay))));
-//
-//            var sorter = new OrderedListStorage(id, isFirstPage);
-//            await JoyReactorProvider.Create().LoadTagAndPostListAsync(id, sorter);
-//            await InvalidateFeedAsync();
-//
-//            Interlocked.Decrement(ref GlobalDelay);
+            var sorter = new OrderedListStorage(id, isFirstPage);
+            await JoyReactorProvider.Create().LoadTagAndPostListAsync(id, sorter);
+            await InvalidateFeedAsync();
         }
 
         internal static Task InvalidateFeedAsync()

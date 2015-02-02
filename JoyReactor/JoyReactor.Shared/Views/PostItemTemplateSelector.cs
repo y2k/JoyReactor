@@ -1,4 +1,5 @@
-﻿using JoyReactor.Core.ViewModels;
+﻿using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.ViewModels;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -12,7 +13,7 @@ namespace JoyReactor.Views
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
-            if (item is PostViewModel.PosterViewModel)
+            if (item is Post)
                 return PosterTemplate;
             if (item is PostViewModel.CommentViewModel)
                 return CommentTemplate;
