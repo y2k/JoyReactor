@@ -56,8 +56,6 @@ namespace JoyReactor.Core.Model
                 b.RegisterType<WebDownloader>().As<IWebDownloader>();
                 b.Register(_ => SQLiteConnectionFactory.Create()).As<SQLiteConnection>();
 
-                b.RegisterType<ImageModel>().AsSelf().SingleInstance();
-
                 b.Register(_ => CrossSettings.Current).AsSelf();
 
                 b.RegisterType<ProfileService>().As<IProfileService>();

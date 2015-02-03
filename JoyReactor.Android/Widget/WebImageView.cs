@@ -1,46 +1,54 @@
-﻿using System;
-using Android.Content;
+﻿using Android.Content;
 using Android.Graphics;
+using Android.Util;
 using Android.Widget;
 using JoyReactor.Core.Model;
-using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Android.Widget
 {
-	public class WebImageView : ImageView
-	{
-		ImageModel iModel = ServiceLocator.Current.GetInstance<ImageModel> ();
+    public class WebImageView : ImageView
+    {
+        string imageSource;
 
-		string imageSource;
+        public int ImageSize { get ; set; }
 
-		public string ImageSource {
-			get { return imageSource; }
-			set { UpdateImageSource (value); }
-		}
+        public float ImageSizeDip
+        { 
+            get { return Resources.DisplayMetrics.Density * ImageSize; }
+            set { ImageSize = (int)(value / Resources.DisplayMetrics.Density); }
+        }
 
-		public WebImageView (Context context, global::Android.Util.IAttributeSet attrs) : base (context, attrs)
-		{
-//			Initialize ();
-		}
+        public string ImageSource
+        {
+            get { return imageSource; }
+            set { UpdateImageSource(value); }
+        }
 
-		void Initialize ()
-		{
-			throw new NotImplementedException ();
-		}
+        public WebImageView(Context context, IAttributeSet attrs)
+            : base(context, attrs)
+        {
+        }
 
-		void UpdateImageSource (string imageSource)
-		{
-			if (this.imageSource != imageSource) {
-				this.imageSource = imageSource;
+        void UpdateImageSource(string imageSource)
+        {
+            if (this.imageSource != imageSource)
+            {
+                this.imageSource = imageSource;
 
-				var u = imageSource == null ? null : new Uri (imageSource); // u == null отменяет закачки
-				iModel.Load (this, u, 0, s => {
-					if (s == null)
-						SetImageDrawable (null);
-					else
-						SetImageBitmap ((Bitmap)s);
-				}); 
-			}
-		}
-	}
+//                var u = imageSource == null ? null : new Uri(imageSource); // u == null отменяет закачки
+//                iModel.Load(this, u, 0, s =>
+//                    {
+//                        if (s == null)
+//                            SetImageDrawable(null);
+//                        else
+//                            SetImageBitmap((Bitmap)s);
+//                    }); 
+                new ImageRequest()
+                    .SetToken(this)
+                    .SetUrl(imageSource)
+                    .CropIn(ImageSize)
+                    .Into<Bitmap>(SetImageBitmap);
+            }
+        }
+    }
 }
