@@ -34,13 +34,19 @@ namespace JoyReactor.Views
             InitializeComponent();
         }
 
-        private async void ReloadImage()
+        private void ReloadImage()
         {
             if (Source != null)
             {
-                Image.Source = null;
-                var path = await new ImageLoader(new Uri(Source), ThumbnailSize).Load<PathImage>();
-                Image.Source = path == null ? null : new BitmapImage(path.PathUri);
+                //Image.Source = null;
+                //var path = await new ImageLoader(new Uri(Source), ThumbnailSize).Load<PathImage>();
+                //Image.Source = path == null ? null : new BitmapImage(path.PathUri);
+
+                new ImageRequest()
+                    .SetUrl(Source)
+                    .CropIn(ThumbnailSize)
+                    .SetToken(this)
+                    .Into<BitmapImage>(s => Image.Source = s);
             }
         }
     }

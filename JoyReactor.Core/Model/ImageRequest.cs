@@ -6,7 +6,7 @@ namespace JoyReactor.Core.Model
 {
     public class ImageRequest
     {
-        static ImageDownloader imageDownloader = new ImageDownloader
+        readonly static ImageDownloader DownloaderInstance = new ImageDownloader
         {
             Decoder = ServiceLocator.Current.GetInstance<ImageDecoder>(),
             DiskCache = new DefaultDiskCache(),
@@ -15,7 +15,7 @@ namespace JoyReactor.Core.Model
 
         Uri url;
         int maxSize;
-        object token;
+        object token = new object();
 
         public ImageRequest SetToken(object token)
         {
@@ -41,9 +41,22 @@ namespace JoyReactor.Core.Model
             return this;
         }
 
-        public void Into<T>(Action<T> callback)
+        public async void Into<T>(Action<T> callback)
         {
-            throw new System.NotImplementedException();
+            var result = await DownloaderInstance.LoadAsync(token, url);
+            if (result != ImageDownloader.InvalideImage)
+                callback(ConvertImage<T>(result));
+        }
+
+        private T ConvertImage<T>(object metaImage)
+        {
+            var convert = DownloaderInstance.Decoder as IImageConverter;
+            return convert == null ? (T)metaImage : convert.Convert<T>(metaImage);
+        }
+
+        public interface IImageConverter
+        {
+            T Convert<T>(object metaImage);
         }
     }
 }

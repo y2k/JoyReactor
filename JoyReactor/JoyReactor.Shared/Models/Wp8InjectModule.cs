@@ -1,7 +1,9 @@
 ﻿using Autofac;
+using JoyReactor.Core.Model;
 using PCLStorage;
 using SQLite.Net.Interop;
 using System;
+using Windows.UI.Xaml.Media.Imaging;
 using XamarinCommons.Image;
 
 namespace JoyReactor.Models
@@ -19,8 +21,15 @@ namespace JoyReactor.Models
         #endregion
     }
 
-    public class PathImageDecoder : ImageDecoder
+    public class PathImageDecoder : ImageDecoder, ImageRequest.IImageConverter
     {
+        public T Convert<T>(object metaImage)
+        {
+            if (metaImage == null) return default(T);
+            if (typeof(T) == typeof(BitmapImage)) return (T)(object)new BitmapImage(((PathImage)metaImage).PathUri);
+            throw new ArgumentException("Not supported type of image " + typeof(T));
+        }
+
         public override object Decode(IFile file)
         {
             return new PathImage { PathUri = new Uri(file.Path) };
