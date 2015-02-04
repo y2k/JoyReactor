@@ -1,22 +1,27 @@
 ﻿using System.Collections.Generic;
+using Android.Content;
 using Android.OS;
 using Android.Support.V17.Leanback.App;
 using Android.Support.V17.Leanback.Widget;
+using JoyReactor.AndroidTv.Helpers;
 using JoyReactor.Core.ViewModels;
-using Android.Content;
 using Messenger = GalaSoft.MvvmLight.Messaging.Messenger;
+using System;
 
 namespace JoyReactor.AndroidTv
 {
     public class MainFragment : BrowseFragment
     {
         TagsViewModel tagsViewModel;
+        BackgroundChanger backgroundMonitor;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
             tagsViewModel = new TagsViewModel();
+            backgroundMonitor = new BackgroundChanger(Activity);
+
             Adapter = new ArrayObjectAdapterImpl { Items = tagsViewModel.Tags };
 
             tagsViewModel.Tags.CollectionChanged += (sender, e) => ((ArrayObjectAdapterImpl)Adapter).NotifyDataChanged();
@@ -28,13 +33,14 @@ namespace JoyReactor.AndroidTv
                 if (item != null)
                     item.OpenPostCommand.Execute(null);
             };
+            ItemSelected += (sender, e) => backgroundMonitor.Change(new Random().Next(0xFFFFFF));
 
             Messenger.Default.Register<PostNavigationMessage>(this, msg =>
-            {
-                Intent intent = new Intent(Activity, typeof(PostActivity));
-                intent.PutExtra(PostActivity.PostId, msg.PostId);
-                Activity.StartActivity(intent);
-            });
+                {
+                    Intent intent = new Intent(Activity, typeof(PostActivity));
+                    intent.PutExtra(PostActivity.PostId, msg.PostId);
+                    Activity.StartActivity(intent);
+                });
 
             Title = "JoyReactor (github.com/y2k)";
         }
@@ -43,11 +49,13 @@ namespace JoyReactor.AndroidTv
         {
             base.OnDestroy();
             tagsViewModel.Cleanup();
+            backgroundMonitor.Dispose();
         }
 
         class ArrayObjectAdapterImpl : ObjectAdapter
         {
             internal IList<TagsViewModel.TagItemViewModel> Items { get; set; }
+
             Dictionary<string, ListRow> cache = new Dictionary<string, ListRow>();
 
             internal ArrayObjectAdapterImpl()

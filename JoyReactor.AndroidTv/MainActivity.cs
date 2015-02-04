@@ -1,19 +1,19 @@
-﻿using System.IO;
-using System;
+﻿using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Graphics;
+using Android.Graphics.Drawables;
 using Android.OS;
 using Autofac;
 using JoyReactor.Core.Model;
+using JoyReactor.Core.Model.Web;
 using Microsoft.Practices.ServiceLocation;
 using SQLite.Net.Interop;
 using SQLite.Net.Platform.XamarinAndroid;
 using XamarinCommons.Image;
-using Android.Graphics.Drawables;
-using JoyReactor.Core.Model.Web;
-using System.Threading.Tasks;
-using System.Threading;
 
 namespace JoyReactor.AndroidTv
 {
@@ -28,7 +28,6 @@ namespace JoyReactor.AndroidTv
             if (bundle == null)
                 FragmentManager.BeginTransaction().Add(Resource.Id.container, new MainFragment()).Commit();
         }
-
 
         #region App initialize
 

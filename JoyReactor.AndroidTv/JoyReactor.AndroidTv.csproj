@@ -97,6 +97,7 @@
     <Compile Include="PostViewModelHolder.cs" />
     <Compile Include="PostActivity.cs" />
     <Compile Include="GridItemPresenter.cs" />
+    <Compile Include="Helpers\BackgroundChanger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -125,5 +126,8 @@
       <Project>{E205F32E-24F2-4B73-B9F1-C474813D605B}</Project>
       <Name>JoyReactor.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\" />
   </ItemGroup>
 </Project>
