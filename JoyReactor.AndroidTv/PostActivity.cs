@@ -63,10 +63,14 @@ namespace JoyReactor.AndroidTv
 
             void ReloadImage(Post i)
             {
-                new ImageModel().Load(deltailsRow, i.Image, 300, bitmap =>
+                new ImageRequest()
+                    .SetUrl(i.Image)
+                    .CropIn(300)
+                    .SetToken(deltailsRow)
+                    .Into<Bitmap>(s =>
                     {
-                        deltailsRow.SetImageBitmap(Activity, (Bitmap)bitmap);
-                        adapter.NotifyArrayItemRangeChanged(0, 1);
+                            deltailsRow.SetImageBitmap(Activity, s);
+                            adapter.NotifyArrayItemRangeChanged(0, 1);
                     });
             }
 
@@ -136,15 +140,20 @@ namespace JoyReactor.AndroidTv
 
                 class RelatedPostPresenter : Presenter
                 {
-                    ImageModel loader = new ImageModel();
+//                    ImageModel loader = new ImageModel();
 
                     public override void OnBindViewHolder(ViewHolder viewHolder, Java.Lang.Object item)
                     {
                         var relatedPost = ((Wrapper)item).Item;
                         var image = ((ImageCardView)viewHolder.View);
                         image.SetMainImageDimensions(300, 300);
-                        loader.Load(image, relatedPost.Image, 300, 
-                            bitmap => image.MainImage = bitmap == null ? null : new BitmapDrawable((Bitmap)bitmap));
+//                        loader.Load(image, relatedPost.Image, 300, 
+//                            bitmap => image.MainImage = bitmap == null ? null : new BitmapDrawable((Bitmap)bitmap));
+                        new ImageRequest()
+                            .SetUrl(relatedPost.Image)
+                            .CropIn(300)
+                            .SetToken(image)
+                            .Into<BitmapDrawable>(s => image.MainImage = s);
                     }
 
                     public override ViewHolder OnCreateViewHolder(Android.Views.ViewGroup parent)

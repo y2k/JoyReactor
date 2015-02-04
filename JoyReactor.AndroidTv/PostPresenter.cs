@@ -1,19 +1,15 @@
-﻿using System;
-using Android.Graphics;
+﻿using Android.Graphics.Drawables;
 using Android.Support.V17.Leanback.Widget;
 using Android.Views;
-using JoyReactor.Core.ViewModels;
 using GalaSoft.MvvmLight;
 using JoyReactor.Core.Model;
-using Microsoft.Practices.ServiceLocation;
-using Android.Graphics.Drawables;
+using JoyReactor.Core.ViewModels;
 
 namespace JoyReactor.AndroidTv
 {
     class PostPresenter : Presenter
     {
         const int RowHeight = 300;
-        ImageModel iModel = ServiceLocator.Current.GetInstance<ImageModel> ();
 
         public override void OnUnbindViewHolder(ViewHolder viewHolder)
         {
@@ -49,9 +45,11 @@ namespace JoyReactor.AndroidTv
 
         void LoadImage(string imageUrl, ImageCardView image)
         {
-            image.MainImage = null;
-            var loadUrl = imageUrl ?? "http://d1luk0418egahw.cloudfront.net/static/images/guide/NoImage_592x444.jpg";
-            iModel.Load(image, new Uri(loadUrl), RowHeight, bitmap => image.MainImage = bitmap == null ? null : new BitmapDrawable((Bitmap)bitmap));
+            new ImageRequest()
+                .SetUrl(imageUrl ?? "http://d1luk0418egahw.cloudfront.net/static/images/guide/NoImage_592x444.jpg")
+                .CropIn(RowHeight)
+                .SetToken(image)
+                .Into<BitmapDrawable>(s => image.MainImage = s);
         }
 
         static int ComputeItemWidth(FeedViewModel.ContentViewModel tag)
