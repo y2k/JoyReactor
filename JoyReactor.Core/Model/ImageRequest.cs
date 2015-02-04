@@ -45,6 +45,7 @@ namespace JoyReactor.Core.Model
 
         public async void Into<T>(Action<T> callback)
         {
+            callback(default(T));
             var result = await DownloaderInstance.LoadAsync(token, CreateDownloadUrl());
             if (result != ImageDownloader.InvalideImage)
                 callback(ConvertImage<T>(result));
