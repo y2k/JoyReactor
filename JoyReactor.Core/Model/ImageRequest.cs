@@ -6,6 +6,8 @@ namespace JoyReactor.Core.Model
 {
     public class ImageRequest
     {
+        const string ThumbailTemplate = "https://remote-cache.api-i-twister.net/Cache/Get?maxHeight=500&width={0}&url={1}";
+
         readonly static ImageDownloader DownloaderInstance = new ImageDownloader
         {
             Decoder = ServiceLocator.Current.GetInstance<ImageDecoder>(),
@@ -43,12 +45,24 @@ namespace JoyReactor.Core.Model
 
         public async void Into<T>(Action<T> callback)
         {
-            var result = await DownloaderInstance.LoadAsync(token, url);
+            var result = await DownloaderInstance.LoadAsync(token, CreateDownloadUrl());
             if (result != ImageDownloader.InvalideImage)
                 callback(ConvertImage<T>(result));
         }
 
-        private T ConvertImage<T>(object metaImage)
+        Uri CreateDownloadUrl()
+        {
+            return IsCanCreateThumbnail()
+                ? new Uri(string.Format(ThumbailTemplate, maxSize, Uri.EscapeDataString("" + url)))
+                : url;
+        }
+
+        bool IsCanCreateThumbnail()
+        {
+            return maxSize != 0 && url != null && url.Host != "remote-cache.api-i-twister.net";
+        }
+
+        T ConvertImage<T>(object metaImage)
         {
             var convert = DownloaderInstance.Decoder as IImageConverter;
             return convert == null ? (T)metaImage : convert.Convert<T>(metaImage);
