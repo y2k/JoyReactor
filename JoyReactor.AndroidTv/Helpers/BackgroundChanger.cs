@@ -1,11 +1,11 @@
 ﻿using System;
-using Android.Support.V17.Leanback.App;
 using Android.App;
 using Android.Graphics;
+using Android.Support.V17.Leanback.App;
 
 namespace JoyReactor.AndroidTv.Helpers
 {
-    public class BackgroundChanger : IDisposable
+    class BackgroundChanger : IDisposable
     {
         BackgroundManager manager;
 
@@ -14,20 +14,19 @@ namespace JoyReactor.AndroidTv.Helpers
             (manager = BackgroundManager.GetInstance(activity)).Attach(activity.Window);
         }
 
-        public void Change(int color)
+        public void Change(IColorSource colorSource)
         {
-            try
-            {
-                manager.Color = Color.ParseColor("#" + color.ToString("X"));
-            }
-            catch
-            {
-            }
+            manager.Color = colorSource.GetColor();
         }
 
         public void Dispose()
         {
             manager.Release();
+        }
+
+        internal interface IColorSource
+        {
+            Color GetColor();
         }
     }
 }

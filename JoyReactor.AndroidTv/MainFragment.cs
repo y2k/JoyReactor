@@ -6,7 +6,6 @@ using Android.Support.V17.Leanback.Widget;
 using JoyReactor.AndroidTv.Helpers;
 using JoyReactor.Core.ViewModels;
 using Messenger = GalaSoft.MvvmLight.Messaging.Messenger;
-using System;
 
 namespace JoyReactor.AndroidTv
 {
@@ -29,11 +28,12 @@ namespace JoyReactor.AndroidTv
             OnActivityCreated(savedInstanceState);
             ItemViewClicked += (sender, e) =>
             {
-                var item = ((PostPresenter.PostWrapper)e.Item).Post as FeedViewModel.ContentViewModel;
-                if (item != null)
-                    item.OpenPostCommand.Execute(null);
+                var item = ((PostPresenter.PostWrapper)e.Item).Post;
+                if (item is FeedViewModel.ContentViewModel)
+                    ((FeedViewModel.ContentViewModel)item).OpenPostCommand.Execute(null);
+
             };
-            ItemSelected += (sender, e) => backgroundMonitor.Change(new Random().Next(0xFFFFFF));
+            ItemSelected += (sender, e) => backgroundMonitor.Change(new ColorSource(e.Item));
 
             Messenger.Default.Register<PostNavigationMessage>(this, msg =>
                 {

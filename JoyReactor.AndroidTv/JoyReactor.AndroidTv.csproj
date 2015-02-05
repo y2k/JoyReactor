@@ -98,6 +98,7 @@
     <Compile Include="PostActivity.cs" />
     <Compile Include="GridItemPresenter.cs" />
     <Compile Include="Helpers\BackgroundChanger.cs" />
+    <Compile Include="Helpers\ColorSource.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
