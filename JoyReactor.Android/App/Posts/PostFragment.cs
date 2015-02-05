@@ -55,6 +55,7 @@ namespace JoyReactor.Android.App.Posts
         class Adapter : RecyclerView.Adapter
         {
             public PostViewModel viewmodel;
+            int leftPaddingForChild;
 
             public override int GetItemViewType(int position)
             {
@@ -64,6 +65,7 @@ namespace JoyReactor.Android.App.Posts
 
             public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
             {
+                leftPaddingForChild = (int)(holder.ItemView.Context.Resources.DisplayMetrics.Density * 20);
                 if (holder.ItemViewType == 0)
                 {
                     var item = (Post)viewmodel.ViewModelParts[position];
@@ -74,8 +76,13 @@ namespace JoyReactor.Android.App.Posts
                 {
                     var item = (PostViewModel.CommentViewModel)viewmodel.ViewModelParts[position];
                     var button = holder.ItemView.FindViewById<TextView>(Resource.Id.title);
-                    button.Text = (item.IsRoot ? "" : ">> ") + item.Text;
+                    button.Text = item.Text;
                     holder.ItemView.SetClick((sender, e) => item.NavigateCommand.Execute(null));
+                    holder.ItemView.SetPadding(
+                        item.IsRoot ? 0 : leftPaddingForChild, 
+                        holder.ItemView.PaddingTop, 
+                        holder.ItemView.PaddingRight, 
+                        holder.ItemView.PaddingBottom);
                 }
             }
 
