@@ -1,6 +1,6 @@
-﻿using SQLite.Net.Attributes;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using SQLite.Net.Attributes;
 
 namespace JoyReactor.Core.Model.DTO
 {
@@ -24,8 +24,13 @@ namespace JoyReactor.Core.Model.DTO
 
         // TODO: придумать как заблокировать поле так что бы оно не игнорировалось при запросах
         public int ChildCount { get; set; }
+
+        public string _Attachments { get; set; }
+
         [Ignore]
-        public List<string> Attachments { get; set; }
+        public ICollection<string> Attachments { 
+            get { return _Attachments?.Split(',') ?? new string[0]; }
+        }
 
         public override string ToString()
         {

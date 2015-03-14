@@ -100,15 +100,27 @@ namespace JoyReactor.Core.ViewModels
 
             public int ChildCount { get; set; }
 
-            public ICollection<string> Images { get; set; }
+            public ICollection<string> Attachments { get; set; }
+
+            public string UserImage { get; set; }
 
             public CommentViewModel() { }
 
             public CommentViewModel(PostViewModel parent, Comment comment)
             {
-                Text = comment.Text;
+                UserImage = comment.UserImage;
+                Attachments = comment.Attachments;
+
+                Text = GetCommentText(comment);
                 ChildCount = comment.ChildCount;
                 NavigateCommand = new FixRelayCommand(() => parent.ReloadCommentList(IsRoot ? comment.ParentCommentId : comment.Id));
+            }
+
+            string GetCommentText(Comment comment)
+            {
+                return comment.ChildCount == 0
+                    ? comment.Text
+                    : string.Format("({0}) {1}", comment.ChildCount, comment.Text);
             }
         }
 

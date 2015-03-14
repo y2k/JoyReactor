@@ -3,24 +3,35 @@
     android:layout_width="match_parent"
     android:padding="8dp"
     android:gravity="center_vertical"
+    android:orientation="vertical"
     android:layout_height="wrap_content">
-    <JoyReactor.Android.Widget.RoundBorderLayour
-        android:layout_width="48dp"
-        android:layout_height="48dp">
-        <JoyReactor.Android.Widget.WebImageView
-            android:id="@+id/icon"
-            android:scaleType="centerCrop"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </JoyReactor.Android.Widget.RoundBorderLayour>
-    <TextView
-        android:paddingLeft="8dp"
-        android:maxLines="3"
-        android:ellipsize="end"
-        android:id="@+id/title"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:fontFamily="sans-serif-light"
-        android:textSize="14sp"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <JoyReactor.Android.Widget.RoundBorderLayour
+            android:layout_width="48dp"
+            android:layout_height="48dp">
+            <JoyReactor.Android.Widget.WebImageView
+                android:id="@+id/icon"
+                android:scaleType="centerCrop"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </JoyReactor.Android.Widget.RoundBorderLayour>
+        <TextView
+            android:paddingLeft="8dp"
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-light"
+            android:textSize="14sp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <JoyReactor.Android.Widget.WebImageView
+        android:layout_gravity="right"
+        android:id="@+id/attachment"
+        android:scaleType="centerCrop"
+        android:layout_width="80dp"
+        android:layout_height="80dp" />
 </LinearLayout>

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Specialized;
 using Android.OS;
+using System.Linq;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
@@ -83,6 +84,14 @@ namespace JoyReactor.Android.App.Posts
                         holder.ItemView.PaddingTop, 
                         holder.ItemView.PaddingRight, 
                         holder.ItemView.PaddingBottom);
+
+                    var avatar = holder.ItemView.FindViewById<WebImageView>(Resource.Id.icon);
+                    avatar.ImageSource = item.UserImage;
+
+                    var attach = holder.ItemView.FindViewById<WebImageView>(Resource.Id.attachment);
+                    attach.ImageSizeDip = 80;
+                    attach.ImageSource = item.Attachments.FirstOrDefault();
+                    attach.Visibility = item.Attachments.Count > 0 ? ViewStates.Visible : ViewStates.Gone;
                 }
             }
 

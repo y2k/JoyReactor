@@ -1,12 +1,12 @@
-﻿using JoyReactor.Core.Model.DTO;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Feed;
 using JoyReactor.Core.Model.Parser;
 using Microsoft.Practices.ServiceLocation;
 using SQLite.Net;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System;
 
 namespace JoyReactor.Core.Model.Database
 {
@@ -236,25 +236,17 @@ namespace JoyReactor.Core.Model.Database
 
         Task<List<Comment>> PostService.IStorage.GetChildCommentsAsync(int postId, int commentId)
         {
-            if (commentId == 0)
-            {
-                return db.QueryAsync<Comment>(
-                    "SELECT " +
-                    "c.*, " +
-                    "(SELECT COUNT(*) FROM comments WHERE ParentCommentId = c.Id) AS ChildCount " +
-                    "FROM comments c " +
-                    "WHERE c.PostId = ? AND c.ParentCommentId = 0 " +
-                    "ORDER BY c.Rating DESC, ChildCount DESC ",
-                    postId);
-            }
-            return db.QueryAsync<Comment>(
-                "SELECT " +
-                "c.*, " +
-                "(SELECT COUNT(*) FROM comments WHERE ParentCommentId = c.Id) AS ChildCount " +
-                "FROM comments c " +
-                "WHERE c.ParentCommentId = ? " +
-                "ORDER BY c.Rating DESC, ChildCount DESC",
-                commentId);
+            return db.QueryAsync<Comment>(@"
+SELECT
+c.*,
+(SELECT COUNT(*) FROM comments WHERE ParentCommentId = c.Id) AS ChildCount,
+a.Url AS _Attachments
+FROM comments c
+LEFT JOIN attachments a ON a.ParentType == 1 AND a.ParentId = c.Id
+WHERE c.PostId = ? AND c.ParentCommentId = ?
+GROUP BY c.Id
+ORDER BY c.Rating DESC, ChildCount DESC
+                ", postId, commentId);
         }
 
         Task<Comment> PostService.IStorage.GetCommentAsync(int commentId)
