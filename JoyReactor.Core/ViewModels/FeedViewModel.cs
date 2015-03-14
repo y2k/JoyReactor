@@ -59,7 +59,7 @@ namespace JoyReactor.Core.ViewModels
             ApplyCommand = new RelayCommand(async () => await service.ApplyNewItemsAsync());
             ChangeCurrentListIdCommand = new RelayCommand<ID>(Initialize);
 
-            MessengerInstance.Register<SelectTagMessage>(this, s => ChangeCurrentListIdCommand.Execute(s.Id));
+            MessengerInstance.Register<TagsViewModel.SelectTagMessage>(this, s => ChangeCurrentListIdCommand.Execute(s.Id));
         }
 
         public void Initialize(ID newId)

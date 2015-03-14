@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
-using Android.Content;
 using Android.Graphics;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
+using JoyReactor.Android.App.Base;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.ViewModels;
-using Microsoft.Practices.ServiceLocation;
-using JoyReactor.Android.App.Base;
-using JoyReactor.Android.App.Base.Commands;
 
 namespace JoyReactor.Android.App.Home
 {
@@ -18,27 +14,13 @@ namespace JoyReactor.Android.App.Home
     {
         ListView list;
         Adapter adapter;
-
         TagInformationViewModel viewModel = new TagInformationViewModel();
 
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             RetainInstance = true;
-        }
-
-        public override void OnStart()
-        {
-            base.OnStart();
-            ChangeSubscriptionCommand.Register(this, s => viewModel.ChangeCurrentTag(s));
             viewModel.Items.CollectionChanged += HandleCollectionChanged;
-        }
-
-        public override void OnStop()
-        {
-            base.OnStop();
-            ChangeSubscriptionCommand.Unregister(this);
-            viewModel.Items.CollectionChanged -= HandleCollectionChanged;
         }
 
         void HandleCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

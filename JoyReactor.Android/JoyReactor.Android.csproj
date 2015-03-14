@@ -96,7 +96,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App\App.cs" />
     <Compile Include="App\HomeActivity.cs" />
-    <Compile Include="App\Base\Commands\ChangeSubscriptionCommand.cs" />
     <Compile Include="App\Base\BaseActivity.cs" />
     <Compile Include="App\Base\BaseFragment.cs" />
     <Compile Include="App\Home\FeedAdapter.cs" />

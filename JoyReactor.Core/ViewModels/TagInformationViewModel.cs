@@ -18,7 +18,8 @@ namespace JoyReactor.Core.ViewModels
 
         public TagInformationViewModel()
         {
-            MessengerInstance.Register<SelectTagMessage>(this, m => ChangeCurrentTag(m.Id));
+            MessengerInstance.Register<TagsViewModel.SelectTagMessage>(
+                this, m => ChangeCurrentTag(m.Id));
         }
 
         public void ChangeCurrentTag(ID currentTagId)

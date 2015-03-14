@@ -1,13 +1,13 @@
-﻿using GalaSoft.MvvmLight;
-using JoyReactor.Core.Model;
-using JoyReactor.Core.Model.DTO;
-using JoyReactor.Core.Model.Helper;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
+using GalaSoft.MvvmLight;
+using JoyReactor.Core.Model;
+using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Helper;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -78,6 +78,11 @@ namespace JoyReactor.Core.ViewModels
             {
                 this.tag = tag;
             }
+        }
+
+        public class SelectTagMessage
+        {
+            public ID Id;
         }
     }
 }

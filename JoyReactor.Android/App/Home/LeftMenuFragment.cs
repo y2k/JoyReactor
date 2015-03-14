@@ -5,7 +5,6 @@ using Android.Widget;
 using JoyReactor.Core;
 using JoyReactor.Core.ViewModels;
 using JoyReactor.Android.App.Base;
-using JoyReactor.Android.App.Base.Commands;
 using JoyReactor.Android.Widget;
 
 namespace JoyReactor.Android.App.Home
@@ -13,7 +12,7 @@ namespace JoyReactor.Android.App.Home
     public class LeftMenuFragment : BaseFragment
     {
         static MenuHeader[] Headers =
-        {
+            {
             new MenuHeader { Title = Resource.String.feed, ListId = ID.Factory.New(ID.IdConst.ReactorGood) },
             new MenuHeader { Title = Resource.String.favorite, ListId = ID.Factory.New(ID.IdConst.ReactorFavorite) },
         };
@@ -50,7 +49,7 @@ namespace JoyReactor.Android.App.Home
                 var id = e.Position < Headers.Length 
 					? Headers[e.Position].ListId 
 					: viewModel.Tags[e.Position - Headers.Length].TagId;
-                new ChangeSubscriptionCommand(id).Execute();
+                MessengerInstance.Send(new TagsViewModel.SelectTagMessage { Id = id });
             };
         }
 

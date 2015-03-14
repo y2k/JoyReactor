@@ -5,8 +5,8 @@ using Android.Support.V4.App;
 using Android.Support.V4.View;
 using Android.Views;
 using JoyReactor.Android.App.Base;
-using JoyReactor.Android.App.Base.Commands;
 using JoyReactor.Android.App.Home;
+using JoyReactor.Core.ViewModels;
 
 namespace JoyReactor.Android.App
 {
@@ -28,6 +28,7 @@ namespace JoyReactor.Android.App
 			pager.PageSelected += (s, e) => SupportActionBar.SetDisplayHomeAsUpEnabled (e.Position > 0);
 
 			pager.CurrentItem = 1;
+            MessengerInstance.Register<TagsViewModel.SelectTagMessage>(this, _ => pager.CurrentItem = 1);
 		}
 
 		public override bool OnCreateOptionsMenu (IMenu menu)
@@ -53,18 +54,6 @@ namespace JoyReactor.Android.App
 				return true;
 			}
 			return base.OnOptionsItemSelected (item);
-		}
-
-		protected override void OnResume ()
-		{
-			base.OnResume ();
-			ChangeSubscriptionCommand.Register (this, s => pager.CurrentItem = 1);
-		}
-
-		protected override void OnPause ()
-		{
-			base.OnPause ();
-			ChangeSubscriptionCommand.Unregister (this);
 		}
 	}
 

@@ -6,7 +6,6 @@ using GalaSoft.MvvmLight.Helpers;
 using JoyReactor.Core;
 using JoyReactor.Core.ViewModels;
 using JoyReactor.Android.App.Base;
-using JoyReactor.Android.App.Base.Commands;
 using JoyReactor.Android.Widget;
 
 namespace JoyReactor.Android.App.Home
@@ -44,22 +43,6 @@ namespace JoyReactor.Android.App.Home
 			viewModel
 				.SetBinding (() => viewModel.IsBusy, refresher, () => refresher.Refreshing, BindingMode.OneWay);
 		}
-
-		#region Collection change listener
-
-		public override void OnStart ()
-		{
-			base.OnStart ();
-			ChangeSubscriptionCommand.Register (this, viewModel.ChangeCurrentListIdCommand.Execute);
-		}
-
-		public override void OnStop ()
-		{
-			base.OnStop ();
-			ChangeSubscriptionCommand.Unregister (this);
-		}
-
-		#endregion
 
 		bool IsViewInflated { get { return View != null; } }
 
