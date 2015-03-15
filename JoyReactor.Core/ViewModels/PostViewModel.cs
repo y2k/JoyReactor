@@ -118,9 +118,7 @@ namespace JoyReactor.Core.ViewModels
 
             string GetCommentText(Comment comment)
             {
-                return comment.ChildCount == 0
-                    ? comment.Text
-                    : string.Format("({0}) {1}", comment.ChildCount, comment.Text);
+                return comment.Text;
             }
         }
 

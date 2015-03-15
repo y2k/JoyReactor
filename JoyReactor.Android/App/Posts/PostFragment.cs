@@ -77,7 +77,10 @@ namespace JoyReactor.Android.App.Posts
                 {
                     var item = (PostViewModel.CommentViewModel)viewmodel.ViewModelParts[position];
                     var button = holder.ItemView.FindViewById<TextView>(Resource.Id.title);
-                    button.Text = item.Text;
+
+                    button.Text = string.Format("({0}) {1}", item.ChildCount, item.Text);
+                    button.Visibility = string.IsNullOrEmpty(item.Text) ? ViewStates.Gone : ViewStates.Visible;
+
                     holder.ItemView.SetClick((sender, e) => item.NavigateCommand.Execute(null));
                     holder.ItemView.SetPadding(
                         item.IsRoot ? 0 : leftPaddingForChild, 

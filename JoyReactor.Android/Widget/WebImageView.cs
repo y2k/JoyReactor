@@ -10,12 +10,12 @@ namespace JoyReactor.Android.Widget
     {
         string imageSource;
 
-        public int ImageSize { get ; set; }
+        public float ImageSize { get ; set; }
 
         public float ImageSizeDip
         { 
-            get { return Resources.DisplayMetrics.Density * ImageSize; }
-            set { ImageSize = (int)(value / Resources.DisplayMetrics.Density); }
+            get { return ImageSize / Resources.DisplayMetrics.Density; }
+            set { ImageSize = value * Resources.DisplayMetrics.Density; }
         }
 
         public string ImageSource
@@ -46,7 +46,7 @@ namespace JoyReactor.Android.Widget
                 new ImageRequest()
                     .SetToken(this)
                     .SetUrl(imageSource)
-                    .CropIn(ImageSize)
+                    .CropIn((int)ImageSize)
                     .Into<Bitmap>(SetImageBitmap);
             }
         }

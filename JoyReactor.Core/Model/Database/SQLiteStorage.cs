@@ -183,7 +183,7 @@ namespace JoyReactor.Core.Model.Database
 
         Task JoyReactorProvider.IStorage.RemovePostComments(string postId)
         {
-            return db.ExecuteAsync("DELETE FROM comments WHERE PostId IN (SELECT Id FROM posts WHERE PostId = ?)");
+            return db.ExecuteAsync("DELETE FROM comments WHERE PostId IN (SELECT Id FROM posts WHERE PostId = ?)", postId);
         }
 
         Task JoyReactorProvider.IStorage.SaveNewPostCommentAsync(string postId, int parrentCommentId, Comment comment, string[] attachments)
