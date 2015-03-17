@@ -1,26 +1,28 @@
-﻿using Android.App;
+﻿using System.Collections.ObjectModel;
+using Android.App;
 using Android.OS;
 using Android.Support.V4.Widget;
 using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
-using JoyReactor.Core.ViewModels;
 using JoyReactor.Android.App.Base;
-using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
-using System.Collections.ObjectModel;
+using JoyReactor.Core.ViewModels;
 
 namespace JoyReactor.Android.App
 {
     [Activity(Label = "@string/activity_private_messages")]			
     public class MessageActivity : BaseActivity
     {
-        protected override void OnCreate(Bundle bundle)
+        protected override void OnCreate(Bundle savedInstanceState)
         {
-            base.OnCreate(bundle);
+            base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_messages);
-            if (bundle == null)
-                FindViewById<SlidingPaneLayout>(Resource.Id.slidePanel).OpenPane();
+
+            var panel = FindViewById<SlidingPaneLayout>(Resource.Id.slidePanel); 
+            if (savedInstanceState == null)
+                panel.OpenPane();
+            MessengerInstance.Register<MessagesViewModel.SelectThreadMessage>(this, _ => panel.ClosePane());
         }
 
         #region Threads

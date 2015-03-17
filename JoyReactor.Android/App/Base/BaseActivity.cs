@@ -65,14 +65,14 @@ namespace JoyReactor.Android.App.Base
         protected override void OnStart()
         {
             base.OnStart();
-            Messenger.Default.Register<PostNavigationMessage>(this, s => 
+            MessengerInstance.Register<PostNavigationMessage>(this, s => 
 				StartActivity(PostActivity.NewIntent(s.PostId)));
         }
 
         protected override void OnStop()
         {
             base.OnStop();
-            Messenger.Default.Unregister(this);
+            MessengerInstance.Unregister(this);
         }
 
         protected override void OnDestroy()

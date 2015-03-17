@@ -7,7 +7,7 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Android.App
 {
-	[Application (Theme = "@style/Theme.AppCompat.Light")]
+    [Application (Theme = "@style/AppTheme")]
 	public class App : Application
 	{
 		public static Application Instance { get; private set; }

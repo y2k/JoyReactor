@@ -124,6 +124,7 @@
     <Compile Include="App\Posts\PostActivity.cs" />
     <Compile Include="App\Posts\PostFragment.cs" />
     <Compile Include="App\MessageActivity.cs" />
+    <Compile Include="App\SettingsActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -162,7 +163,6 @@
     <AndroidResource Include="Resources\mipmap-mdpi\ic_launcher.png" />
     <AndroidResource Include="Resources\mipmap-xhdpi\ic_launcher.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher.png" />
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher.png" />
     <AndroidResource Include="Resources\layout\item_message_inbox.axml" />
     <AndroidResource Include="Resources\layout\item_message_outbox.axml" />
   </ItemGroup>
