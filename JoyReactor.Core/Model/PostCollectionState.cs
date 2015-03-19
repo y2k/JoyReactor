@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace JoyReactor.Core.Model
 {
-    class PostCollectionState
+    public class PostCollectionState
     {
         internal List<Post> Posts { get; set; }
 

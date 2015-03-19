@@ -6,6 +6,7 @@ using NUnit.Framework;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System;
 
 namespace JoyReactor.Core.Tests.ViewModels
 {
@@ -29,7 +30,8 @@ namespace JoyReactor.Core.Tests.ViewModels
 
 		Task SaveLinkedTagsToDatabase (ID id)
 		{
-			return new PostCollectionModel ().SyncFirstPage (id);
+//			return new PostCollectionModel ().SyncFirstPage (id);
+            throw new NotImplementedException(); // FIXME:
 		}
 
 		[Test]

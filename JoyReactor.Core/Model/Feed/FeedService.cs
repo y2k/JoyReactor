@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace JoyReactor.Core.Model.Feed
 {
-    class FeedService : FeedViewModel.IFeedService
+    public class FeedService : FeedViewModel.IFeedService
     {
         internal static event EventHandler FeedChanged;
 

@@ -2,6 +2,7 @@
 using JoyReactor.Core.ViewModels;
 using NUnit.Framework;
 using System.Threading.Tasks;
+using System;
 
 namespace JoyReactor.Core.Tests.ViewModels
 {
@@ -32,11 +33,12 @@ namespace JoyReactor.Core.Tests.ViewModels
             }
         }
 
-        private static async Task<int> SetUpPost()
+        static async Task<int> SetUpPost()
         {
-            int id = TestExtensions.CreatePostIdDatabase(ID.SiteParser.JoyReactor, "861529");
-            await new PostModel().GetPostAsync(id);
-            return id;
+//            int id = TestExtensions.CreatePostIdDatabase(ID.SiteParser.JoyReactor, "861529");
+//            await new PostModel().GetPostAsync(id);
+//            return id;
+            throw new NotImplementedException(); // FIXME:
         }
     }
 }

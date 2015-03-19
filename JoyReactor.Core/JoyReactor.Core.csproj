@@ -94,6 +94,7 @@
     <Compile Include="Model\Parser\JoyReactorProvider.cs" />
     <Compile Include="Model\DTO\RelatedPost.cs" />
     <Compile Include="Model\ImageRequest.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

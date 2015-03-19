@@ -14,13 +14,13 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Parser
 {
-    class JoyReactorProvider
+    public class JoyReactorProvider
     {
         #region New instance factory
 
         JoyReactorProvider() { }
 
-        internal static JoyReactorProvider Create()
+        public static JoyReactorProvider Create()
         {
             return new JoyReactorProvider();
         }
@@ -636,14 +636,14 @@ namespace JoyReactor.Core.Model.Parser
             }
         }
 
-        internal interface IListStorage
+        public interface IListStorage
         {
             void AddPost(Post post);
 
             Task CommitAsync();
         }
 
-        internal interface IStorage
+        public interface IStorage
         {
             Task SaveNewOrUpdatePostAsync(Post post);
 

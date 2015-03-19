@@ -1,25 +1,25 @@
-﻿using JoyReactor.Core.Model.DTO;
+﻿using System;
+using System.Collections.Generic;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Feed;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.ViewModels;
 using Microsoft.Practices.ServiceLocation;
-using System;
-using System.Reactive;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace JoyReactor.Core.Model
 {
-    class PostService : PostViewModel.IPostService, CreateTagViewModel.IPostService
+    public class PostService : PostViewModel.IPostService, CreateTagViewModel.IPostService
     {
         IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
         internal static event EventHandler PostChanged;
         int postId;
 
-        internal PostService() { }
+        public PostService() { }
 
-        internal PostService(int postId)
+        public PostService(int postId)
         {
             this.postId = postId;
         }

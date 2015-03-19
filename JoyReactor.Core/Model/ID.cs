@@ -95,7 +95,7 @@ namespace JoyReactor.Core
 
 			public static ID NewFavoriteForUser (string username)
 			{
-				return new ID { Site = SiteParser.JoyReactor, Type = TagType.Good, Tag = username };
+                return new ID { Site = SiteParser.JoyReactor, Type = TagType.Favorite, Tag = username };
 			}
 		}
 	}

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace JoyReactor.Core.Tests.Xam.Pluging.Settings
 {
-	public class MockSettings : ISettings
+    public class MockSettings : ISettings
 	{
 		Dictionary<string, object> settings = new Dictionary<string, object> ();
 
@@ -27,6 +27,16 @@ namespace JoyReactor.Core.Tests.Xam.Pluging.Settings
 			}
 			return true;
 		}
+
+        public bool AddOrUpdateValue<T>(string key, T value)
+        {
+            return AddOrUpdateValue(key, (object)value);
+        }
+
+        public void Remove(string key)
+        {
+            settings.Remove(key);
+        }
 
 		public void Save ()
 		{
