@@ -21,11 +21,12 @@ namespace JoyReactor.Android.App.Home
             base.OnCreate(savedInstanceState);
             RetainInstance = true;
             viewModel.Items.CollectionChanged += HandleCollectionChanged;
+            viewModel.Initialize();
         }
 
         void HandleCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            adapter.NotifyDataSetChanged();
+            adapter?.NotifyDataSetChanged();
         }
 
         public override void OnActivityCreated(Bundle savedInstanceState)

@@ -48,6 +48,22 @@ namespace JoyReactor.Core
 			return  "" + Site + Divider + Type + Divider + Tag;
 		}
 
+        public override string ToString()
+        {
+            return string.Format("[ID: Site = {0}, Type = {1}, Tag = {2}]", Site, Type, Tag);
+        }
+
+        public override int GetHashCode()
+        {
+            return ToString().GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            var o = obj as ID;
+            return o != null && Site == o.Site && Type == o.Type && Tag == o.Tag;
+        }
+
 		public static ID DeserializeFromString (string value)
 		{
 			var p = value.Split (Divider);

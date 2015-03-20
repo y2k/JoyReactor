@@ -58,7 +58,6 @@
     <Compile Include="Model\DTO\TagPost.cs" />
     <Compile Include="Model\DTO\Tag.cs" />
     <Compile Include="Model\DTO\Profile.cs" />
-    <Compile Include="Model\Helper\HtmlNodeExtensions.cs" />
     <Compile Include="Model\DTO\TagLinkedTag.cs" />
     <Compile Include="Model\TagCollectionModel.cs" />
     <Compile Include="Model\Helper\HtmlUtils.cs" />
@@ -95,6 +94,10 @@
     <Compile Include="Model\DTO\RelatedPost.cs" />
     <Compile Include="Model\ImageRequest.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\ViewModel.cs" />
+    <Compile Include="Model\Parser\TagProvider.cs" />
+    <Compile Include="Model\Database\MemoryStorage.cs" />
+    <Compile Include="Model\DTO\TagGroup.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

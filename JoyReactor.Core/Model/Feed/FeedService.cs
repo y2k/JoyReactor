@@ -55,8 +55,6 @@ namespace JoyReactor.Core.Model.Feed
             return SyncPage(false);
         }
 
-        static long GlobalDelay;
-
         private async Task SyncPage(bool isFirstPage)
         {
             var sorter = new OrderedListStorage(id, isFirstPage);
@@ -66,6 +64,7 @@ namespace JoyReactor.Core.Model.Feed
 
         internal static Task InvalidateFeedAsync()
         {
+            TagCollectionModel.OnInvalidateEvent();
             return Task.Run(() => FeedChanged?.Invoke(null, null));
         }
 

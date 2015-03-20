@@ -6,7 +6,7 @@ namespace JoyReactor.Core.Model
 {
     public class ImageRequest
     {
-        const string ThumbailTemplate = "https://remote-cache.api-i-twister.net/Cache/Get?maxHeight=500&width={0}&url={1}";
+        const string ThumbailTemplate = "http://remote-cache.api-i-twister.net/Cache/Get?maxHeight=500&width={0}&url={1}";
 
         readonly static ImageDownloader DownloaderInstance = new ImageDownloader
         {

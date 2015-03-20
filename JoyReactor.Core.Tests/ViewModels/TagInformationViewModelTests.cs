@@ -1,12 +1,13 @@
-﻿using JoyReactor.Core.Model;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using JoyReactor.Core.Model;
+using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Tests.Helpers;
 using JoyReactor.Core.ViewModels;
 using Microsoft.Practices.ServiceLocation;
+using Microsoft.Reactive.Testing;
+using Moq;
 using NUnit.Framework;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System;
 
 namespace JoyReactor.Core.Tests.ViewModels
 {
@@ -31,20 +32,22 @@ namespace JoyReactor.Core.Tests.ViewModels
 		Task SaveLinkedTagsToDatabase (ID id)
 		{
 //			return new PostCollectionModel ().SyncFirstPage (id);
-            throw new NotImplementedException(); // FIXME:
+            return JoyReactorProvider.Create().LoadTagAndPostListAsync(id, Mock.Of<JoyReactorProvider.IListStorage>());
 		}
 
 		[Test]
-		public async Task Test ()
+        public async void Test ()
 		{
-            var controller = new TagInformationViewModel();
+            var scheduler = new TestScheduler();
+            TagCollectionModel.DefaultScheduler = scheduler;
+            var controller = new TagInformationViewModel { UiScheduler = scheduler };
+
 			var id = ID.Factory.NewTag ("комиксы");
 
 			await SaveLinkedTagsToDatabase (id);
-            SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
             controller.ChangeCurrentTag (id);
-            SynchronizationContext.SetSynchronizationContext(null);
-            await Task.Delay(500); // TODO: заменить способ синхронизации
+
+            scheduler.AdvanceBy(2);
 
 			CollectionAssert.AreEqual (
 				new [] { 

@@ -16,8 +16,8 @@ namespace JoyReactor.Core.Model.Feed
         internal OrderedListStorage(ID id, bool isFirstPage)
         {
             sorter = isFirstPage
-                ? new FirstPagePostSorter(id.SerializeToString())
-                : (IPageSorter)new NextPagePostSorter(id.SerializeToString());
+                ? (IPageSorter)new FirstPagePostSorter(id.SerializeToString())
+                : new NextPagePostSorter(id.SerializeToString());
         }
 
         public void AddPost(Post post)

@@ -299,5 +299,15 @@ ORDER BY c.Rating DESC, ChildCount DESC
                     }
                 });
         }
+
+        public Task SaveLinkedTagsAsync(ID id, string groupName, List<Tag> tags)
+        {
+            return MemoryStorage.Intance.SaveLinkedTagsAsync(id, groupName, tags);
+        }
+
+        public Task RemoveLinkedTagAsync(ID id)
+        {
+            return MemoryStorage.Intance.RemoveLinkedTagAsync(id);
+        }
     }
 }
