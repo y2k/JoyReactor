@@ -246,20 +246,59 @@ namespace JoyReactor.Core.Model.Parser
 
                     await storage.RemoveLinkedTagAsync(id);
                     foreach (var s in doc.DocumentNode.Select("div.sidebar_block"))
-                        await ExtractSidebar(s);
+                        await ExtractTagsFromBlock(s);
                 });
         }
 
-        async Task ExtractSidebar(HtmlNode sidebarNode)
+        async Task ExtractTagsFromBlock(HtmlNode blockNode)
         {
-            var title = sidebarNode.Select("h2.sideheader.random").FirstOrDefault()?.InnerText.Trim();
-            var tags = sidebarNode
-                .Select("a > img")
-                .Select(s => new Tag { BestImage = s.Attr("src"), Title = s.Attr("alt") })
-                .ToList();
-
-            if (title != null && tags.Count > 0)
+            var title = blockNode.Select("h2.sideheader.random").FirstOrDefault()?.InnerText.Trim();
+            var tags = LinkedTagExtractor.Get().Select(s => s.Extract(blockNode)).Where(s => s.Count > 0).FirstOrDefault();
+            if (title != null && tags != null)
                 await storage.SaveLinkedTagsAsync(id, title, tags);
+        }
+
+        abstract class LinkedTagExtractor {
+
+            internal static ICollection<LinkedTagExtractor> Get() {
+                return new LinkedTagExtractor[] { new RandomTagExtractor(), new SubTagExtractor() };
+            }
+
+            internal abstract ICollection<Tag> Extract(HtmlNode root);
+
+            class RandomTagExtractor : LinkedTagExtractor {
+
+                internal override ICollection<Tag> Extract(HtmlNode root)
+                {
+                    return root
+                        .Select("a > img")
+                        .Select(s => new Tag { BestImage = s.Attr("src"), Title = s.Attr("alt") })
+                        .ToList();
+                }
+            }
+
+            class SubTagExtractor : LinkedTagExtractor {
+
+                internal override ICollection<Tag> Extract(HtmlNode root)
+                {
+                    return root
+                        .Select("td > img")
+                        .Select(s => new Tag { 
+                            BestImage = s.Attr("src"), 
+                            Title = LinkToTagName(FindLinkToTag(s)) })
+                        .ToList();
+                }
+
+                static string FindLinkToTag(HtmlNode s)
+                {
+                    return s.ParentNode.ParentNode.ChildNodes[1].FirstChild.Attr("href");
+                }
+
+                static string LinkToTagName(string link)
+                {
+                    return Uri.UnescapeDataString(Uri.UnescapeDataString(link.Substring("/tag/".Length))).Replace('+', ' ');
+                }
+            }
         }
 
         #endregion

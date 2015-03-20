@@ -442,7 +442,7 @@ namespace JoyReactor.Core.Model.Parser
 
             Task SaveRelatedPostsAsync(string postId, List<RelatedPost> posts);
 
-            Task SaveLinkedTagsAsync(ID id, string groupName, List<Tag> tags);
+            Task SaveLinkedTagsAsync(ID id, string groupName, ICollection<Tag> tags);
 
             Task RemoveLinkedTagAsync(ID id);
         }

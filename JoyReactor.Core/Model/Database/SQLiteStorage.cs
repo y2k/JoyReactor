@@ -300,7 +300,7 @@ ORDER BY c.Rating DESC, ChildCount DESC
                 });
         }
 
-        public Task SaveLinkedTagsAsync(ID id, string groupName, List<Tag> tags)
+        public Task SaveLinkedTagsAsync(ID id, string groupName, ICollection<Tag> tags)
         {
             return MemoryStorage.Intance.SaveLinkedTagsAsync(id, groupName, tags);
         }
