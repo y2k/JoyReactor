@@ -83,17 +83,22 @@ namespace JoyReactor.Android.App.Home
                 convertView.FindViewById<TextView>(Resource.Id.title).Text = i.Title;
 
                 var iv = convertView.FindViewById<ImageView>(Resource.Id.icon);
-//				if (i.Image == null)
-//					iv.SetImageBitmap (null);
-//				else
-//					iModel.Load (iv, new Uri (i.Image), 0, s => iv.SetImageBitmap ((Bitmap)s));
                 new ImageRequest()
                     .SetToken(iv)
                     .SetUrl(i.Image)
                     .Into<Bitmap>(iv.SetImageBitmap);
 
-                convertView.FindViewById(Resource.Id.group).Visibility = ViewStates.Gone;
+                var secton = convertView.FindViewById(Resource.Id.group);
+                secton.Visibility = IsSectionStart(position) ? ViewStates.Visible : ViewStates.Gone;
+                convertView.FindViewById<TextView>(Resource.Id.groupTitle).Text = i.Group;
+
                 return convertView;
+            }
+
+            bool IsSectionStart(int position)
+            {
+                var i = Source[position];
+                return (position == 0 || i.Group != Source[position - 1].Group);
             }
         }
     }
