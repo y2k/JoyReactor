@@ -1,13 +1,13 @@
-﻿using JoyReactor.Core.Model.Parser;
-using JoyReactor.Core.ViewModels;
-using Microsoft.Practices.ServiceLocation;
-using System;
+﻿using System;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
+using JoyReactor.Core.Model.Parser;
+using JoyReactor.Core.ViewModels;
+using Microsoft.Practices.ServiceLocation;
 
-namespace JoyReactor.Core.Model.Feed
+namespace JoyReactor.Core.Model
 {
     public class FeedService : FeedViewModel.IFeedService
     {
@@ -39,7 +39,7 @@ namespace JoyReactor.Core.Model.Feed
             SyncPage(true);
 #pragma warning restore CS4014
             return Observable
-                .FromEventPattern(typeof(FeedService), "FeedChanged")
+                .FromEventPattern(e => FeedChanged += e, e => FeedChanged -= e)
                 .StartWith((EventPattern<object>)null)
                 .SelectMany(Observable.FromAsync(() => storage.GetPostsAsync(id)));
         }

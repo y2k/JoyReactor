@@ -1,13 +1,14 @@
-﻿using JoyReactor.Core.Model.Database;
-using JoyReactor.Core.Model.DTO;
-using JoyReactor.Core.Model.Parser;
-using SQLite.Net;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JoyReactor.Core.Model.Database;
+using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Parser;
+using Microsoft.Practices.ServiceLocation;
+using SQLite.Net;
 
-namespace JoyReactor.Core.Model.Feed
+namespace JoyReactor.Core.Model
 {
     class OrderedListStorage : JoyReactorProvider.IListStorage
     {
@@ -45,7 +46,7 @@ namespace JoyReactor.Core.Model.Feed
             SQLiteConnection db;
             int tagId;
 
-            public FirstPagePostSorter(string tagId) : this(SQLiteConnectionFactory.Create(), tagId) { }
+            public FirstPagePostSorter(string tagId) : this(ServiceLocator.Current.GetInstance<SQLiteConnection>(), tagId) { }
 
             public FirstPagePostSorter(SQLiteConnection db, string tagId)
             {
@@ -122,7 +123,7 @@ namespace JoyReactor.Core.Model.Feed
             SQLiteConnection db;
             int tagId;
 
-            public NextPagePostSorter(string tagId) : this(SQLiteConnectionFactory.Create(), tagId) { }
+            public NextPagePostSorter(string tagId) : this(ServiceLocator.Current.GetInstance<SQLiteConnection>(), tagId) { }
 
             public NextPagePostSorter(SQLiteConnection db, string tagId)
             {

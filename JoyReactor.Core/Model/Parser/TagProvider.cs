@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using HtmlAgilityPack;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Web;
 using Microsoft.Practices.ServiceLocation;
-using HtmlAgilityPack;
-using System.Linq;
 
 namespace JoyReactor.Core.Model.Parser
 {
@@ -66,7 +66,6 @@ namespace JoyReactor.Core.Model.Parser
             var url = new StringBuilder("http://" + new ReactorDomainDetector().GetDomainForTag(id.Tag));
             if (id.Type == ID.TagType.Favorite)
             {
-                // TODO: перевести на асинхронную модель
                 if (id.Tag == null)
                     id.Tag = await authStorage.GetCurrentUserNameAsync();
                 url.Append("/user/").Append(Uri.EscapeDataString(id.Tag)).Append("/favorite");

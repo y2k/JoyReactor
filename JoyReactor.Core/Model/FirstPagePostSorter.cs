@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model
 {
@@ -16,7 +17,7 @@ namespace JoyReactor.Core.Model
         SQLiteConnection db;
         int tagId;
 
-        public FirstPagePostSorter(string tagId) : this(SQLiteConnectionFactory.Create(), tagId) { }
+        public FirstPagePostSorter(string tagId) : this(ServiceLocator.Current.GetInstance<SQLiteConnection>(), tagId) { }
 
         public FirstPagePostSorter(SQLiteConnection db, string tagId)
         {

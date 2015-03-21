@@ -37,9 +37,7 @@
     <Compile Include="Model\DTO\Comment.cs" />
     <Compile Include="Model\DTO\Attachment.cs" />
     <Compile Include="Model\DTO\MessageThreadItem.cs" />
-    <Compile Include="Model\Feed\FeedService.cs" />
     <Compile Include="Model\Database\SQLiteStorage.cs" />
-    <Compile Include="Model\Feed\OrderedListStorage.cs" />
     <Compile Include="Model\Helper\ObservableExtensions.cs" />
     <Compile Include="Model\Helper\ObservableFactory.cs" />
     <Compile Include="Model\DefaultServiceLocator.cs" />
@@ -98,6 +96,8 @@
     <Compile Include="Model\Parser\TagProvider.cs" />
     <Compile Include="Model\Database\MemoryStorage.cs" />
     <Compile Include="Model\DTO\TagGroup.cs" />
+    <Compile Include="Model\FeedService.cs" />
+    <Compile Include="Model\OrderedListStorage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

@@ -1,11 +1,15 @@
 ﻿using GalaSoft.MvvmLight;
 using System.Reactive.Concurrency;
 using System.Threading;
+using System;
 
 namespace JoyReactor.Core.ViewModels
 {
     public class ViewModel : ViewModelBase
     {
-        public IScheduler UiScheduler { get; set; } = new SynchronizationContextScheduler(SynchronizationContext.Current);
+        readonly Lazy<SynchronizationContextScheduler> _uiScheduler = 
+            new Lazy<SynchronizationContextScheduler>(() => new SynchronizationContextScheduler(SynchronizationContext.Current));
+
+        public IScheduler UiScheduler { get { return _uiScheduler.Value; } }
     }
 }

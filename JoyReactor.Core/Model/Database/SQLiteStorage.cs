@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
-using JoyReactor.Core.Model.Feed;
 using JoyReactor.Core.Model.Parser;
 using Microsoft.Practices.ServiceLocation;
 using SQLite.Net;

@@ -1,15 +1,14 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using JoyReactor.Core.Model;
-using JoyReactor.Core.Model.DTO;
-using JoyReactor.Core.Model.Feed;
-using JoyReactor.Core.Model.Helper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using JoyReactor.Core.Model;
+using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Helper;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -72,10 +71,8 @@ namespace JoyReactor.Core.ViewModels
                 .Get()
                 .SubscribeOnUi(data =>
                 {
+                    HasNewItems = data.NewItemsCount > 0;
                     IsBusy = false;
-
-                    //HasNewItems = data.NewItemsCount > 0;
-                    //if (!HasNewItems) UpdatePosts(data);
                     UpdatePosts(data);
                 });
         }

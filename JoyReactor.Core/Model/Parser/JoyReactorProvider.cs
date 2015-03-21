@@ -447,7 +447,7 @@ namespace JoyReactor.Core.Model.Parser
             Task RemoveLinkedTagAsync(ID id);
         }
 
-        internal interface IAuthStorage
+        public interface IAuthStorage
         {
             Task<string> GetCurrentUserNameAsync();
 

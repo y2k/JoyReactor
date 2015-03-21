@@ -1,6 +1,6 @@
-﻿using JoyReactor.Core.Model.DTO;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using JoyReactor.Core.Model.DTO;
 
 namespace JoyReactor.Core.Model
 {

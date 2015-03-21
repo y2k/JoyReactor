@@ -10,6 +10,7 @@ using JoyReactor.Core.Tests.Xam.Pluging.Settings;
 using Refractored.Xam.Settings.Abstractions;
 using SQLite.Net;
 using XamarinCommons.Image;
+using JoyReactor.Core.Model.Parser;
 
 namespace JoyReactor.Core.Tests.Helpers
 {
@@ -31,12 +32,12 @@ namespace JoyReactor.Core.Tests.Helpers
 
             b.RegisterType<StubImageDecoder>().As<ImageDecoder>();
             b.RegisterType<MockAuthStorage>().As<ReactorMessageParser.IAuthStorage>();
-//            b.RegisterType<MockAuthStorage>().As<JoyReactorSiteApi.IAuthStorage>();
+            b.RegisterType<MockAuthStorage>().As<JoyReactorProvider.IAuthStorage>();
 
             builderCallback?.Invoke(b);
         }
 
-        class MockAuthStorage : ReactorMessageParser.IAuthStorage
+        class MockAuthStorage : ReactorMessageParser.IAuthStorage, JoyReactorProvider.IAuthStorage
         {
             public Task<IDictionary<string, string>> GetCookiesAsync()
             {
@@ -46,6 +47,11 @@ namespace JoyReactor.Core.Tests.Helpers
             public Task<string> GetCurrentUserNameAsync()
             {
                 return Task.FromResult("mykie78");
+            }
+
+            public Task SaveCookieToDatabaseAsync(string username, IDictionary<string, string> cookies)
+            {
+                return Task.FromResult(false);
             }
         }
 

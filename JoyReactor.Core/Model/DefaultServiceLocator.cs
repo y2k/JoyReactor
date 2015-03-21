@@ -1,6 +1,8 @@
-﻿using Autofac;
+﻿using System;
+using System.Collections.Generic;
+using Autofac;
+using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Database;
-using JoyReactor.Core.Model.Feed;
 using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Messages;
 using JoyReactor.Core.Model.Parser;
@@ -10,8 +12,6 @@ using JoyReactor.Core.ViewModels;
 using Microsoft.Practices.ServiceLocation;
 using Refractored.Xam.Settings;
 using SQLite.Net;
-using System;
-using System.Collections.Generic;
 
 namespace JoyReactor.Core.Model
 {

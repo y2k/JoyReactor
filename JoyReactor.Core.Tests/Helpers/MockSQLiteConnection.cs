@@ -9,11 +9,20 @@ namespace JoyReactor.Core.Tests.Helpers
 {
     public static class MockSQLiteConnection
     {
+        static Lazy<SQLiteConnection> connecton =
+            new Lazy<SQLiteConnection>(() =>
+                {
+                    var db = new SQLiteConnection(GetPlatfrom(), ":memory:");
+                    SQLiteConnectionFactory.InitializeDatabase(db);
+                    return db;
+                });
+
         public static SQLiteConnection Create()
         {
-            var db = new SQLiteConnection(GetPlatfrom(), ":memory:");
-            SQLiteConnectionFactory.InitializeDatabase(db);
-            return db;
+//            var db = new SQLiteConnection(GetPlatfrom(), ":memory:");
+//            SQLiteConnectionFactory.InitializeDatabase(db);
+//            return db;
+            return connecton.Value;
         }
 
         static ISQLitePlatform GetPlatfrom()

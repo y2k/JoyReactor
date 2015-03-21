@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
+using JoyReactor.Core.Model.Database;
+using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.ViewModels;
 using NUnit.Framework;
 
@@ -21,13 +23,17 @@ namespace JoyReactor.Core.Tests.ViewModels
         }
 
         [Test]
-        public async void TestFavorite() {
-            testId = ID.Factory.New(ID.IdConst.ReactorFavorite);
+        [Timeout(2000)]
+        public async void TestFavorite()
+        {
+            testId = ID.Factory.NewFavoriteForUser("mykie78");
+            await TestExtensions.GetDatabase().InsertAsync(new Tag { TagId = testId.SerializeToString() });
             await LoadFirstPage();
         }
 
         [Test]
-        public async Task LoadNewDataOverOldTest()
+        [Timeout(2000)]
+        public async void LoadNewDataOverOldTest()
         {
             testId = ID.Factory.NewTag("песочница");
             await LoadFirstPage();
@@ -80,7 +86,8 @@ namespace JoyReactor.Core.Tests.ViewModels
         }
 
         [Test]
-        public async Task PagingTest()
+        [Timeout(2000)]
+        public async void PagingTest()
         {
             testId = ID.Factory.New(ID.IdConst.ReactorGood);
             await LoadFirstPage();
@@ -137,7 +144,9 @@ namespace JoyReactor.Core.Tests.ViewModels
             for (int i = 0; i < preCount; i++)
                 yield return new FeedViewModel.ContentViewModel(null);
             for (int i = 0; i < divCount; i++)
-                yield return new FeedViewModel.DividerViewModel(() => { });
+                yield return new FeedViewModel.DividerViewModel(() =>
+                    {
+                    });
             for (int i = 0; i < afterCount; i++)
                 yield return new FeedViewModel.ContentViewModel(null);
         }

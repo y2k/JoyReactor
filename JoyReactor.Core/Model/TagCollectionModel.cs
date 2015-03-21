@@ -13,8 +13,7 @@ namespace JoyReactor.Core.Model
 {
     public class TagCollectionModel
     {
-        public static IScheduler DefaultScheduler = TaskPoolScheduler.Default;
-        public static event EventHandler InvalidateEvent;
+        internal static event EventHandler InvalidateEvent;
 
         public static void OnInvalidateEvent()
         {
@@ -48,10 +47,8 @@ namespace JoyReactor.Core.Model
         public IObservable<ICollection<TagGroup>> GetLinkedTags(ID tagId) {
             return Observable
                 .FromEventPattern(e => InvalidateEvent += e, e => InvalidateEvent -= e)
-//                .FromEventPattern(typeof(TagCollectionModel), "InvalidateEvent")
                 .StartWith((EventPattern<object>)null)
-                .SelectMany(_ => Observable.FromAsync(() => storage.GetLinkedTagsAsync(tagId)))
-                .SubscribeOn(DefaultScheduler);
+                .SelectMany(_ => Observable.FromAsync(() => storage.GetLinkedTagsAsync(tagId)));
         }
 
         public interface Storage {
