@@ -1,12 +1,12 @@
-﻿using Microsoft.Practices.ServiceLocation;
+﻿using System;
+using Microsoft.Practices.ServiceLocation;
 using XamarinCommons.Image;
-using System;
 
 namespace JoyReactor.Core.Model
 {
     public class ImageRequest
     {
-        const string ThumbailTemplate = "http://remote-cache.api-i-twister.net/Cache/Get?maxHeight=500&width={0}&url={1}";
+        const string ThumbailTemplate = "https://api-i-twister.net/remote-cache/Cache/Get?maxHeight=500&width={0}&url={1}";
 
         readonly static ImageDownloader DownloaderInstance = new ImageDownloader
         {
