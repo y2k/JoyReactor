@@ -32,20 +32,26 @@
             android:maxLines="2"
             android:textColor="#505050"
             android:textSize="14sp" />
-        <ImageView
-            android:id="@+id/user_image"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+        <JoyReactor.Android.Widget.RoundBorderLayour
+            android:id="@+id/userImagePanel"
             android:layout_below="@id/title"
             android:layout_margin="8dp"
-            android:scaleType="centerCrop" />
+            android:layout_width="40dp"
+            android:layout_height="40dp">
+            <ImageView
+                android:id="@+id/user_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+        </JoyReactor.Android.Widget.RoundBorderLayour>
         <TextView
             android:id="@+id/user_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_below="@id/title"
-            android:layout_margin="4dp"
-            android:layout_toRightOf="@id/user_image"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/userImagePanel"
+            android:gravity="center_vertical"
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="#505050"
