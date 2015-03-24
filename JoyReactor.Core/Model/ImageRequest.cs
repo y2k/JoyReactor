@@ -6,7 +6,8 @@ namespace JoyReactor.Core.Model
 {
     public class ImageRequest
     {
-        const string ThumbailTemplate = "https://api-i-twister.net/remote-cache/Cache/Get?maxHeight=500&width={0}&url={1}";
+        const string ThumbnailDomain = "api-i-twister.net";
+        const string ThumbnailTemplate = "https://" + ThumbnailDomain + ":8002/Cache/Get?maxHeight=500&width={0}&url={1}";
 
         readonly static ImageDownloader DownloaderInstance = new ImageDownloader
         {
@@ -54,13 +55,13 @@ namespace JoyReactor.Core.Model
         Uri CreateDownloadUrl()
         {
             return IsCanCreateThumbnail()
-                ? new Uri(string.Format(ThumbailTemplate, maxSize, Uri.EscapeDataString("" + url)))
+                ? new Uri(string.Format(ThumbnailTemplate, maxSize, Uri.EscapeDataString("" + url)))
                 : url;
         }
 
         bool IsCanCreateThumbnail()
         {
-            return maxSize != 0 && url != null && url.Host != "remote-cache.api-i-twister.net";
+            return maxSize != 0 && url != null && url.Host != ThumbnailDomain;
         }
 
         T ConvertImage<T>(object metaImage)
