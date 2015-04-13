@@ -15,14 +15,14 @@
             android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <View
+    <!--        <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/image"
             android:layout_marginLeft="1dp"
             android:layout_marginRight="1dp"
-            android:background="#4444" />
-        <TextView
+            android:background="#4444" />-->
+    <!--        <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,30 +31,32 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="#505050"
-            android:textSize="14sp" />
+            android:textSize="14sp" />-->
         <JoyReactor.Android.Widget.RoundBorderLayour
             android:id="@+id/userImagePanel"
-            android:layout_below="@id/title"
-            android:layout_margin="8dp"
-            android:layout_width="40dp"
-            android:layout_height="40dp">
+            android:layout_below="@id/image"
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="9dp"
+            android:layout_marginLeft="9dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
             <ImageView
                 android:id="@+id/user_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:scaleType="centerCrop" />
         </JoyReactor.Android.Widget.RoundBorderLayour>
         <TextView
             android:id="@+id/user_name"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@id/title"
-            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/image"
+            android:layout_marginTop="13dp"
+            android:layout_marginLeft="8dp"
             android:layout_toRightOf="@id/userImagePanel"
-            android:gravity="center_vertical"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="#505050"
+            android:textColor="#616161"
             android:textSize="14sp" />
     </RelativeLayout>
     <Button

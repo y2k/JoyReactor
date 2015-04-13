@@ -37,6 +37,7 @@
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
     <ConsolePause>false</ConsolePause>
+    <AndroidSupportedAbis>armeabi;x86</AndroidSupportedAbis>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -51,18 +52,6 @@
     </Reference>
     <Reference Include="XamarinCommons">
       <HintPath>..\JoyReactor.Core\Libs\XamarinCommons.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.Android.Support.v4">
-      <HintPath>..\packages\Xamarin.Android.Support.v4.21.0.3.0\lib\MonoAndroid10\Xamarin.Android.Support.v4.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.Android.Support.v7.AppCompat">
-      <HintPath>..\packages\Xamarin.Android.Support.v7.AppCompat.21.0.3.0\lib\MonoAndroid403\Xamarin.Android.Support.v7.AppCompat.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.Android.Support.v7.CardView">
-      <HintPath>..\packages\Xamarin.Android.Support.v7.CardView.21.0.3.0\lib\MonoAndroid403\Xamarin.Android.Support.v7.CardView.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.Android.Support.v7.RecyclerView">
-      <HintPath>..\packages\Xamarin.Android.Support.v7.RecyclerView.21.0.3.0\lib\MonoAndroid403\Xamarin.Android.Support.v7.RecyclerView.dll</HintPath>
     </Reference>
     <Reference Include="GalaSoft.MvvmLight">
       <HintPath>..\packages\MvvmLightLibs.5.1.1.0\lib\monoandroid1\GalaSoft.MvvmLight.dll</HintPath>
@@ -90,6 +79,18 @@
     </Reference>
     <Reference Include="SQLite.Net.Platform.XamarinAndroid">
       <HintPath>..\packages\SQLite.Net.Platform.XamarinAndroid.2.5.1\lib\MonoAndroid\SQLite.Net.Platform.XamarinAndroid.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Android.Support.v7.CardView">
+      <HintPath>..\packages\Xamarin.Android.Support.v7.CardView.22.0.0.0\lib\MonoAndroid403\Xamarin.Android.Support.v7.CardView.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Android.Support.v4">
+      <HintPath>..\packages\Xamarin.Android.Support.v4.22.0.0.0\lib\MonoAndroid10\Xamarin.Android.Support.v4.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Android.Support.v7.AppCompat">
+      <HintPath>..\packages\Xamarin.Android.Support.v7.AppCompat.22.0.0.0\lib\MonoAndroid403\Xamarin.Android.Support.v7.AppCompat.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Android.Support.v7.RecyclerView">
+      <HintPath>..\packages\Xamarin.Android.Support.v7.RecyclerView.22.0.0.0\lib\MonoAndroid403\Xamarin.Android.Support.v7.RecyclerView.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -125,6 +126,7 @@
     <Compile Include="App\Posts\PostFragment.cs" />
     <Compile Include="App\MessageActivity.cs" />
     <Compile Include="App\SettingsActivity.cs" />
+    <Compile Include="Widget\ReloadButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -137,10 +139,7 @@
     <AndroidResource Include="Resources\layout\ActivityPost.axml" />
     <AndroidResource Include="Resources\layout\fragment_post.axml" />
     <AndroidResource Include="Resources\layout\fragment_profile.axml" />
-    <AndroidResource Include="Resources\layout\FragmentLeftMenu.axml" />
     <AndroidResource Include="Resources\layout\item_comment.axml" />
-    <AndroidResource Include="Resources\layout\ItemFeed.axml" />
-    <AndroidResource Include="Resources\layout\ItemSubscription.axml" />
     <AndroidResource Include="Resources\menu\home.xml" />
     <AndroidResource Include="Resources\layout\laytou_post_header.axml" />
     <AndroidResource Include="Resources\values\styles.xml" />
@@ -153,7 +152,6 @@
     <AndroidResource Include="Resources\values\string.xml" />
     <AndroidResource Include="Resources\layout\dialog_create_tag.axml" />
     <AndroidResource Include="Resources\layout\layout_activity_container.axml" />
-    <AndroidResource Include="Resources\layout\ItemPostDivider.axml" />
     <AndroidResource Include="Resources\layout\fragment_login.axml" />
     <AndroidResource Include="Resources\layout\activity_messages.axml" />
     <AndroidResource Include="Resources\layout\item_message_thread.axml" />
@@ -165,6 +163,15 @@
     <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher.png" />
     <AndroidResource Include="Resources\layout\item_message_inbox.axml" />
     <AndroidResource Include="Resources\layout\item_message_outbox.axml" />
+    <AndroidResource Include="Resources\layout\fragment_left_menu.axml" />
+    <AndroidResource Include="Resources\layout\item_subscription.axml" />
+    <AndroidResource Include="Resources\layout\layout_subscriptions_header.axml" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_favorite.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_featured.png" />
+    <AndroidResource Include="Resources\drawable\drawable_yellow_button.xml" />
+    <AndroidResource Include="Resources\layout\layout_reload_button.axml" />
+    <AndroidResource Include="Resources\layout\item_feed.axml" />
+    <AndroidResource Include="Resources\layout\item_post_divider.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>

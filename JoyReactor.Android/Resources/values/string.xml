@@ -17,4 +17,8 @@
 	<string name="login">Login</string>
 	<string name="logout">Sign out</string>
 	<string name="activity_private_messages">Private messages</string>
+	<string name="new_posts">New posts</string>
+	<string name="apply_caps">APPLY</string>
+	<string name="load_more_caps">LOAD MORE</string>
+	<string name="old_posts">old posts</string>
 </resources>

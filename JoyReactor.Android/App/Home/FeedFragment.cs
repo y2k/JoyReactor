@@ -15,7 +15,7 @@ namespace JoyReactor.Android.App.Home
 		SwipeRefreshLayout refresher;
 		RecyclerView list;
 		FeedAdapter adapter;
-		View applyButton;
+		ReloadButton applyButton;
 
 		FeedViewModel viewModel;
 
@@ -34,7 +34,7 @@ namespace JoyReactor.Android.App.Home
 			list.SetAdapter (adapter = new FeedAdapter (Activity));
 			adapter.ChangeItemSource (viewModel.Posts);
 
-			applyButton.SetCommand ("Click", viewModel.ApplyCommand);
+			applyButton.Command = viewModel.ApplyCommand;
 			refresher.SetCommand ("Refresh", viewModel.RefreshCommand);
 
 			viewModel
@@ -53,7 +53,7 @@ namespace JoyReactor.Android.App.Home
 			list.SetLayoutManager (new StaggeredGridLayoutManager (2, StaggeredGridLayoutManager.Vertical));
 			list.AddItemDecoration (new DividerItemDecoration (2.5f));
 			refresher = v.FindViewById<SwipeRefreshLayout> (Resource.Id.refresher);
-			applyButton = v.FindViewById (Resource.Id.apply);
+			applyButton = v.FindViewById<ReloadButton> (Resource.Id.apply);
 			return v;
 		}
 	}

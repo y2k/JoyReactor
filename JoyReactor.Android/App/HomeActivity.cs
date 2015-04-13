@@ -68,14 +68,9 @@ namespace JoyReactor.Android.App
         {
         }
 
-        #region implemented abstract members of PagerAdapter
-
-        public override int Count
+		public override int Count
         {
-            get
-            {
-                return 3;
-            }
+            get { return 2; }
         }
 
         public override float GetPageWidth(int position)
@@ -83,11 +78,7 @@ namespace JoyReactor.Android.App
             return position == 1 ? 1 : 0.7f;
         }
 
-        #endregion
-
-        #region implemented abstract members of FragmentPagerAdapter
-
-        public override global::Android.Support.V4.App.Fragment GetItem(int position)
+		public override global::Android.Support.V4.App.Fragment GetItem(int position)
         {
             if (position == 0)
                 return new LeftMenuFragment();
@@ -95,8 +86,6 @@ namespace JoyReactor.Android.App
                 return new FeedFragment();
             return new RightMenuFragment();
         }
-
-        #endregion
     }
 
     public class EmptyFragment : BaseFragment

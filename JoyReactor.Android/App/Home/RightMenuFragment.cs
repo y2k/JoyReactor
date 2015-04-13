@@ -44,8 +44,8 @@ namespace JoyReactor.Android.App.Home
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            View v = inflater.Inflate(Resource.Layout.FragmentLeftMenu, null);
-            list = v.FindViewById<ListView>(Resource.Id.List);
+			View v = inflater.Inflate(Resource.Layout.fragment_left_menu, null);
+			list = v.FindViewById<ListView>(Resource.Id.list);
             return v;
         }
 
@@ -77,20 +77,20 @@ namespace JoyReactor.Android.App.Home
             public override View GetView(int position, View convertView, ViewGroup parent)
             {
                 if (convertView == null)
-                    convertView = View.Inflate(parent.Context, Resource.Layout.ItemSubscription, null);
+					convertView = View.Inflate(parent.Context, Resource.Layout.item_subscription, null);
 
-                var i = Source[position];
-                convertView.FindViewById<TextView>(Resource.Id.title).Text = i.Title;
-
-                var iv = convertView.FindViewById<ImageView>(Resource.Id.icon);
-                new ImageRequest()
-                    .SetToken(iv)
-                    .SetUrl(i.Image)
-                    .Into<Bitmap>(iv.SetImageBitmap);
-
-                var secton = convertView.FindViewById(Resource.Id.group);
-                secton.Visibility = IsSectionStart(position) ? ViewStates.Visible : ViewStates.Gone;
-                convertView.FindViewById<TextView>(Resource.Id.groupTitle).Text = i.Group;
+//                var i = Source[position];
+//                convertView.FindViewById<TextView>(Resource.Id.title).Text = i.Title;
+//
+//                var iv = convertView.FindViewById<ImageView>(Resource.Id.icon);
+//                new ImageRequest()
+//                    .SetToken(iv)
+//                    .SetUrl(i.Image)
+//                    .Into<Bitmap>(iv.SetImageBitmap);
+//
+//                var secton = convertView.FindViewById(Resource.Id.group);
+//                secton.Visibility = IsSectionStart(position) ? ViewStates.Visible : ViewStates.Gone;
+//                convertView.FindViewById<TextView>(Resource.Id.groupTitle).Text = i.Group;
 
                 return convertView;
             }

@@ -17,4 +17,8 @@
 	<string name="login">Войти</string>
 	<string name="logout">Выйти</string>
 	<string name="activity_private_messages">Личные сообщения</string>
+	<string name="new_posts">Новые посты</string>
+	<string name="apply_caps">ОБНОВИТЬ</string>
+	<string name="load_more_caps">ЗАГРУЗИТЬ ЕЩЕ</string>
+	<string name="old_posts">старые посты</string>
 </resources>

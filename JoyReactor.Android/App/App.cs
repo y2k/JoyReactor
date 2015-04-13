@@ -2,8 +2,8 @@
 using Android.App;
 using Android.Runtime;
 using JoyReactor.Android.Model;
-using JoyReactor.Core.Model;
 using Microsoft.Practices.ServiceLocation;
+using JoyReactor.Core.Model;
 
 namespace JoyReactor.Android.App
 {
