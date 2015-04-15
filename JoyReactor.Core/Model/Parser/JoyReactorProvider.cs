@@ -83,7 +83,6 @@ namespace JoyReactor.Core.Model.Parser
                 var p = new Post();
 
                 var USER_NAME = new Regex("href=\"[^\"]+user/([^\"/]+)\"", RegexOptions.Singleline);
-//                p.UserName = Uri.UnescapeDataString(Uri.UnescapeDataString(USER_NAME.FirstString(htmlPage))).Replace('+', ' ');
                 p.UserName = USER_NAME.FirstString(htmlPage)?.UnescapeDataString().UnescapeDataString().Replace('+', ' ');
 
                 var USER_IMAGE = new Regex("src=\"([^\"]+)\" class=\"avatar\"");

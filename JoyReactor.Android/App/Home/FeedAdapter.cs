@@ -26,10 +26,15 @@ namespace JoyReactor.Android.App.Home
 		Context context;
 		ObservableCollection<ViewModelBase> items;
 
-		public FeedAdapter (Context context)
+		public FeedAdapter (Context context) : this (context, null)
+		{
+		}
+
+		public FeedAdapter (Context context, ObservableCollection<ViewModelBase> value)
 		{
 			this.context = context;
 			maxWidth = (int)(200 * context.Resources.DisplayMetrics.Density);
+			ChangeItemSource (value);
 		}
 
 		public void ChangeItemSource (ObservableCollection<ViewModelBase> value)
@@ -39,7 +44,8 @@ namespace JoyReactor.Android.App.Home
 					items.CollectionChanged -= HandleCollectionChanged;
 
 				items = value;
-				items.CollectionChanged += HandleCollectionChanged;
+				if (items != null) 
+					items.CollectionChanged += HandleCollectionChanged;
 				NotifyDataSetChanged ();
 			}
 		}

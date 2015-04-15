@@ -12,11 +12,6 @@ namespace JoyReactor.Android.App.Home
 {
 	public class FeedFragment : BaseFragment
 	{
-		SwipeRefreshLayout refresher;
-		RecyclerView list;
-		FeedAdapter adapter;
-		ReloadButton applyButton;
-
 		FeedViewModel viewModel;
 
 		public override void OnCreate (Bundle savedInstanceState)
@@ -27,34 +22,26 @@ namespace JoyReactor.Android.App.Home
 			viewModel.ChangeCurrentListIdCommand.Execute (ID.Factory.New (ID.IdConst.ReactorGood));
 		}
 
-		public override void OnActivityCreated (Bundle savedInstanceState)
+		public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 		{
-			base.OnCreate (savedInstanceState);
+			var view = inflater.Inflate (Resource.Layout.fragment_feed, null);
 
-			list.SetAdapter (adapter = new FeedAdapter (Activity));
-			adapter.ChangeItemSource (viewModel.Posts);
+			var list = view.FindViewById<RecyclerView> (Resource.Id.List);
+			list.SetLayoutManager (new StaggeredGridLayoutManager (2, StaggeredGridLayoutManager.Vertical));
+			list.AddItemDecoration (new DividerItemDecoration (2.5f));
+			list.SetAdapter (new FeedAdapter (Activity, viewModel.Posts));
 
-			applyButton.Command = viewModel.ApplyCommand;
+			var refresher = view.FindViewById<SwipeRefreshLayout> (Resource.Id.refresher);
 			refresher.SetCommand ("Refresh", viewModel.RefreshCommand);
+			viewModel
+				.SetBinding (() => viewModel.IsBusy, refresher, () => refresher.Refreshing, BindingMode.OneWay);
 
+			var applyButton = view.FindViewById<ReloadButton> (Resource.Id.apply);
+			applyButton.Command = viewModel.ApplyCommand;
 			viewModel
 				.SetBinding (() => viewModel.HasNewItems, applyButton, () => applyButton.Visibility, BindingMode.OneWay)
 				.ConvertSourceToTarget (s => s ? ViewStates.Visible : ViewStates.Gone);
-			viewModel
-				.SetBinding (() => viewModel.IsBusy, refresher, () => refresher.Refreshing, BindingMode.OneWay);
-		}
-
-		bool IsViewInflated { get { return View != null; } }
-
-		public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-		{
-			var v = inflater.Inflate (Resource.Layout.fragment_feed, null);
-			list = v.FindViewById<RecyclerView> (Resource.Id.List);
-			list.SetLayoutManager (new StaggeredGridLayoutManager (2, StaggeredGridLayoutManager.Vertical));
-			list.AddItemDecoration (new DividerItemDecoration (2.5f));
-			refresher = v.FindViewById<SwipeRefreshLayout> (Resource.Id.refresher);
-			applyButton = v.FindViewById<ReloadButton> (Resource.Id.apply);
-			return v;
+			return view;
 		}
 	}
 }

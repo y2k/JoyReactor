@@ -10,26 +10,35 @@ using System.Text.RegularExpressions;
 using JoyReactor.Core.Model.Parser;
 using Moq;
 using JoyReactor.Core.Model.DTO;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Tests
 {
-    [TestFixture]
-    public class ReactorParserTests
-    {
-        JoyReactorProvider parser;
+	[TestFixture]
+	public class ReactorParserTests
+	{
+		JoyReactorProvider parser;
+		JoyReactorProvider.IStorage mockStorage;
+		JoyReactorProvider.IListStorage listStorage;
 
-        [SetUp]
-        public void SetUp()
-        {
-            TestExtensions.SetUp();
-            parser = JoyReactorProvider.Create();
-        }
+		[SetUp]
+		public void SetUp ()
+		{
+			listStorage = Mock.Of<JoyReactorProvider.IListStorage> ();
+			mockStorage = Mock.Of<JoyReactorProvider.IStorage> ();
+			TestExtensions.BeginInjection ()
+				.Add<JoyReactorProvider.IStorage> (mockStorage)
+				.Add<JoyReactorProvider.IListStorage> (listStorage)
+				.Commit ();
 
-        [Test]
-        [Ignore]
-        public void TestProfileOfUserEksFoxX()
-        {
-            // FIXME:
+			parser = JoyReactorProvider.Create ();
+		}
+
+		[Test]
+		[Ignore]
+		public void TestProfileOfUserEksFoxX ()
+		{
+			// FIXME:
 //            var profile = await parser.ProfileAsync("eksFox_X");
 //
 //            Assert.AreEqual("eksFox_X", profile.UserName);
@@ -45,21 +54,46 @@ namespace JoyReactor.Core.Tests
 //                Assert.IsTrue(s.Name == s.Name.Trim() && s.Name.Length > 5, "Award name = " + s.Name);
 //                Assert.IsTrue(Regex.IsMatch(s.Image, @"http://img0.joyreactor.cc/pics/award/\d+"), "Award image = " + s.Image);
 //            }
-        }
+		}
 
-        [Test]
-        public async void TestFavoriteUserY2k()
-        {
-            TestExtensions.BeginInjection().Add<JoyReactorProvider.IStorage>().Commit();
-            var listStorage = Mock.Of<JoyReactorProvider.IListStorage>();
-            await parser.LoadTagAndPostListAsync(ID.Factory.NewFavoriteForUser("_y2k"), listStorage);
-            Mock.Get(listStorage).Verify(s => s.AddPost(It.IsAny<Post>()), Times.Exactly(3));
-        }
+		[Test]
+		public async void TestFavoriteUserY2k ()
+		{
+			TestExtensions.BeginInjection ().Add<JoyReactorProvider.IStorage> ().Commit ();
+			var listStorage = Mock.Of<JoyReactorProvider.IListStorage> ();
+			await parser.LoadTagAndPostListAsync (ID.Factory.NewFavoriteForUser ("_y2k"), listStorage);
+			Mock.Get (listStorage).Verify (s => s.AddPost (It.IsAny<Post> ()), Times.Exactly (3));
+		}
 
-        [Test]
-        [Ignore] // FIXME:
-        public void TestFeaturedThreePages()
-        {
+		[Test]
+		public async void TestFeaturedThreePages ()
+		{
+			var id = ID.Factory.New (ID.IdConst.ReactorGood);
+			await parser.LoadTagAndPostListAsync (id, listStorage);
+
+			Mock.Get (mockStorage)
+				.Verify (s => s.UpdateTagInformationAsync (ID.Factory.New (ID.IdConst.ReactorGood), null, 4876, true));
+
+			// Next page
+
+			Mock.Get (mockStorage)
+				.Setup (s => s.GetNextPageForTagAsync (id)).Returns (Task.FromResult (4876));
+
+			await parser.LoadTagAndPostListAsync (id, listStorage);
+
+			Mock.Get (mockStorage)
+				.Verify (s => s.UpdateTagInformationAsync (ID.Factory.New (ID.IdConst.ReactorGood), null, 4875, true));
+
+			// Next page
+
+			Mock.Get (mockStorage)
+				.Setup (s => s.GetNextPageForTagAsync (id)).Returns (Task.FromResult (4875));
+
+			await parser.LoadTagAndPostListAsync (id, listStorage);
+
+			Mock.Get (mockStorage)
+				.Verify (s => s.UpdateTagInformationAsync (ID.Factory.New (ID.IdConst.ReactorGood), null, 4874, true));
+
 //            var postIds = new HashSet<string>();
 //            parser.NewPost += (sender, e) =>
 //            {
@@ -89,21 +123,21 @@ namespace JoyReactor.Core.Tests
 //            parser.NewTagInformation += (sender, e) => Assert.AreEqual(4311, e.NextPage);
 //            parser.ExtractTag(null, ID.TagType.Good, 4312);
 //            Assert.AreEqual(30, postIds.Count);
-        }
+		}
 
-        [Test]
-        [Ignore] // FIXME:
-        public void TestFeatured()
-        {
+		[Test]
+		[Ignore] // FIXME:
+        public void TestFeatured ()
+		{
 //            parser.NewPost += (sender, e) => Assert.IsNotNull(e);
 //            parser.NewTagInformation += (sender, e) => Assert.IsNotNull(e);
 //            parser.ExtractTag(null, ID.TagType.Good, null);
-        }
+		}
 
-        [Test]
-        [Ignore] // FIXME:
-        public void TestComics()
-        {
+		[Test]
+		[Ignore] // FIXME:
+        public void TestComics ()
+		{
 //            int linkedTagCount = 0;
 //
 //            parser.NewPost += (sender, e) => Assert.IsNotNull(e);
@@ -116,12 +150,63 @@ namespace JoyReactor.Core.Tests
 //            parser.ExtractTag("комиксы", ID.TagType.Good, null);
 //
 //            Assert.True(linkedTagCount > 0, "Linked tags = " + linkedTagCount);
-        }
+		}
 
-        [Test]
-        [Ignore] // FIXME:
-        public void TestPost861529()
-        {
+		[Test]
+		public async void TestPost861529 ()
+		{
+			var mockStorage = Mock.Of<JoyReactorProvider.IStorage> ();
+			TestExtensions.BeginInjection ().Add<JoyReactorProvider.IStorage> (mockStorage).Commit ();
+
+			Mock.Get (mockStorage)
+				.Setup (mock => mock.SaveNewOrUpdatePostAsync (It.IsAny<Post> ()))
+				.Returns (Task.FromResult ((object)null));
+
+			int commenCount = 0, notRootCommentCount = 0, commentsAttachments = 0;
+			float sumCommentRating = 0;
+			var comIds = new HashSet<int> ();
+			Mock.Get (mockStorage)
+				.Setup (mock => mock.SaveNewPostCommentAsync (It.IsAny<string> (), It.IsAny<int> (), It.IsAny<Comment> (), It.IsAny<string[]> ()))
+				.Callback<string, int, Comment, string[]> (
+				(postId, parentId, s, attachments) => {
+					Assert.IsNotNull (s);
+					commenCount++;
+					sumCommentRating += s.Rating;
+						
+					Assert.IsTrue (s.Created <= 1577836800000L && s.Created >= 1262304000000L, "Comment created = " + s.Created);
+					comIds.Add (s.Id);
+					if (s.ParentCommentId != 0) {
+						Assert.IsTrue (comIds.Contains (s.ParentCommentId), "Comment parent id = " + s.ParentCommentId);
+						notRootCommentCount++;
+					}
+						
+					var t = s.Text;
+					Assert.IsTrue (t == null || t == t.Trim (), "Comment text = " + s.Text);
+					TestCommentTextNotContainsTag (s.Text);
+						
+					Assert.NotNull (s.UserName);
+					Assert.IsTrue (Regex.IsMatch (s.UserName, "[\\w\\d_]+"), "Comment user name = " + s.UserName);
+					Assert.IsNotNull (s.UserImage);
+					Assert.IsTrue (Regex.IsMatch (s.UserImage, "http://img\\d+\\.joyreactor\\.cc/pics/avatar/user/\\d+"), s.UserImage);
+						
+					Assert.IsNotNull (s.Attachments);
+					commentsAttachments += s.Attachments.Count;
+					foreach (var z in s.Attachments) {
+						Assert.IsTrue (Regex.IsMatch (z, "http://img\\d+\\.joyreactor\\.cc/pics/comment/\\-\\d+\\.(jpeg|png|gif|bmp)"), "Comment id = " + s.Id + ", url = " + z);
+					}
+				})
+				.Returns (Task.FromResult ((object)null));
+
+			await JoyReactorProvider.Create ().LoadPostAsync ("861529");
+
+			var expectedPost = new Post ();
+			expectedPost.UserName = "mr.viridis";
+			expectedPost.UserImage = "http://img0.joyreactor.cc/images/default_avatar.jpeg";
+			expectedPost.Created = 1372924750000;
+
+			Mock.Get (mockStorage).Verify (mock => mock.SaveNewOrUpdatePostAsync (expectedPost));
+			Assert.AreEqual (44, commenCount);
+
 //            bool wasInfo = false;
 //            int commenCount = 0;
 //            int commentsAttachments = 0;
@@ -183,12 +268,12 @@ namespace JoyReactor.Core.Tests
 //            Assert.IsTrue(sumCommentRating > 50, "Sum comment rating = " + sumCommentRating);
 //            Assert.IsTrue(notRootCommentCount > 30, "Not root comment count = " + notRootCommentCount);
 //            Assert.IsTrue(commenCount - notRootCommentCount > 10, "Root comment count = " + (commenCount - notRootCommentCount));
-        }
+		}
 
-        [Test]
-        [Ignore] // FIXME:
-        public void TestPost1323757()
-        {
+		[Test]
+		[Ignore] // FIXME:
+        public void TestPost1323757 ()
+		{
 //            bool wasInfo = false;
 //            int commenCount = 0;
 //            int commentsAttachments = 0;
@@ -250,12 +335,12 @@ namespace JoyReactor.Core.Tests
 //            Assert.IsTrue(sumCommentRating > 1500, "Sum comment rating = " + sumCommentRating);
 //            Assert.IsTrue(notRootCommentCount > 2000, "Not root comment count = " + notRootCommentCount);
 //            Assert.IsTrue(commenCount - notRootCommentCount > 500, "Root comment count = " + (commenCount - notRootCommentCount));
-        }
+		}
 
-        [Test]
-        [Ignore] // FIXME:
-        public void TestPost1382511()
-        {
+		[Test]
+		[Ignore] // FIXME:
+        public void TestPost1382511 ()
+		{
 //            bool wasInfo = false;
 //            int commenCount = 0;
 //            int commentsAttachments = 0;
@@ -322,15 +407,14 @@ namespace JoyReactor.Core.Tests
 //            Assert.IsTrue(sumCommentRating >= 62, "Sum comment rating = " + sumCommentRating);
 //            Assert.IsTrue(notRootCommentCount >= 22, "Not root comment count = " + notRootCommentCount);
 //            Assert.IsTrue(commenCount - notRootCommentCount >= 16, "Root comment count = " + (commenCount - notRootCommentCount));
-        }
+		}
 
-        static void TestCommentTextNotContainsTag(string text)
-        {
-            var t = text == null ? null : text.ToLower();
-            Assert.IsFalse(t != null && new []
-                {
-                    "<br>", "<br />", "<p>", "<a ", "</a>"
-                }.Any(a => t.Contains(a)), "Comment = " + text);
-        }
-    }
+		static void TestCommentTextNotContainsTag (string text)
+		{
+			var t = text == null ? null : text.ToLower ();
+			Assert.IsFalse (t != null && new [] {
+				"<br>", "<br />", "<p>", "<a ", "</a>"
+			}.Any (a => t.Contains (a)), "Comment = " + text);
+		}
+	}
 }

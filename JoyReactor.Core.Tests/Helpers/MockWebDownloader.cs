@@ -12,15 +12,19 @@ namespace JoyReactor.Core.Tests.Helpers
     {
         internal readonly IDictionary<string, string> RouteUrls = new Dictionary<string, string>()
         {
-            ["http://joyreactor.cc/post/1323757"] = "response2.html",
+			["http://joyreactor.cc/post/861529"] = "joyreactor_861529.html",
+			["http://pornreactor.cc/post/861529"] = "joyreactor_861529.html",
+
+			["http://joyreactor.cc/post/1323757"] = "response2.html",
             ["http://joyreactor.cc/post/1382511"] = "response3.html",
-            ["http://joyreactor.cc/post/861529"] = "resp4.html",
             ["http://pornreactor.cc/post/1323757"] = "response2.html",
             ["http://pornreactor.cc/post/1382511"] = "response3.html",
-            ["http://pornreactor.cc/post/861529"] = "resp4.html",
 
             ["http://joyreactor.cc/"] = "joyreactor_feed.html",
-            ["http://joyreactor.cc/tag/комиксы"] = "joyreactor_comics.html",
+			["http://joyreactor.cc/4876"] = "joyreactor_feed_2.html",
+			["http://joyreactor.cc/4875"] = "joyreactor_feed_3.html",
+
+			["http://joyreactor.cc/tag/комиксы"] = "joyreactor_comics.html",
             ["http://joyreactor.cc/4313"] = "joyreactor_page4313.html",
             ["http://joyreactor.cc/4312"] = "joyreactor_page4312.html",
             ["http://joyreactor.cc/tag/песочница"] = "joyreactor_pesochnica.html",
