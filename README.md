@@ -1,6 +1,16 @@
 JoyReactor
 ==========
 
+### Скриншоты
+<img src="/_web/AI-01.png" alt="Screenshots" width="200" />
+<img src="/_web/AI-02.png" alt="Screenshots" width="200" />
+<img src="/_web/AI-03.png" alt="Screenshots" width="200" />
+<img src="/_web/AI-04.png" alt="Screenshots" width="200" />
+<img src="/_web/AI-05.png" alt="Screenshots" width="200" />
+<img src="/_web/AI-07.png" alt="Screenshots" width="200" />
+
+### Описание
+
 Мультиплатформенный (Android iOS Windows10) клиент для сайта http://joyreactor.cc
 
 Проект задумывается как “open source” с лицензией GPL v2.
