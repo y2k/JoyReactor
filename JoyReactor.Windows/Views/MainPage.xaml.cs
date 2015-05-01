@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Microsoft.Practices.ServiceLocation;
+using PCLStorage;
+using SQLite.Net;
+using SQLite.Net.Platform.WinRT;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

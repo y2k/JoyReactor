@@ -7,20 +7,20 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="767bd291-e84e-4065-95a3-8c06d5130d33"
-    Publisher="CN=Igor"
+    Name="f59354ab-8e3b-4a8c-beb7-4d35578cf6f3"
+    Publisher="CN=Admin"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="767bd291-e84e-4065-95a3-8c06d5130d33" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="f59354ab-8e3b-4a8c-beb7-4d35578cf6f3" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>JoyReactor.Windows</DisplayName>
-    <PublisherDisplayName>Igor</PublisherDisplayName>
+    <PublisherDisplayName>Admin</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
   <Dependencies>
-    <TargetPlatform Name="Windows.Universal" MinVersion="10.0.10030.0" MaxVersionTested="10.0.10030.0" />
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.10069.0" MaxVersionTested="10.0.10069.0" />
   </Dependencies>
 
   <Resources>
@@ -36,7 +36,6 @@
         Square150x150Logo="Assets\Logo.png"
         Square44x44Logo="Assets\SmallLogo.png"
         Description="JoyReactor.Windows"
-        ForegroundText="light"
         BackgroundColor="#464646">
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>

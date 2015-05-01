@@ -28,11 +28,20 @@ namespace JoyReactor.Windows
     sealed partial class App : Application
     {
         /// <summary>
+        /// Allows tracking page views, exceptions and other telemetry through the Microsoft Application Insights service.
+        /// </summary>
+        public static Microsoft.ApplicationInsights.TelemetryClient TelemetryClient;
+
+        /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App()
         {
+            TelemetryClient = new Microsoft.ApplicationInsights.TelemetryClient();
+
+            InitializeServiceLocator();
+
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
@@ -52,8 +61,6 @@ namespace JoyReactor.Windows
             }
 #endif
 
-            InitializeServiceLocator();
-
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -62,9 +69,6 @@ namespace JoyReactor.Windows
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
-                // Set the default language
-                // TODO:
-                //rootFrame.Language = Windows.Globalization.ApplicationLanguages.Languages[0];
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 

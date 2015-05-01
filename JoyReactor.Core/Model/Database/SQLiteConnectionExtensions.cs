@@ -74,7 +74,7 @@ namespace JoyReactor.Core.Model.Database
             }
         }
 
-        public static IEnumerable<T> SafeDeferredQuery<T>(this SQLiteConnection instance, string query, params object[] args) where T : new()
+        public static IEnumerable<T> SafeDeferredQuery<T>(this SQLiteConnection instance, string query, params object[] args) where T : class
         {
             lock (instance)
             {
@@ -101,7 +101,7 @@ namespace JoyReactor.Core.Model.Database
             });
         }
 
-        public static List<T> SafeQuery<T>(this SQLiteConnection instance, string query, params object[] args) where T : new()
+        public static List<T> SafeQuery<T>(this SQLiteConnection instance, string query, params object[] args) where T : class
         {
             lock (instance)
             {
@@ -109,7 +109,7 @@ namespace JoyReactor.Core.Model.Database
             }
         }
 
-        public static Task<List<T>> QueryAsync<T>(this SQLiteConnection instance, string query, params object[] args) where T : new()
+        public static Task<List<T>> QueryAsync<T>(this SQLiteConnection instance, string query, params object[] args) where T : class
         {
             return Task.Run(() =>
             {
@@ -119,7 +119,7 @@ namespace JoyReactor.Core.Model.Database
                 }
             });
         }
-        public static Task<T> QueryFirstAsync<T>(this SQLiteConnection instance, string query, params object[] args) where T : new()
+        public static Task<T> QueryFirstAsync<T>(this SQLiteConnection instance, string query, params object[] args) where T : class
         {
             return Task.Run(() =>
             {
