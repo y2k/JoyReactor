@@ -2,6 +2,7 @@
 using PCLStorage;
 using SQLite.Net;
 using SQLite.Net.Interop;
+using System;
 
 namespace JoyReactor.Core.Model.Database
 {
@@ -9,26 +10,21 @@ namespace JoyReactor.Core.Model.Database
     {
         const string DatabaseName = "net.itwister.joyreactor.main.db";
 
-        static volatile AsyncSQLiteConnection Instance;
-        static object syncRoot = new object();
+        static Lazy<AsyncSQLiteConnection> LazyInstance
+            = new Lazy<AsyncSQLiteConnection>(
+                () =>
+                {
+                    var path = PortablePath.Combine(FileSystem.Current.LocalStorage.Path, DatabaseName);
+                    var platform = ServiceLocator.Current.GetInstance<ISQLitePlatform>();
+                    var result = new AsyncSQLiteConnection(new SQLiteConnection(platform, path));
+                    // TODO: убрать блокировку потока
+                    new InitializeTransaction(result).Execute().Wait();
+                    return result;
+                });
 
         internal static AsyncSQLiteConnection Create()
         {
-            if (Instance == null)
-            {
-                lock (syncRoot)
-                {
-                    if (Instance == null)
-                    {
-                        var path = PortablePath.Combine(FileSystem.Current.LocalStorage.Path, DatabaseName);
-                        var platform = ServiceLocator.Current.GetInstance<ISQLitePlatform>();
-                        var localInstance = new AsyncSQLiteConnection(new SQLiteConnection(platform, path));
-                        new InitializeTransaction(localInstance).Execute();
-                        Instance = localInstance;
-                    }
-                }
-            }
-            return Instance;
+            return LazyInstance.Value;
         }
     }
 }

@@ -1,13 +1,15 @@
 ﻿using SQLite.Net;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Database
 {
     class AsyncSQLiteConnection
     {
-        private SQLiteConnection connection;
+        SemaphoreSlim semaphore = new SemaphoreSlim(1);
+        SQLiteConnection connection;
 
         public AsyncSQLiteConnection(SQLiteConnection connection)
         {
@@ -16,51 +18,50 @@ namespace JoyReactor.Core.Model.Database
 
         internal Task CreateTableAsync<T>()
         {
-            connection.CreateTable<T>();
-
-            throw new NotImplementedException();
+            return Execute(() => connection.CreateTable<T>());
         }
 
         internal Task<List<T>> QueryAsync<T>(string query, params object[] args) where T : class
         {
-            connection.Query<T>(query, args);
-
-            throw new NotImplementedException();
+            return Execute(() => connection.Query<T>(query, args));
         }
 
         internal Task<int> InsertAsync(object item)
         {
-            connection.Insert(item);
-
-            throw new NotImplementedException();
+            return Execute(() => connection.Insert(item));
         }
 
         internal Task ExecuteAsync(string query, params object[] args)
         {
-            connection.Execute(query, args);
-
-            throw new NotImplementedException();
+            return Execute(() => connection.Execute(query, args));
         }
 
         internal Task<T> ExecuteScalarAsync<T>(string query, params object[] args)
         {
-            connection.ExecuteScalar<T>(query, args);
-
-            throw new NotImplementedException();
+            return Execute(() => connection.ExecuteScalar<T>(query, args));
         }
 
         internal Task UpdateAsync(object item)
         {
-            connection.Update(item);
-
-            throw new NotImplementedException();
+            return Execute(() => connection.Update(item));
         }
 
         internal Task InsertAllAsync<T>(ICollection<T> items)
         {
-            connection.InsertAll(items);
+            return Execute(() => connection.InsertAll(items));
+        }
 
-            throw new NotImplementedException();
+        async Task<T> Execute<T>(Func<T> callback)
+        {
+            await semaphore.WaitAsync();
+            try
+            {
+                return await Task.Run(callback);
+            }
+            finally
+            {
+                semaphore.Release();
+            }
         }
     }
 }

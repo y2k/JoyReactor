@@ -35,6 +35,7 @@
     <Compile Include="Model\Database\AsyncSQLiteConnection.cs" />
     <Compile Include="Model\Database\CreateDefaultTagsTransaction.cs" />
     <Compile Include="Model\Database\CreateTablesTransaction.cs" />
+    <Compile Include="Model\Database\InitializeTransaction.cs" />
     <Compile Include="Model\DTO\Comment.cs" />
     <Compile Include="Model\DTO\Attachment.cs" />
     <Compile Include="Model\DTO\MessageThreadItem.cs" />
@@ -59,7 +60,6 @@
     <Compile Include="Model\DTO\TagLinkedTag.cs" />
     <Compile Include="Model\TagCollectionModel.cs" />
     <Compile Include="Model\Helper\HtmlUtils.cs" />
-    <Compile Include="Model\Database\SQLiteConnectionExtensions.cs" />
     <Compile Include="Model\Helper\Log.cs" />
     <Compile Include="Model\Helper\DateTimeExtensions.cs" />
     <Compile Include="Model\Helper\NodeHelper.cs" />
