@@ -1,15 +1,15 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Helper;
+using JoyReactor.Core.Model.Web;
+using Microsoft.Practices.ServiceLocation;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using HtmlAgilityPack;
-using JoyReactor.Core.Model.DTO;
-using JoyReactor.Core.Model.Helper;
-using JoyReactor.Core.Model.Web;
-using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Parser
 {
@@ -22,11 +22,13 @@ namespace JoyReactor.Core.Model.Parser
         JoyReactorProvider.IListStorage listStorage;
         ID id;
         string pageHtml;
+        bool isFirstPage;
 
-        public TagProvider(ID id, JoyReactorProvider.IListStorage listStorage)
+        public TagProvider(ID id, JoyReactorProvider.IListStorage listStorage, bool isFirstPage)
         {
             this.id = id;
             this.listStorage = listStorage;
+            this.isFirstPage = isFirstPage;
         }
 
         internal async Task ComputeAsync()
@@ -80,7 +82,7 @@ namespace JoyReactor.Core.Model.Parser
                     url.Append(id.Tag == null ? "/all" : "/new");
             }
 
-            int currentPage = await storage.GetNextPageForTagAsync(id);
+            int currentPage = isFirstPage ? 0 : await storage.GetNextPageForTagAsync(id);
             if (currentPage > 0)
                 url.Append("/").Append(currentPage);
             return new Uri("" + url);
@@ -229,7 +231,7 @@ namespace JoyReactor.Core.Model.Parser
             }
 
             await storage.SaveNewOrUpdatePostAsync(p);
-            listStorage.AddPost(p);
+            await listStorage.AddPost(p);
         }
 
         #endregion
@@ -257,15 +259,18 @@ namespace JoyReactor.Core.Model.Parser
                 await storage.SaveLinkedTagsAsync(id, title, tags);
         }
 
-        abstract class LinkedTagExtractor {
+        abstract class LinkedTagExtractor
+        {
 
-            internal static ICollection<LinkedTagExtractor> Get() {
+            internal static ICollection<LinkedTagExtractor> Get()
+            {
                 return new LinkedTagExtractor[] { new RandomTagExtractor(), new SubTagExtractor() };
             }
 
             internal abstract ICollection<Tag> Extract(HtmlNode root);
 
-            class RandomTagExtractor : LinkedTagExtractor {
+            class RandomTagExtractor : LinkedTagExtractor
+            {
 
                 internal override ICollection<Tag> Extract(HtmlNode root)
                 {
@@ -276,15 +281,18 @@ namespace JoyReactor.Core.Model.Parser
                 }
             }
 
-            class SubTagExtractor : LinkedTagExtractor {
+            class SubTagExtractor : LinkedTagExtractor
+            {
 
                 internal override ICollection<Tag> Extract(HtmlNode root)
                 {
                     return root
                         .Select("td > img")
-                        .Select(s => new Tag { 
-                            BestImage = s.Attr("src"), 
-                            Title = LinkToTagName(FindLinkToTag(s)) })
+                        .Select(s => new Tag
+                            {
+                                BestImage = s.Attr("src"),
+                                Title = LinkToTagName(FindLinkToTag(s))
+                            })
                         .ToList();
                 }
 

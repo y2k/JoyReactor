@@ -38,38 +38,39 @@ namespace JoyReactor.Core.Model.Database
 
         #region GetPostsAsync
 
-        public async Task<PostCollectionState> GetPostsAsync(ID id)
-        {
-            return new PostCollectionState
-            {
-                Posts = await GetPostsForTag(id),
-                NewItemsCount = await GetNewItemsCount(id),
-                DividerPosition = await GetDividerPosition(id),
-            };
-        }
-
-        Task<List<Post>> GetPostsForTag(ID id)
-        {
-            return db.QueryAsync<Post>(
-                "SELECT p.* " +
-                "FROM tag_post t " +
-                "JOIN posts p ON p.Id = t.PostId " +
-                "WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?) " +
-                "AND (Status = ? OR Status = ?)",
-                id.SerializeToString(), TagPost.StatusOld, TagPost.StatusActual);
-        }
-
-        Task<int> GetNewItemsCount(ID id)
-        {
-            return db.ExecuteScalarAsync<int>(
-                "SELECT COUNT(*) " +
-                "FROM tag_post " +
-                "WHERE TagId IN ( " +
-                "   SELECT Id " +
-                "   FROM tags " +
-                "   WHERE TagId = ? AND Status = ?)",
-                id.SerializeToString(), TagPost.StatusPending);
-        }
+        //        public async Task<PostCollectionState> GetPostsAsync(ID id)
+        //        {
+        //            return new PostCollectionState
+        //            {
+        //                Posts = await GetPostsForTag(id),
+        //                NewItemsCount = await GetNewItemsCount(id),
+        //                DividerPosition = await GetDividerPosition(id),
+        //            };
+        //        }
+        //
+        //        Task<List<Post>> GetPostsForTag(ID id)
+        //        {
+        //            return db.QueryAsync<Post>(
+        //                "SELECT p.* " +
+        //                "FROM tag_post t " +
+        //                "JOIN posts p ON p.Id = t.PostId " +
+        //                "WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?) " +
+        //                "AND (Status = ? OR Status = ?)",
+        //                id.SerializeToString(), TagPost.StatusOld, TagPost.StatusActual);
+        //        }
+        //
+        //        Task<int> GetNewItemsCount(ID id)
+        //        {
+        //            return db.ExecuteScalarAsync<int>(
+        //                "SELECT COUNT(*) " +
+        //                "FROM tag_post " +
+        //                "WHERE TagId IN ( " +
+        //                "   SELECT Id " +
+        //                "   FROM tags " +
+        //                "   WHERE TagId = ?) " +
+        //                "AND Status = ?)",
+        //                id.SerializeToString(), TagPost.StatusPending);
+        //        }
 
         Task<int> GetDividerPosition(ID id)
         {
@@ -129,8 +130,7 @@ namespace JoyReactor.Core.Model.Database
                     foreach (var s in links)
                     {
                         s.Id = 0;
-                        if (s.Status == TagPost.StatusPending)
-                            s.Status = TagPost.StatusActual;
+                        s.Status = s.IsPending ? TagPost.StatusActual : TagPost.StatusOld;
                     }
                     db.SafeInsertAll(links);
                 });

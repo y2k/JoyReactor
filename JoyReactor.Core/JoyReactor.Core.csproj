@@ -62,8 +62,6 @@
     <Compile Include="Model\Helper\Log.cs" />
     <Compile Include="Model\Helper\DateTimeExtensions.cs" />
     <Compile Include="Model\Helper\NodeHelper.cs" />
-    <Compile Include="Model\NextPagePostSorter.cs" />
-    <Compile Include="Model\FirstPagePostSorter.cs" />
     <Compile Include="Model\Parser\ReactorDomainDetector.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="ViewModels\CreateTagViewModel.cs" />
@@ -94,10 +92,16 @@
     <Compile Include="Model\Database\MemoryStorage.cs" />
     <Compile Include="Model\DTO\TagGroup.cs" />
     <Compile Include="Model\FeedService.cs" />
-    <Compile Include="Model\OrderedListStorage.cs" />
     <Compile Include="Model\Database\MessageRepository.cs" />
     <Compile Include="Model\Database\AuthRepository.cs" />
     <Compile Include="Model\ProfileService.cs" />
+    <Compile Include="Model\ListStorageFactory.cs" />
+    <Compile Include="Model\Database\TagRepository.cs" />
+    <Compile Include="Model\Database\TagPostRepository.cs" />
+    <Compile Include="Model\Database\Repository.cs" />
+    <Compile Include="Model\Database\Transaction.cs" />
+    <Compile Include="Model\Database\PostRepository.cs" />
+    <Compile Include="Model\Parser\PostProvider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
