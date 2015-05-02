@@ -3,7 +3,7 @@ using JoyReactor.Core.Model.DTO;
 
 namespace JoyReactor.Core.Model.Database
 {
-    public class TagRepository : Repository
+    class TagRepository : Repository
     {
         public Task<Tag> GetAsync(string tagId)
         {

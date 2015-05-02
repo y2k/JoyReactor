@@ -69,9 +69,9 @@ namespace JoyReactor.Core.Model
 				b.RegisterType<AuthRepository>().As<ReactorMessageParser.IAuthStorage>();
 				b.RegisterType<AuthRepository>().As<JoyReactorProvider.IAuthStorage>();
 
-				b.RegisterType<SQLiteStorage>().As<FeedService.IFeedRepository>();
-				b.RegisterType<SQLiteStorage>().As<JoyReactorProvider.IStorage>();
-				b.RegisterType<SQLiteStorage>().As<PostService.IStorage>();
+				b.RegisterType<CommonRepository>().As<FeedService.IFeedRepository>();
+				b.RegisterType<CommonRepository>().As<JoyReactorProvider.IStorage>();
+				b.RegisterType<CommonRepository>().As<PostService.IStorage>();
 
 				b.RegisterType<PostService>().As<CreateTagViewModel.IPostService>();
                 b.RegisterInstance(MemoryStorage.Intance).As<TagCollectionModel.Storage>();

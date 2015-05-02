@@ -38,7 +38,7 @@
     <Compile Include="Model\DTO\Comment.cs" />
     <Compile Include="Model\DTO\Attachment.cs" />
     <Compile Include="Model\DTO\MessageThreadItem.cs" />
-    <Compile Include="Model\Database\SQLiteStorage.cs" />
+    <Compile Include="Model\Database\CommonRepository.cs" />
     <Compile Include="Model\Helper\ObservableExtensions.cs" />
     <Compile Include="Model\Helper\ObservableFactory.cs" />
     <Compile Include="Model\DefaultServiceLocator.cs" />

@@ -4,7 +4,7 @@ using JoyReactor.Core.Model.DTO;
 
 namespace JoyReactor.Core.Model.Database
 {
-    public class TagPostRepository : Repository
+    class TagPostRepository : Repository
     {
         public Task<List<TagPost>> GetAllAsync(int tagId)
         {

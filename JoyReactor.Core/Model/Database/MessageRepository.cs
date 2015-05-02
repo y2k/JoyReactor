@@ -9,13 +9,11 @@ using RawMessage = JoyReactor.Core.Model.Messages.MessageFetcher.RawMessage;
 
 namespace JoyReactor.Core.Model.Database
 {
-    public class MessageRepository : MessageFetcher.IStorage, MessageService.IStorage
+    class MessageRepository : Repository, MessageFetcher.IStorage, MessageService.IStorage
     {
-        SQLiteConnection db = ServiceLocator.Current.GetInstance<SQLiteConnection>();
-
         public Task<List<MessageThreadItem>> GetThreadsWithAdditionInformationAsync()
         {
-            return db.QueryAsync<MessageThreadItem>(
+            return Connection.QueryAsync<MessageThreadItem>(
                 "SELECT * FROM ( " +
                 "SELECT " +
                 " t.Id AS Id, " +
@@ -28,76 +26,70 @@ namespace JoyReactor.Core.Model.Database
                 ") GROUP BY Id ");
         }
 
-        public Task ClearAsync()
+        public async Task ClearAsync()
         {
-            return db.RunInTransactionAsync(() =>
-                {
-                    db.Execute("DELETE FROM message_threads");
-                    db.Execute("DELETE FROM messages");
-                });
+            await Connection.ExecuteAsync("DELETE FROM message_threads");
+            await Connection.ExecuteAsync("DELETE FROM messages");
         }
 
-        public Task SaveAsync(List<RawMessage> messages)
+        public async Task SaveAsync(List<RawMessage> messages)
         {
-            return db.RunInTransactionAsync(() =>
-                {
-                    SyncThreads(messages);
-                    SyncMessages(messages);
-                });
+            await SyncThreads(messages);
+            await SyncMessages(messages);
         }
 
-        void SyncThreads(List<RawMessage> messages)
+        async Task SyncThreads(List<RawMessage> messages)
         {
             var threads = GetThreadsFromMessages(messages);
             foreach (var s in threads)
-                db.Insert(s);
+                await Connection.InsertAsync(s);
         }
 
         IEnumerable<PrivateMessageThread> GetThreadsFromMessages(List<RawMessage> messages)
         {
-            return  from s in messages
-                    group s by s.UserName into t
-                    let thread = t.First()
-                    select new PrivateMessageThread { UserName = thread.UserName, UserImage = thread.UserImage };
+            return from s in messages
+                   group s by s.UserName into t
+                   let thread = t.First()
+                   select new PrivateMessageThread { UserName = thread.UserName, UserImage = thread.UserImage };
         }
 
-        void SyncMessages(List<RawMessage> messages)
+        async Task SyncMessages(List<RawMessage> messages)
         {
             foreach (var s in messages)
-                db.Insert(
+                await Connection.InsertAsync(
                     new PrivateMessage
                     {
-                        ThreadId = GetThreadForUser(s.UserName),
+                        ThreadId = await GetThreadForUser(s.UserName),
                         Created = s.Created,
                         Message = s.Message,
                         Mode = s.Mode == RawMessage.MessageMode.Outbox
-						? PrivateMessage.ModeOutbox
-						: PrivateMessage.ModeInbox,
+                        ? PrivateMessage.ModeOutbox
+                        : PrivateMessage.ModeInbox,
                     });
-        }
-
-        int GetThreadForUser(string username)
-        {
-            return db.SafeExecuteScalar<int>("SELECT Id FROM message_threads WHERE UserName = ?", username);
         }
 
         public Task<List<PrivateMessage>> GetMessagesAsync(string username)
         {
-            return db.QueryAsync<PrivateMessage>(
+            return Connection.QueryAsync<PrivateMessage>(
                 "SELECT * " +
                 "FROM messages " +
                 "WHERE ThreadId IN ( " +
                 "   SELECT Id " +
                 "   FROM message_threads " +
                 "   WHERE UserName = ?) " +
-                "ORDER BY Created", 
+                "ORDER BY Created",
                 username);
         }
 
         public async Task PutMessageAsync(string username, PrivateMessage message)
         {
-            message.ThreadId = GetThreadForUser(username);
-            await db.InsertAsync(message);
+            message.ThreadId = await GetThreadForUser(username);
+            await Connection.InsertAsync(message);
+        }
+
+        Task<int> GetThreadForUser(string username)
+        {
+            return Connection.ExecuteScalarAsync<int>("SELECT Id FROM message_threads WHERE UserName = ?", username);
         }
     }
 }

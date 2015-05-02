@@ -2,6 +2,7 @@
 using PCLStorage;
 using SQLite.Net;
 using SQLite.Net.Interop;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Database
 {
@@ -10,10 +11,10 @@ namespace JoyReactor.Core.Model.Database
         const string DatabaseName = "net.itwister.joyreactor.main.db";
         const int DatabaseVersion = 1;
 
-        static volatile SQLiteConnection Instance;
+        static volatile AsyncSQLiteConnection Instance;
         static object syncRoot = new object();
 
-        public static SQLiteConnection Create()
+        internal static AsyncSQLiteConnection Create()
         {
             if (Instance == null)
             {
@@ -23,7 +24,7 @@ namespace JoyReactor.Core.Model.Database
                     {
                         var path = PortablePath.Combine(FileSystem.Current.LocalStorage.Path, DatabaseName);
                         var platform = ServiceLocator.Current.GetInstance<ISQLitePlatform>();
-                        var localInstance = new SQLiteConnection(platform, path);
+                        var localInstance = new AsyncSQLiteConnection(new SQLiteConnection(platform, path));
                         InitializeDatabase(localInstance);
                         Instance = localInstance;
                     }
@@ -32,26 +33,24 @@ namespace JoyReactor.Core.Model.Database
             return Instance;
         }
 
-        public static void InitializeDatabase(SQLiteConnection db)
+        internal static async void InitializeDatabase(AsyncSQLiteConnection db)
         {
-            int ver = GetUserVesion(db);
+            int ver = await GetUserVesion(db);
             if (ver == 0)
-                db.RunInTransaction(() =>
-                {
-                    OnCreate(db);
-                    SetUserVersion(db, DatabaseVersion);
-                });
+            {
+                OnCreate(db);
+                await SetUserVersion(db, DatabaseVersion);
+            }
             else if (ver < DatabaseVersion)
-                db.RunInTransaction(() =>
-                {
-                    OnUpdate(ver, DatabaseVersion);
-                    SetUserVersion(db, DatabaseVersion);
-                });
+            {
+                OnUpdate(ver, DatabaseVersion);
+                await SetUserVersion(db, DatabaseVersion);
+            }
         }
 
-        static void OnCreate(SQLiteConnection db)
+        static async void OnCreate(AsyncSQLiteConnection db)
         {
-            new CreateTablesTransaction(db).Execute();
+            await new CreateTablesTransaction(db).Execute();
             new CreateDefaultTagsTransaction(db).Execute();
         }
 
@@ -60,14 +59,14 @@ namespace JoyReactor.Core.Model.Database
             // Reserverd
         }
 
-        static void SetUserVersion(SQLiteConnection db, int version)
+        static Task SetUserVersion(AsyncSQLiteConnection db, int version)
         {
-            db.Execute("PRAGMA user_version = " + version);
+            return db.ExecuteAsync("PRAGMA user_version = " + version);
         }
 
-        static int GetUserVesion(SQLiteConnection db)
+        static Task<int> GetUserVesion(AsyncSQLiteConnection db)
         {
-            return db.ExecuteScalar<int>("PRAGMA user_version");
+            return db.ExecuteScalarAsync<int>("PRAGMA user_version");
         }
     }
 }

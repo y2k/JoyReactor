@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using JoyReactor.Core.Model.Database;
+﻿using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
 using Microsoft.Practices.ServiceLocation;
-using SQLite.Net;
+using System;
+using System.Collections.Generic;
 using System.Reactive;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model
 {
@@ -21,7 +19,7 @@ namespace JoyReactor.Core.Model
         }
 
         [Obsolete]
-        SQLiteConnection connection = ServiceLocator.Current.GetInstance<SQLiteConnection>();
+        AsyncSQLiteConnection connection = ServiceLocator.Current.GetInstance<AsyncSQLiteConnection>();
         Storage storage = ServiceLocator.Current.GetInstance<Storage>();
 
         [Obsolete]
