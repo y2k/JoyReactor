@@ -3,11 +3,11 @@ using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Parser;
 using System.Threading.Tasks;
 
-namespace JoyReactor.Core.Model.Profiles
+namespace JoyReactor.Core.Model
 {
     class ProfileService : IProfileService
     {
-        IAuthStorage storage = new SQLiteAuthStorage();
+        IAuthStorage storage = new AuthRepository();
         JoyReactorProvider provider = JoyReactorProvider.Create();
 
         public async Task<Profile> GetMyProfile()

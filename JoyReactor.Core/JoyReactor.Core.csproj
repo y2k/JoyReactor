@@ -44,7 +44,6 @@
     <Compile Include="Model\PostCollectionState.cs" />
     <Compile Include="Model\IProfileService.cs" />
     <Compile Include="Model\PostService.cs" />
-    <Compile Include="Model\Profiles\ProfileService.cs" />
     <Compile Include="Model\Web\WebDownloaderExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Web\IWebDownloader.cs" />
@@ -82,11 +81,9 @@
     <Compile Include="ViewModels\MessageThreadsViewModel.cs" />
     <Compile Include="ViewModels\MessagesViewModel.cs" />
     <Compile Include="Model\Messages\MessageService.cs" />
-    <Compile Include="Model\Database\SQLiteMessageStorage.cs" />
     <Compile Include="Model\DTO\PrivateMessage.cs" />
     <Compile Include="Model\DTO\PrivateMessageThread.cs" />
     <Compile Include="Model\Messages\ReactorMessageParser.cs" />
-    <Compile Include="Model\Database\SQLiteAuthStorage.cs" />
     <Compile Include="Model\Messages\MessageFetcher.cs" />
     <Compile Include="Model\Parser\JoyReactorProvider.cs" />
     <Compile Include="Model\DTO\RelatedPost.cs" />
@@ -98,6 +95,9 @@
     <Compile Include="Model\DTO\TagGroup.cs" />
     <Compile Include="Model\FeedService.cs" />
     <Compile Include="Model\OrderedListStorage.cs" />
+    <Compile Include="Model\Database\MessageRepository.cs" />
+    <Compile Include="Model\Database\AuthRepository.cs" />
+    <Compile Include="Model\ProfileService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

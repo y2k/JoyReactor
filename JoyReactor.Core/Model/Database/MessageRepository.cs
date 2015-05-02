@@ -9,7 +9,7 @@ using RawMessage = JoyReactor.Core.Model.Messages.MessageFetcher.RawMessage;
 
 namespace JoyReactor.Core.Model.Database
 {
-    public class SQLiteMessageStorage : MessageFetcher.IStorage, MessageService.IStorage
+    public class MessageRepository : MessageFetcher.IStorage, MessageService.IStorage
     {
         SQLiteConnection db = ServiceLocator.Current.GetInstance<SQLiteConnection>();
 

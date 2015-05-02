@@ -10,7 +10,7 @@ using SQLite.Net;
 
 namespace JoyReactor.Core.Model.Database
 {
-    class SQLiteStorage : FeedService.IStorage, JoyReactorProvider.IStorage, PostService.IStorage
+    class SQLiteStorage : FeedService.IFeedRepository, JoyReactorProvider.IStorage, PostService.IStorage
     {
         SQLiteConnection db = ServiceLocator.Current.GetInstance<SQLiteConnection>();
 

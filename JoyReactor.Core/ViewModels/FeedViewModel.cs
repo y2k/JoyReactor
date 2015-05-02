@@ -63,7 +63,7 @@ namespace JoyReactor.Core.ViewModels
 
         public void Initialize(ID newId)
         {
-            service = FeedService.Create(newId);
+            service = new FeedService(newId);
             IsBusy = true;
 
             subscription?.Dispose();
@@ -77,7 +77,7 @@ namespace JoyReactor.Core.ViewModels
                 });
         }
 
-        private void UpdatePosts(PostCollectionState data)
+        void UpdatePosts(PostCollectionState data)
         {
             var newPosts = ConvertToViewModelItemList(true, data);
             for (int i = Posts.Count - 1; i >= newPosts.Count; i--)
@@ -112,7 +112,9 @@ namespace JoyReactor.Core.ViewModels
             {
                 var divider = showDivider
                     ? new DividerViewModel(LoadNextPage)
-                    : new DividerViewModel(() => { });
+                    : new DividerViewModel(() =>
+                    {
+                    });
                 posts.Insert(data.DividerPosition, divider);
             }
             return posts;

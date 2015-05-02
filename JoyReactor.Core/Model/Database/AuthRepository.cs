@@ -1,7 +1,6 @@
 ﻿using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Messages;
 using JoyReactor.Core.Model.Parser;
-using JoyReactor.Core.Model.Profiles;
 using Microsoft.Practices.ServiceLocation;
 using SQLite.Net;
 using System.Collections.Generic;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Database
 {
-    class SQLiteAuthStorage : ProfileService.IAuthStorage, ReactorMessageParser.IAuthStorage, JoyReactorProvider.IAuthStorage
+    class AuthRepository : ProfileService.IAuthStorage, ReactorMessageParser.IAuthStorage, JoyReactorProvider.IAuthStorage
     {
         SQLiteConnection db = ServiceLocator.Current.GetInstance<SQLiteConnection>();
 

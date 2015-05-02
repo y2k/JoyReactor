@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Reactive;
 using System.Reactive.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.ViewModels;
@@ -9,72 +7,67 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model
 {
-    public class FeedService : FeedViewModel.IFeedService
-    {
-        internal static event EventHandler FeedChanged;
+	public class FeedService : FeedViewModel.IFeedService
+	{
+		internal static event EventHandler FeedChanged;
 
-        IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
-        ID id;
+		IFeedRepository storage = ServiceLocator.Current.GetInstance<IFeedRepository>();
+		ID id;
 
-        #region Instance factory
+		public FeedService(ID id)
+		{
+			this.id = id;
+		}
 
-        FeedService() { }
+		public async Task ApplyNewItemsAsync()
+		{
+			await storage.ApplyNewItemsAsync(id);
+			await InvalidateFeedAsync();
+		}
 
-        internal static FeedService Create(ID id)
-        {
-            return new FeedService { id = id };
-        }
+		public IObservable<PostCollectionState> Get()
+		{
+			return Observable
+				.FromAsync(() => storage.GetPostsAsync(id))
+				.Merge(Observable.FromAsync(
+					async () =>
+					{
+						await SyncPage(true);
+						return await storage.GetPostsAsync(id);
+					}));
+		}
 
-        #endregion
+		public async Task ResetAsync()
+		{
+			await storage.ClearTagFromPostsAsync(id);
+			await SyncPage(true);
+		}
 
-        public async Task ApplyNewItemsAsync()
-        {
-            await storage.ApplyNewItemsAsync(id);
-            await InvalidateFeedAsync();
-        }
+		public Task SyncNextPageAsync()
+		{
+			return SyncPage(false);
+		}
 
-        public IObservable<PostCollectionState> Get()
-        {
-#pragma warning disable CS4014
-            SyncPage(true);
-#pragma warning restore CS4014
-            return Observable
-                .FromEventPattern(e => FeedChanged += e, e => FeedChanged -= e)
-                .StartWith((EventPattern<object>)null)
-                .SelectMany(Observable.FromAsync(() => storage.GetPostsAsync(id)));
-        }
+		async Task SyncPage(bool isFirstPage)
+		{
+			var sorter = new OrderedListStorage(id, isFirstPage);
+			await JoyReactorProvider.Create().LoadTagAndPostListAsync(id, sorter);
+			await InvalidateFeedAsync();
+		}
 
-        public async Task ResetAsync()
-        {
-            await storage.ClearTagFromPostsAsync(id);
-            await SyncPage(true);
-        }
+		internal static Task InvalidateFeedAsync()
+		{
+			TagCollectionModel.OnInvalidateEvent();
+			return Task.Run(() => FeedChanged?.Invoke(null, null));
+		}
 
-        public Task SyncNextPageAsync()
-        {
-            return SyncPage(false);
-        }
+		internal interface IFeedRepository
+		{
+			Task<PostCollectionState> GetPostsAsync(ID id);
 
-        private async Task SyncPage(bool isFirstPage)
-        {
-            var sorter = new OrderedListStorage(id, isFirstPage);
-            await JoyReactorProvider.Create().LoadTagAndPostListAsync(id, sorter);
-            await InvalidateFeedAsync();
-        }
+			Task ApplyNewItemsAsync(ID id);
 
-        internal static Task InvalidateFeedAsync()
-        {
-            TagCollectionModel.OnInvalidateEvent();
-            return Task.Run(() => FeedChanged?.Invoke(null, null));
-        }
-
-        internal interface IStorage
-        {
-            Task<PostCollectionState> GetPostsAsync(ID id);
-
-            Task ApplyNewItemsAsync(ID id);
-
-            Task ClearTagFromPostsAsync(ID id);
-        }
-    }
+			Task ClearTagFromPostsAsync(ID id);
+		}
+	}
 }
