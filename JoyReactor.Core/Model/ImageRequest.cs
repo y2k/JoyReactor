@@ -6,9 +6,6 @@ namespace JoyReactor.Core.Model
 {
     public class ImageRequest
     {
-        const string ThumbnailDomain = "api-i-twister.net";
-        const string ThumbnailTemplate = "https://" + ThumbnailDomain + ":8002/Cache/Get?maxHeight=500&width={0}&url={1}";
-
         readonly static ImageDownloader DownloaderInstance = new ImageDownloader
         {
             Decoder = ServiceLocator.Current.GetInstance<ImageDecoder>(),
@@ -47,21 +44,9 @@ namespace JoyReactor.Core.Model
         public async void Into<T>(Action<T> callback)
         {
             callback(default(T));
-            var result = await DownloaderInstance.LoadAsync(token, CreateDownloadUrl());
+            var result = await DownloaderInstance.LoadAsync(token, new ThumbnailFactory(url, maxSize).Create());
             if (result != ImageDownloader.InvalideImage)
                 callback(ConvertImage<T>(result));
-        }
-
-        Uri CreateDownloadUrl()
-        {
-            return IsCanCreateThumbnail()
-                ? new Uri(string.Format(ThumbnailTemplate, maxSize, Uri.EscapeDataString("" + url)))
-                : url;
-        }
-
-        bool IsCanCreateThumbnail()
-        {
-            return maxSize != 0 && url != null && url.Host != ThumbnailDomain;
         }
 
         T ConvertImage<T>(object metaImage)
@@ -73,6 +58,36 @@ namespace JoyReactor.Core.Model
         public interface IImageConverter
         {
             T Convert<T>(object metaImage);
+        }
+
+        class ThumbnailFactory
+        {
+            const string ThumbnailDomain = "api-i-twister.net";
+            const string ThumbnailTemplate = "https://" + ThumbnailDomain + ":8002/Cache/Get?maxHeight=500&width={0}&url={1}";
+
+            int maxSize;
+            Uri url;
+
+            internal ThumbnailFactory(Uri url, int maxSize)
+            {
+                this.url = url;
+                this.maxSize = maxSize;
+            }
+
+            internal Uri Create()
+            {
+                return IsCanCreateThumbnail() ? CreateThumbnailUri() : url;
+            }
+
+            Uri CreateThumbnailUri()
+            {
+                return new Uri(string.Format(ThumbnailTemplate, maxSize, Uri.EscapeDataString("" + url)));
+            }
+
+            bool IsCanCreateThumbnail()
+            {
+                return maxSize != 0 && url != null && url.Host != ThumbnailDomain;
+            }
         }
     }
 }

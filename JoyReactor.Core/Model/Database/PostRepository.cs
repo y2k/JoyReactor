@@ -8,12 +8,12 @@ namespace JoyReactor.Core.Model.Database
     {
         public Task<List<Post>> GetAllAsync(int tagId)
         {
-            return Connection.QueryAsync<Post>(
-                "SELECT p.* " +
-                "FROM tag_post t " +
-                "JOIN posts p ON p.Id = t.PostId " +
-                "WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)",
-                tagId);
+            return Connection.QueryAsync<Post>(@"
+                SELECT p.* 
+                FROM tag_post t 
+                JOIN posts p ON p.Id = t.PostId 
+                WHERE TagId = ?
+                ", tagId);
         }
     }
 }
