@@ -1,27 +1,20 @@
 ﻿using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Messages;
 using JoyReactor.Core.Model.Parser;
-using Microsoft.Practices.ServiceLocation;
-using SQLite.Net;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Database
 {
-    class AuthRepository : ProfileService.IAuthStorage, ReactorMessageParser.IAuthStorage, JoyReactorProvider.IAuthStorage
+    class AuthRepository : Repository, ProfileService.IAuthStorage, ReactorMessageParser.IAuthStorage, JoyReactorProvider.IAuthStorage
     {
-        SQLiteConnection db = ServiceLocator.Current.GetInstance<SQLiteConnection>();
-
-        public Task ClearDatabase()
+        public async Task ClearDatabase()
         {
-            return db.RunInTransactionAsync(() =>
-            {
-                db.SafeExecute("DELETE FROM posts");
-                db.SafeExecute("DELETE FROM tag_post");
-                db.SafeExecute("DELETE FROM tags WHERE Flags & ? != 0", Tag.FlagWebRead);
-                db.SafeExecute("DELETE FROM profiles");
-            });
+            await Connection.ExecuteAsync("DELETE FROM posts");
+            await Connection.ExecuteAsync("DELETE FROM tag_post");
+            await Connection.ExecuteAsync("DELETE FROM tags WHERE Flags & ? != 0", Tag.FlagWebRead);
+            await Connection.ExecuteAsync("DELETE FROM profiles");
         }
 
         string SerializeObject(IDictionary<string, string> cookies)
@@ -31,7 +24,7 @@ namespace JoyReactor.Core.Model.Database
 
         public async Task<IDictionary<string, string>> GetCookiesAsync()
         {
-            var cookies = await db.ExecuteScalarAsync<string>("SELECT Cookie FROM profiles LIMIT 1");
+            var cookies = await Connection.ExecuteScalarAsync<string>("SELECT Cookie FROM profiles LIMIT 1");
             if (cookies == null)
                 return new Dictionary<string, string>();
             return DeserializeCookies(cookies);
@@ -47,19 +40,19 @@ namespace JoyReactor.Core.Model.Database
 
         public Task<string> GetCurrentUserNameAsync()
         {
-            return db.ExecuteScalarAsync<string>(
+            return Connection.ExecuteScalarAsync<string>(
                 "SELECT Username FROM profiles LIMIT 1",
                 "" + ID.SiteParser.JoyReactor);
         }
 
         public async Task<Profile> GetCurrentProfileAsync()
         {
-            return (await db.QueryAsync<Profile>("SELECT * FROM profiles LIMIT 1")).First();
+            return (await Connection.QueryAsync<Profile>("SELECT * FROM profiles LIMIT 1")).First();
         }
 
         public Task SaveCookieToDatabaseAsync(string username, IDictionary<string, string> cookies)
         {
-            return db.InsertAsync(CreateProfile(username, cookies));
+            return Connection.InsertAsync(CreateProfile(username, cookies));
         }
 
         Profile CreateProfile(string username, IDictionary<string, string> cookies)

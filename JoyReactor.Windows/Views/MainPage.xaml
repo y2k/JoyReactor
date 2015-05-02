@@ -1,15 +1,70 @@
-﻿<Page
-    x:Class="JoyReactor.Windows.Views.MainPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:JoyReactor.Windows.Views"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="using:JoyReactor.Core.ViewModels"
-    mc:Ignorable="d">
-
+﻿<Page x:Class="JoyReactor.Windows.Views.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:JoyReactor.Windows.Views"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:vm="using:JoyReactor.Core.ViewModels"
+      xmlns:v="using:JoyReactor.Windows.Views"
+      mc:Ignorable="d">
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Button Padding="10"
+                Click="Button_Click"
+                Content="ActionBar" />
+        <Grid Grid.Row="1">
+            <Grid.DataContext>
+                <vm:FeedViewModel />
+            </Grid.DataContext>
+            <ListView ItemsSource="{Binding Posts}"
+                      SelectionMode="None">
+                <ListView.ItemTemplateSelector>
+                    <v:FeedItemTemplateSelector>
+                        <v:FeedItemTemplateSelector.ContentTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <StackPanel HorizontalAlignment="Stretch">
+                                        <v:FixedAspectPanel MaxAspect="1.67"
+                                                            MaxChildWidth="{Binding ImageWidth}"
+                                                            MaxChildHeight="{Binding ImageHeight}">
+                                            <v:ThumbnailImage Source="{Binding Image}"
+                                                              ThumbnailSize="300" />
+                                        </v:FixedAspectPanel>
+                                        <TextBlock Text="{Binding Title}" />
+                                    </StackPanel>
+                                    <Button HorizontalAlignment="Stretch"
+                                            Opacity="0.2"
+                                            VerticalAlignment="Stretch"
+                                            Command="{Binding OpenPostCommand}" />
+                                </Grid>
+                            </DataTemplate>
+                        </v:FeedItemTemplateSelector.ContentTemplate>
+                        <v:FeedItemTemplateSelector.DividerTemplate>
+                            <DataTemplate>
+                                <Button Content="Divider"
+                                        HorizontalAlignment="Stretch"
+                                        Command="{Binding LoadMoreCommand}" />
+                            </DataTemplate>
+                        </v:FeedItemTemplateSelector.DividerTemplate>
+                    </v:FeedItemTemplateSelector>
+                </ListView.ItemTemplateSelector>
+            </ListView>
+            <Button Content="New posts"
+                    Command="{Binding ApplyCommand}"
+                    Background="Red"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    Visibility="{Binding HasNewItems, Converter={StaticResource BoolToVisibilityConverter}}" />
+        </Grid>
+        <Grid Grid.Row="1"
+              Name="LeftPanel"
+              Width="220"
+              HorizontalAlignment="Left"
+              Visibility="Collapsed"
+              Background="Red">
             <Grid.DataContext>
                 <vm:TagsViewModel />
             </Grid.DataContext>

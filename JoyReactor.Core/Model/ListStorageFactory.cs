@@ -48,31 +48,27 @@ namespace JoyReactor.Core.Model
                 currentTagPosts = (await new TagPostRepository().GetAllAsync(tag.Id)).Where(s => s.Status != 0).ToList();
             }
 
-            public Task CommitAsync()
+            public async Task CommitAsync()
             {
-                return new Transaction().Run(
-                    async () =>
-                    {
-                        await new TagPostRepository().RemoveAsync(tag.Id);
+                await new TagPostRepository().RemoveAsync(tag.Id);
 
-                        if (IsTagEmpty)
-                        {
-                            foreach (var id in uniquePostIds)
-                                await InsertTagPost(id, TagPost.StatusActual, false);
-                        }
-                        else if (IsTagChanged)
-                        {
-                            foreach (var id in uniquePostIds)
-                                await InsertTagPost(id, 0, true);
-                            foreach (var tagPost in currentTagPosts)
-                                await InsertTagPost(tagPost.PostId, tagPost.Status, dublicatePostIds.Contains(tagPost.PostId));
-                        }
-                        else
-                        {
-                            foreach (var tagPost in currentTagPosts)
-                                await InsertTagPost(tagPost.PostId, dublicatePostIds.Contains(tagPost.PostId) ? TagPost.StatusActual : TagPost.StatusOld, false);
-                        }
-                    });
+                if (IsTagEmpty)
+                {
+                    foreach (var id in uniquePostIds)
+                        await InsertTagPost(id, TagPost.StatusActual, false);
+                }
+                else if (IsTagChanged)
+                {
+                    foreach (var id in uniquePostIds)
+                        await InsertTagPost(id, 0, true);
+                    foreach (var tagPost in currentTagPosts)
+                        await InsertTagPost(tagPost.PostId, tagPost.Status, dublicatePostIds.Contains(tagPost.PostId));
+                }
+                else
+                {
+                    foreach (var tagPost in currentTagPosts)
+                        await InsertTagPost(tagPost.PostId, dublicatePostIds.Contains(tagPost.PostId) ? TagPost.StatusActual : TagPost.StatusOld, false);
+                }
             }
 
             bool IsTagEmpty
@@ -153,19 +149,15 @@ namespace JoyReactor.Core.Model
                 CommitAsync().Wait();
             }
 
-            public Task CommitAsync()
+            public async Task CommitAsync()
             {
-                return new Transaction().Run(
-                    async () =>
-                    {
-                        await new TagPostRepository().RemoveAsync(tag.Id);
-                        foreach (var id in currentActualPostIds)
-                            await InsertTagPost(id, TagPost.StatusActual);
-                        foreach (var id in newPostIds)
-                            await InsertTagPost(id, TagPost.StatusActual);
-                        foreach (var id in currentOldPostIds)
-                            await InsertTagPost(id, TagPost.StatusOld);
-                    });
+                await new TagPostRepository().RemoveAsync(tag.Id);
+                foreach (var id in currentActualPostIds)
+                    await InsertTagPost(id, TagPost.StatusActual);
+                foreach (var id in newPostIds)
+                    await InsertTagPost(id, TagPost.StatusActual);
+                foreach (var id in currentOldPostIds)
+                    await InsertTagPost(id, TagPost.StatusOld);
             }
 
 

@@ -4,16 +4,16 @@ using JoyReactor.Core.Model.DTO;
 
 namespace JoyReactor.Core.Model.Database
 {
-    public class TagPostRepository : Repository
+    class TagPostRepository : Repository
     {
         public Task<List<TagPost>> GetAllAsync(int tagId)
         {
-            return Connection.QueryAsync<TagPost>("SELECT * FROM TagPost WHERE TagId = ?", tagId);
+            return Connection.QueryAsync<TagPost>($"SELECT * FROM tag_post WHERE TagId = ?", tagId);
         }
 
         public Task RemoveAsync(int tagId)
         {
-            return Connection.ExecuteAsync("DELETE FROM TagPost WHERE TagId = ?", tagId);
+            return Connection.ExecuteAsync("DELETE FROM tag_post WHERE TagId = ?", tagId);
         }
 
         public Task<int> AddAsync(TagPost item)

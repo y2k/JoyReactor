@@ -32,12 +32,14 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Model\Database\AsyncSQLiteConnection.cs" />
     <Compile Include="Model\Database\CreateDefaultTagsTransaction.cs" />
     <Compile Include="Model\Database\CreateTablesTransaction.cs" />
+    <Compile Include="Model\Database\InitializeTransaction.cs" />
     <Compile Include="Model\DTO\Comment.cs" />
     <Compile Include="Model\DTO\Attachment.cs" />
     <Compile Include="Model\DTO\MessageThreadItem.cs" />
-    <Compile Include="Model\Database\SQLiteStorage.cs" />
+    <Compile Include="Model\Database\CommonRepository.cs" />
     <Compile Include="Model\Helper\ObservableExtensions.cs" />
     <Compile Include="Model\Helper\ObservableFactory.cs" />
     <Compile Include="Model\DefaultServiceLocator.cs" />
@@ -58,7 +60,6 @@
     <Compile Include="Model\DTO\TagLinkedTag.cs" />
     <Compile Include="Model\TagCollectionModel.cs" />
     <Compile Include="Model\Helper\HtmlUtils.cs" />
-    <Compile Include="Model\Database\SQLiteConnectionExtensions.cs" />
     <Compile Include="Model\Helper\Log.cs" />
     <Compile Include="Model\Helper\DateTimeExtensions.cs" />
     <Compile Include="Model\Helper\NodeHelper.cs" />
@@ -99,7 +100,6 @@
     <Compile Include="Model\Database\TagRepository.cs" />
     <Compile Include="Model\Database\TagPostRepository.cs" />
     <Compile Include="Model\Database\Repository.cs" />
-    <Compile Include="Model\Database\Transaction.cs" />
     <Compile Include="Model\Database\PostRepository.cs" />
     <Compile Include="Model\Parser\PostProvider.cs" />
   </ItemGroup>

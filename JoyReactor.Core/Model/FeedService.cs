@@ -49,7 +49,7 @@ namespace JoyReactor.Core.Model
             var posts = await new PostRepository().GetAllAsync(tag.Id);
 
             result.Posts = tagPosts
-                .Where(s => s.Status != null)
+                .Where(s => s.Status != 0)
                 .Join(posts, s => s.PostId, s => s.Id, (t, p) => p)
                 .ToList();                
             result.NewItemsCount = tagPosts.Count(s => s.Status == 0 && s.IsPending);

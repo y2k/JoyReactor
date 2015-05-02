@@ -1,11 +1,9 @@
-﻿using System;
-using SQLite.Net;
-using Microsoft.Practices.ServiceLocation;
+﻿using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Database
 {
-    public class Repository
+    class Repository
     {
-        protected SQLiteConnection Connection { get; } = ServiceLocator.Current.GetInstance<SQLiteConnection>();
+        protected AsyncSQLiteConnection Connection { get; } = ServiceLocator.Current.GetInstance<AsyncSQLiteConnection>();
     }
 }
