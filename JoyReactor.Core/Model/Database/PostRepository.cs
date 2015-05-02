@@ -12,7 +12,7 @@ namespace JoyReactor.Core.Model.Database
                 "SELECT p.* " +
                 "FROM tag_post t " +
                 "JOIN posts p ON p.Id = t.PostId " +
-                "WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?) " +
+                "WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)",
                 tagId);
         }
     }

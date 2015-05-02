@@ -3,6 +3,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:JoyReactor.Windows"
+    xmlns:v="using:JoyReactor.Windows.Views"
     RequestedTheme="Light">
-
+    <Application.Resources>
+        <ResourceDictionary>
+            <v:BoolToVisibilityConverter x:Name="BoolToVisibilityConverter" />
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>

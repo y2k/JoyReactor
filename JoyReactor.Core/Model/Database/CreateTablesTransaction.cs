@@ -1,5 +1,4 @@
 ﻿using JoyReactor.Core.Model.DTO;
-using SQLite.Net;
 using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Database

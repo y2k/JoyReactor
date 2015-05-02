@@ -14,7 +14,7 @@
   <mp:PhoneIdentity PhoneProductId="f59354ab-8e3b-4a8c-beb7-4d35578cf6f3" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>JoyReactor.Windows</DisplayName>
+    <DisplayName>JoyReactor</DisplayName>
     <PublisherDisplayName>Admin</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -32,10 +32,10 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="JoyReactor.Windows.App">
       <uap:VisualElements
-        DisplayName="JoyReactor.Windows"
+        DisplayName="JoyReactor"
         Square150x150Logo="Assets\Logo.png"
         Square44x44Logo="Assets\SmallLogo.png"
-        Description="JoyReactor.Windows"
+        Description="JoyReactor"
         BackgroundColor="#464646">
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>

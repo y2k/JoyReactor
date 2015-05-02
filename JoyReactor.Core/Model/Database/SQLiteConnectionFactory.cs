@@ -3,6 +3,7 @@ using PCLStorage;
 using SQLite.Net;
 using SQLite.Net.Interop;
 using System;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Database
 {
@@ -18,7 +19,7 @@ namespace JoyReactor.Core.Model.Database
                     var platform = ServiceLocator.Current.GetInstance<ISQLitePlatform>();
                     var result = new AsyncSQLiteConnection(new SQLiteConnection(platform, path));
                     // TODO: убрать блокировку потока
-                    new InitializeTransaction(result).Execute().Wait();
+                    Task.Run(() => new InitializeTransaction(result).Execute()).Wait();
                     return result;
                 });
 
