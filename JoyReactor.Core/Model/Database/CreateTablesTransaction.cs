@@ -1,32 +1,30 @@
 ﻿using JoyReactor.Core.Model.DTO;
 using SQLite.Net;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Database
 {
     class CreateTablesTransaction
     {
-        SQLiteConnection db;
+        AsyncSQLiteConnection db;
 
-        public CreateTablesTransaction(SQLiteConnection db)
+        public CreateTablesTransaction(AsyncSQLiteConnection db)
         {
             this.db = db;
         }
 
-        public void Execute()
+        public async Task Execute()
         {
-            db.CreateTable<Post>();
-            db.CreateTable<Tag>();
-            db.CreateTable<TagPost>();
-            db.CreateTable<TagLinkedTag>();
-            db.CreateTable<Comment>();
-            db.CreateTable<Attachment>();
-
-            db.CreateTable<Profile>();
-
-            db.CreateTable<PrivateMessageThread>();
-            db.CreateTable<PrivateMessage>();
-
-            db.CreateTable<RelatedPost>();
+            await db.CreateTableAsync<Post>();
+            await db.CreateTableAsync<Tag>();
+            await db.CreateTableAsync<TagPost>();
+            await db.CreateTableAsync<TagLinkedTag>();
+            await db.CreateTableAsync<Comment>();
+            await db.CreateTableAsync<Attachment>();
+            await db.CreateTableAsync<Profile>();
+            await db.CreateTableAsync<PrivateMessageThread>();
+            await db.CreateTableAsync<PrivateMessage>();
+            await db.CreateTableAsync<RelatedPost>();
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using SQLite.Net;
+﻿using SQLite.Net;
 using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Database
