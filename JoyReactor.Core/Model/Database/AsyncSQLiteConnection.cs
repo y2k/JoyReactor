@@ -16,41 +16,50 @@ namespace JoyReactor.Core.Model.Database
 
         internal Task CreateTableAsync<T>()
         {
+            connection.CreateTable<T>();
+
             throw new NotImplementedException();
         }
 
-        internal Task<T> QueryFirstAsync<T>(string sql, params object[] args)
+        internal Task<List<T>> QueryAsync<T>(string query, params object[] args) where T : class
         {
-            throw new NotImplementedException();
-        }
+            connection.Query<T>(query, args);
 
-        internal Task<List<T>> QueryAsync<T>(string sql, params object[] args)
-        {
             throw new NotImplementedException();
         }
 
         internal Task<int> InsertAsync(object item)
         {
+            connection.Insert(item);
+
             throw new NotImplementedException();
         }
 
-        internal Task ExecuteAsync(string sql, params object[] args)
+        internal Task ExecuteAsync(string query, params object[] args)
         {
+            connection.Execute(query, args);
+
             throw new NotImplementedException();
         }
 
-        internal Task<T> ExecuteScalarAsync<T>(string sql, params object[] args)
+        internal Task<T> ExecuteScalarAsync<T>(string query, params object[] args)
         {
+            connection.ExecuteScalar<T>(query, args);
+
             throw new NotImplementedException();
         }
 
         internal Task UpdateAsync(object item)
         {
+            connection.Update(item);
+
             throw new NotImplementedException();
         }
 
-        internal Task InsertAllAsync<T>(ICollection<T> links)
+        internal Task InsertAllAsync<T>(ICollection<T> items)
         {
+            connection.InsertAll(items);
+
             throw new NotImplementedException();
         }
     }

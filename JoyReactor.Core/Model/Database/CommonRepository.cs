@@ -77,9 +77,9 @@ namespace JoyReactor.Core.Model.Database
 
         public async Task ApplyNewItemsAsync(ID id)
         {
-            var tagId = (await Connection.QueryFirstAsync<TagPost>(
+            var tagId = (await Connection.QueryAsync<TagPost>(
                             "SELECT Id FROM tags WHERE TagId = ?",
-                            id.SerializeToString())).Id;
+                            id.SerializeToString())).First().Id;
             var links = await Connection.QueryAsync<TagPost>(
                             "SELECT * FROM tag_post WHERE TagId = ?",
                             tagId);
@@ -197,14 +197,14 @@ ORDER BY c.Rating DESC, ChildCount DESC
                 ", postId, commentId);
         }
 
-        Task<Comment> PostService.IStorage.GetCommentAsync(int commentId)
+        async Task<Comment> PostService.IStorage.GetCommentAsync(int commentId)
         {
-            return Connection.QueryFirstAsync<Comment>(
+            return (await Connection.QueryAsync<Comment>(
                 "SELECT " +
                 "c.*, " +
                 "(SELECT COUNT(*) FROM comments WHERE ParentCommentId = c.Id) AS ChildCount " +
                 "FROM comments c " +
-                "WHERE c.Id = ? ", commentId);
+                "WHERE c.Id = ? ", commentId)).First();
         }
 
         Task PostService.IStorage.CreateMainTagAsync(string name)
@@ -222,9 +222,9 @@ ORDER BY c.Rating DESC, ChildCount DESC
             return Connection.QueryAsync<RelatedPost>("SELECT * FROM related_posts WHERE ParentPostId = ?", postId);
         }
 
-        Task<Post> PostService.IStorage.GetPostAsync(int postId)
+        async Task<Post> PostService.IStorage.GetPostAsync(int postId)
         {
-            return Connection.QueryFirstAsync<Post>("SELECT * FROM posts WHERE id = ?", postId);
+            return (await Connection.QueryAsync<Post>("SELECT * FROM posts WHERE id = ?", postId)).First();
         }
 
         Task<List<Attachment>> PostService.IStorage.GetAttachmentsAsync(int postId)

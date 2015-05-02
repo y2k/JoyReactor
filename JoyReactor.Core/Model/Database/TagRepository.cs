@@ -1,13 +1,14 @@
-﻿using System.Threading.Tasks;
-using JoyReactor.Core.Model.DTO;
+﻿using JoyReactor.Core.Model.DTO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Database
 {
     class TagRepository : Repository
     {
-        public Task<Tag> GetAsync(string tagId)
+        public async Task<Tag> GetAsync(string tagId)
         {
-            return Connection.QueryFirstAsync<Tag>("SELECT * FROM tags WHERE TagId = ?", tagId);
+            return (await Connection.QueryAsync<Tag>("SELECT * FROM tags WHERE TagId = ?", tagId)).First();
         }
     }
 }
