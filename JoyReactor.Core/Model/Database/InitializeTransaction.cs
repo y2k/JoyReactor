@@ -18,7 +18,7 @@ namespace JoyReactor.Core.Model.Database
             int ver = await GetUserVesion(connection);
             if (ver == 0)
             {
-                OnCreate(connection);
+                await OnCreate(connection);
                 await SetUserVersion(connection, DatabaseVersion);
             }
             else if (ver < DatabaseVersion)
@@ -28,7 +28,7 @@ namespace JoyReactor.Core.Model.Database
             }
         }
 
-        async void OnCreate(AsyncSQLiteConnection db)
+        async Task OnCreate(AsyncSQLiteConnection db)
         {
             await new CreateTablesTransaction(db).Execute();
             await new CreateDefaultTagsTransaction(db).Execute();
