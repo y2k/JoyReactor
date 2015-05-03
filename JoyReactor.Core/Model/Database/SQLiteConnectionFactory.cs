@@ -3,6 +3,7 @@ using PCLStorage;
 using SQLite.Net;
 using SQLite.Net.Interop;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Database
@@ -18,10 +19,21 @@ namespace JoyReactor.Core.Model.Database
                     var path = PortablePath.Combine(FileSystem.Current.LocalStorage.Path, DatabaseName);
                     var platform = ServiceLocator.Current.GetInstance<ISQLitePlatform>();
                     var result = new AsyncSQLiteConnection(new SQLiteConnection(platform, path));
-                    // TODO: убрать блокировку потока
-                    Task.Run(() => new InitializeTransaction(result).Execute()).Wait();
+                    Initialize(new InitializeTransaction(result));
                     return result;
                 });
+
+        static void Initialize(InitializeTransaction result)
+        {
+            // TODO: убрать блокировку потока
+            var semaphore = new SemaphoreSlim(0);
+            Task.Run(async () =>
+            {
+                await result.Execute();
+                semaphore.Release();
+            });
+            semaphore.Wait();
+        }
 
         internal static AsyncSQLiteConnection Create()
         {
