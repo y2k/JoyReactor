@@ -2,8 +2,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Reactive.Linq;
-using System.Threading;
 using GalaSoft.MvvmLight;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
@@ -42,26 +40,13 @@ namespace JoyReactor.Core.ViewModels
         {
             scheduledTask = new TagCollectionModel()
                 .GetMainSubscriptions()
-                .SubscribeOnUi(tags =>
-                {
-                    Tags.ReplaceAll(tags.Select(s => new TagItemViewModel(s)).ToList());
-                    Tags.Insert(0, CreateFeaturedViewModel());
-                });
+                .SubscribeOnUi(tags => Tags.ReplaceAll(tags.Select(s => new TagItemViewModel(s)).ToList()));
         }
 
         public override void Cleanup()
         {
             base.Cleanup();
             scheduledTask?.Dispose();
-        }
-
-        private TagItemViewModel CreateFeaturedViewModel()
-        {
-            return new TagItemViewModel(new Tag
-            {
-                Title = "Featured",
-                TagId = ID.Factory.New(ID.IdConst.ReactorGood).SerializeToString()
-            });
         }
 
         public class TagItemViewModel : ViewModelBase

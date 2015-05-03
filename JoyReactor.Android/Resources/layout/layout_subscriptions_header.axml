@@ -5,23 +5,40 @@
     android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <TextView
-        android:gravity="center_horizontal"
-        android:drawableTop="@drawable/ic_featured"
-        android:drawablePadding="10dp"
-        android:textSize="14sp"
-        android:textColor="@color/text_primary"
-        android:text="@string/feed"
-        android:layout_marginRight="42dp"
-        android:layout_width="75dp"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:gravity="center_horizontal"
-        android:drawableTop="@drawable/ic_favorite"
-        android:drawablePadding="10dp"
-        android:textSize="14sp"
-        android:textColor="@color/primary"
-        android:text="@string/favorite"
-        android:layout_width="75dp"
-        android:layout_height="wrap_content" />
+    <FrameLayout
+        android:paddingRight="21dp"
+        android:clickable="true"
+        android:foreground="?android:attr/listChoiceBackgroundIndicator"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_gravity="right|center_vertical"
+            android:gravity="center_horizontal"
+            android:drawableTop="@drawable/ic_featured"
+            android:drawablePadding="10dp"
+            android:textSize="14sp"
+            android:textColor="@color/text_primary"
+            android:text="@string/feed"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
+    <FrameLayout
+        android:paddingLeft="21dp"
+        android:clickable="true"
+        android:foreground="?android:attr/listChoiceBackgroundIndicator"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_gravity="left|center_vertical"
+            android:gravity="center_horizontal"
+            android:drawableTop="@drawable/ic_favorite"
+            android:drawablePadding="10dp"
+            android:textSize="14sp"
+            android:textColor="@color/primary"
+            android:text="@string/favorite"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
 </LinearLayout>
