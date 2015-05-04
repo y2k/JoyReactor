@@ -21,7 +21,7 @@ namespace JoyReactor.Core.Model.Web
             {
                 handler.CookieContainer = new CookieContainer();
                 handler.UseCookies = true;
-                handler.AllowAutoRedirect = true;
+                handler.AllowAutoRedirect = false;
 
                 var req = new HttpRequestMessage { RequestUri = uri };
                 if (reqParams != null)
@@ -32,11 +32,20 @@ namespace JoyReactor.Core.Model.Web
                     client.DefaultRequestHeaders.UserAgent.ParseAdd(UserAgent);
                     client.DefaultRequestHeaders.Accept.ParseAdd(Accept);
 
-                    return new WebResponse
+                    try
                     {
-                        Data = await (await client.SendAsync(req)).Content.ReadAsStreamAsync(),
-                        Cookies = GetCookies(uri, handler),
-                    };
+                        var response = await client.SendAsync(req);
+                        var result = new WebResponse
+                        {
+                            Data = await response.Content.ReadAsStreamAsync(),
+                            Cookies = GetCookies(uri, response),
+                        };
+                        return result;
+                    }
+                    catch (Exception e)
+                    {
+                        throw e;
+                    }
                 }
             }
         }
@@ -61,7 +70,16 @@ namespace JoyReactor.Core.Model.Web
                     req.Headers.Add(s.Key, s.Value);
         }
 
-        Dictionary<string, string> GetCookies(Uri uri, HttpClientHandler handler)
+        IDictionary<string, string> GetCookies(Uri uri, HttpResponseMessage response)
+        {
+            return response.Headers
+                .Where(s => s.Key == "Set-Cookie")
+                .SelectMany(s => s.Value)
+                .Select(s => s.Split(';')[0])
+                .ToDictionary(s => s.Split('=')[0], s => s.Split('=')[1]);
+        }
+
+        IDictionary<string, string> GetCookies(Uri uri, HttpClientHandler handler)
         {
             var u = new Uri("http://" + (uri.Host.StartsWith("www.") ? "" : "www.") + uri.Host);
             return handler.CookieContainer.GetCookies(u).Cast<Cookie>().ToDictionary(s => s.Name, s => s.Value);
