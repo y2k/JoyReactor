@@ -36,6 +36,7 @@
     <Compile Include="Model\Database\CreateDefaultTagsTransaction.cs" />
     <Compile Include="Model\Database\CreateTablesTransaction.cs" />
     <Compile Include="Model\Database\InitializeTransaction.cs" />
+    <Compile Include="Model\Database\ProfileRepository.cs" />
     <Compile Include="Model\DTO\Comment.cs" />
     <Compile Include="Model\DTO\Attachment.cs" />
     <Compile Include="Model\DTO\MessageThreadItem.cs" />

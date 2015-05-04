@@ -32,12 +32,11 @@ namespace JoyReactor.Core.Model.Web
                     client.DefaultRequestHeaders.UserAgent.ParseAdd(UserAgent);
                     client.DefaultRequestHeaders.Accept.ParseAdd(Accept);
 
-                    var result = new WebResponse();
-                    var r = await client.SendAsync(req);
-                    result.Data = await r.Content.ReadAsStreamAsync();
-
-                    result.Cookies = GetCookies(uri, handler);
-                    return result;
+                    return new WebResponse
+                    {
+                        Data = await (await client.SendAsync(req)).Content.ReadAsStreamAsync(),
+                        Cookies = GetCookies(uri, handler),
+                    };
                 }
             }
         }
@@ -62,7 +61,7 @@ namespace JoyReactor.Core.Model.Web
                     req.Headers.Add(s.Key, s.Value);
         }
 
-        Dictionary<string,string> GetCookies(Uri uri, HttpClientHandler handler)
+        Dictionary<string, string> GetCookies(Uri uri, HttpClientHandler handler)
         {
             var u = new Uri("http://" + (uri.Host.StartsWith("www.") ? "" : "www.") + uri.Host);
             return handler.CookieContainer.GetCookies(u).Cast<Cookie>().ToDictionary(s => s.Name, s => s.Value);

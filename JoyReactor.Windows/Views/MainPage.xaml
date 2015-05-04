@@ -12,9 +12,14 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Button Padding="10"
-                Click="Button_Click"
-                Content="ActionBar" />
+        <StackPanel Orientation="Horizontal">
+            <Button Click="Button_Click"
+                    Padding="10"
+                    Content="ActionBar" />
+            <Button Content="Profile"
+                    Padding="10"
+                    Click="Button_Click_1" />
+        </StackPanel>
         <Grid Grid.Row="1">
             <Grid.DataContext>
                 <vm:FeedViewModel />

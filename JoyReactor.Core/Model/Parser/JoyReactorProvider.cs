@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Web;
@@ -46,7 +47,7 @@ namespace JoyReactor.Core.Model.Parser
             return new ProfileProvider().ComputeAsync();
         }
 
-        private class LoginProvider
+        class LoginProvider
         {
             IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
             IAuthStorage authStorage = ServiceLocator.Current.GetInstance<IAuthStorage>();
@@ -97,7 +98,7 @@ namespace JoyReactor.Core.Model.Parser
             }
         }
 
-        private class ProfileProvider
+        class ProfileProvider
         {
             IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
             IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
@@ -105,7 +106,7 @@ namespace JoyReactor.Core.Model.Parser
 
             public async Task ComputeAsync()
             {
-                var username = await authStorage.GetCurrentUserNameAsync();
+                var username = await GetCurrentUserNameAsync();
                 if (username == null)
                     throw new NotLogedException();
                 var url = new Uri("http://joyreactor.cc/user/" + Uri.EscapeDataString(username));
@@ -152,7 +153,13 @@ namespace JoyReactor.Core.Model.Parser
                 await storage.SaveNewOrUpdateProfileAsync(p);
             }
 
-            private static string UnescapeTagName(string tag)
+            async Task<string> GetCurrentUserNameAsync()
+            {
+                var profiles = await new ProfileRepository().GetAllAsync();
+                return profiles.FirstOrDefault()?.UserName;
+            }
+
+            static string UnescapeTagName(string tag)
             {
                 return tag
                     .UnescapeDataString()
@@ -195,6 +202,7 @@ namespace JoyReactor.Core.Model.Parser
 
         public interface IAuthStorage
         {
+            [Obsolete]
             Task<string> GetCurrentUserNameAsync();
 
             Task<IDictionary<string, string>> GetCookiesAsync();

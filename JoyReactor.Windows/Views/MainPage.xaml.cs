@@ -33,14 +33,24 @@ namespace JoyReactor.Windows.Views
             Messenger.Default.Unregister(this);
         }
 
-        private ID GetDefaultListId()
+        ID GetDefaultListId()
         {
             return ID.Factory.New(ID.IdConst.ReactorGood);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        void Button_Click(object sender, RoutedEventArgs e)
         {
-            LeftPanel.Visibility = LeftPanel.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+            LeftPanel.Visibility = InvertVisibility(LeftPanel.Visibility);
+        }
+
+        Visibility InvertVisibility(Visibility value)
+        {
+            return value == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(ProfilePage));
         }
     }
 }

@@ -1,17 +1,19 @@
-﻿using System;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using JoyReactor.Core.Model.Database;
+﻿using JoyReactor.Core.Model.Database;
+using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.ViewModels;
 using Microsoft.Practices.ServiceLocation;
-using JoyReactor.Core.Model.DTO;
+using System;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model
 {
     public class FeedService : FeedViewModel.IFeedService
     {
+        const int IgnoreResult = 0;
+
         internal static event EventHandler FeedChanged;
 
         IFeedRepository storage = ServiceLocator.Current.GetInstance<IFeedRepository>();
@@ -31,13 +33,10 @@ namespace JoyReactor.Core.Model
         public IObservable<PostCollectionState> Get()
         {
             return Observable
-				.FromAsync(() => GetPostsAsync(id))
-				.Merge(Observable.FromAsync(
-                    async () =>
-                    {
-                        await SyncPage(true);
-                        return await GetPostsAsync(id);
-                    }));
+                .Return(IgnoreResult)
+                .Merge(Observable.FromEventPattern(s => FeedChanged += s, s => FeedChanged -= s).Select(_ => IgnoreResult))
+                .Merge(Observable.FromAsync(() => SyncPage(true)).Select(_ => IgnoreResult))
+                .SelectMany(_ => Observable.FromAsync(() => GetPostsAsync(id)));
         }
 
         async Task<PostCollectionState> GetPostsAsync(ID id)
@@ -51,7 +50,7 @@ namespace JoyReactor.Core.Model
             result.Posts = tagPosts
                 .Where(s => s.Status != 0)
                 .Join(posts, s => s.PostId, s => s.Id, (t, p) => p)
-                .ToList();                
+                .ToList();
             result.NewItemsCount = tagPosts.Count(s => s.Status == 0 && s.IsPending);
             result.DividerPosition = tagPosts.Count(s => s.Status == TagPost.StatusActual);
 
