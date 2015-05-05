@@ -21,4 +21,5 @@
 	<string name="apply_caps">APPLY</string>
 	<string name="load_more_caps">LOAD MORE</string>
 	<string name="old_posts">old posts</string>
+	<string name="rating">Rating:</string>
 </resources>

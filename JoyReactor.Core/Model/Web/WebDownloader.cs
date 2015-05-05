@@ -38,7 +38,7 @@ namespace JoyReactor.Core.Model.Web
                         var result = new WebResponse
                         {
                             Data = await response.Content.ReadAsStreamAsync(),
-                            Cookies = GetCookies(uri, response),
+                            Cookies = GetCookies(response),
                         };
                         return result;
                     }
@@ -70,7 +70,7 @@ namespace JoyReactor.Core.Model.Web
                     req.Headers.Add(s.Key, s.Value);
         }
 
-        IDictionary<string, string> GetCookies(Uri uri, HttpResponseMessage response)
+        IDictionary<string, string> GetCookies(HttpResponseMessage response)
         {
             return response.Headers
                 .Where(s => s.Key == "Set-Cookie")

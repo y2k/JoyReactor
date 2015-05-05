@@ -4,10 +4,9 @@
     <color name="primary">#ffa726</color>
     <color name="primary_dark">#fb8c00</color>
     <color name="accent">#ffc400</color>
-    <color name="text_primary">#D9FFFFFF</color>
-    <color name="text_secondary">#D9000000</color>
+    <color name="text_primary">#fff</color>
+    <color name="text_secondary">#616161</color>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>

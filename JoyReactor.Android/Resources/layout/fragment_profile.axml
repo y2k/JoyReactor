@@ -7,22 +7,46 @@
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <JoyReactor.Android.Widget.WebImageView
-            android:id="@+id/avatar"
-            android:scaleType="centerCrop"
-            android:layout_width="100dp"
-            android:layout_height="100dp" />
+        <JoyReactor.Android.Widget.RoundBorderLayour
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <JoyReactor.Android.Widget.WebImageView
+                android:id="@+id/avatar"
+                android:scaleType="centerCrop"
+                android:layout_width="90dp"
+                android:layout_height="90dp" />
+        </JoyReactor.Android.Widget.RoundBorderLayour>
         <TextView
+            android:layout_marginTop="14dp"
             android:id="@+id/username"
+            android:textSize="18sp"
+            android:textColor="@color/text_secondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/rating"
+        <LinearLayout
+            android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_marginRight="8dp"
+                android:text="@string/rating"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/rating"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="32dp"
+            android:textColor="@color/text_primary"
+            android:background="@drawable/drawable_yellow_button"
             android:text="@string/logout"
             android:id="@+id/logout" />
     </LinearLayout>
