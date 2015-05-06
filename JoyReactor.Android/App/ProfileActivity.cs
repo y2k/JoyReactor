@@ -62,6 +62,14 @@ namespace JoyReactor.Android.App
                 var avatar = view.FindViewById<WebImageView>(Resource.Id.avatar);
                 viewmodel.SetBinding(() => viewmodel.Avatar, avatar, () => avatar.ImageSource);
 
+                var stars = view.FindViewById<RatingBar>(Resource.Id.stars);
+                viewmodel.SetBinding(() => viewmodel.Stars, stars, () => stars.Rating);
+
+                var nextStarProgress = view.FindViewById<ProgressBar>(Resource.Id.nextStarProgress);
+                viewmodel
+                    .SetBinding(() => viewmodel.NextStarProgress, nextStarProgress, () => nextStarProgress.Progress)
+                    .ConvertSourceToTarget(s => (int)(100 * s));
+
                 view.FindViewById(Resource.Id.logout).SetCommand("Click", viewmodel.LogoutCommand);
                 return view;
             }

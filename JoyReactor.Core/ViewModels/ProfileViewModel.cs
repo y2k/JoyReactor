@@ -6,76 +6,101 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.ViewModels
 {
-	public class ProfileViewModel : ViewModelBase
-	{
-		#region Properties
+    public class ProfileViewModel : ViewModelBase
+    {
+        #region Properties
 
-		bool _isLoading;
+        bool _isLoading;
 
-		public bool IsLoading {
-			get { return _isLoading; }
-			set { Set (ref _isLoading, value); }
-		}
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set { Set(ref _isLoading, value); }
+        }
 
-		string _avatar;
+        string _avatar;
 
-		public string Avatar {
-			get { return _avatar; }
-			set { Set (ref _avatar, value); }
-		}
+        public string Avatar
+        {
+            get { return _avatar; }
+            set { Set(ref _avatar, value); }
+        }
 
-		string _username;
+        string _username;
 
-		public string UserName {
-			get { return _username; }
-			set { Set (ref _username, value); }
-		}
+        public string UserName
+        {
+            get { return _username; }
+            set { Set(ref _username, value); }
+        }
 
-		float _rating;
+        float _rating;
 
-		public float Rating {
-			get { return _rating; }
-			set { Set (ref _rating, value); }
-		}
+        public float Rating
+        {
+            get { return _rating; }
+            set { Set(ref _rating, value); }
+        }
 
-		#endregion
+        int _stars;
 
-		public RelayCommand LogoutCommand { get; set; }
+        public int Stars
+        {
+            get { return _stars; }
+            set { Set(ref _stars, value); }
+        }
 
-		IProfileService service = ServiceLocator.Current.GetInstance<IProfileService> ();
+        float _nextStarProgress;
 
-		public ProfileViewModel ()
-		{
-			LogoutCommand = new FixRelayCommand (Logout);
-		}
+        public float NextStarProgress
+        {
+            get { return _nextStarProgress; }
+            set { Set(ref _nextStarProgress, value); }
+        }
 
-		public async Task Initialize ()
-		{
-			IsLoading = true;
-			try {
-				var profile = await service.GetMyProfile ();
-				UserName = profile.UserName;
+        #endregion
+
+        public RelayCommand LogoutCommand { get; set; }
+
+        IProfileService service = ServiceLocator.Current.GetInstance<IProfileService>();
+
+        public ProfileViewModel()
+        {
+            LogoutCommand = new FixRelayCommand(Logout);
+        }
+
+        public async Task Initialize()
+        {
+            IsLoading = true;
+            try
+            {
+                var profile = await service.GetMyProfile();
+                UserName = profile.UserName;
                 Avatar = profile.UserImage;
-				Rating = profile.Rating;
-			} catch (NotLogedException) {
-				NavigateToLogin ();
-			}
-			IsLoading = false;
-		}
+                Rating = profile.Rating;
+                Stars = profile.Stars;
+                NextStarProgress = profile.NextStarProgress;
+            }
+            catch (NotLogedException)
+            {
+                NavigateToLogin();
+            }
+            IsLoading = false;
+        }
 
-		async void Logout ()
-		{
-			await service.Logout ();
-			NavigateToLogin ();
-		}
+        async void Logout()
+        {
+            await service.Logout();
+            NavigateToLogin();
+        }
 
-		void NavigateToLogin ()
-		{
-			MessengerInstance.Send (new NavigateToLoginMessage ());
-		}
+        void NavigateToLogin()
+        {
+            MessengerInstance.Send(new NavigateToLoginMessage());
+        }
 
-		public class NavigateToLoginMessage
-		{
-		}
-	}
+        public class NavigateToLoginMessage
+        {
+        }
+    }
 }

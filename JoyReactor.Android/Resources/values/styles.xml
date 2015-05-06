@@ -6,6 +6,7 @@
     <color name="accent">#ffc400</color>
     <color name="text_primary">#fff</color>
     <color name="text_secondary">#616161</color>
+    <color name="window_background">#fafafa</color>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/primary</item>
@@ -14,6 +15,7 @@
         <item name="android:textColorPrimary">@color/text_primary</item>
         <item name="android:textColor">@color/text_secondary</item>
         <item name="android:navigationBarColor">@color/primary_dark</item>
+        <item name="android:windowBackground">@color/window_background</item>
     </style>
 
 </resources>

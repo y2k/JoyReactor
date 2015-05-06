@@ -176,6 +176,7 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_star_selected.png" />
     <AndroidResource Include="Resources\drawable\drawable_star.xml" />
     <AndroidResource Include="Resources\drawable\drawable_progress.xml" />
+    <AndroidResource Include="Resources\drawable\edittext_background.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>

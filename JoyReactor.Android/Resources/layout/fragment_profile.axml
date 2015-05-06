@@ -56,7 +56,6 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="17dp"
-                android:rating="2.8"
                 android:numStars="10"
                 android:progressDrawable="@drawable/drawable_star" />
         </FrameLayout>
@@ -80,13 +79,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <ProgressBar
-                android:id="@+id/starProgress"
+                android:id="@+id/nextStarProgress"
                 android:layout_marginTop="12dp"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="21dp"
                 android:max="100"
-                android:progress="30"
                 android:progressDrawable="@drawable/drawable_progress" />
         </LinearLayout>
         <View
@@ -99,11 +97,11 @@
             android:layout_marginTop="32dp"
             android:textColor="@color/text_primary"
             android:background="@drawable/drawable_yellow_button"
+            android:textSize="18sp"
             android:text="@string/logout"
             android:id="@+id/logout" />
     </LinearLayout>
     <FrameLayout
-        android:visibility="gone"
         android:id="@+id/progress"
         android:background="@android:color/white"
         android:layout_width="match_parent"
