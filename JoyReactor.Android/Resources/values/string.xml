@@ -22,4 +22,5 @@
 	<string name="load_more_caps">LOAD MORE</string>
 	<string name="old_posts">old posts</string>
 	<string name="rating">Rating:</string>
+	<string name="star_progress">New star progress:</string>
 </resources>

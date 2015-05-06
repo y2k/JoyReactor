@@ -172,6 +172,10 @@
     <AndroidResource Include="Resources\layout\layout_reload_button.axml" />
     <AndroidResource Include="Resources\layout\item_feed.axml" />
     <AndroidResource Include="Resources\layout\item_post_divider.axml" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_star.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_star_selected.png" />
+    <AndroidResource Include="Resources\drawable\drawable_star.xml" />
+    <AndroidResource Include="Resources\drawable\drawable_progress.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
