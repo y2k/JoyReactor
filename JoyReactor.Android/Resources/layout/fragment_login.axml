@@ -41,7 +41,7 @@
             android:layout_marginTop="16dp"
             android:textColor="@color/text_primary"
             android:background="@drawable/drawable_yellow_button" />
-        <TextView
+    <!--        <TextView
             android:id="@+id/error"
             android:background="#f00"
             android:textColor="#fff"
@@ -52,7 +52,7 @@
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/login_error" />
+            android:text="@string/login_error" />-->
     </LinearLayout>
     <FrameLayout
         android:visibility="gone"

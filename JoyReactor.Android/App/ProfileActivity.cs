@@ -79,13 +79,15 @@ namespace JoyReactor.Android.App
 		{
 			LoginViewModel viewmodel;
 			Binding progressBinding;
-			Binding errorBinding;
 
 			public override void OnCreate(Bundle savedInstanceState)
 			{
 				base.OnCreate(savedInstanceState);
 				RetainInstance = true;
 				viewmodel = new LoginViewModel();
+
+				MessengerInstance.Register<LoginViewModel.LoginFailMessage>(
+					this, _ => Toast.MakeText(Activity, Resource.String.login_error, ToastLength.Long).Show());
 			}
 
 			public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -101,11 +103,6 @@ namespace JoyReactor.Android.App
 				var progress = view.FindViewById(Resource.Id.progress);
 				progressBinding = viewmodel
 					.SetBinding(() => viewmodel.IsBusy, progress, () => progress.Visibility)
-					.ConvertSourceToTarget(s => s ? ViewStates.Visible : ViewStates.Gone);
-
-				var error = view.FindViewById(Resource.Id.error);
-				errorBinding = viewmodel
-					.SetBinding(() => viewmodel.HasError, error, () => error.Visibility)
 					.ConvertSourceToTarget(s => s ? ViewStates.Visible : ViewStates.Gone);
 
 				view.FindViewById(Resource.Id.login).SetCommand("Click", viewmodel.LoginCommand);
