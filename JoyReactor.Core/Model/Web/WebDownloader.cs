@@ -79,12 +79,6 @@ namespace JoyReactor.Core.Model.Web
                 .ToDictionary(s => s.Split('=')[0], s => s.Split('=')[1]);
         }
 
-        IDictionary<string, string> GetCookies(Uri uri, HttpClientHandler handler)
-        {
-            var u = new Uri("http://" + (uri.Host.StartsWith("www.") ? "" : "www.") + uri.Host);
-            return handler.CookieContainer.GetCookies(u).Cast<Cookie>().ToDictionary(s => s.Name, s => s.Value);
-        }
-
         class DefaultProxy : IWebProxy
         {
             public ICredentials Credentials { get; set; } = new NetworkCredential("joyreactor-dev", "4ECB7AAA-4696-4392-84B7-58EBB95A4F51");

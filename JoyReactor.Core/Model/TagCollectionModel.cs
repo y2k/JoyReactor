@@ -22,12 +22,6 @@ namespace JoyReactor.Core.Model
         AsyncSQLiteConnection connection = ServiceLocator.Current.GetInstance<AsyncSQLiteConnection>();
         Storage storage = ServiceLocator.Current.GetInstance<Storage>();
 
-        [Obsolete]
-        public Task<List<Tag>> GetMainSubscriptionsAsync()
-        {
-            return DoGetSubscriptionsAsync();
-        }
-
         public IObservable<List<Tag>> GetMainSubscriptions()
         {
             var first = Observable.FromAsync(DoGetSubscriptionsAsync);

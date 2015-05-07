@@ -1,13 +1,12 @@
-﻿using System;
+﻿using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Parser;
+using JoyReactor.Core.ViewModels;
+using Microsoft.Practices.ServiceLocation;
+using System;
 using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using JoyReactor.Core.Model;
-using JoyReactor.Core.Model.DTO;
-using JoyReactor.Core.Model.Parser;
-using JoyReactor.Core.ViewModels;
-using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model
 {
