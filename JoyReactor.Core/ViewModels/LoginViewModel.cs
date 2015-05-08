@@ -63,7 +63,7 @@ namespace JoyReactor.Core.ViewModels
 				await service.Login(Username, Password);
 				MessengerInstance.Send(new NavigateToProfileMessage());
 			}
-			catch
+            catch (Exception e)
 			{
 				HasError = true;
 				MessengerInstance.Send(new LoginFailMessage());

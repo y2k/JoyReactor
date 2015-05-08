@@ -21,7 +21,6 @@ namespace JoyReactor.Core.Model.Web
             {
                 handler.CookieContainer = new CookieContainer();
                 handler.UseCookies = true;
-                handler.AllowAutoRedirect = false;
 
                 var req = new HttpRequestMessage { RequestUri = uri };
                 if (reqParams != null)
@@ -68,6 +67,8 @@ namespace JoyReactor.Core.Model.Web
             if (reqParams.AdditionHeaders != null)
                 foreach (var s in reqParams.AdditionHeaders)
                     req.Headers.Add(s.Key, s.Value);
+
+            handler.AllowAutoRedirect = !reqParams.NotFollowRedirects;
         }
 
         IDictionary<string, string> GetCookies(HttpResponseMessage response)

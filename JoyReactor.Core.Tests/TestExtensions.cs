@@ -1,26 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using Autofac;
 using GalaSoft.MvvmLight.Messaging;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.Tests.Helpers;
 using Microsoft.Practices.ServiceLocation;
-using SQLite.Net;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Threading.Tasks;
-using Autofac;
-using JoyReactor.Core.Model.Messages;
-using JoyReactor.Core.Model.Web;
-using JoyReactor.Core.Tests.Xam.Pluging.Settings;
-using Refractored.Xam.Settings.Abstractions;
-using SQLite.Net;
-using XamarinCommons.Image;
 using Moq;
+using SQLite.Net;
 
 namespace JoyReactor.Core.Tests
 {

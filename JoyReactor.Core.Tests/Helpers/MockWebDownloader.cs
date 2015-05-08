@@ -56,6 +56,8 @@ namespace JoyReactor.Core.Tests.Helpers
             ["http://joyreactor.cc/user/_y2k/favorite"] = "joyreactor_user_y2k_favorite.html",
 
             ["http://joyreactor.cc/user/eksFox_X"] = "joyreactor_user_eksFox_X.html",
+
+            ["http://joyreactor.cc/post/1962130"] = "joyreactor_post_1962130.html"
         };
 
         IDictionary<string, string> CookieResultsForPosts = new Dictionary<string, string>()

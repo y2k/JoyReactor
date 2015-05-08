@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Database
 {
-    class AsyncSQLiteConnection
+    public class AsyncSQLiteConnection
     {
         SemaphoreSlim semaphore = new SemaphoreSlim(1);
         SQLiteConnection connection;

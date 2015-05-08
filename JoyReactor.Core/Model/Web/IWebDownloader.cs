@@ -26,6 +26,7 @@ namespace JoyReactor.Core.Model.Web
 		public IDictionary<string, string> Form { get; set; }
 		public IDictionary<string, string> Cookies { get; set; }
         public IDictionary<string, string> AdditionHeaders { get; set; }
+        public bool NotFollowRedirects { get; set; }
 
         public Uri Referer { get; set; }
         public bool UseForeignProxy { get; set; }

@@ -54,7 +54,8 @@ namespace JoyReactor.Core.Model.Parser
 
             var TITLE = new Regex("<div class=\"post_content\"><span>([^<]*)</span>", RegexOptions.Singleline);
             p.Title = TITLE.FirstString(htmlPage);
-            if (string.IsNullOrWhiteSpace(p.Title)) p.Title = null;
+            if (string.IsNullOrWhiteSpace(p.Title))
+                p.Title = null;
 
             var CREATED = new Regex("data\\-time=\"(\\d+)\"");
             p.Created = CREATED.FirstLong(htmlPage) * 1000L;
@@ -211,7 +212,7 @@ namespace JoyReactor.Core.Model.Parser
                 int i = html.IndexOf('<', position);
                 int endTag = html.IndexOf('>', i + 1);
 
-                var SINGLE_TAGS = new string[] { "<br>", "<param " };
+                var SINGLE_TAGS = new [] { "<br>", "<param " };
                 if (SINGLE_TAGS.Any(s => s == html.Substring(i, s.Length)))
                 {
                     position = html.IndexOf('>', i);
@@ -255,7 +256,7 @@ namespace JoyReactor.Core.Model.Parser
 
             var COMMENT_IMAGES = new Regex("<img src=\"(http://[^\"]+/pics/comment/)[^\"]+(\\-\\d+\\.[^\"]+)");
             var m = COMMENT_IMAGES.Match(s);
-            var attchs = m.Success ? new string[] { m.Groups[1].Value + m.Groups[2].Value } : new string[0];
+            var attchs = m.Success ? new [] { m.Groups[1].Value + m.Groups[2].Value } : new string[0];
 
             await storage.SaveNewPostCommentAsync(postId, parentId, c, attchs);
 

@@ -61,7 +61,7 @@ namespace JoyReactor.Core.Tests
 		{
 			TestExtensions.BeginInjection ().Add<JoyReactorProvider.IStorage> ().Commit ();
 			var listStorage = Mock.Of<JoyReactorProvider.IListStorage> ();
-			await parser.LoadTagAndPostListAsync (ID.Factory.NewFavoriteForUser ("_y2k"), listStorage);
+            await parser.LoadTagAndPostListAsync (ID.Factory.NewFavoriteForUser ("_y2k"), listStorage, true);
 			Mock.Get (listStorage).Verify (s => s.AddPost (It.IsAny<Post> ()), Times.Exactly (3));
 		}
 
@@ -69,7 +69,7 @@ namespace JoyReactor.Core.Tests
 		public async void TestFeaturedThreePages ()
 		{
 			var id = ID.Factory.New (ID.IdConst.ReactorGood);
-			await parser.LoadTagAndPostListAsync (id, listStorage);
+            await parser.LoadTagAndPostListAsync (id, listStorage, true);
 
 			Mock.Get (mockStorage)
 				.Verify (s => s.UpdateTagInformationAsync (ID.Factory.New (ID.IdConst.ReactorGood), null, 4876, true));
@@ -79,7 +79,7 @@ namespace JoyReactor.Core.Tests
 			Mock.Get (mockStorage)
 				.Setup (s => s.GetNextPageForTagAsync (id)).Returns (Task.FromResult (4876));
 
-			await parser.LoadTagAndPostListAsync (id, listStorage);
+            await parser.LoadTagAndPostListAsync (id, listStorage, true);
 
 			Mock.Get (mockStorage)
 				.Verify (s => s.UpdateTagInformationAsync (ID.Factory.New (ID.IdConst.ReactorGood), null, 4875, true));
@@ -89,7 +89,7 @@ namespace JoyReactor.Core.Tests
 			Mock.Get (mockStorage)
 				.Setup (s => s.GetNextPageForTagAsync (id)).Returns (Task.FromResult (4875));
 
-			await parser.LoadTagAndPostListAsync (id, listStorage);
+            await parser.LoadTagAndPostListAsync (id, listStorage, true);
 
 			Mock.Get (mockStorage)
 				.Verify (s => s.UpdateTagInformationAsync (ID.Factory.New (ID.IdConst.ReactorGood), null, 4874, true));

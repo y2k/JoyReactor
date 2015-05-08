@@ -11,6 +11,7 @@ using Refractored.Xam.Settings.Abstractions;
 using SQLite.Net;
 using XamarinCommons.Image;
 using JoyReactor.Core.Model.Parser;
+using JoyReactor.Core.Model.Database;
 
 namespace JoyReactor.Core.Tests.Helpers
 {
@@ -18,16 +19,23 @@ namespace JoyReactor.Core.Tests.Helpers
     {
         Action<ContainerBuilder> builderCallback;
 
-        public TestModule() { }
+        public TestModule()
+        {
+        }
 
-        public TestModule(Action<ContainerBuilder> builderCallback) {
+        public TestModule(Action<ContainerBuilder> builderCallback)
+        {
             this.builderCallback = builderCallback; 
         }
 
         protected override void Load(ContainerBuilder b)
         {
+            //            b.RegisterInstance(MockSQLiteConnection.Create()).As<SQLiteConnection>();
+            var connection = MockSQLiteConnection.Create();
+            b.RegisterInstance(connection).As<SQLiteConnection>();
+            b.RegisterInstance(new AsyncSQLiteConnection(connection)).As<AsyncSQLiteConnection>();
+
             b.RegisterType<MockWebDownloader>().As<IWebDownloader>().SingleInstance();
-            b.RegisterInstance(MockSQLiteConnection.Create()).As<SQLiteConnection>();
             b.RegisterInstance(new MockSettings()).As<ISettings>();
 
             b.RegisterType<StubImageDecoder>().As<ImageDecoder>();

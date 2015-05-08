@@ -1,10 +1,10 @@
-﻿using HtmlAgilityPack;
-using JoyReactor.Core.Model.Web;
-using Microsoft.Practices.ServiceLocation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using HtmlAgilityPack;
+using JoyReactor.Core.Model.Web;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Parser
 {
@@ -31,6 +31,7 @@ namespace JoyReactor.Core.Model.Parser
                 new Uri("http://joyreactor.cc/login"),
                 new RequestParams
                 {
+                    NotFollowRedirects = true,
                     Cookies = loginPage.Cookies,
                     Referer = new Uri("http://joyreactor.cc/login"),
                     Form = new Dictionary<string, string>
@@ -42,7 +43,7 @@ namespace JoyReactor.Core.Model.Parser
                     }
                 });
 
-            if (!hs.ContainsKey("joyreactor"))
+            if (!hs.ContainsKey("joyreactor_sess"))
                 throw new Exception();
 
             await authStorage.SaveCookieToDatabaseAsync(username, hs);
