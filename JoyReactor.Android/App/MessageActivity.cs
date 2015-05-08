@@ -19,10 +19,10 @@ namespace JoyReactor.Android.App
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_messages);
 
-            var panel = FindViewById<SlidingPaneLayout>(Resource.Id.slidePanel); 
-            if (savedInstanceState == null)
-                panel.OpenPane();
-            MessengerInstance.Register<MessagesViewModel.SelectThreadMessage>(this, _ => panel.ClosePane());
+            var panel = FindViewById<DrawerLayout>(Resource.Id.slidePanel); 
+//            if (savedInstanceState == null)
+//                panel.OpenPane();
+//            MessengerInstance.Register<MessagesViewModel.SelectThreadMessage>(this, _ => panel.ClosePane());
         }
 
         #region Threads

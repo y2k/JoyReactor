@@ -1,18 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:padding="5dp"
-    android:layout_height="fill_parent">
+    android:paddingRight="11dp"
+    android:paddingBottom="4dp"
+    android:paddingTop="4dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <JoyReactor.Android.Widget.RoundBorderLayour
+        android:layout_marginLeft="9dp"
+        android:layout_marginTop="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <JoyReactor.Android.Widget.WebImageView
+            android:id="@+id/avatar"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:scaleType="centerCrop" />
+    </JoyReactor.Android.Widget.RoundBorderLayour>
     <TextView
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_width="match_parent"
+        android:layout_marginLeft="54dp"
+        android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/username"
-        android:layout_marginBottom="5dp" />
+        android:textStyle="bold"
+        android:textSize="12sp"
+        android:id="@+id/username" />
     <TextView
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_width="match_parent"
+        android:layout_below="@id/username"
+        android:layout_marginLeft="54dp"
+        android:layout_marginTop="2dp"
+        android:textSize="12sp"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/lastMessage" />
-</LinearLayout>
+    <TextView
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/lastMessage"
+        android:layout_marginTop="4dp"
+        android:textSize="12sp"
+        android:text="2 часа назад"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/time" />
+</RelativeLayout>
