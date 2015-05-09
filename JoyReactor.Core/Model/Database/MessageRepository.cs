@@ -1,10 +1,8 @@
-﻿using JoyReactor.Core.Model.DTO;
-using JoyReactor.Core.Model.Messages;
-using Microsoft.Practices.ServiceLocation;
-using SQLite.Net;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Messages;
 using RawMessage = JoyReactor.Core.Model.Messages.MessageFetcher.RawMessage;
 
 namespace JoyReactor.Core.Model.Database
@@ -19,6 +17,7 @@ namespace JoyReactor.Core.Model.Database
                 " t.Id AS Id, " +
                 " t.UserName AS UserName, " +
                 " t.UserImage AS UserImage, " +
+                " m.Created AS LastMessageTime, " +
                 " m.Message AS LastMessage " +
                 "FROM message_threads t " +
                 "LEFT JOIN messages m ON t.Id = m.ThreadId " +

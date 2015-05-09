@@ -39,7 +39,6 @@
         android:layout_below="@id/lastMessage"
         android:layout_marginTop="4dp"
         android:textSize="12sp"
-        android:text="2 часа назад"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/time" />

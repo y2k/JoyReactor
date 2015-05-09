@@ -8,6 +8,8 @@ using GalaSoft.MvvmLight.Helpers;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.ViewModels;
+using JoyReactor.Core.Helpers;
+using Humanizer;
 
 namespace JoyReactor.Android.App
 {
@@ -57,6 +59,7 @@ namespace JoyReactor.Android.App
                         v = v ?? View.Inflate(Activity, Resource.Layout.item_message_thread, null);
                         v.FindViewById<TextView>(Resource.Id.username).Text = s.UserName;
                         v.FindViewById<TextView>(Resource.Id.lastMessage).Text = s.LastMessage;
+                        v.FindViewById<TextView>(Resource.Id.time).Text = s.LastMessageTime.Humanize();
                         return v;
                     },
                 };
