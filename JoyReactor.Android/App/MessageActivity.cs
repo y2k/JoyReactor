@@ -1,15 +1,14 @@
-﻿using System.Collections.ObjectModel;
-using Android.App;
+﻿using Android.App;
 using Android.OS;
 using Android.Support.V4.Widget;
 using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
+using Humanizer;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.ViewModels;
-using JoyReactor.Core.Helpers;
-using Humanizer;
+using System.Collections.ObjectModel;
 
 namespace JoyReactor.Android.App
 {
@@ -22,6 +21,7 @@ namespace JoyReactor.Android.App
             SetContentView(Resource.Layout.activity_messages);
 
             var panel = FindViewById<DrawerLayout>(Resource.Id.slidePanel); 
+// TODO:
 //            if (savedInstanceState == null)
 //                panel.OpenPane();
 //            MessengerInstance.Register<MessagesViewModel.SelectThreadMessage>(this, _ => panel.ClosePane());
@@ -64,9 +64,10 @@ namespace JoyReactor.Android.App
                     },
                 };
                 var progress = view.FindViewById(Resource.Id.progress);
-                viewmodel
+                var binding = viewmodel
 					.SetBinding(() => viewmodel.IsBusy, progress, () => progress.Visibility)
 					.ConvertSourceToTarget(s => s ? ViewStates.Visible : ViewStates.Gone);
+                bindings.Add(binding);
                 return view;
             }
         }
@@ -97,8 +98,17 @@ namespace JoyReactor.Android.App
                 var view = inflater.Inflate(Resource.Layout.fragment_messages, null);
                 var list = view.FindViewById<ListView>(Resource.Id.list);
                 list.Adapter = new MessageAdapter(viewmodel.Messages);
+
                 var newMessage = view.FindViewById<EditText>(Resource.Id.newMessage);
-                viewmodel.SetBinding(() => viewmodel.NewMessage, newMessage, () => newMessage.Text, BindingMode.TwoWay);
+                Binding binding = viewmodel.SetBinding(() => viewmodel.NewMessage, newMessage, () => newMessage.Text, BindingMode.TwoWay);
+                bindings.Add(binding);
+
+                var progress = view.FindViewById(Resource.Id.progress);
+                binding = viewmodel
+                    .SetBinding(() => viewmodel.IsBusy, progress, () => progress.Visibility)
+                    .ConvertSourceToTarget(s => s ? ViewStates.Visible : ViewStates.Gone);
+                bindings.Add(binding);
+
                 view.FindViewById(Resource.Id.createMessage).SetCommand("Click", viewmodel.CreateMessageCommand);
                 return view;
             }
@@ -124,7 +134,7 @@ namespace JoyReactor.Android.App
                         convertView = CreateView(position);
                     var s = dataSource[position];
                     convertView.FindViewById<TextView>(Resource.Id.message).Text = s.Message;
-                    convertView.FindViewById<TextView>(Resource.Id.created).Text = s.Created.ToLongDateString() + " " + s.Created.ToLongTimeString();
+                    convertView.FindViewById<TextView>(Resource.Id.created).Text = s.Created.Humanize();
                     return convertView;
                 }
 

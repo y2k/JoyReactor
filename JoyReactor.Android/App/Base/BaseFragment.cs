@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Android.OS;
+﻿using Android.OS;
 using Android.Support.V4.App;
+using GalaSoft.MvvmLight.Helpers;
 using GalaSoft.MvvmLight.Messaging;
+using System;
+using System.Collections.Generic;
 using Messenger = GalaSoft.MvvmLight.Messaging.Messenger;
 
 namespace JoyReactor.Android.App.Base
@@ -13,6 +14,8 @@ namespace JoyReactor.Android.App.Base
         public const string Arg2 = "arg2";
         public const string Arg3 = "arg3";
         public const string Arg4 = "arg4";
+
+        protected List<Binding> bindings = new List<Binding>();
 
         List<Action> onResumeEvents = new List<Action>();
         List<Action> onPauseEvents = new List<Action>();

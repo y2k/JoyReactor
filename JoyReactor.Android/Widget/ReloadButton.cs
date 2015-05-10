@@ -14,7 +14,7 @@ namespace JoyReactor.Android.Widget
 		public ReloadButton (Context context, IAttributeSet attrs) : base (context, attrs)
 		{
 			View.Inflate(context, Resource.Layout.layout_reload_button, this);
-			FindViewById (Resource.Id.innerReloadButton).Click += (sender, e) => Command?.Execute(null);
+			FindViewById (Resource.Id.innerReloadButton).Click += (sender, e) => Command.Execute(null);
 		}
 	}
 }

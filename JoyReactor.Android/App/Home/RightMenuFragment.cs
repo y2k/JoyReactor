@@ -26,7 +26,8 @@ namespace JoyReactor.Android.App.Home
 
         void HandleCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            adapter?.NotifyDataSetChanged();
+			if (adapter != null)
+            	adapter.NotifyDataSetChanged();
         }
 
         public override void OnActivityCreated(Bundle savedInstanceState)

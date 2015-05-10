@@ -21,9 +21,9 @@ namespace JoyReactor.Android.App
 			if (bundle == null)
 				SetRootFragment(new ProfileFragment());
 
-			Messenger.Default.Register<LoginViewModel.NavigateToProfileMessage>(
+            MessengerInstance.Register<LoginViewModel.NavigateToProfileMessage>(
 				this, m => SetRootFragment(new ProfileFragment()));
-			Messenger.Default.Register<ProfileViewModel.NavigateToLoginMessage>(
+            MessengerInstance.Register<ProfileViewModel.NavigateToLoginMessage>(
 				this, m => SetRootFragment(new LoginFragment()));
 		}
 
