@@ -24,4 +24,5 @@
 	<string name="rating">Rating:</string>
 	<string name="star_progress">New star progress:</string>
 	<string name="login_error">Can\'t login. Try later.</string>
+	<string name="your_new_message_here">Your new message here…</string>
 </resources>

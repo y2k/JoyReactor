@@ -7,28 +7,46 @@
         android:focusableInTouchMode="true"
         android:layout_width="0px"
         android:layout_height="0px" />
-    <Button
-        android:text="@android:string/ok"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:id="@+id/createMessage"
-        android:layout_alignParentBottom="true" />
-    <EditText
-        android:hint="Your new message"
-        android:id="@+id/newMessage"
+    <LinearLayout
+        android:id="@+id/inputPanel"
+        android:background="@android:color/white"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/createMessage"
-        android:layout_alignBaseline="@id/createMessage"
-        android:inputType="textMultiLine" />
+        android:layout_height="wrap_content">
+        <EditText
+            android:paddingLeft="20dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingRight="8dp"
+            android:background="@android:color/transparent"
+            android:hint="@string/your_new_message_here"
+            android:textColorHint="#bdbdbd"
+            android:textColor="@color/text_secondary"
+            android:id="@+id/newMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="48dp"
+            android:inputType="textMultiLine" />
+        <ImageButton
+            android:src="@drawable/ic_send_grey600_24dp"
+            android:background="?android:listChoiceBackgroundIndicator"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:id="@+id/createMessage" />
+    </LinearLayout>
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/list"
         android:divider="@null"
         android:dividerHeight="0dp"
-        android:layout_above="@id/createMessage" />
+        android:layout_above="@id/inputPanel" />
+    <View
+        android:layout_alignTop="@id/inputPanel"
+        android:background="#e0e0e0"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

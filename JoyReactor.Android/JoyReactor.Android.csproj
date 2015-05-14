@@ -182,6 +182,7 @@
     <AndroidResource Include="Resources\drawable\drawable_progress.xml" />
     <AndroidResource Include="Resources\drawable\edittext_background.xml" />
     <AndroidResource Include="Resources\drawable\outbox_message_background.xml" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_send_grey600_24dp.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup />
@@ -190,5 +191,8 @@
       <Project>{E205F32E-24F2-4B73-B9F1-C474813D605B}</Project>
       <Name>JoyReactor.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\drawable-xxxhdpi\" />
   </ItemGroup>
 </Project>
