@@ -135,15 +135,29 @@ namespace JoyReactor.Android.App
                     var s = dataSource[position];
                     convertView.FindViewById<TextView>(Resource.Id.message).Text = s.Message;
                     convertView.FindViewById<TextView>(Resource.Id.created).Text = s.Created.Humanize();
+
+                    string name;
+                    if (IsInboxItem(position)) {
+                        name = position > 0 && IsInboxItem(position - 1) ? "inbox" : "inbox_first";
+                    } else {
+                        name = position > 0 && !IsInboxItem(position - 1) ? "outbox" : "outbox_first";
+                    }
+                    convertView.FindViewById(Resource.Id.content).Background = VectorDrawable.NewVectorDrawable(name);
+
                     return convertView;
                 }
 
                 View CreateView(int position)
                 {
-                    var resId = GetItemViewType(position) == 0 
+                    var resId = IsInboxItem(position) 
                         ? Resource.Layout.item_message_inbox 
                         : Resource.Layout.item_message_outbox;
                     return View.Inflate(App.Instance, resId, null);
+                }
+
+                bool IsInboxItem(int position)
+                {
+                    return GetItemViewType(position) == 0;
                 }
 
                 public override int Count

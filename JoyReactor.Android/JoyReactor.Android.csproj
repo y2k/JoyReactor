@@ -130,6 +130,7 @@
     <Compile Include="App\MessageActivity.cs" />
     <Compile Include="App\SettingsActivity.cs" />
     <Compile Include="Widget\ReloadButton.cs" />
+    <Compile Include="App\Base\VectorDrawable.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -189,10 +190,5 @@
       <Project>{E205F32E-24F2-4B73-B9F1-C474813D605B}</Project>
       <Name>JoyReactor.Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable\inbox_message_background.xml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
   </ItemGroup>
 </Project>
