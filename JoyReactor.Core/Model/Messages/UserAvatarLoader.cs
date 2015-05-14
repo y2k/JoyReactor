@@ -24,7 +24,7 @@ namespace JoyReactor.Core.Model.Messages
             foreach (var message in messages)
             {
                 var avatar = cache.Get(message.UserName);
-                if (avatar == null)
+                if (string.IsNullOrEmpty(avatar))
                 {
                     avatar = await GetFromWeb(message.UserName);
                     cache.Put(message.UserName, avatar);

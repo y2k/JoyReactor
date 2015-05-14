@@ -1,14 +1,14 @@
-﻿using Android.App;
+﻿using System.Collections.ObjectModel;
+using Android.App;
 using Android.OS;
-using Android.Support.V4.Widget;
 using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
 using Humanizer;
 using JoyReactor.Android.App.Base;
+using JoyReactor.Android.Widget;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.ViewModels;
-using System.Collections.ObjectModel;
 
 namespace JoyReactor.Android.App
 {
@@ -20,8 +20,8 @@ namespace JoyReactor.Android.App
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_messages);
 
-            var panel = FindViewById<DrawerLayout>(Resource.Id.slidePanel); 
 // TODO:
+//            var panel = FindViewById<DrawerLayout÷>(Resource.Id.slidePanel); 
 //            if (savedInstanceState == null)
 //                panel.OpenPane();
 //            MessengerInstance.Register<MessagesViewModel.SelectThreadMessage>(this, _ => panel.ClosePane());
@@ -60,6 +60,7 @@ namespace JoyReactor.Android.App
                         v.FindViewById<TextView>(Resource.Id.username).Text = s.UserName;
                         v.FindViewById<TextView>(Resource.Id.lastMessage).Text = s.LastMessage;
                         v.FindViewById<TextView>(Resource.Id.time).Text = s.LastMessageTime.Humanize();
+                        v.FindViewById<WebImageView>(Resource.Id.userImage).ImageSource = s.UserImage;
                         return v;
                     },
                 };

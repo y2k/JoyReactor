@@ -50,7 +50,7 @@ namespace JoyReactor.Android.App.Base
 
             if (!name.StartsWith("inbox"))
             {
-                paint.Color = Color.ParseColor("#fbfbfb");
+                paint.Color = Color.ParseColor("#E0E0E0");
                 paint.SetStyle(Paint.Style.Stroke);
                 paint.StrokeWidth = 1;
 

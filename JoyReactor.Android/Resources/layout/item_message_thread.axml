@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <JoyReactor.Android.Widget.WebImageView
-            android:id="@+id/avatar"
+            android:id="@+id/userImage"
             android:layout_width="38dp"
             android:layout_height="38dp"
             android:scaleType="centerCrop" />
