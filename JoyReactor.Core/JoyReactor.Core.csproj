@@ -44,6 +44,7 @@
     <Compile Include="Model\Helper\ObservableExtensions.cs" />
     <Compile Include="Model\Helper\ObservableFactory.cs" />
     <Compile Include="Model\DefaultServiceLocator.cs" />
+    <Compile Include="Model\Messages\UserAvatarLoader.cs" />
     <Compile Include="Model\Parser\LoginProvider.cs" />
     <Compile Include="Model\Parser\ProfileProvider.cs" />
     <Compile Include="Model\PostCollectionState.cs" />

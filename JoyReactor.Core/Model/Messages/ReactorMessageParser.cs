@@ -21,10 +21,12 @@ namespace JoyReactor.Core.Model.Messages
             var doc = await downloader.GetDocumentAsync(
                 GenerateUri(page), 
                 new RequestParams { Cookies = await auth.GetCookiesAsync() });
-            return doc.DocumentNode
+            var messages = doc.DocumentNode
 				.Select("div.article")
 				.Select(ConvertToMessage)
 				.ToList();
+            await new UserAvatarLoader(messages).LoadAsync();
+            return messages;
         }
 
         Uri GenerateUri(int page)
