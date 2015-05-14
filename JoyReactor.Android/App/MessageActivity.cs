@@ -9,22 +9,30 @@ using JoyReactor.Android.App.Base;
 using JoyReactor.Android.Widget;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.ViewModels;
+using Android.Support.V4.Widget;
 
 namespace JoyReactor.Android.App
 {
     [Activity(Label = "@string/activity_private_messages")]			
     public class MessageActivity : BaseActivity
     {
+        DrawerLayout panel;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_messages);
 
-// TODO:
-//            var panel = FindViewById<DrawerLayout÷>(Resource.Id.slidePanel); 
-//            if (savedInstanceState == null)
-//                panel.OpenPane();
-//            MessengerInstance.Register<MessagesViewModel.SelectThreadMessage>(this, _ => panel.ClosePane());
+            panel = FindViewById<DrawerLayout>(Resource.Id.slidePanel); 
+            if (savedInstanceState == null)
+                panel.OpenDrawer((int)GravityFlags.Left);
+        }
+
+        protected override void OnStart()
+        {
+            base.OnStart();
+            MessengerInstance.Register<MessagesViewModel.SelectThreadMessage>(
+                this, _ => panel.CloseDrawer((int)GravityFlags.Left));
         }
 
         #region Threads

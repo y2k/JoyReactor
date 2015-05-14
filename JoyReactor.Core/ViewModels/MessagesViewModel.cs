@@ -41,7 +41,7 @@ namespace JoyReactor.Core.ViewModels
             CreateMessageCommand = new FixRelayCommand(CreateNewMessage);
         }
 
-        private async void CreateNewMessage()
+        async void CreateNewMessage()
         {
             IsBusy = true;
             await ServiceLocator.Current.GetInstance<IMessageService>()

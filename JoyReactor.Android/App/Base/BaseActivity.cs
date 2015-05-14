@@ -10,7 +10,7 @@ using Messenger = GalaSoft.MvvmLight.Messaging.Messenger;
 
 namespace JoyReactor.Android.App.Base
 {
-    public class BaseActivity : ActionBarActivity
+    public class BaseActivity : AppCompatActivity
     {
         public const string Arg1 = "arg1";
         public const string Arg2 = "arg2";
@@ -72,12 +72,6 @@ namespace JoyReactor.Android.App.Base
         protected override void OnStop()
         {
             base.OnStop();
-            MessengerInstance.Unregister(this);
-        }
-
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
             MessengerInstance.Unregister(this);
         }
     }
