@@ -58,17 +58,17 @@ namespace JoyReactor.Core.ViewModels
 		{
 			HasError = false;
 			IsBusy = true;
-			try
-			{
-				await service.Login(Username, Password);
-				MessengerInstance.Send(new NavigateToProfileMessage());
-			}
-            catch (Exception e)
-			{
-				HasError = true;
-				MessengerInstance.Send(new LoginFailMessage());
-			}
-			IsBusy = false;
+            try
+            {
+                await service.Login(Username, Password);
+                MessengerInstance.Send(new NavigateToProfileMessage());
+            }
+            catch
+            {
+                HasError = true;
+                IsBusy = false;
+                MessengerInstance.Send(new LoginFailMessage());
+            }
 		}
 
 		public class NavigateToProfileMessage
