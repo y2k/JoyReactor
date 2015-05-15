@@ -66,6 +66,8 @@ namespace JoyReactor.Android.App.Posts
 
             public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
             {
+                var h = (Holder)holder;
+
                 leftPaddingForChild = (int)(holder.ItemView.Context.Resources.DisplayMetrics.Density * 20);
                 if (holder.ItemViewType == 0)
                 {
@@ -78,15 +80,11 @@ namespace JoyReactor.Android.App.Posts
                     var item = (PostViewModel.CommentViewModel)viewmodel.ViewModelParts[position];
                     var button = holder.ItemView.FindViewById<TextView>(Resource.Id.title);
 
-                    button.Text = string.Format("({0}) {1}", item.ChildCount, item.Text);
+//                    button.Text = string.Format("({0}) {1}", item.ChildCount, item.Text);
+                    button.Text = item.Text;
                     button.Visibility = string.IsNullOrEmpty(item.Text) ? ViewStates.Gone : ViewStates.Visible;
 
                     holder.ItemView.SetClick((sender, e) => item.NavigateCommand.Execute(null));
-                    holder.ItemView.SetPadding(
-                        item.IsRoot ? 0 : leftPaddingForChild, 
-                        holder.ItemView.PaddingTop, 
-                        holder.ItemView.PaddingRight, 
-                        holder.ItemView.PaddingBottom);
 
                     var avatar = holder.ItemView.FindViewById<WebImageView>(Resource.Id.icon);
                     avatar.ImageSource = item.UserImage;
@@ -95,27 +93,28 @@ namespace JoyReactor.Android.App.Posts
                     attach.ImageSizeDip = 80;
                     attach.ImageSource = item.Attachments.FirstOrDefault();
                     attach.Visibility = item.Attachments.Count > 0 ? ViewStates.Visible : ViewStates.Gone;
+
+                    h.rating.Text = "" + item.Rating;
+                    h.replies.Text = "" + item.ChildCount;
+                    h.divider.Visibility = item.IsReply ? ViewStates.Visible : ViewStates.Gone;
                 }
             }
 
             public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
             {
-                View view;
                 if (viewType == 0)
                 {
-                    var webImage = new WebImageView(parent.Context, null);
                     var panel = new FixedAspectPanel(parent.Context, null);
+                    var webImage = new WebImageView(parent.Context, null);
                     panel.Aspect = 1; // FIXME:
                     panel.AddView(webImage);
-                    view = panel;
+                    return new Holder(panel);
                 }
                 else
                 {
-                    view = View.Inflate(parent.Context, Resource.Layout.item_comment, null);
+                    var view = View.Inflate(parent.Context, Resource.Layout.item_comment, null);
+                    return Holder.New(view);
                 }
-                view.LayoutParameters = new StaggeredGridLayoutManager.LayoutParams(
-                    ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
-                return new Holder(view);
             }
 
             public override int ItemCount
@@ -125,9 +124,23 @@ namespace JoyReactor.Android.App.Posts
 
             class Holder : RecyclerView.ViewHolder
             {
-                public Holder(View view)
-                    : base(view)
+                internal TextView rating;
+                internal TextView replies;
+                internal View divider;
+
+                public Holder(View view) : base(view)
                 {
+                    view.LayoutParameters = new StaggeredGridLayoutManager.LayoutParams(
+                        ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+                }
+
+                internal static Holder New(View view)
+                {
+                    return new Holder(view) {
+                        rating = view.FindViewById<TextView>(Resource.Id.rating),
+                        replies = view.FindViewById<TextView>(Resource.Id.replies),
+                        divider = view.FindViewById(Resource.Id.divider),
+                    };
                 }
             }
         }

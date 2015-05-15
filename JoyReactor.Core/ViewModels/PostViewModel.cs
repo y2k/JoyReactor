@@ -17,6 +17,7 @@ namespace JoyReactor.Core.ViewModels
         public ObservableCollection<RelatedPost> RelatedPost { get; } = new ObservableCollection<RelatedPost>();
 
         bool _isBusy;
+
         public bool IsBusy
         {
             get { return _isBusy; }
@@ -53,7 +54,8 @@ namespace JoyReactor.Core.ViewModels
             postSubscription?.Dispose();
             postSubscription = postService
                 .Get()
-                .SubscribeOnUi(post => {
+                .SubscribeOnUi(post =>
+                {
                     ViewModelParts.ReplaceAt(0, post);
                     RelatedPost.ReplaceAll(post.RelatedPosts);
                 });
@@ -68,19 +70,21 @@ namespace JoyReactor.Core.ViewModels
                 .SubscribeOnUi(comments =>
                 {
                     ViewModelParts.ReplaceAll(1, new ViewModelBase[0]);
+                    var replies = false;
                     if (comments.Count >= 2 && comments[0].Id == comments[1].ParentCommentId)
                     {
                         ViewModelParts.Insert(1, new CommentViewModel(this, comments[0]) { IsRoot = true });
                         comments.RemoveAt(0);
+                        replies = true;
                     }
-                    ViewModelParts.AddRange(ConvertToViewModels(comments));
+                    ViewModelParts.AddRange(ConvertToViewModels(comments, replies));
                 });
         }
 
-        IEnumerable<CommentViewModel> ConvertToViewModels(IEnumerable<Comment> comments)
+        IEnumerable<CommentViewModel> ConvertToViewModels(List<Comment> comments, bool isReply)
         {
             foreach (var s in comments)
-                yield return new CommentViewModel(this, s);
+                yield return new CommentViewModel(this, s) { IsReply = isReply };
         }
 
         public override void Cleanup()
@@ -96,6 +100,8 @@ namespace JoyReactor.Core.ViewModels
 
             public bool IsRoot { get; set; }
 
+            public bool IsReply { get; set; }
+
             public string Text { get; set; }
 
             public int ChildCount { get; set; }
@@ -104,7 +110,11 @@ namespace JoyReactor.Core.ViewModels
 
             public string UserImage { get; set; }
 
-            public CommentViewModel() { }
+            public float Rating { get; set; }
+
+            public CommentViewModel()
+            {
+            }
 
             public CommentViewModel(PostViewModel parent, Comment comment)
             {
@@ -113,6 +123,8 @@ namespace JoyReactor.Core.ViewModels
 
                 Text = GetCommentText(comment);
                 ChildCount = comment.ChildCount;
+                Rating = comment.Rating;
+
                 NavigateCommand = new FixRelayCommand(() => parent.ReloadCommentList(IsRoot ? comment.ParentCommentId : comment.Id));
             }
 
