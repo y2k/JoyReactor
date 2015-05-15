@@ -1,8 +1,8 @@
-using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
 using Microsoft.Practices.ServiceLocation;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.ViewModels
 {

@@ -3,11 +3,10 @@ using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
 using Microsoft.Practices.ServiceLocation;
 using System.Threading.Tasks;
-using System;
 
 namespace JoyReactor.Core.ViewModels
 {
-	public class LoginViewModel : ViewModelBase
+    public class LoginViewModel : ViewModelBase
 	{
 		#region Properties
 
