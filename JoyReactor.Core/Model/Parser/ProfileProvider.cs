@@ -1,9 +1,11 @@
-﻿using JoyReactor.Core.Model.Database;
+﻿using JoyReactor.Core.Model.Common;
+using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Web;
 using Microsoft.Practices.ServiceLocation;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -11,11 +13,15 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Parser
 {
-    class ProfileProvider
+    public class ProfileProvider
     {
         IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
-        JoyReactorProvider.IStorage storage = ServiceLocator.Current.GetInstance<JoyReactorProvider.IStorage>();
-        JoyReactorProvider.IAuthStorage authStorage = ServiceLocator.Current.GetInstance<JoyReactorProvider.IAuthStorage>();
+        Storage storage, authStorage;
+
+        public ProfileProvider(Storage storage)
+        {
+            this.storage = authStorage = storage;
+        }
 
         public async Task ComputeAsync()
         {
@@ -59,7 +65,12 @@ namespace JoyReactor.Core.Model.Parser
             if (div != null)
             {
                 var profileTagRx = new Regex("/tag/(.+)");
-                var readingTags = div.Descendants("a").Select(s => UnescapeTagName(profileTagRx.FirstString(s.GetHref())));
+                var readingTags = div
+                    .Descendants("a")
+                    .Select(s => UnescapeTagName(profileTagRx.FirstString(s.GetHref())))
+                    .Select(s => new Tag { Title = s })
+                    .ToList();
+                await new TagImageLoader(readingTags).LoadAsync();
                 await storage.ReplaceCurrentUserReadingTagsAsync(readingTags);
             }
 
@@ -78,6 +89,34 @@ namespace JoyReactor.Core.Model.Parser
                 .UnescapeDataString()
                 .UnescapeDataString()
                 .Replace('+', ' ');
+        }
+
+        public interface Storage
+        {
+            Task ReplaceCurrentUserReadingTagsAsync(IEnumerable<Tag> readingTags);
+
+            Task SaveNewOrUpdateProfileAsync(Profile profile);
+        }
+
+        class TagImageLoader : ImageLoader<Tag>
+        {
+            internal TagImageLoader(List<Tag> tags) : base(tags, "tag-image_") { }
+
+            protected override async Task<string> GetFromWeb(IWebDownloader downloader, Tag item)
+            {
+                var html = await downloader.GetTextAsync(new Uri("http://joyreactor.cc/tag/" + item.Title));
+                return Regex.Match(html, @"\<img itemprop=""photo"" src=""([^""]+)").Groups[1].Value;
+            }
+
+            protected override string GetKey(Tag item)
+            {
+                return item.Title;
+            }
+
+            protected override void Set(Tag item, string value)
+            {
+                item.BestImage = value;
+            }
         }
     }
 }

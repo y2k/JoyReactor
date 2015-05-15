@@ -10,5 +10,15 @@ namespace JoyReactor.Core.Model.Database
         {
             return Connection.QueryAsync<Profile>("SELECT * FROM profiles");
         }
+
+        internal Task RemoveAllAsync()
+        {
+            return Connection.ExecuteAsync("DELETE FROM profiles");
+        }
+
+        internal Task InsertAsync(Profile profile)
+        {
+            return Connection.InsertAsync(profile);
+        }
     }
 }

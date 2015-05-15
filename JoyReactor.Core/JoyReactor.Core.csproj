@@ -32,6 +32,7 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Model\Common\ImageLoader.cs" />
     <Compile Include="Model\Database\AsyncSQLiteConnection.cs" />
     <Compile Include="Model\Database\CreateDefaultTagsTransaction.cs" />
     <Compile Include="Model\Database\CreateTablesTransaction.cs" />

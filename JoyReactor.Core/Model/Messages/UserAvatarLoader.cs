@@ -1,6 +1,5 @@
-﻿using JoyReactor.Core.Model.Web;
-using Microsoft.Practices.ServiceLocation;
-using Refractored.Xam.Settings;
+﻿using JoyReactor.Core.Model.Common;
+using JoyReactor.Core.Model.Web;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -8,53 +7,24 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Messages
 {
-    class UserAvatarLoader
+    class UserAvatarLoader : ImageLoader<MessageFetcher.RawMessage>
     {
-        IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
-        AvatarCache cache = new AvatarCache();
-        List<MessageFetcher.RawMessage> messages;
+        internal UserAvatarLoader(List<MessageFetcher.RawMessage> items) : base(items, "avatar-cache_") { }
 
-        public UserAvatarLoader(List<MessageFetcher.RawMessage> messages)
+        protected override async Task<string> GetFromWeb(IWebDownloader downloader, MessageFetcher.RawMessage item)
         {
-            this.messages = messages;
-        }
-
-        internal async Task LoadAsync()
-        {
-            foreach (var message in messages)
-            {
-                var avatar = cache.Get(message.UserName);
-                if (string.IsNullOrEmpty(avatar))
-                {
-                    avatar = await GetFromWeb(message.UserName);
-                    cache.Put(message.UserName, avatar);
-                }
-                message.UserImage = avatar;
-            }
-        }
-
-        async Task<string> GetFromWeb(string userName)
-        {
-            var html = await downloader.GetTextAsync(new Uri("http://joyreactor.cc/user/" + userName));
+            var html = await downloader.GetTextAsync(new Uri("http://joyreactor.cc/user/" + item.UserName));
             return Regex.Match(html, "http://[^/]+/pics/avatar/user/\\d+").Value;
         }
 
-        class AvatarCache
+        protected override string GetKey(MessageFetcher.RawMessage item)
         {
-            internal string Get(string key)
-            {
-                return CrossSettings.Current.GetValueOrDefault<string>(GetFullKey(key));
-            }
+            return item.UserName;
+        }
 
-            internal void Put(string key, string value)
-            {
-                CrossSettings.Current.AddOrUpdateValue(GetFullKey(key), value);
-            }
-
-            string GetFullKey(string key)
-            {
-                return "avatar-cache_" + key;
-            }
+        protected override void Set(MessageFetcher.RawMessage item, string value)
+        {
+            item.UserName = value;
         }
     }
 }

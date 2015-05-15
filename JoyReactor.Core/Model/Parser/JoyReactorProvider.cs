@@ -33,9 +33,9 @@ namespace JoyReactor.Core.Model.Parser
             return new LoginProvider(username, password).ComputeAsync();
         }
 
-        public Task LoadCurrentUserProfileAsync()
+        public Task LoadCurrentUserProfileAsync(ProfileProvider.Storage storage)
         {
-            return new ProfileProvider().ComputeAsync();
+            return new ProfileProvider(storage).ComputeAsync();
         }
 
         public interface IListStorage
