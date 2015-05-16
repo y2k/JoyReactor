@@ -123,7 +123,6 @@ namespace JoyReactor.Core.Model.Parser
             public PageCollectionParser(string pageHtml)
             {
                 this.pageHtml = pageHtml;
-                throw new NotImplementedException();
             }
 
             public List<Post> Parse()

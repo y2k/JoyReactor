@@ -51,7 +51,7 @@ namespace JoyReactor.Core.Model
 
         TagPost newTagPost(int postId)
         {
-            return new TagPost { TagId = tagId, PostId = postId };
+            return new TagPost { TagId = tagId, PostId = postId, Status = TagPost.StatusActual };
         }
 
         async Task ReplaceTagPosts(List<TagPost> items)
