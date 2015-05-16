@@ -16,7 +16,7 @@ namespace JoyReactor.Core.Model.Parser
     class TagProvider
     {
         IProviderAuthStorage authStorage = ServiceLocator.Current.GetInstance<IProviderAuthStorage>();
-        IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
+        WebDownloader downloader = ServiceLocator.Current.GetInstance<WebDownloader>();
         IProviderStorage storage = ServiceLocator.Current.GetInstance<IProviderStorage>();
 
         IProviderListStorage listStorage;

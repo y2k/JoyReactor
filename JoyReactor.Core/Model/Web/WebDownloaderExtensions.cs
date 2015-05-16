@@ -8,7 +8,7 @@ namespace JoyReactor.Core.Model.Web
 {
     static class WebDownloaderExtensions
     {
-        public static async Task<HtmlDocument> GetDocumentAsync(this IWebDownloader instance, Uri uri, RequestParams reqParams = null)
+        public static async Task<HtmlDocument> GetDocumentAsync(this WebDownloader instance, Uri uri, RequestParams reqParams = null)
         {
             using (var response = await instance.ExecuteAsync(uri, reqParams))
             {
@@ -18,12 +18,12 @@ namespace JoyReactor.Core.Model.Web
             }
         }
 
-        public static async Task PostAsync(this IWebDownloader instance, Uri uri, RequestParams requestParams)
+        public static async Task PostAsync(this WebDownloader instance, Uri uri, RequestParams requestParams)
         {
             using (var response = await instance.ExecuteAsync(uri, requestParams)) { }
         }
 
-        public static async Task<IDictionary<string, string>> PostForCookiesAsync(this IWebDownloader instance, Uri uri, RequestParams reqParams = null)
+        public static async Task<IDictionary<string, string>> PostForCookiesAsync(this WebDownloader instance, Uri uri, RequestParams reqParams = null)
         {
             if (reqParams == null || reqParams.Form == null)
                 throw new Exception();
@@ -31,7 +31,7 @@ namespace JoyReactor.Core.Model.Web
                 return response.Cookies;
         }
 
-        public static async Task<string> GetTextAsync(this IWebDownloader instance, Uri uri, RequestParams reqParams = null)
+        public static async Task<string> GetTextAsync(this WebDownloader instance, Uri uri, RequestParams reqParams = null)
         {
             using (var response = await instance.ExecuteAsync(uri, reqParams))
                 return await new StreamReader(response.Data).ReadToEndAsync();

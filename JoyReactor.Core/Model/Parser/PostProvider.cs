@@ -13,7 +13,7 @@ namespace JoyReactor.Core.Model.Parser
 {
     class PostProvider
     {
-        IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
+        WebDownloader downloader = ServiceLocator.Current.GetInstance<WebDownloader>();
         IProviderStorage storage = ServiceLocator.Current.GetInstance<IProviderStorage>();
 
         string postId;

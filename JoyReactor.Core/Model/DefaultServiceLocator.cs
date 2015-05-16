@@ -52,7 +52,7 @@ namespace JoyReactor.Core.Model
 			protected override void Load(ContainerBuilder b)
 			{
 				b.RegisterType<Log.DumpLogger>().As<Log.ILogger>();
-				b.RegisterType<WebDownloader>().As<IWebDownloader>();
+				b.RegisterType<WebDownloader>().As<WebDownloader>();
 				b.Register(_ => SQLiteConnectionFactory.Create()).As<AsyncSQLiteConnection>();
 
 				b.Register(_ => CrossSettings.Current).AsSelf();

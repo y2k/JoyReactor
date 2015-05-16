@@ -8,7 +8,7 @@ namespace JoyReactor.Core.Model.Common
 {
     abstract class ImageLoader<T>
     {
-        IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
+        WebDownloader downloader = ServiceLocator.Current.GetInstance<WebDownloader>();
         ImageCache cache;
         List<T> items;
 
@@ -34,7 +34,7 @@ namespace JoyReactor.Core.Model.Common
 
         protected abstract string GetKey(T item);
 
-        protected abstract Task<string> GetFromWeb(IWebDownloader downloader, T item);
+        protected abstract Task<string> GetFromWeb(WebDownloader downloader, T item);
 
         protected abstract void Set(T item, string value);
 

@@ -4,10 +4,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace JoyReactor.Core.Model.Web
 {
-    public class WebDownloader : IWebDownloader
+    public class WebDownloader
     {
         const string UserAgent = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36 OPR/18.0.1284.68";
         const string Accept = "text/html";
@@ -94,5 +95,27 @@ namespace JoyReactor.Core.Model.Web
                 return false;
             }
         }
+    }
+
+    public class WebResponse : IDisposable
+    {
+        public IDictionary<string, string> Cookies { get; set; }
+        public Stream Data { get; set; }
+
+        public void Dispose()
+        {
+            Data?.Dispose();
+        }
+    }
+
+    public class RequestParams 
+    {
+        public IDictionary<string, string> Form { get; set; }
+        public IDictionary<string, string> Cookies { get; set; }
+        public IDictionary<string, string> AdditionHeaders { get; set; }
+        public bool NotFollowRedirects { get; set; }
+
+        public Uri Referer { get; set; }
+        public bool UseForeignProxy { get; set; }
     }
 }
