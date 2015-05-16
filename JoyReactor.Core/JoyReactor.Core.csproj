@@ -106,6 +106,9 @@
     <Compile Include="Model\Database\Repository.cs" />
     <Compile Include="Model\Database\PostRepository.cs" />
     <Compile Include="Model\Parser\PostProvider.cs" />
+    <Compile Include="Model\PostCollectionLoader.cs" />
+    <Compile Include="Model\Parser\PostCollectionProvider.cs" />
+    <Compile Include="Model\TagOrderSaver.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

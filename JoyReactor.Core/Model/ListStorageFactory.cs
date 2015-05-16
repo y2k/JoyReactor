@@ -50,7 +50,7 @@ namespace JoyReactor.Core.Model
 
             public async Task CommitAsync()
             {
-                await new TagPostRepository().RemoveAsync(tag.Id);
+                await new TagPostRepository().RemoveAllAsync(tag.Id);
 
                 if (IsTagEmpty)
                 {
@@ -151,7 +151,7 @@ namespace JoyReactor.Core.Model
 
             public async Task CommitAsync()
             {
-                await new TagPostRepository().RemoveAsync(tag.Id);
+                await new TagPostRepository().RemoveAllAsync(tag.Id);
                 foreach (var id in currentActualPostIds)
                     await InsertTagPost(id, TagPost.StatusActual);
                 foreach (var id in newPostIds)

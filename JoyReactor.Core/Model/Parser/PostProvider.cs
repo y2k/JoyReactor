@@ -27,7 +27,6 @@ namespace JoyReactor.Core.Model.Parser
         internal async Task ComputeAsync()
         {
             await DownloadHtmlPageAsync();
-
             await SavePostInformation();
             await SavePostAttachments();
             await SaveRelatedPosts();
