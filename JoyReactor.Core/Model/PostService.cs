@@ -58,7 +58,7 @@ namespace JoyReactor.Core.Model
         async void SyncPost()
         {
             var post = await storage.GetPostAsync(postId);
-            await JoyReactorProvider.Create().LoadPostAsync(post.PostId);
+            await new PostProvider(post.PostId).ComputeAsync();
             PostChanged?.Invoke(null, null);
         }
 

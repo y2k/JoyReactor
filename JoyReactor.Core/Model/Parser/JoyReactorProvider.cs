@@ -5,79 +5,45 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Parser
 {
-    public class JoyReactorProvider
+    public interface IProviderListStorage
     {
-        #region New instance factory
+        Task AddPost(Post post);
 
-        JoyReactorProvider() { }
+        Task CommitAsync();
+    }
 
-        public static JoyReactorProvider Create()
-        {
-            return new JoyReactorProvider();
-        }
+    public interface IProviderStorage
+    {
+        Task SaveNewOrUpdatePostAsync(Post post);
 
-        #endregion
+        Task UpdateTagInformationAsync(ID id, string image, int nextPage, bool hasNextPage);
 
-        public Task LoadTagAndPostListAsync(ID id, IListStorage listStorage, bool isFirstPage)
-        {
-            return new TagProvider(id, listStorage, isFirstPage).ComputeAsync();
-        }
+        Task ReplacePostAttachments(string postId, List<Attachment> attachments);
 
-        public Task LoadPostAsync(string postId)
-        {
-            return new PostProvider(postId).ComputeAsync();
-        }
+        Task RemovePostComments(string postId);
 
-        public Task LoginAsync(string username, string password)
-        {
-            return new LoginProvider(username, password).ComputeAsync();
-        }
+        Task SaveNewPostCommentAsync(string postId, int parrentCommentId, Comment comment, string[] attachments);
 
-        public Task LoadCurrentUserProfileAsync(ProfileProvider.Storage storage)
-        {
-            return new ProfileProvider(storage).ComputeAsync();
-        }
+        Task SaveNewOrUpdateProfileAsync(Profile profile);
 
-        public interface IListStorage
-        {
-            Task AddPost(Post post);
+        Task ReplaceCurrentUserReadingTagsAsync(IEnumerable<string> readingTags);
 
-            Task CommitAsync();
-        }
+        Task<int> GetNextPageForTagAsync(ID id);
 
-        public interface IStorage
-        {
-            Task SaveNewOrUpdatePostAsync(Post post);
+        Task SaveRelatedPostsAsync(string postId, List<RelatedPost> posts);
 
-            Task UpdateTagInformationAsync(ID id, string image, int nextPage, bool hasNextPage);
+        Task SaveLinkedTagsAsync(ID id, string groupName, ICollection<Tag> tags);
 
-            Task ReplacePostAttachments(string postId, List<Attachment> attachments);
+        Task RemoveLinkedTagAsync(ID id);
+    }
 
-            Task RemovePostComments(string postId);
+    public interface IProviderAuthStorage
+    {
+        [Obsolete]
+        Task<string> GetCurrentUserNameAsync();
 
-            Task SaveNewPostCommentAsync(string postId, int parrentCommentId, Comment comment, string[] attachments);
+        Task<IDictionary<string, string>> GetCookiesAsync();
 
-            Task SaveNewOrUpdateProfileAsync(Profile profile);
-
-            Task ReplaceCurrentUserReadingTagsAsync(IEnumerable<string> readingTags);
-
-            Task<int> GetNextPageForTagAsync(ID id);
-
-            Task SaveRelatedPostsAsync(string postId, List<RelatedPost> posts);
-
-            Task SaveLinkedTagsAsync(ID id, string groupName, ICollection<Tag> tags);
-
-            Task RemoveLinkedTagAsync(ID id);
-        }
-
-        public interface IAuthStorage
-        {
-            [Obsolete]
-            Task<string> GetCurrentUserNameAsync();
-
-            Task<IDictionary<string, string>> GetCookiesAsync();
-
-            Task SaveCookieToDatabaseAsync(string username, IDictionary<string, string> cookies);
-        }
+        Task SaveCookieToDatabaseAsync(string username, IDictionary<string, string> cookies);
     }
 }

@@ -71,7 +71,7 @@ namespace JoyReactor.Core.Model
         async Task SyncPage(bool isFirstPage)
         {
             var sorter = ListStorageFactory.NewInstance(id, isFirstPage);
-            await JoyReactorProvider.Create().LoadTagAndPostListAsync(id, sorter, isFirstPage);
+            await new TagProvider(id, sorter, isFirstPage).ComputeAsync();
             await InvalidateFeedAsync();
         }
 

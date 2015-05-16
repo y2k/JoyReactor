@@ -2,7 +2,6 @@
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Parser;
 using System.Threading.Tasks;
-using System;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -11,18 +10,17 @@ namespace JoyReactor.Core.Model
     class ProfileService : IProfileService, ProfileProvider.Storage
     {
         IAuthStorage storage = new AuthRepository();
-        JoyReactorProvider provider = JoyReactorProvider.Create();
 
         public async Task<Profile> GetMyProfile()
         {
-            await provider.LoadCurrentUserProfileAsync(this);
+            await new ProfileProvider(this).ComputeAsync();
             return await storage.GetCurrentProfileAsync();
         }
 
         public async Task Login(string username, string password)
         {
-            await provider.LoginAsync(username, password);
-            await provider.LoadCurrentUserProfileAsync(this);
+            await new LoginProvider(username, password).ComputeAsync();
+            await new ProfileProvider(this).ComputeAsync();
             await InvaliteTagList();
         }
 

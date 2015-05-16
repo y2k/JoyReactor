@@ -10,14 +10,14 @@ namespace JoyReactor.Core.Model
 {
     static class ListStorageFactory
     {
-        public static JoyReactorProvider.IListStorage NewInstance(ID id, bool isFirstPage)
+        public static IProviderListStorage NewInstance(ID id, bool isFirstPage)
         {
             return isFirstPage
-                ? (JoyReactorProvider.IListStorage)new FirstPagePostSorter(id.SerializeToString())
+                ? (IProviderListStorage)new FirstPagePostSorter(id.SerializeToString())
                 : new NextPagePostSorter(id.SerializeToString());
         }
 
-        class FirstPagePostSorter : JoyReactorProvider.IListStorage
+        class FirstPagePostSorter : IProviderListStorage
         {
             List<int> uniquePostIds = new List<int>();
             List<int> dublicatePostIds = new List<int>();
@@ -92,7 +92,7 @@ namespace JoyReactor.Core.Model
             }
         }
 
-        class NextPagePostSorter : JoyReactorProvider.IListStorage
+        class NextPagePostSorter : IProviderListStorage
         {
             List<int> currentActualPostIds = new List<int>();
             List<int> currentOldPostIds = new List<int>();
