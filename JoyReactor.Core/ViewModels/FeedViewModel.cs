@@ -120,11 +120,13 @@ namespace JoyReactor.Core.ViewModels
 
         public class ContentViewModel : ViewModelBase
         {
+            const string ImageStub = "http://wiki.solid-run.com/images/7/75/No_image_available.png";
+
             public RelayCommand OpenPostCommand { get; set; }
 
             public string Title { get { return post.Title; } }
 
-            public string Image { get { return post.Image; } }
+            public string Image { get { return post.Image ?? ImageStub; } }
 
             public int ImageWidth { get { return post.ImageWidth; } }
 
