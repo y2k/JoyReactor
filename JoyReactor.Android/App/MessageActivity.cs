@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using Android.App;
 using Android.OS;
+using Android.Support.V4.Widget;
 using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
@@ -9,7 +10,6 @@ using JoyReactor.Android.App.Base;
 using JoyReactor.Android.Widget;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.ViewModels;
-using Android.Support.V4.Widget;
 
 namespace JoyReactor.Android.App
 {
@@ -73,10 +73,8 @@ namespace JoyReactor.Android.App
                     },
                 };
                 var progress = view.FindViewById(Resource.Id.progress);
-                var binding = viewmodel
-					.SetBinding(() => viewmodel.IsBusy, progress, () => progress.Visibility)
+                AddBinding(viewmodel, () => viewmodel.IsBusy, progress, () => progress.Visibility)
 					.ConvertSourceToTarget(s => s ? ViewStates.Visible : ViewStates.Gone);
-                bindings.Add(binding);
                 return view;
             }
         }
@@ -109,14 +107,11 @@ namespace JoyReactor.Android.App
                 list.Adapter = new MessageAdapter(viewmodel.Messages);
 
                 var newMessage = view.FindViewById<EditText>(Resource.Id.newMessage);
-                Binding binding = viewmodel.SetBinding(() => viewmodel.NewMessage, newMessage, () => newMessage.Text, BindingMode.TwoWay);
-                bindings.Add(binding);
+                AddBinding(viewmodel, () => viewmodel.NewMessage, newMessage, () => newMessage.Text, BindingMode.TwoWay);
 
                 var progress = view.FindViewById(Resource.Id.progress);
-                binding = viewmodel
-                    .SetBinding(() => viewmodel.IsBusy, progress, () => progress.Visibility)
+                AddBinding(viewmodel, () => viewmodel.IsBusy, progress, () => progress.Visibility)
                     .ConvertSourceToTarget(s => s ? ViewStates.Visible : ViewStates.Gone);
-                bindings.Add(binding);
 
                 view.FindViewById(Resource.Id.createMessage).SetCommand("Click", viewmodel.CreateMessageCommand);
                 return view;

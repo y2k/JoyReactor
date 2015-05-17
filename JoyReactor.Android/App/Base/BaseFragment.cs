@@ -1,9 +1,10 @@
-﻿using Android.OS;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using Android.OS;
 using Android.Support.V4.App;
 using GalaSoft.MvvmLight.Helpers;
 using GalaSoft.MvvmLight.Messaging;
-using System;
-using System.Collections.Generic;
 using Messenger = GalaSoft.MvvmLight.Messaging.Messenger;
 
 namespace JoyReactor.Android.App.Base
@@ -15,10 +16,10 @@ namespace JoyReactor.Android.App.Base
         public const string Arg3 = "arg3";
         public const string Arg4 = "arg4";
 
-        protected List<Binding> bindings = new List<Binding>();
-
         List<Action> onResumeEvents = new List<Action>();
         List<Action> onPauseEvents = new List<Action>();
+
+        BindingManager bindinManager = new BindingManager();
 
         public IMessenger MessengerInstance
         {
@@ -64,12 +65,35 @@ namespace JoyReactor.Android.App.Base
             onResumeEvents.Clear();
             onPauseEvents.Clear();
             MessengerInstance.Unregister(this);
+            bindinManager.Destroy();
         }
 
         public override void OnPause()
         {
             base.OnPause();
             onPauseEvents.ForEach(s => s());
+        }
+
+        protected Binding<TS, TT> AddBinding<TS, TT>(object source, Expression<Func<TS>> sourceExpression, object target, Expression<Func<TT>> targetExpression = null, BindingMode mode = BindingMode.Default)
+        {
+            return bindinManager.AddBinding(source, sourceExpression, target, targetExpression, mode);
+        }
+
+        class BindingManager {
+
+            List<Binding> bindings = new List<Binding>();
+
+            internal Binding<TS, TT> AddBinding<TS, TT>(object source, Expression<Func<TS>> sourceExpression, object target, Expression<Func<TT>> targetExpression, BindingMode mode)
+            {
+                var binding = source.SetBinding(sourceExpression, target, targetExpression, mode);
+                bindings.Add(binding);
+                return binding;
+            }
+
+            public void Destroy()
+            {
+                bindings.Clear();
+            }
         }
     }
 }
