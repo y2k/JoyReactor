@@ -10,8 +10,8 @@ namespace JoyReactor.Core.Model.Parser
 {
     class LoginProvider
     {
-        IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
-        JoyReactorProvider.IAuthStorage authStorage = ServiceLocator.Current.GetInstance<JoyReactorProvider.IAuthStorage>();
+        WebDownloader downloader = ServiceLocator.Current.GetInstance<WebDownloader>();
+        IProviderAuthStorage authStorage = ServiceLocator.Current.GetInstance<IProviderAuthStorage>();
 
         string username;
         string password;

@@ -15,16 +15,16 @@ namespace JoyReactor.Core.Model.Parser
 {
     class TagProvider
     {
-        JoyReactorProvider.IAuthStorage authStorage = ServiceLocator.Current.GetInstance<JoyReactorProvider.IAuthStorage>();
-        IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
-        JoyReactorProvider.IStorage storage = ServiceLocator.Current.GetInstance<JoyReactorProvider.IStorage>();
+        IProviderAuthStorage authStorage = ServiceLocator.Current.GetInstance<IProviderAuthStorage>();
+        WebDownloader downloader = ServiceLocator.Current.GetInstance<WebDownloader>();
+        IProviderStorage storage = ServiceLocator.Current.GetInstance<IProviderStorage>();
 
-        JoyReactorProvider.IListStorage listStorage;
+        IProviderListStorage listStorage;
         ID id;
         string pageHtml;
         bool isFirstPage;
 
-        public TagProvider(ID id, JoyReactorProvider.IListStorage listStorage, bool isFirstPage)
+        public TagProvider(ID id, IProviderListStorage listStorage, bool isFirstPage)
         {
             this.id = id;
             this.listStorage = listStorage;

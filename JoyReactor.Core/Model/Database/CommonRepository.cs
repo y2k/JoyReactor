@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Database
 {
-    class CommonRepository : Repository, FeedService.IFeedRepository, JoyReactorProvider.IStorage, PostService.IStorage
+    class CommonRepository : Repository, FeedService.IFeedRepository, IProviderStorage, PostService.IStorage
     {
         public Task ClearOldLinkedTagsAsync(ID id)
         {
@@ -103,7 +103,7 @@ namespace JoyReactor.Core.Model.Database
             return Connection.ExecuteAsync("DELETE FROM tag_post WHERE TagId IN (SELECT Id FROM tags WHERE TagId = ?)", id.SerializeToString());
         }
 
-        async Task JoyReactorProvider.IStorage.SaveNewOrUpdatePostAsync(Post post)
+        async Task IProviderStorage.SaveNewOrUpdatePostAsync(Post post)
         {
             post.Id = await Connection.ExecuteScalarAsync<int>("SELECT Id FROM posts WHERE PostId = ?", post.PostId);
             if (post.Id == 0)
@@ -112,7 +112,7 @@ namespace JoyReactor.Core.Model.Database
                 await Connection.UpdateAsync(post);
         }
 
-        async Task JoyReactorProvider.IStorage.UpdateTagInformationAsync(ID id, string image, int nextPage, bool hasNextPage)
+        async Task IProviderStorage.UpdateTagInformationAsync(ID id, string image, int nextPage, bool hasNextPage)
         {
             var t = (await Connection.QueryAsync<Tag>("SELECT * FROM tags WHERE TagId = ?", id.SerializeToString())).FirstOrDefault()
                     ?? new Tag { BestImage = image, TagId = id.SerializeToString() };
@@ -123,7 +123,7 @@ namespace JoyReactor.Core.Model.Database
                 await Connection.UpdateAsync(t);
         }
 
-        async Task JoyReactorProvider.IStorage.ReplacePostAttachments(string postId, List<Attachment> attachments)
+        async Task IProviderStorage.ReplacePostAttachments(string postId, List<Attachment> attachments)
         {
             var parentId = await Connection.ExecuteScalarAsync<int>("SELECT Id FROM posts WHERE PostId = ?", postId);
             await Connection.ExecuteAsync("DELETE FROM attachments WHERE ParentId = ? AND ParentType = ?", parentId, Attachment.ParentPost);
@@ -135,12 +135,12 @@ namespace JoyReactor.Core.Model.Database
             }
         }
 
-        Task JoyReactorProvider.IStorage.RemovePostComments(string postId)
+        Task IProviderStorage.RemovePostComments(string postId)
         {
             return Connection.ExecuteAsync("DELETE FROM comments WHERE PostId IN (SELECT Id FROM posts WHERE PostId = ?)", postId);
         }
 
-        async Task JoyReactorProvider.IStorage.SaveNewPostCommentAsync(string postId, int parrentCommentId, Comment comment, string[] attachments)
+        async Task IProviderStorage.SaveNewPostCommentAsync(string postId, int parrentCommentId, Comment comment, string[] attachments)
         {
             comment.ParentCommentId = parrentCommentId;
             comment.PostId = await Connection.ExecuteScalarAsync<int>("SELECT Id FROM posts WHERE PostId = ?", postId);
@@ -157,7 +157,7 @@ namespace JoyReactor.Core.Model.Database
                     });
         }
 
-        async Task JoyReactorProvider.IStorage.SaveNewOrUpdateProfileAsync(Profile profile)
+        async Task IProviderStorage.SaveNewOrUpdateProfileAsync(Profile profile)
         {
             // TODO: придумать способ получше, что бы сохранять куки при обновление профиля
             profile.Cookie = await Connection.ExecuteScalarAsync<string>("SELECT Cookie FROM profiles");
@@ -165,7 +165,7 @@ namespace JoyReactor.Core.Model.Database
             await Connection.InsertAsync(profile);
         }
 
-        async Task JoyReactorProvider.IStorage.ReplaceCurrentUserReadingTagsAsync(IEnumerable<string> readingTags)
+        async Task IProviderStorage.ReplaceCurrentUserReadingTagsAsync(IEnumerable<string> readingTags)
         {
             foreach (var t in readingTags)
             {
@@ -234,7 +234,7 @@ ORDER BY c.Rating DESC, ChildCount DESC
                 Attachment.ParentPost, postId);
         }
 
-        async Task JoyReactorProvider.IStorage.SaveRelatedPostsAsync(string postId, List<RelatedPost> posts)
+        async Task IProviderStorage.SaveRelatedPostsAsync(string postId, List<RelatedPost> posts)
         {
             var id = await Connection.ExecuteScalarAsync<int>("SELECT Id FROM posts WHERE PostId = ?", postId);
             await Connection.ExecuteAsync("DELETE FROM related_posts WHERE ParentPostId = ?", id);

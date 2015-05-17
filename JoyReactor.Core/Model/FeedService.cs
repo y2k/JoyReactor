@@ -1,6 +1,5 @@
 ﻿using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
-using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.ViewModels;
 using Microsoft.Practices.ServiceLocation;
 using System;
@@ -70,8 +69,7 @@ namespace JoyReactor.Core.Model
 
         async Task SyncPage(bool isFirstPage)
         {
-            var sorter = ListStorageFactory.NewInstance(id, isFirstPage);
-            await JoyReactorProvider.Create().LoadTagAndPostListAsync(id, sorter, isFirstPage);
+            await new PostCollectionLoader(id, isFirstPage).LoadAsync();
             await InvalidateFeedAsync();
         }
 
@@ -83,8 +81,6 @@ namespace JoyReactor.Core.Model
 
         internal interface IFeedRepository
         {
-            //            Task<PostCollectionState> GetPostsAsync(ID id);
-
             Task ApplyNewItemsAsync(ID id);
 
             Task ClearTagFromPostsAsync(ID id);

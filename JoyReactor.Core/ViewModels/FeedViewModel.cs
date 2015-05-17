@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -112,9 +111,7 @@ namespace JoyReactor.Core.ViewModels
             {
                 var divider = showDivider
                     ? new DividerViewModel(LoadNextPage)
-                    : new DividerViewModel(() =>
-                    {
-                    });
+                    : new DividerViewModel(() => { });
                 posts.Insert(data.DividerPosition, divider);
             }
             return posts;
@@ -122,11 +119,13 @@ namespace JoyReactor.Core.ViewModels
 
         public class ContentViewModel : ViewModelBase
         {
+            const string ImageStub = "http://wiki.solid-run.com/images/7/75/No_image_available.png";
+
             public RelayCommand OpenPostCommand { get; set; }
 
             public string Title { get { return post.Title; } }
 
-            public string Image { get { return post.Image; } }
+            public string Image { get { return post.Image ?? ImageStub; } }
 
             public int ImageWidth { get { return post.ImageWidth; } }
 

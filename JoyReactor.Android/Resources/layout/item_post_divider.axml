@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <Button
+        android:id="@+id/dividerButton"
         android:text="@string/load_more_caps"
         android:textColor="@color/text_primary"
         android:textSize="14sp"
@@ -11,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <TextView
+        android:visibility="gone"
         android:textColor="@color/primary_dark"
         android:padding="4dp"
         android:textSize="16sp"

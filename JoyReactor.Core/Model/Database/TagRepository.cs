@@ -20,5 +20,10 @@ namespace JoyReactor.Core.Model.Database
         {
             return Connection.InsertAsync(tag);
         }
+
+        public Task UpdateAsync(Tag tag)
+        {
+            return Connection.UpdateAsync(tag);
+        }
     }
 }

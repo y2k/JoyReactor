@@ -11,11 +11,6 @@ namespace JoyReactor.Android.App.Home
 {
 	public class LeftMenuFragment : BaseFragment
 	{
-		static MenuHeader[] Headers = {
-			new MenuHeader { Title = Resource.String.feed, ListId = ID.Factory.New (ID.IdConst.ReactorGood) },
-			new MenuHeader { Title = Resource.String.favorite, ListId = ID.Factory.New (ID.IdConst.ReactorFavorite) },
-		};
-
 		ListView list;
 		Adapter adapter;
 		TagsViewModel viewModel;
@@ -41,13 +36,10 @@ namespace JoyReactor.Android.App.Home
 			base.OnActivityCreated (savedInstanceState);
 
 			list.Adapter = adapter;
-
-			list.ItemClick += (sender, e) => { 
-				var id = e.Position < Headers.Length 
-					? Headers [e.Position].ListId 
-					: viewModel.Tags [e.Position - Headers.Length].TagId;
-				MessengerInstance.Send (new TagsViewModel.SelectTagMessage { Id = id });
-			};
+            list.ItemClick += (sender, e) => { 
+                var id = e.Position < 1 ? null : viewModel.Tags [e.Position - 1].TagId;
+                MessengerInstance.Send (new TagsViewModel.SelectTagMessage { Id = id });
+            };
 		}
 
 		void HandleCollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
@@ -87,8 +79,13 @@ namespace JoyReactor.Android.App.Home
 			public override View GetView (int position, View convertView, ViewGroup parent)
 			{
 				if (GetItemViewType (position) == 0) {
-					// 
 					convertView = convertView ?? View.Inflate(parent.Context, Resource.Layout.layout_subscriptions_header, null);
+                    convertView.FindViewById(Resource.Id.selectFeatured).Click
+                        += (sender, e) => fragment.MessengerInstance.Send (
+                            new TagsViewModel.SelectTagMessage { Id = ID.Factory.New (ID.IdConst.ReactorGood) });
+                    convertView.FindViewById(Resource.Id.selectFavorite).Click
+                        += (sender, e) => fragment.MessengerInstance.Send (
+                            new TagsViewModel.SelectTagMessage { Id = ID.Factory.New (ID.IdConst.ReactorFavorite) });
 				} else {
 					convertView = convertView ?? View.Inflate (parent.Context, Resource.Layout.item_subscription, null);
 					var i = fragment.viewModel.Tags [position - 1];

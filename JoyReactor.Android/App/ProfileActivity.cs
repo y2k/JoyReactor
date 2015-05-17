@@ -48,14 +48,11 @@ namespace JoyReactor.Android.App
 			{
 				var view = inflater.Inflate(Resource.Layout.fragment_profile, container, false);
 
-				Binding binding;
 				var progress = view.FindViewById(Resource.Id.progress);
-				binding = viewmodel
-					.SetBinding(() => viewmodel.IsLoading, progress, () => progress.Visibility)
+				AddBinding(viewmodel, () => viewmodel.IsLoading, progress, () => progress.Visibility)
 					.ConvertSourceToTarget(s => s ? ViewStates.Visible : ViewStates.Gone);
-				bindings.Add (binding);
 
-				var username = view.FindViewById<TextView>(Resource.Id.username);
+                var username = view.FindViewById<TextView>(Resource.Id.username);
 				viewmodel.SetBinding(() => viewmodel.UserName, username, () => username.Text);
 
 				var rating = view.FindViewById<TextView>(Resource.Id.rating);

@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <FrameLayout
+        android:id="@+id/selectFeatured"
         android:paddingRight="21dp"
         android:clickable="true"
         android:foreground="?android:attr/listChoiceBackgroundIndicator"
@@ -24,6 +25,7 @@
             android:layout_height="wrap_content" />
     </FrameLayout>
     <FrameLayout
+        android:id="@+id/selectFavorite"
         android:paddingLeft="21dp"
         android:clickable="true"
         android:foreground="?android:attr/listChoiceBackgroundIndicator"

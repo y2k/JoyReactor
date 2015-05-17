@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Database
 {
-    class AuthRepository : Repository, ProfileService.IAuthStorage, ReactorMessageParser.IAuthStorage, JoyReactorProvider.IAuthStorage
+    class AuthRepository : Repository, ProfileService.IAuthStorage, ReactorMessageParser.IAuthStorage, IProviderAuthStorage
     {
         public async Task ClearDatabase()
         {

@@ -85,7 +85,9 @@ namespace JoyReactor.Android.App.Home
 
 		void BindFooter (View footer, FeedViewModel.DividerViewModel viewModel)
 		{
-			footer.SetClick ((sender, e) => viewModel.LoadMoreCommand.Execute (null));
+            footer
+                .FindViewById(Resource.Id.dividerButton)
+                .SetClick ((sender, e) => viewModel.LoadMoreCommand.Execute (null));
 		}
 
 		View CreateViewForFooter ()

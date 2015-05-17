@@ -13,8 +13,8 @@ namespace JoyReactor.Core.Model.Parser
 {
     class PostProvider
     {
-        IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
-        JoyReactorProvider.IStorage storage = ServiceLocator.Current.GetInstance<JoyReactorProvider.IStorage>();
+        WebDownloader downloader = ServiceLocator.Current.GetInstance<WebDownloader>();
+        IProviderStorage storage = ServiceLocator.Current.GetInstance<IProviderStorage>();
 
         string postId;
         string htmlPage;
@@ -27,7 +27,6 @@ namespace JoyReactor.Core.Model.Parser
         internal async Task ComputeAsync()
         {
             await DownloadHtmlPageAsync();
-
             await SavePostInformation();
             await SavePostAttachments();
             await SaveRelatedPosts();

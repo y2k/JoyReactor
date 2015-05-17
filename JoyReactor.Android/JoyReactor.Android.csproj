@@ -137,7 +137,6 @@
     <None Include="Assets\AboutAssets.txt" />
     <None Include="packages.config" />
     <None Include="Properties\AndroidManifest.xml" />
-    <None Include="Properties\_SettingsStarted.txt" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\ActivityPost.axml" />

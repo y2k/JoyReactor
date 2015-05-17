@@ -33,8 +33,7 @@ namespace JoyReactor.Android.App.Home
 
 			var refresher = view.FindViewById<SwipeRefreshLayout> (Resource.Id.refresher);
 			refresher.SetCommand ("Refresh", viewModel.RefreshCommand);
-			viewModel
-				.SetBinding (() => viewModel.IsBusy, refresher, () => refresher.Refreshing, BindingMode.OneWay);
+            AddBinding(viewModel, () => viewModel.IsBusy, refresher, () => refresher.Refreshing);
 
 			var applyButton = view.FindViewById<ReloadButton> (Resource.Id.apply);
 			applyButton.Command = viewModel.ApplyCommand;

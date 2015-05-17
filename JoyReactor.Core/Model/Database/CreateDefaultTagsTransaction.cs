@@ -14,7 +14,9 @@ namespace JoyReactor.Core.Model.Database
 
         public async Task Execute()
         {
-            await InsertSystem(ID.Factory.New(ID.IdConst.ReactorGood), "JoyReactor");
+            await InsertSystem(ID.Factory.New(ID.IdConst.ReactorGood), "_");
+            await InsertSystem(ID.Factory.New(ID.IdConst.ReactorFavorite), "_");
+
             await InsertMain("anime", "Anime", "http://img1.joyreactor.cc/pics/avatar/tag/2851");
             await InsertMain("cosplay", "Cosplay", "http://img8.joyreactor.cc/pics/avatar/tag/518");
             await InsertMain("dev", "Dev", "http://img0.joyreactor.cc/pics/avatar/tag/2");

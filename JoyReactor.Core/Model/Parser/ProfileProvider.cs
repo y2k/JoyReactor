@@ -15,7 +15,7 @@ namespace JoyReactor.Core.Model.Parser
 {
     public class ProfileProvider
     {
-        IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
+        WebDownloader downloader = ServiceLocator.Current.GetInstance<WebDownloader>();
         Storage storage, authStorage;
 
         public ProfileProvider(Storage storage)
@@ -102,7 +102,7 @@ namespace JoyReactor.Core.Model.Parser
         {
             internal TagImageLoader(List<Tag> tags) : base(tags, "tag-image_") { }
 
-            protected override async Task<string> GetFromWeb(IWebDownloader downloader, Tag item)
+            protected override async Task<string> GetFromWeb(WebDownloader downloader, Tag item)
             {
                 var html = await downloader.GetTextAsync(new Uri("http://joyreactor.cc/tag/" + item.Title));
                 return Regex.Match(html, @"\<img itemprop=""photo"" src=""([^""]+)").Groups[1].Value;

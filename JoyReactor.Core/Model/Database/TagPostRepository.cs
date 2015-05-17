@@ -8,10 +8,10 @@ namespace JoyReactor.Core.Model.Database
     {
         public Task<List<TagPost>> GetAllAsync(int tagId)
         {
-            return Connection.QueryAsync<TagPost>($"SELECT * FROM tag_post WHERE TagId = ?", tagId);
+            return Connection.QueryAsync<TagPost>("SELECT * FROM tag_post WHERE TagId = ?", tagId);
         }
 
-        public Task RemoveAsync(int tagId)
+        public Task RemoveAllAsync(int tagId)
         {
             return Connection.ExecuteAsync("DELETE FROM tag_post WHERE TagId = ?", tagId);
         }
@@ -19,6 +19,11 @@ namespace JoyReactor.Core.Model.Database
         public Task<int> AddAsync(TagPost item)
         {
             return Connection.InsertAsync(item);
+        }
+
+        public Task InsertAllAsync(List<TagPost> items)
+        {
+            return Connection.InsertAllAsync(items);
         }
     }
 }

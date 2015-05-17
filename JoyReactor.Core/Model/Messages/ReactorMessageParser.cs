@@ -13,7 +13,7 @@ namespace JoyReactor.Core.Model.Messages
 {
     public class ReactorMessageParser : MessageFetcher.IMessageParser
     {
-        IWebDownloader downloader = ServiceLocator.Current.GetInstance<IWebDownloader>();
+        WebDownloader downloader = ServiceLocator.Current.GetInstance<WebDownloader>();
         IAuthStorage auth = ServiceLocator.Current.GetInstance<IAuthStorage>();
 
         public async Task<List<RawMessage>> LoadNextPageAsync(int page)
