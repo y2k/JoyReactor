@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Web;
@@ -80,15 +81,16 @@ namespace JoyReactor.Core.Model.Parser
 
             async Task<Uri> GenerateUrl()
             {
-                var url = new StringBuilder("http://" + new ReactorDomainDetector().GetDomainForTag(id.Tag));
+                var url = new StringBuilder("http://");
                 if (id.Type == ID.TagType.Favorite)
                 {
-                    if (id.Tag == null)
-                        id.Tag = await authStorage.GetCurrentUserNameAsync();
-                    url.Append("/user/").Append(Uri.EscapeDataString(id.Tag)).Append("/favorite");
+                    url.Append(new ReactorDomainDetector().GetDomainForType(ReactorDomainDetector.TagType.Normal));
+                    var username = id.Tag ?? (await new ProfileRepository().GetCurrentAsync()).UserName;
+                    url.Append("/user/").Append(Uri.EscapeDataString(username)).Append("/favorite");
                 }
                 else
                 {
+                    url.Append(new ReactorDomainDetector().GetDomainForTag(id.Tag));
                     if (id.Tag != null)
                         url.Append("/tag/").Append(Uri.EscapeUriString(id.Tag));
                     if (ID.TagType.Best == id.Type)

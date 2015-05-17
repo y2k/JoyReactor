@@ -1,6 +1,7 @@
 ﻿using JoyReactor.Core.Model.DTO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace JoyReactor.Core.Model.Database
 {
@@ -19,6 +20,11 @@ namespace JoyReactor.Core.Model.Database
         internal Task InsertAsync(Profile profile)
         {
             return Connection.InsertAsync(profile);
+        }
+
+        internal async Task<Profile> GetCurrentAsync()
+        {
+            return (await Connection.QueryAsync<Profile>("SELECT * FROM profiles LIMIT 1")).First();
         }
     }
 }
