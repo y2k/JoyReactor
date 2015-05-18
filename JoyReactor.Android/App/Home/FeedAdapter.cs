@@ -1,8 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Drawing;
 using Android.Content;
-using Android.Graphics;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
@@ -10,7 +8,6 @@ using GalaSoft.MvvmLight;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.Widget;
 using JoyReactor.Core;
-using JoyReactor.Core.Model;
 using JoyReactor.Core.ViewModels;
 
 namespace JoyReactor.Android.App.Home
@@ -100,34 +97,19 @@ namespace JoyReactor.Android.App.Home
 			return convertView;
 		}
 
-		void BindContent (View convertView, int position)
+        void BindContent (View view, int position)
 		{
 			var item = (FeedViewModel.ContentViewModel)items [position];
 
-			var v = convertView.FindViewById (Resource.Id.action);
-			v.SetClick ((sender, e) => item.OpenPostCommand.Execute (null));
+            view.FindViewById<FixedAspectPanel>(Resource.Id.imagePanel).Aspect = (float)item.ImageWidth / item.ImageHeight;
+            var iv = view.FindViewById<WebImageView>(Resource.Id.image);
+            iv.ImageSize = maxWidth;
+            iv.ImageSource = item.Image;
 
-			var iv = convertView.FindViewById<FixedSizeImageView> (Resource.Id.image);
-			iv.ImageSize = new Size (item.ImageWidth, item.ImageHeight);
+            view.FindViewById<WebImageView> (Resource.Id.userImage).ImageSource = "" + item.UserImage;
+            view.FindViewById<TextView> (Resource.Id.userName).Text = item.UserName;
 
-//            iv.SetImageDrawable(null);
-//            iModel.Load(iv, item.Image == null ? null : new Uri(item.Image), maxWidth, s => iv.SetImageDrawable(s == null ? null : new BitmapDrawable((Bitmap)s)));
-			new ImageRequest ()
-                .SetToken (iv)
-                .SetUrl (item.Image)
-                .CropIn (maxWidth)
-                .Into<Bitmap> (iv.SetImageBitmap);
-
-			var ui = convertView.FindViewById<ImageView> (Resource.Id.user_image);
-//            ui.SetImageDrawable(null);
-//            iModel.Load(ui, item.UserImage, 0, s => ui.SetImageBitmap((Bitmap)s));
-			new ImageRequest ()
-                .SetToken (ui)
-                .SetUrl (item.UserImage)
-                .Into<Bitmap> (ui.SetImageBitmap);
-
-			convertView.FindViewById<TextView> (Resource.Id.user_name).Text = item.UserName;
-//			convertView.FindViewById<TextView> (Resource.Id.title).Text = item.Title;
+            view.FindViewById (Resource.Id.action).SetClick ((sender, e) => item.OpenPostCommand.Execute (null));
 		}
 
 		class ViewHolder : RecyclerView.ViewHolder

@@ -137,9 +137,9 @@ namespace JoyReactor.Core.ViewModels
 
             public string Image { get { return post.Image ?? ImageStub; } }
 
-            public int ImageWidth { get { return post.ImageWidth; } }
+            public int ImageWidth { get { return Math.Max(1, post.ImageWidth); } }
 
-            public int ImageHeight { get { return post.ImageHeight; } }
+            public int ImageHeight { get { return Math.Max(1, post.ImageHeight); } }
 
             public Uri UserImage { get { return post.UserImage == null ? null : new Uri(post.UserImage); } }
 

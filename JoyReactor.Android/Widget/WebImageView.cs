@@ -3,11 +3,14 @@ using Android.Graphics;
 using Android.Util;
 using Android.Widget;
 using JoyReactor.Core.Model;
+using System;
 
 namespace JoyReactor.Android.Widget
 {
     public class WebImageView : ImageView
     {
+        public const float ImageSizeAuto = -1;
+
         string imageSource;
 
         public float ImageSize { get ; set; }
@@ -24,9 +27,9 @@ namespace JoyReactor.Android.Widget
             set { UpdateImageSource(value); }
         }
 
-        public WebImageView(Context context, IAttributeSet attrs)
-            : base(context, attrs)
-        {
+        public WebImageView(Context context, IAttributeSet attrs) : base(context, attrs) 
+        { 
+            ImageSize = ImageSizeAuto;
         }
 
         void UpdateImageSource(string imageSource)
@@ -34,21 +37,19 @@ namespace JoyReactor.Android.Widget
             if (this.imageSource != imageSource)
             {
                 this.imageSource = imageSource;
-
-//                var u = imageSource == null ? null : new Uri(imageSource); // u == null отменяет закачки
-//                iModel.Load(this, u, 0, s =>
-//                    {
-//                        if (s == null)
-//                            SetImageDrawable(null);
-//                        else
-//                            SetImageBitmap((Bitmap)s);
-//                    }); 
                 new ImageRequest()
                     .SetToken(this)
                     .SetUrl(imageSource)
-                    .CropIn((int)ImageSize)
+                    .CropIn(GetImageSize())
                     .Into<Bitmap>(SetImageBitmap);
             }
+        }
+
+        int GetImageSize()
+        {
+            return ImageSize >= 0
+                ? (int)ImageSize
+                : Math.Max(LayoutParameters.Width, LayoutParameters.Height);
         }
     }
 }

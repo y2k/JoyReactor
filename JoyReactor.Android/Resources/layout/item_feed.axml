@@ -9,48 +9,35 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:orientation="vertical">
-        <JoyReactor.Android.Widget.FixedSizeImageView
-            android:minWidth="100dp"
-            android:minHeight="100dp"
-            android:id="@+id/image"
+        <JoyReactor.Android.Widget.FixedAspectPanel
+            android:id="@+id/imagePanel"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    <!--        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/image"
-            android:layout_marginLeft="1dp"
-            android:layout_marginRight="1dp"
-            android:background="#4444" />-->
-    <!--        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/image"
-            android:layout_margin="4dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textColor="#505050"
-            android:textSize="14sp" />-->
+            android:layout_height="wrap_content">
+            <JoyReactor.Android.Widget.WebImageView
+                android:id="@+id/image"
+                android:scaleType="centerCrop"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </JoyReactor.Android.Widget.FixedAspectPanel>
         <JoyReactor.Android.Widget.RoundBorderLayour
             android:id="@+id/userImagePanel"
-            android:layout_below="@id/image"
+            android:layout_below="@id/imagePanel"
             android:layout_marginTop="9dp"
             android:layout_marginBottom="9dp"
             android:layout_marginLeft="9dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/user_image"
+            <JoyReactor.Android.Widget.WebImageView
+                android:id="@+id/userImage"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:scaleType="centerCrop" />
         </JoyReactor.Android.Widget.RoundBorderLayour>
         <TextView
-            android:id="@+id/user_name"
+            android:id="@+id/userName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/image"
+            android:layout_below="@id/imagePanel"
             android:layout_marginTop="13dp"
             android:layout_marginLeft="8dp"
             android:layout_toRightOf="@id/userImagePanel"
