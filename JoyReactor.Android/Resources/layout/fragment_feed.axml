@@ -7,8 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <JoyReactor.Android.Widget.FeedRecyclerView
-            android:padding="8dp"
-            android:clipToPadding="false"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/list" />
