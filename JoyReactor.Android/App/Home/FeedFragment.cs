@@ -26,7 +26,7 @@ namespace JoyReactor.Android.App.Home
 		{
 			var view = inflater.Inflate (Resource.Layout.fragment_feed, null);
 
-			var list = view.FindViewById<RecyclerView> (Resource.Id.List);
+			var list = view.FindViewById<RecyclerView> (Resource.Id.list);
 			list.SetLayoutManager (new StaggeredGridLayoutManager (2, StaggeredGridLayoutManager.Vertical));
 			list.AddItemDecoration (new DividerItemDecoration (2.5f));
 			list.SetAdapter (new FeedAdapter (viewModel.Posts));

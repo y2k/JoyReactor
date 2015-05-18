@@ -11,7 +11,7 @@
             android:clipToPadding="false"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/List" />
+            android:id="@+id/list" />
     </JoyReactor.Android.Widget.ColorSwipeRefreshLayout>
     <JoyReactor.Android.Widget.ReloadButton
         android:layout_gravity="bottom"
