@@ -119,9 +119,7 @@ namespace JoyReactor.Core.ViewModels
             {
                 var divider = showDivider
                     ? new DividerViewModel(LoadNextPage)
-                    : new DividerViewModel(() =>
-                    {
-                    });
+                    : new DividerViewModel(() => { });
                 posts.Insert(data.DividerPosition, divider);
             }
             return posts;

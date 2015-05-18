@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using Android.Content;
 using Android.Support.V7.Widget;
 using Android.Views;
@@ -12,112 +11,107 @@ using JoyReactor.Core.ViewModels;
 
 namespace JoyReactor.Android.App.Home
 {
-	class FeedAdapter : RecyclerView.Adapter
-	{
-		const int TypeContent = Resource.Layout.item_feed;
-		const int TypeDivider = Resource.Layout.item_comment;
+    class FeedAdapter : RecyclerView.Adapter
+    {
+        public ID ListId { get; set; }
 
-		public ID ListId { get; set; }
+        readonly ObservableCollection<ViewModelBase> items;
 
-		int maxWidth;
-		Context context;
-		ObservableCollection<ViewModelBase> items;
+        public FeedAdapter(ObservableCollection<ViewModelBase> items)
+        {
+            this.items = items;
+            items.CollectionChanged += (sender, e) => NotifyDataSetChanged();
+        }
 
-		public FeedAdapter (Context context) : this (context, null)
-		{
-		}
+        #region RecyclerView.Adapter methods
 
-		public FeedAdapter (Context context, ObservableCollection<ViewModelBase> value)
-		{
-			this.context = context;
-			maxWidth = (int)(200 * context.Resources.DisplayMetrics.Density);
-			ChangeItemSource (value);
-		}
+        public override int ItemCount
+        { 
+            get { return items.Count; }
+        }
 
-		public void ChangeItemSource (ObservableCollection<ViewModelBase> value)
-		{
-			if (items != value) {
-				if (items != null)
-					items.CollectionChanged -= HandleCollectionChanged;
+        public override int GetItemViewType(int position)
+        {
+            return BaseViewHolder.GetItemViewType(items[position]);
+        }
 
-				items = value;
-				if (items != null) 
-					items.CollectionChanged += HandleCollectionChanged;
-				NotifyDataSetChanged ();
-			}
-		}
+        public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
+        {
+            return BaseViewHolder.NewViewHolder(parent.Context, viewType);
+        }
 
-		void HandleCollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
-		{
-			NotifyDataSetChanged ();
-		}
+        public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
+        {
+            ((BaseViewHolder)holder).OnBindViewHolder(items[position]);
+        }
 
-		#region implemented abstract members of Adapter
+        #endregion
 
-		public override int GetItemViewType (int position)
-		{
-			return items [position] is FeedViewModel.ContentViewModel ? TypeContent : TypeDivider;
-		}
+        abstract class BaseViewHolder : RecyclerView.ViewHolder
+        {
+            internal BaseViewHolder(View view)
+                : base(view)
+            {
+            }
 
-		public override void OnBindViewHolder (RecyclerView.ViewHolder holder, int position)
-		{
-			if (holder.ItemViewType == TypeContent)
-				BindContent (holder.ItemView, position);
-			else
-				BindFooter (holder.ItemView, (FeedViewModel.DividerViewModel)items [position]);
-		}
+            internal abstract void OnBindViewHolder(object item);
 
-		public override RecyclerView.ViewHolder OnCreateViewHolder (ViewGroup parent, int viewType)
-		{
-			return viewType == TypeDivider
-				? new ViewHolder (CreateViewForFooter ())
-				: new ViewHolder (View.Inflate (context, Resource.Layout.item_feed, null));
-		}
+            internal static int GetItemViewType(object item)
+            {
+                return item is FeedViewModel.ContentViewModel ? 0 : 1;
+            }
 
-		public override int ItemCount { 
-			get { return items == null ? 0 : items.Count; }
-		}
+            internal static BaseViewHolder NewViewHolder(Context context, int viewType)
+            {
+                return (viewType == 0 ? (BaseViewHolder)new ContentViewHolder(context) : new FooterViewHolder(context));
+            }
+        }
 
-		#endregion
+        class ContentViewHolder : BaseViewHolder
+        {
+            Context context;
 
-		void BindFooter (View footer, FeedViewModel.DividerViewModel viewModel)
-		{
-            footer
-                .FindViewById(Resource.Id.dividerButton)
-                .SetClick ((sender, e) => viewModel.LoadMoreCommand.Execute (null));
-		}
+            public ContentViewHolder(Context context)
+                : base(View.Inflate(context, Resource.Layout.item_feed, null))
+            {
+                this.context = context;
+            }
 
-		View CreateViewForFooter ()
-		{
-			var convertView = View.Inflate (context, Resource.Layout.item_post_divider, null);
-			convertView.LayoutParameters = new StaggeredGridLayoutManager.LayoutParams (
-				ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent) {
-				FullSpan = true,
-			};
-			return convertView;
-		}
+            internal override void OnBindViewHolder(object item)
+            {
+                var vm = (FeedViewModel.ContentViewModel)item;
 
-        void BindContent (View view, int position)
-		{
-			var item = (FeedViewModel.ContentViewModel)items [position];
+                ItemView.FindViewById<FixedAspectPanel>(Resource.Id.imagePanel).Aspect = (float)vm.ImageWidth / vm.ImageHeight;
+                var iv = ItemView.FindViewById<WebImageView>(Resource.Id.image);
+                iv.ImageSize = 200 * context.Resources.DisplayMetrics.Density;
+                iv.ImageSource = vm.Image;
 
-            view.FindViewById<FixedAspectPanel>(Resource.Id.imagePanel).Aspect = (float)item.ImageWidth / item.ImageHeight;
-            var iv = view.FindViewById<WebImageView>(Resource.Id.image);
-            iv.ImageSize = maxWidth;
-            iv.ImageSource = item.Image;
+                ItemView.FindViewById<WebImageView>(Resource.Id.userImage).ImageSource = "" + vm.UserImage;
+                ItemView.FindViewById<TextView>(Resource.Id.userName).Text = vm.UserName;
 
-            view.FindViewById<WebImageView> (Resource.Id.userImage).ImageSource = "" + item.UserImage;
-            view.FindViewById<TextView> (Resource.Id.userName).Text = item.UserName;
+                ItemView.FindViewById(Resource.Id.action).SetClick((sender, e) => vm.OpenPostCommand.Execute(null));
+            }
+        }
 
-            view.FindViewById (Resource.Id.action).SetClick ((sender, e) => item.OpenPostCommand.Execute (null));
-		}
+        class FooterViewHolder : BaseViewHolder
+        {
+            public FooterViewHolder(Context context)
+                : base(View.Inflate(context, Resource.Layout.item_post_divider, null))
+            {
+                ItemView.LayoutParameters = new StaggeredGridLayoutManager.LayoutParams(
+                    ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent)
+                {
+                    FullSpan = true,
+                };
+            }
 
-		class ViewHolder : RecyclerView.ViewHolder
-		{
-			public ViewHolder (View view)
-				: base (view)
-			{
-			}
-		}
-	}
+            internal override void OnBindViewHolder(object item)
+            {
+                var vm = (FeedViewModel.DividerViewModel)item;
+                ItemView
+                    .FindViewById(Resource.Id.dividerButton)
+                    .SetClick((sender, e) => vm.LoadMoreCommand.Execute(null));
+            }
+        }
+    }
 }

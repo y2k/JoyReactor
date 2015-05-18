@@ -29,7 +29,7 @@ namespace JoyReactor.Android.App.Home
 			var list = view.FindViewById<RecyclerView> (Resource.Id.List);
 			list.SetLayoutManager (new StaggeredGridLayoutManager (2, StaggeredGridLayoutManager.Vertical));
 			list.AddItemDecoration (new DividerItemDecoration (2.5f));
-			list.SetAdapter (new FeedAdapter (Activity, viewModel.Posts));
+			list.SetAdapter (new FeedAdapter (viewModel.Posts));
 
 			var refresher = view.FindViewById<SwipeRefreshLayout> (Resource.Id.refresher);
 			refresher.SetCommand ("Refresh", viewModel.RefreshCommand);
