@@ -16,14 +16,11 @@ namespace JoyReactor.Core.Model.Database
             return Connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM tags WHERE TagId = ?", id);
         }
 
-        internal Task InsertAsync(Tag tag)
+        public async Task InsertIfNotExistsAsync(Tag tag)
         {
-            return Connection.InsertAsync(tag);
-        }
-
-        public Task UpdateAsync(Tag tag)
-        {
-            return Connection.UpdateAsync(tag);
+            var count = (await Connection.QueryAsync<Tag>("SELECT * FROM tags WHERE TagId = ?", tag.Id)).Count();
+            if (count == 0)
+                await InsertAsync(tag);
         }
     }
 }

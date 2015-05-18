@@ -75,7 +75,7 @@ namespace JoyReactor.Core.Model
 
         internal static Task InvalidateFeedAsync()
         {
-            TagCollectionModel.OnInvalidateEvent();
+            TagCollectionModel.InvalidateTagCollection();
             return Task.Run(() => FeedChanged?.Invoke(null, null));
         }
 

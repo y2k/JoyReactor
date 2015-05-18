@@ -32,7 +32,7 @@ namespace JoyReactor.Core.Model
 
         Task InvaliteTagList()
         {
-            return Task.Run(() => TagCollectionModel.OnInvalidateEvent());
+            return Task.Run(() => TagCollectionModel.InvalidateTagCollection());
         }
 
         public async Task ReplaceCurrentUserReadingTagsAsync(IEnumerable<Tag> readingTags)
@@ -40,7 +40,6 @@ namespace JoyReactor.Core.Model
             foreach (var t in readingTags)
             {
                 t.Flags = Tag.FlagWebRead | Tag.FlagShowInMain;
-                t.TagId = ID.Factory.NewTag(t.Title.ToLower()).SerializeToString();
 
                 int count = await new TagRepository().CountAsync(t.TagId);
                 if (count == 0)

@@ -62,10 +62,11 @@ namespace JoyReactor.Core.Model
             PostChanged?.Invoke(null, null);
         }
 
+        [Obsolete]
         public async Task CreateTagAsync(string name)
         {
             await storage.CreateMainTagAsync(name);
-            TagCollectionModel.OnInvalidateEvent();
+            TagCollectionModel.InvalidateTagCollection();
         }
 
         internal interface IStorage

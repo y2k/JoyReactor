@@ -1,26 +1,25 @@
-﻿using JoyReactor.Core.Model.Common;
-using JoyReactor.Core.Model.Database;
-using JoyReactor.Core.Model.DTO;
-using JoyReactor.Core.Model.Helper;
-using JoyReactor.Core.Model.Web;
-using Microsoft.Practices.ServiceLocation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using JoyReactor.Core.Model.Database;
+using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Helper;
+using JoyReactor.Core.Model.Web;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Parser
 {
     public class ProfileProvider
     {
         WebDownloader downloader = ServiceLocator.Current.GetInstance<WebDownloader>();
-        Storage storage, authStorage;
+        Storage storage;
 
         public ProfileProvider(Storage storage)
         {
-            this.storage = authStorage = storage;
+            this.storage = storage;
         }
 
         public async Task ComputeAsync()
@@ -68,9 +67,9 @@ namespace JoyReactor.Core.Model.Parser
                 var readingTags = div
                     .Descendants("a")
                     .Select(s => UnescapeTagName(profileTagRx.FirstString(s.GetHref())))
-                    .Select(s => new Tag { Title = s })
+                    .Select(s => new Tag { Title = s, TagId = ID.Factory.NewTag(s.ToLower()).SerializeToString() })
                     .ToList();
-                await new TagImageLoader(readingTags).LoadAsync();
+                await new TagImageProvider(readingTags).LoadAsync();
                 await storage.ReplaceCurrentUserReadingTagsAsync(readingTags);
             }
 
@@ -96,27 +95,6 @@ namespace JoyReactor.Core.Model.Parser
             Task ReplaceCurrentUserReadingTagsAsync(IEnumerable<Tag> readingTags);
 
             Task SaveNewOrUpdateProfileAsync(Profile profile);
-        }
-
-        class TagImageLoader : ImageLoader<Tag>
-        {
-            internal TagImageLoader(List<Tag> tags) : base(tags, "tag-image_") { }
-
-            protected override async Task<string> GetFromWeb(WebDownloader downloader, Tag item)
-            {
-                var html = await downloader.GetTextAsync(new Uri("http://joyreactor.cc/tag/" + item.Title));
-                return Regex.Match(html, @"\<img itemprop=""photo"" src=""([^""]+)").Groups[1].Value;
-            }
-
-            protected override string GetKey(Tag item)
-            {
-                return item.Title;
-            }
-
-            protected override void Set(Tag item, string value)
-            {
-                item.BestImage = value;
-            }
         }
     }
 }

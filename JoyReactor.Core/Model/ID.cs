@@ -70,21 +70,14 @@ namespace JoyReactor.Core
 			return new ID {
 				Site = (SiteParser)Enum.Parse (typeof(SiteParser), p [0]),
 				Type = (TagType)Enum.Parse (typeof(TagType), p [1]),
-				Tag = p [2]
+                Tag = string.IsNullOrEmpty(p[2]) ? null : p[2],
 			};
 		}
 
+        [Obsolete]
 		public static ID Parser (string flatId)
 		{
-			var p = flatId.Split ('-');
-			var id = new ID {
-				Site = (SiteParser)Enum.Parse (typeof(SiteParser), p [0]),
-				Type = (TagType)Enum.Parse (typeof(TagType), p [1]),
-				Tag = p [2]
-			};
-			if ("" == id.Tag)
-				id.Tag = null;
-			return id;
+            return DeserializeFromString(flatId);
 		}
 
 		public class TagID : ID

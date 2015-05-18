@@ -1,7 +1,10 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System.Threading.Tasks;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using Microsoft.Practices.ServiceLocation;
-using System.Threading.Tasks;
+using JoyReactor.Core.Model.Database;
+using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Parser;
+using JoyReactor.Core.Model;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -10,6 +13,7 @@ namespace JoyReactor.Core.ViewModels
         #region Properties
 
         string _name;
+
         public string Name
         {
             get { return _name; }
@@ -17,6 +21,7 @@ namespace JoyReactor.Core.ViewModels
         }
 
         bool _nameError;
+
         public bool NameError
         {
             get { return _nameError; }
@@ -24,6 +29,7 @@ namespace JoyReactor.Core.ViewModels
         }
 
         bool _isBusy;
+
         public bool IsBusy
         {
             get { return _isBusy; }
@@ -31,6 +37,7 @@ namespace JoyReactor.Core.ViewModels
         }
 
         bool _isComplete;
+
         public bool IsComplete
         {
             get { return _isComplete; }
@@ -61,8 +68,17 @@ namespace JoyReactor.Core.ViewModels
         async void CreateTag()
         {
             IsBusy = true;
-            Name = Name.Trim();
-            await ServiceLocator.Current.GetInstance<IPostService>().CreateTagAsync(Name);
+
+            var tag = new Tag
+            {
+                Title = Name.Trim(),
+                TagId = ID.Factory.NewTag(Name.Trim().ToLower()).SerializeToString(),
+                Flags = Tag.FlagShowInMain,
+            };
+            await new TagImageProvider(tag).LoadAsync();
+            await new TagRepository().InsertIfNotExistsAsync(tag);
+            await TagCollectionModel.InvalidateTagCollectionAsync();
+
             IsBusy = false;
             IsComplete = true;
             MessengerInstance.Send(new CloseMessage());

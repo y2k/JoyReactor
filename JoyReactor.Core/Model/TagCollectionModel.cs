@@ -13,9 +13,14 @@ namespace JoyReactor.Core.Model
     {
         internal static event EventHandler InvalidateEvent;
 
-        public static void OnInvalidateEvent()
+        [Obsolete]
+        public static void InvalidateTagCollection()
         {
             InvalidateEvent?.Invoke(null, null);
+        }
+
+        public static Task InvalidateTagCollectionAsync() {
+            return Task.Run(() => InvalidateEvent?.Invoke(null, null));
         }
 
         [Obsolete]
