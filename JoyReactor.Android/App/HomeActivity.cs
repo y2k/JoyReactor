@@ -28,8 +28,13 @@ namespace JoyReactor.Android.App
 			pager.PageSelected += (s, e) => SupportActionBar.SetDisplayHomeAsUpEnabled (e.Position > 0);
 
 			pager.CurrentItem = 1;
-			MessengerInstance.Register<TagsViewModel.SelectTagMessage> (this, _ => pager.CurrentItem = 1);
 		}
+
+        protected override void OnStart()
+        {
+            base.OnStart();
+            MessengerInstance.Register<TagsViewModel.SelectTagMessage> (this, _ => pager.CurrentItem = 1);
+        }
 
 		public override bool OnCreateOptionsMenu (IMenu menu)
 		{
