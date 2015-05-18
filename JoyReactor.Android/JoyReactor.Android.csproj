@@ -131,6 +131,7 @@
     <Compile Include="App\SettingsActivity.cs" />
     <Compile Include="Widget\ReloadButton.cs" />
     <Compile Include="App\Base\VectorDrawable.cs" />
+    <Compile Include="Widget\FeedRecyclerView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
