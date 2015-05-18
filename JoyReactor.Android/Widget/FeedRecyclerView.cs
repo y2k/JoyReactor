@@ -12,15 +12,17 @@ namespace JoyReactor.Android.Widget
         public FeedRecyclerView(Context context, IAttributeSet attrs)
             : base(context, attrs)
         {
-            Initialize();
+            RecreateChildList();
         }
 
-        public override bool CanScrollVertically(int direction)
+        public void ResetScrollToTop()
         {
-            return list.CanScrollVertically(direction);
+            var adapter = list.GetAdapter();
+            RecreateChildList();
+            list.SetAdapter(adapter);
         }
 
-        void Initialize()
+        void RecreateChildList()
         {
             RemoveAllViews();
 
@@ -34,16 +36,14 @@ namespace JoyReactor.Android.Widget
             AddView(list);
         }
 
-        public void ResetScrollToTop()
-        {
-            var adapter = list.GetAdapter();
-            Initialize();
-            list.SetAdapter(adapter);
-        }
-
         public void SetAdapter(RecyclerView.Adapter adapter)
         {
             list.SetAdapter(adapter);
+        }
+
+        public override bool CanScrollVertically(int direction)
+        {
+            return list.CanScrollVertically(direction);
         }
     }
 }
