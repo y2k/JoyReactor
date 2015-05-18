@@ -8,6 +8,7 @@ using JoyReactor.Android.App.Base;
 using JoyReactor.Android.Widget;
 using JoyReactor.Core;
 using JoyReactor.Core.ViewModels;
+using System;
 
 namespace JoyReactor.Android.App.Home
 {
@@ -69,6 +70,7 @@ namespace JoyReactor.Android.App.Home
 
         class ContentViewHolder : BaseViewHolder
         {
+            const float MinImageAspect = 1f / 2f;
             Context context;
 
             public ContentViewHolder(Context context)
@@ -81,7 +83,8 @@ namespace JoyReactor.Android.App.Home
             {
                 var vm = (FeedViewModel.ContentViewModel)item;
 
-                ItemView.FindViewById<FixedAspectPanel>(Resource.Id.imagePanel).Aspect = (float)vm.ImageWidth / vm.ImageHeight;
+                ItemView.FindViewById<FixedAspectPanel>(Resource.Id.imagePanel).Aspect =
+                    Math.Max(MinImageAspect, (float)vm.ImageWidth / vm.ImageHeight);
                 var iv = ItemView.FindViewById<WebImageView>(Resource.Id.image);
                 iv.ImageSize = 200 * context.Resources.DisplayMetrics.Density;
                 iv.ImageSource = vm.Image;
