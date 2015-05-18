@@ -25,4 +25,5 @@
 	<string name="star_progress">Прогресс до следующей звезды:</string>
 	<string name="login_error">Не удалось войти. Попробуйте позже.</string>
 	<string name="your_new_message_here">Введите сообщение…</string>
+	<string name="you_are_not_authorized">Вы не авторизованы</string>
 </resources>

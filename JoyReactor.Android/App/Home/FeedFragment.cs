@@ -40,6 +40,11 @@ namespace JoyReactor.Android.App.Home
 			viewModel
 				.SetBinding (() => viewModel.HasNewItems, applyButton, () => applyButton.Visibility, BindingMode.OneWay)
 				.ConvertSourceToTarget (s => s ? ViewStates.Visible : ViewStates.Gone);
+
+            var error = view.FindViewById(Resource.Id.error);
+            AddBinding(viewModel, () => viewModel.Error, error, () => error.Visibility)
+                .ConvertSourceToTarget(s => s == FeedViewModel.ErrorType.NotError ? ViewStates.Gone : ViewStates.Visible);
+
 			return view;
 		}
 	}

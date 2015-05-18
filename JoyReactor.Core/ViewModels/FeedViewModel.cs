@@ -31,19 +31,15 @@ namespace JoyReactor.Core.ViewModels
 
         bool _isBusy;
 
-        public bool IsBusy
-        {
-            get { return _isBusy; }
-            set { Set(ref _isBusy, value); }
-        }
+        public bool IsBusy { get { return _isBusy; } set { Set(ref _isBusy, value); } }
 
         bool _hasNewItems;
 
-        public bool HasNewItems
-        {
-            get { return _hasNewItems; }
-            set { Set(ref _hasNewItems, value); }
-        }
+        public bool HasNewItems { get { return _hasNewItems; } set { Set(ref _hasNewItems, value); } }
+
+        ErrorType _error;
+
+        public ErrorType Error { get { return _error; } set { Set(ref _error, value); } }
 
         #endregion
 
@@ -63,17 +59,29 @@ namespace JoyReactor.Core.ViewModels
         public void Initialize(ID newId)
         {
             service = new FeedService(newId);
-            IsBusy = true;
+            ClearState();
 
             subscription?.Dispose();
             subscription = service
                 .Get()
                 .SubscribeOnUi(data =>
                 {
+                    Error = ErrorType.NotError;
                     HasNewItems = data.NewItemsCount > 0;
                     IsBusy = false;
                     UpdatePosts(data);
+                }, error =>
+                {
+                    ClearState();
+                    Error = ErrorType.NotAuthorized;
                 });
+        }
+
+        void ClearState()
+        {
+            Error = ErrorType.NotError;
+            HasNewItems = IsBusy = false;
+            Posts.Clear();
         }
 
         void UpdatePosts(PostCollectionState data)
@@ -111,7 +119,9 @@ namespace JoyReactor.Core.ViewModels
             {
                 var divider = showDivider
                     ? new DividerViewModel(LoadNextPage)
-                    : new DividerViewModel(() => { });
+                    : new DividerViewModel(() =>
+                    {
+                    });
                 posts.Insert(data.DividerPosition, divider);
             }
             return posts;
@@ -185,6 +195,12 @@ namespace JoyReactor.Core.ViewModels
             Task SyncNextPageAsync();
 
             Task ResetAsync();
+        }
+
+        public enum ErrorType
+        {
+            NotError,
+            NotAuthorized,
         }
     }
 }
