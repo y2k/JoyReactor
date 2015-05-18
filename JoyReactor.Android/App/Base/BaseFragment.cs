@@ -19,7 +19,7 @@ namespace JoyReactor.Android.App.Base
         List<Action> onResumeEvents = new List<Action>();
         List<Action> onPauseEvents = new List<Action>();
 
-        BindingManager bindinManager = new BindingManager();
+        BindingManager bindingManager = new BindingManager();
 
         public IMessenger MessengerInstance
         {
@@ -65,7 +65,12 @@ namespace JoyReactor.Android.App.Base
             onResumeEvents.Clear();
             onPauseEvents.Clear();
             MessengerInstance.Unregister(this);
-            bindinManager.Destroy();
+        }
+
+        public override void OnDestroyView()
+        {
+            base.OnDestroyView();
+            bindingManager.Destroy();
         }
 
         public override void OnPause()
@@ -76,10 +81,10 @@ namespace JoyReactor.Android.App.Base
 
         protected Binding<TS, TT> AddBinding<TS, TT>(object source, Expression<Func<TS>> sourceExpression, object target, Expression<Func<TT>> targetExpression = null, BindingMode mode = BindingMode.Default)
         {
-            return bindinManager.AddBinding(source, sourceExpression, target, targetExpression, mode);
+            return bindingManager.AddBinding(source, sourceExpression, target, targetExpression, mode);
         }
 
-        class BindingManager {
+        internal class BindingManager {
 
             List<Binding> bindings = new List<Binding>();
 

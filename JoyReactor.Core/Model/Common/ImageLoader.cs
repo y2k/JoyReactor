@@ -26,7 +26,9 @@ namespace JoyReactor.Core.Model.Common
                 if (string.IsNullOrEmpty(avatar))
                 {
                     avatar = await GetFromWeb(downloader, s);
-                    cache.Put(GetKey(s), avatar);
+
+                    if (!string.IsNullOrEmpty(avatar))
+                        cache.Put(GetKey(s), avatar);
                 }
                 Set(s, avatar);
             }

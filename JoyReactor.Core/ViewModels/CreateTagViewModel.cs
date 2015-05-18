@@ -5,6 +5,7 @@ using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model;
+using System;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -34,14 +35,6 @@ namespace JoyReactor.Core.ViewModels
         {
             get { return _isBusy; }
             set { Set(ref _isBusy, value); }
-        }
-
-        bool _isComplete;
-
-        public bool IsComplete
-        {
-            get { return _isComplete; }
-            set { Set(ref _isComplete, value); }
         }
 
         #endregion
@@ -76,12 +69,14 @@ namespace JoyReactor.Core.ViewModels
                 Flags = Tag.FlagShowInMain,
             };
             await new TagImageProvider(tag).LoadAsync();
-            await new TagRepository().InsertIfNotExistsAsync(tag);
-            await TagCollectionModel.InvalidateTagCollectionAsync();
+            if (Uri.IsWellFormedUriString(tag.BestImage, UriKind.Absolute))
+            {
+                await new TagRepository().InsertIfNotExistsAsync(tag);
+                await TagCollectionModel.InvalidateTagCollectionAsync();
+                MessengerInstance.Send(new CloseMessage());
+            }
 
             IsBusy = false;
-            IsComplete = true;
-            MessengerInstance.Send(new CloseMessage());
         }
 
         public class CloseMessage

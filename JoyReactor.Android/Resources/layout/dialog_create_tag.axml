@@ -1,39 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<ViewAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/animator"
     android:minWidth="300dp"
-    android:padding="16dp"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <EditText
-        android:id="@+id/name"
-        android:hint="@string/tag_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textCapWords" />
-    <TextView
-        android:textStyle="italic"
-        android:layout_marginLeft="4dp"
-        android:text="@string/example_tag"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
     <LinearLayout
-        style="?android:attr/buttonBarStyle"
-        android:gravity="right"
+        android:orientation="vertical"
+        android:padding="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <Button
-            style="?android:attr/buttonBarButtonStyle"
-            android:id="@+id/cancel"
-            android:text="@android:string/cancel"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/name"
+            android:hint="@string/tag_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords" />
+        <TextView
+            android:textStyle="italic"
+            android:layout_marginLeft="4dp"
+            android:text="@string/example_tag"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <Button
-            style="?android:attr/buttonBarButtonStyle"
-            android:id="@+id/ok"
-            android:text="@android:string/ok"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:gravity="right"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/cancel"
+                android:text="@android:string/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/ok"
+                android:text="@android:string/ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+    <ProgressBar
+        style="?android:attr/progressBarStyle"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</ViewAnimator>
