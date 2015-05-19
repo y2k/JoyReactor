@@ -143,6 +143,8 @@ namespace JoyReactor.Core.ViewModels
 
             public string UserName { get { return post.UserName; } }
 
+            public DateTime Created { get { return post.Created.DateTimeFromUnixTimestampMs(); } }
+
             Post post;
 
             public ContentViewModel(Post post)

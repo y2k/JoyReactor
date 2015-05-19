@@ -185,6 +185,19 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\ic_send_grey600_24dp.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\ic_rating.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\ic_reply.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_favorite.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_featured.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_time.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_favorite.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_featured.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_time.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_time.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_favorite.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_featured.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_time.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_favorite.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_featured.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_time.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup />

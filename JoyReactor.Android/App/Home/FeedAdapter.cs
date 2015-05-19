@@ -1,14 +1,15 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using Android.Content;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight;
+using Humanizer;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.Widget;
 using JoyReactor.Core;
 using JoyReactor.Core.ViewModels;
-using System;
 
 namespace JoyReactor.Android.App.Home
 {
@@ -89,6 +90,7 @@ namespace JoyReactor.Android.App.Home
                 iv.ImageSize = 200 * context.Resources.DisplayMetrics.Density;
                 iv.ImageSource = vm.Image;
 
+                ItemView.FindViewById<TextView>(Resource.Id.time).Text = vm.Created.Humanize();
                 ItemView.FindViewById<WebImageView>(Resource.Id.userImage).ImageSource = "" + vm.UserImage;
                 ItemView.FindViewById<TextView>(Resource.Id.userName).Text = vm.UserName;
 
