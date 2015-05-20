@@ -7,6 +7,7 @@ using Android.Views;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.App.Home;
 using JoyReactor.Core.ViewModels;
+using JoyReactor.Android.Model;
 
 namespace JoyReactor.Android.App
 {
@@ -49,7 +50,8 @@ namespace JoyReactor.Android.App
 				pager.CurrentItem = 0;
 				return true;
 			case Resource.Id.profile:
-				StartActivity (typeof(ProfileActivity));
+//				StartActivity (typeof(ProfileActivity));
+                new FeedbackController(this).Send();
 				return true;
 			case Resource.Id.messages:
 				StartActivity (typeof(MessageActivity));

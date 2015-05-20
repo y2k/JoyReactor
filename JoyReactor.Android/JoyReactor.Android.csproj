@@ -132,6 +132,7 @@
     <Compile Include="Widget\ReloadButton.cs" />
     <Compile Include="App\Base\VectorDrawable.cs" />
     <Compile Include="Widget\FeedRecyclerView.cs" />
+    <Compile Include="Model\FeedbackController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
