@@ -50,8 +50,7 @@ namespace JoyReactor.Android.App
 				pager.CurrentItem = 0;
 				return true;
 			case Resource.Id.profile:
-//				StartActivity (typeof(ProfileActivity));
-                new FeedbackController(this).Send();
+				StartActivity (typeof(ProfileActivity));
 				return true;
 			case Resource.Id.messages:
 				StartActivity (typeof(MessageActivity));

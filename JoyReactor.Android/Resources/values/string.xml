@@ -26,4 +26,5 @@
 	<string name="login_error">Can\'t login. Try later.</string>
 	<string name="your_new_message_here">Your new message here…</string>
 	<string name="you_are_not_authorized">You are not authorized</string>
+	<string name="send_feedback">Send feedback</string>
 </resources>

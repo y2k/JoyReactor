@@ -26,4 +26,5 @@
 	<string name="login_error">Не удалось войти. Попробуйте позже.</string>
 	<string name="your_new_message_here">Введите сообщение…</string>
 	<string name="you_are_not_authorized">Вы не авторизованы</string>
+	<string name="send_feedback">Написать отзыв</string>
 </resources>

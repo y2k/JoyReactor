@@ -7,6 +7,8 @@ using JoyReactor.Android.App.Gallery;
 using JoyReactor.Android.App.Posts;
 using JoyReactor.Core.ViewModels;
 using Messenger = GalaSoft.MvvmLight.Messaging.Messenger;
+using Android.Views;
+using JoyReactor.Android.Model;
 
 namespace JoyReactor.Android.App.Base
 {
@@ -74,5 +76,20 @@ namespace JoyReactor.Android.App.Base
             base.OnStop();
             MessengerInstance.Unregister(this);
         }
+
+		public override bool OnCreateOptionsMenu (IMenu menu)
+		{
+			MenuInflater.Inflate (Resource.Menu.feedback, menu);
+			return true;
+		}
+
+		public override bool OnOptionsItemSelected (IMenuItem item)
+		{
+			if (item.ItemId == Resource.Id.feedback) {
+				new FeedbackController (this).Send ();
+				return true;
+			}
+			return base.OnOptionsItemSelected (item);
+		}
     }
 }

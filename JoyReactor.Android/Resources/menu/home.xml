@@ -1,21 +1,26 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
+<menu 
+	xmlns:android="http://schemas.android.com/apk/res/android" 
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/feedback"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_warning_white_24dp"
+        android:title="@string/send_feedback" />
     <item
         android:id="@+id/profile"
-        android:showAsAction="never"
-        android:title="@string/profile"/>
+        app:showAsAction="never"
+        android:title="@string/profile" />
     <item
         android:id="@+id/messages"
-        android:showAsAction="never"
-        android:title="@string/activity_private_messages"/>
+        app:showAsAction="never"
+        android:title="@string/activity_private_messages" />
     <item
         android:id="@+id/addTag"
-        android:showAsAction="never"
-        android:title="@string/add_tag"/>
+        app:showAsAction="never"
+        android:title="@string/add_tag" />
     <item
         android:id="@+id/settings"
-        android:showAsAction="never"
-        android:title="@string/settings"/>
-
+        app:showAsAction="never"
+        android:title="@string/settings" />
 </menu>
