@@ -125,7 +125,7 @@ namespace JoyReactor.Core.ViewModels
                 ChildCount = comment.ChildCount;
                 Rating = comment.Rating;
 
-                NavigateCommand = new FixRelayCommand(() => parent.ReloadCommentList(IsRoot ? comment.ParentCommentId : comment.Id));
+                NavigateCommand = new Command(() => parent.ReloadCommentList(IsRoot ? comment.ParentCommentId : comment.Id));
             }
 
             string GetCommentText(Comment comment)

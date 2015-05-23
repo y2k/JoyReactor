@@ -109,6 +109,7 @@
     <Compile Include="Model\Parser\PostCollectionProvider.cs" />
     <Compile Include="Model\TagOrderSaver.cs" />
     <Compile Include="Model\Parser\TagImageProvider.cs" />
+    <Compile Include="ViewModels\UpdateNotificationViewModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

@@ -2,13 +2,13 @@
 using Android.Content;
 using Android.Support.V4.App;
 using Android.Support.V7.App;
+using Android.Views;
 using GalaSoft.MvvmLight.Messaging;
 using JoyReactor.Android.App.Gallery;
 using JoyReactor.Android.App.Posts;
+using JoyReactor.Android.Model;
 using JoyReactor.Core.ViewModels;
 using Messenger = GalaSoft.MvvmLight.Messaging.Messenger;
-using Android.Views;
-using JoyReactor.Android.Model;
 
 namespace JoyReactor.Android.App.Base
 {
@@ -64,32 +64,35 @@ namespace JoyReactor.Android.App.Base
 				.Commit();
         }
 
-        protected override void OnStart()
+        public override bool OnCreateOptionsMenu(IMenu menu)
         {
-            base.OnStart();
-            MessengerInstance.Register<PostNavigationMessage>(this, s => 
-				StartActivity(PostActivity.NewIntent(s.PostId)));
+            MenuInflater.Inflate(Resource.Menu.feedback, menu);
+            return true;
         }
 
-        protected override void OnStop()
+        public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            base.OnStop();
+            if (item.ItemId == Resource.Id.feedback)
+            {
+                new FeedbackController(this).Send();
+                return true;
+            }
+            return base.OnOptionsItemSelected(item);
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+            MessengerInstance.Register<PostNavigationMessage>(
+                this, s => StartActivity(PostActivity.NewIntent(s.PostId)));
+            ViewModel.NavigationService = new NavigationService(this);
+        }
+
+        protected override void OnPause()
+        {
+            base.OnPause();
             MessengerInstance.Unregister(this);
+            ViewModel.NavigationService = null;
         }
-
-		public override bool OnCreateOptionsMenu (IMenu menu)
-		{
-			MenuInflater.Inflate (Resource.Menu.feedback, menu);
-			return true;
-		}
-
-		public override bool OnOptionsItemSelected (IMenuItem item)
-		{
-			if (item.ItemId == Resource.Id.feedback) {
-				new FeedbackController (this).Send ();
-				return true;
-			}
-			return base.OnOptionsItemSelected (item);
-		}
     }
 }

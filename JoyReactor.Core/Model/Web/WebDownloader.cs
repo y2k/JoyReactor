@@ -14,6 +14,7 @@ namespace JoyReactor.Core.Model.Web
         const string Accept = "text/html";
 
         const bool AllowProxy = false;
+
         // TODO: вернуть прокси
 
         public async Task<WebResponse> ExecuteAsync(Uri uri, RequestParams reqParams = null)

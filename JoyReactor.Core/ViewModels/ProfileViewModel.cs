@@ -66,7 +66,7 @@ namespace JoyReactor.Core.ViewModels
 
         public ProfileViewModel()
         {
-            LogoutCommand = new FixRelayCommand(Logout);
+            LogoutCommand = new Command(Logout);
         }
 
         public async Task Initialize()

@@ -38,7 +38,7 @@ namespace JoyReactor.Core.ViewModels
         public MessagesViewModel()
         {
             MessengerInstance.Register<SelectThreadMessage>(this, m => SwitchUser(m.Username));
-            CreateMessageCommand = new FixRelayCommand(CreateNewMessage);
+            CreateMessageCommand = new Command(CreateNewMessage);
         }
 
         async void CreateNewMessage()

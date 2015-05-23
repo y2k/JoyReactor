@@ -150,7 +150,7 @@ namespace JoyReactor.Core.ViewModels
             public ContentViewModel(Post post)
             {
                 this.post = post;
-                OpenPostCommand = new FixRelayCommand(() =>
+                OpenPostCommand = new Command(() =>
                     MessengerInstance.Send(new PostNavigationMessage { PostId = post.Id }));
             }
 

@@ -1,7 +1,8 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
 using System.Reactive.Concurrency;
 using System.Threading;
-using System;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Views;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -11,5 +12,7 @@ namespace JoyReactor.Core.ViewModels
             new Lazy<SynchronizationContextScheduler>(() => new SynchronizationContextScheduler(SynchronizationContext.Current));
 
         public IScheduler UiScheduler { get { return _uiScheduler.Value; } }
+
+        public static INavigationService NavigationService { get; set; }
     }
 }

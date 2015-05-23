@@ -7,7 +7,6 @@ using Android.Views;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.App.Home;
 using JoyReactor.Core.ViewModels;
-using JoyReactor.Android.Model;
 
 namespace JoyReactor.Android.App
 {

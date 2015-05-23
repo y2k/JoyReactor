@@ -51,7 +51,7 @@ namespace JoyReactor.Core.ViewModels
 
 		public LoginViewModel()
 		{
-			LoginCommand = new FixRelayCommand(async () => await Login());
+			LoginCommand = new Command(async () => await Login());
 		}
 
 		public async Task Login()

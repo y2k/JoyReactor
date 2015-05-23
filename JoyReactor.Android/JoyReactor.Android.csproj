@@ -37,7 +37,6 @@
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
     <ConsolePause>false</ConsolePause>
-    <AndroidSupportedAbis>armeabi;x86</AndroidSupportedAbis>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -133,6 +132,8 @@
     <Compile Include="App\Base\VectorDrawable.cs" />
     <Compile Include="Widget\FeedRecyclerView.cs" />
     <Compile Include="Model\FeedbackController.cs" />
+    <Compile Include="App\UpdateNotificationFragment.cs" />
+    <Compile Include="App\Base\NavigationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -209,6 +210,7 @@
     <AndroidResource Include="Resources\drawable-mdpi\ic_send_grey600_24dp.png" />
     <AndroidResource Include="Resources\drawable-xhdpi\ic_send_grey600_24dp.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_send_grey600_24dp.png" />
+    <AndroidResource Include="Resources\layout\fragment_update_notification.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup />

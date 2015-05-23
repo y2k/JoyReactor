@@ -3,11 +3,11 @@ using GalaSoft.MvvmLight.Command;
 
 namespace JoyReactor.Core.ViewModels
 {
-	public class FixRelayCommand : RelayCommand
+	public class Command : RelayCommand
 	{
 		Action action;
 
-		public FixRelayCommand (Action action) : base (() => {
+		public Command (Action action) : base (() => {
 			})
 		{
 			this.action = action;
