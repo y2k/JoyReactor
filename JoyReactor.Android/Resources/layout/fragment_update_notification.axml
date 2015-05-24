@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:gravity="center_vertical"
-    android:background="#f00"
+    android:background="#df00"
     android:clickable="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
-        android:text="Updates available"
+        android:text="@string/updates_available"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:textSize="18sp"
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content" />
     <Button
         android:id="@+id/open"
-        android:text="Open"
+        android:text="@string/open"
         style="@android:style/Widget.Holo.Button"
         android:textSize="18sp"
         android:textColor="@android:color/white"
