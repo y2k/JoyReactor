@@ -1,13 +1,13 @@
 ﻿using System.Collections.Specialized;
-using Android.OS;
 using System.Linq;
+using Android.OS;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
-using JoyReactor.Core.ViewModels;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.Widget;
 using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.ViewModels;
 
 namespace JoyReactor.Android.App.Posts
 {
