@@ -162,7 +162,7 @@ namespace JoyReactor.Android.App
 
                 public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
                 {
-                    return new ViewHolderImpl(CreateView(viewType));
+                    return new ViewHolderImpl(CreateView(viewType, parent));
                 }
 
                 public override int ItemCount
@@ -172,12 +172,12 @@ namespace JoyReactor.Android.App
 
                 #endregion
 
-                View CreateView(int type)
+                View CreateView(int type, ViewGroup parent)
                 {
                     var resId = type == 0
                                 ? Resource.Layout.item_message_inbox
                                 : Resource.Layout.item_message_outbox;
-                    return View.Inflate(App.Instance, resId, null);
+                    return LayoutInflater.From(parent.Context).Inflate(resId, parent, false);
                 }
 
                 class ViewHolderImpl : RecyclerView.ViewHolder
