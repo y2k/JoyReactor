@@ -66,7 +66,7 @@ namespace JoyReactor.Android.App
                     GetTemplateDelegate = (position, s, v) =>
                     {
                         v = v ?? View.Inflate(Activity, Resource.Layout.item_message_thread, null);
-                        v.FindViewById<TextView>(Resource.Id.username).Text = s.UserName;
+                        v.FindViewById<TextView>(Resource.Id.userName).Text = s.UserName;
                         v.FindViewById<TextView>(Resource.Id.lastMessage).Text = s.LastMessage;
                         v.FindViewById<TextView>(Resource.Id.time).Text = s.LastMessageTime.Humanize();
                         v.FindViewById<WebImageView>(Resource.Id.userImage).ImageSource = s.UserImage;

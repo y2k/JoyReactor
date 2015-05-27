@@ -24,7 +24,7 @@ namespace JoyReactor.Core.Model.Messages
 
         protected override void Set(MessageFetcher.RawMessage item, string value)
         {
-            item.UserName = value;
+            item.UserImage = value;
         }
     }
 }
