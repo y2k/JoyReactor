@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace JoyReactor.Core.ViewModels
         public ObservableCollection<PrivateMessage> Messages { get; } = new ObservableCollection<PrivateMessage>();
 
         bool _isBusy;
+
         public bool IsBusy
         {
             get { return _isBusy; }
@@ -24,6 +26,7 @@ namespace JoyReactor.Core.ViewModels
         }
 
         string _newMessage;
+
         public string NewMessage
         {
             get { return _newMessage; }
@@ -65,7 +68,7 @@ namespace JoyReactor.Core.ViewModels
         void OnNext(List<PrivateMessage> messages)
         {
             // TODO
-            Messages.ReplaceAll(messages);
+            Messages.ReplaceAll(messages.AsEnumerable().Reverse());
             IsBusy = false;
         }
 

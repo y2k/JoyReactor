@@ -10,6 +10,7 @@ using JoyReactor.Android.App.Base;
 using JoyReactor.Android.Widget;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.ViewModels;
+using Android.Support.V7.Widget;
 
 namespace JoyReactor.Android.App
 {
@@ -103,8 +104,9 @@ namespace JoyReactor.Android.App
             public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
             {
                 var view = inflater.Inflate(Resource.Layout.fragment_messages, null);
-                var list = view.FindViewById<ListView>(Resource.Id.list);
-                list.Adapter = new MessageAdapter(viewmodel.Messages);
+                var list = view.FindViewById<RecyclerView>(Resource.Id.list);
+                list.SetLayoutManager(new LinearLayoutManager(Activity, LinearLayoutManager.Vertical, true));
+                list.SetAdapter(new MessageAdapter(viewmodel.Messages));
 
                 var newMessage = view.FindViewById<EditText>(Resource.Id.newMessage);
                 AddBinding(viewmodel, () => viewmodel.NewMessage, newMessage, () => newMessage.Text, BindingMode.TwoWay);
@@ -117,7 +119,7 @@ namespace JoyReactor.Android.App
                 return view;
             }
 
-            class MessageAdapter : BaseAdapter<PrivateMessage>
+            class MessageAdapter : RecyclerView.Adapter
             {
                 ObservableCollection<PrivateMessage> dataSource { get; set; }
 
@@ -127,36 +129,30 @@ namespace JoyReactor.Android.App
                     dataSource.CollectionChanged += (sender, e) => NotifyDataSetChanged();
                 }
 
-                public override long GetItemId(int position)
+                #region implemented abstract members of Adapter
+
+                public override int GetItemViewType(int position)
                 {
-                    return position;
+                    return dataSource[position].Mode == PrivateMessage.ModeInbox ? 0 : 1;
                 }
 
-                public override View GetView(int position, View convertView, ViewGroup parent)
+                public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
                 {
-                    if (convertView == null)
-                        convertView = CreateView(position);
                     var s = dataSource[position];
+                    var convertView = holder.ItemView;
                     convertView.FindViewById<TextView>(Resource.Id.message).Text = s.Message;
                     convertView.FindViewById<TextView>(Resource.Id.created).Text = s.Created.Humanize();
-
+                    
                     string name;
-                    if (IsInboxItem(position)) {
-                        name = position > 0 && IsInboxItem(position - 1) ? "inbox" : "inbox_first";
-                    } else {
-                        name = position > 0 && !IsInboxItem(position - 1) ? "outbox" : "outbox_first";
+                    if (IsInboxItem(position))
+                    {
+                        name = (position == ItemCount - 1) || !IsInboxItem(position + 1) ? "inbox_first" : "inbox";
+                    }
+                    else
+                    {
+                        name = (position == ItemCount - 1) || IsInboxItem(position + 1) ? "outbox_first" : "outbox";
                     }
                     convertView.FindViewById(Resource.Id.content).Background = VectorDrawable.NewVectorDrawable(name);
-
-                    return convertView;
-                }
-
-                View CreateView(int position)
-                {
-                    var resId = IsInboxItem(position) 
-                        ? Resource.Layout.item_message_inbox 
-                        : Resource.Layout.item_message_outbox;
-                    return View.Inflate(App.Instance, resId, null);
                 }
 
                 bool IsInboxItem(int position)
@@ -164,24 +160,32 @@ namespace JoyReactor.Android.App
                     return GetItemViewType(position) == 0;
                 }
 
-                public override int Count
+                public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
+                {
+                    return new ViewHolderImpl(CreateView(viewType));
+                }
+
+                public override int ItemCount
                 {
                     get { return dataSource.Count; }
                 }
 
-                public override PrivateMessage this [int index]
+                #endregion
+
+                View CreateView(int type)
                 {
-                    get { throw new System.NotImplementedException(); }
+                    var resId = type == 0
+                                ? Resource.Layout.item_message_inbox
+                                : Resource.Layout.item_message_outbox;
+                    return View.Inflate(App.Instance, resId, null);
                 }
 
-                public override int GetItemViewType(int position)
+                class ViewHolderImpl : RecyclerView.ViewHolder
                 {
-                    return dataSource[position].Mode == PrivateMessage.ModeInbox ? 0 : 1;
-                }
-
-                public override int ViewTypeCount
-                {
-                    get { return 2; }
+                    internal ViewHolderImpl(View view)
+                        : base(view)
+                    {
+                    }
                 }
             }
         }
