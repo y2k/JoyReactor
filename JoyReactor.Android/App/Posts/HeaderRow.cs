@@ -21,6 +21,7 @@ namespace JoyReactor.Android.App.Posts
 
         public void OnBindViewHolder(int position)
         {
+            image.ImageSizeDip = 300;
             image.ImageSource = viewmodel.Image;
             panel.Aspect = viewmodel.ImageAspect;
         }
