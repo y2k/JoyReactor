@@ -134,6 +134,8 @@
     <Compile Include="Model\FeedbackController.cs" />
     <Compile Include="App\UpdateNotificationFragment.cs" />
     <Compile Include="App\Base\NavigationService.cs" />
+    <Compile Include="App\Posts\HeaderRow.cs" />
+    <Compile Include="App\Posts\CommentRow.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -211,6 +213,7 @@
     <AndroidResource Include="Resources\drawable-xhdpi\ic_send_grey600_24dp.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_send_grey600_24dp.png" />
     <AndroidResource Include="Resources\layout\fragment_update_notification.axml" />
+    <AndroidResource Include="Resources\layout\layout_post.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup />

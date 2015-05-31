@@ -18,16 +18,19 @@ namespace JoyReactor.Core.ViewModels
 
         bool _isBusy;
 
-        public bool IsBusy
-        {
-            get { return _isBusy; }
-            set { Set(ref _isBusy, value); }
-        }
+        public bool IsBusy { get { return _isBusy; } set { Set(ref _isBusy, value); } }
+
+        string _image;
+
+        public string Image { get { return _image; } set { Set(ref _image, value); } }
+
+        float _imageAspect;
+
+        public float ImageAspect { get { return _imageAspect; } set { Set(ref _imageAspect, value); } }
 
         public RelayCommand OpenGalleryCommand { get; set; }
 
         IPostService postService;
-
         IDisposable postSubscription;
         IDisposable commentSubscription;
 
