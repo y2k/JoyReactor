@@ -1,14 +1,14 @@
-﻿using Android.Support.V7.Widget;
+﻿using System.Linq;
+using Android.Support.V7.Widget;
 using Android.Views;
-using JoyReactor.Core.ViewModels;
 using Android.Widget;
-using JoyReactor.Android.Widget;
 using JoyReactor.Android.App.Base;
-using System.Linq;
+using JoyReactor.Android.Widget;
+using JoyReactor.Core.ViewModels;
 
 namespace JoyReactor.Android.App.Posts
 {
-    public class CommentRow : RecyclerView.ViewHolder
+    public class CommentRow : RecyclerView.ViewHolder, PostFragment.Adapter.PostViewHolder
     {
         PostViewModel viewmodel;
 
@@ -33,7 +33,7 @@ namespace JoyReactor.Android.App.Posts
 
         public void OnBindViewHolder(int position)
         {
-            var item = (PostViewModel.CommentViewModel)viewmodel.ViewModelParts[position];
+            var item = viewmodel.Comments[position];
             button.Text = item.Text;
             button.Visibility = string.IsNullOrEmpty(item.Text) ? ViewStates.Gone : ViewStates.Visible;
 

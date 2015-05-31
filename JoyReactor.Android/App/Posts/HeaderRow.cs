@@ -5,7 +5,7 @@ using JoyReactor.Core.ViewModels;
 
 namespace JoyReactor.Android.App.Posts
 {
-    public class HeaderRow : RecyclerView.ViewHolder
+    public class HeaderRow : RecyclerView.ViewHolder, PostFragment.Adapter.PostViewHolder
     {
         PostViewModel viewmodel;
         WebImageView image;
@@ -19,7 +19,7 @@ namespace JoyReactor.Android.App.Posts
             panel = ItemView.FindViewById<FixedAspectPanel>(Resource.Id.imagePanel);
         }
 
-        public void OnBindViewHolder()
+        public void OnBindViewHolder(int position)
         {
             image.ImageSource = viewmodel.Image;
             panel.Aspect = viewmodel.ImageAspect;

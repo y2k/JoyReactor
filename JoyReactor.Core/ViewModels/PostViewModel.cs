@@ -12,7 +12,8 @@ namespace JoyReactor.Core.ViewModels
 {
     public class PostViewModel : ViewModelBase
     {
-        public ObservableCollection<object> ViewModelParts { get; } = new ObservableCollection<object>();
+        public ObservableCollection<PostViewModel.CommentViewModel> Comments { get; }
+            = new ObservableCollection<PostViewModel.CommentViewModel>();
 
         public ObservableCollection<RelatedPost> RelatedPost { get; } = new ObservableCollection<RelatedPost>();
 
@@ -45,7 +46,7 @@ namespace JoyReactor.Core.ViewModels
                     .Select(s => s.Select(_ => "Тестовый текст - "))
                     .Select(s => s.Aggregate((a, b) => a + b))
                     .Select(s => new CommentViewModel { Text = s });
-                ViewModelParts.AddRange(items);
+                Comments.AddRange(items);
             }
 #endif
         }
@@ -59,7 +60,8 @@ namespace JoyReactor.Core.ViewModels
                 .Get()
                 .SubscribeOnUi(post =>
                 {
-                    ViewModelParts.ReplaceAt(0, post);
+                    Image = post.Image;
+                    ImageAspect = (float)post.ImageWidth / post.ImageHeight;
                     RelatedPost.ReplaceAll(post.RelatedPosts);
                 });
             ReloadCommentList(0);
@@ -72,15 +74,15 @@ namespace JoyReactor.Core.ViewModels
                 .Get(commentId)
                 .SubscribeOnUi(comments =>
                 {
-                    ViewModelParts.ReplaceAll(1, new ViewModelBase[0]);
+                    Comments.Clear();
                     var replies = false;
                     if (comments.Count >= 2 && comments[0].Id == comments[1].ParentCommentId)
                     {
-                        ViewModelParts.Insert(1, new CommentViewModel(this, comments[0]) { IsRoot = true });
+                        Comments.Insert(0, new CommentViewModel(this, comments[0]) { IsRoot = true });
                         comments.RemoveAt(0);
                         replies = true;
                     }
-                    ViewModelParts.AddRange(ConvertToViewModels(comments, replies));
+                    Comments.AddRange(ConvertToViewModels(comments, replies));
                 });
         }
 
