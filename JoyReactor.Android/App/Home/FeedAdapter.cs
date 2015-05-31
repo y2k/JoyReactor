@@ -90,7 +90,7 @@ namespace JoyReactor.Android.App.Home
                 iv.ImageSize = 200 * context.Resources.DisplayMetrics.Density;
                 iv.ImageSource = vm.Image;
 
-                ItemView.FindViewById<TextView>(Resource.Id.time).Text = vm.Created.Humanize();
+                ItemView.FindViewById<TextView>(Resource.Id.time).Text = "" + vm.Created.ToUniversalTime().Humanize();
                 ItemView.FindViewById<WebImageView>(Resource.Id.userImage).ImageSource = "" + vm.UserImage;
                 ItemView.FindViewById<TextView>(Resource.Id.userName).Text = vm.UserName;
 
