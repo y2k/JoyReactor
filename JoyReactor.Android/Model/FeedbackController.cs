@@ -65,8 +65,8 @@ namespace JoyReactor.Android.Model
         {
             Intent emailItent = new Intent(Intent.ActionSend)
                 .SetType("application/zip")
-				.PutExtra(Intent.ExtraEmail, new [] { "itwisterlx@gmail.com" })
-				.PutExtra(Intent.ExtraSubject, "[Feedback][JoyReactor]")
+                .PutExtra(Intent.ExtraEmail, new [] { "joyreactor.feedbacks@gmail.com" })
+                .PutExtra(Intent.ExtraSubject, activity.GetString(Resource.String.write_feedback))
                 .PutExtra(Intent.ExtraStream, Uri.FromFile(screenshot));
 
             var prefApps = new []
