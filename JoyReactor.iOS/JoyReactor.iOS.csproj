@@ -130,6 +130,10 @@
       <DependentUpon>HomeController.cs</DependentUpon>
     </Compile>
     <Compile Include="Platform\IosInjectModule.cs" />
+    <Compile Include="MenuController.cs" />
+    <Compile Include="MenuController.designer.cs">
+      <DependentUpon>MenuController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
