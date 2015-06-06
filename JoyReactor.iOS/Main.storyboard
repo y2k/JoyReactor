@@ -4,7 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <scenes>
-        <!--Home Controller-->
+        <!--Home-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="HomeController" sceneMemberID="viewController">
@@ -18,6 +18,7 @@
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TMX-YA-HRN">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="uZG-yN-uaB">
                                     <size key="itemSize" width="434" height="447"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -66,7 +67,7 @@
                             <constraint firstItem="TMX-YA-HRN" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="wKu-FD-hb9"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="Ii9-RE-aw5"/>
+                    <navigationItem key="navigationItem" title="Home" id="Ii9-RE-aw5"/>
                     <connections>
                         <outlet property="PostList" destination="TMX-YA-HRN" id="Rez-Sk-jdG"/>
                     </connections>
@@ -82,6 +83,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="7Cx-Tf-4bS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="barTintColor" red="0.94509803920000002" green="0.58823529409999997" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <connections>

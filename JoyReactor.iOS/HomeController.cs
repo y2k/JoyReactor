@@ -24,6 +24,8 @@ namespace JoyReactor.iOS
             PostList.Delegate = new Delegate();
             viewmodel.Posts.CollectionChanged += (sender, e) => PostList.ReloadData();
 
+            NavigationItem.LeftBarButtonItem = new UIBarButtonItem { Title = "☰" };
+
             viewmodel.Initialize(ID.Factory.New(ID.IdConst.ReactorGood));
         }
 
@@ -44,7 +46,7 @@ namespace JoyReactor.iOS
                     var item = (FeedViewModel.ContentViewModel)viewmodel.Posts[(int)indexPath.Item];
                     new ImageRequest()
                         .SetUrl(item.Image)
-                        .CropIn(200)
+                        .CropIn(300)
                         .Into<UIImage>(image => ((UIImageView)view.ViewWithTag(1)).Image = image);
                     ((UILabel)view.ViewWithTag(2)).Text = item.Title;
                 }
