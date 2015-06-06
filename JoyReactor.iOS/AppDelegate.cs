@@ -1,4 +1,7 @@
 ﻿using Foundation;
+using JoyReactor.Core.Model;
+using JoyReactor.iOS.Platform;
+using Microsoft.Practices.ServiceLocation;
 using UIKit;
 
 namespace JoyReactor.iOS
@@ -25,6 +28,9 @@ namespace JoyReactor.iOS
             #if ENABLE_TEST_CLOUD
 			Xamarin.Calabash.Start();
             #endif
+
+            var locator = new DefaultServiceLocator(new IosInjectModule());
+            ServiceLocator.SetLocatorProvider(() => locator);
 
             return true;
         }
@@ -61,5 +67,3 @@ namespace JoyReactor.iOS
         }
     }
 }
-
-

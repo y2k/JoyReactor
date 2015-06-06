@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDisplayName</key>
-	<string>JoyReactor.iOS</string>
+	<string>JoyReactor</string>
 	<key>CFBundleIdentifier</key>
 	<string>net.itwister.joyreactor</string>
 	<key>CFBundleShortVersionString</key>
@@ -13,7 +13,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MinimumOSVersion</key>
-	<string>8.0</string>
+	<string>8.3</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
