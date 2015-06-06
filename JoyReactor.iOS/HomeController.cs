@@ -50,7 +50,7 @@ namespace JoyReactor.iOS
                         .SetUrl(item.Image)
                         .CropIn(300)
                         .Into<UIImage>(image => ((UIImageView)view.ViewWithTag(1)).Image = image);
-                    ((UILabel)view.ViewWithTag(2)).Text = item.Title;
+                    ((UILabel)view.ViewWithTag(2)).Text = item.UserName;
                 }
                 catch
                 {
@@ -60,7 +60,17 @@ namespace JoyReactor.iOS
 
             public override nint GetItemsCount(UICollectionView collectionView, nint section)
             {
-                return viewmodel.Posts.Count;
+                return viewmodel.Posts.Count - 1;
+            }
+
+            public override nint NumberOfSections(UICollectionView collectionView)
+            {
+                return 1;
+            }
+
+            public override UICollectionReusableView GetViewForSupplementaryElement(UICollectionView collectionView, NSString elementKind, NSIndexPath indexPath)
+            {
+                return collectionView.DequeueReusableSupplementaryView(elementKind, "Divider", indexPath);
             }
         }
 
@@ -69,7 +79,7 @@ namespace JoyReactor.iOS
             public override CGSize GetSizeForItem(UICollectionView collectionView, UICollectionViewLayout layout, NSIndexPath indexPath)
             {
                 var size = (collectionView.Bounds.Width - 10) / 2;
-                return new CGSize(size, size);
+                return new CGSize(size, 1.5f * size);
             }
 
             //            public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
