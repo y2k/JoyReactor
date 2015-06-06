@@ -4,7 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <scenes>
-        <!--Home-->
+        <!--Featured-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="HomeController" sceneMemberID="viewController">
@@ -59,17 +59,30 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <containerView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="297-9M-jvo" userLabel="SideMenuContainerView">
+                                <rect key="frame" x="0.0" y="0.0" width="250" height="536"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="250" id="mXL-cc-A0P"/>
+                                </constraints>
+                                <connections>
+                                    <segue destination="zVL-K6-prM" kind="embed" id="Zvu-b2-d7G"/>
+                                </connections>
+                            </containerView>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="297-9M-jvo" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="CID-81-yCQ"/>
+                            <constraint firstAttribute="bottom" secondItem="297-9M-jvo" secondAttribute="bottom" id="Snx-Jy-dZA"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="TMX-YA-HRN" secondAttribute="bottom" id="fmb-cz-5dd"/>
+                            <constraint firstItem="297-9M-jvo" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="p1Z-Eg-7fy"/>
                             <constraint firstItem="TMX-YA-HRN" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="rh6-5H-KjA"/>
                             <constraint firstAttribute="trailing" secondItem="TMX-YA-HRN" secondAttribute="trailing" id="uCE-Fo-nVB"/>
                             <constraint firstItem="TMX-YA-HRN" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="wKu-FD-hb9"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Home" id="Ii9-RE-aw5"/>
+                    <navigationItem key="navigationItem" title="Featured" id="Ii9-RE-aw5"/>
                     <connections>
                         <outlet property="PostList" destination="TMX-YA-HRN" id="Rez-Sk-jdG"/>
+                        <outlet property="SideMenu" destination="297-9M-jvo" id="qIr-9W-IgV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -94,6 +107,52 @@
             </objects>
             <point key="canvasLocation" x="-74" y="1222"/>
         </scene>
+        <!--SideMenu-->
+        <scene sceneID="arU-ih-2s1">
+            <objects>
+                <viewController title="SideMenu" id="zVL-K6-prM" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="mrs-Fd-4my"/>
+                        <viewControllerLayoutGuide type="bottom" id="zyn-vo-4jn"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="tFT-7K-j7i">
+                        <rect key="frame" x="0.0" y="0.0" width="250" height="536"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wGO-1V-ygZ">
+                                <rect key="frame" x="102" y="8" width="46" height="30"/>
+                                <state key="normal" title="Аниме">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oIV-S3-r4V">
+                                <rect key="frame" x="102" y="46" width="46" height="30"/>
+                                <state key="normal" title="Гифки">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7X3-wy-eNK">
+                                <rect key="frame" x="95" y="84" width="61" height="30"/>
+                                <state key="normal" title="Эротика">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.94509803920000002" green="0.58823529409999997" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="oIV-S3-r4V" secondAttribute="centerX" id="0J9-dl-cdD"/>
+                            <constraint firstAttribute="centerX" secondItem="wGO-1V-ygZ" secondAttribute="centerX" id="89q-Aq-VZP"/>
+                            <constraint firstAttribute="centerX" secondItem="7X3-wy-eNK" secondAttribute="centerX" id="dTc-MQ-NDk"/>
+                            <constraint firstItem="wGO-1V-ygZ" firstAttribute="top" secondItem="mrs-Fd-4my" secondAttribute="bottom" constant="8" id="oU0-S8-GMN"/>
+                            <constraint firstItem="7X3-wy-eNK" firstAttribute="top" secondItem="oIV-S3-r4V" secondAttribute="bottom" constant="8" id="p10-sL-U6b"/>
+                            <constraint firstItem="oIV-S3-r4V" firstAttribute="top" secondItem="wGO-1V-ygZ" secondAttribute="bottom" constant="8" id="uLm-KM-Ocf"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rac-sY-cy6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="704" y="1969.5"/>
+        </scene>
     </scenes>
-    <color key="tintColor" red="0.94509803921568625" green="0.58823529411764708" blue="0.14901960784313725" alpha="1" colorSpace="calibratedRGB"/>
+    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
 </document>

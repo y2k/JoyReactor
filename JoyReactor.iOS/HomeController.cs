@@ -24,7 +24,9 @@ namespace JoyReactor.iOS
             PostList.Delegate = new Delegate();
             viewmodel.Posts.CollectionChanged += (sender, e) => PostList.ReloadData();
 
-            NavigationItem.LeftBarButtonItem = new UIBarButtonItem { Title = "☰" };
+            var button = new UIBarButtonItem { Title = "☰" };
+            button.Clicked += (sender, e) => SideMenu.Hidden = !SideMenu.Hidden;
+            NavigationItem.LeftBarButtonItem = button;
 
             viewmodel.Initialize(ID.Factory.New(ID.IdConst.ReactorGood));
         }

@@ -14,9 +14,17 @@ namespace JoyReactor.iOS
 	{
 		[Outlet]
 		UIKit.UICollectionView PostList { get; set; }
+
+		[Outlet]
+		UIKit.UIView SideMenu { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (SideMenu != null) {
+				SideMenu.Dispose ();
+				SideMenu = null;
+			}
+
 			if (PostList != null) {
 				PostList.Dispose ();
 				PostList = null;
