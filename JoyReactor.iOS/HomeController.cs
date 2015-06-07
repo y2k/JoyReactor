@@ -42,36 +42,35 @@ namespace JoyReactor.iOS
 
             public override UICollectionViewCell GetCell(UICollectionView collectionView, NSIndexPath indexPath)
             {
-                var view = (UICollectionViewCell)collectionView.DequeueReusableCell("PostCell", indexPath);
-                view.Layer.CornerRadius = 8;
-                var item = (FeedViewModel.ContentViewModel)viewmodel.Posts[(int)indexPath.Item];
-                new ImageRequest()
-                    .SetUrl(item.Image)
-                    .CropIn(300)
-                    .Into<UIImage>(image => ((UIImageView)view.ViewWithTag(1)).Image = image);
-                var userImage = (UIImageView)view.ViewWithTag(3);
-                userImage.Layer.CornerRadius = userImage.Bounds.Width / 2;
-                new ImageRequest()
-                    .SetUrl(item.UserImage)
-                    .CropIn(40)
-                    .Into<UIImage>(image => userImage.Image = image);
-                ((UILabel)view.ViewWithTag(2)).Text = item.UserName;
+                UICollectionViewCell view;
+                if (viewmodel.Posts[(int)indexPath.Item] is FeedViewModel.ContentViewModel)
+                {
+                    view = (UICollectionViewCell)collectionView.DequeueReusableCell("PostCell", indexPath);
+                    var item = (FeedViewModel.ContentViewModel)viewmodel.Posts[(int)indexPath.Item];
+
+                    view.Layer.CornerRadius = 8;
+                    new ImageRequest()
+                        .SetUrl(item.Image)
+                        .CropIn(300)
+                        .Into<UIImage>(image => ((UIImageView)view.ViewWithTag(1)).Image = image);
+                    var userImage = (UIImageView)view.ViewWithTag(3);
+                    userImage.Layer.CornerRadius = userImage.Bounds.Width / 2;
+                    new ImageRequest()
+                        .SetUrl(item.UserImage)
+                        .CropIn(40)
+                        .Into<UIImage>(image => userImage.Image = image);
+                    ((UILabel)view.ViewWithTag(2)).Text = item.UserName;
+                }
+                else
+                {
+                    view = (UICollectionViewCell)collectionView.DequeueReusableCell("DividerCell", indexPath);
+                }
                 return view;
             }
 
             public override nint GetItemsCount(UICollectionView collectionView, nint section)
             {
-                return viewmodel.Posts.Count - 1;
-            }
-
-            public override nint NumberOfSections(UICollectionView collectionView)
-            {
-                return 1;
-            }
-
-            public override UICollectionReusableView GetViewForSupplementaryElement(UICollectionView collectionView, NSString elementKind, NSIndexPath indexPath)
-            {
-                return collectionView.DequeueReusableSupplementaryView(elementKind, "Divider", indexPath);
+                return viewmodel.Posts.Count;
             }
         }
 
@@ -86,26 +85,21 @@ namespace JoyReactor.iOS
 
             public override CGSize GetSizeForItem(UICollectionView collectionView, UICollectionViewLayout layout, NSIndexPath indexPath)
             {
-                var item = (FeedViewModel.ContentViewModel)viewmodel.Posts[(int)indexPath.Item];
-                var width = collectionView.Bounds.Width - 10;
-                var height = 66 + width * item.ImageHeight / item.ImageWidth;
-                return new CGSize(width, height);
+                const float space = 5f;
+                var item = viewmodel.Posts[(int)indexPath.Item];
+                if (item is FeedViewModel.ContentViewModel)
+                {
+                    var post = (FeedViewModel.ContentViewModel)item;
+                    int col = (int)((collectionView.Bounds.Width - space) / (200 + space));
+                    var width = (collectionView.Bounds.Width - space * (1 + col)) / col;
+                    var height = 66 + width * post.ImageHeight / post.ImageWidth;
+                    return new CGSize(width, height);
+                }
+                else
+                {
+                    return new CGSize(collectionView.Bounds.Width - 2 * space, 50);
+                }
             }
-
-            //            public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
-            //            {
-            //                // TODO:
-            //            }
-
-            //            public override void ItemHighlighted(UICollectionView collectionView, NSIndexPath indexPath)
-            //            {
-            //                collectionView.CellForItem(indexPath).BackgroundColor = UIColor.FromRGBA(0xC0, 0xC0, 0xFF, 0x80);
-            //            }
-            //
-            //            public override void ItemUnhighlighted(UICollectionView collectionView, NSIndexPath indexPath)
-            //            {
-            //                collectionView.CellForItem(indexPath).BackgroundColor = null;
-            //            }
         }
     }
 }
