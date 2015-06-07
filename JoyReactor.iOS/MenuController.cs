@@ -20,6 +20,7 @@ namespace JoyReactor.iOS
             var viewmodel = new TagsViewModel();
 
             TagList.DataSource = new TagDataSource(viewmodel);
+            TagList.Delegate = new Delegate(viewmodel);
             viewmodel.Tags.CollectionChanged += (sender, e) => TagList.ReloadData();
         }
 
@@ -52,6 +53,21 @@ namespace JoyReactor.iOS
             public override nint RowsInSection(UITableView tableView, nint section)
             {
                 return viewmodel.Tags.Count;
+            }
+        }
+
+        class Delegate : UITableViewDelegate
+        {
+            TagsViewModel viewmodel;
+
+            public Delegate(TagsViewModel viewmodel)
+            {
+                this.viewmodel = viewmodel;
+            }
+
+            public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
+            {
+                viewmodel.SelectedTag = (int)indexPath.Item;
             }
         }
     }
