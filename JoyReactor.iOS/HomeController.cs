@@ -1,10 +1,10 @@
 using System;
+using CoreGraphics;
 using Foundation;
 using JoyReactor.Core;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.ViewModels;
 using UIKit;
-using CoreGraphics;
 
 namespace JoyReactor.iOS
 {
@@ -21,7 +21,7 @@ namespace JoyReactor.iOS
 
             var viewmodel = new FeedViewModel();
             PostList.DataSource = new DataSource(viewmodel);
-            PostList.Delegate = new Delegate();
+            PostList.Delegate = new Delegate(viewmodel);
             viewmodel.Posts.CollectionChanged += (sender, e) => PostList.ReloadData();
 
             var button = new UIBarButtonItem { Title = "☰" };
@@ -43,18 +43,19 @@ namespace JoyReactor.iOS
             public override UICollectionViewCell GetCell(UICollectionView collectionView, NSIndexPath indexPath)
             {
                 var view = (UICollectionViewCell)collectionView.DequeueReusableCell("PostCell", indexPath);
-                try
-                {
-                    var item = (FeedViewModel.ContentViewModel)viewmodel.Posts[(int)indexPath.Item];
-                    new ImageRequest()
-                        .SetUrl(item.Image)
-                        .CropIn(300)
-                        .Into<UIImage>(image => ((UIImageView)view.ViewWithTag(1)).Image = image);
-                    ((UILabel)view.ViewWithTag(2)).Text = item.UserName;
-                }
-                catch
-                {
-                }
+                view.Layer.CornerRadius = 8;
+                var item = (FeedViewModel.ContentViewModel)viewmodel.Posts[(int)indexPath.Item];
+                new ImageRequest()
+                    .SetUrl(item.Image)
+                    .CropIn(300)
+                    .Into<UIImage>(image => ((UIImageView)view.ViewWithTag(1)).Image = image);
+                var userImage = (UIImageView)view.ViewWithTag(3);
+                userImage.Layer.CornerRadius = userImage.Bounds.Width / 2;
+                new ImageRequest()
+                    .SetUrl(item.UserImage)
+                    .CropIn(40)
+                    .Into<UIImage>(image => userImage.Image = image);
+                ((UILabel)view.ViewWithTag(2)).Text = item.UserName;
                 return view;
             }
 
@@ -76,10 +77,19 @@ namespace JoyReactor.iOS
 
         public class Delegate : UICollectionViewDelegateFlowLayout
         {
+            FeedViewModel viewmodel;
+
+            public Delegate(FeedViewModel viewmodel)
+            {
+                this.viewmodel = viewmodel;
+            }
+
             public override CGSize GetSizeForItem(UICollectionView collectionView, UICollectionViewLayout layout, NSIndexPath indexPath)
             {
-                var size = (collectionView.Bounds.Width - 10) / 2;
-                return new CGSize(size, 1.5f * size);
+                var item = (FeedViewModel.ContentViewModel)viewmodel.Posts[(int)indexPath.Item];
+                var width = collectionView.Bounds.Width - 10;
+                var height = 66 + width * item.ImageHeight / item.ImageWidth;
+                return new CGSize(width, height);
             }
 
             //            public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)

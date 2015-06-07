@@ -2,8 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Vc0-v0-jED">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Featured-->
@@ -20,29 +18,33 @@
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TMX-YA-HRN">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="uZG-yN-uaB">
-                                    <size key="itemSize" width="320" height="396"/>
+                                <color key="backgroundColor" red="0.8980392157" green="0.8980392157" blue="0.8980392157" alpha="1" colorSpace="calibratedRGB"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="5" minimumInteritemSpacing="5" id="uZG-yN-uaB">
+                                    <size key="itemSize" width="320" height="386"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="50" height="50"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <inset key="sectionInset" minX="5" minY="5" maxX="5" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PostCell" id="ANL-YC-xqx">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="396"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="386"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="C79-hK-w0g">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
+                                                </imageView>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="3" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Kdg-Hu-m45" userLabel="UserImage">
+                                                    <rect key="frame" x="8" y="328" width="50" height="50"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" secondItem="C79-hK-w0g" secondAttribute="height" multiplier="1:1" id="P6a-Pw-PN6"/>
+                                                        <constraint firstAttribute="height" constant="50" id="9pj-ip-auO"/>
+                                                        <constraint firstAttribute="width" constant="50" id="WO6-YP-Hhc"/>
                                                     </constraints>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gCn-jB-S3u">
-                                                    <rect key="frame" x="16" y="328" width="42" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gCn-jB-S3u" userLabel="UserName">
+                                                    <rect key="frame" x="66" y="335" width="246" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -52,11 +54,15 @@
                                         </view>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstItem="gCn-jB-S3u" firstAttribute="leading" secondItem="ANL-YC-xqx" secondAttribute="leadingMargin" constant="8" id="aw9-qC-CQ8"/>
-                                            <constraint firstAttribute="trailing" secondItem="C79-hK-w0g" secondAttribute="trailing" id="k2R-Ge-UF5"/>
-                                            <constraint firstItem="C79-hK-w0g" firstAttribute="top" secondItem="ANL-YC-xqx" secondAttribute="top" id="uQn-Ms-LAT"/>
-                                            <constraint firstItem="gCn-jB-S3u" firstAttribute="top" secondItem="C79-hK-w0g" secondAttribute="bottom" constant="8" id="uay-tU-Xgv"/>
-                                            <constraint firstItem="C79-hK-w0g" firstAttribute="leading" secondItem="ANL-YC-xqx" secondAttribute="leading" id="umn-fW-FiB"/>
+                                            <constraint firstItem="gCn-jB-S3u" firstAttribute="leading" secondItem="Kdg-Hu-m45" secondAttribute="trailing" constant="8" id="2Tt-na-BFn"/>
+                                            <constraint firstItem="Kdg-Hu-m45" firstAttribute="top" secondItem="C79-hK-w0g" secondAttribute="bottom" constant="8" id="5hn-to-ao7"/>
+                                            <constraint firstAttribute="trailing" secondItem="C79-hK-w0g" secondAttribute="trailing" id="7Av-Jl-qEm"/>
+                                            <constraint firstItem="C79-hK-w0g" firstAttribute="leading" secondItem="ANL-YC-xqx" secondAttribute="leading" id="9nX-LW-SKt"/>
+                                            <constraint firstItem="Kdg-Hu-m45" firstAttribute="leading" secondItem="ANL-YC-xqx" secondAttribute="leading" constant="8" id="HOV-6X-pXW"/>
+                                            <constraint firstItem="C79-hK-w0g" firstAttribute="top" secondItem="ANL-YC-xqx" secondAttribute="top" id="b35-2G-7ZX"/>
+                                            <constraint firstAttribute="bottom" secondItem="gCn-jB-S3u" secondAttribute="bottom" constant="30" id="qSl-Dp-H5a"/>
+                                            <constraint firstAttribute="trailing" secondItem="gCn-jB-S3u" secondAttribute="trailing" constant="8" id="rm8-Kn-haY"/>
+                                            <constraint firstAttribute="bottom" secondItem="Kdg-Hu-m45" secondAttribute="bottom" constant="8" id="xbk-WU-vw2"/>
                                         </constraints>
                                     </collectionViewCell>
                                 </cells>
