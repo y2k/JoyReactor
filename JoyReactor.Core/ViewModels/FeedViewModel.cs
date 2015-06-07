@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.ViewModels
 {
-    public class FeedViewModel : ViewModelBase
+    public class FeedViewModel : ViewModel
     {
         #region Commands
 
@@ -29,17 +29,11 @@ namespace JoyReactor.Core.ViewModels
 
         public ObservableCollection<ViewModelBase> Posts { get; } = new ObservableCollection<ViewModelBase>();
 
-        bool _isBusy;
+        public bool IsBusy { get { return Get<bool>(); } set { Set(value); } }
 
-        public bool IsBusy { get { return _isBusy; } set { Set(ref _isBusy, value); } }
+        public bool HasNewItems { get { return Get<bool>(); } set { Set(value); } }
 
-        bool _hasNewItems;
-
-        public bool HasNewItems { get { return _hasNewItems; } set { Set(ref _hasNewItems, value); } }
-
-        ErrorType _error;
-
-        public ErrorType Error { get { return _error; } set { Set(ref _error, value); } }
+        public ErrorType Error { get { return Get<ErrorType>(); } set { Set(value); } }
 
         #endregion
 
