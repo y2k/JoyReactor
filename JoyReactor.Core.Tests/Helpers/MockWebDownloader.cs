@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Tests.Helpers
 {
-    class MockWebDownloader : IWebDownloader
+    class MockWebDownloader : WebDownloader
     {
         internal readonly IDictionary<string, string> RouteUrls = new Dictionary<string, string>()
         {
@@ -67,7 +67,7 @@ namespace JoyReactor.Core.Tests.Helpers
 
         #region IWebDownloader implementation
 
-        public Task<WebResponse> ExecuteAsync(Uri uri, RequestParams reqParams = null)
+        public override Task<WebResponse> ExecuteAsync(Uri uri, RequestParams reqParams = null)
         {
             if (reqParams?.Form != null)
             {

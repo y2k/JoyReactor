@@ -17,7 +17,7 @@ namespace JoyReactor.Core.Model.Web
 
         // TODO: вернуть прокси
 
-        public async Task<WebResponse> ExecuteAsync(Uri uri, RequestParams reqParams = null)
+        public virtual async Task<WebResponse> ExecuteAsync(Uri uri, RequestParams reqParams = null)
         {
             using (var handler = new HttpClientHandler())
             {

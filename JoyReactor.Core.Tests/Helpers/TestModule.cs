@@ -35,17 +35,17 @@ namespace JoyReactor.Core.Tests.Helpers
             b.RegisterInstance(connection).As<SQLiteConnection>();
             b.RegisterInstance(new AsyncSQLiteConnection(connection)).As<AsyncSQLiteConnection>();
 
-            b.RegisterType<MockWebDownloader>().As<IWebDownloader>().SingleInstance();
+            b.RegisterType<MockWebDownloader>().As<WebDownloader>().SingleInstance();
             b.RegisterInstance(new MockSettings()).As<ISettings>();
 
             b.RegisterType<StubImageDecoder>().As<ImageDecoder>();
             b.RegisterType<MockAuthStorage>().As<ReactorMessageParser.IAuthStorage>();
-            b.RegisterType<MockAuthStorage>().As<JoyReactorProvider.IAuthStorage>();
+            b.RegisterType<MockAuthStorage>().As<IProviderAuthStorage>();
 
             builderCallback?.Invoke(b);
         }
 
-        class MockAuthStorage : ReactorMessageParser.IAuthStorage, JoyReactorProvider.IAuthStorage
+        class MockAuthStorage : ReactorMessageParser.IAuthStorage, IProviderAuthStorage
         {
             public Task<IDictionary<string, string>> GetCookiesAsync()
             {

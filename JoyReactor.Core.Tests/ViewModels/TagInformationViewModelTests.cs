@@ -55,7 +55,7 @@ namespace JoyReactor.Core.Tests.ViewModels
 
         Task SaveLinkedTagsToDatabase(ID id)
         {
-            return JoyReactorProvider.Create().LoadTagAndPostListAsync(id, Mock.Of<JoyReactorProvider.IListStorage>(), true);
+            return new TagProvider(id, Mock.Of<IProviderListStorage>(), true).ComputeAsync();
         }
     }
 }

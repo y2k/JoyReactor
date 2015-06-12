@@ -8,7 +8,7 @@ namespace JoyReactor.Core.Tests.Model.Parser
         [Test]
         public async void Test()
         {
-            await JoyReactorProvider.Create().LoadPostAsync("1962130");
+            await new PostProvider("1962130").ComputeAsync();
         }
     }
 }

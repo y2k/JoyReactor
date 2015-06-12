@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Parser
 {
-    class PostProvider
+    public class PostProvider
     {
         WebDownloader downloader = ServiceLocator.Current.GetInstance<WebDownloader>();
         IProviderStorage storage = ServiceLocator.Current.GetInstance<IProviderStorage>();
@@ -19,12 +19,12 @@ namespace JoyReactor.Core.Model.Parser
         string postId;
         string htmlPage;
 
-        internal PostProvider(string postId)
+        public PostProvider(string postId)
         {
             this.postId = postId;
         }
 
-        internal async Task ComputeAsync()
+        public async Task ComputeAsync()
         {
             await DownloadHtmlPageAsync();
             await SavePostInformation();

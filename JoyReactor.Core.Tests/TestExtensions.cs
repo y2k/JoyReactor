@@ -16,7 +16,7 @@ namespace JoyReactor.Core.Tests
     {
         public static void SetFakeSite(string url, string filename)
         {
-            var downloader = (MockWebDownloader)ServiceLocator.Current.GetInstance<IWebDownloader>();
+            var downloader = (MockWebDownloader)ServiceLocator.Current.GetInstance<WebDownloader>();
             downloader.RouteUrls[url] = filename;
         }
 

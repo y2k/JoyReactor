@@ -83,7 +83,7 @@ namespace JoyReactor.Core.Tests.ViewModels
     {
         public static List<PostViewModel.CommentViewModel> Comments(this PostViewModel viewmodel)
         {
-            return viewmodel.ViewModelParts.OfType<PostViewModel.CommentViewModel>().ToList();
+            return viewmodel.Comments.ToList();
         }
     }
 }

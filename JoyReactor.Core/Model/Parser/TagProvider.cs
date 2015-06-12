@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Parser
 {
-    class TagProvider
+    public class TagProvider
     {
         IProviderAuthStorage authStorage = ServiceLocator.Current.GetInstance<IProviderAuthStorage>();
         WebDownloader downloader = ServiceLocator.Current.GetInstance<WebDownloader>();
@@ -31,7 +31,7 @@ namespace JoyReactor.Core.Model.Parser
             this.isFirstPage = isFirstPage;
         }
 
-        internal async Task ComputeAsync()
+        public async Task ComputeAsync()
         {
             pageHtml = await DownloadTagPageWithCheckDomainAsync();
             await ExtractTagInformationAsync();
