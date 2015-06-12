@@ -13,7 +13,7 @@ namespace JoyReactor.Core.Model
     {
         const int IgnoreResult = 0;
 
-        internal static event EventHandler FeedChanged;
+        //internal static event EventHandler FeedChanged;
 
         IFeedRepository storage = ServiceLocator.Current.GetInstance<IFeedRepository>();
         ID id;
@@ -33,7 +33,7 @@ namespace JoyReactor.Core.Model
         {
             return Observable
                 .Return(IgnoreResult)
-                .Merge(Observable.FromEventPattern(s => FeedChanged += s, s => FeedChanged -= s).Select(_ => IgnoreResult))
+                //.Merge(Observable.FromEventPattern(s => FeedChanged += s, s => FeedChanged -= s).Select(_ => IgnoreResult))
                 .Merge(Observable.FromAsync(() => SyncPage(true)).Select(_ => IgnoreResult))
                 .SelectMany(_ => Observable.FromAsync(() => GetPostsAsync(id)));
         }

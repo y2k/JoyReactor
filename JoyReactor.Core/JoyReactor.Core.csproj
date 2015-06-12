@@ -71,6 +71,7 @@
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="ViewModels\CreateTagViewModel.cs" />
     <Compile Include="ViewModels\FeedViewModel.cs" />
+    <Compile Include="ViewModels\FeedViewModel2.cs" />
     <Compile Include="ViewModels\GalleryViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="Model\Helper\ObservableCollectionExtensions.cs" />

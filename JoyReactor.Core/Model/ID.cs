@@ -5,7 +5,9 @@ namespace JoyReactor.Core
 {
 	public class ID
 	{
-		public enum IdConst
+        public static readonly ID Reactor = Factory.New(IdConst.ReactorGood);
+
+        public enum IdConst
 		{
 			ReactorGood,
 			ReactorBest,
