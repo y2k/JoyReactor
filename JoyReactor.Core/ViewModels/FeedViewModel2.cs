@@ -15,6 +15,8 @@ namespace JoyReactor.Core.ViewModels
 
         public bool HasNewItems { get { return Get<bool>(); } set { Set(value); } }
 
+        public Command
+
         public FeedViewModel2()
         {
             Init();
@@ -34,7 +36,7 @@ namespace JoyReactor.Core.ViewModels
             IsBusy = false;
         }
 
-        private bool IsContains(IList<Post> posts1, IList<Post> posts2)
+        bool IsContains(IList<Post> posts1, IList<Post> posts2)
         {
             if (posts1.Count <= posts2.Count)
                 return false;

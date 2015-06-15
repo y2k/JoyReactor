@@ -81,7 +81,6 @@
     <Compile Include="ViewModels\TagInformationViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="ViewModels\PostNavigationMessage.cs" />
-    <Compile Include="ViewModels\FixRelayCommand.cs" />
     <Compile Include="ViewModels\MessageThreadsViewModel.cs" />
     <Compile Include="ViewModels\MessagesViewModel.cs" />
     <Compile Include="Model\Messages\MessageService.cs" />
@@ -111,6 +110,7 @@
     <Compile Include="Model\TagOrderSaver.cs" />
     <Compile Include="Model\Parser\TagImageProvider.cs" />
     <Compile Include="ViewModels\UpdateNotificationViewModel.cs" />
+    <Compile Include="ViewModels\Command.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
