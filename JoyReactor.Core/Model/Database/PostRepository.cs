@@ -1,12 +1,24 @@
-﻿using System.Threading.Tasks;
-using System.Collections.Generic;
-using JoyReactor.Core.Model.DTO;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using JoyReactor.Core.Model.DTO;
 
 namespace JoyReactor.Core.Model.Database
 {
-    class PostRepository : Repository
+    class PostRepository : Repository<Post>
     {
+        public async Task InsertOrUpdateAsync(Post row)
+        {
+            var old = await GetAsync(row.PostId);
+            if (old == null)
+                InsertAsync(row);
+            else
+            {
+                row.Id = old.Id;
+                UpdateAsync(row);
+            }
+        }
+
         public Task<List<Post>> GetAllAsync(int tagId)
         {
             return Connection.QueryAsync<Post>(@"
@@ -19,8 +31,11 @@ namespace JoyReactor.Core.Model.Database
 
         public async Task<Post> GetAsync(string postId)
         {
-            return (await Connection.QueryAsync<Post>("SELECT * FROM posts WHERE PostId = ?", postId))
-                .FirstOrDefault();
+            var rows = await Connection.QueryAsync<Post>(@"
+            SELECT * 
+            FROM posts 
+            WHERE PostId = ?", postId);
+            return rows.FirstOrDefault();
         }
     }
 }

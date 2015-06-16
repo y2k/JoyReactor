@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Database
 {
-    class CommonRepository : Repository, FeedService.IFeedRepository, IProviderStorage, PostService.IStorage
+    class CommonRepository : Repository<object>, FeedService.IFeedRepository, IProviderStorage, PostService.IStorage
     {
         public Task ClearOldLinkedTagsAsync(ID id)
         {

@@ -4,6 +4,8 @@ using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Parser;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
+using System.Linq;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -15,11 +17,29 @@ namespace JoyReactor.Core.ViewModels
 
         public bool HasNewItems { get { return Get<bool>(); } set { Set(value); } }
 
-        public Command
+        public ICommand ApplyCommand { get; private set; }
+
+        PostCollectionProvider provider;
 
         public FeedViewModel2()
         {
             Init();
+
+            ApplyCommand = new Command(
+                async () =>
+                {
+                    var tag = await new TagRepository().GetAsync(ID.Reactor.SerializeToString());
+                    var ids = new List<TagPost>();
+                    foreach (var s in provider.Posts)
+                        ids.Add(new TagPost { TagId = tag.Id, PostId = s.Id });
+                    foreach (var s in Posts)
+                        if (ids.All(i => i.PostId != s.Id))
+                            ids.Add(new TagPost { TagId = tag.Id, PostId = s.Id });
+                    await new TagPostRepository().ReplaceAllForTagAsync(ids);
+
+                    Posts.ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
+                    HasNewItems = false;
+                });
         }
 
         async void Init()
@@ -29,8 +49,11 @@ namespace JoyReactor.Core.ViewModels
             var tag = await new TagRepository().GetAsync(ID.Reactor.SerializeToString());
             Posts.ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
 
-            var provider = new PostCollectionProvider(ID.DeserializeFromString(tag.TagId), 0);
+            provider = new PostCollectionProvider(ID.DeserializeFromString(tag.TagId), 0);
             await provider.DownloadFromWebAsync();
+
+            foreach (var s in provider.Posts)
+                await new PostRepository().InsertOrUpdateAsync(s);
 
             HasNewItems = !IsContains(Posts, provider.Posts);
             IsBusy = false;

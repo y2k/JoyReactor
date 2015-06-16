@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Database
 {
-    class TagRepository : Repository
+    class TagRepository : Repository<Tag>
     {
         public async Task<Tag> GetAsync(string tagId)
         {

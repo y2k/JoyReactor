@@ -75,8 +75,10 @@ namespace JoyReactor.Core.Model
 
         internal static Task InvalidateFeedAsync()
         {
-            TagCollectionModel.InvalidateTagCollection();
-            return Task.Run(() => FeedChanged?.Invoke(null, null));
+//            TagCollectionModel.InvalidateTagCollection();
+//            return Task.Run(() => FeedChanged?.Invoke(null, null));
+
+            throw new NotImplementedException();
         }
 
         internal interface IFeedRepository

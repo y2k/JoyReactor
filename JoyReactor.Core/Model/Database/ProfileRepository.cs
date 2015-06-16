@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace JoyReactor.Core.Model.Database
 {
-    class ProfileRepository : Repository
+    class ProfileRepository : Repository<Profile>
     {
         public Task<List<Profile>> GetAllAsync()
         {

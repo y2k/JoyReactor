@@ -7,7 +7,7 @@ using RawMessage = JoyReactor.Core.Model.Messages.MessageFetcher.RawMessage;
 
 namespace JoyReactor.Core.Model.Database
 {
-    class MessageRepository : Repository, MessageFetcher.IStorage, MessageService.IStorage
+    class MessageRepository : Repository<object>, MessageFetcher.IStorage, MessageService.IStorage
     {
         public Task<List<MessageThreadItem>> GetThreadsWithAdditionInformationAsync()
         {

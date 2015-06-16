@@ -4,7 +4,7 @@ using JoyReactor.Core.Model.DTO;
 
 namespace JoyReactor.Core.Model.Database
 {
-    class TagPostRepository : Repository
+    class TagPostRepository : Repository<TagPost>
     {
         public Task<List<TagPost>> GetAllAsync(int tagId)
         {
@@ -21,9 +21,10 @@ namespace JoyReactor.Core.Model.Database
             return Connection.InsertAsync(item);
         }
 
-        public Task InsertAllAsync(List<TagPost> items)
+        public async Task ReplaceAllForTagAsync(List<TagPost> items)
         {
-            return Connection.InsertAllAsync(items);
+            await RemoveAllAsync(items[0].TagId);
+            await InsertAllAsync(items);
         }
     }
 }
