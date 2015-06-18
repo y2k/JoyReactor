@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Parser
 {
-    public class PostProvider
+    public class PostRequest
     {
         WebDownloader downloader = ServiceLocator.Current.GetInstance<WebDownloader>();
         IProviderStorage storage = ServiceLocator.Current.GetInstance<IProviderStorage>();
@@ -19,7 +19,7 @@ namespace JoyReactor.Core.Model.Parser
         string postId;
         string htmlPage;
 
-        public PostProvider(string postId)
+        public PostRequest(string postId)
         {
             this.postId = postId;
         }

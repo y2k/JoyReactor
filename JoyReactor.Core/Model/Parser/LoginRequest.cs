@@ -8,7 +8,7 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Parser
 {
-    class LoginProvider
+    class LoginRequest
     {
         WebDownloader downloader = ServiceLocator.Current.GetInstance<WebDownloader>();
         IProviderAuthStorage authStorage = ServiceLocator.Current.GetInstance<IProviderAuthStorage>();
@@ -16,7 +16,7 @@ namespace JoyReactor.Core.Model.Parser
         string username;
         string password;
 
-        internal LoginProvider(string username, string password)
+        internal LoginRequest(string username, string password)
         {
             this.username = username;
             this.password = password;

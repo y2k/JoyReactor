@@ -9,7 +9,7 @@ namespace JoyReactor.Core.Model
     {
         ID id;
         bool isFirstPage;
-        PostCollectionProvider provider;
+        PostCollectionRequest provider;
 
         public PostCollectionLoader(ID id, bool isFirstPage)
         {
@@ -19,7 +19,7 @@ namespace JoyReactor.Core.Model
 
         public async Task LoadAsync()
         {
-            provider = new PostCollectionProvider(id, await GetCurrentPage());
+            provider = new PostCollectionRequest(id, await GetCurrentPage());
             await provider.DownloadFromWebAsync();
 
             await UpdatePostContennt();
@@ -30,7 +30,7 @@ namespace JoyReactor.Core.Model
         async Task<int> GetCurrentPage()
         {
             return isFirstPage 
-                ? PostCollectionProvider.FirstPage
+                ? PostCollectionRequest.FirstPage
                 : (await new TagRepository().GetAsync(id.SerializeToString())).NextPage;
         }
 

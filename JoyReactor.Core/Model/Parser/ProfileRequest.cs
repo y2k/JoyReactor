@@ -12,12 +12,12 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Parser
 {
-    public class ProfileProvider
+    public class ProfileRequest
     {
         WebDownloader downloader = ServiceLocator.Current.GetInstance<WebDownloader>();
         Storage storage;
 
-        public ProfileProvider(Storage storage)
+        public ProfileRequest(Storage storage)
         {
             this.storage = storage;
         }
@@ -69,7 +69,7 @@ namespace JoyReactor.Core.Model.Parser
                     .Select(s => UnescapeTagName(profileTagRx.FirstString(s.GetHref())))
                     .Select(s => new Tag { Title = s, TagId = ID.Factory.NewTag(s.ToLower()).SerializeToString() })
                     .ToList();
-                await new TagImageProvider(readingTags).LoadAsync();
+                await new TagImageRequest(readingTags).LoadAsync();
                 await storage.ReplaceCurrentUserReadingTagsAsync(readingTags);
             }
 

@@ -13,7 +13,7 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Parser
 {
-    public class PostCollectionProvider
+    public class PostCollectionRequest
     {
         public const int FirstPage = 0;
 
@@ -25,7 +25,7 @@ namespace JoyReactor.Core.Model.Parser
         int page;
         string pageHtml;
 
-        public PostCollectionProvider(ID id, int page)
+        public PostCollectionRequest(ID id, int page)
         {
             this.page = page;
             this.id = id;

@@ -46,8 +46,6 @@
     <Compile Include="Model\Helper\ObservableFactory.cs" />
     <Compile Include="Model\DefaultServiceLocator.cs" />
     <Compile Include="Model\Messages\UserAvatarLoader.cs" />
-    <Compile Include="Model\Parser\LoginProvider.cs" />
-    <Compile Include="Model\Parser\ProfileProvider.cs" />
     <Compile Include="Model\PostCollectionState.cs" />
     <Compile Include="Model\IProfileService.cs" />
     <Compile Include="Model\PostService.cs" />
@@ -88,12 +86,10 @@
     <Compile Include="Model\DTO\PrivateMessageThread.cs" />
     <Compile Include="Model\Messages\ReactorMessageParser.cs" />
     <Compile Include="Model\Messages\MessageFetcher.cs" />
-    <Compile Include="Model\Parser\JoyReactorProvider.cs" />
     <Compile Include="Model\DTO\RelatedPost.cs" />
     <Compile Include="Model\ImageRequest.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
-    <Compile Include="Model\Parser\TagProvider.cs" />
     <Compile Include="Model\Database\MemoryStorage.cs" />
     <Compile Include="Model\DTO\TagGroup.cs" />
     <Compile Include="Model\FeedService.cs" />
@@ -104,13 +100,17 @@
     <Compile Include="Model\Database\TagPostRepository.cs" />
     <Compile Include="Model\Database\Repository.cs" />
     <Compile Include="Model\Database\PostRepository.cs" />
-    <Compile Include="Model\Parser\PostProvider.cs" />
     <Compile Include="Model\PostCollectionLoader.cs" />
-    <Compile Include="Model\Parser\PostCollectionProvider.cs" />
     <Compile Include="Model\TagOrderSaver.cs" />
-    <Compile Include="Model\Parser\TagImageProvider.cs" />
     <Compile Include="ViewModels\UpdateNotificationViewModel.cs" />
     <Compile Include="ViewModels\Command.cs" />
+    <Compile Include="Model\Parser\PostCollectionRequest.cs" />
+    <Compile Include="Model\Parser\PostRequest.cs" />
+    <Compile Include="Model\Parser\IProviderListStorage.cs" />
+    <Compile Include="Model\Parser\LoginRequest.cs" />
+    <Compile Include="Model\Parser\ProfileRequest.cs" />
+    <Compile Include="Model\Parser\TagImageRequest.cs" />
+    <Compile Include="Model\Parser\TagRequest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

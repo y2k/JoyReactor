@@ -68,7 +68,7 @@ namespace JoyReactor.Core.ViewModels
                 TagId = ID.Factory.NewTag(Name.Trim().ToLower()).SerializeToString(),
                 Flags = Tag.FlagShowInMain,
             };
-            await new TagImageProvider(tag).LoadAsync();
+            await new TagImageRequest(tag).LoadAsync();
             if (Uri.IsWellFormedUriString(tag.BestImage, UriKind.Absolute))
             {
                 await new TagRepository().InsertIfNotExistsAsync(tag);

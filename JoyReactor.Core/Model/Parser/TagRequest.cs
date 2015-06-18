@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model.Parser
 {
-    public class TagProvider
+    public class TagRequest
     {
         IProviderAuthStorage authStorage = ServiceLocator.Current.GetInstance<IProviderAuthStorage>();
         WebDownloader downloader = ServiceLocator.Current.GetInstance<WebDownloader>();
@@ -24,7 +24,7 @@ namespace JoyReactor.Core.Model.Parser
         string pageHtml;
         bool isFirstPage;
 
-        public TagProvider(ID id, IProviderListStorage listStorage, bool isFirstPage)
+        public TagRequest(ID id, IProviderListStorage listStorage, bool isFirstPage)
         {
             this.id = id;
             this.listStorage = listStorage;

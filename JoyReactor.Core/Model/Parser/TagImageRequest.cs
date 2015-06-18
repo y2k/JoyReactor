@@ -8,11 +8,11 @@ using JoyReactor.Core.Model.Web;
 
 namespace JoyReactor.Core.Model.Parser
 {
-    class TagImageProvider : ImageLoader<Tag>
+    class TagImageRequest : ImageLoader<Tag>
     {
-        internal TagImageProvider(Tag tag) : this (new List<Tag> { tag }) {}
+        internal TagImageRequest(Tag tag) : this (new List<Tag> { tag }) {}
 
-        internal TagImageProvider(List<Tag> tags) : base(tags, "tag_image.") { }
+        internal TagImageRequest(List<Tag> tags) : base(tags, "tag_image.") { }
 
         protected override async Task<string> GetFromWeb(WebDownloader downloader, Tag item)
         {

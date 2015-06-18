@@ -7,20 +7,20 @@ using System.Collections.Generic;
 
 namespace JoyReactor.Core.Model
 {
-    class ProfileService : IProfileService, ProfileProvider.Storage
+    class ProfileService : IProfileService, ProfileRequest.Storage
     {
         IAuthStorage storage = new AuthRepository();
 
         public async Task<Profile> GetMyProfile()
         {
-            await new ProfileProvider(this).ComputeAsync();
+            await new ProfileRequest(this).ComputeAsync();
             return await storage.GetCurrentProfileAsync();
         }
 
         public async Task Login(string username, string password)
         {
-            await new LoginProvider(username, password).ComputeAsync();
-            await new ProfileProvider(this).ComputeAsync();
+            await new LoginRequest(username, password).ComputeAsync();
+            await new ProfileRequest(this).ComputeAsync();
             await InvaliteTagList();
         }
 

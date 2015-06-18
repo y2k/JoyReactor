@@ -19,7 +19,7 @@ namespace JoyReactor.Core.ViewModels
 
         public ICommand ApplyCommand { get; private set; }
 
-        PostCollectionProvider provider;
+        PostCollectionRequest provider;
 
         public FeedViewModel2()
         {
@@ -48,7 +48,7 @@ namespace JoyReactor.Core.ViewModels
             var tag = await new TagRepository().GetAsync(ID.Reactor.SerializeToString());
             Posts.ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
 
-            provider = new PostCollectionProvider(ID.DeserializeFromString(tag.TagId), 0);
+            provider = new PostCollectionRequest(ID.DeserializeFromString(tag.TagId), 0);
             await provider.DownloadFromWebAsync();
 
             await new PostRepository().UpdateOrInsertAllAsync(provider.Posts);
