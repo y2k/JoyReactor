@@ -45,15 +45,13 @@ namespace JoyReactor.Core.ViewModels
         async void Init()
         {
             IsBusy = true;
-
             var tag = await new TagRepository().GetAsync(ID.Reactor.SerializeToString());
             Posts.ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
 
             provider = new PostCollectionProvider(ID.DeserializeFromString(tag.TagId), 0);
             await provider.DownloadFromWebAsync();
 
-            foreach (var s in provider.Posts)
-                await new PostRepository().InsertOrUpdateAsync(s);
+            await new PostRepository().UpdateOrInsertAllAsync(provider.Posts);
 
             HasNewItems = !IsContains(Posts, provider.Posts);
             IsBusy = false;

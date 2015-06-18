@@ -7,7 +7,18 @@ namespace JoyReactor.Core.Model.Database
 {
     class PostRepository : Repository<Post>
     {
-        public async Task InsertOrUpdateAsync(Post row)
+        public Task InsertOrUpdateAsync(Post row)
+        {
+            return InsertOrUpdateInner(row);
+        }
+
+        public async Task UpdateOrInsertAllAsync(ICollection<Post> items)
+        {
+            foreach (var s in items)
+                await InsertOrUpdateInner(s);
+        }
+
+        async Task InsertOrUpdateInner(Post row)
         {
             var old = await GetAsync(row.PostId);
             if (old == null)
