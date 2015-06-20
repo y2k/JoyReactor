@@ -24,6 +24,8 @@ namespace JoyReactor.Core.ViewModels
 
         public ICommand SelectItemCommand { get; private set; }
 
+        public ICommand RefreshCommand { get; set; }
+
         PostCollectionRequest firstPageRequest;
         ID id;
         int nextPage;

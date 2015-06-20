@@ -22,7 +22,8 @@ namespace JoyReactor.Android.App
             var view = inflater.Inflate(Resource.Layout.fragment_update_notification, container, false);
 
             view.FindViewById(Resource.Id.open).SetCommand("Click", viewmodel.OpenCommand);
-            AddBinding(viewmodel, () => viewmodel.UpdateAvailable, view, () => view.Visibility)
+            Bindings
+                .Add(viewmodel, () => viewmodel.UpdateAvailable, view, () => view.Visibility)
                 .ConvertSourceToTarget(s => s ? ViewStates.Visible : ViewStates.Gone);
 
             return view;

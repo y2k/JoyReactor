@@ -30,17 +30,18 @@ namespace JoyReactor.Android.App.Home
             list.SetAdapter(new FeedAdapter(viewmodel.Posts, viewmodel));
 
             var refresher = view.FindViewById<SwipeRefreshLayout>(Resource.Id.refresher);
-//			refresher.SetCommand ("Refresh", viewModel.RefreshCommand);
-            AddBinding(viewmodel, () => viewmodel.IsBusy, refresher, () => refresher.Refreshing);
+            refresher.SetCommand(viewmodel.RefreshCommand);
+            Bindings.Add(viewmodel, () => viewmodel.IsBusy, refresher, () => refresher.Refreshing);
 
             var applyButton = view.FindViewById<ReloadButton>(Resource.Id.apply);
             applyButton.Command = viewmodel.ApplyCommand;
-            viewmodel
-                .SetBinding(() => viewmodel.HasNewItems, applyButton, () => applyButton.Visibility, BindingMode.OneWay)
+            Bindings
+                .Add(viewmodel, () => viewmodel.HasNewItems, applyButton, () => applyButton.Visibility)
 				.ConvertSourceToTarget(s => s ? ViewStates.Visible : ViewStates.Gone);
 
             var error = view.FindViewById(Resource.Id.error);
-            AddBinding(viewmodel, () => viewmodel.Error, error, () => error.Visibility)
+            Bindings
+                .Add(viewmodel, () => viewmodel.Error, error, () => error.Visibility)
                 .ConvertSourceToTarget(s => s == FeedViewModel.ErrorType.NotError ? ViewStates.Gone : ViewStates.Visible);
 
             return view;

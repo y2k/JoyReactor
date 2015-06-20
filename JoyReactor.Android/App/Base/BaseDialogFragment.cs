@@ -12,7 +12,7 @@ namespace JoyReactor.Android.App.Base
 
         protected Binding<TS, TT> AddBinding<TS, TT>(object source, Expression<Func<TS>> sourceExpression, object target, Expression<Func<TT>> targetExpression = null, BindingMode mode = BindingMode.Default)
         {
-            return bindingManager.AddBinding(source, sourceExpression, target, targetExpression, mode);
+            return bindingManager.Add(source, sourceExpression, target, targetExpression, mode);
         }
 
         public IMessenger MessengerInstance

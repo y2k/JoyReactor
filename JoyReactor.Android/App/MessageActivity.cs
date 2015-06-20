@@ -74,7 +74,8 @@ namespace JoyReactor.Android.App
                     },
                 };
                 var progress = view.FindViewById(Resource.Id.progress);
-                AddBinding(viewmodel, () => viewmodel.IsBusy, progress, () => progress.Visibility)
+                Bindings
+                    .Add(viewmodel, () => viewmodel.IsBusy, progress, () => progress.Visibility)
 					.ConvertSourceToTarget(s => s ? ViewStates.Visible : ViewStates.Gone);
                 return view;
             }
@@ -109,10 +110,11 @@ namespace JoyReactor.Android.App
                 list.SetAdapter(new MessageAdapter(viewmodel.Messages));
 
                 var newMessage = view.FindViewById<EditText>(Resource.Id.newMessage);
-                AddBinding(viewmodel, () => viewmodel.NewMessage, newMessage, () => newMessage.Text, BindingMode.TwoWay);
+                Bindings.Add(viewmodel, () => viewmodel.NewMessage, newMessage, () => newMessage.Text, BindingMode.TwoWay);
 
                 var progress = view.FindViewById(Resource.Id.progress);
-                AddBinding(viewmodel, () => viewmodel.IsBusy, progress, () => progress.Visibility)
+                Bindings
+                    .Add(viewmodel, () => viewmodel.IsBusy, progress, () => progress.Visibility)
                     .ConvertSourceToTarget(s => s ? ViewStates.Visible : ViewStates.Gone);
 
                 view.FindViewById(Resource.Id.createMessage).SetCommand("Click", viewmodel.CreateMessageCommand);
