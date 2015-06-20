@@ -119,6 +119,7 @@ namespace JoyReactor.Core.ViewModels
             return posts;
         }
 
+        [Obsolete]
         public class ContentViewModel : ViewModelBase
         {
             const string ImageStub = "http://wiki.solid-run.com/images/7/75/No_image_available.png";
@@ -160,6 +161,7 @@ namespace JoyReactor.Core.ViewModels
             }
         }
 
+        [Obsolete]
         public class DividerViewModel : ViewModelBase
         {
             public RelayCommand LoadMoreCommand { get; set; }

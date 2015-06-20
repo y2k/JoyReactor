@@ -22,11 +22,11 @@ namespace JoyReactor.Core.Model.Database
         {
             var old = await GetAsync(row.PostId);
             if (old == null)
-                InsertAsync(row);
+                await InsertAsync(row);
             else
             {
                 row.Id = old.Id;
-                UpdateAsync(row);
+                await UpdateAsync(row);
             }
         }
 

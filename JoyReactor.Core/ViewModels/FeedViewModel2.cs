@@ -12,6 +12,8 @@ namespace JoyReactor.Core.ViewModels
 {
     public class FeedViewModel2 : ScopedViewModel
     {
+        public FeedViewModel.ErrorType Error { get { return FeedViewModel.ErrorType.NotError; } }
+
         public ObservableCollection<Post> Posts { get; } = new ObservableCollection<Post>();
 
         public bool IsBusy { get { return Get<bool>(); } set { Set(value); } }
@@ -30,7 +32,7 @@ namespace JoyReactor.Core.ViewModels
         {
             ApplyCommand = new Command(ApplyCommandMethod);
             SelectItemCommand = new Command<int>(SelectItemCommandMethod);
-            SetCurrentTag(ID.Reactor);
+            SetCurrentTag(ID.ReactorGood);
         }
 
         public override void OnActivated()
@@ -93,7 +95,7 @@ namespace JoyReactor.Core.ViewModels
             await nextPageRequest.DownloadFromWebAsync();
             nextPage = nextPageRequest.NextPage;
 
-            await new PostRepository().UpdateOrInsertAllAsync(firstPageRequest.Posts);
+            await new PostRepository().UpdateOrInsertAllAsync(nextPageRequest.Posts);
 
             var ids = new List<TagPost>();
             foreach (var s in GetBeforeDivider())

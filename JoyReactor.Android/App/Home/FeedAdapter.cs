@@ -4,11 +4,12 @@ using Android.Content;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
-using GalaSoft.MvvmLight;
 using Humanizer;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.Widget;
 using JoyReactor.Core;
+using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.ViewModels;
 
 namespace JoyReactor.Android.App.Home
@@ -17,10 +18,12 @@ namespace JoyReactor.Android.App.Home
     {
         public ID ListId { get; set; }
 
-        readonly ObservableCollection<ViewModelBase> items;
+        readonly ObservableCollection<Post> items;
+        readonly FeedViewModel2 viewmodel;
 
-        public FeedAdapter(ObservableCollection<ViewModelBase> items)
+        public FeedAdapter(ObservableCollection<Post> items, FeedViewModel2 viewmodel)
         {
+            this.viewmodel = viewmodel;
             this.items = items;
             items.CollectionChanged += (sender, e) => NotifyDataSetChanged();
         }
@@ -39,12 +42,12 @@ namespace JoyReactor.Android.App.Home
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {
-            return BaseViewHolder.NewViewHolder(parent.Context, viewType);
+            return BaseViewHolder.NewViewHolder(parent.Context, viewType, viewmodel);
         }
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
-            ((BaseViewHolder)holder).OnBindViewHolder(items[position]);
+            ((BaseViewHolder)holder).OnBindViewHolder(items[position], position);
         }
 
         #endregion
@@ -56,33 +59,38 @@ namespace JoyReactor.Android.App.Home
             {
             }
 
-            internal abstract void OnBindViewHolder(object item);
+            internal abstract void OnBindViewHolder(object item, int position);
 
             internal static int GetItemViewType(object item)
             {
-                return item is FeedViewModel.ContentViewModel ? 0 : 1;
+//                return item is FeedViewModel.ContentViewModel ? 0 : 1;
+                return item is FeedViewModel2.Divider ? 1 : 0;
             }
 
-            internal static BaseViewHolder NewViewHolder(Context context, int viewType)
+            internal static BaseViewHolder NewViewHolder(Context context, int viewType, FeedViewModel2 viewmodel)
             {
-                return (viewType == 0 ? (BaseViewHolder)new ContentViewHolder(context) : new FooterViewHolder(context));
+                return viewType == 0 
+                    ? (BaseViewHolder)new ContentViewHolder(context, viewmodel) 
+                    : new FooterViewHolder(context, viewmodel);
             }
         }
 
         class ContentViewHolder : BaseViewHolder
         {
             const float MinImageAspect = 1f / 2f;
-            Context context;
+            readonly Context context;
+            readonly FeedViewModel2 viewmodel;
 
-            public ContentViewHolder(Context context)
+            public ContentViewHolder(Context context, FeedViewModel2 viewmodel)
                 : base(View.Inflate(context, Resource.Layout.item_feed, null))
             {
+                this.viewmodel = viewmodel;
                 this.context = context;
             }
 
-            internal override void OnBindViewHolder(object item)
+            internal override void OnBindViewHolder(object item, int position)
             {
-                var vm = (FeedViewModel.ContentViewModel)item;
+                var vm = (Post)item;
 
                 ItemView.FindViewById<FixedAspectPanel>(Resource.Id.imagePanel).Aspect =
                     Math.Max(MinImageAspect, (float)vm.ImageWidth / vm.ImageHeight);
@@ -90,19 +98,25 @@ namespace JoyReactor.Android.App.Home
                 iv.ImageSize = 200 * context.Resources.DisplayMetrics.Density;
                 iv.ImageSource = vm.Image;
 
-                ItemView.FindViewById<TextView>(Resource.Id.time).Text = "" + vm.Created.ToUniversalTime().Humanize();
+                ItemView.FindViewById<TextView>(Resource.Id.time).Text = 
+                    vm.Created.DateTimeFromUnixTimestampMs().ToUniversalTime().Humanize();
                 ItemView.FindViewById<WebImageView>(Resource.Id.userImage).ImageSource = "" + vm.UserImage;
                 ItemView.FindViewById<TextView>(Resource.Id.userName).Text = vm.UserName;
 
-                ItemView.FindViewById(Resource.Id.action).SetClick((sender, e) => vm.OpenPostCommand.Execute(null));
+//                ItemView.FindViewById(Resource.Id.action).SetClick((sender, e) => vm.OpenPostCommand.Execute(null));
+                ItemView.FindViewById(Resource.Id.action)
+                    .SetClick((sender, e) => viewmodel.SelectItemCommand.Execute(position));
             }
         }
 
         class FooterViewHolder : BaseViewHolder
         {
-            public FooterViewHolder(Context context)
+            readonly FeedViewModel2 viewmodel;
+
+            public FooterViewHolder(Context context, FeedViewModel2 viewmodel)
                 : base(View.Inflate(context, Resource.Layout.item_post_divider, null))
             {
+                this.viewmodel = viewmodel;
                 ItemView.LayoutParameters = new StaggeredGridLayoutManager.LayoutParams(
                     ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent)
                 {
@@ -110,12 +124,13 @@ namespace JoyReactor.Android.App.Home
                 };
             }
 
-            internal override void OnBindViewHolder(object item)
+            internal override void OnBindViewHolder(object item, int position)
             {
-                var vm = (FeedViewModel.DividerViewModel)item;
+//                var vm = (FeedViewModel2.Divider)item;
                 ItemView
                     .FindViewById(Resource.Id.dividerButton)
-                    .SetClick((sender, e) => vm.LoadMoreCommand.Execute(null));
+                    .SetClick((sender, e) => viewmodel.SelectItemCommand.Execute(position));
+//                    .SetClick((sender, e) => vm.LoadMoreCommand.Execute(null));
             }
         }
     }
