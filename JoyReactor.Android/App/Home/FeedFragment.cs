@@ -17,7 +17,7 @@ namespace JoyReactor.Android.App.Home
         {
             base.OnCreate(savedInstanceState);
             RetainInstance = true;
-            viewmodel = new FeedViewModel2();
+            viewmodel = Scope.New<FeedViewModel2>();
 
             MessengerInstance.Register<TagsViewModel.SelectTagMessage>(this, _ => list.ResetScrollToTop());
         }

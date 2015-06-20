@@ -6,6 +6,7 @@ using Android.Support.V4.App;
 using GalaSoft.MvvmLight.Helpers;
 using GalaSoft.MvvmLight.Messaging;
 using Messenger = GalaSoft.MvvmLight.Messaging.Messenger;
+using JoyReactor.Core.ViewModels;
 
 namespace JoyReactor.Android.App.Base
 {
@@ -20,6 +21,8 @@ namespace JoyReactor.Android.App.Base
         List<Action> onPauseEvents = new List<Action>();
 
         protected readonly BindingManager Bindings = new BindingManager();
+
+        protected readonly ScopedViewModel.Scope Scope = new ScopedViewModel.Scope();
 
         public IMessenger MessengerInstance
         {
@@ -57,6 +60,7 @@ namespace JoyReactor.Android.App.Base
         {
             base.OnResume();
             onResumeEvents.ForEach(s => s());
+            Scope.OnActivated();
         }
 
         public override void OnDestroy()
@@ -77,6 +81,7 @@ namespace JoyReactor.Android.App.Base
         {
             base.OnPause();
             onPauseEvents.ForEach(s => s());
+            Scope.OnDeactivated();
         }
 
         public class BindingManager

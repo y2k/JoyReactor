@@ -47,6 +47,7 @@ namespace JoyReactor.Core.ViewModels
         {
             this.id = id;
 
+            HasNewItems = false;
             IsBusy = true;
             var tag = await new TagRepository().GetAsync(id.SerializeToString());
             Posts.ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
