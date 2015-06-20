@@ -89,7 +89,7 @@ namespace JoyReactor.Core.ViewModels
             IsBusy = true;
 
             var tag = await new TagRepository().GetAsync(id.SerializeToString());
-            var nextPageRequest = new PostCollectionRequest(tag, nextPage);
+            var nextPageRequest = new PostCollectionRequest(id, nextPage);
             await nextPageRequest.DownloadFromWebAsync();
             nextPage = nextPageRequest.NextPage;
 
@@ -105,7 +105,7 @@ namespace JoyReactor.Core.ViewModels
             foreach (var s in GetAfterDivider())
                 if (ids.All(i => i.PostId != s.Id))
                     ids.Add(new TagPost { TagId = tag.Id, PostId = s.Id });
-            new TagPostRepository().ReplaceAllForTagAsync(ids);
+            await new TagPostRepository().ReplaceAllForTagAsync(ids);
 
             Posts.ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
             Posts.Insert(dividerPosition, new Divider());
@@ -115,7 +115,7 @@ namespace JoyReactor.Core.ViewModels
 
         public async Task ApplyCommandMethod()
         {
-            var tag = await new TagRepository().GetAsync(id);
+            var tag = await new TagRepository().GetAsync(id.SerializeToString());
             var ids = new List<TagPost>();
             foreach (var s in firstPageRequest.Posts)
                 ids.Add(new TagPost { TagId = tag.Id, PostId = s.Id });
