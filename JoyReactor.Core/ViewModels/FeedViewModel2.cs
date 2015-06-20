@@ -1,15 +1,16 @@
-﻿using JoyReactor.Core.Model.Database;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Parser;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
-using System.Linq;
 
 namespace JoyReactor.Core.ViewModels
 {
-    public class FeedViewModel2 : ViewModel
+    public class FeedViewModel2 : ScopedViewModel
     {
         public ObservableCollection<Post> Posts { get; } = new ObservableCollection<Post>();
 
@@ -19,52 +20,127 @@ namespace JoyReactor.Core.ViewModels
 
         public ICommand ApplyCommand { get; private set; }
 
-        PostCollectionRequest provider;
+        public ICommand SelectItemCommand { get; private set; }
+
+        PostCollectionRequest firstPageRequest;
+        ID id;
+        int nextPage;
 
         public FeedViewModel2()
         {
-            Init();
-
-            ApplyCommand = new Command(
-                async () =>
-                {
-                    var tag = await new TagRepository().GetAsync(ID.Reactor.SerializeToString());
-                    var ids = new List<TagPost>();
-                    foreach (var s in provider.Posts)
-                        ids.Add(new TagPost { TagId = tag.Id, PostId = s.Id });
-                    foreach (var s in Posts)
-                        if (ids.All(i => i.PostId != s.Id))
-                            ids.Add(new TagPost { TagId = tag.Id, PostId = s.Id });
-                    await new TagPostRepository().ReplaceAllForTagAsync(ids);
-
-                    Posts.ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
-                    HasNewItems = false;
-                });
+            ApplyCommand = new Command(ApplyCommandMethod);
+            SelectItemCommand = new Command<int>(SelectItemCommandMethod);
+            SetCurrentTag(ID.Reactor);
         }
 
-        async void Init()
+        public override void OnActivated()
         {
+            base.OnActivated();
+            MessengerInstance.Register<TagsViewModel.SelectTagMessage>(this, m => SetCurrentTag(m.Id));
+        }
+
+        async void SetCurrentTag(ID id)
+        {
+            this.id = id;
+
             IsBusy = true;
-            var tag = await new TagRepository().GetAsync(ID.Reactor.SerializeToString());
+            var tag = await new TagRepository().GetAsync(id.SerializeToString());
             Posts.ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
 
-            provider = new PostCollectionRequest(ID.DeserializeFromString(tag.TagId), 0);
-            await provider.DownloadFromWebAsync();
+            firstPageRequest = new PostCollectionRequest(id, 0);
+            await firstPageRequest.DownloadFromWebAsync();
+            nextPage = firstPageRequest.NextPage;
 
-            await new PostRepository().UpdateOrInsertAllAsync(provider.Posts);
+            await new PostRepository().UpdateOrInsertAllAsync(firstPageRequest.Posts);
 
-            HasNewItems = !IsContains(Posts, provider.Posts);
+            if (Posts.Count == 0 || IsStartWith(Posts, firstPageRequest.Posts))
+                await ApplyCommandMethod();
+            else
+                HasNewItems = true;
+
             IsBusy = false;
         }
 
-        bool IsContains(IList<Post> posts1, IList<Post> posts2)
+        bool IsStartWith(IList<Post> originalPosts, IList<Post> newPosts)
         {
-            if (posts1.Count <= posts2.Count)
+            if (originalPosts.Count < newPosts.Count)
                 return false;
-            for (int i = 0; i < posts2.Count; i++)
-                if (posts1[i].PostId != posts2[i].PostId)
+            for (int i = 0; i < newPosts.Count; i++)
+                if (originalPosts[i].PostId != newPosts[i].PostId)
                     return false;
             return true;
+        }
+
+        public async Task SelectItemCommandMethod(int index)
+        {
+            var item = Posts[index];
+            if (item is Divider)
+            {
+                await LoadNextPage();
+            }
+            else
+            {
+                // TODO:
+            }
+        }
+
+        async Task LoadNextPage()
+        {
+            IsBusy = true;
+
+            var tag = await new TagRepository().GetAsync(id.SerializeToString());
+            var nextPageRequest = new PostCollectionRequest(tag, nextPage);
+            await nextPageRequest.DownloadFromWebAsync();
+            nextPage = nextPageRequest.NextPage;
+
+            await new PostRepository().UpdateOrInsertAllAsync(firstPageRequest.Posts);
+
+            var ids = new List<TagPost>();
+            foreach (var s in GetBeforeDivider())
+                ids.Add(new TagPost { TagId = tag.Id, PostId = s.Id });
+            foreach (var s in nextPageRequest.Posts)
+                if (ids.All(i => i.PostId != s.Id))
+                    ids.Add(new TagPost { TagId = tag.Id, PostId = s.Id });
+            int dividerPosition = ids.Count;
+            foreach (var s in GetAfterDivider())
+                if (ids.All(i => i.PostId != s.Id))
+                    ids.Add(new TagPost { TagId = tag.Id, PostId = s.Id });
+            new TagPostRepository().ReplaceAllForTagAsync(ids);
+
+            Posts.ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
+            Posts.Insert(dividerPosition, new Divider());
+
+            IsBusy = false;
+        }
+
+        public async Task ApplyCommandMethod()
+        {
+            var tag = await new TagRepository().GetAsync(id);
+            var ids = new List<TagPost>();
+            foreach (var s in firstPageRequest.Posts)
+                ids.Add(new TagPost { TagId = tag.Id, PostId = s.Id });
+            foreach (var s in GetBeforeDivider())
+                if (ids.All(i => i.PostId != s.Id))
+                    ids.Add(new TagPost { TagId = tag.Id, PostId = s.Id });
+            await new TagPostRepository().ReplaceAllForTagAsync(ids);
+            Posts.ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
+            Posts.Insert(firstPageRequest.Posts.Count, new Divider());
+
+            HasNewItems = false;
+        }
+
+        IEnumerable<Post> GetBeforeDivider()
+        {
+            return Posts.TakeWhile(s => !(s is Divider));
+        }
+
+        IEnumerable<Post> GetAfterDivider()
+        {
+            return Posts.SkipWhile(s => !(s is Divider)).Skip(1);
+        }
+
+        public class Divider : Post
+        {
         }
     }
 }

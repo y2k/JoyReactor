@@ -77,7 +77,6 @@
     <Compile Include="ViewModels\ProfileViewModel.cs" />
     <Compile Include="ViewModels\TagsViewModel.cs" />
     <Compile Include="ViewModels\TagInformationViewModel.cs" />
-    <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="ViewModels\PostNavigationMessage.cs" />
     <Compile Include="ViewModels\MessageThreadsViewModel.cs" />
     <Compile Include="ViewModels\MessagesViewModel.cs" />
@@ -89,7 +88,6 @@
     <Compile Include="Model\DTO\RelatedPost.cs" />
     <Compile Include="Model\ImageRequest.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
-    <Compile Include="ViewModels\ViewModel.cs" />
     <Compile Include="Model\Database\MemoryStorage.cs" />
     <Compile Include="Model\DTO\TagGroup.cs" />
     <Compile Include="Model\FeedService.cs" />
@@ -103,7 +101,6 @@
     <Compile Include="Model\PostCollectionLoader.cs" />
     <Compile Include="Model\TagOrderSaver.cs" />
     <Compile Include="ViewModels\UpdateNotificationViewModel.cs" />
-    <Compile Include="ViewModels\Command.cs" />
     <Compile Include="Model\Parser\PostCollectionRequest.cs" />
     <Compile Include="Model\Parser\PostRequest.cs" />
     <Compile Include="Model\Parser\IProviderListStorage.cs" />
@@ -111,6 +108,10 @@
     <Compile Include="Model\Parser\ProfileRequest.cs" />
     <Compile Include="Model\Parser\TagImageRequest.cs" />
     <Compile Include="Model\Parser\TagRequest.cs" />
+    <Compile Include="ViewModels\Common\Command.cs" />
+    <Compile Include="ViewModels\Common\ViewModel.cs" />
+    <Compile Include="ViewModels\Common\ViewModelLocator.cs" />
+    <Compile Include="ViewModels\Common\ScopedViewModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -183,4 +184,7 @@
     <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
   </Target>
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ViewModels\Common\" />
+  </ItemGroup>
 </Project>

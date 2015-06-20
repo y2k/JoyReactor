@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Concurrency;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Views;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Linq;
 
 namespace JoyReactor.Core.ViewModels
 {
