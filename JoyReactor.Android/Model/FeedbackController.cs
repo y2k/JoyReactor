@@ -8,6 +8,7 @@ using Android.App;
 using Android.Content;
 using Android.Graphics;
 using Android.OS;
+using Android.Widget;
 using Java.IO;
 using Java.Lang;
 using Java.Util.Zip;
@@ -46,7 +47,15 @@ namespace JoyReactor.Android.Model
                     zip.Finish();
                 }
             }
-            activity.StartActivity(CreateEmailIntent(new File(path)));
+
+            try
+            {
+                activity.StartActivity(CreateEmailIntent(new File(path)));
+            }
+            catch (ActivityNotFoundException)
+            {
+                Toast.MakeText(activity, Resource.String.error_email_client_not_installed, ToastLength.Long).Show();
+            }
         }
 
         async Task TakeScreenshot(OutputStream stream)

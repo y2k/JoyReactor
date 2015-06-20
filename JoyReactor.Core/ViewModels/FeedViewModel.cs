@@ -34,6 +34,7 @@ namespace JoyReactor.Core.ViewModels
         {
             ApplyCommand = new Command(ApplyCommandMethod);
             SelectItemCommand = new Command<int>(SelectItemCommandMethod);
+            RefreshCommand = new Command(RefreshCommandMethod);
             SetCurrentTag(ID.ReactorGood);
         }
 
@@ -142,6 +143,12 @@ namespace JoyReactor.Core.ViewModels
         IEnumerable<Post> GetAfterDivider()
         {
             return Posts.SkipWhile(s => !(s is Divider)).Skip(1);
+        }
+
+        public async Task RefreshCommandMethod()
+        {
+            if (IsBusy)
+                return;
         }
 
         public class Divider : Post

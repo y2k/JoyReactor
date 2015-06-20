@@ -30,4 +30,5 @@
 	<string name="updates_available">Доступно обновление</string>
 	<string name="open">Открыть</string>
 	<string name="write_feedback">Оставьте отзыв, предложение или сообщите об ошибке</string>
+    <string name="error_email_client_not_installed">У вас не установлен почтовый клиент.</string>
 </resources>
