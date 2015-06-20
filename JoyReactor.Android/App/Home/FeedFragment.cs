@@ -10,14 +10,14 @@ namespace JoyReactor.Android.App.Home
 {
     public class FeedFragment : BaseFragment
     {
-        FeedViewModel2 viewmodel;
+        FeedViewModel viewmodel;
         FeedRecyclerView list;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             RetainInstance = true;
-            viewmodel = Scope.New<FeedViewModel2>();
+            viewmodel = Scope.New<FeedViewModel>();
 
             MessengerInstance.Register<TagsViewModel.SelectTagMessage>(this, _ => list.ResetScrollToTop());
         }

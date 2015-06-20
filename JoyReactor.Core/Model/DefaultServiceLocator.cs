@@ -10,7 +10,6 @@ using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.ViewModels;
 using Microsoft.Practices.ServiceLocation;
 using Refractored.Xam.Settings;
-using SQLite.Net;
 
 namespace JoyReactor.Core.Model
 {
@@ -69,7 +68,6 @@ namespace JoyReactor.Core.Model
 				b.RegisterType<AuthRepository>().As<ReactorMessageParser.IAuthStorage>();
 				b.RegisterType<AuthRepository>().As<IProviderAuthStorage>();
 
-				b.RegisterType<CommonRepository>().As<FeedService.IFeedRepository>();
 				b.RegisterType<CommonRepository>().As<IProviderStorage>();
 				b.RegisterType<CommonRepository>().As<PostService.IStorage>();
 

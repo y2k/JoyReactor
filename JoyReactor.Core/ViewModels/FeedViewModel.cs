@@ -1,196 +1,151 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using JoyReactor.Core.Model;
-using JoyReactor.Core.Model.DTO;
-using JoyReactor.Core.Model.Helper;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using JoyReactor.Core.Model.Database;
+using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Helper;
+using JoyReactor.Core.Model.Parser;
 
 namespace JoyReactor.Core.ViewModels
 {
-    public class FeedViewModel : ViewModel
+    public class FeedViewModel : ScopedViewModel
     {
-        #region Commands
+        public ErrorType Error { get { return ErrorType.NotError; } }
 
-        public RelayCommand RefreshCommand { get; set; }
-
-        public RelayCommand MoreCommand { get; set; }
-
-        public RelayCommand ApplyCommand { get; set; }
-
-        public RelayCommand<ID> ChangeCurrentListIdCommand { get; set; }
-
-        #endregion
-
-        #region Properties
-
-        public ObservableCollection<ViewModelBase> Posts { get; } = new ObservableCollection<ViewModelBase>();
+        public ObservableCollection<Post> Posts { get; } = new ObservableCollection<Post>();
 
         public bool IsBusy { get { return Get<bool>(); } set { Set(value); } }
 
         public bool HasNewItems { get { return Get<bool>(); } set { Set(value); } }
 
-        public ErrorType Error { get { return Get<ErrorType>(); } set { Set(value); } }
+        public ICommand ApplyCommand { get; private set; }
 
-        #endregion
+        public ICommand SelectItemCommand { get; private set; }
 
-        IFeedService service;
-        IDisposable subscription;
+        public ICommand RefreshCommand { get; set; }
+
+        PostCollectionRequest firstPageRequest;
+        ID id;
+        int nextPage;
 
         public FeedViewModel()
         {
-            RefreshCommand = new RelayCommand(ReloadFeed);
-            MoreCommand = new RelayCommand(LoadNextPage);
-            ApplyCommand = new RelayCommand(async () => await service.ApplyNewItemsAsync());
-            ChangeCurrentListIdCommand = new RelayCommand<ID>(Initialize);
-
-            MessengerInstance.Register<TagsViewModel.SelectTagMessage>(this, s => ChangeCurrentListIdCommand.Execute(s.Id));
+            ApplyCommand = new Command(ApplyCommandMethod);
+            SelectItemCommand = new Command<int>(SelectItemCommandMethod);
+            SetCurrentTag(ID.ReactorGood);
         }
 
-        public void Initialize(ID newId)
+        public override void OnActivated()
         {
-            service = new FeedService(newId);
-            ClearState();
-
-            subscription?.Dispose();
-            subscription = service
-                .Get()
-                .SubscribeOnUi(data =>
-                {
-                    Error = ErrorType.NotError;
-                    HasNewItems = data.NewItemsCount > 0;
-                    IsBusy = false;
-                    UpdatePosts(data);
-                }, error =>
-                {
-                    ClearState();
-                    Error = ErrorType.NotAuthorized;
-                });
+            base.OnActivated();
+            MessengerInstance.Register<TagsViewModel.SelectTagMessage>(this, m => SetCurrentTag(m.Id));
         }
 
-        void ClearState()
+        async void SetCurrentTag(ID id)
         {
-            Error = ErrorType.NotError;
-            HasNewItems = IsBusy = false;
-            Posts.Clear();
-        }
+            this.id = id;
 
-        void UpdatePosts(PostCollectionState data)
-        {
-            var newPosts = ConvertToViewModelItemList(true, data);
-            for (int i = Posts.Count - 1; i >= newPosts.Count; i--)
-                Posts.RemoveAt(i);
-            for (int i = Posts.Count; i < newPosts.Count; i++)
-                Posts.Add(null);
-            for (int i = 0; i < newPosts.Count; i++)
-                Posts[i] = newPosts[i];
-        }
-
-        async void ReloadFeed()
-        {
+            HasNewItems = false;
             IsBusy = true;
-            if (HasNewItems)
-                await service.ApplyNewItemsAsync();
+            var tag = await new TagRepository().GetAsync(id.SerializeToString());
+            Posts.ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
+
+            firstPageRequest = new PostCollectionRequest(id, 0);
+            await firstPageRequest.DownloadFromWebAsync();
+            nextPage = firstPageRequest.NextPage;
+
+            await new PostRepository().UpdateOrInsertAllAsync(firstPageRequest.Posts);
+
+            if (Posts.Count == 0 || IsStartWith(Posts, firstPageRequest.Posts))
+                await ApplyCommandMethod();
             else
-                await service.ResetAsync();
+                HasNewItems = true;
+
             IsBusy = false;
         }
 
-        async void LoadNextPage()
+        bool IsStartWith(IList<Post> originalPosts, IList<Post> newPosts)
+        {
+            if (originalPosts.Count < newPosts.Count)
+                return false;
+            for (int i = 0; i < newPosts.Count; i++)
+                if (originalPosts[i].PostId != newPosts[i].PostId)
+                    return false;
+            return true;
+        }
+
+        public async Task SelectItemCommandMethod(int index)
+        {
+            var item = Posts[index];
+            if (item is Divider)
+            {
+                await LoadNextPage();
+            }
+            else
+            {
+                // TODO:
+            }
+        }
+
+        async Task LoadNextPage()
         {
             IsBusy = true;
-            await service.SyncNextPageAsync();
+
+            var tag = await new TagRepository().GetAsync(id.SerializeToString());
+            var nextPageRequest = new PostCollectionRequest(id, nextPage);
+            await nextPageRequest.DownloadFromWebAsync();
+            nextPage = nextPageRequest.NextPage;
+
+            await new PostRepository().UpdateOrInsertAllAsync(nextPageRequest.Posts);
+
+            var ids = new List<TagPost>();
+            foreach (var s in GetBeforeDivider())
+                ids.Add(new TagPost { TagId = tag.Id, PostId = s.Id });
+            foreach (var s in nextPageRequest.Posts)
+                if (ids.All(i => i.PostId != s.Id))
+                    ids.Add(new TagPost { TagId = tag.Id, PostId = s.Id });
+            int dividerPosition = ids.Count;
+            foreach (var s in GetAfterDivider())
+                if (ids.All(i => i.PostId != s.Id))
+                    ids.Add(new TagPost { TagId = tag.Id, PostId = s.Id });
+            await new TagPostRepository().ReplaceAllForTagAsync(ids);
+
+            Posts.ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
+            Posts.Insert(dividerPosition, new Divider());
+
             IsBusy = false;
         }
 
-        List<ViewModelBase> ConvertToViewModelItemList(bool showDivider, PostCollectionState data)
+        public async Task ApplyCommandMethod()
         {
-            var posts = data.Posts.Select(s => new ContentViewModel(s)).ToList<ViewModelBase>();
-            if (posts.Count > 0 && data.DividerPosition >= 0)
-            {
-                var divider = showDivider
-                    ? new DividerViewModel(LoadNextPage)
-                    : new DividerViewModel(() => { });
-                posts.Insert(data.DividerPosition, divider);
-            }
-            return posts;
+            var tag = await new TagRepository().GetAsync(id.SerializeToString());
+            var ids = new List<TagPost>();
+            foreach (var s in firstPageRequest.Posts)
+                ids.Add(new TagPost { TagId = tag.Id, PostId = s.Id });
+            foreach (var s in GetBeforeDivider())
+                if (ids.All(i => i.PostId != s.Id))
+                    ids.Add(new TagPost { TagId = tag.Id, PostId = s.Id });
+            await new TagPostRepository().ReplaceAllForTagAsync(ids);
+            Posts.ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
+            Posts.Insert(firstPageRequest.Posts.Count, new Divider());
+
+            HasNewItems = false;
         }
 
-        [Obsolete]
-        public class ContentViewModel : ViewModelBase
+        IEnumerable<Post> GetBeforeDivider()
         {
-            const string ImageStub = "http://wiki.solid-run.com/images/7/75/No_image_available.png";
-
-            public RelayCommand OpenPostCommand { get; set; }
-
-            public string Title { get { return post.Title; } }
-
-            public string Image { get { return post.Image ?? ImageStub; } }
-
-            public int ImageWidth { get { return Math.Max(1, post.ImageWidth); } }
-
-            public int ImageHeight { get { return Math.Max(1, post.ImageHeight); } }
-
-            public Uri UserImage { get { return post.UserImage == null ? null : new Uri(post.UserImage); } }
-
-            public string UserName { get { return post.UserName; } }
-
-            public DateTime Created { get { return post.Created.DateTimeFromUnixTimestampMs(); } }
-
-            Post post;
-
-            public ContentViewModel(Post post)
-            {
-                this.post = post;
-                OpenPostCommand = new Command(() =>
-                    MessengerInstance.Send(new PostNavigationMessage { PostId = post.Id }));
-            }
-
-            public override bool Equals(object obj)
-            {
-                var o = obj as ContentViewModel;
-                return o != null && post.PostId == o.post.PostId;
-            }
-
-            public override int GetHashCode()
-            {
-                return base.GetHashCode();
-            }
+            return Posts.TakeWhile(s => !(s is Divider));
         }
 
-        [Obsolete]
-        public class DividerViewModel : ViewModelBase
+        IEnumerable<Post> GetAfterDivider()
         {
-            public RelayCommand LoadMoreCommand { get; set; }
-
-            public DividerViewModel(Action command)
-            {
-                LoadMoreCommand = new RelayCommand(command);
-            }
-
-            public override bool Equals(object obj)
-            {
-                return obj is DividerViewModel;
-            }
-
-            public override int GetHashCode()
-            {
-                return base.GetHashCode();
-            }
+            return Posts.SkipWhile(s => !(s is Divider)).Skip(1);
         }
 
-        internal interface IFeedService
+        public class Divider : Post
         {
-            Task ApplyNewItemsAsync();
-
-            IObservable<PostCollectionState> Get();
-
-            Task SyncNextPageAsync();
-
-            Task ResetAsync();
         }
 
         public enum ErrorType

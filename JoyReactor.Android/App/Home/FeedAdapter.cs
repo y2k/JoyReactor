@@ -19,9 +19,9 @@ namespace JoyReactor.Android.App.Home
         public ID ListId { get; set; }
 
         readonly ObservableCollection<Post> items;
-        readonly FeedViewModel2 viewmodel;
+        readonly FeedViewModel viewmodel;
 
-        public FeedAdapter(ObservableCollection<Post> items, FeedViewModel2 viewmodel)
+        public FeedAdapter(ObservableCollection<Post> items, FeedViewModel viewmodel)
         {
             this.viewmodel = viewmodel;
             this.items = items;
@@ -64,10 +64,10 @@ namespace JoyReactor.Android.App.Home
             internal static int GetItemViewType(object item)
             {
 //                return item is FeedViewModel.ContentViewModel ? 0 : 1;
-                return item is FeedViewModel2.Divider ? 1 : 0;
+                return item is FeedViewModel.Divider ? 1 : 0;
             }
 
-            internal static BaseViewHolder NewViewHolder(Context context, int viewType, FeedViewModel2 viewmodel)
+            internal static BaseViewHolder NewViewHolder(Context context, int viewType, FeedViewModel viewmodel)
             {
                 return viewType == 0 
                     ? (BaseViewHolder)new ContentViewHolder(context, viewmodel) 
@@ -79,9 +79,9 @@ namespace JoyReactor.Android.App.Home
         {
             const float MinImageAspect = 1f / 2f;
             readonly Context context;
-            readonly FeedViewModel2 viewmodel;
+            readonly FeedViewModel viewmodel;
 
-            public ContentViewHolder(Context context, FeedViewModel2 viewmodel)
+            public ContentViewHolder(Context context, FeedViewModel viewmodel)
                 : base(View.Inflate(context, Resource.Layout.item_feed, null))
             {
                 this.viewmodel = viewmodel;
@@ -111,9 +111,9 @@ namespace JoyReactor.Android.App.Home
 
         class FooterViewHolder : BaseViewHolder
         {
-            readonly FeedViewModel2 viewmodel;
+            readonly FeedViewModel viewmodel;
 
-            public FooterViewHolder(Context context, FeedViewModel2 viewmodel)
+            public FooterViewHolder(Context context, FeedViewModel viewmodel)
                 : base(View.Inflate(context, Resource.Layout.item_post_divider, null))
             {
                 this.viewmodel = viewmodel;

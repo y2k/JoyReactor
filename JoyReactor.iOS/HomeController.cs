@@ -1,8 +1,8 @@
 using System;
 using CoreGraphics;
 using Foundation;
-using JoyReactor.Core;
 using JoyReactor.Core.Model;
+using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.ViewModels;
 using UIKit;
 
@@ -27,8 +27,6 @@ namespace JoyReactor.iOS
             var button = new UIBarButtonItem { Title = "☰" };
             button.Clicked += (sender, e) => SideMenu.Hidden = !SideMenu.Hidden;
             NavigationItem.LeftBarButtonItem = button;
-
-            viewmodel.Initialize(ID.Factory.New(ID.IdConst.ReactorGood));
         }
 
         public class DataSource : UICollectionViewDataSource
@@ -43,11 +41,14 @@ namespace JoyReactor.iOS
             public override UICollectionViewCell GetCell(UICollectionView collectionView, NSIndexPath indexPath)
             {
                 UICollectionViewCell view;
-                if (viewmodel.Posts[(int)indexPath.Item] is FeedViewModel.ContentViewModel)
+                var item = viewmodel.Posts[(int)indexPath.Item];
+                if (item is FeedViewModel.Divider)
+                {
+                    view = (UICollectionViewCell)collectionView.DequeueReusableCell("DividerCell", indexPath);
+                }
+                else
                 {
                     view = (UICollectionViewCell)collectionView.DequeueReusableCell("PostCell", indexPath);
-                    var item = (FeedViewModel.ContentViewModel)viewmodel.Posts[(int)indexPath.Item];
-
                     view.Layer.CornerRadius = 8;
                     new ImageRequest()
                         .SetUrl(item.Image)
@@ -60,10 +61,6 @@ namespace JoyReactor.iOS
                         .CropIn(40)
                         .Into<UIImage>(image => userImage.Image = image);
                     ((UILabel)view.ViewWithTag(2)).Text = item.UserName;
-                }
-                else
-                {
-                    view = (UICollectionViewCell)collectionView.DequeueReusableCell("DividerCell", indexPath);
                 }
                 return view;
             }
@@ -86,19 +83,14 @@ namespace JoyReactor.iOS
             public override CGSize GetSizeForItem(UICollectionView collectionView, UICollectionViewLayout layout, NSIndexPath indexPath)
             {
                 const float space = 5f;
-                var item = viewmodel.Posts[(int)indexPath.Item];
-                if (item is FeedViewModel.ContentViewModel)
-                {
-                    var post = (FeedViewModel.ContentViewModel)item;
-                    int col = (int)((collectionView.Bounds.Width - space) / (200 + space));
-                    var width = (collectionView.Bounds.Width - space * (1 + col)) / col;
-                    var height = 66 + width * post.ImageHeight / post.ImageWidth;
-                    return new CGSize(width, height);
-                }
-                else
-                {
+                var post = viewmodel.Posts[(int)indexPath.Item];
+                if (post is FeedViewModel.Divider)
                     return new CGSize(collectionView.Bounds.Width - 2 * space, 50);
-                }
+
+                int col = (int)((collectionView.Bounds.Width - space) / (200 + space));
+                var width = (collectionView.Bounds.Width - space * (1 + col)) / col;
+                var height = 66 + width * post.ImageHeight / post.ImageWidth;
+                return new CGSize(width, height);
             }
         }
     }

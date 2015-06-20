@@ -68,8 +68,6 @@
     <Compile Include="Model\Parser\ReactorDomainDetector.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="ViewModels\CreateTagViewModel.cs" />
-    <Compile Include="ViewModels\FeedViewModel.cs" />
-    <Compile Include="ViewModels\FeedViewModel2.cs" />
     <Compile Include="ViewModels\GalleryViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="Model\Helper\ObservableCollectionExtensions.cs" />
@@ -90,7 +88,6 @@
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Model\Database\MemoryStorage.cs" />
     <Compile Include="Model\DTO\TagGroup.cs" />
-    <Compile Include="Model\FeedService.cs" />
     <Compile Include="Model\Database\MessageRepository.cs" />
     <Compile Include="Model\Database\AuthRepository.cs" />
     <Compile Include="Model\ProfileService.cs" />
@@ -110,8 +107,8 @@
     <Compile Include="Model\Parser\TagRequest.cs" />
     <Compile Include="ViewModels\Common\Command.cs" />
     <Compile Include="ViewModels\Common\ViewModel.cs" />
-    <Compile Include="ViewModels\Common\ViewModelLocator.cs" />
     <Compile Include="ViewModels\Common\ScopedViewModel.cs" />
+    <Compile Include="ViewModels\FeedViewModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
