@@ -35,7 +35,7 @@ namespace JoyReactor.Core.Model.Parser
         {
             pageHtml = await new PageDownloader(id, page).DownloadAsync();
             NextPage = GetNextPageOfTagList();
-            Posts = new PageCollectionParser(pageHtml).Parse();
+            Posts = await Task.Run(() => new PageCollectionParser(pageHtml).Parse());
         }
 
         int GetNextPageOfTagList()
