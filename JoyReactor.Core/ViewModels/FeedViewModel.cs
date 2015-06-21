@@ -81,13 +81,9 @@ namespace JoyReactor.Core.ViewModels
         {
             var item = Posts[index];
             if (item is Divider)
-            {
                 await LoadNextPage();
-            }
             else
-            {
-                // TODO:
-            }
+                MessengerInstance.Send(new PostNavigationMessage { PostId = item.Id });
         }
 
         async Task LoadNextPage()
