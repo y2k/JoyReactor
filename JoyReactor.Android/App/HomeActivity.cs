@@ -57,9 +57,6 @@ namespace JoyReactor.Android.App
 			case Resource.Id.addTag:
 				new CreateTagDialog ().Show (SupportFragmentManager, null);
 				return true;
-			case Resource.Id.settings:
-				StartActivity (typeof(SettingsActivity));
-				return true;
 			}
 			return base.OnOptionsItemSelected (item);
 		}

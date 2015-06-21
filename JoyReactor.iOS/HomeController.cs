@@ -1,9 +1,9 @@
 using System;
 using CoreGraphics;
 using Foundation;
-using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.ViewModels;
+using JoyReactor.iOS.Platform;
 using UIKit;
 
 namespace JoyReactor.iOS
@@ -24,7 +24,7 @@ namespace JoyReactor.iOS
             PostList.Delegate = new Delegate(viewmodel);
             viewmodel.Posts.CollectionChanged += (sender, e) => PostList.ReloadData();
 
-            var button = new UIBarButtonItem { Title = "☰" };
+            var button = new UIBarButtonItem { Image = UIImage.FromBundle("MenuIcon.png") };
             button.Clicked += (sender, e) => SideMenu.Hidden = !SideMenu.Hidden;
             NavigationItem.LeftBarButtonItem = button;
         }
@@ -51,15 +51,15 @@ namespace JoyReactor.iOS
                     view = (UICollectionViewCell)collectionView.DequeueReusableCell("PostCell", indexPath);
                     view.Layer.CornerRadius = 8;
                     new ImageRequest()
-                        .SetUrl(item.Image)
+                        .SetUri(item.Image)
                         .CropIn(300)
-                        .Into<UIImage>(image => ((UIImageView)view.ViewWithTag(1)).Image = image);
+                        .To(view.ViewWithTag(1));
                     var userImage = (UIImageView)view.ViewWithTag(3);
                     userImage.Layer.CornerRadius = userImage.Bounds.Width / 2;
                     new ImageRequest()
-                        .SetUrl(item.UserImage)
+                        .SetUri(item.UserImage)
                         .CropIn(40)
-                        .Into<UIImage>(image => userImage.Image = image);
+                        .To(userImage);
                     ((UILabel)view.ViewWithTag(2)).Text = item.UserName;
                 }
                 return view;

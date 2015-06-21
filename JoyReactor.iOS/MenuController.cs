@@ -3,6 +3,7 @@ using Foundation;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.ViewModels;
 using UIKit;
+using JoyReactor.iOS.Platform;
 
 namespace JoyReactor.iOS
 {
@@ -40,8 +41,8 @@ namespace JoyReactor.iOS
 
                 var imageView = (UIImageView)view.ViewWithTag(1);
                 new ImageRequest()
-                    .SetUrl(item.Image)
-                    .Into<UIImage>(image => imageView.Image = image);
+                    .SetUri(item.Image)
+                    .To(imageView);
                 ((UILabel)view.ViewWithTag(2)).Text = item.Title;
 
                 imageView.Layer.CornerRadius = imageView.Bounds.Width / 2;

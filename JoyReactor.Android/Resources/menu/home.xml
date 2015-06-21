@@ -19,8 +19,4 @@
         android:id="@+id/addTag"
         app:showAsAction="never"
         android:title="@string/add_tag" />
-    <item
-        android:id="@+id/settings"
-        app:showAsAction="never"
-        android:title="@string/settings" />
 </menu>
