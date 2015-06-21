@@ -83,7 +83,6 @@
     <Compile Include="Model\Messages\ReactorMessageParser.cs" />
     <Compile Include="Model\Messages\MessageFetcher.cs" />
     <Compile Include="Model\DTO\RelatedPost.cs" />
-    <Compile Include="Model\ImageRequest.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Model\Database\MemoryStorage.cs" />
     <Compile Include="Model\DTO\TagGroup.cs" />

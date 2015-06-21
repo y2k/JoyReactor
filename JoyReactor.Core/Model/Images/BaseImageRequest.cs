@@ -65,7 +65,7 @@ namespace JoyReactor.Core.Model.Images
                 SetToTarget(target, null);
 
                 var cachedBytes = await DiskCache.GetAsync(uri);
-                if (IsInvalideState())
+                if (IsInvalidState())
                     return;
                 if (cachedBytes == null)
                 {
@@ -75,7 +75,7 @@ namespace JoyReactor.Core.Model.Images
                         try
                         {
                             data = await Downloader.GetByteArrayAsync(uri);
-                            if (IsInvalideState())
+                            if (IsInvalidState())
                                 return;
                             break;
                         }
@@ -88,10 +88,10 @@ namespace JoyReactor.Core.Model.Images
                         return;
                     
                     await DiskCache.PutAsync(uri, data);
-                    if (IsInvalideState())
+                    if (IsInvalidState())
                         return;
                     var image = await DecodeImageAsync(data);
-                    if (IsInvalideState())
+                    if (IsInvalidState())
                         return;
                     MemoryCache.Put(uri, image);
                     SetToTarget(target, image);
@@ -99,7 +99,7 @@ namespace JoyReactor.Core.Model.Images
                 else
                 {
                     var image = await DecodeImageAsync(cachedBytes);
-                    if (IsInvalideState())
+                    if (IsInvalidState())
                         return;
                     MemoryCache.Put(uri, image);
                     SetToTarget(target, image);
@@ -111,7 +111,7 @@ namespace JoyReactor.Core.Model.Images
             }
         }
 
-        bool IsInvalideState()
+        bool IsInvalidState()
         {
             return !Transaction.IsValid(this);
         }
