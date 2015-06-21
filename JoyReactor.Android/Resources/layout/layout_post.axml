@@ -13,4 +13,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </JoyReactor.Android.Widget.FixedAspectPanel>
+    <View
+        android:background="@drawable/drawable_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="6dp" />
 </LinearLayout>

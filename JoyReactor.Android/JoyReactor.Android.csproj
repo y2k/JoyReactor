@@ -214,6 +214,7 @@
     <AndroidResource Include="Resources\layout\fragment_update_notification.axml" />
     <AndroidResource Include="Resources\layout\layout_post.axml" />
     <AndroidResource Include="Resources\layout\item_post_divider.axml" />
+    <AndroidResource Include="Resources\drawable\drawable_shadow.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup />

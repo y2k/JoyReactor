@@ -16,6 +16,12 @@
         <item name="android:textColor">@color/text_secondary</item>
         <item name="android:navigationBarColor">@color/primary_dark</item>
         <item name="android:windowBackground">@color/window_background</item>
+        <item name="actionBarStyle">@style/AppActionBar</item>
+    </style>
+
+    <style name="AppActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
+        <item name="elevation">0dp</item>
+        <item name="background">@color/primary</item>
     </style>
 
 </resources>

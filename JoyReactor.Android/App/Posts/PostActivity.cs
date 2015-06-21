@@ -1,9 +1,7 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Views;
 using JoyReactor.Android.App.Base;
-using JoyReactor.Android.Model;
 
 namespace JoyReactor.Android.App.Posts
 {
