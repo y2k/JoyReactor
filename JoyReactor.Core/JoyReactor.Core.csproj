@@ -46,7 +46,6 @@
     <Compile Include="Model\Helper\ObservableFactory.cs" />
     <Compile Include="Model\DefaultServiceLocator.cs" />
     <Compile Include="Model\Messages\UserAvatarLoader.cs" />
-    <Compile Include="Model\PostCollectionState.cs" />
     <Compile Include="Model\IProfileService.cs" />
     <Compile Include="Model\PostService.cs" />
     <Compile Include="Model\Web\WebDownloaderExtensions.cs" />
@@ -95,7 +94,6 @@
     <Compile Include="Model\Database\TagPostRepository.cs" />
     <Compile Include="Model\Database\Repository.cs" />
     <Compile Include="Model\Database\PostRepository.cs" />
-    <Compile Include="Model\PostCollectionLoader.cs" />
     <Compile Include="Model\TagOrderSaver.cs" />
     <Compile Include="ViewModels\UpdateNotificationViewModel.cs" />
     <Compile Include="Model\Parser\PostCollectionRequest.cs" />
@@ -168,6 +166,9 @@
     </Reference>
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.3.5.2\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="ModernHttpClient">
+      <HintPath>..\packages\modernhttpclient.2.4.2\lib\Portable-Net45+WinRT45+WP8+WPA81\ModernHttpClient.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
