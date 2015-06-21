@@ -1,9 +1,8 @@
-﻿using Android.Content;
-using Android.Graphics;
+﻿using System;
+using Android.Content;
 using Android.Util;
 using Android.Widget;
-using JoyReactor.Core.Model;
-using System;
+using JoyReactor.Android.Model;
 
 namespace JoyReactor.Android.Widget
 {
@@ -27,7 +26,8 @@ namespace JoyReactor.Android.Widget
             set { UpdateImageSource(value); }
         }
 
-        public WebImageView(Context context, IAttributeSet attrs) : base(context, attrs) 
+        public WebImageView(Context context, IAttributeSet attrs)
+            : base(context, attrs)
         { 
             ImageSize = ImageSizeAuto;
         }
@@ -38,10 +38,9 @@ namespace JoyReactor.Android.Widget
             {
                 this.imageSource = imageSource;
                 new ImageRequest()
-                    .SetToken(this)
-                    .SetUrl(imageSource)
+                    .SetUri(imageSource)
                     .CropIn(GetImageSize())
-                    .Into<Bitmap>(SetImageBitmap);
+                    .To(this);
             }
         }
 

@@ -46,9 +46,6 @@
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
-    <Reference Include="XamarinCommons">
-      <HintPath>..\JoyReactor.Core\Libs\XamarinCommons.dll</HintPath>
-    </Reference>
     <Reference Include="GalaSoft.MvvmLight">
       <HintPath>..\packages\MvvmLightLibs.5.1.1.0\lib\monoandroid1\GalaSoft.MvvmLight.dll</HintPath>
     </Reference>
@@ -108,7 +105,6 @@
     <Compile Include="App\Home\LeftMenuFragment.cs" />
     <Compile Include="App\Home\RightMenuFragment.cs" />
     <Compile Include="Model\AndroidInjectModule.cs" />
-    <Compile Include="Model\BitmapImageDecoder.cs" />
     <Compile Include="Widget\FixedSizeImageView.cs" />
     <Compile Include="Widget\WebImageView.cs" />
     <Compile Include="Widget\RoundBorderLayour.cs" />
@@ -139,6 +135,7 @@
     <Compile Include="App\Base\NavigationService.cs" />
     <Compile Include="App\Posts\HeaderRow.cs" />
     <Compile Include="App\Posts\CommentRow.cs" />
+    <Compile Include="Model\ImageRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
