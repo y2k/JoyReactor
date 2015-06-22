@@ -136,6 +136,8 @@
     <Compile Include="App\Posts\HeaderRow.cs" />
     <Compile Include="App\Posts\CommentRow.cs" />
     <Compile Include="Model\ImageRequest.cs" />
+    <Compile Include="Widget\LargeImageViewer.cs" />
+    <Compile Include="TestActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
