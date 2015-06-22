@@ -43,10 +43,12 @@ namespace JoyReactor.Android.App
         {
             base.OnActivityCreated(savedInstanceState);
 
-            AddBinding(viewModel, () => viewModel.Name, name, () => name.Text, BindingMode.TwoWay);
-            AddBinding(viewModel, () => viewModel.NameError, name, () => name.Error)
+            Bindings.Add(viewModel, () => viewModel.Name, name, () => name.Text, BindingMode.TwoWay);
+            Bindings
+                .Add(viewModel, () => viewModel.NameError, name, () => name.Error)
 				.ConvertSourceToTarget(s => s ? GetString(Resource.String.required_field) : null);
-            AddBinding(viewModel, () => viewModel.IsBusy, animator, () => animator.DisplayedChild)
+            Bindings
+                .Add(viewModel, () => viewModel.IsBusy, animator, () => animator.DisplayedChild)
                 .ConvertSourceToTarget(s => s ? 1 : 0);
 
             View.FindViewById(Resource.Id.cancel).Click += (sender, e) => Dismiss();

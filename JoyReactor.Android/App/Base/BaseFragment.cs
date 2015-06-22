@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using Android.OS;
 using Android.Support.V4.App;
-using GalaSoft.MvvmLight.Helpers;
 using GalaSoft.MvvmLight.Messaging;
-using Messenger = GalaSoft.MvvmLight.Messaging.Messenger;
 using JoyReactor.Core.ViewModels;
+using Messenger = GalaSoft.MvvmLight.Messaging.Messenger;
 
 namespace JoyReactor.Android.App.Base
 {
@@ -82,23 +80,6 @@ namespace JoyReactor.Android.App.Base
             base.OnPause();
             onPauseEvents.ForEach(s => s());
             Scope.OnDeactivated();
-        }
-
-        public class BindingManager
-        {
-            List<Binding> bindings = new List<Binding>();
-
-            internal Binding<TS, TT> Add<TS, TT>(object source, Expression<Func<TS>> sourceExpression, object target, Expression<Func<TT>> targetExpression, BindingMode mode = BindingMode.Default)
-            {
-                var binding = source.SetBinding(sourceExpression, target, targetExpression, mode);
-                bindings.Add(binding);
-                return binding;
-            }
-
-            public void Destroy()
-            {
-                bindings.Clear();
-            }
         }
     }
 }
