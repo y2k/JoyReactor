@@ -90,6 +90,16 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oHy-gr-Tv2">
+                                <rect key="frame" x="0.0" y="486" width="600" height="50"/>
+                                <color key="backgroundColor" red="0.92156862745098034" green="0.51764705882352946" blue="0.14901960784313725" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="Huz-pI-eeD"/>
+                                </constraints>
+                                <state key="normal" title="Apply new posts">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
                             <containerView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="297-9M-jvo" userLabel="SideMenuContainerView">
                                 <rect key="frame" x="0.0" y="0.0" width="250" height="536"/>
                                 <constraints>
@@ -103,15 +113,19 @@
                         <constraints>
                             <constraint firstItem="297-9M-jvo" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="CID-81-yCQ"/>
                             <constraint firstAttribute="bottom" secondItem="297-9M-jvo" secondAttribute="bottom" id="Snx-Jy-dZA"/>
+                            <constraint firstAttribute="trailing" secondItem="oHy-gr-Tv2" secondAttribute="trailing" id="YSL-ug-PEq"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="TMX-YA-HRN" secondAttribute="bottom" id="fmb-cz-5dd"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="oHy-gr-Tv2" secondAttribute="bottom" id="nSR-3J-0ly"/>
                             <constraint firstItem="297-9M-jvo" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="p1Z-Eg-7fy"/>
                             <constraint firstItem="TMX-YA-HRN" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="rh6-5H-KjA"/>
+                            <constraint firstItem="oHy-gr-Tv2" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="rnh-l3-hzV"/>
                             <constraint firstAttribute="trailing" secondItem="TMX-YA-HRN" secondAttribute="trailing" id="uCE-Fo-nVB"/>
                             <constraint firstItem="TMX-YA-HRN" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="wKu-FD-hb9"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Featured" id="Ii9-RE-aw5"/>
                     <connections>
+                        <outlet property="ApplyNewPosts" destination="oHy-gr-Tv2" id="uKy-o2-hm5"/>
                         <outlet property="PostList" destination="TMX-YA-HRN" id="Rez-Sk-jdG"/>
                         <outlet property="SideMenu" destination="297-9M-jvo" id="qIr-9W-IgV"/>
                     </connections>

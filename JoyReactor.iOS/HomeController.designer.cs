@@ -13,6 +13,9 @@ namespace JoyReactor.iOS
 	partial class HomeController
 	{
 		[Outlet]
+		UIKit.UIButton ApplyNewPosts { get; set; }
+
+		[Outlet]
 		UIKit.UICollectionView PostList { get; set; }
 
 		[Outlet]
@@ -20,14 +23,19 @@ namespace JoyReactor.iOS
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (PostList != null) {
+				PostList.Dispose ();
+				PostList = null;
+			}
+
 			if (SideMenu != null) {
 				SideMenu.Dispose ();
 				SideMenu = null;
 			}
 
-			if (PostList != null) {
-				PostList.Dispose ();
-				PostList = null;
+			if (ApplyNewPosts != null) {
+				ApplyNewPosts.Dispose ();
+				ApplyNewPosts = null;
 			}
 		}
 	}

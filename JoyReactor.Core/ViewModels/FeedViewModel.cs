@@ -146,13 +146,17 @@ namespace JoyReactor.Core.ViewModels
             if (IsBusy)
                 return;
 
-            IsBusy = true;
-            HasNewItems = false;
-            Posts.Clear();
+            if (HasNewItems)
+                await ApplyCommandMethod();
+            else
+            {
+                IsBusy = true;
+                Posts.Clear();
 
-            var tag = await new TagRepository().GetAsync(id.SerializeToString());
-            await new TagPostRepository().RemoveAllAsync(tag.Id);
-            SetCurrentTag(id);
+                var tag = await new TagRepository().GetAsync(id.SerializeToString());
+                await new TagPostRepository().RemoveAllAsync(tag.Id);
+                SetCurrentTag(id);
+            }
         }
 
         public class Divider : Post

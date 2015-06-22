@@ -24,8 +24,46 @@ namespace JoyReactor.iOS
             PostList.Delegate = new Delegate(viewmodel);
             viewmodel.Posts.CollectionChanged += (sender, e) => PostList.ReloadData();
 
+            ApplyNewPosts.SetCommand(viewmodel.ApplyCommand);
+
             var button = new UIBarButtonItem { Image = UIImage.FromBundle("MenuIcon.png") };
-            button.Clicked += (sender, e) => SideMenu.Hidden = !SideMenu.Hidden;
+            button.Clicked += async (sender, e) =>
+            {
+                if (SideMenu.Hidden)
+                {
+                    SideMenu.Hidden = false;
+                    SideMenu.Alpha = 0;
+                    SideMenu.Frame = new CGRect
+                    {
+                        X = -SideMenu.Frame.Width, 
+                        Size = SideMenu.Frame.Size,
+                    };
+                    UIView.Animate(0.3, 
+                        () =>
+                        {
+                            SideMenu.Alpha = 1;
+                            SideMenu.Frame = new CGRect
+                            {
+                                X = SideMenu.Frame.X + SideMenu.Frame.Width,
+                                Size = SideMenu.Frame.Size,
+                            };
+                        });
+                }
+                else
+                {
+                    await UIView.AnimateAsync(0.3,
+                        () =>
+                        {
+                            SideMenu.Frame = new CGRect
+                            {
+                                X = SideMenu.Frame.X - SideMenu.Frame.Width, 
+                                Size = SideMenu.Frame.Size,
+                            };
+                            SideMenu.Alpha = 0;
+                        });
+                    SideMenu.Hidden = true;
+                }
+            };
             NavigationItem.LeftBarButtonItem = button;
         }
 
