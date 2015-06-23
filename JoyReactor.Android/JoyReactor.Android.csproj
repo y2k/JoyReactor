@@ -137,6 +137,7 @@
     <Compile Include="App\Posts\CommentRow.cs" />
     <Compile Include="Model\ImageRequest.cs" />
     <Compile Include="App\Base\BindingManager.cs" />
+    <Compile Include="Model\Bootstrap.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
