@@ -52,14 +52,10 @@ namespace JoyReactor.Android.App
                 Bindings.Add(viewmodel, () => viewmodel.IsLoading, progress);
 
                 var username = view.FindViewById<TextView>(Resource.Id.username);
-                Bindings
-                    .Add(viewmodel, () => viewmodel.UserName)
-                    .WhenSourceChanges(() => username.Text = viewmodel.UserName);
+                Bindings.Add(viewmodel, () => viewmodel.UserName, username);
 
                 var rating = view.FindViewById<TextView>(Resource.Id.rating);
-                Bindings
-                    .Add(viewmodel, () => viewmodel.Rating)
-                    .WhenSourceChanges(() => rating.Text = "" + viewmodel.Rating);
+                Bindings.Add(viewmodel, () => viewmodel.Rating, rating);
 
                 var avatar = view.FindViewById<WebImageView>(Resource.Id.avatar);
                 Bindings
@@ -100,10 +96,10 @@ namespace JoyReactor.Android.App
                 var view = inflater.Inflate(Resource.Layout.fragment_login, null);
 
                 var username = view.FindViewById<EditText>(Resource.Id.username);
-                Bindings.Add(viewmodel, () => viewmodel.Username, username, () => username.Text, BindingMode.TwoWay);
+                Bindings.Add(viewmodel, () => viewmodel.Username, username);
 
                 var password = view.FindViewById<EditText>(Resource.Id.password);
-                Bindings.Add(viewmodel, () => viewmodel.Password, password, () => password.Text, BindingMode.TwoWay);
+                Bindings.Add(viewmodel, () => viewmodel.Password, password);
 
                 var progress = view.FindViewById(Resource.Id.progress);
                 Bindings.Add(viewmodel, () => viewmodel.IsBusy, progress);

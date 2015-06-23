@@ -4,7 +4,6 @@ using Android.Runtime;
 using JoyReactor.Android.Model;
 using JoyReactor.Core.Model;
 using Microsoft.Practices.ServiceLocation;
-using Xamarin;
 
 namespace JoyReactor.Android.App
 {
@@ -23,9 +22,9 @@ namespace JoyReactor.Android.App
             base.OnCreate();
 
             #if DEBUG
-            Insights.Initialize("7d0715fea86f4239a3a4d6ce8acbe1871296e8a4", this);
+            Xamarin.Insights.Initialize("7d0715fea86f4239a3a4d6ce8acbe1871296e8a4", this);
             #else
-            Insights.Initialize("1664e416e9def27db9e1d4ddc74255f3537a2c16", this);
+            Xamarin.Insights.Initialize("1664e416e9def27db9e1d4ddc74255f3537a2c16", this);
             #endif
 
             Instance = this;
