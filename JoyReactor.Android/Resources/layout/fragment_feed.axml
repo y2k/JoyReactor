@@ -27,5 +27,5 @@
         android:background="@color/text_secondary"
         android:padding="30dp"
         android:textAllCaps="true"
-        android:text="@string/you_are_not_authorized" />
+        android:text="@string/unknow_error" />
 </FrameLayout>

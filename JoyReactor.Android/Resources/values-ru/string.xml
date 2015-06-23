@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">JoyReactor</string>
 	<string name="add_tag">Добавить тег</string>
 	<string name="profile">Профиль</string>
 	<string name="settings">Настройки</string>
@@ -31,4 +30,5 @@
 	<string name="open">Открыть</string>
 	<string name="write_feedback">Оставьте отзыв, предложение или сообщите об ошибке</string>
     <string name="error_email_client_not_installed">У вас не установлен почтовый клиент.</string>
+    <string name="unknow_error">Ошибка. Попробуйте позже.</string>
 </resources>

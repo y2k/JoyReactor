@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">JoyReactor</string>
+	<string name="app_name">JoyReactor (beta)</string>
 	<string name="add_tag">Add tag</string>
 	<string name="profile">Profile</string>
 	<string name="settings">Settings</string>
@@ -31,4 +31,5 @@
 	<string name="open">Open</string>
 	<string name="write_feedback">Write feedback</string>
     <string name="error_email_client_not_installed">You don\'t have any email client installed.</string>
+    <string name="unknow_error">Error. Try again later.</string>
 </resources>
