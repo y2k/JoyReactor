@@ -1,19 +1,11 @@
 ﻿using Android.Support.V4.App;
-using GalaSoft.MvvmLight.Helpers;
-using System.Linq.Expressions;
-using System;
 using GalaSoft.MvvmLight.Messaging;
 
 namespace JoyReactor.Android.App.Base
 {
 	public class BaseDialogFragment : DialogFragment
 	{
-        BaseFragment.BindingManager bindingManager = new BaseFragment.BindingManager();
-
-        protected Binding<TS, TT> AddBinding<TS, TT>(object source, Expression<Func<TS>> sourceExpression, object target, Expression<Func<TT>> targetExpression = null, BindingMode mode = BindingMode.Default)
-        {
-            return bindingManager.Add(source, sourceExpression, target, targetExpression, mode);
-        }
+        protected readonly BindingManager Bindings = new BindingManager();
 
         public IMessenger MessengerInstance
         {
@@ -23,7 +15,7 @@ namespace JoyReactor.Android.App.Base
         public override void OnDestroyView()
         {
             base.OnDestroyView();
-            bindingManager.Destroy();
+            Bindings.Destroy();
         }
 
         public override void OnDestroy()

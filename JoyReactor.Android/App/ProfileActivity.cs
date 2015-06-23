@@ -3,9 +3,9 @@ using Android.OS;
 using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
-using JoyReactor.Core.ViewModels;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.Widget;
+using JoyReactor.Core.ViewModels;
 using Messenger = GalaSoft.MvvmLight.Messaging.Messenger;
 
 namespace JoyReactor.Android.App
@@ -13,12 +13,12 @@ namespace JoyReactor.Android.App
     [Activity(Label = "@string/profile", ParentActivity = typeof(HomeActivity), WindowSoftInputMode = SoftInput.AdjustResize)]			
     public class ProfileActivity : BaseActivity
     {
-        protected override void OnCreate(Bundle bundle)
+        protected override void OnCreate(Bundle savedInstanceState)
         {
-            base.OnCreate(bundle);
+            base.OnCreate(savedInstanceState);
             SetContentViewForFragment();
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
-            if (bundle == null)
+            if (savedInstanceState == null)
                 SetRootFragment(new ProfileFragment());
 
             MessengerInstance.Register<LoginViewModel.NavigateToProfileMessage>(
@@ -49,27 +49,34 @@ namespace JoyReactor.Android.App
                 var view = inflater.Inflate(Resource.Layout.fragment_profile, container, false);
 
                 var progress = view.FindViewById(Resource.Id.progress);
-                Bindings.Add(viewmodel, () => viewmodel.IsLoading, progress, () => progress.Visibility)
-					.ConvertSourceToTarget(s => s ? ViewStates.Visible : ViewStates.Gone);
+                Bindings.Add(viewmodel, () => viewmodel.IsLoading, progress);
 
                 var username = view.FindViewById<TextView>(Resource.Id.username);
-                Bindings.Add(viewmodel, () => viewmodel.UserName, username, () => username.Text);
+                Bindings
+                    .Add(viewmodel, () => viewmodel.UserName)
+                    .WhenSourceChanges(() => username.Text = viewmodel.UserName);
 
                 var rating = view.FindViewById<TextView>(Resource.Id.rating);
-                Bindings.Add(viewmodel, () => viewmodel.Rating, rating, () => rating.Text);
+                Bindings
+                    .Add(viewmodel, () => viewmodel.Rating)
+                    .WhenSourceChanges(() => rating.Text = "" + viewmodel.Rating);
 
                 var avatar = view.FindViewById<WebImageView>(Resource.Id.avatar);
-                Bindings.Add(viewmodel, () => viewmodel.Avatar, avatar, () => avatar.ImageSource);
+                Bindings
+                    .Add(viewmodel, () => viewmodel.Avatar)
+                    .WhenSourceChanges(() => avatar.ImageSource = viewmodel.Avatar);
 
                 var stars = view.FindViewById<RatingBar>(Resource.Id.stars);
-                Bindings.Add(viewmodel, () => viewmodel.Stars, stars, () => stars.Rating);
+                Bindings
+                    .Add(viewmodel, () => viewmodel.Stars)
+                    .WhenSourceChanges(() => stars.Rating = viewmodel.Stars);
 
                 var nextStarProgress = view.FindViewById<ProgressBar>(Resource.Id.nextStarProgress);
                 Bindings
-                    .Add(viewmodel, () => viewmodel.NextStarProgress, nextStarProgress, () => nextStarProgress.Progress)
-                    .ConvertSourceToTarget(s => (int)(100 * s));
+                    .Add(viewmodel, () => viewmodel.NextStarProgress)
+                    .WhenSourceChanges(() => nextStarProgress.Progress = (int)(100 * viewmodel.NextStarProgress));
 
-                view.FindViewById(Resource.Id.logout).SetCommand("Click", viewmodel.LogoutCommand);
+                view.FindViewById(Resource.Id.logout).SetCommand(viewmodel.LogoutCommand);
                 return view;
             }
         }
@@ -77,7 +84,6 @@ namespace JoyReactor.Android.App
         public class LoginFragment : BaseFragment
         {
             LoginViewModel viewmodel;
-            Binding progressBinding;
 
             public override void OnCreate(Bundle savedInstanceState)
             {
@@ -94,17 +100,15 @@ namespace JoyReactor.Android.App
                 var view = inflater.Inflate(Resource.Layout.fragment_login, null);
 
                 var username = view.FindViewById<EditText>(Resource.Id.username);
-                viewmodel.SetBinding(() => viewmodel.Username, username, () => username.Text, BindingMode.TwoWay);
+                Bindings.Add(viewmodel, () => viewmodel.Username, username, () => username.Text, BindingMode.TwoWay);
 
                 var password = view.FindViewById<EditText>(Resource.Id.password);
-                viewmodel.SetBinding(() => viewmodel.Password, password, () => password.Text, BindingMode.TwoWay);
+                Bindings.Add(viewmodel, () => viewmodel.Password, password, () => password.Text, BindingMode.TwoWay);
 
                 var progress = view.FindViewById(Resource.Id.progress);
-                progressBinding = viewmodel
-					.SetBinding(() => viewmodel.IsBusy, progress, () => progress.Visibility)
-					.ConvertSourceToTarget(s => s ? ViewStates.Visible : ViewStates.Gone);
+                Bindings.Add(viewmodel, () => viewmodel.IsBusy, progress);
 
-                view.FindViewById(Resource.Id.login).SetCommand("Click", viewmodel.LoginCommand);
+                view.FindViewById(Resource.Id.login).SetCommand(viewmodel.LoginCommand);
                 return view;
             }
         }

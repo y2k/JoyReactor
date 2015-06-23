@@ -8,9 +8,19 @@ namespace JoyReactor.Android.App.Base
 {
     public static class ViewExtensions
     {
+        public static void SetVisibility(this View instance, bool visibility)
+        {
+            instance.Visibility = visibility ? ViewStates.Visible : ViewStates.Gone;
+        }
+
         public static void SetCommand(this SwipeRefreshLayout instance, ICommand command)
         {
             instance.Refresh += (sender, e) => command.Execute(null);
+        }
+
+        public static void SetCommand(this View instance, ICommand command)
+        {
+            instance.Click += (sender, e) => command.Execute(null);
         }
 
         static readonly List<ClickRecord> records = new List<ClickRecord>();

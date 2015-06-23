@@ -138,6 +138,7 @@
     <Compile Include="Model\ImageRequest.cs" />
     <Compile Include="Widget\LargeImageViewer.cs" />
     <Compile Include="TestActivity.cs" />
+    <Compile Include="App\Base\BindingManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

@@ -40,7 +40,7 @@ namespace JoyReactor.Core.ViewModels
         {
             scheduledTask = new TagCollectionModel()
                 .GetMainSubscriptions()
-                .SubscribeOnUi(tags => Tags.ReplaceAll(tags.Select(s => new TagItemViewModel(s)).ToList()));
+                .SubscribeOnUi(tags => Tags.ReplaceAll(tags.OrderBy(s => s.Title.ToUpper()).Select(s => new TagItemViewModel(s))));
         }
 
         public override void Cleanup()
