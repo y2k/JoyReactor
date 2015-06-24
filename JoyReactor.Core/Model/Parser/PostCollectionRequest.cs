@@ -220,7 +220,7 @@ namespace JoyReactor.Core.Model.Parser
                 p.PostId = PostIdRx.FirstString(html);
                 var CreatedRx = new Regex("data\\-time=\"(\\d+)\"");
                 p.Created = CreatedRx.FirstLong(html) * 1000L;
-                var RatingRx = new Regex("Рейтинг:\\s*<div class=\"[^\"]+\"></div>\\s*([\\d\\.]+)");
+                var RatingRx = new Regex("class=\"post_rating\"><span>([^<]+)");
                 p.Rating = RatingRx.FirstFloat(html, CultureInfo.InvariantCulture);
 
                 var CoubRx = new Regex("<iframe src=\"http://coub.com/embed/(.+?)\" allowfullscreen=\"true\" frameborder=\"0\" width=\"(\\d+)\" height=\"(\\d+)");
