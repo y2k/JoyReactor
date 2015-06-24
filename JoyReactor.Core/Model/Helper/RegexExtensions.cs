@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using System.Globalization;
 
 namespace JoyReactor.Core.Model.Helper
 {

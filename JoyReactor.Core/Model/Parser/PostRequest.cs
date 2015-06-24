@@ -245,7 +245,7 @@ namespace JoyReactor.Core.Model.Parser
 
             var ratingReg = new Regex("class=\"comment_rating\" [^>]+> *<span>([^<]+)</span>", RegexOptions.Singleline);
             float rating;
-            float.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out rating);
+            float.TryParse(ratingReg.FirstString(s), NumberStyles.Number, CultureInfo.InvariantCulture, out rating);
             c.Rating = rating;
 
             var USER_NAME = new Regex("href=\"[^\"]+user/([^\"/]+)\"", RegexOptions.Singleline);
