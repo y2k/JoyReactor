@@ -158,7 +158,11 @@ namespace JoyReactor.Core.ViewModels
                 return;
 
             if (HasNewItems)
+            {
+                IsBusy = true;
                 await ApplyCommandMethod();
+                IsBusy = false;
+            }
             else
             {
                 IsBusy = true;
