@@ -17,7 +17,7 @@ namespace JoyReactor.Core.Model.Parser
         protected override async Task<string> GetFromWeb(WebDownloader downloader, Tag item)
         {
             var html = await downloader.GetTextAsync(new Uri("http://joyreactor.cc/tag/" + Uri.EscapeDataString(GetTagName(item))));
-            var match = Regex.Match(html, @"\<img itemprop=""photo"" src=""([^""]+)");
+            var match = Regex.Match(html, @"\<img src=""([^""]+)""[^>]+class=""blog_avatar""");
             return match.Success ? match.Groups[1].Value : null;
         }
 
