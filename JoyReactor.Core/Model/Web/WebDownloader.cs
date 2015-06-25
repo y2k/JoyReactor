@@ -23,6 +23,7 @@ namespace JoyReactor.Core.Model.Web
             {
                 handler.CookieContainer = new CookieContainer();
                 handler.UseCookies = true;
+                handler.AutomaticDecompression = DecompressionMethods.GZip;
 
                 var req = new HttpRequestMessage { RequestUri = uri };
                 if (reqParams != null)
