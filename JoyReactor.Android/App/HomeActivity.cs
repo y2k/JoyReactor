@@ -30,9 +30,9 @@ namespace JoyReactor.Android.App
             pager.CurrentItem = 1;
         }
 
-        protected override void OnStart()
+        protected override void OnResume()
         {
-            base.OnStart();
+            base.OnResume();
             MessengerInstance.Register<TagsViewModel.SelectTagMessage>(this, _ => pager.CurrentItem = 1);
         }
 

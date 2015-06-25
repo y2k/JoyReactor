@@ -64,7 +64,6 @@
     <Compile Include="Model\Helper\Log.cs" />
     <Compile Include="Model\Helper\DateTimeExtensions.cs" />
     <Compile Include="Model\Helper\NodeHelper.cs" />
-    <Compile Include="Model\Parser\ReactorDomainDetector.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="ViewModels\CreateTagViewModel.cs" />
     <Compile Include="ViewModels\GalleryViewModel.cs" />
@@ -109,6 +108,7 @@
     <Compile Include="Model\Images\BaseImageRequest.cs" />
     <Compile Include="Model\Images\DiskCache.cs" />
     <Compile Include="Model\Images\BaseMemoryCache.cs" />
+    <Compile Include="Model\Parser\TagUrlBuilder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
