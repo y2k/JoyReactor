@@ -64,14 +64,17 @@ namespace JoyReactor.Core.Model.Parser
                 var response = await DownloadTagPageAsync();
                 if (IsPageFromSecretSite(response.Html))
                 {
-//                    domainRepository.SetTagDomain(id.Tag, TagDomainRepository.DomainType.Secret);
                     tagUriFactory.CorrectIsSecret(id.Tag);
                     return (await DownloadTagPageAsync()).Html;
                 }
                 if (page == 0 && response.Uri.Host != response.RequestUri.Host)
-                    tagUriFactory.CorrectTagDomain(id.Tag, response.Uri.Host);
-//                    domainRepository.SetTagDomain(id.Tag, response.Uri.Host);
+                    tagUriFactory.CorrectTagDomain(id.Tag, response.Uri.Host, IsFandromRoot(response.Uri));
                 return response.Html;
+            }
+
+            bool IsFandromRoot(Uri uri)
+            {
+                return uri.AbsolutePath == "/";
             }
 
             async Task<Response> DownloadTagPageAsync()

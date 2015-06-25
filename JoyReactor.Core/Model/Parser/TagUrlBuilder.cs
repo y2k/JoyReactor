@@ -11,14 +11,14 @@ namespace JoyReactor.Core.Model.Parser
 
         readonly TagStateStorage storage = new TagStateStorage();
 
-        public void CorrectTagDomain(string tag, string domain, bool isRoot = false)
+        public void CorrectTagDomain(string tag, string domain, bool isRoot)
         {
             storage.SaveTagState(tag, domain, isRoot);
         }
 
         public void CorrectIsSecret(string tag)
         {
-            CorrectTagDomain(tag, "pornreactor.cc");
+            CorrectTagDomain(tag, "pornreactor.cc", false);
         }
 
         public Uri Build(ID id, int page)
@@ -26,16 +26,14 @@ namespace JoyReactor.Core.Model.Parser
             var tag = id.Tag;
             var url = new StringBuilder("http://");
             url.Append(storage.GetDomain(tag, DefaultDomain));
-            if (!storage.IsFandomRootTag(tag))
+            if (tag != null && !storage.IsFandomRootTag(tag))
                 url.Append("/tag/").Append(Uri.EscapeUriString(tag));
             if (ID.TagType.Best == id.Type)
                 url.Append("/best");
             else if (ID.TagType.All == id.Type)
                 url.Append(id.Tag == null ? "/all" : "/new");
-
             if (page > 0)
                 url.Append("/").Append(page);
-
             return new Uri("" + url);
         }
 
@@ -43,9 +41,9 @@ namespace JoyReactor.Core.Model.Parser
         {
             ISettings settings = ServiceLocator.Current.GetInstance<ISettings>();
 
-            public void SaveTagState(string tag, string domain, bool isRoot)
+            public void SaveTagState(string tag, string domain, bool isFandomRoot)
             {
-                settings.AddOrUpdateValue(CreateKey(tag), domain + "|" + isRoot);
+                settings.AddOrUpdateValue(CreateKey(tag), domain + "|" + isFandomRoot);
             }
 
             public string GetDomain(string tag, string defaultValue)
