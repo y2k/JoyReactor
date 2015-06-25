@@ -16,12 +16,13 @@ namespace JoyReactor.Android.Widget
         public LargeImageViewer(Context context, IAttributeSet attrs)
             : base(context, attrs)
         {
-            button = new ToggleButton();
+            button = new ToggleButton(this);
             button.OnToggle += (sender, e) =>
             {
                 touchDetector = button.IsZoom 
-                        ? (TouchDetector)new TouchDetector.Zoom(image.Zoom) 
+                        ? (TouchDetector)new TouchDetector.Zoom(this, image.Zoom)
                         : new TouchDetector.Translate(image.Translate);
+                Invalidate();
             };
             touchDetector = new TouchDetector.Translate((x, y) => image.Translate(x, y));
             SetImage(null);
@@ -89,11 +90,11 @@ namespace JoyReactor.Android.Widget
                 {
                     destRect = new Rect(0, 0, width, height);
                     srcRect = new Rect(0, 0, width, height);
+                    Invalidate();
                 }
-                Invalidate();
             }
 
-            public void Zoom(float x, float y)
+            public void Zoom(float scale)
             {
                 throw new NotImplementedException();
             }
@@ -134,24 +135,48 @@ namespace JoyReactor.Android.Widget
 
             public event EventHandler OnToggle;
 
+            Rect rect;
+            bool pressed;
+
+            float Radius;
+
+            public ToggleButton(View parent)
+            {
+                Radius = parent.Resources.DisplayMetrics.Density * 48;
+            }
+
             public void Draw(Canvas canvas)
             {
-                // TODO:
+                rect = new Rect(canvas.Width - (int)Radius, 0, canvas.Width, (int)Radius);
+                canvas.DrawRect(rect, new Paint { Color = Color.Red });
+                canvas.DrawText(IsZoom ? "Z" : "T", rect.Left, rect.Bottom, new Paint{ TextSize = Radius, Color = Color.White });
             }
 
             public bool HandlerTouchEvent(MotionEvent e)
             {
-                // TODO:
+                if (!rect.Contains((int)e.GetX(), (int)e.GetY()))
+                    return false;
+                switch (e.Action)
+                {
+                    case MotionEventActions.Down:
+                        pressed = true;
+                        return true;
+                    case MotionEventActions.Up:
+                    case MotionEventActions.Cancel:
+                        if (!pressed)
+                            return false;
+                        pressed = false;
+                        IsZoom = !IsZoom;
+                        OnToggle(this, null);
+                        return true;
+                }
                 return false;
             }
         }
 
-        abstract class TouchDetector
+        abstract class TouchDetector : Java.Lang.Object
         {
-            public virtual bool HandlerTouchEvent(MotionEvent e)
-            {
-                throw new NotImplementedException();
-            }
+            public abstract bool HandlerTouchEvent(MotionEvent e);
 
             internal class Translate : TouchDetector
             {
@@ -187,11 +212,36 @@ namespace JoyReactor.Android.Widget
                 }
             }
 
-            internal class Zoom : TouchDetector
+            internal class Zoom : TouchDetector, ScaleGestureDetector.IOnScaleGestureListener
             {
-                internal Zoom(Action<float, float> callback)
+                ScaleGestureDetector detector;
+
+                Action<float> callback;
+
+                internal Zoom(View parent, Action<float> callback)
                 {
-                    // TODO:
+                    this.callback = callback;
+                    detector = new ScaleGestureDetector(parent.Context, this);
+                }
+
+                public override bool HandlerTouchEvent(MotionEvent e)
+                {
+                    return detector.OnTouchEvent(e);
+                }
+
+                public bool OnScale(ScaleGestureDetector detector)
+                {
+                    callback(detector.ScaleFactor);
+                    return true;
+                }
+
+                public bool OnScaleBegin(ScaleGestureDetector detector)
+                {
+                    return true;
+                }
+
+                public void OnScaleEnd(ScaleGestureDetector detector)
+                {
                 }
             }
         }
