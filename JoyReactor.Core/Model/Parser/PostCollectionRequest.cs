@@ -10,6 +10,7 @@ using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Web;
 using Microsoft.Practices.ServiceLocation;
+using System.IO;
 
 namespace JoyReactor.Core.Model.Parser
 {
@@ -46,10 +47,11 @@ namespace JoyReactor.Core.Model.Parser
 
         class PageDownloader
         {
-            WebDownloader downloader = ServiceLocator.Current.GetInstance<WebDownloader>();
-            IProviderAuthStorage authStorage = ServiceLocator.Current.GetInstance<IProviderAuthStorage>();
-            ID id;
-            int page;
+            readonly WebDownloader downloader = ServiceLocator.Current.GetInstance<WebDownloader>();
+            readonly IProviderAuthStorage authStorage = ServiceLocator.Current.GetInstance<IProviderAuthStorage>();
+            readonly TagUrlBuilder tagUriFactory = new TagUrlBuilder();
+            readonly ID id;
+            readonly int page;
 
             internal PageDownloader(ID id, int page)
             {
@@ -59,24 +61,36 @@ namespace JoyReactor.Core.Model.Parser
 
             public async Task<string> DownloadAsync()
             {
-                var html = await DownloadTagPageAsync();
-                if (IsPageFromSecretSite(html))
+                var response = await DownloadTagPageAsync();
+                if (IsPageFromSecretSite(response.Html))
                 {
-                    new ReactorDomainDetector().SetTagType(id.Tag, ReactorDomainDetector.TagType.Secret);
-                    return await DownloadTagPageAsync();
+//                    domainRepository.SetTagDomain(id.Tag, TagDomainRepository.DomainType.Secret);
+                    tagUriFactory.CorrectIsSecret(id.Tag);
+                    return (await DownloadTagPageAsync()).Html;
                 }
-                return html;
+                if (page == 0 && response.Uri.Host != response.RequestUri.Host)
+                    tagUriFactory.CorrectTagDomain(id.Tag, response.Uri.Host);
+//                    domainRepository.SetTagDomain(id.Tag, response.Uri.Host);
+                return response.Html;
             }
 
-            async Task<string> DownloadTagPageAsync()
+            async Task<Response> DownloadTagPageAsync()
             {
-                return await downloader.GetTextAsync(
-                    await GenerateUrl(),
-                    new RequestParams
+                var requestParams = new RequestParams
+                {
+                    Cookies = await GetCookiesAsync(),
+                    UseForeignProxy = true,
+                };
+                var uri = await GenerateUrl();
+                using (var r = await downloader.ExecuteAsync(uri, requestParams))
+                {
+                    return new Response
                     {
-                        Cookies = await GetCookiesAsync(),
-                        UseForeignProxy = true,
-                    });
+                        RequestUri = uri,
+                        Uri = r.ResponseUri,
+                        Html = await new StreamReader(r.Data).ReadToEndAsync(),
+                    };
+                }
             }
 
             async Task<Uri> GenerateUrl()
@@ -84,25 +98,14 @@ namespace JoyReactor.Core.Model.Parser
                 var url = new StringBuilder("http://");
                 if (id.Type == ID.TagType.Favorite)
                 {
-                    url.Append(new ReactorDomainDetector().GetDomainForType(ReactorDomainDetector.TagType.Normal));
+                    url.Append(TagUrlBuilder.DefaultDomain);
                     var username = id.Tag ?? (await new ProfileRepository().GetCurrentAsync()).UserName;
                     url.Append("/user/").Append(Uri.EscapeDataString(username)).Append("/favorite");
+                    if (page > 0)
+                        url.Append("/").Append(page);
+                    return new Uri("" + url);
                 }
-                else
-                {
-                    url.Append(new ReactorDomainDetector().GetDomainForTag(id.Tag));
-                    if (id.Tag != null)
-                        url.Append("/tag/").Append(Uri.EscapeUriString(id.Tag));
-                    if (ID.TagType.Best == id.Type)
-                        url.Append("/best");
-                    else if (ID.TagType.All == id.Type)
-                        url.Append(id.Tag == null ? "/all" : "/new");
-                }
-
-                int currentPage = page;
-                if (currentPage > 0)
-                    url.Append("/").Append(currentPage);
-                return new Uri("" + url);
+                return new TagUrlBuilder().Build(id, page);
             }
 
             bool IsPageFromSecretSite(string html)
@@ -115,6 +118,13 @@ namespace JoyReactor.Core.Model.Parser
                 var cookies = await authStorage.GetCookiesAsync();
                 cookies.Add("showVideoGif2", "1");
                 return cookies;
+            }
+
+            struct Response
+            {
+                internal string Html;
+                internal Uri Uri;
+                internal Uri RequestUri;
             }
         }
 

@@ -19,6 +19,8 @@ namespace JoyReactor.Core.Model.Parser
         WebDownloader downloader = ServiceLocator.Current.GetInstance<WebDownloader>();
         IProviderStorage storage = ServiceLocator.Current.GetInstance<IProviderStorage>();
 
+        TagUrlBuilder tagUriBuilder = new TagUrlBuilder();
+
         IProviderListStorage listStorage;
         ID id;
         string pageHtml;
@@ -46,7 +48,7 @@ namespace JoyReactor.Core.Model.Parser
             var html = await DownloadTagPageAsync();
             if (IsPageFromSecretSite(html))
             {
-                new ReactorDomainDetector().SetTagType(id.Tag, ReactorDomainDetector.TagType.Secret);
+                tagUriBuilder.CorrectIsSecret(id.Tag);
                 return await DownloadTagPageAsync();
             }
             return html;
@@ -65,27 +67,20 @@ namespace JoyReactor.Core.Model.Parser
 
         async Task<Uri> GenerateUrl()
         {
-            var url = new StringBuilder("http://" + new ReactorDomainDetector().GetDomainForTag(id.Tag));
+            int currentPage = isFirstPage ? 0 : await storage.GetNextPageForTagAsync(id);
+            var url = new StringBuilder("http://");
             if (id.Type == ID.TagType.Favorite)
             {
+                url.Append(TagUrlBuilder.DefaultDomain);
                 if (id.Tag == null)
                     id.Tag = await authStorage.GetCurrentUserNameAsync();
                 url.Append("/user/").Append(Uri.EscapeDataString(id.Tag)).Append("/favorite");
-            }
-            else
-            {
-                if (id.Tag != null)
-                    url.Append("/tag/").Append(Uri.EscapeUriString(id.Tag));
-                if (ID.TagType.Best == id.Type)
-                    url.Append("/best");
-                else if (ID.TagType.All == id.Type)
-                    url.Append(id.Tag == null ? "/all" : "/new");
-            }
 
-            int currentPage = isFirstPage ? 0 : await storage.GetNextPageForTagAsync(id);
-            if (currentPage > 0)
-                url.Append("/").Append(currentPage);
-            return new Uri("" + url);
+                if (currentPage > 0)
+                    url.Append("/").Append(currentPage);
+                return new Uri("" + url);
+            }
+            return tagUriBuilder.Build(id, currentPage);
         }
 
         bool IsPageFromSecretSite(string html)
@@ -289,10 +284,10 @@ namespace JoyReactor.Core.Model.Parser
                     return root
                         .Select("td > img")
                         .Select(s => new Tag
-                            {
-                                BestImage = s.Attr("src"),
-                                Title = LinkToTagName(FindLinkToTag(s))
-                            })
+                        {
+                            BestImage = s.Attr("src"),
+                            Title = LinkToTagName(FindLinkToTag(s))
+                        })
                         .ToList();
                 }
 

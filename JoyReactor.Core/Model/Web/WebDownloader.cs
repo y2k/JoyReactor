@@ -37,12 +37,12 @@ namespace JoyReactor.Core.Model.Web
                     try
                     {
                         var response = await client.SendAsync(req);
-                        var result = new WebResponse
+                        return new WebResponse
                         {
                             Data = await response.Content.ReadAsStreamAsync(),
                             Cookies = GetCookies(response),
+                            ResponseUri = req.RequestUri,
                         };
-                        return result;
                     }
                     catch (Exception e)
                     {
@@ -102,7 +102,10 @@ namespace JoyReactor.Core.Model.Web
     public class WebResponse : IDisposable
     {
         public IDictionary<string, string> Cookies { get; set; }
+
         public Stream Data { get; set; }
+
+        public Uri ResponseUri { get; set; }
 
         public void Dispose()
         {
@@ -110,14 +113,18 @@ namespace JoyReactor.Core.Model.Web
         }
     }
 
-    public class RequestParams 
+    public class RequestParams
     {
         public IDictionary<string, string> Form { get; set; }
+
         public IDictionary<string, string> Cookies { get; set; }
+
         public IDictionary<string, string> AdditionHeaders { get; set; }
+
         public bool NotFollowRedirects { get; set; }
 
         public Uri Referer { get; set; }
+
         public bool UseForeignProxy { get; set; }
     }
 }
