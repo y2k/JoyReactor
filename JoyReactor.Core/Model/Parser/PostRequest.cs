@@ -1,13 +1,13 @@
-﻿using JoyReactor.Core.Model.DTO;
-using JoyReactor.Core.Model.Helper;
-using JoyReactor.Core.Model.Web;
-using Microsoft.Practices.ServiceLocation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using JoyReactor.Core.Model.DTO;
+using JoyReactor.Core.Model.Helper;
+using JoyReactor.Core.Model.Web;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.Model.Parser
 {
@@ -183,7 +183,7 @@ namespace JoyReactor.Core.Model.Parser
                     break;
 
                 // Оптимизированная (по памяти и CPU) проверка случая когда "нет комментариев"
-                if (parentId == null && position == initPosition)
+                if (parentId == 0 && position == initPosition)
                 {
                     if (end - position < 100 && html.Substring(position, end - position).Contains("нет комментариев"))
                         return position;
@@ -243,11 +243,12 @@ namespace JoyReactor.Core.Model.Parser
             var TIMESTAMP = new Regex("timestamp=\"(\\d+)");
             c.Created = TIMESTAMP.FirstLong(s) * 1000L;
 
-            var COMMENT_RATING = new Regex("<span\\s*class=\"comment_rating\"\\s*comment_id=\"\\d+\">\\s*<span>—\\s*([\\d\\.]+)</span>", RegexOptions.Singleline);
-            c.Rating = COMMENT_RATING.FirstFloat(s, CultureInfo.InvariantCulture);
+            var ratingReg = new Regex("class=\"comment_rating\" [^>]+> *<span>([^<]+)</span>", RegexOptions.Singleline);
+            float rating;
+            float.TryParse(ratingReg.FirstString(s), NumberStyles.Number, CultureInfo.InvariantCulture, out rating);
+            c.Rating = rating;
 
             var USER_NAME = new Regex("href=\"[^\"]+user/([^\"/]+)\"", RegexOptions.Singleline);
-            //                c.UserName = Uri.UnescapeDataString(Uri.UnescapeDataString(USER_NAME.FirstString(s))).Replace('+', ' ');
             c.UserName = USER_NAME.FirstString(s)?.UnescapeDataString().UnescapeDataString().Replace('+', ' ');
 
             var USER_ID = new Regex("userId=\"(\\d+)\"");

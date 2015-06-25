@@ -14,7 +14,7 @@
             android:hint="@string/tag_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textCapWords" />
+            android:inputType="textCapSentences" />
         <TextView
             android:textStyle="italic"
             android:layout_marginLeft="4dp"

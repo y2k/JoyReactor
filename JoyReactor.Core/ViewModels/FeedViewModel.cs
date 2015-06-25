@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace JoyReactor.Core.ViewModels
 {
     public class FeedViewModel : ScopedViewModel
     {
-        public ErrorType Error { get { return ErrorType.NotError; } }
+        public ErrorType Error { get { return Get<ErrorType>(); } set { Set(value); } }
 
         public ObservableCollection<Post> Posts { get; } = new ObservableCollection<Post>();
 
@@ -32,9 +33,11 @@ namespace JoyReactor.Core.ViewModels
 
         public FeedViewModel()
         {
+            Error = ErrorType.NotError;
             ApplyCommand = new Command(ApplyCommandMethod);
             SelectItemCommand = new Command<int>(SelectItemCommandMethod);
             RefreshCommand = new Command(RefreshCommandMethod);
+
             SetCurrentTag(ID.ReactorGood);
         }
 
@@ -50,20 +53,28 @@ namespace JoyReactor.Core.ViewModels
 
             HasNewItems = false;
             IsBusy = true;
-            var tag = await new TagRepository().GetAsync(id.SerializeToString());
-            Posts.ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
+            Error = ErrorType.NotError;
 
-            firstPageRequest = new PostCollectionRequest(id, 0);
-            await firstPageRequest.DownloadFromWebAsync();
-            nextPage = firstPageRequest.NextPage;
+            try
+            {
+                var tag = await new TagRepository().GetAsync(id.SerializeToString());
+                Posts.ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
 
-            await new PostRepository().UpdateOrInsertAllAsync(firstPageRequest.Posts);
+                firstPageRequest = new PostCollectionRequest(id, 0);
+                await firstPageRequest.DownloadFromWebAsync();
+                nextPage = firstPageRequest.NextPage;
 
-            if (Posts.Count == 0 || IsStartWith(Posts, firstPageRequest.Posts))
-                await ApplyCommandMethod();
-            else
-                HasNewItems = true;
+                await new PostRepository().UpdateOrInsertAllAsync(firstPageRequest.Posts);
 
+                if (Posts.Count == 0 || IsStartWith(Posts, firstPageRequest.Posts))
+                    await ApplyCommandMethod();
+                else
+                    HasNewItems = true;
+            }
+            catch (Exception e)
+            {
+                Error = ErrorType.UnkownError;
+            }
             IsBusy = false;
         }
 
@@ -147,7 +158,11 @@ namespace JoyReactor.Core.ViewModels
                 return;
 
             if (HasNewItems)
+            {
+                IsBusy = true;
                 await ApplyCommandMethod();
+                IsBusy = false;
+            }
             else
             {
                 IsBusy = true;
@@ -166,7 +181,7 @@ namespace JoyReactor.Core.ViewModels
         public enum ErrorType
         {
             NotError,
-            NotAuthorized,
+            UnkownError,
         }
     }
 }

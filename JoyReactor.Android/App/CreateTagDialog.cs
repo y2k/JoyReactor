@@ -3,8 +3,8 @@ using Android.OS;
 using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
-using JoyReactor.Core.ViewModels;
 using JoyReactor.Android.App.Base;
+using JoyReactor.Core.ViewModels;
 using Messenger = GalaSoft.MvvmLight.Messaging.Messenger;
 
 namespace JoyReactor.Android.App
@@ -45,14 +45,14 @@ namespace JoyReactor.Android.App
 
             Bindings.Add(viewModel, () => viewModel.Name, name, () => name.Text, BindingMode.TwoWay);
             Bindings
-                .Add(viewModel, () => viewModel.NameError, name, () => name.Error)
-				.ConvertSourceToTarget(s => s ? GetString(Resource.String.required_field) : null);
+                .Add(viewModel, () => viewModel.NameError)
+                .WhenSourceChanges(() => name.Error = viewModel.NameError ? GetString(Resource.String.required_field) : null);
             Bindings
-                .Add(viewModel, () => viewModel.IsBusy, animator, () => animator.DisplayedChild)
-                .ConvertSourceToTarget(s => s ? 1 : 0);
+                .Add(viewModel, () => viewModel.IsBusy)
+                .WhenSourceChanges(() => animator.DisplayedChild = viewModel.IsBusy ? 1 : 0);
 
             View.FindViewById(Resource.Id.cancel).Click += (sender, e) => Dismiss();
-            View.FindViewById(Resource.Id.ok).SetCommand("Click", viewModel.CreateCommand);
+            View.FindViewById(Resource.Id.ok).SetCommand(viewModel.CreateCommand);
         }
     }
 }

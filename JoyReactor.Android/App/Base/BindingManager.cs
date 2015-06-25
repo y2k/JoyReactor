@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
 using Android.Views;
+using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
 
 namespace JoyReactor.Android.App.Base
@@ -29,6 +31,27 @@ namespace JoyReactor.Android.App.Base
             var func = sourceExpression.Compile();
             return Add(source, sourceExpression)
                 .WhenSourceChanges(() => target.Visibility = func() ? ViewStates.Visible : ViewStates.Gone);
+        }
+
+        public Binding Add(object source, Expression<Func<string>> sourceExpression, EditText target)
+        {
+            var prop = (PropertyInfo)((MemberExpression)sourceExpression.Body).Member;
+            var binding = Add(source, sourceExpression)
+                .WhenSourceChanges(() =>
+                {
+                    var text = (string)prop.GetValue(source);
+                    if (target.Text != text)
+                        target.Text = text;
+                });
+            target.TextChanged += (sender, e) => prop.SetValue(source, target.Text);
+            return binding;
+        }
+
+        public Binding Add<T>(object source, Expression<Func<T>> sourceExpression, TextView target)
+        {
+            var prop = (PropertyInfo)((MemberExpression)sourceExpression.Body).Member;
+            return Add(source, sourceExpression)
+                .WhenSourceChanges(() => target.Text = "" + prop.GetValue(source));
         }
 
         public void Destroy()

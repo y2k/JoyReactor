@@ -10,15 +10,26 @@ namespace JoyReactor.Core.Model.Parser
 {
     class TagImageRequest : ImageLoader<Tag>
     {
-        internal TagImageRequest(Tag tag) : this (new List<Tag> { tag }) {}
+        internal TagImageRequest(Tag tag)
+            : this(new List<Tag> { tag })
+        {
+        }
 
-        internal TagImageRequest(List<Tag> tags) : base(tags, "tag_image.") { }
+        internal TagImageRequest(List<Tag> tags)
+            : base(tags, "tag_image.")
+        {
+        }
 
         protected override async Task<string> GetFromWeb(WebDownloader downloader, Tag item)
         {
             var html = await downloader.GetTextAsync(new Uri("http://joyreactor.cc/tag/" + Uri.EscapeDataString(GetTagName(item))));
             var match = Regex.Match(html, @"\<img itemprop=""photo"" src=""([^""]+)");
-            return match.Success ? match.Groups[1].Value : null;
+            if (match.Success)
+                return match.Groups[1].Value;
+            match = Regex.Match(html, @"\<img src=""([^""]+)""[^>]+class=""blog_avatar""");
+            if (match.Success)
+                return match.Groups[1].Value;
+            return null;
         }
 
         static string GetTagName(Tag item)
