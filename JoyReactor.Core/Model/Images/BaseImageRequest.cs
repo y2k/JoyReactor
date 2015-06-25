@@ -140,7 +140,7 @@ namespace JoyReactor.Core.Model.Images
         class ThumbnailUri
         {
             const string ThumbnailDomain = "api-i-twister.net";
-            const string ThumbnailTemplate = "https://" + ThumbnailDomain + ":8002/Cache/Get?maxHeight=500&width={0}&url={1}";
+            const string ThumbnailTemplate = "https://" + ThumbnailDomain + ":8002/Cache/Get?bgColor=ffffff&maxHeight=500&width={0}&url={1}";
         
             readonly int maxSize;
             readonly Uri url;
