@@ -56,8 +56,6 @@ namespace JoyReactor.Core.Model
 
 				b.Register(_ => CrossSettings.Current).AsSelf();
 
-				b.RegisterType<ProfileService>().As<IProfileService>();
-
 				b.RegisterType<MessageRepository>().As<MessageService.IStorage>();
 				b.RegisterType<MessageRepository>().As<MessageFetcher.IStorage>();
 

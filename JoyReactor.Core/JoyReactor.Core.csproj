@@ -46,7 +46,6 @@
     <Compile Include="Model\Helper\ObservableFactory.cs" />
     <Compile Include="Model\DefaultServiceLocator.cs" />
     <Compile Include="Model\Messages\UserAvatarLoader.cs" />
-    <Compile Include="Model\IProfileService.cs" />
     <Compile Include="Model\PostService.cs" />
     <Compile Include="Model\Web\WebDownloaderExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -109,6 +108,7 @@
     <Compile Include="Model\Images\DiskCache.cs" />
     <Compile Include="Model\Images\BaseMemoryCache.cs" />
     <Compile Include="Model\Parser\TagUrlBuilder.cs" />
+    <Compile Include="Model\Common\NotLogedException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

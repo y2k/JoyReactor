@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
-using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -17,8 +16,6 @@ namespace JoyReactor.Core.ViewModels
 
         public RelayCommand LoginCommand { get; set; }
 
-        readonly IProfileService service = ServiceLocator.Current.GetInstance<IProfileService>();
-
         public LoginViewModel()
         {
             LoginCommand = new Command(Login);
@@ -30,7 +27,7 @@ namespace JoyReactor.Core.ViewModels
             IsBusy = true;
             try
             {
-                await service.Login(Username, Password);
+                await new ProfileService().Login(Username, Password);
                 MessengerInstance.Send(new NavigateToProfileMessage());
             }
             catch
