@@ -102,7 +102,7 @@
             android:id="@+id/logout" />
     </LinearLayout>
     <LinearLayout
-        android:visibility="visible"
+        android:visibility="gone"
         android:id="@+id/progress"
         android:background="@android:color/white"
         android:gravity="center"

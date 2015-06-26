@@ -43,7 +43,7 @@
             android:background="@drawable/drawable_yellow_button" />
     </LinearLayout>
     <LinearLayout
-        android:visibility="visible"
+        android:visibility="gone"
         android:id="@+id/progress"
         android:background="@android:color/white"
         android:gravity="center"
