@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="net.itwister.joyreactor2" android:versionName="0.9" android:versionCode="900">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="net.itwister.joyreactor2" android:versionName="0.9.1" android:versionCode="901">
 	<uses-sdk android:minSdkVersion="15" android:targetSdkVersion="22" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.INTERNET" />
