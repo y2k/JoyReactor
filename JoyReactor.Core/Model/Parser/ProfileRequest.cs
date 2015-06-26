@@ -66,10 +66,11 @@ namespace JoyReactor.Core.Model.Parser
                 var profileTagRx = new Regex("/tag/(.+)");
                 var readingTags = div
                     .Descendants("a")
-                    .Select(s => UnescapeTagName(profileTagRx.FirstString(s.GetHref())))
+                    .Select(s => profileTagRx.FirstString(s.GetHref()))
+                    .Where(s => s != null)
+                    .Select(s => UnescapeTagName(s))
                     .Select(s => new Tag { Title = s, TagId = ID.Factory.NewTag(s.ToLower()).SerializeToString() })
                     .ToList();
-                await new TagImageRequest(readingTags).LoadAsync();
                 await storage.ReplaceCurrentUserReadingTagsAsync(readingTags);
             }
 
