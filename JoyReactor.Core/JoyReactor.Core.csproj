@@ -109,6 +109,7 @@
     <Compile Include="Model\Images\BaseMemoryCache.cs" />
     <Compile Include="Model\Parser\TagUrlBuilder.cs" />
     <Compile Include="Model\Common\NotLogedException.cs" />
+    <Compile Include="Model\IPlatform.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

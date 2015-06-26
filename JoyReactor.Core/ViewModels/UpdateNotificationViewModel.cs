@@ -2,7 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Web;
+using Microsoft.Practices.ServiceLocation;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -37,7 +39,7 @@ namespace JoyReactor.Core.ViewModels
 
         Version GetCurrentVersion()
         {
-            return new Version(0, 9); // TODO:
+            return ServiceLocator.Current.GetInstance<IPlatform>().GetVersion();
         }
 
         async Task<Version> GetNewVersion()
