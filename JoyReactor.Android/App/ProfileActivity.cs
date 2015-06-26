@@ -2,7 +2,6 @@
 using Android.OS;
 using Android.Views;
 using Android.Widget;
-using GalaSoft.MvvmLight.Helpers;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.Widget;
 using JoyReactor.Core.ViewModels;

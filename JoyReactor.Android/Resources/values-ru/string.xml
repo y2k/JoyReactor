@@ -31,4 +31,6 @@
 	<string name="write_feedback">Оставьте отзыв, предложение или сообщите об ошибке</string>
     <string name="error_email_client_not_installed">У вас не установлен почтовый клиент.</string>
     <string name="unknow_error">Ошибка. Попробуйте позже.</string>
+    <string name="authorization">Авторизация</string>
+    <string name="get_profile">Загрузка профиля</string>
 </resources>
