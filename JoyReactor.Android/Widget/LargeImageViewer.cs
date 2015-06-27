@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Android.Content;
 using Android.Graphics;
 using Android.Util;
 using Android.Views;
+using JoyReactor.Android.Model;
 
 namespace JoyReactor.Android.Widget
 {
     public class LargeImageViewer : View
     {
-        MetaImage image;
+        DynamicImage image;
         ToggleButton button;
         TouchDetector touchDetector;
 
@@ -17,25 +17,32 @@ namespace JoyReactor.Android.Widget
             : base(context, attrs)
         {
             button = new ToggleButton(this);
-            button.OnToggle += (sender, e) =>
-            {
-                touchDetector = button.IsZoom 
-                        ? (TouchDetector)new TouchDetector.Zoom(this, image.Zoom)
-                        : new TouchDetector.Translate(image.Translate);
-                Invalidate();
-            };
-            touchDetector = new TouchDetector.Translate((x, y) => image.Translate(x, y));
+            button.OnToggle += (sender, e) => OnTouchMethodChanged();
+            OnTouchMethodChanged();
+
             SetImage(null);
+        }
+
+        void OnTouchMethodChanged()
+        {
+            touchDetector = button.IsZoom 
+                ? (TouchDetector)new TouchDetector.Zoom(this, scale => image.Zoom(scale))
+                : new TouchDetector.Translate((x, y) => image.Translate(x, y));
+            Invalidate();
         }
 
         public void SetImage(string pathToImage)
         {
-            image = pathToImage == null ? MetaImage.Stub : new MetaImage(this, pathToImage);
+            image = pathToImage == null ? DynamicImage.Stub : new DynamicImage(this, pathToImage);
         }
 
         protected override void OnDraw(Canvas canvas)
         {
+            canvas.Save();
+            canvas.Scale(image.GetCurrentFrameScale(), image.GetCurrentFrameScale());
             canvas.DrawBitmap(image.GetCurrentFrame(), 0, 0, new Paint { FilterBitmap = true });
+            canvas.Restore();
+
             button.Draw(canvas);
         }
 
@@ -52,81 +59,6 @@ namespace JoyReactor.Android.Widget
         {
             base.OnLayout(changed, left, top, right, bottom);
             image.Layout(right - left, bottom - top);
-        }
-
-        class MetaImage
-        {
-            public static readonly MetaImage Stub = new MetaImage(null, null);
-
-            BitmapRegionDecoder decoder;
-            Rect destRect;
-            Rect srcRect;
-
-            Task activeTask;
-
-            Bitmap bufferFrame;
-            Bitmap currentFrame;
-
-            View parent;
-
-            public MetaImage(View parent, string pathToImage)
-            {
-                this.parent = parent;
-                decoder = pathToImage == null ? null 
-                    : BitmapRegionDecoder.NewInstance(pathToImage, false);
-            }
-
-            public Bitmap GetCurrentFrame()
-            {
-                // TODO:
-                return currentFrame ?? Bitmap.CreateBitmap(4, 4, Bitmap.Config.Argb8888);
-            }
-
-            public void Layout(int width, int height)
-            {
-                if (decoder == null)
-                    return;
-                if (destRect == null)
-                {
-                    destRect = new Rect(0, 0, width, height);
-                    srcRect = new Rect(0, 0, width, height);
-                    Invalidate();
-                }
-            }
-
-            public void Zoom(float scale)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void Translate(float x, float y)
-            {
-                srcRect.Offset((int)(-x), (int)(-y));
-                Invalidate();
-            }
-
-            async void Invalidate()
-            {
-                if (activeTask == null)
-                {
-                    activeTask = Task.Run(
-                        () =>
-                        {
-                            var o = new BitmapFactory.Options();
-                            o.InSampleSize = 1;
-                            o.InBitmap = bufferFrame;
-                            currentFrame = decoder.DecodeRegion(srcRect, o);
-                        });
-                    await activeTask;
-
-                    var t = currentFrame;
-                    currentFrame = bufferFrame;
-                    bufferFrame = t;
-
-                    activeTask = null;
-                    parent.Invalidate();
-                }
-            }
         }
 
         class ToggleButton
