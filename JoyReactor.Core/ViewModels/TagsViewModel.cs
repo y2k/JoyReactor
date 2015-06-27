@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -40,7 +41,15 @@ namespace JoyReactor.Core.ViewModels
         {
             scheduledTask = new TagCollectionModel()
                 .GetMainSubscriptions()
-                .SubscribeOnUi(tags => Tags.ReplaceAll(tags.OrderBy(s => s.Title.ToUpper()).Select(s => new TagItemViewModel(s))));
+                .SubscribeOnUi(OnTagsChanged);
+        }
+
+        void OnTagsChanged(List<Tag> tags)
+        {
+            var vms = tags
+                .OrderBy(s => s.Title.ToUpper())
+                .Select(s => new TagItemViewModel(s));
+            Tags.ReplaceAll(vms);
         }
 
         public override void Cleanup()
@@ -51,11 +60,13 @@ namespace JoyReactor.Core.ViewModels
 
         public class TagItemViewModel : ViewModelBase
         {
+            const string DefaultImage = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Lol_question_mark.png/150px-Lol_question_mark.png";
+
             public ID TagId { get { return ID.Parser(tag.TagId); } }
 
             public string Title { get { return tag.Title; } }
 
-            public string Image { get { return tag.BestImage; } }
+            public string Image { get { return tag.BestImage ?? DefaultImage; } }
 
             internal Tag tag;
 

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using JoyReactor.Core.Model.Common;
 using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
@@ -66,10 +67,11 @@ namespace JoyReactor.Core.Model.Parser
                 var profileTagRx = new Regex("/tag/(.+)");
                 var readingTags = div
                     .Descendants("a")
-                    .Select(s => UnescapeTagName(profileTagRx.FirstString(s.GetHref())))
+                    .Select(s => profileTagRx.FirstString(s.GetHref()))
+                    .Where(s => s != null)
+                    .Select(s => UnescapeTagName(s))
                     .Select(s => new Tag { Title = s, TagId = ID.Factory.NewTag(s.ToLower()).SerializeToString() })
                     .ToList();
-                await new TagImageRequest(readingTags).LoadAsync();
                 await storage.ReplaceCurrentUserReadingTagsAsync(readingTags);
             }
 

@@ -22,9 +22,11 @@ namespace JoyReactor.Core.Model.Parser
 
         public List<Post> Posts { get; set; }
 
+        public string TagImage { get; set; }
+
         ID id;
         int page;
-        string pageHtml;
+        string html;
 
         public PostCollectionRequest(ID id, int page)
         {
@@ -34,15 +36,19 @@ namespace JoyReactor.Core.Model.Parser
 
         public async Task DownloadFromWebAsync()
         {
-            pageHtml = await new PageDownloader(id, page).DownloadAsync();
+            html = await new PageDownloader(id, page).DownloadAsync();
             NextPage = GetNextPageOfTagList();
-            Posts = await Task.Run(() => new PageCollectionParser(pageHtml).Parse());
+
+            var imageRx = new Regex("src=\"([^\"]+)\" *alt=\"[^\"]+\" *class=\"blog_avatar\" */>");
+            TagImage = imageRx.FirstString(html);
+
+            Posts = await Task.Run(() => new PageCollectionParser(html).Parse());
         }
 
         int GetNextPageOfTagList()
         {
             var currentPageRx = new Regex("<span class='current'>(\\d+)</span>");
-            return currentPageRx.FirstInt(pageHtml) - 1;
+            return currentPageRx.FirstInt(html) - 1;
         }
 
         class PageDownloader

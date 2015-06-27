@@ -27,9 +27,7 @@ namespace JoyReactor.Core.Model.Images
                 {
                     int count = 0;
                     while ((count = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
-                    {
                         result.Write(buffer, 0, count);
-                    }
                 }
                 return result.ToArray();
             }

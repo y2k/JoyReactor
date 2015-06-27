@@ -1,13 +1,13 @@
-﻿using JoyReactor.Core.Model.Database;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Parser;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace JoyReactor.Core.Model
 {
-    class ProfileService : IProfileService, ProfileRequest.Storage
+    class ProfileService : ProfileRequest.Storage
     {
         IAuthStorage storage = new AuthRepository();
 

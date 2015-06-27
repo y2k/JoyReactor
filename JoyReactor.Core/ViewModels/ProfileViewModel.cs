@@ -1,68 +1,26 @@
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
 using Microsoft.Practices.ServiceLocation;
 using System.Threading.Tasks;
+using JoyReactor.Core.Model.Common;
 
 namespace JoyReactor.Core.ViewModels
 {
-    public class ProfileViewModel : ViewModelBase
+    public class ProfileViewModel : ViewModel
     {
-        #region Properties
+        public bool IsLoading { get { return Get<bool>(); } set { Set(value); } }
 
-        bool _isLoading;
+        public string Avatar { get { return Get<string>(); } set { Set(value); } }
 
-        public bool IsLoading
-        {
-            get { return _isLoading; }
-            set { Set(ref _isLoading, value); }
-        }
+        public string UserName { get { return Get<string>(); } set { Set(value); } }
 
-        string _avatar;
+        public float Rating { get { return Get<float>(); } set { Set(value); } }
 
-        public string Avatar
-        {
-            get { return _avatar; }
-            set { Set(ref _avatar, value); }
-        }
+        public int Stars { get { return Get<int>(); } set { Set(value); } }
 
-        string _username;
-
-        public string UserName
-        {
-            get { return _username; }
-            set { Set(ref _username, value); }
-        }
-
-        float _rating;
-
-        public float Rating
-        {
-            get { return _rating; }
-            set { Set(ref _rating, value); }
-        }
-
-        int _stars;
-
-        public int Stars
-        {
-            get { return _stars; }
-            set { Set(ref _stars, value); }
-        }
-
-        float _nextStarProgress;
-
-        public float NextStarProgress
-        {
-            get { return _nextStarProgress; }
-            set { Set(ref _nextStarProgress, value); }
-        }
-
-        #endregion
+        public float NextStarProgress { get { return Get<float>(); } set { Set(value); } }
 
         public RelayCommand LogoutCommand { get; set; }
-
-        IProfileService service = ServiceLocator.Current.GetInstance<IProfileService>();
 
         public ProfileViewModel()
         {
@@ -74,7 +32,7 @@ namespace JoyReactor.Core.ViewModels
             IsLoading = true;
             try
             {
-                var profile = await service.GetMyProfile();
+                var profile = await new ProfileService().GetMyProfile();
                 UserName = profile.UserName;
                 Avatar = profile.UserImage;
                 Rating = profile.Rating;
@@ -90,7 +48,7 @@ namespace JoyReactor.Core.ViewModels
 
         async void Logout()
         {
-            await service.Logout();
+            await new ProfileService().Logout();
             NavigateToLogin();
         }
 

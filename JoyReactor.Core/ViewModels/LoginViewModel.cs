@@ -1,82 +1,49 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
-using Microsoft.Practices.ServiceLocation;
-using System;
-using System.Threading.Tasks;
 
 namespace JoyReactor.Core.ViewModels
 {
-    public class LoginViewModel : ViewModelBase
-	{
-		#region Properties
+    public class LoginViewModel : ViewModel
+    {
+        public bool IsBusy { get { return Get<bool>(); } set { Set(value); } }
 
-		bool _isBusy;
+        public string Password { get { return Get<string>(); } set { Set(value); } }
 
-		public bool IsBusy
-		{
-			get { return _isBusy; }
-			set { Set(ref _isBusy, value); }
-		}
+        public string Username { get { return Get<string>(); } set { Set(value); } }
 
-		string _password;
+        public bool HasError { get { return Get<bool>(); } set { Set(value); } }
 
-		public string Password
-		{
-			get { return _password; }
-			set { Set(ref _password, value); }
-		}
+        public RelayCommand LoginCommand { get; set; }
 
-		string _username;
+        public LoginViewModel()
+        {
+            LoginCommand = new Command(Login);
+        }
 
-		public string Username
-		{
-			get { return _username; }
-			set { Set(ref _username, value); }
-		}
-
-		bool _hasError;
-
-		public bool HasError
-		{
-			get { return _hasError; }
-			set { Set(ref _hasError, value); }
-		}
-
-		public RelayCommand LoginCommand { get; set; }
-
-		#endregion
-
-		IProfileService service = ServiceLocator.Current.GetInstance<IProfileService>();
-
-		public LoginViewModel()
-		{
-			LoginCommand = new Command(async () => await Login());
-		}
-
-		public async Task Login()
-		{
-			HasError = false;
-			IsBusy = true;
+        public async Task Login()
+        {
+            HasError = false;
+            IsBusy = true;
             try
             {
-                await service.Login(Username, Password);
+                await new ProfileService().Login(Username, Password);
                 MessengerInstance.Send(new NavigateToProfileMessage());
             }
-            catch (Exception e)
+            catch
             {
                 HasError = true;
                 IsBusy = false;
                 MessengerInstance.Send(new LoginFailMessage());
             }
-		}
+        }
 
-		public class NavigateToProfileMessage
-		{
-		}
+        public class NavigateToProfileMessage
+        {
+        }
 
-		public class LoginFailMessage
-		{
-		}
-	}
+        public class LoginFailMessage
+        {
+        }
+    }
 }

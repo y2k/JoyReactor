@@ -8,6 +8,7 @@ using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Parser;
+using JoyReactor.Core.Model;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -64,6 +65,7 @@ namespace JoyReactor.Core.ViewModels
                 await firstPageRequest.DownloadFromWebAsync();
                 nextPage = firstPageRequest.NextPage;
 
+                await new TagCollectionModel().UpdateTagAsync(id, firstPageRequest);
                 await new PostRepository().UpdateOrInsertAllAsync(firstPageRequest.Posts);
 
                 if (Posts.Count == 0 || IsStartWith(Posts, firstPageRequest.Posts))
