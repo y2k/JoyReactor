@@ -26,7 +26,7 @@ namespace JoyReactor.Android.Widget
         void OnTouchMethodChanged()
         {
             touchDetector = button.IsZoom 
-                ? (TouchDetector)new TouchDetector.Zoom(this, scale => image.Zoom(scale))
+                ? (TouchDetector)new TouchDetector.Zoom(this, (scale, x, y) => image.Zoom(scale, x, y))
                 : new TouchDetector.Translate((x, y) => image.Translate(x, y));
             Invalidate();
         }
@@ -148,10 +148,13 @@ namespace JoyReactor.Android.Widget
             {
                 ScaleGestureDetector detector;
 
-                Action<float> callback;
+                Action<float, float, float> callback;
 
-                internal Zoom(View parent, Action<float> callback)
+                View parent;
+
+                internal Zoom(View parent, Action<float, float, float> callback)
                 {
+                    this.parent = parent;
                     this.callback = callback;
                     detector = new ScaleGestureDetector(parent.Context, this);
                 }
@@ -163,7 +166,9 @@ namespace JoyReactor.Android.Widget
 
                 public bool OnScale(ScaleGestureDetector detector)
                 {
-                    callback(detector.ScaleFactor);
+                    callback(detector.ScaleFactor,
+                        detector.FocusX / parent.Width,
+                        detector.FocusY / parent.Height);
                     return true;
                 }
 

@@ -19,8 +19,7 @@ namespace JoyReactor.Android.Model
 
         bool isBusy;
 
-        PointF sceneTranslate = new PointF();
-        float sceneScale = 1;
+        Matrix sceneMatrix = new Matrix();
 
         float currentFrameScale;
 
@@ -54,16 +53,15 @@ namespace JoyReactor.Android.Model
             }
         }
 
-        public void Zoom(float scale)
+        public void Zoom(float scale, float centerX, float centerY)
         {
-            sceneScale *= scale;
+            sceneMatrix.PreScale(1 / scale, 1 / scale, centerX * frameSize.X, centerY * frameSize.Y);
             Invalidate();
         }
 
         public void Translate(float x, float y)
         {
-            sceneTranslate.X -= x / sceneScale;
-            sceneTranslate.Y -= y / sceneScale;
+            sceneMatrix.PostTranslate(-x, -y);
             Invalidate();
         }
 
@@ -80,14 +78,9 @@ namespace JoyReactor.Android.Model
 
         async Task ReloadImagePart()
         {
-            var decodeRect = 
-                new Rect
-                {
-                    Left = (int)sceneTranslate.X,
-                    Top = (int)sceneTranslate.Y,
-                    Right = (int)(sceneTranslate.X + frameSize.X / sceneScale),
-                    Bottom = (int)(sceneTranslate.Y + frameSize.Y / sceneScale),
-                };
+            var decodeRect = new RectF { Right = frameSize.X, Bottom = frameSize.Y };
+            sceneMatrix.MapRect(decodeRect);
+            var sceneScale = Math.Min(frameSize.X / decodeRect.Width(), frameSize.Y / decodeRect.Height());
 
             var o = new BitmapFactory.Options();
             o.InSampleSize = Math.Max(1, (int)Math.Pow(2, Math.Ceiling(Math.Log(1 / sceneScale, 2))));
@@ -97,10 +90,12 @@ namespace JoyReactor.Android.Model
                 () =>
                 {
                     new Canvas(bufferFrame).DrawColor(Color.Black);
-                    return decoder.DecodeRegion(decodeRect, o);
+                    var outRect = new Rect();
+                    decodeRect.Round(outRect);
+                    return decoder.DecodeRegion(outRect, o);
                 });
             currentFrameScale = sceneScale * o.InSampleSize;
-                 
+
             SwapBuffers();
         }
 
