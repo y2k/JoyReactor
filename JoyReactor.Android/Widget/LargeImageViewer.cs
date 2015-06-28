@@ -10,25 +10,17 @@ namespace JoyReactor.Android.Widget
     public class LargeImageViewer : View
     {
         DynamicImage image;
-        ToggleButton button;
         TouchDetector touchDetector;
 
         public LargeImageViewer(Context context, IAttributeSet attrs)
             : base(context, attrs)
         {
-            button = new ToggleButton(this);
-            button.OnToggle += (sender, e) => OnTouchMethodChanged();
-            OnTouchMethodChanged();
-
             SetImage(null);
-        }
-
-        void OnTouchMethodChanged()
-        {
-            touchDetector = button.IsZoom 
-                ? (TouchDetector)new TouchDetector.Zoom(this, (scale, x, y) => image.Zoom(scale, x, y))
-                : new TouchDetector.Translate((x, y) => image.Translate(x, y));
-            Invalidate();
+            touchDetector = new TouchDetector.Router
+            {
+                TransateDetector = new TouchDetector.Translate((x, y) => image.Translate(x, y)),
+                ScaleDetector = new TouchDetector.Zoom(this, (scale, x, y) => image.Zoom(scale, x, y)),
+            };
         }
 
         public void SetImage(string pathToImage)
@@ -42,14 +34,10 @@ namespace JoyReactor.Android.Widget
             canvas.Scale(image.GetCurrentFrameScale(), image.GetCurrentFrameScale());
             canvas.DrawBitmap(image.GetCurrentFrame(), 0, 0, new Paint { FilterBitmap = true });
             canvas.Restore();
-
-            button.Draw(canvas);
         }
 
         public override bool OnTouchEvent(MotionEvent e)
         {
-            if (button.HandlerTouchEvent(e))
-                return true;
             if (touchDetector.HandlerTouchEvent(e))
                 return true;
             return base.OnTouchEvent(e);
@@ -61,54 +49,34 @@ namespace JoyReactor.Android.Widget
             image.Layout(right - left, bottom - top);
         }
 
-        class ToggleButton
-        {
-            public bool IsZoom { get; private set; }
-
-            public event EventHandler OnToggle;
-
-            Rect rect;
-            bool pressed;
-
-            float Radius;
-
-            public ToggleButton(View parent)
-            {
-                Radius = parent.Resources.DisplayMetrics.Density * 48;
-            }
-
-            public void Draw(Canvas canvas)
-            {
-                rect = new Rect(canvas.Width - (int)Radius, 0, canvas.Width, (int)Radius);
-                canvas.DrawRect(rect, new Paint { Color = Color.Red });
-                canvas.DrawText(IsZoom ? "Z" : "T", rect.Left, rect.Bottom, new Paint{ TextSize = Radius, Color = Color.White });
-            }
-
-            public bool HandlerTouchEvent(MotionEvent e)
-            {
-                if (!rect.Contains((int)e.GetX(), (int)e.GetY()))
-                    return false;
-                switch (e.Action)
-                {
-                    case MotionEventActions.Down:
-                        pressed = true;
-                        return true;
-                    case MotionEventActions.Up:
-                    case MotionEventActions.Cancel:
-                        if (!pressed)
-                            return false;
-                        pressed = false;
-                        IsZoom = !IsZoom;
-                        OnToggle(this, null);
-                        return true;
-                }
-                return false;
-            }
-        }
-
         abstract class TouchDetector : Java.Lang.Object
         {
             public abstract bool HandlerTouchEvent(MotionEvent e);
+
+            internal class Router : TouchDetector
+            {
+                internal TouchDetector TransateDetector { get; set; }
+
+                internal TouchDetector ScaleDetector { get; set; }
+
+                bool blockUntilDown;
+
+                public override bool HandlerTouchEvent(MotionEvent e)
+                {
+                    if (blockUntilDown && e.Action != MotionEventActions.Down)
+                        return false;
+                    blockUntilDown = false;
+                    if (e.Action == MotionEventActions.PointerUp)
+                    {
+                        blockUntilDown = true;
+                        return false;
+                    }
+
+                    return e.PointerCount == 1
+                        ? TransateDetector.HandlerTouchEvent(e)
+                        : ScaleDetector.HandlerTouchEvent(e);
+                }
+            }
 
             internal class Translate : TouchDetector
             {

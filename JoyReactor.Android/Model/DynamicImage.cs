@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Android.Graphics;
 using Android.Views;
+using IllegalArgumentException = Java.Lang.IllegalArgumentException;
 
 namespace JoyReactor.Android.Model
 {
@@ -61,7 +62,7 @@ namespace JoyReactor.Android.Model
 
         public void Translate(float x, float y)
         {
-            sceneMatrix.PostTranslate(-x, -y);
+            sceneMatrix.PreTranslate(-x, -y);
             Invalidate();
         }
 
@@ -92,7 +93,15 @@ namespace JoyReactor.Android.Model
                     new Canvas(bufferFrame).DrawColor(Color.Black);
                     var outRect = new Rect();
                     decodeRect.Round(outRect);
-                    return decoder.DecodeRegion(outRect, o);
+                    try
+                    {
+                        return decoder.DecodeRegion(outRect, o);
+                    }
+                    catch (IllegalArgumentException)
+                    {
+                        // Игнорируем выход за пределы картинки
+                        return bufferFrame;
+                    }
                 });
             currentFrameScale = sceneScale * o.InSampleSize;
 
