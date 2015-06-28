@@ -7,7 +7,7 @@ using Android.Widget;
 
 namespace JoyReactor.Android
 {
-    [Activity(Label = "Large image decoder", MainLauncher = true)]
+    [Activity(Label = "Large image decoder", MainLauncher = false)]
     public class TestActivity : Activity
     {
         LargeImageViewer viewer;

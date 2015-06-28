@@ -10,7 +10,7 @@ using JoyReactor.Core.ViewModels;
 
 namespace JoyReactor.Android.App
 {
-    [Activity(Label = "@string/app_name", MainLauncher = false)]
+    [Activity(Label = "@string/app_name", MainLauncher = true)]
     public class HomeActivity : BaseActivity
     {
         ViewPager pager;
