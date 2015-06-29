@@ -19,6 +19,11 @@
         <item name="actionBarStyle">@style/AppActionBar</item>
     </style>
 
+    <style name="AppTheme.Gallery">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="AppActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
         <item name="elevation">0dp</item>
         <item name="background">@color/primary</item>

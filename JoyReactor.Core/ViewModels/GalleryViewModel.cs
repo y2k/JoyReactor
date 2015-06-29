@@ -12,13 +12,18 @@ namespace JoyReactor.Core.ViewModels
 
         public int Progress { get { return Get<int>(); } set { Set(value); } }
 
+        bool isActivated;
+
         public async override void OnActivated()
         {
             base.OnActivated();
 
-            var file = await DownloadAsync();
-            Progress = 100;
-            ImagePath = file.Path;
+            if (!isActivated)
+            {
+                isActivated = true;
+                ImagePath = (await DownloadAsync()).Path;
+                Progress = 100;
+            }
         }
 
         async Task<IFile> DownloadAsync()
@@ -27,10 +32,10 @@ namespace JoyReactor.Core.ViewModels
             var targetName = GetTargetName();
             if (await targetDir.CheckExistsAsync(targetName) != ExistenceCheckResult.FileExists)
             {
-                var targetFile = await targetDir.CreateFileAsync(GetTargetName(), CreationCollisionOption.OpenIfExists);
+                var temp = await targetDir.CreateFileAsync(Guid.NewGuid() + "tmp", CreationCollisionOption.ReplaceExisting);
                 using (var response = await CreateImageRequest())
                 {
-                    using (var targetStream = await targetFile.OpenAsync(FileAccess.ReadAndWrite))
+                    using (var targetStream = await temp.OpenAsync(FileAccess.ReadAndWrite))
                     {
                         int lastUpdateProgress = 0;
                         var buf = new byte[4 * 1024];
@@ -47,6 +52,7 @@ namespace JoyReactor.Core.ViewModels
                         }
                     }
                 }
+                await temp.RenameAsync(GetTargetName());
             }
             return await targetDir.GetFileAsync(GetTargetName());
         }

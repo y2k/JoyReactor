@@ -10,6 +10,7 @@ namespace JoyReactor.Android.App.Gallery
 {
     [Activity(
         Label = "FullscreenGalleryActivity",
+        Theme = "@style/AppTheme.Gallery",
         ScreenOrientation = global::Android.Content.PM.ScreenOrientation.Portrait)]			
     public class FullscreenGalleryActivity : BaseActivity
     {
