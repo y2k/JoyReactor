@@ -9,6 +9,7 @@ using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.Model;
+using JoyReactor.Core.ViewModels.Common;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -96,7 +97,8 @@ namespace JoyReactor.Core.ViewModels
             if (item is Divider)
                 await LoadNextPage();
             else
-                MessengerInstance.Send(new PostNavigationMessage { PostId = item.Id });
+                BaseNavigationService.Instance.ImageFullscreen(item.Image);
+//                MessengerInstance.Send(new PostNavigationMessage { PostId = item.Id });
         }
 
         async Task LoadNextPage()

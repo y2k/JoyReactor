@@ -21,7 +21,7 @@ namespace JoyReactor.Core.Model.Web
             using (var response = await instance.ExecuteAsync(uri, reqParams))
             {
                 var doc = new HtmlDocument();
-                await Task.Run(() => doc.Load(response.Data));
+                await Task.Run(() => doc.Load(response.Stream));
                 return doc;
             }
         }
@@ -44,7 +44,7 @@ namespace JoyReactor.Core.Model.Web
         public static async Task<string> GetTextAsync(this WebDownloader instance, Uri uri, RequestParams reqParams = null)
         {
             using (var response = await instance.ExecuteAsync(uri, reqParams))
-                return await new StreamReader(response.Data).ReadToEndAsync();
+                return await new StreamReader(response.Stream).ReadToEndAsync();
         }
     }
 }

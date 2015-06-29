@@ -8,6 +8,7 @@ using JoyReactor.Android.App.Gallery;
 using JoyReactor.Android.App.Posts;
 using JoyReactor.Android.Model;
 using JoyReactor.Core.ViewModels;
+using JoyReactor.Core.ViewModels.Common;
 using Messenger = GalaSoft.MvvmLight.Messaging.Messenger;
 
 namespace JoyReactor.Android.App.Base
@@ -18,6 +19,10 @@ namespace JoyReactor.Android.App.Base
         public const string Arg2 = "arg2";
         public const string Arg3 = "arg3";
         public const string Arg4 = "arg4";
+
+        protected ScopedViewModel.Scope Scope = new ScopedViewModel.Scope();
+
+        protected BindingManager Bindins = new BindingManager();
 
         public IMessenger MessengerInstance
         {
@@ -86,6 +91,9 @@ namespace JoyReactor.Android.App.Base
             MessengerInstance.Register<PostNavigationMessage>(
                 this, s => StartActivity(PostActivity.NewIntent(s.PostId)));
             ViewModel.NavigationService = new NavigationService(this);
+
+            BaseNavigationService.Instance = new JoyReactor.Android.NavigationService(this);
+            Scope.OnActivated();
         }
 
         protected override void OnPause()
@@ -93,6 +101,15 @@ namespace JoyReactor.Android.App.Base
             base.OnPause();
             MessengerInstance.Unregister(this);
             ViewModel.NavigationService = null;
+
+            Scope.OnDeactivated();
+            BaseNavigationService.Instance = null;
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            Bindins.Destroy();
         }
     }
 }

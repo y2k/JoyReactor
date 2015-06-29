@@ -25,7 +25,7 @@ namespace JoyReactor.Core.Model.Parser
         public async Task ComputeAsync()
         {
             var loginPage = await downloader.ExecuteAsync(new Uri("http://joyreactor.cc/login"));
-            var csrf = ExtractCsrf(loginPage.Data);
+            var csrf = ExtractCsrf(loginPage.Stream);
 
             var hs = await downloader.PostForCookiesAsync(
                 new Uri("http://joyreactor.cc/login"),

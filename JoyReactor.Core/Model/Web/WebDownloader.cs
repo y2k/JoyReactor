@@ -39,9 +39,10 @@ namespace JoyReactor.Core.Model.Web
                         var response = await client.SendAsync(req);
                         return new WebResponse
                         {
-                            Data = await response.Content.ReadAsStreamAsync(),
+                            Stream = await response.Content.ReadAsStreamAsync(),
                             Cookies = GetCookies(response),
                             ResponseUri = req.RequestUri,
+                            ContentLength = (int)(response.Content.Headers.ContentLength ?? -1),
                         };
                     }
                     catch (Exception e)
@@ -103,13 +104,15 @@ namespace JoyReactor.Core.Model.Web
     {
         public IDictionary<string, string> Cookies { get; set; }
 
-        public Stream Data { get; set; }
+        public Stream Stream { get; set; }
 
         public Uri ResponseUri { get; set; }
 
+        public int ContentLength { get; set; }
+
         public void Dispose()
         {
-            Data?.Dispose();
+            Stream?.Dispose();
         }
     }
 

@@ -110,6 +110,7 @@
     <Compile Include="Model\Parser\TagUrlBuilder.cs" />
     <Compile Include="Model\Common\NotLogedException.cs" />
     <Compile Include="Model\IPlatform.cs" />
+    <Compile Include="ViewModels\Common\BaseNavigationService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

@@ -97,7 +97,7 @@ namespace JoyReactor.Core.Model.Parser
                     {
                         RequestUri = uri,
                         Uri = r.ResponseUri,
-                        Html = await new StreamReader(r.Data).ReadToEndAsync(),
+                        Html = await new StreamReader(r.Stream).ReadToEndAsync(),
                     };
                 }
             }

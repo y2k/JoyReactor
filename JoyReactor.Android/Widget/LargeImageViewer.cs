@@ -26,6 +26,7 @@ namespace JoyReactor.Android.Widget
         public void SetImage(string pathToImage)
         {
             image = pathToImage == null ? DynamicImage.Stub : new DynamicImage(this, pathToImage);
+            RequestLayout();
         }
 
         protected override void OnDraw(Canvas canvas)
