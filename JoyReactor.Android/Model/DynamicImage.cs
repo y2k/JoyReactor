@@ -17,11 +17,8 @@ namespace JoyReactor.Android.Model
         Bitmap currentFrame;
 
         View parent;
-
         bool isBusy;
-
-        Matrix sceneMatrix = new Matrix();
-
+        Matrix sceneMatrix;
         float currentFrameScale;
 
         public DynamicImage(View parent, string pathToImage)
@@ -54,7 +51,7 @@ namespace JoyReactor.Android.Model
             }
         }
 
-        public void Zoom(float scale, float centerX, float centerY)
+        public void Scale(float scale, float centerX, float centerY)
         {
             sceneMatrix.PreScale(1 / scale, 1 / scale, centerX * frameSize.X, centerY * frameSize.Y);
             Invalidate();
@@ -79,6 +76,9 @@ namespace JoyReactor.Android.Model
 
         async Task ReloadImagePart()
         {
+            if (sceneMatrix == null)
+                SetInitMatrix();
+
             var decodeRect = new RectF { Right = frameSize.X, Bottom = frameSize.Y };
             sceneMatrix.MapRect(decodeRect);
             var sceneScale = Math.Min(frameSize.X / decodeRect.Width(), frameSize.Y / decodeRect.Height());
@@ -91,10 +91,10 @@ namespace JoyReactor.Android.Model
                 () =>
                 {
                     new Canvas(bufferFrame).DrawColor(Color.Black);
-                    var outRect = new Rect();
-                    decodeRect.Round(outRect);
                     try
                     {
+                        var outRect = new Rect();
+                        decodeRect.Round(outRect);
                         return decoder.DecodeRegion(outRect, o);
                     }
                     catch (IllegalArgumentException)
@@ -103,9 +103,19 @@ namespace JoyReactor.Android.Model
                         return bufferFrame;
                     }
                 });
-            currentFrameScale = sceneScale * o.InSampleSize;
 
+            currentFrameScale = sceneScale * o.InSampleSize;
             SwapBuffers();
+        }
+
+        void SetInitMatrix()
+        {
+            sceneMatrix = new Matrix();
+            var scale = Math.Min(frameSize.X / decoder.Width, frameSize.Y / decoder.Height);
+            Scale(scale, 0, 0);
+            Translate(
+                0.5f * (frameSize.X - decoder.Width * scale), 
+                0.5f * (frameSize.Y - decoder.Height * scale));
         }
 
         void SwapBuffers()

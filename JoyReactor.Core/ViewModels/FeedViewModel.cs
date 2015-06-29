@@ -27,6 +27,8 @@ namespace JoyReactor.Core.ViewModels
 
         public ICommand SelectItemCommand { get; private set; }
 
+        public ICommand OpenImageCommand { get; private set; }
+
         public ICommand RefreshCommand { get; set; }
 
         PostCollectionRequest firstPageRequest;
@@ -38,6 +40,7 @@ namespace JoyReactor.Core.ViewModels
             Error = ErrorType.NotError;
             ApplyCommand = new Command(ApplyCommandMethod);
             SelectItemCommand = new Command<int>(SelectItemCommandMethod);
+            OpenImageCommand = new Command<int>(OpenImageCommandMethod);
             RefreshCommand = new Command(RefreshCommandMethod);
 
             SetCurrentTag(ID.ReactorGood);
@@ -97,8 +100,14 @@ namespace JoyReactor.Core.ViewModels
             if (item is Divider)
                 await LoadNextPage();
             else
-                BaseNavigationService.Instance.ImageFullscreen(item.Image);
-//                MessengerInstance.Send(new PostNavigationMessage { PostId = item.Id });
+                MessengerInstance.Send(new PostNavigationMessage { PostId = item.Id });
+        }
+
+        public void OpenImageCommandMethod(int index)
+        {
+            var item = Posts[index].Image;
+            if (item != null && (new [] { ".jpeg", ".jpg", ".png" }.Any(item.EndsWith)))
+                BaseNavigationService.Instance.ImageFullscreen(item);
         }
 
         async Task LoadNextPage()

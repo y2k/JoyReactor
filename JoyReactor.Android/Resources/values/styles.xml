@@ -22,6 +22,7 @@
     <style name="AppTheme.Gallery">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/black</item>
     </style>
 
     <style name="AppActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">

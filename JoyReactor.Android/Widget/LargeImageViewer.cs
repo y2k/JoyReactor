@@ -19,7 +19,7 @@ namespace JoyReactor.Android.Widget
             touchDetector = new TouchDetector.Router
             {
                 TransateDetector = new TouchDetector.Translate((x, y) => image.Translate(x, y)),
-                ScaleDetector = new TouchDetector.Zoom(this, (scale, x, y) => image.Zoom(scale, x, y)),
+                ScaleDetector = new TouchDetector.Zoom(this, (scale, x, y) => image.Scale(scale, x, y)),
             };
         }
 
