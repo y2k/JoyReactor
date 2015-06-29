@@ -103,9 +103,14 @@ namespace JoyReactor.Android.App.Home
                 ItemView.FindViewById<WebImageView>(Resource.Id.userImage).ImageSource = "" + vm.UserImage;
                 ItemView.FindViewById<TextView>(Resource.Id.userName).Text = vm.UserName;
 
-//                ItemView.FindViewById(Resource.Id.action).SetClick((sender, e) => vm.OpenPostCommand.Execute(null));
-                ItemView.FindViewById(Resource.Id.action)
+                ItemView
+                    .FindViewById(Resource.Id.action)
                     .SetClick((sender, e) => viewmodel.SelectItemCommand.Execute(position));
+//                ItemView
+//                    .FindViewById(Resource.Id.openImage)
+//                    .SetClick((sender, e) => viewmodel.OpenImageCommand.Execute(position));
+                ItemView.FindViewById(Resource.Id.action).LongClick += 
+                    (sender, e) => viewmodel.OpenImageCommand.Execute(position);
             }
         }
 

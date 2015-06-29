@@ -4,11 +4,21 @@
     android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <RelativeLayout
+    <Button
+        android:id="@+id/action"
+        android:background="?android:listChoiceBackgroundIndicator"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent" />
+    <RelativeLayout
         android:background="@android:color/white"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <!--        <Button
+            android:id="@+id/action"
+            android:background="?android:listChoiceBackgroundIndicator"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />-->
         <JoyReactor.Android.Widget.FixedAspectPanel
             android:id="@+id/imagePanel"
             android:layout_width="match_parent"
@@ -18,6 +28,11 @@
                 android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
+        <!--            <Button
+                android:id="@+id/openImage"
+                android:background="?android:listChoiceBackgroundIndicator"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />-->
         </JoyReactor.Android.Widget.FixedAspectPanel>
         <JoyReactor.Android.Widget.RoundBorderLayour
             android:id="@+id/userImagePanel"
@@ -61,9 +76,4 @@
             android:textColor="#a9a9a9"
             android:textSize="11sp" />
     </RelativeLayout>
-    <Button
-        android:id="@+id/action"
-        android:background="?android:listChoiceBackgroundIndicator"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 </android.support.v7.widget.CardView>
