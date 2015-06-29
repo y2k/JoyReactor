@@ -28,17 +28,22 @@ namespace JoyReactor.Core.ViewModels
             if (await targetDir.CheckExistsAsync(targetName) != ExistenceCheckResult.FileExists)
             {
                 var targetFile = await targetDir.CreateFileAsync(GetTargetName(), CreationCollisionOption.OpenIfExists);
-                using (var response = await new WebDownloader().ExecuteAsync(new Uri(GetImageUrl())))
+                using (var response = await CreateImageRequest())
                 {
                     using (var targetStream = await targetFile.OpenAsync(FileAccess.ReadAndWrite))
                     {
-                        var buf = new byte[16 * 1024];
+                        int lastUpdateProgress = 0;
+                        var buf = new byte[4 * 1024];
                         int count, totalCopied = 0;
                         while ((count = await response.Stream.ReadAsync(buf, 0, buf.Length)) != 0)
                         {
                             await targetStream.WriteAsync(buf, 0, count);
                             totalCopied += count;
-                            Progress = Math.Min(99, (int)(100f * totalCopied / response.ContentLength));
+                            if (Environment.TickCount - lastUpdateProgress > 1000 / 60)
+                            {
+                                Progress = Math.Min(99, (int)(100f * totalCopied / response.ContentLength));
+                                lastUpdateProgress = Environment.TickCount;
+                            }
                         }
                     }
                 }
@@ -48,12 +53,19 @@ namespace JoyReactor.Core.ViewModels
 
         string GetTargetName()
         {
-            return GetImageUrl().GetHashCode() + ".jpeg";
+            return GetImageUri().GetHashCode() + ".jpeg";
         }
 
-        string GetImageUrl()
+        Task<WebResponse> CreateImageRequest()
         {
-            return BaseNavigationService.Instance.GetArgument<string>();
+            return new WebDownloader().ExecuteAsync(
+                GetImageUri(),
+                new RequestParams { Referer = new Uri("http://joyreactor.cc/") });
+        }
+
+        Uri GetImageUri()
+        {
+            return new Uri(BaseNavigationService.Instance.GetArgument<string>());
         }
     }
 }

@@ -25,6 +25,7 @@ namespace JoyReactor.Android.App.Gallery
                 .Add(viewmodel, () => viewmodel.Progress)
                 .WhenSourceChanges(() =>
                 {
+                    progress.Indeterminate = viewmodel.Progress == 0;
                     progress.Progress = viewmodel.Progress;
                     progress.Visibility = viewmodel.Progress < 100 ? ViewStates.Visible : ViewStates.Gone;
                 });
