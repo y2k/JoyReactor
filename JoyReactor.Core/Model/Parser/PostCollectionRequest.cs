@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -10,7 +11,6 @@ using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Web;
 using Microsoft.Practices.ServiceLocation;
-using System.IO;
 
 namespace JoyReactor.Core.Model.Parser
 {
@@ -87,7 +87,7 @@ namespace JoyReactor.Core.Model.Parser
             {
                 var requestParams = new RequestParams
                 {
-                    Cookies = await GetCookiesAsync(),
+                    Cookies = await authStorage.GetCookiesAsync(),
                     UseForeignProxy = true,
                 };
                 var uri = await GenerateUrl();
@@ -120,13 +120,6 @@ namespace JoyReactor.Core.Model.Parser
             bool IsPageFromSecretSite(string html)
             {
                 return html.Contains(">секретные разделы</a>");
-            }
-
-            async Task<IDictionary<string, string>> GetCookiesAsync()
-            {
-                var cookies = await authStorage.GetCookiesAsync();
-                cookies.Add("showVideoGif2", "1");
-                return cookies;
             }
 
             struct Response
@@ -219,6 +212,16 @@ namespace JoyReactor.Core.Model.Parser
                         p.ImageHeight = 512;
                     }
                 }
+                if (p.Image == null)
+                {
+                    var videoMatch = Regex.Match(html, "<video class=\"video_gif\"[^>]+");
+                    if (videoMatch.Success)
+                    {
+                        p.Image = new Regex(@"poster=""([^""]+)").FirstString(videoMatch.Value);
+                        p.ImageWidth = new Regex(@"width=""(\d+)").FirstInt(videoMatch.Value);
+                        p.ImageHeight = new Regex(@"height=""(\d+)").FirstInt(videoMatch.Value);
+                    }
+                }
                 if (p.Image != null)
                 {
                     p.Image = Regex.Replace(p.Image, "/pics/post/full/[\\w\\s%-]+-(\\d+\\.[\\d\\w]+)", "/pics/post/full/-$1");
@@ -253,7 +256,6 @@ namespace JoyReactor.Core.Model.Parser
                     p.ImageWidth = int.Parse(m.Groups[2].Value);
                     p.ImageHeight = int.Parse(m.Groups[2].Value);
                 }
-
                 return p;
             }
         }
