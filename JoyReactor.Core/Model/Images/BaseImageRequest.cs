@@ -137,13 +137,19 @@ namespace JoyReactor.Core.Model.Images
             }
         }
 
-        class ThumbnailUri
+        public class ThumbnailUri
         {
             const string ThumbnailDomain = "api-i-twister.net";
             const string ThumbnailTemplate = "https://" + ThumbnailDomain + ":8002/Cache/Get?bgColor=ffffff&maxHeight=500&width={0}&url={1}";
+            const string OriginalTemplate = "https://" + ThumbnailDomain + ":8002/Cache/Get?url={1}";
         
             readonly int maxSize;
             readonly Uri url;
+
+            internal ThumbnailUri(Uri url)
+                : this(url, -1)
+            {
+            }
 
             internal ThumbnailUri(Uri url, int maxSize)
             {
@@ -158,7 +164,8 @@ namespace JoyReactor.Core.Model.Images
 
             Uri CreateThumbnailUri()
             {
-                return new Uri(string.Format(ThumbnailTemplate, maxSize, Uri.EscapeDataString("" + url)));
+                var template = maxSize > 0 ? ThumbnailTemplate : OriginalTemplate;
+                return new Uri(string.Format(template, maxSize, Uri.EscapeDataString("" + url)));
             }
 
             bool IsCanCreateThumbnail()

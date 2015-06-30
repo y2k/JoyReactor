@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using JoyReactor.Core.Model.Images;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.ViewModels.Common;
 using PCLStorage;
@@ -72,7 +73,8 @@ namespace JoyReactor.Core.ViewModels
 
         Uri GetImageUri()
         {
-            return new Uri(BaseNavigationService.Instance.GetArgument<string>());
+            var original = new Uri(BaseNavigationService.Instance.GetArgument<string>());
+            return new BaseImageRequest.ThumbnailUri(original).ToUri();
         }
 
         public static bool IsCanShow(string imageUrl)
