@@ -220,6 +220,9 @@ namespace JoyReactor.Core.Model.Parser
                         p.Image = new Regex(@"poster=""([^""]+)").FirstString(videoMatch.Value);
                         p.ImageWidth = new Regex(@"width=""(\d+)").FirstInt(videoMatch.Value);
                         p.ImageHeight = new Regex(@"height=""(\d+)").FirstInt(videoMatch.Value);
+
+                        var sourceMatch = Regex.Match(html, @"<source src=""(.+?/mp4/).+?(\d+\.mp4)""");
+                        p.Video = sourceMatch.Groups[1].Value + "-" + sourceMatch.Groups[2].Value;
                     }
                 }
                 if (p.Image != null)

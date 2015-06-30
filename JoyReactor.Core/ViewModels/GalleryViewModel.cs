@@ -14,6 +14,8 @@ namespace JoyReactor.Core.ViewModels
 
         public int Progress { get { return Get<int>(); } set { Set(value); } }
 
+        public bool IsVideo { get { return CheckIsVideo(GetImageUri()); } }
+
         bool isActivated;
 
         public async override void OnActivated()
@@ -74,12 +76,19 @@ namespace JoyReactor.Core.ViewModels
         Uri GetImageUri()
         {
             var original = new Uri(BaseNavigationService.Instance.GetArgument<string>());
-            return new BaseImageRequest.ThumbnailUri(original).ToUri();
+            return  CheckIsVideo(original) 
+                ? original
+                : new BaseImageRequest.ThumbnailUri(original).ToUri();
+        }
+
+        static bool CheckIsVideo(Uri original)
+        {
+            return original.ToString().EndsWith(".mp4");
         }
 
         public static bool IsCanShow(string imageUrl)
         {
-            return imageUrl != null && (new [] { ".jpeg", ".jpg", ".png" }.Any(imageUrl.EndsWith));
+            return imageUrl != null && (new [] { ".jpeg", ".jpg", ".png", ".mp4" }.Any(imageUrl.EndsWith));
         }
     }
 }

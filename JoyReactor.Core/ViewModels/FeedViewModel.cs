@@ -105,9 +105,10 @@ namespace JoyReactor.Core.ViewModels
 
         public void OpenImageCommandMethod(int index)
         {
-            var imageUrl = Posts[index].Image;
-            if (GalleryViewModel.IsCanShow(imageUrl))
-                BaseNavigationService.Instance.ImageFullscreen(imageUrl);
+            var post = Posts[index];
+            var mediaUri = post.Video ?? post.Image;
+            if (GalleryViewModel.IsCanShow(mediaUri))
+                BaseNavigationService.Instance.ImageFullscreen(mediaUri);
         }
 
         async Task LoadNextPage()

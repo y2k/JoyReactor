@@ -36,20 +36,22 @@ namespace JoyReactor.Core.Model.DTO
 
         public string Content { get; set; }
 
+        public string Video { get; set; }
+
         [Ignore]
         public List<Attachment> Attachments { get; set; }
 
         [Ignore]
         public List<RelatedPost> RelatedPosts { get; set; }
 
-		public override string ToString ()
-		{
-			return string.Format ("[Post: Id={0}, PostId={1}, Image={2}, ImageWidth={3}, ImageHeight={4}, UserName={5}, Title={6}, Created={7}, UserImage={8}, Rating={9}, Coub={10}, CommentCount={11}, Timestamp={12}, Content={13}]", Id, PostId, Image, ImageWidth, ImageHeight, UserName, Title, Created, UserImage, Rating, Coub, CommentCount, Timestamp, Content);
-		}
+        public override string ToString()
+        {
+            return string.Format("[Post: Id={0}, PostId={1}, Image={2}, ImageWidth={3}, ImageHeight={4}, UserName={5}, Title={6}, Created={7}, UserImage={8}, Rating={9}, Coub={10}, CommentCount={11}, Timestamp={12}, Content={13}, Video={14}, Attachments={15}, RelatedPosts={16}]", Id, PostId, Image, ImageWidth, ImageHeight, UserName, Title, Created, UserImage, Rating, Coub, CommentCount, Timestamp, Content, Video, Attachments, RelatedPosts);
+        }
 
-		public override bool Equals (object obj)
-		{
-			return (obj as Post)?.ToString() == ToString();
-		}
+        public override bool Equals(object obj)
+        {
+            return (obj as Post)?.ToString() == ToString();
+        }
     }
 }
