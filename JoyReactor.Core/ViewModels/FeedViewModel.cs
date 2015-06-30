@@ -105,9 +105,9 @@ namespace JoyReactor.Core.ViewModels
 
         public void OpenImageCommandMethod(int index)
         {
-            var item = Posts[index].Image;
-            if (item != null && (new [] { ".jpeg", ".jpg", ".png" }.Any(item.EndsWith)))
-                BaseNavigationService.Instance.ImageFullscreen(item);
+            var imageUrl = Posts[index].Image;
+            if (GalleryViewModel.IsCanShow(imageUrl))
+                BaseNavigationService.Instance.ImageFullscreen(imageUrl);
         }
 
         async Task LoadNextPage()

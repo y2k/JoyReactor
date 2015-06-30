@@ -1,5 +1,6 @@
 ﻿using Android.Support.V7.Widget;
 using Android.Views;
+using JoyReactor.Android.App.Base;
 using JoyReactor.Android.Widget;
 using JoyReactor.Core.ViewModels;
 
@@ -17,6 +18,7 @@ namespace JoyReactor.Android.App.Posts
             this.viewmodel = viewmodel;
             image = ItemView.FindViewById<WebImageView>(Resource.Id.image);
             panel = ItemView.FindViewById<FixedAspectPanel>(Resource.Id.imagePanel);
+            image.SetClick((sender, e) => viewmodel.OpenImageCommand.Execute(null));
         }
 
         public void OnBindViewHolder(int position)

@@ -7,10 +7,12 @@ using GalaSoft.MvvmLight.Command;
 using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
+using System.Windows.Input;
+using JoyReactor.Core.ViewModels.Common;
 
 namespace JoyReactor.Core.ViewModels
 {
-    public class PostViewModel : ViewModelBase
+    public class PostViewModel : ViewModel
     {
         public ObservableCollection<PostViewModel.CommentViewModel> Comments { get; }
             = new ObservableCollection<PostViewModel.CommentViewModel>();
@@ -31,6 +33,8 @@ namespace JoyReactor.Core.ViewModels
 
         public RelayCommand OpenGalleryCommand { get; set; }
 
+        public ICommand OpenImageCommand { get; set; }
+
         IPostService postService;
         IDisposable postSubscription;
         IDisposable commentSubscription;
@@ -49,6 +53,13 @@ namespace JoyReactor.Core.ViewModels
                 Comments.AddRange(items);
             }
 #endif
+            OpenImageCommand = new Command(OpenImageCommandMethod);
+        }
+
+        public void OpenImageCommandMethod()
+        {
+            if (GalleryViewModel.IsCanShow(Image))
+                BaseNavigationService.Instance.ImageFullscreen(Image);
         }
 
         public void Initialize(int postId)

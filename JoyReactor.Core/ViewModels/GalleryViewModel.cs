@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.ViewModels.Common;
@@ -72,6 +73,11 @@ namespace JoyReactor.Core.ViewModels
         Uri GetImageUri()
         {
             return new Uri(BaseNavigationService.Instance.GetArgument<string>());
+        }
+
+        public static bool IsCanShow(string imageUrl)
+        {
+            return imageUrl != null && (new [] { ".jpeg", ".jpg", ".png" }.Any(imageUrl.EndsWith));
         }
     }
 }

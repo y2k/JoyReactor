@@ -142,6 +142,7 @@
     <Compile Include="Model\Bootstrap.cs" />
     <Compile Include="Model\DynamicImage.cs" />
     <Compile Include="NavigationService.cs" />
+    <Compile Include="Widget\CommandButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
