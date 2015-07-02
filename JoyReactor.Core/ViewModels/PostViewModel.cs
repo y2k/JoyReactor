@@ -17,6 +17,9 @@ namespace JoyReactor.Core.ViewModels
         public ObservableCollection<PostViewModel.CommentViewModel> Comments { get; }
             = new ObservableCollection<PostViewModel.CommentViewModel>();
 
+        public ObservableCollection<string> CommentImages { get; }
+            = new ObservableCollection<string>();
+
         public ObservableCollection<RelatedPost> RelatedPost { get; } = new ObservableCollection<RelatedPost>();
 
         bool _isBusy;
@@ -94,6 +97,14 @@ namespace JoyReactor.Core.ViewModels
                         replies = true;
                     }
                     Comments.AddRange(ConvertToViewModels(comments, replies));
+
+                    if (commentId == 0)
+                    {
+                        var newCommentImages = comments
+                                .Where(s => s.Attachments != null && s.Attachments.Count > 0)
+                                .Select(s => s.Attachments.First());
+                        CommentImages.ReplaceAll(newCommentImages);
+                    }
                 });
         }
 

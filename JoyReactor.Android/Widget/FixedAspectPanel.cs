@@ -38,7 +38,7 @@ namespace JoyReactor.Android.Widget
                 w = (int)(h * _aspect);
             }
             else
-                throw new Exception();
+                throw new InvalidOperationException();
             SetMeasuredDimension(w, h);
 
             for (int i = 0; i < ChildCount; i++)

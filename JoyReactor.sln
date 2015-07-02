@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyReactor.Core", "JoyReact
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyReactor.Core.Tests", "JoyReactor.Core.Tests\JoyReactor.Core.Tests.csproj", "{A5AF8642-6542-445B-9BE8-610B4F4BBFCE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Android", "Android", "{CC75DB3F-0312-4BA0-A4B8-7FB9E657D635}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Droid", "Droid", "{CC75DB3F-0312-4BA0-A4B8-7FB9E657D635}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyReactor.Android", "JoyReactor.Android\JoyReactor.Android.csproj", "{C8E57538-8B6C-4BBE-BECE-C77DF342E022}"
 EndProject

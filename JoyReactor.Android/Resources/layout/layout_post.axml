@@ -1,20 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <JoyReactor.Android.Widget.FixedAspectPanel
-        android:id="@+id/imagePanel"
-        android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/thumbnails"
+        android:orientation="vertical"
+        android:layout_width="100dp"
+        android:layout_alignParentRight="true"
         android:layout_height="wrap_content">
         <JoyReactor.Android.Widget.WebImageView
-            android:id="@+id/image"
             android:scaleType="centerCrop"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </JoyReactor.Android.Widget.FixedAspectPanel>
+            android:layout_height="100dp" />
+        <JoyReactor.Android.Widget.WebImageView
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
+        <JoyReactor.Android.Widget.WebImageView
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
+    </LinearLayout>
+    <TextView
+        android:background="#A000"
+        android:textColor="@android:color/white"
+        android:textSize="40sp"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center"
+        android:id="@+id/imageCount"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignRight="@id/thumbnails"
+        android:layout_alignBottom="@id/thumbnails" />
+    <JoyReactor.Android.Widget.WebImageView
+        android:layout_toLeftOf="@id/thumbnails"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/image"
+        android:scaleType="centerCrop"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="300dp" />
     <View
+        android:layout_below="@id/thumbnails"
         android:background="@drawable/drawable_shadow"
         android:layout_width="match_parent"
         android:layout_height="6dp" />
-</LinearLayout>
+</RelativeLayout>
