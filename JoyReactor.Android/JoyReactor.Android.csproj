@@ -223,6 +223,7 @@
     <AndroidResource Include="Resources\layout\item_post_divider.axml" />
     <AndroidResource Include="Resources\drawable\drawable_shadow.xml" />
     <AndroidResource Include="Resources\layout\activity_fullscreen_gallery.axml" />
+    <AndroidResource Include="Resources\layout\fragment_post_2.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup />

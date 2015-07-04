@@ -34,6 +34,8 @@ namespace JoyReactor.Core.ViewModels
 
         public ICommand OpenImageCommand { get; set; }
 
+        public ICommand ReloadCommand{ get; set; }
+
         int postId;
 
         public PostViewModel()
@@ -51,6 +53,7 @@ namespace JoyReactor.Core.ViewModels
             }
 #endif
             OpenImageCommand = new Command(OpenImageCommandMethod);
+            ReloadCommand = new Command(ReloadCommandMethod);
         }
 
         public void OpenImageCommandMethod()
@@ -59,13 +62,20 @@ namespace JoyReactor.Core.ViewModels
                 BaseNavigationService.Instance.ImageFullscreen(Image);
         }
 
+        public Task ReloadCommandMethod()
+        {
+            return Initialize(postId);
+        }
+
         public async Task Initialize(int postId)
         {
             this.postId = postId;
 
+            IsBusy = true;
             await ReloadFromCache();
             await SyncWithWeb();
             await ReloadFromCache();
+            IsBusy = false;
         }
 
         async Task ReloadFromCache()

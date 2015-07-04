@@ -1,5 +1,6 @@
 ﻿using System.Collections.Specialized;
 using Android.OS;
+using Android.Support.V4.Widget;
 using Android.Support.V7.Widget;
 using Android.Views;
 using JoyReactor.Android.App.Base;
@@ -39,9 +40,17 @@ namespace JoyReactor.Android.App.Posts
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            list = new RecyclerView(Activity);
+            var view = inflater.Inflate(Resource.Layout.fragment_post_2, container, false);
+            list = view.FindViewById<RecyclerView>(Resource.Id.list);
             list.SetLayoutManager(new LinearLayoutManager(Activity));
-            return list;
+
+            var refresher = view.FindViewById<SwipeRefreshLayout>(Resource.Id.refresher);
+            Bindings
+                .Add(viewmodel, () => viewmodel.IsBusy)
+                .WhenSourceChanges(() => refresher.Refreshing = viewmodel.IsBusy);
+            refresher.Refresh += (sender, e) => viewmodel.ReloadCommand.Execute(null);
+
+            return view;
         }
 
         public static PostFragment NewFragment(int postId)
