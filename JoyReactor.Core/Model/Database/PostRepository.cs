@@ -48,5 +48,14 @@ namespace JoyReactor.Core.Model.Database
             WHERE PostId = ?", postId);
             return rows.FirstOrDefault();
         }
+
+        public async Task<Post> GetAsync(int postId)
+        {
+            var rows = await Connection.QueryAsync<Post>(@"
+            SELECT * 
+            FROM posts 
+            WHERE Id = ?", postId);
+            return rows.FirstOrDefault();
+        }
     }
 }

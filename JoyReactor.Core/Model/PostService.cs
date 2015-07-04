@@ -10,13 +10,17 @@ using System.Threading.Tasks;
 
 namespace JoyReactor.Core.Model
 {
-    public class PostService : PostViewModel.IPostService, CreateTagViewModel.IPostService
+    public class PostService : /* PostViewModel.IPostService, */ CreateTagViewModel.IPostService
     {
         IStorage storage = ServiceLocator.Current.GetInstance<IStorage>();
+
         internal static event EventHandler PostChanged;
+
         int postId;
 
-        public PostService() { }
+        public PostService()
+        {
+        }
 
         public PostService(int postId)
         {
@@ -32,7 +36,8 @@ namespace JoyReactor.Core.Model
         async Task<List<Comment>> GetComments(int commentId)
         {
             var comments = await storage.GetChildCommentsAsync(postId, commentId);
-            if (commentId != 0) comments.Insert(0, await storage.GetCommentAsync(commentId));
+            if (commentId != 0)
+                comments.Insert(0, await storage.GetCommentAsync(commentId));
             return comments;
         }
 
@@ -42,13 +47,15 @@ namespace JoyReactor.Core.Model
             return CreateEventObserver().SelectMany(Observable.FromAsync(GetPostAsync));
         }
 
-        IObservable<EventPattern<object>> CreateEventObserver() {
+        IObservable<EventPattern<object>> CreateEventObserver()
+        {
             return Observable
                 .FromEventPattern(typeof(PostService), "PostChanged")
                 .StartWith((EventPattern<object>)null);
         }
 
-        async Task<Post> GetPostAsync() {
+        async Task<Post> GetPostAsync()
+        {
             var post = await storage.GetPostAsync(postId);
             post.RelatedPosts = await storage.GetRelatedPostsAsync(postId);
             post.Attachments = await storage.GetAttachmentsAsync(postId);

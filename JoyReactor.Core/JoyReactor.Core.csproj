@@ -111,6 +111,8 @@
     <Compile Include="Model\Common\NotLogedException.cs" />
     <Compile Include="Model\IPlatform.cs" />
     <Compile Include="ViewModels\Common\BaseNavigationService.cs" />
+    <Compile Include="Model\Database\AttachmentRepository.cs" />
+    <Compile Include="Model\Database\CommentRepository.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

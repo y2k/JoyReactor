@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using JoyReactor.Core.Model;
+using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
-using System.Windows.Input;
+using JoyReactor.Core.Model.Parser;
 using JoyReactor.Core.ViewModels.Common;
 
 namespace JoyReactor.Core.ViewModels
 {
-    public class PostViewModel : ViewModel
+    public class PostViewModel : ScopedViewModel
     {
         public ObservableCollection<PostViewModel.CommentViewModel> Comments { get; }
             = new ObservableCollection<PostViewModel.CommentViewModel>();
@@ -22,25 +24,17 @@ namespace JoyReactor.Core.ViewModels
 
         public ObservableCollection<RelatedPost> RelatedPost { get; } = new ObservableCollection<RelatedPost>();
 
-        bool _isBusy;
+        public bool IsBusy { get { return Get<bool>(); } set { Set(value); } }
 
-        public bool IsBusy { get { return _isBusy; } set { Set(ref _isBusy, value); } }
+        public string Image { get { return Get<string>(); } set { Set(value); } }
 
-        string _image;
-
-        public string Image { get { return _image; } set { Set(ref _image, value); } }
-
-        float _imageAspect;
-
-        public float ImageAspect { get { return _imageAspect; } set { Set(ref _imageAspect, value); } }
+        public float ImageAspect { get { return Get<float>(); } set { Set(value); } }
 
         public RelayCommand OpenGalleryCommand { get; set; }
 
         public ICommand OpenImageCommand { get; set; }
 
-        IPostService postService;
-        IDisposable postSubscription;
-        IDisposable commentSubscription;
+        int postId;
 
         public PostViewModel()
         {
@@ -65,60 +59,59 @@ namespace JoyReactor.Core.ViewModels
                 BaseNavigationService.Instance.ImageFullscreen(Image);
         }
 
-        public void Initialize(int postId)
+        public async Task Initialize(int postId)
         {
-            postService = new PostService(postId);
+            this.postId = postId;
 
-            postSubscription?.Dispose();
-            postSubscription = postService
-                .Get()
-                .SubscribeOnUi(post =>
-                {
-                    Image = post.Image;
-                    ImageAspect = (float)post.ImageWidth / post.ImageHeight;
-                    RelatedPost.ReplaceAll(post.RelatedPosts);
-                });
-            ReloadCommentList(0);
+            await ReloadFromCache();
+            await SyncWithWeb();
+            await ReloadFromCache();
         }
 
-        void ReloadCommentList(int commentId)
+        async Task ReloadFromCache()
         {
-            commentSubscription?.Dispose();
-            commentSubscription = postService
-                .Get(commentId)
-                .SubscribeOnUi(comments =>
-                {
-                    Comments.Clear();
-                    var replies = false;
-                    if (comments.Count >= 2 && comments[0].Id == comments[1].ParentCommentId)
-                    {
-                        Comments.Insert(0, new CommentViewModel(this, comments[0]) { IsRoot = true });
-                        comments.RemoveAt(0);
-                        replies = true;
-                    }
-                    Comments.AddRange(ConvertToViewModels(comments, replies));
+            var post = await new PostRepository().GetAsync(postId);
+            Image = post.Image;
+            ImageAspect = (float)post.ImageWidth / post.ImageHeight;
+            var attachmentRepo = new AttachmentRepository();
+            var images = (await attachmentRepo.GetAsync(postId))
+                .Union(await attachmentRepo.GetForCommentsAsync(postId))
+                .Select(s => s.Url)
+                .Skip(1)
+                .ToList();
+            CommentImages.ReplaceAll(images);
 
-                    if (commentId == 0)
-                    {
-                        var newCommentImages = comments
-                                .Where(s => s.Attachments != null && s.Attachments.Count > 0)
-                                .Select(s => s.Attachments.First());
-                        CommentImages.ReplaceAll(newCommentImages);
-                    }
-                });
+            await ReloadCommentList(0);
+        }
+
+        async Task SyncWithWeb()
+        {
+            var post = await new PostRepository().GetAsync(postId);
+            await new PostRequest(post.PostId).ComputeAsync();
+        }
+
+        async Task ReloadCommentList(int commentId)
+        {
+            var storage = new CommentRepository();
+            var comments = await storage.GetChildCommentsAsync(postId, commentId);
+            if (commentId != 0)
+                comments.Insert(0, await storage.GetCommentAsync(commentId));
+        
+            Comments.Clear();
+            var replies = false;
+            if (comments.Count >= 2 && comments[0].Id == comments[1].ParentCommentId)
+            {
+                Comments.Insert(0, new CommentViewModel(this, comments[0]) { IsRoot = true });
+                comments.RemoveAt(0);
+                replies = true;
+            }
+            Comments.AddRange(ConvertToViewModels(comments, replies));
         }
 
         IEnumerable<CommentViewModel> ConvertToViewModels(List<Comment> comments, bool isReply)
         {
             foreach (var s in comments)
                 yield return new CommentViewModel(this, s) { IsReply = isReply };
-        }
-
-        public override void Cleanup()
-        {
-            base.Cleanup();
-            postSubscription?.Dispose();
-            commentSubscription?.Dispose();
         }
 
         public class CommentViewModel : ViewModelBase
@@ -159,13 +152,6 @@ namespace JoyReactor.Core.ViewModels
             {
                 return comment.Text;
             }
-        }
-
-        internal interface IPostService
-        {
-            IObservable<Post> Get();
-
-            IObservable<List<Comment>> Get(int comment);
         }
     }
 }
