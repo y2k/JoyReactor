@@ -10,7 +10,7 @@ namespace JoyReactor.Core.Model.Web
 {
     public class WebDownloader
     {
-        const string UserAgent = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36 OPR/18.0.1284.68";
+        const string UserAgent = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36 OPR/18.0.1284.68 JoyReactorClient/1.0";
         const string Accept = "text/html";
 
         const bool AllowProxy = false;
