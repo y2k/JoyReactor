@@ -1,10 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using JoyReactor.Core.Model;
+﻿using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Web;
 using Microsoft.Practices.ServiceLocation;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -13,7 +12,7 @@ namespace JoyReactor.Core.ViewModels
         bool _updateAvailable;
 
         public bool UpdateAvailable
-        { 
+        {
             get { return _updateAvailable; }
             set { Set(ref _updateAvailable, value); }
         }
@@ -44,7 +43,8 @@ namespace JoyReactor.Core.ViewModels
 
         async Task<Version> GetNewVersion()
         {
-            var doc = await new WebDownloader().GetXmlAsync(new Uri("https://github.com/y2k/JoyReactor/releases.atom"));
+            var client = ServiceLocator.Current.GetInstance<WebDownloader>();
+            var doc = await client.GetXmlAsync(new Uri("https://github.com/y2k/JoyReactor/releases.atom"));
             return doc.Root.Elements()
                 .Where(s => s.Name.LocalName == "entry")
                 .Select(s => s.Descendants().First(a => a.Name.LocalName == "title"))

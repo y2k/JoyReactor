@@ -1,10 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using JoyReactor.Core.Model.Images;
+﻿using JoyReactor.Core.Model.Images;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.ViewModels.Common;
+using Microsoft.Practices.ServiceLocation;
 using PCLStorage;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -68,15 +69,14 @@ namespace JoyReactor.Core.ViewModels
 
         Task<WebResponse> CreateImageRequest()
         {
-            return new WebDownloader().ExecuteAsync(
-                GetImageUri(),
-                new RequestParams { Referer = new Uri("http://joyreactor.cc/") });
+            var client = ServiceLocator.Current.GetInstance<WebDownloader>();
+            return client.ExecuteAsync(GetImageUri(), new RequestParams { Referer = new Uri("http://joyreactor.cc/") });
         }
 
         Uri GetImageUri()
         {
             var original = new Uri(BaseNavigationService.Instance.GetArgument<string>());
-            return  CheckIsVideo(original) 
+            return CheckIsVideo(original)
                 ? original
                 : new BaseImageRequest.ThumbnailUri(original).ToUri();
         }
@@ -88,7 +88,7 @@ namespace JoyReactor.Core.ViewModels
 
         public static bool IsCanShow(string imageUrl)
         {
-            return imageUrl != null && (new [] { ".jpeg", ".jpg", ".png", ".mp4" }.Any(imageUrl.EndsWith));
+            return imageUrl != null && (new[] { ".jpeg", ".jpg", ".png", ".mp4" }.Any(imageUrl.EndsWith));
         }
     }
 }
