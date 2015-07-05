@@ -1,8 +1,9 @@
-﻿using System;
+﻿using JoyReactor.Core.Model.Web;
+using Microsoft.Practices.ServiceLocation;
+using System;
 using System.Collections.Generic;
-using System.Net.Http;
+using System.IO;
 using System.Threading.Tasks;
-using ModernHttpClient;
 
 namespace JoyReactor.Core.Model.Images
 {
@@ -15,7 +16,6 @@ namespace JoyReactor.Core.Model.Images
         static readonly OperationTransaction Transaction = new OperationTransaction();
         static readonly DiskCache DiskCache = new DiskCache();
         static BaseMemoryCache MemoryCache;
-        static HttpClient Downloader;
 
         string originalUrl;
         int sizePx;
@@ -39,10 +39,7 @@ namespace JoyReactor.Core.Model.Images
             lock (DiskCache)
             {
                 if (MemoryCache == null)
-                {
                     MemoryCache = CreateMemoryCache();
-                    Downloader = new HttpClient(new NativeMessageHandler());
-                }
             }
 
             Transaction.Begin(target, this);
@@ -74,7 +71,7 @@ namespace JoyReactor.Core.Model.Images
                     {
                         try
                         {
-                            data = await Downloader.GetByteArrayAsync(uri);
+                            data = await DownloadAsync(uri);
                             if (IsInvalidState())
                                 return;
                             break;
@@ -86,7 +83,7 @@ namespace JoyReactor.Core.Model.Images
                     }
                     if (data == null)
                         return;
-                    
+
                     await DiskCache.PutAsync(uri, data);
                     if (IsInvalidState())
                         return;
@@ -108,6 +105,17 @@ namespace JoyReactor.Core.Model.Images
             finally
             {
                 Transaction.End(target, this);
+            }
+        }
+
+        private static async Task<byte[]> DownloadAsync(Uri uri)
+        {
+            var client = ServiceLocator.Current.GetInstance<WebDownloader>();
+            using (var r = await client.ExecuteAsync(uri))
+            {
+                var buffer = new MemoryStream();
+                await r.Stream.CopyToAsync(buffer);
+                return buffer.ToArray();
             }
         }
 
@@ -142,7 +150,7 @@ namespace JoyReactor.Core.Model.Images
             const string ThumbnailDomain = "api-i-twister.net";
             const string ThumbnailTemplate = "https://" + ThumbnailDomain + ":8002/Cache/Get?bgColor=ffffff&maxHeight=500&width={0}&url={1}";
             const string OriginalTemplate = "https://" + ThumbnailDomain + ":8002/Cache/Get?url={1}";
-        
+
             readonly int maxSize;
             readonly Uri url;
 

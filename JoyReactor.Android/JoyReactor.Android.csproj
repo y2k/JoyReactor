@@ -143,6 +143,7 @@
     <Compile Include="Model\DynamicImage.cs" />
     <Compile Include="NavigationService.cs" />
     <Compile Include="Widget\CommandButton.cs" />
+    <Compile Include="Model\AndroidWebDownloader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
