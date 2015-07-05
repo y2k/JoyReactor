@@ -104,7 +104,6 @@ namespace JoyReactor.Android.App.Home
 
                 ItemView.FindViewById(Resource.Id.videoMark).Visibility = 
                     vm.IsVideo ? ViewStates.Visible : ViewStates.Gone;
-                // ItemView.FindViewById<ImageView>(Resource.Id.videoMark).SetColorFilter(Color.Orange);
 
                 var button = ItemView.FindViewById<CommandButton>(Resource.Id.action);
                 button.ClickCommandArgument = button.LongClickCommandArgument = position;
