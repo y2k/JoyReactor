@@ -31,7 +31,7 @@ namespace JoyReactor.Core.ViewModels
 
     public class Command<T> : Command
     {
-        public Command(Func<T, Task> asyncAction) : base(() => {})
+        public Command(Func<T, Task> asyncAction) : base(() => { })
         {
             action = async parameter => await asyncAction((T)parameter);
         }

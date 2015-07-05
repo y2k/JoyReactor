@@ -18,9 +18,9 @@ namespace JoyReactor.Android.App.Base
             instance.Refresh += (sender, e) => command.Execute(null);
         }
 
-        public static void SetCommand(this View instance, ICommand command)
+        public static void SetCommand(this View instance, ICommand command, object param = null)
         {
-            instance.Click += (sender, e) => command.Execute(null);
+            instance.SetClick((sender, e) => command.Execute(param));
         }
 
         static readonly List<ClickRecord> records = new List<ClickRecord>();

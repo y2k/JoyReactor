@@ -46,7 +46,7 @@ namespace JoyReactor.Core.ViewModels
             IsLoading = false;
         }
 
-        async void Logout()
+        async Task Logout()
         {
             await new ProfileService().Logout();
             NavigateToLogin();

@@ -1,10 +1,10 @@
-﻿using Android.Support.V7.Widget;
+﻿using System.Linq;
+using Android.Support.V7.Widget;
 using Android.Views;
+using Android.Widget;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.Widget;
-using System.Linq;
 using JoyReactor.Core.ViewModels;
-using Android.Widget;
 
 namespace JoyReactor.Android.App.Posts
 {
@@ -20,7 +20,7 @@ namespace JoyReactor.Android.App.Posts
         {
             this.viewmodel = viewmodel;
             image = ItemView.FindViewById<WebImageView>(Resource.Id.image);
-            image.SetClick((sender, e) => viewmodel.OpenImageCommand.Execute(null));
+            image.SetCommand(viewmodel.OpenImageCommand);
             thumbnails = ItemView.FindViewById<ViewGroup>(Resource.Id.thumbnails);
             imageCount = ItemView.FindViewById<TextView>(Resource.Id.imageCount);
         }
@@ -34,7 +34,7 @@ namespace JoyReactor.Android.App.Posts
             {
                 var iv = (WebImageView)thumbnails.GetChildAt(i);
                 iv.ImageSource = viewmodel.CommentImages.Skip(i).FirstOrDefault();
-                iv.Click += (sender, e) => viewmodel.OpenThumbnailCommand.Execute(i);;
+                iv.SetCommand(viewmodel.OpenThumbnailCommand, i);
             }
 
             var notVisibleImageCount = viewmodel.CommentImages.Count - thumbnails.ChildCount;

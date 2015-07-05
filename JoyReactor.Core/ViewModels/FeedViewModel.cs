@@ -40,8 +40,13 @@ namespace JoyReactor.Core.ViewModels
             Error = ErrorType.NotError;
             ApplyCommand = new Command(ApplyCommandMethod);
             SelectItemCommand = new Command<int>(SelectItemCommandMethod);
-            OpenImageCommand = new Command<int>(OpenImageCommandMethod);
             RefreshCommand = new Command(RefreshCommandMethod);
+
+            OpenImageCommand = new Command<int>(index =>
+            {
+                var post = Posts[index];
+                OpenImageInFullscreen(post.Video ?? post.Image);
+            });
 
             SetCurrentTag(ID.ReactorGood);
         }
@@ -103,10 +108,10 @@ namespace JoyReactor.Core.ViewModels
                 MessengerInstance.Send(new PostNavigationMessage { PostId = item.Id });
         }
 
-        public void OpenImageCommandMethod(int index)
+        void OpenImageInFullscreen(string mediaUri)
         {
-            var post = Posts[index];
-            var mediaUri = post.Video ?? post.Image;
+            //var post = Posts[index];
+            //var mediaUri = post.Video ?? post.Image;
             if (GalleryViewModel.IsCanShow(mediaUri))
                 BaseNavigationService.Instance.ImageFullscreen(mediaUri);
         }

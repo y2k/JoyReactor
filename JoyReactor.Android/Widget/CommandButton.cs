@@ -18,8 +18,16 @@ namespace JoyReactor.Android.Widget
         public CommandButton(Context context, IAttributeSet attrs)
             : base(context, attrs)
         {
-            Click += (sender, e) => ClickCommand?.Execute(ClickCommandArgument);
-            LongClick += (sender, e) => LongClickCommand?.Execute(LongClickCommandArgument);
+            Click += (sender, e) =>
+            {
+                if (ClickCommand != null)
+                    ClickCommand.Execute(ClickCommandArgument);
+            };
+            LongClick += (sender, e) =>
+            {
+                if (ClickCommand != null)
+                    LongClickCommand.Execute(LongClickCommandArgument);
+            };
         }
     }
 }
