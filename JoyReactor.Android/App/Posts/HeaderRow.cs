@@ -34,6 +34,7 @@ namespace JoyReactor.Android.App.Posts
             {
                 var iv = (WebImageView)thumbnails.GetChildAt(i);
                 iv.ImageSource = viewmodel.CommentImages.Skip(i).FirstOrDefault();
+                iv.Click += (sender, e) => viewmodel.OpenThumbnailCommand.Execute(i);;
             }
 
             var notVisibleImageCount = viewmodel.CommentImages.Count - thumbnails.ChildCount;

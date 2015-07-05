@@ -34,7 +34,9 @@ namespace JoyReactor.Core.ViewModels
 
         public ICommand OpenImageCommand { get; set; }
 
-        public ICommand ReloadCommand{ get; set; }
+        public ICommand ReloadCommand { get; set; }
+
+        public ICommand OpenThumbnailCommand { get; set; }
 
         int postId;
 
@@ -52,14 +54,16 @@ namespace JoyReactor.Core.ViewModels
                 Comments.AddRange(items);
             }
 #endif
-            OpenImageCommand = new Command(OpenImageCommandMethod);
+
             ReloadCommand = new Command(ReloadCommandMethod);
+            OpenImageCommand = new Command(() => OpenImageFullscreen(Image));
+            OpenThumbnailCommand = new Command<int>(index => OpenImageFullscreen(CommentImages[index]));
         }
 
-        public void OpenImageCommandMethod()
+        void OpenImageFullscreen(string url)
         {
-            if (GalleryViewModel.IsCanShow(Image))
-                BaseNavigationService.Instance.ImageFullscreen(Image);
+            if (GalleryViewModel.IsCanShow(url))
+                BaseNavigationService.Instance.ImageFullscreen(url);
         }
 
         public Task ReloadCommandMethod()
