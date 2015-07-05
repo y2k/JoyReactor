@@ -17,7 +17,7 @@ namespace JoyReactor.Core.ViewModels
     {
         public ErrorType Error { get { return Get<ErrorType>(); } set { Set(value); } }
 
-        public ObservableCollection<Post> Posts { get; } = new ObservableCollection<Post>();
+        public ObservableCollection<PostItemViewModel> Posts { get; } = new ObservableCollection<PostItemViewModel>();
 
         public bool IsBusy { get { return Get<bool>(); } set { Set(value); } }
 
@@ -25,8 +25,10 @@ namespace JoyReactor.Core.ViewModels
 
         public ICommand ApplyCommand { get; private set; }
 
+        [Obsolete]
         public ICommand SelectItemCommand { get; private set; }
 
+        [Obsolete]
         public ICommand OpenImageCommand { get; private set; }
 
         public ICommand RefreshCommand { get; set; }
@@ -41,12 +43,7 @@ namespace JoyReactor.Core.ViewModels
             ApplyCommand = new Command(ApplyCommandMethod);
             SelectItemCommand = new Command<int>(SelectItemCommandMethod);
             RefreshCommand = new Command(RefreshCommandMethod);
-
-            OpenImageCommand = new Command<int>(index =>
-            {
-                var post = Posts[index];
-                OpenImageInFullscreen(post.Video ?? post.Image);
-            });
+            OpenImageCommand = new Command<int>(index => Posts[index].OpenImageCommand.Execute(null));
 
             SetCurrentTag(ID.ReactorGood);
         }
@@ -68,7 +65,7 @@ namespace JoyReactor.Core.ViewModels
             try
             {
                 var tag = await new TagRepository().GetAsync(id.SerializeToString());
-                Posts.ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
+                ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
 
                 firstPageRequest = new PostCollectionRequest(id, 0);
                 await firstPageRequest.DownloadFromWebAsync();
@@ -77,7 +74,7 @@ namespace JoyReactor.Core.ViewModels
                 await new TagCollectionModel().UpdateTagAsync(id, firstPageRequest);
                 await new PostRepository().UpdateOrInsertAllAsync(firstPageRequest.Posts);
 
-                if (Posts.Count == 0 || IsStartWith(Posts, firstPageRequest.Posts))
+                if (Posts.Count == 0 || IsStartWith(firstPageRequest.Posts))
                     await ApplyCommandMethod();
                 else
                     HasNewItems = true;
@@ -89,12 +86,12 @@ namespace JoyReactor.Core.ViewModels
             IsBusy = false;
         }
 
-        bool IsStartWith(IList<Post> originalPosts, IList<Post> newPosts)
+        bool IsStartWith(IList<Post> newPosts)
         {
-            if (originalPosts.Count < newPosts.Count)
+            if (Posts.Count < newPosts.Count)
                 return false;
             for (int i = 0; i < newPosts.Count; i++)
-                if (originalPosts[i].PostId != newPosts[i].PostId)
+                if (Posts[i].Post.PostId != newPosts[i].PostId)
                     return false;
             return true;
         }
@@ -102,18 +99,10 @@ namespace JoyReactor.Core.ViewModels
         public async Task SelectItemCommandMethod(int index)
         {
             var item = Posts[index];
-            if (item is Divider)
+            if (item is PostItemViewModel.Divider)
                 await LoadNextPage();
             else
-                MessengerInstance.Send(new PostNavigationMessage { PostId = item.Id });
-        }
-
-        void OpenImageInFullscreen(string mediaUri)
-        {
-            //var post = Posts[index];
-            //var mediaUri = post.Video ?? post.Image;
-            if (GalleryViewModel.IsCanShow(mediaUri))
-                BaseNavigationService.Instance.ImageFullscreen(mediaUri);
+                MessengerInstance.Send(new PostNavigationMessage { PostId = item.Post.Id });
         }
 
         async Task LoadNextPage()
@@ -139,8 +128,8 @@ namespace JoyReactor.Core.ViewModels
                     ids.Add(new TagPost { TagId = tag.Id, PostId = s.Id });
             await new TagPostRepository().ReplaceAllForTagAsync(ids);
 
-            Posts.ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
-            Posts.Insert(dividerPosition, new Divider());
+            ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
+            Posts.Insert(dividerPosition, new PostItemViewModel.Divider());
 
             IsBusy = false;
         }
@@ -155,20 +144,25 @@ namespace JoyReactor.Core.ViewModels
                 if (ids.All(i => i.PostId != s.Id))
                     ids.Add(new TagPost { TagId = tag.Id, PostId = s.Id });
             await new TagPostRepository().ReplaceAllForTagAsync(ids);
-            Posts.ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
-            Posts.Insert(firstPageRequest.Posts.Count, new Divider());
+            ReplaceAll(await new PostRepository().GetAllAsync(tag.Id));
+            Posts.Insert(firstPageRequest.Posts.Count, new PostItemViewModel.Divider());
 
             HasNewItems = false;
         }
 
+        void ReplaceAll(IEnumerable<Post> items)
+        {
+            Posts.ReplaceAll(items.Select(s => new PostItemViewModel(s)));
+        }
+
         IEnumerable<Post> GetBeforeDivider()
         {
-            return Posts.TakeWhile(s => !(s is Divider));
+            return Posts.TakeWhile(s => !(s is PostItemViewModel.Divider)).Select(s => s.Post);
         }
 
         IEnumerable<Post> GetAfterDivider()
         {
-            return Posts.SkipWhile(s => !(s is Divider)).Skip(1);
+            return Posts.SkipWhile(s => !(s is PostItemViewModel.Divider)).Skip(1).Select(s => s.Post);
         }
 
         public async Task RefreshCommandMethod()
@@ -191,10 +185,6 @@ namespace JoyReactor.Core.ViewModels
                 await new TagPostRepository().RemoveAllAsync(tag.Id);
                 SetCurrentTag(id);
             }
-        }
-
-        public class Divider : Post
-        {
         }
 
         public enum ErrorType

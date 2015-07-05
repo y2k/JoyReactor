@@ -8,9 +8,9 @@ using Humanizer;
 using JoyReactor.Android.App.Base;
 using JoyReactor.Android.Widget;
 using JoyReactor.Core;
-using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.ViewModels;
+using Android.Graphics;
 
 namespace JoyReactor.Android.App.Home
 {
@@ -18,10 +18,10 @@ namespace JoyReactor.Android.App.Home
     {
         public ID ListId { get; set; }
 
-        readonly ObservableCollection<Post> items;
+        readonly ObservableCollection<PostItemViewModel> items;
         readonly FeedViewModel viewmodel;
 
-        public FeedAdapter(ObservableCollection<Post> items, FeedViewModel viewmodel)
+        public FeedAdapter(ObservableCollection<PostItemViewModel> items, FeedViewModel viewmodel)
         {
             this.viewmodel = viewmodel;
             this.items = items;
@@ -63,8 +63,7 @@ namespace JoyReactor.Android.App.Home
 
             internal static int GetItemViewType(object item)
             {
-//                return item is FeedViewModel.ContentViewModel ? 0 : 1;
-                return item is FeedViewModel.Divider ? 1 : 0;
+                return item is PostItemViewModel.Divider ? 1 : 0;
             }
 
             internal static BaseViewHolder NewViewHolder(Context context, int viewType, FeedViewModel viewmodel)
@@ -90,23 +89,27 @@ namespace JoyReactor.Android.App.Home
 
             internal override void OnBindViewHolder(object item, int position)
             {
-                var vm = (Post)item;
+                var vm = (PostItemViewModel)item;
 
                 ItemView.FindViewById<FixedAspectPanel>(Resource.Id.imagePanel).Aspect =
-                    Math.Max(MinImageAspect, (float)vm.ImageWidth / vm.ImageHeight);
+                    Math.Max(MinImageAspect, vm.ImageAspect);
                 var iv = ItemView.FindViewById<WebImageView>(Resource.Id.image);
                 iv.ImageSize = 200 * context.Resources.DisplayMetrics.Density;
                 iv.ImageSource = vm.Image;
 
                 ItemView.FindViewById<TextView>(Resource.Id.time).Text = 
-                    vm.Created.DateTimeFromUnixTimestampMs().ToUniversalTime().Humanize();
+                    vm.Created.ToUniversalTime().Humanize();
                 ItemView.FindViewById<WebImageView>(Resource.Id.userImage).ImageSource = "" + vm.UserImage;
                 ItemView.FindViewById<TextView>(Resource.Id.userName).Text = vm.UserName;
+
+                ItemView.FindViewById(Resource.Id.videoMark).Visibility = 
+                    vm.IsVideo ? ViewStates.Visible : ViewStates.Gone;
+                // ItemView.FindViewById<ImageView>(Resource.Id.videoMark).SetColorFilter(Color.Orange);
 
                 var button = ItemView.FindViewById<CommandButton>(Resource.Id.action);
                 button.ClickCommandArgument = button.LongClickCommandArgument = position;
                 button.ClickCommand = viewmodel.SelectItemCommand;
-                button.LongClickCommand = viewmodel.OpenImageCommand;
+                button.LongClickCommand = vm.OpenImageCommand;
             }
         }
 
@@ -127,11 +130,9 @@ namespace JoyReactor.Android.App.Home
 
             internal override void OnBindViewHolder(object item, int position)
             {
-//                var vm = (FeedViewModel2.Divider)item;
                 ItemView
                     .FindViewById(Resource.Id.dividerButton)
                     .SetClick((sender, e) => viewmodel.SelectItemCommand.Execute(position));
-//                    .SetClick((sender, e) => vm.LoadMoreCommand.Execute(null));
             }
         }
     }
