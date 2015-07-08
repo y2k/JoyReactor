@@ -32,7 +32,9 @@ namespace JoyReactor.Android.App.Base
                     path.LineTo(24, 0);
                     path.LineTo(0, 0);
                 }
-                path.AddRoundRect(12, 0, canvas.Width / GetScale(), canvas.Height / GetScale(), 3, 3, Path.Direction.Ccw);
+                path.AddRoundRect(
+                    new RectF(12, 0, canvas.Width / GetScale(), canvas.Height / GetScale()), 
+                    3, 3, Path.Direction.Ccw);
             }
             else
             {
@@ -44,7 +46,9 @@ namespace JoyReactor.Android.App.Base
                     path.LineTo(canvas.Width / GetScale() - 24, 0);
                     path.LineTo(canvas.Width / GetScale(), 0);
                 }
-                path.AddRoundRect(0, 0, canvas.Width / GetScale() - 12, canvas.Height / GetScale(), 3, 3, Path.Direction.Cw);
+                path.AddRoundRect(
+                    new RectF(0, 0, canvas.Width / GetScale() - 12, canvas.Height / GetScale()), 
+                    3, 3, Path.Direction.Cw);
             }
             canvas.DrawPath(path, paint);
 
