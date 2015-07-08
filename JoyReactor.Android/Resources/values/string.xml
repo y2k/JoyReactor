@@ -7,7 +7,7 @@
 	<string name="about">About</string>
 	<string name="favorite">Favorite</string>
 	<string name="feed">Feed</string>
-	<string name="post_acitivty">Posts</string>
+	<string name="post_acitivty">Post</string>
 	<string name="create_tag">Create tag</string>
 	<string name="tag_name">Tag name</string>
 	<string name="example_tag">Example: Android, Anime</string>

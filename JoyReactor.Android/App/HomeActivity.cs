@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.Graphics;
 using Android.OS;
+using Android.Runtime;
 using Android.Support.V4.App;
 using Android.Support.V4.View;
 using Android.Views;
@@ -11,6 +12,7 @@ using JoyReactor.Core.ViewModels;
 namespace JoyReactor.Android.App
 {
     [Activity(Label = "@string/app_name", MainLauncher = true)]
+    [Register("net.itwister.joyreactor2.HomeActivity")]
     public class HomeActivity : BaseActivity
     {
         ViewPager pager;
