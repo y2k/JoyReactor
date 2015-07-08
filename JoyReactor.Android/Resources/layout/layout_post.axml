@@ -5,20 +5,22 @@
     <LinearLayout
         android:id="@+id/thumbnails"
         android:orientation="vertical"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_height="wrap_content">
         <JoyReactor.Android.Widget.WebImageView
             android:scaleType="centerCrop"
-            android:layout_width="match_parent"
+            android:layout_marginBottom="1dp"
+            android:layout_width="100dp"
             android:layout_height="100dp" />
         <JoyReactor.Android.Widget.WebImageView
             android:scaleType="centerCrop"
-            android:layout_width="match_parent"
+            android:layout_marginBottom="1dp"
+            android:layout_width="100dp"
             android:layout_height="100dp" />
         <JoyReactor.Android.Widget.WebImageView
             android:scaleType="centerCrop"
-            android:layout_width="match_parent"
+            android:layout_width="100dp"
             android:layout_height="100dp" />
     </LinearLayout>
     <TextView
@@ -37,9 +39,10 @@
         android:layout_alignParentLeft="true"
         android:id="@+id/image"
         android:scaleType="centerCrop"
+        android:layout_marginRight="1dp"
         android:layout_weight="1"
         android:layout_width="0dp"
-        android:layout_height="300dp" />
+        android:layout_height="302dp" />
     <View
         android:layout_below="@id/thumbnails"
         android:background="@drawable/drawable_shadow"
