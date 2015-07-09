@@ -27,7 +27,7 @@ namespace JoyReactor.Core.Model.Parser
             var url = new StringBuilder("http://");
             url.Append(storage.GetDomain(tag, DefaultDomain));
             if (tag != null && !storage.IsFandomRootTag(tag))
-                url.Append("/tag/").Append(Uri.EscapeUriString(tag));
+                url.Append("/tag/").Append(Uri.EscapeDataString(tag));
             if (ID.TagType.Best == id.Type)
                 url.Append("/best");
             else if (ID.TagType.All == id.Type)
