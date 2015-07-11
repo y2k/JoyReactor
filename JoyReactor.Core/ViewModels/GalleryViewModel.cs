@@ -16,7 +16,7 @@ namespace JoyReactor.Core.ViewModels
 
         public int Progress { get { return Get<int>(); } set { Set(value); } }
 
-        public bool IsVideo { get { return GetImageUrl().IsVideo; } }
+        public bool IsVideo { get { return GetImageUrl().IsAnimated; } }
 
         bool isActivated;
 
@@ -55,17 +55,19 @@ namespace JoyReactor.Core.ViewModels
         {
             internal string OriginalUrl { get; set; }
 
-            internal bool IsVideo
+            internal bool IsAnimated
             { 
                 get { return new[] { ".mp4", ".gif" }.Any(OriginalUrl.EndsWith); }
             }
 
             internal Uri ToUri()
             {
-                var uri = new Uri(OriginalUrl);
-                return OriginalUrl.EndsWith(".mp4") 
-                    ? uri
-                    : new BaseImageRequest.ThumbnailUri(uri).SetFormat("mp4").ToUri();
+                if (OriginalUrl.EndsWith(".mp4"))
+                    return new Uri(OriginalUrl);
+                var image = new BaseImageRequest.ThumbnailUri(new Uri(OriginalUrl));
+                if (OriginalUrl.EndsWith(".gif"))
+                    image.SetFormat("mp4");
+                return image.ToUri();
             }
         }
 

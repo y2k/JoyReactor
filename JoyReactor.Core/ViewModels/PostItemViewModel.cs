@@ -24,7 +24,10 @@ namespace JoyReactor.Core.ViewModels
 
         public float ImageAspect { get { return (float)post.ImageWidth / post.ImageHeight; } }
 
-        public bool IsVideo { get { return post.Video != null; } }
+        public bool IsVideo
+        {
+            get { return post.Video != null || (post.Image != null && post.Image.EndsWith(".gif")); }
+        }
 
         public ICommand OpenImageCommand { get; set; }
 
