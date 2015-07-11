@@ -33,10 +33,7 @@ namespace JoyReactor.Core.ViewModels
         public PostItemViewModel(Post post = null)
         {
             this.post = post;
-            OpenImageCommand = new Command(() =>
-            {
-                OpenImageInFullscreen(post.Video ?? post.Image);
-            });
+            OpenImageCommand = new Command(() => OpenImageInFullscreen(post.Video ?? post.Image));
         }
 
         void OpenImageInFullscreen(string mediaUri)

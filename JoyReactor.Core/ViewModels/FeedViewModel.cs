@@ -4,12 +4,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using JoyReactor.Core.Model;
 using JoyReactor.Core.Model.Database;
 using JoyReactor.Core.Model.DTO;
 using JoyReactor.Core.Model.Helper;
 using JoyReactor.Core.Model.Parser;
-using JoyReactor.Core.Model;
-using JoyReactor.Core.ViewModels.Common;
 
 namespace JoyReactor.Core.ViewModels
 {
