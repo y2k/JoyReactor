@@ -15,7 +15,7 @@ namespace JoyReactor.Core.ViewModels
 
         public int Progress { get { return Get<int>(); } set { Set(value); } }
 
-        public bool IsVideo { get { return CheckIsVideo(GetImageUri()); } }
+        public bool IsVideo { get { return CheckIsVideo(); } }
 
         bool isActivated;
 
@@ -75,15 +75,20 @@ namespace JoyReactor.Core.ViewModels
 
         Uri GetImageUri()
         {
-            var original = new Uri(BaseNavigationService.Instance.GetArgument<string>());
-            return CheckIsVideo(original)
+            var original = new Uri(GetOriginalImageUrl());
+            return CheckIsVideo()
                 ? original
                 : new BaseImageRequest.ThumbnailUri(original).ToUri();
         }
 
-        static bool CheckIsVideo(Uri original)
+        bool CheckIsVideo()
         {
-            return original.ToString().EndsWith(".mp4");
+            return GetOriginalImageUrl().EndsWith(".mp4");
+        }
+
+        string GetOriginalImageUrl()
+        {
+            return BaseNavigationService.Instance.GetArgument<string>();
         }
 
         public static bool IsCanShow(string imageUrl)
