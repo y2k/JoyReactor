@@ -114,6 +114,7 @@
     <Compile Include="ViewModels\Common\BaseNavigationService.cs" />
     <Compile Include="Model\Database\AttachmentRepository.cs" />
     <Compile Include="Model\Database\CommentRepository.cs" />
+    <Compile Include="Model\Common\NotFoundException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

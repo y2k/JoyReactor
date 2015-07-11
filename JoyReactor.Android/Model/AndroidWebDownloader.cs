@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Java.Net;
+using JoyReactor.Core.Model.Common;
 using JoyReactor.Core.Model.Web;
-using System.IO;
 
 namespace JoyReactor.Android.Model
 {
     public class AndroidWebDownloader : WebDownloader
     {
-        public override Task<WebResponse> ExecuteAsync(Uri uri, RequestParams reqParams)
+        public override Task<WebResponse> ExecuteAsync(Uri uri, RequestParams reqParams = null)
         {
             return Task.Run(() => Execute(uri, reqParams));
         }
@@ -46,14 +47,20 @@ namespace JoyReactor.Android.Model
                 }
             }
 
-            var r = new WebResponse
+            try
             {
-                Stream = GetStream(connection),
-                ContentLength = connection.ContentLength,
-                ResponseUri = new Uri("" + connection.URL),
-                Cookies = GetCookies(connection),
-            };
-            return r;
+                return new WebResponse
+                {
+                    Stream = GetStream(connection),
+                    ContentLength = connection.ContentLength,
+                    ResponseUri = new Uri("" + connection.URL),
+                    Cookies = GetCookies(connection),
+                };
+            }
+            catch (Java.IO.FileNotFoundException e)
+            {
+                throw new NotFoundException();
+            }
         }
 
         IDictionary<string, string> GetCookies(URLConnection connection)

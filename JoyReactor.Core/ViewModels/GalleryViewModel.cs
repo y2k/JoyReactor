@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using JoyReactor.Core.Model.Common;
 using JoyReactor.Core.Model.Images;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.ViewModels.Common;
@@ -26,14 +27,18 @@ namespace JoyReactor.Core.ViewModels
             if (!isActivated)
             {
                 isActivated = true;
-                var downloader = new Downloader
-                {
-                    ImageUrl = GetImageUrl().ToUri(),
-                    ProgressCallback = s => Progress = s,
-                };
-                ImagePath = (await downloader.DownloadAsync()).Path;
-                Progress = 100;
+                await Initialize();
             }
+        }
+
+        async Task Initialize()
+        {
+            ImagePath = await new Downloader
+            {
+                ImageUrl = GetImageUrl().ToUri(),
+                ProgressCallback = s => Progress = s,
+            }.RequestImageAsync();
+            Progress = 100;
         }
 
         ImageUrl GetImageUrl()
@@ -70,35 +75,57 @@ namespace JoyReactor.Core.ViewModels
 
             internal Action<int> ProgressCallback;
 
-            internal async Task<IFile> DownloadAsync()
+            IFolder imageFolder;
+
+            internal async Task<string> RequestImageAsync()
             {
-                var targetDir = await FileSystem.Current.LocalStorage.CreateFolderAsync("full-images", CreationCollisionOption.OpenIfExists);
-                var targetName = GetTargetName();
-                if (await targetDir.CheckExistsAsync(targetName) != ExistenceCheckResult.FileExists)
+                imageFolder = await FileSystem.Current.LocalStorage.CreateFolderAsync(
+                    "full-images", CreationCollisionOption.OpenIfExists);
+                if (await imageFolder.CheckExistsAsync(GetTargetName()) != ExistenceCheckResult.FileExists)
+                    await Download();
+                var file = await imageFolder.GetFileAsync(GetTargetName());
+                return file.Path;
+            }
+
+            async Task Download()
+            {
+                for (int i = 0; i < 5; i++)
                 {
-                    var temp = await targetDir.CreateFileAsync(Guid.NewGuid() + "tmp", CreationCollisionOption.ReplaceExisting);
-                    using (var response = await CreateImageRequest())
+                    try
                     {
-                        using (var targetStream = await temp.OpenAsync(FileAccess.ReadAndWrite))
+                        await TryDownloader();
+                        break;
+                    }
+                    catch (NotFoundException)
+                    {
+                        await Task.Delay(500 << i);
+                    }
+                }
+            }
+
+            async Task TryDownloader()
+            {
+                var temp = await imageFolder.CreateFileAsync(Guid.NewGuid() + "tmp", CreationCollisionOption.ReplaceExisting);
+                using (var response = await CreateImageRequest())
+                {
+                    using (var targetStream = await temp.OpenAsync(FileAccess.ReadAndWrite))
+                    {
+                        int lastUpdateProgress = 0;
+                        var buf = new byte[4 * 1024];
+                        int count, totalCopied = 0;
+                        while ((count = await response.Stream.ReadAsync(buf, 0, buf.Length)) != 0)
                         {
-                            int lastUpdateProgress = 0;
-                            var buf = new byte[4 * 1024];
-                            int count, totalCopied = 0;
-                            while ((count = await response.Stream.ReadAsync(buf, 0, buf.Length)) != 0)
+                            await targetStream.WriteAsync(buf, 0, count);
+                            totalCopied += count;
+                            if (Environment.TickCount - lastUpdateProgress > 1000 / 60)
                             {
-                                await targetStream.WriteAsync(buf, 0, count);
-                                totalCopied += count;
-                                if (Environment.TickCount - lastUpdateProgress > 1000 / 60)
-                                {
-                                    ProgressCallback(Math.Min(99, (int)(100f * totalCopied / response.ContentLength)));
-                                    lastUpdateProgress = Environment.TickCount;
-                                }
+                                ProgressCallback(Math.Min(99, (int)(100f * totalCopied / response.ContentLength)));
+                                lastUpdateProgress = Environment.TickCount;
                             }
                         }
                     }
-                    await temp.RenameAsync(GetTargetName());
                 }
-                return await targetDir.GetFileAsync(GetTargetName());
+                await temp.RenameAsync(GetTargetName());
             }
 
             Task<WebResponse> CreateImageRequest()
