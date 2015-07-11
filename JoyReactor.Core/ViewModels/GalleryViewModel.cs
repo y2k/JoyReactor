@@ -1,11 +1,11 @@
-﻿using JoyReactor.Core.Model.Images;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using JoyReactor.Core.Model.Images;
 using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.ViewModels.Common;
 using Microsoft.Practices.ServiceLocation;
 using PCLStorage;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -26,51 +26,14 @@ namespace JoyReactor.Core.ViewModels
             if (!isActivated)
             {
                 isActivated = true;
-                ImagePath = (await DownloadAsync()).Path;
+                var downloader = new Downloader
+                {
+                    ImageUrl = GetImageUri(),
+                    ProgressCallback = s => Progress = s,
+                };
+                ImagePath = (await downloader.DownloadAsync()).Path;
                 Progress = 100;
             }
-        }
-
-        async Task<IFile> DownloadAsync()
-        {
-            var targetDir = await FileSystem.Current.LocalStorage.CreateFolderAsync("full-images", CreationCollisionOption.OpenIfExists);
-            var targetName = GetTargetName();
-            if (await targetDir.CheckExistsAsync(targetName) != ExistenceCheckResult.FileExists)
-            {
-                var temp = await targetDir.CreateFileAsync(Guid.NewGuid() + "tmp", CreationCollisionOption.ReplaceExisting);
-                using (var response = await CreateImageRequest())
-                {
-                    using (var targetStream = await temp.OpenAsync(FileAccess.ReadAndWrite))
-                    {
-                        int lastUpdateProgress = 0;
-                        var buf = new byte[4 * 1024];
-                        int count, totalCopied = 0;
-                        while ((count = await response.Stream.ReadAsync(buf, 0, buf.Length)) != 0)
-                        {
-                            await targetStream.WriteAsync(buf, 0, count);
-                            totalCopied += count;
-                            if (Environment.TickCount - lastUpdateProgress > 1000 / 60)
-                            {
-                                Progress = Math.Min(99, (int)(100f * totalCopied / response.ContentLength));
-                                lastUpdateProgress = Environment.TickCount;
-                            }
-                        }
-                    }
-                }
-                await temp.RenameAsync(GetTargetName());
-            }
-            return await targetDir.GetFileAsync(GetTargetName());
-        }
-
-        string GetTargetName()
-        {
-            return GetImageUri().GetHashCode() + ".jpeg";
-        }
-
-        Task<WebResponse> CreateImageRequest()
-        {
-            var client = ServiceLocator.Current.GetInstance<WebDownloader>();
-            return client.ExecuteAsync(GetImageUri(), new RequestParams { Referer = new Uri("http://joyreactor.cc/") });
         }
 
         Uri GetImageUri()
@@ -93,7 +56,56 @@ namespace JoyReactor.Core.ViewModels
 
         public static bool IsCanShow(string imageUrl)
         {
-            return imageUrl != null && (new[] { ".jpeg", ".jpg", ".png", ".mp4" }.Any(imageUrl.EndsWith));
+            return imageUrl != null && (new[] { ".jpeg", ".jpg", ".png", ".mp4", ".gif" }.Any(imageUrl.EndsWith));
+        }
+
+        class Downloader
+        {
+            internal Uri ImageUrl { get; set; }
+
+            internal Action<int> ProgressCallback;
+
+            internal async Task<IFile> DownloadAsync()
+            {
+                var targetDir = await FileSystem.Current.LocalStorage.CreateFolderAsync("full-images", CreationCollisionOption.OpenIfExists);
+                var targetName = GetTargetName();
+                if (await targetDir.CheckExistsAsync(targetName) != ExistenceCheckResult.FileExists)
+                {
+                    var temp = await targetDir.CreateFileAsync(Guid.NewGuid() + "tmp", CreationCollisionOption.ReplaceExisting);
+                    using (var response = await CreateImageRequest())
+                    {
+                        using (var targetStream = await temp.OpenAsync(FileAccess.ReadAndWrite))
+                        {
+                            int lastUpdateProgress = 0;
+                            var buf = new byte[4 * 1024];
+                            int count, totalCopied = 0;
+                            while ((count = await response.Stream.ReadAsync(buf, 0, buf.Length)) != 0)
+                            {
+                                await targetStream.WriteAsync(buf, 0, count);
+                                totalCopied += count;
+                                if (Environment.TickCount - lastUpdateProgress > 1000 / 60)
+                                {
+                                    ProgressCallback(Math.Min(99, (int)(100f * totalCopied / response.ContentLength)));
+                                    lastUpdateProgress = Environment.TickCount;
+                                }
+                            }
+                        }
+                    }
+                    await temp.RenameAsync(GetTargetName());
+                }
+                return await targetDir.GetFileAsync(GetTargetName());
+            }
+
+            Task<WebResponse> CreateImageRequest()
+            {
+                var client = ServiceLocator.Current.GetInstance<WebDownloader>();
+                return client.ExecuteAsync(ImageUrl, new RequestParams { Referer = new Uri("http://joyreactor.cc/") });
+            }
+
+            string GetTargetName()
+            {
+                return ImageUrl.GetHashCode() + ".jpeg";
+            }
         }
     }
 }
