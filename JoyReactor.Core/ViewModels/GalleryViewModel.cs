@@ -15,7 +15,7 @@ namespace JoyReactor.Core.ViewModels
 
         public int Progress { get { return Get<int>(); } set { Set(value); } }
 
-        public bool IsVideo { get { return CheckIsVideo(); } }
+        public bool IsVideo { get { return GetImageUrl().IsVideo; } }
 
         bool isActivated;
 
@@ -28,7 +28,7 @@ namespace JoyReactor.Core.ViewModels
                 isActivated = true;
                 var downloader = new Downloader
                 {
-                    ImageUrl = GetImageUri(),
+                    ImageUrl = GetImageUrl().ToUri(),
                     ProgressCallback = s => Progress = s,
                 };
                 ImagePath = (await downloader.DownloadAsync()).Path;
@@ -36,27 +36,32 @@ namespace JoyReactor.Core.ViewModels
             }
         }
 
-        Uri GetImageUri()
+        ImageUrl GetImageUrl()
         {
-            var original = new Uri(GetOriginalImageUrl());
-            return CheckIsVideo()
-                ? original
-                : new BaseImageRequest.ThumbnailUri(original).ToUri();
-        }
-
-        bool CheckIsVideo()
-        {
-            return GetOriginalImageUrl().EndsWith(".mp4");
-        }
-
-        string GetOriginalImageUrl()
-        {
-            return BaseNavigationService.Instance.GetArgument<string>();
+            return new ImageUrl { OriginalUrl = BaseNavigationService.Instance.GetArgument<string>() };
         }
 
         public static bool IsCanShow(string imageUrl)
         {
             return imageUrl != null && (new[] { ".jpeg", ".jpg", ".png", ".mp4", ".gif" }.Any(imageUrl.EndsWith));
+        }
+
+        class ImageUrl
+        {
+            internal string OriginalUrl { get; set; }
+
+            internal bool IsVideo
+            { 
+                get { return new[] { ".mp4", ".gif" }.Any(OriginalUrl.EndsWith); }
+            }
+
+            internal Uri ToUri()
+            {
+                var uri = new Uri(OriginalUrl);
+                return OriginalUrl.EndsWith(".mp4") 
+                    ? uri
+                    : new BaseImageRequest.ThumbnailUri(uri).SetFormat("mp4").ToUri();
+            }
         }
 
         class Downloader

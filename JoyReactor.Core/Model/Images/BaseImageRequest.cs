@@ -153,6 +153,7 @@ namespace JoyReactor.Core.Model.Images
 
             readonly int maxSize;
             readonly Uri url;
+            string format;
 
             internal ThumbnailUri(Uri url)
                 : this(url, -1)
@@ -173,12 +174,21 @@ namespace JoyReactor.Core.Model.Images
             Uri CreateThumbnailUri()
             {
                 var template = maxSize > 0 ? ThumbnailTemplate : OriginalTemplate;
-                return new Uri(string.Format(template, maxSize, Uri.EscapeDataString("" + url)));
+                var result = string.Format(template, maxSize, Uri.EscapeDataString("" + url));
+                if (format != null)
+                    result += "&format=" + Uri.EscapeDataString(format);
+                return new Uri(result);
             }
 
             bool IsCanCreateThumbnail()
             {
                 return maxSize != 0 && url != null && url.Host != ThumbnailDomain;
+            }
+
+            public ThumbnailUri SetFormat(string format)
+            {
+                this.format = format;
+                return this;
             }
         }
     }
