@@ -10,7 +10,8 @@ namespace JoyReactor.Core.Model.Database
 {
     public static class SQLiteConnectionFactory
     {
-        const string DatabaseName = "net.itwister.joyreactor.main.db";
+        // TODO: перед релизом сбросить название базы
+        const string DatabaseName = "net.itwister.joyreactor.main.2.db";
 
         static Lazy<AsyncSQLiteConnection> LazyInstance
             = new Lazy<AsyncSQLiteConnection>(
