@@ -139,7 +139,7 @@ namespace JoyReactor.Core.ViewModels
 
             string GetTargetName()
             {
-                return ImageUrl.GetHashCode() + ".jpeg";
+                return "" + ImageUrl.GetHashCode();
             }
         }
     }
