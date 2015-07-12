@@ -16,10 +16,9 @@ namespace JoyReactor.Core.ViewModels
 
         public int Progress { get { return Get<int>(); } set { Set(value); } }
 
-        public bool IsVideo { get { return GetImageUrl().IsAnimated; } }
+        public bool IsVideo { get { return Get<bool>(); } set { Set(value); } }
 
         bool isActivated;
-
 
         public async override void OnActivated()
         {
@@ -27,6 +26,7 @@ namespace JoyReactor.Core.ViewModels
 
             if (!isActivated)
             {
+                IsVideo = GetImageUrl().IsAnimated;
                 isActivated = true;
                 await Initialize();
             }

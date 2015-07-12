@@ -29,6 +29,7 @@ namespace JoyReactor.Android.App.Gallery
         {
             GalleryViewModel viewmodel;
             VideoView videoView;
+            LargeImageViewer imageView;
 
             public override void OnCreate(Bundle savedInstanceState)
             {
@@ -54,14 +55,15 @@ namespace JoyReactor.Android.App.Gallery
                 videoView = view.FindViewById<VideoView>(Resource.Id.videoView);
                 videoView.SetOnPreparedListener(new PreparedListenerImlp());
 
+                imageView = view.FindViewById<LargeImageViewer>(Resource.Id.imageViewer);
                 Bindings
                     .Add(viewmodel, () => viewmodel.ImagePath)
-                    .WhenSourceChanges(() => SetMedia(viewmodel));
+                    .WhenSourceChanges(SetMedia);
 
                 return view;
             }
 
-            void SetMedia(GalleryViewModel viewmodel)
+            void SetMedia()
             {
                 if (viewmodel.ImagePath == null)
                     return;
@@ -73,7 +75,6 @@ namespace JoyReactor.Android.App.Gallery
                 else
                 {
                     videoView.Visibility = ViewStates.Gone;
-                    var imageView = View.FindViewById<LargeImageViewer>(Resource.Id.imageViewer);
                     imageView.SetImage(viewmodel.ImagePath);
                 }
             }
