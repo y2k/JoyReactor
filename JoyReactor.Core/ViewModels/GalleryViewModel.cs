@@ -20,6 +20,7 @@ namespace JoyReactor.Core.ViewModels
 
         bool isActivated;
 
+
         public async override void OnActivated()
         {
             base.OnActivated();

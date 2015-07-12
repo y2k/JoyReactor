@@ -11,7 +11,10 @@ using JoyReactor.Core.ViewModels;
 
 namespace JoyReactor.Android.App
 {
-    [Activity(Label = "@string/app_name", MainLauncher = true)]
+    [Activity(
+        Label = "@string/app_name", 
+        MainLauncher = true,
+        ScreenOrientation = global::Android.Content.PM.ScreenOrientation.Portrait)]
     [Register("net.itwister.joyreactor2.HomeActivity")]
     public class HomeActivity : BaseActivity
     {

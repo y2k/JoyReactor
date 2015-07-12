@@ -22,7 +22,7 @@ namespace JoyReactor.Android.App.Base
 
         protected ScopedViewModel.Scope Scope = new ScopedViewModel.Scope();
 
-        protected BindingManager Bindins = new BindingManager();
+        protected BindingManager Bindings = new BindingManager();
 
         public IMessenger MessengerInstance
         {
@@ -109,7 +109,7 @@ namespace JoyReactor.Android.App.Base
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            Bindins.Destroy();
+            Bindings.Destroy();
         }
     }
 }

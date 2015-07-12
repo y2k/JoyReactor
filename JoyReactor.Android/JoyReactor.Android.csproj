@@ -226,6 +226,7 @@
     <AndroidResource Include="Resources\layout\activity_fullscreen_gallery.axml" />
     <AndroidResource Include="Resources\layout\fragment_post_2.axml" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\ic_video.png" />
+    <AndroidResource Include="Resources\layout\activity_container.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup />

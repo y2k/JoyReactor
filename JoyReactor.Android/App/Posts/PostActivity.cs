@@ -5,7 +5,9 @@ using JoyReactor.Android.App.Base;
 
 namespace JoyReactor.Android.App.Posts
 {
-    [Activity(Label = "@string/post_acitivty")]
+    [Activity(
+        Label = "@string/post_acitivty",
+        ScreenOrientation = global::Android.Content.PM.ScreenOrientation.Portrait)]
     [MetaData("android.support.PARENT_ACTIVITY", Value = "net.itwister.joyreactor2.HomeActivity")]
     public class PostActivity : BaseActivity
     {
