@@ -16,7 +16,7 @@ namespace JoyReactor.Core.ViewModels
 
         int _selectedTag;
 
-        IDisposable scheduledTask;
+        IDisposable tagsSubscription;
 
         public int SelectedTag
         {
@@ -39,7 +39,7 @@ namespace JoyReactor.Core.ViewModels
 
         void Initialize()
         {
-            scheduledTask = new TagCollectionModel()
+            tagsSubscription = new TagCollectionModel()
                 .GetMainSubscriptions()
                 .SubscribeOnUi(OnTagsChanged);
         }
@@ -55,7 +55,7 @@ namespace JoyReactor.Core.ViewModels
         public override void Cleanup()
         {
             base.Cleanup();
-            scheduledTask?.Dispose();
+            tagsSubscription?.Dispose();
         }
 
         public class TagItemViewModel : ViewModelBase
