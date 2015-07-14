@@ -70,7 +70,7 @@ namespace JoyReactor.Core
 
         public static ID DeserializeFromString(string value)
         {
-            var p = value.Split(Divider);
+            var p = value.Split(new[]{ Divider }, 3);
             return new ID
             {
                 Site = (SiteParser)Enum.Parse(typeof(SiteParser), p[0]),
