@@ -88,7 +88,6 @@ namespace JoyReactor.Core.ViewModels
             Image = post.Image;
             ImageAspect = (float)post.ImageWidth / post.ImageHeight;
 
-            #if FUTURE
             var attachmentRepo = new AttachmentRepository();
             var images = (await attachmentRepo.GetAsync(postId))
                 .Union(await attachmentRepo.GetForCommentsAsync(postId))
@@ -96,7 +95,6 @@ namespace JoyReactor.Core.ViewModels
                 .Skip(1)
                 .ToList();
             CommentImages.ReplaceAll(images);
-            #endif
 
             await ReloadCommentList(0);
         }

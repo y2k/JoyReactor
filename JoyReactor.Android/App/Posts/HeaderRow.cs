@@ -37,7 +37,11 @@ namespace JoyReactor.Android.App.Posts
                 iv.SetCommand(viewmodel.OpenThumbnailCommand, i);
             }
 
+            #if FUTURE
             var notVisibleImageCount = viewmodel.CommentImages.Count - thumbnails.ChildCount;
+            #else
+            var notVisibleImageCount = 0;
+            #endif
             imageCount.Visibility = notVisibleImageCount > 0 ? ViewStates.Visible : ViewStates.Gone;
             imageCount.Text = "+" + notVisibleImageCount;
         }
