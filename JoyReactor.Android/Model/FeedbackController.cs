@@ -30,31 +30,41 @@ namespace JoyReactor.Android.Model
 
         internal async void Send()
         {
-            var path = Path.Combine("" + activity.GetExternalFilesDir(null), "system_info_" + Guid.NewGuid() + ".zip");
-            using (var file = System.IO.File.Create(path))
-            {
-                using (var zip = new ZipOutputStream(file))
-                {
-                    zip.SetMethod(ZipOutputStream.Deflated);
-                    zip.SetLevel(5);
-
-                    await zip.PutNextEntryAsync(new ZipEntry("screenshot.jpeg"));
-                    await TakeScreenshot(zip);
-                    zip.CloseEntry();
-                    await zip.PutNextEntryAsync(new ZipEntry("system_info.txt"));
-                    await zip.WriteAsync(Encoding.UTF8.GetBytes(new SystemInformation(activity).GetInformation()));
-                    zip.CloseEntry();
-                    zip.Finish();
-                }
-            }
-
             try
             {
-                activity.StartActivity(CreateEmailIntent(new File(path)));
+                activity.StartActivity(CreateEmailIntent(await CreateZipWithInformation()));
             }
             catch (ActivityNotFoundException)
             {
                 Toast.MakeText(activity, Resource.String.error_email_client_not_installed, ToastLength.Long).Show();
+            }
+        }
+
+        async Task<File> CreateZipWithInformation()
+        {
+            try
+            {
+                var path = Path.Combine("" + activity.GetExternalFilesDir(null), "system_info_" + Guid.NewGuid() + ".zip");
+                using (var file = System.IO.File.Create(path))
+                {
+                    using (var zip = new ZipOutputStream(file))
+                    {
+                        zip.SetMethod(ZipOutputStream.Deflated);
+                        zip.SetLevel(5);
+                        await zip.PutNextEntryAsync(new ZipEntry("screenshot.jpeg"));
+                        await TakeScreenshot(zip);
+                        zip.CloseEntry();
+                        await zip.PutNextEntryAsync(new ZipEntry("system_info.txt"));
+                        await zip.WriteAsync(Encoding.UTF8.GetBytes(new SystemInformation(activity).GetInformation()));
+                        zip.CloseEntry();
+                        zip.Finish();
+                    }
+                }
+                return new File(path);
+            }
+            catch
+            {
+                return null;
             }
         }
 
@@ -72,11 +82,17 @@ namespace JoyReactor.Android.Model
 
         Intent CreateEmailIntent(File screenshot)
         {
-            Intent emailItent = new Intent(Intent.ActionSend)
-                .SetType("application/zip")
+            var emailItent = new Intent(Intent.ActionSend)
                 .PutExtra(Intent.ExtraEmail, new [] { "joyreactor.feedbacks@gmail.com" })
-                .PutExtra(Intent.ExtraSubject, activity.GetString(Resource.String.write_feedback))
-                .PutExtra(Intent.ExtraStream, Uri.FromFile(screenshot));
+                .PutExtra(Intent.ExtraSubject, activity.GetString(Resource.String.write_feedback));
+            if (screenshot == null)
+                emailItent.SetType("text/html");
+            else
+            {
+                emailItent
+                    .SetType("application/zip")
+                    .PutExtra(Intent.ExtraStream, Uri.FromFile(screenshot));
+            }
 
             var prefApps = new []
             { 
