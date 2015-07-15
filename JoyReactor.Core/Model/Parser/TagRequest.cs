@@ -85,7 +85,7 @@ namespace JoyReactor.Core.Model.Parser
 
         bool IsPageFromSecretSite(string html)
         {
-            var postCount = Regex.Matches(html, "class=\"postContainer\"");
+            var postCount = Regex.Matches(html, "class=\"postContainer\"").Count;
             var unsafeMarker = html.Contains(">секретные разделы</a>");
             if (postCount == 0 && unsafeMarker)
                 return true;
