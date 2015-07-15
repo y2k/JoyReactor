@@ -53,12 +53,18 @@ namespace JoyReactor.Android.Model
 
         public void Scale(float scale, float centerX, float centerY)
         {
+            if (decoder == null)
+                return;
+
             sceneMatrix.PreScale(1 / scale, 1 / scale, centerX * frameSize.X, centerY * frameSize.Y);
             Invalidate();
         }
 
         public void Translate(float x, float y)
         {
+            if (decoder == null)
+                return;
+
             sceneMatrix.PreTranslate(-x, -y);
             Invalidate();
         }
