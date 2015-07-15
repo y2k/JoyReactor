@@ -36,13 +36,7 @@ namespace JoyReactor.Core.ViewModels
         public PostItemViewModel(Post post = null)
         {
             this.post = post;
-            OpenImageCommand = new Command(() => OpenImageInFullscreen(post.Video ?? post.Image));
-        }
-
-        void OpenImageInFullscreen(string mediaUri)
-        {
-            if (GalleryViewModel.IsCanShow(mediaUri))
-                BaseNavigationService.Instance.ImageFullscreen(mediaUri);
+            OpenImageCommand = new Command(() => GalleryViewModel.TryOpen(post));
         }
 
         public class Divider : PostItemViewModel

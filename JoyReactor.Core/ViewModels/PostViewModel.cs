@@ -56,14 +56,14 @@ namespace JoyReactor.Core.ViewModels
 #endif
 
             ReloadCommand = new Command(ReloadCommandMethod);
-            OpenImageCommand = new Command(() => OpenImageFullscreen(Image));
-            OpenThumbnailCommand = new Command<int>(index => OpenImageFullscreen(CommentImages[index]));
-        }
-
-        void OpenImageFullscreen(string url)
-        {
-            if (GalleryViewModel.IsCanShow(url))
-                BaseNavigationService.Instance.ImageFullscreen(url);
+            OpenImageCommand = new Command(
+                async () =>
+                {
+                    var post = await new PostRepository().GetAsync(postId);
+                    GalleryViewModel.TryOpen(post);
+                });
+            OpenThumbnailCommand = new Command<int>(
+                index => GalleryViewModel.TryOpen(CommentImages[index]));
         }
 
         public Task ReloadCommandMethod()

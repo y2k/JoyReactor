@@ -7,6 +7,7 @@ using JoyReactor.Core.Model.Web;
 using JoyReactor.Core.ViewModels.Common;
 using Microsoft.Practices.ServiceLocation;
 using PCLStorage;
+using JoyReactor.Core.Model.DTO;
 
 namespace JoyReactor.Core.ViewModels
 {
@@ -47,7 +48,18 @@ namespace JoyReactor.Core.ViewModels
             return new ImageUrl { OriginalUrl = BaseNavigationService.Instance.GetArgument<string>() };
         }
 
-        public static bool IsCanShow(string imageUrl)
+        public static void TryOpen(Post post)
+        {
+            TryOpen(post.Video ?? post.Image);
+        }
+
+        public static void TryOpen(string mediaUri)
+        {
+            if (IsCanShow(mediaUri))
+                BaseNavigationService.Instance.ImageFullscreen(mediaUri);
+        }
+
+        static bool IsCanShow(string imageUrl)
         {
             return imageUrl != null && (new[] { ".jpeg", ".jpg", ".png", ".mp4", ".gif" }.Any(imageUrl.EndsWith));
         }
