@@ -146,7 +146,7 @@ namespace JoyReactor.Core.ViewModels
             Task<WebResponse> CreateImageRequest()
             {
                 var client = ServiceLocator.Current.GetInstance<WebDownloader>();
-                return client.ExecuteAsync(ImageUrl, new RequestParams { Referer = new Uri("http://joyreactor.cc/") });
+                return client.ExecuteAsync(ImageUrl, new RequestParams { Referer = ImageUrl });
             }
 
             string GetTargetName()
