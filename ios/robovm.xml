@@ -9,4 +9,21 @@
             <directory>resources</directory>
         </resource>
     </resources>
+    <forceLinkClasses>
+        <!-- For http: support in URLConnection -->
+        <pattern>com.android.okhttp.HttpHandler</pattern>
+
+        <!-- For https: support in URLConnection -->
+        <pattern>com.android.okhttp.HttpsHandler</pattern>
+        <!-- OpenSSL is preferred over BouncyCastle. This pulls in full OpenSSL support. -->
+        <pattern>com.android.org.conscrypt.**</pattern>
+        <!-- We still need KeyStore.BKS and CertPathValidator.PKIX from BouncyCastle -->
+        <pattern>com.android.org.bouncycastle.jce.provider.BouncyCastleProvider</pattern>
+        <pattern>com.android.org.bouncycastle.jcajce.provider.keystore.BC$Mappings</pattern>
+        <pattern>com.android.org.bouncycastle.jcajce.provider.keystore.bc.BcKeyStoreSpi</pattern>
+        <pattern>com.android.org.bouncycastle.jcajce.provider.keystore.bc.BcKeyStoreSpi$Std</pattern>
+        <pattern>com.android.org.bouncycastle.jce.provider.PKIXCertPathValidatorSpi</pattern>
+        <!-- Use AndroidDigestFactoryOpenSSL as AndroidDigestFactory implementation -->
+        <pattern>com.android.org.bouncycastle.crypto.digests.AndroidDigestFactoryOpenSSL</pattern>
+    </forceLinkClasses>
 </config>

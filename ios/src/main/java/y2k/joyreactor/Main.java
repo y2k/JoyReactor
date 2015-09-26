@@ -4,11 +4,13 @@ import org.robovm.apple.foundation.NSAutoreleasePool;
 import org.robovm.apple.uikit.UIApplication;
 import org.robovm.apple.uikit.UIApplicationDelegateAdapter;
 import org.robovm.apple.uikit.UIApplicationLaunchOptions;
+import y2k.joyreactor.platform.IosMainQueueScheduler;
 
 public class Main extends UIApplicationDelegateAdapter {
 
     @Override
     public boolean didFinishLaunching(UIApplication application, UIApplicationLaunchOptions launchOptions) {
+        ForegroundScheduler.setInstance(new IosMainQueueScheduler());
         return true;
     }
 

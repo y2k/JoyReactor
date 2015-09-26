@@ -1,25 +1,19 @@
 package y2k.joyreactor;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.support.v7.app.AppCompatActivity;
 
-public class MainActivity extends Activity {
-    private CounterStore counterStore = new CounterStore();
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my);
+        setContentView(R.layout.activity_container);
 
-        final TextView counterTextView = (TextView) findViewById(R.id.counterTextView);
-        final Button counterButton = (Button) findViewById(R.id.counterButton);
-
-        counterButton.setOnClickListener((view) -> {
-            counterStore.add(1);
-            counterTextView.setText("Click Nr. " + counterStore.get());
-        });
+        if (savedInstanceState == null)
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.container, new PostListFragment())
+                    .commit();
     }
 }
