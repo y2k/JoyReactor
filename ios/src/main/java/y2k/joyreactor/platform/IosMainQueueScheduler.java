@@ -26,7 +26,6 @@ public class IosMainQueueScheduler extends Scheduler {
 
         @Override
         public Subscription schedule(Action0 action, long delayTime, TimeUnit unit) {
-            System.out.println("Schedule (delay = " + delayTime + ", unit = " + unit + ")");
             DispatchQueue.getMainQueue().after(delayTime, unit, action::call);
             return null;
         }

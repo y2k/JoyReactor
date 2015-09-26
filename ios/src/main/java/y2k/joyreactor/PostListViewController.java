@@ -34,7 +34,8 @@ public class PostListViewController extends UIViewController implements PostList
         super.viewDidLoad();
         presenter = new PostListPresenter(this);
         list.setDataSource(dataSource = new PostDataSource());
-//        ((UICollectionViewFlowLayout) list.getCollectionViewLayout()).setItemSize(new CGSize(150, 150 + 40));
+
+        new SideMenu(this, "Menu").attach();
     }
 
     @Override
@@ -68,7 +69,7 @@ public class PostListViewController extends UIViewController implements PostList
             UIImageView iv = (UIImageView) cell.getViewWithTag(1);
             new ImageRequest().setUrl(i.image).load(data -> iv.setImage(new UIImage(new NSData(data))));
 
-            return  cell;
+            return cell;
         }
     }
 }
