@@ -48,7 +48,6 @@ public class PostListViewController extends UIViewController implements PostList
     public void reloadPosts(PostLoader.PostCollection posts) {
         dataSource.posts = posts;
         list.reloadData();
-        System.out.println("reloadPosts | " + posts.size());
     }
 
     class PostDataSource extends UITableViewDataSourceAdapter {

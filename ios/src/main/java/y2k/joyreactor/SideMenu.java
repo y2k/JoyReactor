@@ -8,7 +8,7 @@ import org.robovm.apple.uikit.*;
  */
 public class SideMenu {
 
-    static final float PanelWidth = 280;
+    static final float PanelWidth = 270;
 
     final UIViewController parent;
     final UIView parentView;
