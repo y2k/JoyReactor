@@ -1,10 +1,13 @@
 package y2k.joyreactor;
 
+import org.ocpsoft.prettytime.PrettyTime;
 import org.robovm.apple.foundation.NSData;
 import org.robovm.apple.foundation.NSIndexPath;
 import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
+
+import java.util.Date;
 
 /**
  * Created by y2k on 9/26/15.
@@ -76,21 +79,32 @@ public class PostListViewController extends UIViewController implements PostList
             UITableViewCell cell = tableView.dequeueReusableCell("Post");
             Post i = posts.get(indexPath.getRow());
 
-            ((UILabel) cell.getViewWithTag(2)).setText(i.title);
-            UIImageView iv = (UIImageView) cell.getViewWithTag(1);
+            ((UILabel) cell.getViewWithTag(3)).setText(i.userName);
+            ((UILabel) cell.getViewWithTag(4)).setText(new PrettyTime().format(i.created));
+
+            loadImage(i.image, 300, (int) (300 / i.getAspect()), (UIImageView) cell.getViewWithTag(1));
+
+            UIImageView userImageView = (UIImageView) cell.getViewWithTag(2);
+            loadImage(i.userImage, 50, 50, userImageView);
+            userImageView.getLayer().setCornerRadius(userImageView.getFrame().getWidth() / 2);
+
+            UIView root = cell.getViewWithTag(10);
+            root.getLayer().setCornerRadius(10);
+            root.getLayer().setMasksToBounds(true);
+            root.getLayer().setBorderColor(UIColor.lightGray().getCGColor());
+            root.getLayer().setBorderWidth(1);
+
+            return cell;
+        }
+
+        void loadImage(String url, int width, int height, UIImageView iv) {
             iv.setAlpha(0);
-            new ImageRequest().setUrl(i.image)
-                    .setSize(300, (int) (300 / i.getAspect()))
+            new ImageRequest().setUrl(url)
+                    .setSize(width, height)
                     .load(data -> {
                         iv.setImage(new UIImage(new NSData(data)));
                         UIView.animate(0.3, () -> iv.setAlpha(1));
                     });
-
-            UIView root = cell.getViewWithTag(3);
-            root.getLayer().setCornerRadius(10);
-            root.getLayer().setMasksToBounds(true);
-
-            return cell;
         }
     }
 

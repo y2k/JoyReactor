@@ -25,5 +25,7 @@
         <pattern>com.android.org.bouncycastle.jce.provider.PKIXCertPathValidatorSpi</pattern>
         <!-- Use AndroidDigestFactoryOpenSSL as AndroidDigestFactory implementation -->
         <pattern>com.android.org.bouncycastle.crypto.digests.AndroidDigestFactoryOpenSSL</pattern>
+
+        <pattern>org.ocpsoft.prettytime.i18n.*</pattern>
     </forceLinkClasses>
 </config>

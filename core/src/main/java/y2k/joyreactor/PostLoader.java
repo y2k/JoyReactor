@@ -8,6 +8,7 @@ import rx.schedulers.Schedulers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by y2k on 9/26/15.
@@ -39,6 +40,12 @@ public class PostLoader {
             result.width = Integer.parseInt(img.attr("width"));
             result.height = Integer.parseInt(img.attr("height"));
         }
+
+        result.userName = element.select("div.uhead_nick > a").text();
+        result.userImage = element.select("div.uhead_nick > img").attr("src");
+
+        result.created = new Date(1000L * Long.parseLong(element.select("span.date > span").attr("data-time")));
+
         return result;
     }
 }
