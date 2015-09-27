@@ -80,6 +80,10 @@ public class PostListViewController extends UIViewController implements PostList
             UIImageView iv = (UIImageView) cell.getViewWithTag(1);
             new ImageRequest().setUrl(i.image).load(data -> iv.setImage(new UIImage(new NSData(data))));
 
+            UIView root = cell.getViewWithTag(3);
+            root.getLayer().setCornerRadius(10);
+            root.getLayer().setMasksToBounds(true);
+
             return cell;
         }
     }
