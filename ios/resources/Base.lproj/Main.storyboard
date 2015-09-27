@@ -14,16 +14,16 @@
                         <viewControllerLayoutGuide type="bottom" id="GRf-jy-2iC"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="xOT-TG-81E">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="310" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3Tb-xx-2IX">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <inset key="scrollIndicatorInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Post" rowHeight="310" id="5Ro-Wk-r2I">
-                                        <rect key="frame" x="0.0" y="28" width="320" height="310"/>
+                                        <rect key="frame" x="0.0" y="92" width="320" height="310"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5Ro-Wk-r2I" id="6E6-b2-GcU">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="310"/>
@@ -85,21 +85,21 @@
                                 </prototypes>
                             </tableView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="jCg-BN-mSk">
-                                <rect key="frame" x="142" y="189" width="37" height="37"/>
+                                <rect key="frame" x="142" y="221" width="37" height="37"/>
                                 <color key="color" red="0.94509803920000002" green="0.58823529409999997" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="0.97647058823529409" green="0.97647058823529409" blue="0.97647058823529409" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="GRf-jy-2iC" firstAttribute="top" secondItem="3Tb-xx-2IX" secondAttribute="bottom" id="Kwl-Uu-coX"/>
+                            <constraint firstItem="3Tb-xx-2IX" firstAttribute="top" secondItem="xOT-TG-81E" secondAttribute="top" id="LgE-Yb-0wv"/>
                             <constraint firstItem="jCg-BN-mSk" firstAttribute="centerY" secondItem="xOT-TG-81E" secondAttribute="centerY" id="Q90-bs-NG2"/>
-                            <constraint firstItem="3Tb-xx-2IX" firstAttribute="top" secondItem="WrT-94-kTm" secondAttribute="bottom" id="VFu-hq-fjQ"/>
                             <constraint firstAttribute="trailing" secondItem="3Tb-xx-2IX" secondAttribute="trailing" id="YTv-W7-luc"/>
                             <constraint firstItem="3Tb-xx-2IX" firstAttribute="leading" secondItem="xOT-TG-81E" secondAttribute="leading" id="d3f-iN-JDw"/>
                             <constraint firstItem="jCg-BN-mSk" firstAttribute="centerX" secondItem="xOT-TG-81E" secondAttribute="centerX" id="sNQ-0h-2Pj"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="P8z-RY-c2R">
+                    <navigationItem key="navigationItem" title="Featured" id="P8z-RY-c2R">
                         <barButtonItem key="rightBarButtonItem" systemItem="action" id="Tkx-Qd-npW"/>
                     </navigationItem>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
@@ -228,7 +228,7 @@
                 <navigationController id="zyg-bh-PNk" sceneMemberID="viewController">
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="gmD-81-9dy">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="gmD-81-9dy">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
