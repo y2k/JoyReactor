@@ -1,7 +1,7 @@
-<img src="/_web/poster.jpg" alt="Poster" />
-
 JoyReactor
 ==========
+
+<img src="/_web/poster.jpg" alt="Poster" />
 
 ### Макет приложения
 <img src="/_web/AI-01.png" alt="Screenshots" width="200" />
