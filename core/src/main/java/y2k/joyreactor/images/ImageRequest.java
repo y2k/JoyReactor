@@ -37,7 +37,9 @@ public class ImageRequest {
 
                 byte[] image = getFromCache(url);
                 if (image == null)
-                    image = getFromWeb(url);
+                    image = new Downloader().getFromWeb(url);
+                if (image == null)
+                    throw new Exception();
 
                 final byte[] finalImage = image;
                 ForegroundScheduler.getInstance().createWorker().schedule(() -> callback.call(finalImage));
@@ -47,22 +49,7 @@ public class ImageRequest {
         });
     }
 
-    private byte[] getFromWeb(URL url) throws IOException {
-        InputStream in = null;
-        DiskCache.WriteAction out = null;
-        try {
-            in = url.openConnection().getInputStream();
-            out = cache.save("" + url);
-            copy(in, out.getStream());
-        } finally {
-            if (in != null) in.close();
-            if (out != null) out.close();
-        }
-
-        return getFromCache(url);
-    }
-
-    private byte[] getFromCache(URL url) throws IOException {
+    private byte[] getFromCache(URL url) throws Exception {
         DiskCache.ReadAction in = null;
         try {
             in = cache.load("" + url);
@@ -81,6 +68,32 @@ public class ImageRequest {
         int count;
         while ((count = in.read(buf)) != -1)
             out.write(buf, 0, count);
+    }
+
+    class Downloader {
+
+        private byte[] getFromWeb(URL url) throws Exception {
+            for (int i = 0; i < 5; i++)
+                if (tryDownload(url, i)) break;
+            return getFromCache(url);
+        }
+
+        private boolean tryDownload(URL url, int tryCount) throws InterruptedException, IOException {
+            InputStream in = null;
+            DiskCache.WriteAction out = null;
+            try {
+                in = url.openConnection().getInputStream();
+                out = cache.save("" + url);
+                copy(in, out.getStream());
+                return true;
+            } catch (Exception e) {
+                Thread.sleep(500 << tryCount);
+            } finally {
+                if (in != null) in.close();
+                if (out != null) out.close();
+            }
+            return false;
+        }
     }
 
     class UrlBuilder {
