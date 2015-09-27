@@ -15,6 +15,11 @@ public class Post {
     public int width;
     public int height;
 
+    public float getAspect() {
+        float aspect = height == 0 ? 1 : (float) width / height;
+        return (float) Math.min(2, Math.max(0.5, aspect));
+    }
+
     public static class Collection extends ArrayList<Post> {
 
         public static Observable<Post.Collection> get() {

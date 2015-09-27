@@ -2,19 +2,29 @@ package y2k.joyreactor;
 
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import sun.misc.IOUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * Created by y2k on 9/26/15.
  */
 public class ImageRequest {
 
-    private String imageUrl;
+    private UrlBuilder urlBuilder = new UrlBuilder();
 
     public ImageRequest setUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+        urlBuilder.url = imageUrl;
+        return this;
+    }
+
+    public ImageRequest setSize(int width, int height) {
+        urlBuilder.width = width;
+        urlBuilder.height = height;
         return this;
     }
 
@@ -22,24 +32,37 @@ public class ImageRequest {
         Schedulers.io().createWorker().schedule(() -> {
             try {
 
-                URL url = new URL("http", "api-i-twister.net", 8010, "/cache/fit?width=150&height=150&url=" + imageUrl);
+                URL url = urlBuilder.build();
+                ByteArrayOutputStream result = new ByteArrayOutputStream();
                 InputStream stream = null;
-                byte[] buf = new byte[64 * 1024];
                 try {
-                    stream = url.openConnection().getInputStream();
-                    for (int pos = 0; pos < buf.length; ) {
-                        int count = stream.read(buf, pos, buf.length - pos);
-                        if (count < 0) break;
-                        pos += count;
-                    }
+                    URLConnection connection = url.openConnection();
+                    stream = connection.getInputStream();
+                    byte[] buf = new byte[4 * 1024];
+                    int count;
+                    while ((count = stream.read(buf)) != -1)
+                        result.write(buf, 0, count);
                 } finally {
                     if (stream != null) stream.close();
                 }
 
-                ForegroundScheduler.getInstance().createWorker().schedule(() -> callback.call(buf));
+                ForegroundScheduler.getInstance().createWorker().schedule(() -> callback.call(result.toByteArray()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
+    }
+
+    class UrlBuilder {
+
+        String url;
+        int width;
+        int height;
+
+        private URL build() throws MalformedURLException {
+            return new URL(
+                    "http", "api-i-twister.net", 8010,
+                    "/cache/fit?width=" + width + "&height=" + height + "&url=" + url);
+        }
     }
 }

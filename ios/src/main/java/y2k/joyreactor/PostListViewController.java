@@ -78,7 +78,13 @@ public class PostListViewController extends UIViewController implements PostList
 
             ((UILabel) cell.getViewWithTag(2)).setText(i.title);
             UIImageView iv = (UIImageView) cell.getViewWithTag(1);
-            new ImageRequest().setUrl(i.image).load(data -> iv.setImage(new UIImage(new NSData(data))));
+            iv.setAlpha(0);
+            new ImageRequest().setUrl(i.image)
+                    .setSize(300, (int) (300 / i.getAspect()))
+                    .load(data -> {
+                        iv.setImage(new UIImage(new NSData(data)));
+                        UIView.animate(0.3, () -> iv.setAlpha(1));
+                    });
 
             UIView root = cell.getViewWithTag(3);
             root.getLayer().setCornerRadius(10);
@@ -95,10 +101,7 @@ public class PostListViewController extends UIViewController implements PostList
         @Override
         public double getHeightForRow(UITableView tableView, NSIndexPath indexPath) {
             Post post = posts.get(indexPath.getRow());
-            if (post.height <= 0) return tableView.getFrame().getWidth();
-
-            float aspect = (float) post.width / post.height;
-            return 30 + tableView.getFrame().getWidth() / aspect;
+            return (tableView.getFrame().getWidth() - 16) / post.getAspect() + 30 + 16;
         }
     }
 }
