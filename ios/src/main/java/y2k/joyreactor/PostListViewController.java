@@ -6,8 +6,7 @@ import org.robovm.apple.foundation.NSIndexPath;
 import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
-
-import java.util.Date;
+import y2k.joyreactor.images.ImageRequest;
 
 /**
  * Created by y2k on 9/26/15.
