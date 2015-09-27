@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="01J-lp-oVM">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="EHf-IW-A2E">
+            <objects>
+                <viewController id="01J-lp-oVM" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Llm-lL-Icb"/>
+                        <viewControllerLayoutGuide type="bottom" id="xb3-aO-Qok"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8v5-Um-PDj">
+                                <rect key="frame" x="55" y="73" width="210" height="334"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchScreenGirl.png" translatesAutoresizingMaskIntoConstraints="NO" id="XEE-Rm-wMe">
+                                        <rect key="frame" x="0.0" y="0.0" width="210" height="240"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchScreenLogo.png" translatesAutoresizingMaskIntoConstraints="NO" id="Y0m-M6-xiy">
+                                        <rect key="frame" x="10" y="280" width="190" height="54"/>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="XEE-Rm-wMe" firstAttribute="top" secondItem="8v5-Um-PDj" secondAttribute="top" id="36c-mM-XJd"/>
+                                    <constraint firstItem="Y0m-M6-xiy" firstAttribute="centerX" secondItem="8v5-Um-PDj" secondAttribute="centerX" id="Gac-Nl-R3W"/>
+                                    <constraint firstItem="Y0m-M6-xiy" firstAttribute="top" secondItem="XEE-Rm-wMe" secondAttribute="bottom" constant="40" id="IE2-Fz-WGB"/>
+                                    <constraint firstItem="XEE-Rm-wMe" firstAttribute="leading" secondItem="8v5-Um-PDj" secondAttribute="leading" id="OyF-e1-fZN"/>
+                                    <constraint firstAttribute="trailing" secondItem="XEE-Rm-wMe" secondAttribute="trailing" id="hPp-Yg-YZq"/>
+                                    <constraint firstAttribute="bottom" secondItem="Y0m-M6-xiy" secondAttribute="bottom" id="rUJ-4h-LL8"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.94509803920000002" green="0.58823529409999997" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="8v5-Um-PDj" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="QYX-Ub-65N"/>
+                            <constraint firstItem="8v5-Um-PDj" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="ZP6-1v-vNx"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="53" y="375"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="LaunchScreenGirl.png" width="210" height="240"/>
+        <image name="LaunchScreenLogo.png" width="190" height="54"/>
+    </resources>
+</document>
