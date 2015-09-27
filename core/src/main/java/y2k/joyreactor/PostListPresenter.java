@@ -8,7 +8,7 @@ public class PostListPresenter {
     public PostListPresenter(View view) {
         view.setBusy(true);
 
-        new PostLoader().get().subscribe(data -> {
+        Post.Collection.get().subscribe(data -> {
             view.reloadPosts(data);
             view.setBusy(false);
         });
@@ -18,6 +18,6 @@ public class PostListPresenter {
 
         void setBusy(boolean isBusy);
 
-        void reloadPosts(PostLoader.PostCollection posts);
+        void reloadPosts(Post.Collection posts);
     }
 }

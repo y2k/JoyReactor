@@ -12,34 +12,34 @@ import org.robovm.objc.annotation.IBOutlet;
 @CustomClass("MenuViewController")
 public class MenuViewController extends UIViewController implements MenuPresenter.View {
 
-    private MenuPresenter presenter;
-
     UITableView list;
+    Tag.Collection tags;
+
+    @Override
+    public void viewDidLoad() {
+        super.viewDidLoad();
+
+        new MenuPresenter(this);
+        list.setDataSource(new TagDataSource());
+        list.setDelegate(new TagDelegate());
+    }
+
+    @Override
+    public void reloadData(Tag.Collection tags) {
+        this.tags = tags;
+        list.reloadData();
+    }
 
     @IBOutlet
     void setList(UITableView list) {
         this.list = list;
     }
 
-    @Override
-    public void viewDidLoad() {
-        super.viewDidLoad();
-
-        presenter = new MenuPresenter(this);
-        list.setDataSource(new TagDataSource());
-        list.setDelegate(new TagDelegate());
-    }
-
-    @Override
-    public void reloadData() {
-        list.reloadData();
-    }
-
     class TagDataSource extends UITableViewDataSourceAdapter {
 
         @Override
         public long getNumberOfRowsInSection(UITableView tableView, long section) {
-            return presenter.tags.size() + 1;
+            return tags.size() + 1;
         }
 
         @Override
@@ -49,7 +49,7 @@ public class MenuViewController extends UIViewController implements MenuPresente
                 cell = tableView.dequeueReusableCell("Header");
             } else {
                 cell = tableView.dequeueReusableCell("Tag");
-                Tag i = presenter.tags.get(indexPath.getRow() - 1);
+                Tag i = tags.get(indexPath.getRow() - 1);
 
                 UIImageView iv = (UIImageView) cell.getViewWithTag(1);
                 iv.getLayer().setCornerRadius(iv.getFrame().getWidth() / 2);

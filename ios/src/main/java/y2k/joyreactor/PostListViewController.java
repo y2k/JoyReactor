@@ -14,6 +14,7 @@ public class PostListViewController extends UIViewController implements PostList
 
     PostListPresenter presenter;
     PostDataSource dataSource;
+    PostDelegate postDelegate;
 
     UITableView list;
 
@@ -34,6 +35,7 @@ public class PostListViewController extends UIViewController implements PostList
         super.viewDidLoad();
         presenter = new PostListPresenter(this);
         list.setDataSource(dataSource = new PostDataSource());
+        list.setDelegate(postDelegate = new PostDelegate());
 
         new SideMenu(this, "Menu").attach();
     }
@@ -45,14 +47,15 @@ public class PostListViewController extends UIViewController implements PostList
     }
 
     @Override
-    public void reloadPosts(PostLoader.PostCollection posts) {
+    public void reloadPosts(Post.Collection posts) {
         dataSource.posts = posts;
+        postDelegate.posts = posts;
         list.reloadData();
     }
 
     class PostDataSource extends UITableViewDataSourceAdapter {
 
-        PostLoader.PostCollection posts;
+        Post.Collection posts;
 
         @Override
         public long getNumberOfRowsInSection(UITableView tableView, long section) {
@@ -62,13 +65,27 @@ public class PostListViewController extends UIViewController implements PostList
         @Override
         public UITableViewCell getCellForRow(UITableView tableView, NSIndexPath indexPath) {
             UITableViewCell cell = tableView.dequeueReusableCell("Post");
-            PostLoader.Post i = posts.get(indexPath.getRow());
+            Post i = posts.get(indexPath.getRow());
 
             ((UILabel) cell.getViewWithTag(2)).setText(i.title);
             UIImageView iv = (UIImageView) cell.getViewWithTag(1);
             new ImageRequest().setUrl(i.image).load(data -> iv.setImage(new UIImage(new NSData(data))));
 
             return cell;
+        }
+    }
+
+    class PostDelegate extends UITableViewDelegateAdapter {
+
+        Post.Collection posts;
+
+        @Override
+        public double getHeightForRow(UITableView tableView, NSIndexPath indexPath) {
+            Post post = posts.get(indexPath.getRow());
+            if (post.height <= 0) return tableView.getFrame().getWidth();
+
+            float aspect = (float) post.width / post.height;
+            return 30 + tableView.getFrame().getWidth() / aspect;
         }
     }
 }

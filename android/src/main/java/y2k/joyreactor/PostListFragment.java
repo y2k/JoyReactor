@@ -23,7 +23,7 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
     }
 
     @Override
-    public void reloadPosts(PostLoader.PostCollection posts) {
+    public void reloadPosts(Post.Collection posts) {
         adapter.reloadData(posts);
     }
 
@@ -45,7 +45,7 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
 
     static class PostAdapter extends RecyclerView.Adapter {
 
-        PostLoader.PostCollection posts;
+        Post.Collection posts;
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int itemType) {
@@ -56,7 +56,7 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
             Holder h = (Holder) viewHolder;
-            PostLoader.Post i = posts.get(position);
+            Post i = posts.get(position);
             new ImageRequest().setUrl(i.image).load(data ->
                     h.image.setImageBitmap(BitmapFactory.decodeByteArray(data, 0, data.length)));
         }
@@ -66,7 +66,7 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
             return posts == null ? 0 : posts.size();
         }
 
-        public void reloadData(PostLoader.PostCollection posts) {
+        public void reloadData(Post.Collection posts) {
             this.posts = posts;
             notifyDataSetChanged();
         }

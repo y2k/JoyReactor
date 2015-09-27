@@ -14,23 +14,14 @@ import java.util.ArrayList;
  */
 public class PostLoader {
 
-    public Observable<PostCollection> get() {
-        Observable<PostCollection> result = Observable
-                .create(subscriber -> Schedulers.io().createWorker().schedule(() -> {
-                    try {
-                        Document doc = getDocument();
+    public Post.Collection getPosts() throws IOException {
+        Document doc = getDocument();
 
-                        PostCollection posts = new PostCollection();
-                        for (Element e : doc.select("div.postContainer"))
-                            posts.add(new Post(e));
+        Post.Collection posts = new Post.Collection();
+        for (Element e : doc.select("div.postContainer"))
+            posts.add(newPost(e));
 
-                        subscriber.onNext(posts);
-                    } catch (Exception e) {
-                        subscriber.onError(e);
-                    }
-                }));
-
-        return result.observeOn(ForegroundScheduler.getInstance());
+        return posts;
     }
 
     private Document getDocument() throws IOException {
@@ -39,17 +30,15 @@ public class PostLoader {
                 .timeout(15000).get();
     }
 
-    public static class PostCollection extends ArrayList<Post> {
-    }
-
-    public static class Post {
-
-        public final String title;
-        public final String image;
-
-        public Post(Element element) {
-            title = element.select("div.post_content").text();
-            image = element.select("div.post_content img").attr("src");
+    private Post newPost(Element element) {
+        Post result = new Post();
+        result.title = element.select("div.post_content").text();
+        Element img = element.select("div.post_content img").first();
+        if (img != null && img.hasAttr("width")) {
+            result.image = img.attr("src");
+            result.width = Integer.parseInt(img.attr("width"));
+            result.height = Integer.parseInt(img.attr("height"));
         }
+        return result;
     }
 }

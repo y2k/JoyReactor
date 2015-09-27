@@ -5,10 +5,10 @@
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
-        <!--MyViewController-->
+        <!--PostListViewController-->
         <scene sceneID="HF5-hW-DZA">
             <objects>
-                <viewController title="MyViewController" id="Rw5-ns-KcI" customClass="PostListViewController" sceneMemberID="viewController">
+                <viewController title="MyViewController" id="Rw5-ns-KcI" userLabel="PostListViewController" customClass="PostListViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="WrT-94-kTm"/>
                         <viewControllerLayoutGuide type="bottom" id="GRf-jy-2iC"/>
@@ -17,19 +17,19 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="310" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3Tb-xx-2IX">
-                                <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="310" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3Tb-xx-2IX">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Post" rowHeight="310" id="5Ro-Wk-r2I">
                                         <rect key="frame" x="0.0" y="28" width="320" height="310"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5Ro-Wk-r2I" id="6E6-b2-GcU">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="309"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="310"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="daW-b9-C5v">
-                                                    <rect key="frame" x="0.0" y="279" width="320" height="30"/>
+                                                    <rect key="frame" x="0.0" y="280" width="320" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="dAP-1X-J48"/>
                                                     </constraints>
@@ -58,7 +58,7 @@
                             </tableView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="jCg-BN-mSk">
                                 <rect key="frame" x="142" y="189" width="37" height="37"/>
-                                <color key="color" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="color" red="0.94509803920000002" green="0.58823529409999997" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="0.94117647058823528" green="0.58039215686274515" blue="0.14901960784313725" alpha="1" colorSpace="calibratedRGB"/>
