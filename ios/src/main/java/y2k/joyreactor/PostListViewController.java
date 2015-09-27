@@ -38,6 +38,15 @@ public class PostListViewController extends UIViewController implements PostList
         list.setDelegate(postDelegate = new PostDelegate());
 
         new SideMenu(this, "Menu").attach();
+
+        getNavigationItem().getRightBarButtonItem().setOnClickListener(sender -> {
+            UIActionSheet menu = new UIActionSheet();
+            menu.addButton("Settings");
+            menu.addButton("Profile");
+            menu.addButton("Logout");
+            menu.setCancelButtonIndex(menu.addButton("Cancel"));
+            menu.showFrom(sender, true);
+        });
     }
 
     @Override

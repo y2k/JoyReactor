@@ -71,7 +71,9 @@
                             <constraint firstItem="jCg-BN-mSk" firstAttribute="centerX" secondItem="xOT-TG-81E" secondAttribute="centerX" id="sNQ-0h-2Pj"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="P8z-RY-c2R"/>
+                    <navigationItem key="navigationItem" id="P8z-RY-c2R">
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="Tkx-Qd-npW"/>
+                    </navigationItem>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="list" destination="3Tb-xx-2IX" id="Oim-ws-X1H"/>
