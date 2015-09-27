@@ -54,9 +54,7 @@ public class DiskCache {
     }
 
     File getCacheDirectory() {
-        String dir = System.getProperty("user.dir");
-        System.out.println("Current dir = " + dir);
-        return new File(dir);
+        return new File(System.getProperty("user.dir"));
     }
 
     public interface ReadAction {
