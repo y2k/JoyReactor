@@ -1,5 +1,7 @@
 package y2k.joyreactor.images;
 
+import y2k.joyreactor.Platform;
+
 import java.io.*;
 
 /**
@@ -54,7 +56,7 @@ public class DiskCache {
     }
 
     File getCacheDirectory() {
-        return new File(System.getProperty("user.dir"));
+        return Platform.Instance.getCurrentDirectory();
     }
 
     public interface ReadAction {

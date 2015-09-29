@@ -23,7 +23,7 @@
                                 <inset key="scrollIndicatorInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Post" rowHeight="310" id="5Ro-Wk-r2I">
-                                        <rect key="frame" x="0.0" y="28" width="320" height="310"/>
+                                        <rect key="frame" x="0.0" y="92" width="320" height="310"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5Ro-Wk-r2I" id="6E6-b2-GcU">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="310"/>
@@ -239,7 +239,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Header" rowHeight="250" id="Jk9-eX-8nH">
-                                        <rect key="frame" x="0.0" y="92" width="320" height="250"/>
+                                        <rect key="frame" x="0.0" y="28" width="320" height="250"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Jk9-eX-8nH" id="igg-6s-XlJ">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="250"/>
@@ -261,7 +261,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Comment" rowHeight="70" id="c4l-n9-NMZ">
-                                        <rect key="frame" x="0.0" y="342" width="320" height="70"/>
+                                        <rect key="frame" x="0.0" y="278" width="320" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="c4l-n9-NMZ" id="kql-nz-EgN">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
@@ -356,7 +356,7 @@
                         <color key="barTintColor" red="0.94117647059999998" green="0.58039215690000001" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="Cue-WN-Q4j" kind="relationship" relationship="rootViewController" id="w9x-pT-4wF"/>
+                        <segue destination="Rw5-ns-KcI" kind="relationship" relationship="rootViewController" id="OuB-kR-lbO"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hXa-2q-nii" userLabel="First Responder" sceneMemberID="firstResponder"/>
