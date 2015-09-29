@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class Comment {
 
     public String text;
+    public String userAvatar;
 
     public static class Collection extends ArrayList<Comment> {
 

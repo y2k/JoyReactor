@@ -27,7 +27,8 @@ public class PostViewContoller extends UIViewController implements PostPresenter
         super.viewDidLoad();
 
         list.setDataSource(dataSource = new CommentTableView.DataSource());
-        list.setDelegate(new CommentTableView.Delegate());
+        list.setRowHeight(UITableView.getAutomaticDimension());
+        list.setEstimatedRowHeight(44);
         new PostPresenter(this);
     }
 
@@ -80,15 +81,15 @@ public class PostViewContoller extends UIViewController implements PostPresenter
                 cell = tableView.dequeueReusableCell("Comment");
                 Comment item = comments.get(indexPath.getRow() - 1);
                 ((UILabel) cell.getViewWithTag(1)).setText(item.text);
+
+                UIImageView iv = (UIImageView) cell.getViewWithTag(2);
+                iv.getLayer().setCornerRadius(iv.getFrame().getWidth() / 2);
+                new ImageRequest()
+                        .setUrl(item.userAvatar)
+                        .setSize((int) iv.getFrame().getWidth(), (int) iv.getFrame().getHeight())
+                        .load(bitmap -> iv.setImage(new UIImage(new NSData(bitmap))));
+
                 return cell;
-            }
-        }
-
-        static class Delegate extends UITableViewDelegateAdapter {
-
-            @Override
-            public double getHeightForRow(UITableView tableView, NSIndexPath indexPath) {
-                return indexPath.getRow() == 0 ? 250 : -1;
             }
         }
     }
