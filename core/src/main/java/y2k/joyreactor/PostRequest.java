@@ -1,34 +1,24 @@
 package y2k.joyreactor;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import rx.Observable;
-import rx.schedulers.Schedulers;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Created by y2k on 9/26/15.
  */
-public class PostLoader {
+public class PostRequest {
 
     public Post.Collection getPosts() throws IOException {
-        Document doc = getDocument();
+        Document doc = new HttpClient().getDocument("http://joyreactor.cc");
 
         Post.Collection posts = new Post.Collection();
         for (Element e : doc.select("div.postContainer"))
             posts.add(newPost(e));
 
         return posts;
-    }
-
-    private Document getDocument() throws IOException {
-        return Jsoup.connect("http://joyreactor.cc")
-                .userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko")
-                .timeout(15000).get();
     }
 
     private Post newPost(Element element) {

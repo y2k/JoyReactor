@@ -89,6 +89,9 @@ public class PostViewContoller extends UIViewController implements PostPresenter
                         .setSize((int) iv.getFrame().getWidth(), (int) iv.getFrame().getHeight())
                         .load(bitmap -> iv.setImage(new UIImage(new NSData(bitmap))));
 
+                ((UILabel) cell.getViewWithTag(3)).setText("" + item.childCount);
+                ((UILabel) cell.getViewWithTag(4)).setText("" + item.rating);
+
                 return cell;
             }
         }

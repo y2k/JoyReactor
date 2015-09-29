@@ -29,11 +29,11 @@ public class Post {
 
     public static class Collection extends ArrayList<Post> {
 
-        public static Observable<Post.Collection> get() {
+        public static Observable<Post.Collection> request() {
             Observable<Post.Collection> result = Observable
                     .create(subscriber -> Schedulers.io().createWorker().schedule(() -> {
                         try {
-                            subscriber.onNext(new PostLoader().getPosts());
+                            subscriber.onNext(new PostRequest().getPosts());
                         } catch (Exception e) {
                             subscriber.onError(e);
                         }

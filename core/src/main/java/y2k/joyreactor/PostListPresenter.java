@@ -8,10 +8,12 @@ public class PostListPresenter {
     public PostListPresenter(View view) {
         view.setBusy(true);
 
-        Post.Collection.get().subscribe(data -> {
-            view.reloadPosts(data);
-            view.setBusy(false);
-        });
+        Post.Collection
+                .request()
+                .subscribe(data -> {
+                    view.reloadPosts(data);
+                    view.setBusy(false);
+                }, Throwable::printStackTrace);
     }
 
     public interface View {

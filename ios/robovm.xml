@@ -27,5 +27,6 @@
         <pattern>com.android.org.bouncycastle.crypto.digests.AndroidDigestFactoryOpenSSL</pattern>
 
         <pattern>org.ocpsoft.prettytime.i18n.*</pattern>
+        <pattern>java.util.logging.*</pattern>
     </forceLinkClasses>
 </config>
