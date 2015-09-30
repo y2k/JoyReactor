@@ -8,4 +8,8 @@ import org.robovm.objc.annotation.CustomClass;
  */
 @CustomClass("StarProgress")
 public class StarProgress extends UIView {
+
+    public void setStars(int stars) {
+        // TODO:
+    }
 }

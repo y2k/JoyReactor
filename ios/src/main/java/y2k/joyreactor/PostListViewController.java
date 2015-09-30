@@ -100,7 +100,7 @@ public class PostListViewController extends UIViewController implements PostList
             iv.setAlpha(0);
             new ImageRequest().setUrl(url)
                     .setSize(width, height)
-                    .load(data -> {
+                    .to(data -> {
                         iv.setImage(new UIImage(new NSData(data)));
                         UIView.animate(0.3, () -> iv.setAlpha(1));
                     });

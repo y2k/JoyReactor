@@ -30,7 +30,7 @@ public class ImageRequest {
         return this;
     }
 
-    public void load(Action1<byte[]> callback) {
+    public void to(Action1<byte[]> callback) {
         Schedulers.io().createWorker().schedule(() -> {
             try {
                 URL url = urlBuilder.build();

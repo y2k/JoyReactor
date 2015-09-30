@@ -57,7 +57,7 @@ public class MenuViewController extends UIViewController implements MenuPresente
                 new ImageRequest()
                         .setUrl(i.image)
                         .setSize(40, 40)
-                        .load(data -> iv.setImage(new UIImage(new NSData(data))));
+                        .to(data -> iv.setImage(new UIImage(new NSData(data))));
                 ((UILabel) cell.getViewWithTag(2)).setText(i.title);
             }
             return cell;

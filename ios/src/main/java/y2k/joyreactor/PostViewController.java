@@ -71,7 +71,7 @@ public class PostViewController extends UIViewController implements PostPresente
                     new ImageRequest()
                             .setUrl(post.image)
                             .setSize(300, (int) (300 / post.getAspect()))
-                            .load(data -> iv.setImage(new UIImage(new NSData(data))));
+                            .to(data -> iv.setImage(new UIImage(new NSData(data))));
                 }
                 return cell;
             }
@@ -87,7 +87,7 @@ public class PostViewController extends UIViewController implements PostPresente
                 new ImageRequest()
                         .setUrl(item.userAvatar)
                         .setSize((int) iv.getFrame().getWidth(), (int) iv.getFrame().getHeight())
-                        .load(bitmap -> iv.setImage(new UIImage(new NSData(bitmap))));
+                        .to(bitmap -> iv.setImage(new UIImage(new NSData(bitmap))));
 
                 ((UILabel) cell.getViewWithTag(3)).setText("" + item.childCount);
                 ((UILabel) cell.getViewWithTag(4)).setText("" + item.rating);

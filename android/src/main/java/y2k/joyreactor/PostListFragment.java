@@ -58,7 +58,7 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
             Holder h = (Holder) viewHolder;
             Post i = posts.get(position);
-            new ImageRequest().setUrl(i.image).load(data ->
+            new ImageRequest().setUrl(i.image).to(data ->
                     h.image.setImageBitmap(BitmapFactory.decodeByteArray(data, 0, data.length)));
         }
 
