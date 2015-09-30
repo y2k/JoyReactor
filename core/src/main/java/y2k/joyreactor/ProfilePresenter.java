@@ -20,9 +20,7 @@ public class ProfilePresenter {
                 .subscribe(profile -> {
                     view.setProfile(profile);
                     view.setProgress(false);
-                }, error -> {
-                    // TODO:
-                });
+                }, Throwable::printStackTrace);
     }
 
     public void logout() {
