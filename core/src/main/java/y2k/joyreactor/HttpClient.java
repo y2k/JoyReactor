@@ -2,6 +2,7 @@ package y2k.joyreactor;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import rx.Observable;
 
 import java.io.IOException;
 
@@ -9,6 +10,10 @@ import java.io.IOException;
  * Created by y2k on 9/29/15.
  */
 public class HttpClient {
+
+    public Observable<Document> getDocumentAsync(String url) {
+        return ObservableUtils.create(() -> getDocument(url));
+    }
 
     public Document getDocument(String url) throws IOException {
         return Jsoup.connect(url)

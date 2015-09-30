@@ -18,62 +18,58 @@ public class Profile {
     public int stars;
     public float progressToNewStar;
 
-    static Observable<Profile> request() {
-        return ObservableUtils.create(() -> new ProfileRequest("Krowly").execute());
+    static Observable<Profile> requestMine() {
+        return request(getMyUserName());
     }
 
-    static class ProfileRequest {
+    private static String getMyUserName() {
+        return "Krowly"; // TODO:
+    }
 
-        private String username;
+    static Observable<Profile> request(String username) {
+        return new HttpClient()
+                .getDocumentAsync(getUrl(username))
+                .map(doc -> {
+                    ProfileParser parser = new ProfileParser(doc);
+                    Profile profile = new Profile();
+                    profile.userName = username;
+                    profile.userImage = parser.getUserImage();
+                    profile.progressToNewStar = parser.getProgressToNewStar();
+                    profile.rating = parser.getRating();
+                    profile.stars = parser.getStars();
+                    return profile;
+                });
+    }
 
-        ProfileRequest(String username) {
-            this.username = username;
+    private static String getUrl(String username) {
+        return "http://joyreactor.cc/user/" + username;
+    }
+
+    static class ProfileParser {
+
+        private Document document;
+
+        ProfileParser(Document document) {
+            this.document = document;
         }
 
-        Profile execute() throws IOException {
-            Document doc = new HttpClient().getDocument(getUrl());
-            ProfileParser parser = new ProfileParser(doc);
-
-            Profile profile = new Profile();
-            profile.userName = username;
-            profile.userImage = parser.getUserImage();
-            profile.progressToNewStar = parser.getProgressToNewStar();
-            profile.rating = parser.getRating();
-            profile.stars = parser.getStars();
-
-            return profile;
+        String getUserImage() {
+            return document.select("img.avatar").first().attr("src");
         }
 
-        private String getUrl() {
-            return "http://joyreactor.cc/user/" + username;
+        float getProgressToNewStar() {
+            String style = document.select("div.poll_res_bg_active").first().attr("style");
+            Matcher m = Pattern.compile("width:(\\d+)%;").matcher(style);
+            if (!m.find()) throw new IllegalStateException();
+            return Float.parseFloat(m.group(1));
         }
 
-        static class ProfileParser {
+        float getRating() {
+            return Float.parseFloat(document.select("#rating-text > b").text());
+        }
 
-            private Document document;
-
-            ProfileParser(Document document) {
-                this.document = document;
-            }
-
-            String getUserImage() {
-                return document.select("img.avatar").first().attr("src");
-            }
-
-            float getProgressToNewStar() {
-                String style = document.select("div.poll_res_bg_active").first().attr("style");
-                Matcher m = Pattern.compile("width:(\\d+)%;").matcher(style);
-                if (!m.find()) throw new IllegalStateException();
-                return Float.parseFloat(m.group(1));
-            }
-
-            float getRating() {
-                return Float.parseFloat(document.select("#rating-text > b").text());
-            }
-
-            int getStars() {
-                return document.select(".star-row-0 > .star-0").size();
-            }
+        int getStars() {
+            return document.select(".star-row-0 > .star-0").size();
         }
     }
 }

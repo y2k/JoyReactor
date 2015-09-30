@@ -16,7 +16,7 @@ public class ProfilePresenter {
 
     private void initialize() {
         view.setProgress(true);
-        Profile.request()
+        Profile.requestMine()
                 .subscribe(profile -> {
                     view.setProfile(profile);
                     view.setProgress(false);
