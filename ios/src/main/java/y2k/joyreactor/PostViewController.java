@@ -11,8 +11,8 @@ import y2k.joyreactor.images.ImageRequest;
  * Created by y2k on 28/09/15.
  */
 
-@CustomClass("PostViewContoller")
-public class PostViewContoller extends UIViewController implements PostPresenter.View {
+@CustomClass("PostViewController")
+public class PostViewController extends UIViewController implements PostPresenter.View {
 
     CommentTableView.DataSource dataSource;
     UITableView list;
