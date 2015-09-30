@@ -47,7 +47,7 @@ public class LoginViewController extends UIViewController implements LoginPresen
     public void showError() {
         // TODO:
     }
-ы
+
     // ==========================================
     // Outlets
     // ==========================================
