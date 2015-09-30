@@ -1,5 +1,7 @@
 package y2k.joyreactor;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by y2k on 9/30/15.
  */
@@ -25,6 +27,9 @@ public class ProfilePresenter {
 
     public void logout() {
         // TODO:
+        view.setProgress(true);
+        ForegroundScheduler.getInstance().createWorker().schedule(
+                () -> view.setProgress(false), 2, TimeUnit.SECONDS);
     }
 
     public interface View {

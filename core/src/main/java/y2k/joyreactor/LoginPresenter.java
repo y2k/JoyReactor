@@ -23,6 +23,10 @@ public class LoginPresenter {
                         });
     }
 
+    public void register() {
+        view.openUrl("http://joyreactor.cc/register");
+    }
+
     public interface View {
 
         String getUsername();
@@ -32,5 +36,7 @@ public class LoginPresenter {
         void setProgress(boolean isProgress);
 
         void showError();
+
+        void openUrl(String url);
     }
 }

@@ -1,5 +1,7 @@
 package y2k.joyreactor;
 
+import org.robovm.apple.foundation.NSURL;
+import org.robovm.apple.uikit.UIApplication;
 import org.robovm.apple.uikit.UIButton;
 import org.robovm.apple.uikit.UITextField;
 import org.robovm.apple.uikit.UIViewController;
@@ -15,12 +17,14 @@ public class LoginViewController extends UIViewController implements LoginPresen
     UITextField username;
     UITextField password;
     UIButton loginButton;
+    UIButton registerButton;
 
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
         LoginPresenter presenter = new LoginPresenter(this);
         loginButton.addOnTouchUpInsideListener((sender, e) -> presenter.login());
+        registerButton.addOnTouchUpInsideListener((sender, e) -> presenter.register());
     }
 
     // ==========================================
@@ -48,6 +52,11 @@ public class LoginViewController extends UIViewController implements LoginPresen
         // TODO:
     }
 
+    @Override
+    public void openUrl(String url) {
+        UIApplication.getSharedApplication().openURL(new NSURL(url));
+    }
+
     // ==========================================
     // Outlets
     // ==========================================
@@ -65,5 +74,10 @@ public class LoginViewController extends UIViewController implements LoginPresen
     @IBOutlet
     void setLoginButton(UIButton loginButton) {
         this.loginButton = loginButton;
+    }
+
+    @IBOutlet
+    void setRegisterButton(UIButton registerButton) {
+        this.registerButton = registerButton;
     }
 }

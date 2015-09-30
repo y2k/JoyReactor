@@ -15,14 +15,15 @@ public class ProfileViewController extends UIViewController implements ProfilePr
     UIImageView userImage;
     UILabel userName;
     UILabel rating;
-    StarProgress starProgress;
+    StarProgress stars;
     ProgressBar progressToNewStar;
-    UIActivityIndicatorView busyIndicator;
+    UIButton logoutButton;
 
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
-        new ProfilePresenter(this);
+        ProfilePresenter presenter = new ProfilePresenter(this);
+        logoutButton.addOnTouchUpInsideListener((sender, e) -> presenter.logout());
     }
 
     // ==========================================
@@ -37,14 +38,14 @@ public class ProfileViewController extends UIViewController implements ProfilePr
                 .setSize((int) userImage.getFrame().getWidth(), (int) userImage.getFrame().getHeight())
                 .to(bitmap -> userImage.setImage(new UIImage(new NSData(bitmap))));
         rating.setText(Translator.get("Rating: ") + profile.rating);
-        starProgress.setStars(profile.stars);
+        stars.setStars(profile.stars);
         progressToNewStar.setValue(profile.progressToNewStar);
     }
 
     @Override
     public void setProgress(boolean isProgress) {
-        if (isProgress) busyIndicator.startAnimating();
-        else busyIndicator.stopAnimating();
+        logoutButton.setEnabled(!isProgress);
+        getNavigationItem().setHidesBackButton(isProgress, true);
     }
 
     // ==========================================
@@ -67,8 +68,8 @@ public class ProfileViewController extends UIViewController implements ProfilePr
     }
 
     @IBOutlet
-    void setStarProgress(StarProgress starProgress) {
-        this.starProgress = starProgress;
+    void setStars(StarProgress stars) {
+        this.stars = stars;
     }
 
     @IBOutlet
@@ -77,7 +78,7 @@ public class ProfileViewController extends UIViewController implements ProfilePr
     }
 
     @IBOutlet
-    void setBusyIndicator(UIActivityIndicatorView busyIndicator) {
-        this.busyIndicator = busyIndicator;
+    void setLogoutButton(UIButton logoutButton) {
+        this.logoutButton = logoutButton;
     }
 }
