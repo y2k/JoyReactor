@@ -1,10 +1,7 @@
 package y2k.joyreactor;
 
 import org.robovm.apple.foundation.NSURL;
-import org.robovm.apple.uikit.UIApplication;
-import org.robovm.apple.uikit.UIButton;
-import org.robovm.apple.uikit.UITextField;
-import org.robovm.apple.uikit.UIViewController;
+import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
 
@@ -23,8 +20,12 @@ public class LoginViewController extends UIViewController implements LoginPresen
     public void viewDidLoad() {
         super.viewDidLoad();
         LoginPresenter presenter = new LoginPresenter(this);
+
         loginButton.addOnTouchUpInsideListener((sender, e) -> presenter.login());
         registerButton.addOnTouchUpInsideListener((sender, e) -> presenter.register());
+
+        username.setDelegate(new DefaultUITextFieldDelegate());
+        password.setDelegate(new DefaultUITextFieldDelegate());
     }
 
     // ==========================================
@@ -79,5 +80,14 @@ public class LoginViewController extends UIViewController implements LoginPresen
     @IBOutlet
     void setRegisterButton(UIButton registerButton) {
         this.registerButton = registerButton;
+    }
+
+    private static class DefaultUITextFieldDelegate extends UITextFieldDelegateAdapter {
+
+        @Override
+        public boolean shouldReturn(UITextField textField) {
+            textField.resignFirstResponder();
+            return true;
+        }
     }
 }
