@@ -1,7 +1,6 @@
 package y2k.joyreactor;
 
 import rx.Observable;
-import rx.schedulers.Schedulers;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,21 +23,13 @@ public class Post {
 
     public float getAspect() {
         float aspect = height == 0 ? 1 : (float) width / height;
-        return (float) Math.min(2, Math.max(1, aspect));
+        return Math.min(2, Math.max(1, aspect));
     }
 
     public static class Collection extends ArrayList<Post> {
 
         public static Observable<Post.Collection> request() {
-            Observable<Post.Collection> result = Observable
-                    .create(subscriber -> Schedulers.io().createWorker().schedule(() -> {
-                        try {
-                            subscriber.onNext(new PostRequest().getPosts());
-                        } catch (Exception e) {
-                            subscriber.onError(e);
-                        }
-                    }));
-            return result.observeOn(ForegroundScheduler.getInstance());
+            return ObservableUtils.create(() -> new PostRequest().getPosts());
         }
     }
 }
