@@ -20,4 +20,20 @@ public class HttpClient {
                 .userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko")
                 .timeout(15000).get();
     }
+
+    public Form beginForm() {
+        return null;
+    }
+
+    public class Form {
+
+        public Form put(String key, String value) {
+            return this;
+        }
+
+        public Document send(String url) {
+            // TODO:
+            return null;
+        }
+    }
 }
