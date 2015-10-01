@@ -8,7 +8,7 @@ import java.util.concurrent.Callable;
 /**
  * Created by y2k on 30/09/15.
  */
-class ObservableUtils {
+public class ObservableUtils {
 
     public static <T> Observable<T> create(Callable<T> action) {
         Observable<T> result = Observable
