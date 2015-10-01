@@ -7,11 +7,14 @@ import rx.Observable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.*;
-import java.nio.charset.Charset;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by y2k on 9/29/15.
@@ -25,13 +28,11 @@ public class HttpClient {
     }
 
     public Document getDocument(String url) throws IOException {
-        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
         InputStream stream = null;
         try {
-            sCookies.attach(conn);
-            conn.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko");
-            sCookies.detach(conn);
+            HttpURLConnection conn = createConnection(url);
             stream = getInputStream(conn);
+            sCookies.detach(conn);
             return Jsoup.parse(stream, "utf-8", url);
         } finally {
             if (stream != null) stream.close();
@@ -39,19 +40,20 @@ public class HttpClient {
     }
 
     private InputStream getInputStream(HttpURLConnection conn) throws IOException {
+        String redirect = conn.getHeaderField("Location");
+        if (redirect != null) {
+            conn.disconnect();
+            conn = createConnection(redirect);
+        }
         return conn.getResponseCode() < 300 ? conn.getInputStream() : conn.getErrorStream();
     }
 
-    private static void showInformation(HttpURLConnection conn) {
-        System.out.println("=| INFORMATION |=======================");
-        System.out.println("URL: " + conn.getURL());
-        System.out.println("METHOD: " + conn.getRequestMethod() + "\n");
-        Map<String, List<String>> headers = conn.getHeaderFields();
-        for (String key : headers.keySet()) {
-            for (String value : headers.get(key))
-                System.out.println(key + " = " + value);
-        }
-        System.out.println("=| INFORMATION |=======================");
+    private HttpURLConnection createConnection(String url) throws IOException {
+        HttpURLConnection conn;
+        conn = (HttpURLConnection) new URL(url).openConnection();
+        conn.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko");
+        sCookies.attach(conn);
+        return conn;
     }
 
     public Form beginForm() {
@@ -68,21 +70,17 @@ public class HttpClient {
         }
 
         public Document send(String url) throws Exception {
-            HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+            HttpURLConnection conn = createConnection(url);
             conn.setRequestMethod("POST");
             conn.setInstanceFollowRedirects(false);
-            conn.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko");
             conn.addRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            sCookies.attach(conn);
             conn.getOutputStream().write(serializeForm());
-
-            showInformation(conn);
-            sCookies.detach(conn);
 
             // TODO:
             InputStream stream = null;
             try {
                 stream = getInputStream(conn);
+                sCookies.detach(conn);
                 return Jsoup.parse(stream, "utf-8", url);
             } finally {
                 if (stream != null) stream.close();
@@ -98,19 +96,33 @@ public class HttpClient {
                 buffer.append("&");
             }
             buffer.replace(buffer.length() - 1, buffer.length(), "");
-            System.out.println(buffer);
             return buffer.toString().getBytes();
         }
     }
 
     static class CookieStorage {
 
+        private static final Pattern COOKIE_PATTERN = Pattern.compile("(.+?)=([^;]+)");
+        private Map<String, String> storage = new HashMap<>();
+
         public void attach(HttpURLConnection connection) {
-            // TODO:
+            if (storage.isEmpty()) return;
+
+            StringBuilder cookie = new StringBuilder();
+            for (String key : storage.keySet())
+                cookie.append(key).append("=").append(storage.get(key)).append("; ");
+            connection.addRequestProperty("Cookie", cookie.toString());
         }
 
         public void detach(HttpURLConnection connection) {
-            // TODO:
+            List<String> cookies = connection.getHeaderFields().get("Set-Cookie");
+            if (cookies == null || cookies.isEmpty()) return;
+
+            for (String c : cookies) {
+                Matcher m = COOKIE_PATTERN.matcher(c);
+                if (!m.find()) throw new IllegalStateException(c);
+                storage.put(m.group(1), m.group(2));
+            }
         }
     }
 }
