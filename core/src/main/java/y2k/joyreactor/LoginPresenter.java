@@ -18,6 +18,7 @@ public class LoginPresenter {
                 .subscribe(
                         s -> view.setProgress(false),
                         error -> {
+                            error.printStackTrace();
                             view.setProgress(false);
                             view.showError();
                         });

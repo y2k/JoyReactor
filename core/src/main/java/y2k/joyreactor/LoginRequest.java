@@ -27,6 +27,9 @@ public class LoginRequest {
                     .put("signin[remember]", "on")
                     .put("signin[_csrf_token]", getCsrf())
                     .send("http://joyreactor.cc/login");
+
+//            System.out.println(doc.html());
+
             if (doc.getElementById("logout") == null)
                 throw new IllegalStateException();
             return null;
