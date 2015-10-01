@@ -13,20 +13,25 @@ import java.util.Observer;
 public class Messenger {
 
     Map<Class, Observable> observers = new HashMap<>();
+    HashMap<ObserverImpl, Object> registrations = new HashMap<>();
 
     public void send(Object message) {
         Observable observable = observers.get(message.getClass());
         if (observable != null) observable.notifyObservers(message);
     }
 
-    public <T> void register(Object receiver, Action1<T> callback, Class type) {
+    public <T> void register(Object receiver, Action1<T> callback, Class<T> type) {
         Observable observable = observers.get(type);
         if (observable == null) observers.put(type, observable = new Observable());
-        observable.addObserver(new ObserverImpl<>(callback));
+
+        ObserverImpl<T> o = new ObserverImpl<>(callback);
+        observable.addObserver(o);
+
+        registrations.put(o, receiver);
     }
 
     public void unregister(Object receiver) {
-        // TODO:
+        while (registrations.values().remove(receiver)) ;
     }
 
     public static Messenger getDefault() {

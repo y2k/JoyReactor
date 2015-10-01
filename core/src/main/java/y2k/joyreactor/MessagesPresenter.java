@@ -6,9 +6,10 @@ package y2k.joyreactor;
 public class MessagesPresenter {
 
     public MessagesPresenter(View view) {
-        Messenger.getDefault().register(this, (MessageThreadsPresenter.MessageThreadSelected m) -> {
+        Messenger.getDefault().register(this, m -> {
             // TODO:
-        });
+        }, MessageThreadsPresenter.MessageThreadSelected.class);
+        Messenger.getDefault().unregister(this);
     }
 
     public void reply(String message) {
