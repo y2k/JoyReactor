@@ -18,21 +18,15 @@ public class Message {
     Date date;
     boolean isMine;
 
-    public static Observable<Message[]> request(String name) {
+    public static Observable<List<Message>> request(String name) {
         return ObservableUtils.create(() -> {
-
             List<Message> messages = new ArrayList<>();
-
-            PageIterator iterator = new PageIterator();
-            while (iterator.hasNext()) {
-                // TODO:
-                new Parser(iterator.next())
-                        .parse()
-                        .filter(s -> s.userName.equals(name))
-                        .forEach(messages::add);
-            }
-
-            return messages.toArray(new Message[messages.size()]);
+            new PageIterator()
+                    .observable()
+                    .flatMap(s -> new Parser(s).parse())
+                    .filter(s -> s.userName.equals(name))
+                    .forEach(messages::add);
+            return messages;
         });
     }
 
