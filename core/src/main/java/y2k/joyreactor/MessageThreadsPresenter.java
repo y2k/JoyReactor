@@ -5,6 +5,8 @@ package y2k.joyreactor;
  */
 public class MessageThreadsPresenter {
 
+    private MessageThread.Collection threads;
+
     public MessageThreadsPresenter(View view) {
         view.setIsBusy(true);
         MessageThread.Collection
@@ -13,6 +15,19 @@ public class MessageThreadsPresenter {
                     view.setIsBusy(false);
                     view.reloadData(threads);
                 });
+    }
+
+    public void selectThread(int index) {
+        Messenger.getDefault().send(new MessageThreadSelected(threads.get(index)));
+    }
+
+    public static class MessageThreadSelected {
+
+        final MessageThread thread;
+
+        public MessageThreadSelected(MessageThread thread) {
+            this.thread = thread;
+        }
     }
 
     public interface View {
