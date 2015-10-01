@@ -5,7 +5,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import rx.Observable;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -24,35 +23,11 @@ public class MessageThread {
         public static Observable<Collection> request() {
             return ObservableUtils.create(() -> {
                 Collection messageThreads = new Collection();
-                PageIterator pages = new PageIterator("http://joyreactor.cc/private/list");
+                PageIterator pages = new PageIterator();
                 while (pages.hasNext())
                     messageThreads.addAll(new Parser(pages.next()).parse());
                 return messageThreads;
             });
-        }
-
-        private static class PageIterator {
-
-            private String startUrl;
-            private Document page;
-
-            public PageIterator(String startUrl) {
-                this.startUrl = startUrl;
-            }
-
-            public boolean hasNext() {
-                return getUrlForNext() != null;
-            }
-
-            public Document next() throws IOException {
-                return page = new HttpClient().getDocument(getUrlForNext());
-            }
-
-            private String getUrlForNext() {
-                if (page == null) return startUrl;
-                Element nextNode = page.select("a.hasNext").first();
-                return nextNode == null ? null : nextNode.absUrl("href");
-            }
         }
 
         private static class Parser {

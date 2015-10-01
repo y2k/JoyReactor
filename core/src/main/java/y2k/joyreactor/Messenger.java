@@ -12,8 +12,10 @@ import java.util.Observer;
  */
 public class Messenger {
 
-    Map<Class, Observable> observers = new HashMap<>();
-    HashMap<ObserverImpl, Object> registrations = new HashMap<>();
+    private static final Messenger sInstance = new Messenger();
+
+    private Map<Class, Observable> observers = new HashMap<>();
+    private HashMap<ObserverImpl, Object> registrations = new HashMap<>();
 
     public void send(Object message) {
         Observable observable = observers.get(message.getClass());
@@ -35,7 +37,7 @@ public class Messenger {
     }
 
     public static Messenger getDefault() {
-        return null;
+        return sInstance;
     }
 
     private static class ObserverImpl<T> implements Observer {

@@ -3,13 +3,21 @@ package y2k.joyreactor;
 /**
  * Created by y2k on 01/10/15.
  */
-public class MessagesPresenter {
+public class MessagesPresenter extends Presenter {
+
+    private View view;
 
     public MessagesPresenter(View view) {
+        this.view = view;
+    }
+
+    @Override
+    public void activate() {
+        super.activate();
         Messenger.getDefault().register(this, m -> {
-            // TODO:
+            Message.request(m.thread.userName)
+                    .subscribe(view::updateMessages, Throwable::printStackTrace);
         }, MessageThreadsPresenter.MessageThreadSelected.class);
-        Messenger.getDefault().unregister(this);
     }
 
     public void reply(String message) {
@@ -17,6 +25,7 @@ public class MessagesPresenter {
     }
 
     public interface View {
-        //
+
+        void updateMessages(Message[] messages);
     }
 }
