@@ -11,6 +11,9 @@ public class MessagesPresenter extends Presenter {
 
     public MessagesPresenter(View view) {
         this.view = view;
+
+        Message.request("user500")
+                .subscribe(view::updateMessages, Throwable::printStackTrace);
     }
 
     @Override

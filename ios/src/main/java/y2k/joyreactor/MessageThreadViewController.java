@@ -1,10 +1,7 @@
 package y2k.joyreactor;
 
 import org.robovm.apple.foundation.NSIndexPath;
-import org.robovm.apple.uikit.UITableView;
-import org.robovm.apple.uikit.UITableViewCell;
-import org.robovm.apple.uikit.UITableViewDataSourceAdapter;
-import org.robovm.apple.uikit.UIViewController;
+import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
 
@@ -22,7 +19,6 @@ public class MessageThreadViewController extends UIViewController implements Mes
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
-        new MessageThreadsPresenter(this);
         list.setDataSource(new UITableViewDataSourceAdapter() {
 
             @Override
@@ -38,6 +34,16 @@ public class MessageThreadViewController extends UIViewController implements Mes
                 return cell;
             }
         });
+        list.setDelegate(new UITableViewDelegateAdapter() {
+
+            @Override
+            public void didSelectRow(UITableView tableView, NSIndexPath indexPath) {
+                UIViewController vc = getStoryboard().instantiateViewController("Messages");
+                getNavigationController().pushViewController(vc, true);
+            }
+        });
+
+        new MessageThreadsPresenter(this);
     }
 
     @Override

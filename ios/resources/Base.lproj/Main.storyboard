@@ -641,7 +641,7 @@
             </objects>
             <point key="canvasLocation" x="625" y="1107"/>
         </scene>
-        <!--Message Thread View Controller-->
+        <!--Threads-->
         <scene sceneID="mYO-wh-Qpd">
             <objects>
                 <viewController storyboardIdentifier="MessageThreads" id="Mhh-k7-mSZ" customClass="MessageThreadViewController" sceneMemberID="viewController">
@@ -650,16 +650,16 @@
                         <viewControllerLayoutGuide type="bottom" id="wRa-gs-GtK"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="cd9-p6-YSa">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="g1q-fw-y9s">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Thread" textLabel="SRR-Ro-Xcc" style="IBUITableViewCellStyleDefault" id="5is-UJ-QHy">
-                                        <rect key="frame" x="0.0" y="28" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="92" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5is-UJ-QHy" id="BFX-4i-Dub">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -684,13 +684,14 @@
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="g1q-fw-y9s" firstAttribute="leading" secondItem="cd9-p6-YSa" secondAttribute="leading" id="Bce-at-OD1"/>
-                            <constraint firstAttribute="trailing" secondItem="g1q-fw-y9s" secondAttribute="trailing" id="Wd4-nS-Jul"/>
-                            <constraint firstItem="g1q-fw-y9s" firstAttribute="top" secondItem="Gdz-FT-sfD" secondAttribute="bottom" id="XgT-fu-POs"/>
-                            <constraint firstItem="wRa-gs-GtK" firstAttribute="top" secondItem="g1q-fw-y9s" secondAttribute="bottom" id="Xhj-Na-UAY"/>
+                            <constraint firstItem="wRa-gs-GtK" firstAttribute="top" secondItem="g1q-fw-y9s" secondAttribute="bottom" id="Cto-9f-O5t"/>
+                            <constraint firstAttribute="trailing" secondItem="g1q-fw-y9s" secondAttribute="trailing" id="M8J-Lr-iDv"/>
+                            <constraint firstItem="g1q-fw-y9s" firstAttribute="top" secondItem="cd9-p6-YSa" secondAttribute="top" id="XR3-dm-xhS"/>
+                            <constraint firstItem="g1q-fw-y9s" firstAttribute="leading" secondItem="cd9-p6-YSa" secondAttribute="leading" id="uPM-py-YEk"/>
                         </constraints>
                     </view>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
+                    <navigationItem key="navigationItem" title="Threads" id="HmQ-xZ-Pne"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="list" destination="g1q-fw-y9s" id="rTg-TB-XXV"/>
@@ -700,25 +701,47 @@
             </objects>
             <point key="canvasLocation" x="230" y="1668"/>
         </scene>
-        <!--Message View Controller-->
+        <!--Messages-->
         <scene sceneID="V1R-1y-QEI">
             <objects>
-                <viewController id="b8L-u8-AMw" customClass="MessageViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Messages" id="b8L-u8-AMw" customClass="MessageViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="edP-VE-kV6"/>
                         <viewControllerLayoutGuide type="bottom" id="DmD-jY-FKU"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="GRj-ZT-XZz">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bbd-pz-nlV">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="366"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="430"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Message" textLabel="aI5-nr-LAV" style="IBUITableViewCellStyleDefault" id="545-hh-K8X">
+                                        <rect key="frame" x="0.0" y="92" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="545-hh-K8X" id="l4a-F3-kkp">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="aI5-nr-LAV">
+                                                    <rect key="frame" x="15" y="0.0" width="290" height="43"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <animations/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <animations/>
+                                        </tableViewCellContentView>
+                                        <animations/>
+                                    </tableViewCell>
+                                </prototypes>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="79m-Jb-nqm">
-                                <rect key="frame" x="0.0" y="366" width="320" height="50"/>
+                                <rect key="frame" x="0.0" y="430" width="320" height="50"/>
                                 <animations/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.081942766766834652" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -730,16 +753,20 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="79m-Jb-nqm" firstAttribute="leading" secondItem="GRj-ZT-XZz" secondAttribute="leading" id="IAX-P4-Ne1"/>
+                            <constraint firstItem="bbd-pz-nlV" firstAttribute="top" secondItem="GRj-ZT-XZz" secondAttribute="top" id="Re2-wZ-J6q"/>
                             <constraint firstAttribute="trailing" secondItem="79m-Jb-nqm" secondAttribute="trailing" id="U7Y-Ex-R9z"/>
-                            <constraint firstItem="bbd-pz-nlV" firstAttribute="top" secondItem="edP-VE-kV6" secondAttribute="bottom" id="ZZG-oF-aQG"/>
                             <constraint firstItem="bbd-pz-nlV" firstAttribute="leading" secondItem="GRj-ZT-XZz" secondAttribute="leading" id="nkP-Gc-pbo"/>
                             <constraint firstItem="79m-Jb-nqm" firstAttribute="top" secondItem="bbd-pz-nlV" secondAttribute="bottom" id="phA-sB-ksT"/>
                             <constraint firstItem="DmD-jY-FKU" firstAttribute="top" secondItem="79m-Jb-nqm" secondAttribute="bottom" id="wft-2w-bh9"/>
                             <constraint firstAttribute="trailing" secondItem="bbd-pz-nlV" secondAttribute="trailing" id="yT2-CZ-8lY"/>
                         </constraints>
                     </view>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
+                    <navigationItem key="navigationItem" title="Messages" id="3aM-M9-Bve"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="list" destination="bbd-pz-nlV" id="KRA-6g-eqt"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="djh-43-5vK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
