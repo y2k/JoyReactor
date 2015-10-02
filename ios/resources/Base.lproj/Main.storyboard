@@ -730,7 +730,7 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <animations/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -742,10 +742,35 @@
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="79m-Jb-nqm">
                                 <rect key="frame" x="0.0" y="430" width="320" height="50"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1k0-Af-kxa">
+                                        <rect key="frame" x="270" y="0.0" width="50" height="50"/>
+                                        <animations/>
+                                        <color key="backgroundColor" red="0.098542461522795222" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="89w-Th-Rny"/>
+                                        </constraints>
+                                        <state key="normal" title="&gt;"/>
+                                    </button>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Yhr-6x-lxQ">
+                                        <rect key="frame" x="0.0" y="0.0" width="270" height="50"/>
+                                        <animations/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    </textView>
+                                </subviews>
                                 <animations/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.081942766766834652" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="1k0-Af-kxa" secondAttribute="bottom" id="6a0-4A-P3Y"/>
                                     <constraint firstAttribute="height" constant="50" id="9iL-y8-1J9"/>
+                                    <constraint firstAttribute="bottom" secondItem="Yhr-6x-lxQ" secondAttribute="bottom" id="MDW-1D-VCO"/>
+                                    <constraint firstItem="1k0-Af-kxa" firstAttribute="top" secondItem="79m-Jb-nqm" secondAttribute="top" id="Qju-RS-xKd"/>
+                                    <constraint firstItem="Yhr-6x-lxQ" firstAttribute="leading" secondItem="79m-Jb-nqm" secondAttribute="leading" id="dXC-wV-y7b"/>
+                                    <constraint firstItem="1k0-Af-kxa" firstAttribute="leading" secondItem="Yhr-6x-lxQ" secondAttribute="trailing" id="oBa-0x-duG"/>
+                                    <constraint firstItem="Yhr-6x-lxQ" firstAttribute="top" secondItem="79m-Jb-nqm" secondAttribute="top" id="r40-fc-ITU"/>
+                                    <constraint firstAttribute="trailing" secondItem="1k0-Af-kxa" secondAttribute="trailing" id="vy1-te-Rdt"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -766,6 +791,8 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="list" destination="bbd-pz-nlV" id="KRA-6g-eqt"/>
+                        <outlet property="newMessage" destination="Yhr-6x-lxQ" id="HEg-aZ-JVQ"/>
+                        <outlet property="sendButton" destination="1k0-Af-kxa" id="9nw-cN-Ssq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="djh-43-5vK" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class MessageThread {
 
-    String userName;
+    String username;
     String userImage;
     String lastMessage;
     Date date;
@@ -29,7 +29,7 @@ public class MessageThread {
                 new MessagePageIterator()
                         .observable()
                         .flatMap(s -> new Parser(s).parse())
-                        .filter(s -> !alreadyAdded(threads, s.userName))
+                        .filter(s -> !alreadyAdded(threads, s.username))
                         .forEach(threads::add);
                 return threads;
             });
@@ -37,7 +37,7 @@ public class MessageThread {
 
         private boolean alreadyAdded(List<MessageThread> threads, String name) {
             for (MessageThread t : threads)
-                if (t.userName.equals(name)) return true;
+                if (t.username.equals(name)) return true;
             return false;
         }
 
@@ -54,8 +54,8 @@ public class MessageThread {
                         .from(document.select("div.messages_wr > div.article"))
                         .map(s -> {
                             MessageThread thread = new MessageThread();
-                            thread.userName = s.select("div.mess_from > a").text();
-                            thread.userImage = new UserImageRequest(thread.userName).execute();
+                            thread.username = s.select("div.mess_from > a").text();
+                            thread.userImage = new UserImageRequest(thread.username).execute();
                             thread.lastMessage = s.select("div.mess_text").text();
                             thread.date = new Date(1000 * Long.parseLong(s.select("span[data-time]").attr("data-time")));
                             return thread;

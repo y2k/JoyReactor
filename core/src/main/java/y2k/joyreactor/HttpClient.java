@@ -63,24 +63,32 @@ public class HttpClient {
     public class Form {
 
         Map<String, String> form = new HashMap<>();
+        Map<String, String> headers = new HashMap<>();
 
         public Form put(String key, String value) {
             form.put(key, value);
             return this;
         }
 
+        public Form putHeader(String name, String value) {
+            headers.put(name, value);
+            return this;
+        }
+
         public Document send(String url) throws Exception {
-            HttpURLConnection conn = createConnection(url);
-            conn.setRequestMethod("POST");
-            conn.setInstanceFollowRedirects(false);
-            conn.addRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            conn.getOutputStream().write(serializeForm());
+            HttpURLConnection connection = createConnection(url);
+            connection.setRequestMethod("POST");
+            connection.setInstanceFollowRedirects(false);
+            connection.addRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            for (String name : headers.keySet())
+                connection.addRequestProperty(name, headers.get(name));
+            connection.getOutputStream().write(serializeForm());
 
             // TODO:
             InputStream stream = null;
             try {
-                stream = getInputStream(conn);
-                sCookies.grab(conn);
+                stream = getInputStream(connection);
+                sCookies.grab(connection);
                 return Jsoup.parse(stream, "utf-8", url);
             } finally {
                 if (stream != null) stream.close();

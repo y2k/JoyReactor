@@ -12,25 +12,42 @@ public class MessagesPresenter extends Presenter {
     public MessagesPresenter(View view) {
         this.view = view;
 
-        Message.request("user500")
-                .subscribe(view::updateMessages, Throwable::printStackTrace);
+        // FIXME:
+        reloadMessages(getUsername());
     }
 
     @Override
     public void activate() {
         super.activate();
-        Messenger.getDefault().register(this, m -> {
-            Message.request(m.thread.userName)
-                    .subscribe(view::updateMessages, Throwable::printStackTrace);
-        }, MessageThreadsPresenter.ThreadSelectedMessage.class);
+        Messenger.getDefault().register(this,
+                m -> reloadMessages(m.thread.username),
+                MessageThreadsPresenter.ThreadSelectedMessage.class);
     }
 
     public void reply(String message) {
-        // TODO:
+        view.setIdBusy(true);
+        new SendMessageRequest(getUsername())
+                .request(message)
+                .subscribe(s -> reloadMessages(getUsername()), Throwable::printStackTrace);
+    }
+
+    private void reloadMessages(String username) {
+        view.setIdBusy(true);
+        Message.request(username)
+                .subscribe((messages) -> {
+                    view.updateMessages(messages);
+                    view.setIdBusy(false);
+                }, Throwable::printStackTrace);
+    }
+
+    private String getUsername() {
+        return "user500"; // TODO:
     }
 
     public interface View {
 
         void updateMessages(List<Message> messages);
+
+        void setIdBusy(boolean isBusy);
     }
 }

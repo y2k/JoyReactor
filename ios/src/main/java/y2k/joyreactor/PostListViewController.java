@@ -43,11 +43,9 @@ public class PostListViewController extends UIViewController implements PostList
 
         getNavigationItem().getRightBarButtonItem().setOnClickListener(sender -> {
             UIActionSheet menu = new UIActionSheet();
-            menu.addButton("Profile");
-            menu.addButton("Messages");
-            menu.addButton("Settings");
-            menu.addButton("Logout");
-            menu.setCancelButtonIndex(menu.addButton("Cancel"));
+            menu.addButton(Translator.get("Profile"));
+            menu.addButton(Translator.get("Messages"));
+            menu.setCancelButtonIndex(menu.addButton(Translator.get("Cancel")));
             menu.setDelegate(new UIActionSheetDelegateAdapter() {
 
                 @Override
@@ -125,7 +123,7 @@ public class PostListViewController extends UIViewController implements PostList
         @Override
         public double getHeightForRow(UITableView tableView, NSIndexPath indexPath) {
             Post post = posts.get(indexPath.getRow());
-            return (tableView.getFrame().getWidth() - 16) / post.getAspect() + 30 + 16;
+            return (tableView.getFrame().getWidth() - 16) / post.getAspect() + 66 + 16;
         }
     }
 }

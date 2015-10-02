@@ -15,6 +15,10 @@ public class MessageViewController extends UIViewController implements MessagesP
 
     UITableView list;
     List<Message> messages;
+    UITextView newMessage;
+    UIButton sendButton;
+
+    MessagesPresenter presenter;
 
     @Override
     public void viewDidLoad() {
@@ -42,8 +46,10 @@ public class MessageViewController extends UIViewController implements MessagesP
                 getNavigationController().pushViewController(vc, true);
             }
         });
+        sendButton.addOnTouchUpInsideListener(
+                (sender, e) -> presenter.reply(newMessage.getText()));
 
-        new MessagesPresenter(this);
+        presenter = new MessagesPresenter(this);
     }
 
     @Override
@@ -53,6 +59,12 @@ public class MessageViewController extends UIViewController implements MessagesP
         list.reloadData();
     }
 
+    @Override
+    public void setIdBusy(boolean isBusy) {
+        // TODO:
+        getNavigationItem().setHidesBackButton(isBusy, true);
+    }
+
     // ==========================================
     // Outlets
     // ==========================================
@@ -60,5 +72,15 @@ public class MessageViewController extends UIViewController implements MessagesP
     @IBOutlet
     void setList(UITableView list) {
         this.list = list;
+    }
+
+    @IBOutlet
+    void setNewMessage(UITextView newMessage) {
+        this.newMessage = newMessage;
+    }
+
+    @IBOutlet
+    void setSendButton(UIButton sendButton) {
+        this.sendButton = sendButton;
     }
 }

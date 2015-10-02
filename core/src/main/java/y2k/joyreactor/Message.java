@@ -3,9 +3,7 @@ package y2k.joyreactor;
 import org.jsoup.nodes.Document;
 import rx.Observable;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by y2k on 10/1/15.
@@ -29,6 +27,7 @@ public class Message {
                         .observable()
                         .flatMap(s -> new Parser(s, name).parse())
                         .forEach(messages::add);
+                Collections.sort(messages, (left, right) -> right.date.compareTo(left.date));
                 return messages;
             });
         }
