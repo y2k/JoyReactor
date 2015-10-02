@@ -8,48 +8,53 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by igor on 10/1/15.
+ * Created by y2k on 10/1/15.
  */
 public class Message {
 
-    String userName;
-    String userImage;
-    String lastMessage;
+    String text;
     Date date;
     boolean isMine;
 
     public static Observable<List<Message>> request(String name) {
-        return ObservableUtils.create(() -> {
-            List<Message> messages = new ArrayList<>();
-            new PageIterator()
-                    .observable()
-                    .flatMap(s -> new Parser(s).parse())
-                    .filter(s -> s.userName.equals(name))
-                    .forEach(messages::add);
-            return messages;
-        });
+        return new MessageRequest().request(name);
     }
 
-    public static class Parser {
+    private static class MessageRequest {
 
-        private Document document;
-
-        Parser(Document document) {
-            this.document = document;
+        public Observable<List<Message>> request(String name) {
+            return ObservableUtils.create(() -> {
+                List<Message> messages = new ArrayList<>();
+                new MessagePageIterator()
+                        .observable()
+                        .flatMap(s -> new Parser(s, name).parse())
+                        .forEach(messages::add);
+                return messages;
+            });
         }
 
-        Observable<Message> parse() {
-            return Observable
-                    .from(document.select("div.messages_wr > div.article"))
-                    .map(s -> {
-                        Message message = new Message();
-                        message.userName = s.select("div.mess_from > a").text();
-                        message.userImage = new UserImageRequest(message.userName).execute();
-                        message.lastMessage = s.select("div.mess_text").text();
-                        message.date = new Date(1000 * Long.parseLong(s.select("span[data-time]").attr("data-time")));
-                        message.isMine = s.select("div.mess_reply").isEmpty();
-                        return message;
-                    });
+        private static class Parser {
+
+            private Document document;
+            private String name;
+
+            Parser(Document document, String name) {
+                this.document = document;
+                this.name = name;
+            }
+
+            Observable<Message> parse() {
+                return Observable
+                        .from(document.select("div.messages_wr > div.article"))
+                        .filter(s -> name.equals(s.select("div.mess_from > a").text()))
+                        .map(s -> {
+                            Message message = new Message();
+                            message.text = s.select("div.mess_text").text();
+                            message.date = new Date(1000 * Long.parseLong(s.select("span[data-time]").attr("data-time")));
+                            message.isMine = s.select("div.mess_reply").isEmpty();
+                            return message;
+                        });
+            }
         }
     }
 }

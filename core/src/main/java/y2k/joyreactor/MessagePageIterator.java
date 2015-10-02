@@ -7,9 +7,9 @@ import rx.Observable;
 import java.io.IOException;
 
 /**
- * Created by igor on 10/1/15.
+ * Created by y2k on 10/1/15.
  */
-public class PageIterator {
+public class MessagePageIterator {
 
     private static final String START_URL = "http://joyreactor.cc/private/list";
     private Document page;
@@ -36,7 +36,7 @@ public class PageIterator {
 
     private String getUrlForNext() {
         if (page == null) return START_URL;
-        Element nextNode = page.select("a.hasNext").first();
+        Element nextNode = page.select("a.next").first();
         return nextNode == null ? null : nextNode.absUrl("href");
     }
 }

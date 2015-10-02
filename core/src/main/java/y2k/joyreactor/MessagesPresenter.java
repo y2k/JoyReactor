@@ -1,5 +1,7 @@
 package y2k.joyreactor;
 
+import java.util.List;
+
 /**
  * Created by y2k on 01/10/15.
  */
@@ -17,7 +19,7 @@ public class MessagesPresenter extends Presenter {
         Messenger.getDefault().register(this, m -> {
             Message.request(m.thread.userName)
                     .subscribe(view::updateMessages, Throwable::printStackTrace);
-        }, MessageThreadsPresenter.MessageThreadSelected.class);
+        }, MessageThreadsPresenter.ThreadSelectedMessage.class);
     }
 
     public void reply(String message) {
@@ -26,6 +28,6 @@ public class MessagesPresenter extends Presenter {
 
     public interface View {
 
-        void updateMessages(Message[] messages);
+        void updateMessages(List<Message> messages);
     }
 }

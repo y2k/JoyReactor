@@ -1,12 +1,11 @@
 package y2k.joyreactor;
 
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import rx.Observable;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by y2k on 01/10/15.
@@ -18,46 +17,49 @@ public class MessageThread {
     String lastMessage;
     Date date;
 
-    public static class Collection extends ArrayList<MessageThread> {
+    public static Observable<List<MessageThread>> request() {
+        return new MessageThreadRequest().request();
+    }
 
-        public static Observable<Collection> request() {
+    private static class MessageThreadRequest extends ArrayList<MessageThread> {
+
+        Observable<List<MessageThread>> request() {
             return ObservableUtils.create(() -> {
-                Collection messageThreads = new Collection();
-                PageIterator pages = new PageIterator();
-                while (pages.hasNext())
-                    messageThreads.addAll(new Parser(pages.next()).parse());
-                return messageThreads;
+                List<MessageThread> threads = new ArrayList<>();
+                new MessagePageIterator()
+                        .observable()
+                        .flatMap(s -> new Parser(s).parse())
+                        .filter(s -> !alreadyAdded(threads, s.userName))
+                        .forEach(threads::add);
+                return threads;
             });
+        }
+
+        private boolean alreadyAdded(List<MessageThread> threads, String name) {
+            for (MessageThread t : threads)
+                if (t.userName.equals(name)) return true;
+            return false;
         }
 
         private static class Parser {
 
-            private Collection threads = new Collection();
             private Document document;
 
             Parser(Document document) {
                 this.document = document;
             }
 
-            Collection parse() {
-                Elements articles = document.select("div.messages_wr > div.article");
-                for (Element a : articles) {
-                    MessageThread thread = new MessageThread();
-                    thread.userName = a.select("div.mess_from > a").text();
-                    if (!contains(thread.userName)) {
-                        thread.userImage = new UserImageRequest(thread.userName).execute();
-                        thread.lastMessage = a.select("div.mess_text").text();
-                        thread.date = new Date(1000 * Long.parseLong(a.select("span[data-time]").attr("data-time")));
-                        threads.add(thread);
-                    }
-                }
-                return threads;
-            }
-
-            private boolean contains(String name) {
-                for (MessageThread t : threads)
-                    if (t.userName.equals(name)) return true;
-                return false;
+            Observable<MessageThread> parse() {
+                return Observable
+                        .from(document.select("div.messages_wr > div.article"))
+                        .map(s -> {
+                            MessageThread thread = new MessageThread();
+                            thread.userName = s.select("div.mess_from > a").text();
+                            thread.userImage = new UserImageRequest(thread.userName).execute();
+                            thread.lastMessage = s.select("div.mess_text").text();
+                            thread.date = new Date(1000 * Long.parseLong(s.select("span[data-time]").attr("data-time")));
+                            return thread;
+                        });
             }
         }
     }

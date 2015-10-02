@@ -43,10 +43,21 @@ public class PostListViewController extends UIViewController implements PostList
 
         getNavigationItem().getRightBarButtonItem().setOnClickListener(sender -> {
             UIActionSheet menu = new UIActionSheet();
-            menu.addButton("Settings");
             menu.addButton("Profile");
+            menu.addButton("Messages");
+            menu.addButton("Settings");
             menu.addButton("Logout");
             menu.setCancelButtonIndex(menu.addButton("Cancel"));
+            menu.setDelegate(new UIActionSheetDelegateAdapter() {
+
+                @Override
+                public void clicked(UIActionSheet actionSheet, long buttonIndex) {
+                    if (buttonIndex == 0)
+                        getNavigationController().pushViewController(getStoryboard().instantiateViewController("Login"), true);
+                    else if (buttonIndex == 1)
+                        getNavigationController().pushViewController(getStoryboard().instantiateViewController("MessageThreads"), true);
+                }
+            });
             menu.showFrom(sender, true);
         });
     }
