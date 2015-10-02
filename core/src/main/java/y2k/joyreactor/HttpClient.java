@@ -32,20 +32,20 @@ public class HttpClient {
         try {
             HttpURLConnection conn = createConnection(url);
             stream = getInputStream(conn);
-            sCookies.detach(conn);
+            sCookies.grab(conn);
             return Jsoup.parse(stream, "utf-8", url);
         } finally {
             if (stream != null) stream.close();
         }
     }
 
-    private InputStream getInputStream(HttpURLConnection conn) throws IOException {
-        String redirect = conn.getHeaderField("Location");
+    private InputStream getInputStream(HttpURLConnection connection) throws IOException {
+        String redirect = connection.getHeaderField("Location");
         if (redirect != null) {
-            conn.disconnect();
-            conn = createConnection(redirect);
+            connection.disconnect();
+            connection = createConnection(redirect);
         }
-        return conn.getResponseCode() < 300 ? conn.getInputStream() : conn.getErrorStream();
+        return connection.getResponseCode() < 300 ? connection.getInputStream() : connection.getErrorStream();
     }
 
     private HttpURLConnection createConnection(String url) throws IOException {
@@ -80,7 +80,7 @@ public class HttpClient {
             InputStream stream = null;
             try {
                 stream = getInputStream(conn);
-                sCookies.detach(conn);
+                sCookies.grab(conn);
                 return Jsoup.parse(stream, "utf-8", url);
             } finally {
                 if (stream != null) stream.close();
@@ -114,7 +114,7 @@ public class HttpClient {
             connection.addRequestProperty("Cookie", cookie.toString());
         }
 
-        public void detach(HttpURLConnection connection) {
+        public void grab(HttpURLConnection connection) {
             List<String> cookies = connection.getHeaderFields().get("Set-Cookie");
             if (cookies == null || cookies.isEmpty()) return;
 

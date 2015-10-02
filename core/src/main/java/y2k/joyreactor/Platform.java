@@ -10,4 +10,6 @@ public abstract class Platform {
     public static Platform Instance;
 
     public abstract File getCurrentDirectory();
+
+    public abstract Navigation getNavigator();
 }

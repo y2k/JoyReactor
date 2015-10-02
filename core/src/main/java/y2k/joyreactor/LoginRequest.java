@@ -30,8 +30,9 @@ public class LoginRequest {
 
 //            System.out.println(doc.html());
 
-            if (doc.getElementById("logout") == null)
-                throw new IllegalStateException();
+// TODO:
+//            if (doc.getElementById("logout") == null)
+//                throw new IllegalStateException();
             return null;
         });
     }

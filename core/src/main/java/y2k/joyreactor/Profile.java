@@ -19,50 +19,51 @@ public class Profile {
     public float progressToNewStar;
 
     static Observable<Profile> requestMine() {
-        return request(getMyUserName());
+        return new ProfileRequest().request();
     }
 
-    private static String getMyUserName() {
-        return "Krowly"; // TODO:
-    }
+    private static class ProfileRequest {
 
-    static Observable<Profile> request(String username) {
-        return new HttpClient()
-                .getDocumentAsync(getUrl(username))
-                .map(document -> new ProfileParser(document).parse());
-    }
-
-    private static String getUrl(String username) {
-        return "http://joyreactor.cc/user/" + username;
-    }
-
-    static class ProfileParser {
-
-        private Document document;
-
-        ProfileParser(Document document) {
-            this.document = document;
+        public Observable<Profile> request() {
+            return getMyUserName()
+                    .flatMap(username -> new HttpClient().getDocumentAsync(getUrl(username)))
+                    .map(document -> new ProfileParser(document).parse());
         }
 
-        Profile parse() {
-            Profile profile = new Profile();
-            profile.userName = getAvatarNode().attr("alt");
-            profile.userImage = getAvatarNode().attr("src");
-            profile.progressToNewStar = getProgressToNewStar();
-            profile.rating = Float.parseFloat(document.select("#rating-text > b").text());
-            profile.stars = document.select(".star-row-0 > .star-0").size();
-            return profile;
+        private Observable<String> getMyUserName() {
+            return new HttpClient()
+                    .getDocumentAsync("http://joyreactor.cc/donate")
+                    .map(document -> document.select("a#settings").text());
         }
 
-        private Element getAvatarNode() {
-            return document.select("img.avatar").first();
+        private String getUrl(String username) {
+            return "http://joyreactor.cc/user/" + username;
         }
 
-        private float getProgressToNewStar() {
-            String style = document.select("div.poll_res_bg_active").first().attr("style");
-            Matcher m = Pattern.compile("width:(\\d+)%;").matcher(style);
-            if (!m.find()) throw new IllegalStateException();
-            return Float.parseFloat(m.group(1));
+        private static class ProfileParser {
+
+            private Document document;
+
+            ProfileParser(Document document) {
+                this.document = document;
+            }
+
+            Profile parse() {
+                Profile profile = new Profile();
+                profile.userName = document.select("div.sidebarContent > div.user > span").text();
+                profile.userImage = document.select("div.sidebarContent > div.user > img").attr("src");
+                profile.progressToNewStar = getProgressToNewStar();
+                profile.rating = Float.parseFloat(document.select("#rating-text > b").text());
+                profile.stars = document.select(".star-row-0 > .star-0").size();
+                return profile;
+            }
+
+            private float getProgressToNewStar() {
+                String style = document.select("div.poll_res_bg_active").first().attr("style");
+                Matcher m = Pattern.compile("width:(\\d+)%;").matcher(style);
+                if (!m.find()) throw new IllegalStateException();
+                return Float.parseFloat(m.group(1));
+            }
         }
     }
 }

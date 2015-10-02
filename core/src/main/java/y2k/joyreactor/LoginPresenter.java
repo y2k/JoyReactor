@@ -16,8 +16,10 @@ public class LoginPresenter {
         new LoginRequest(view.getUsername(), view.getPassword())
                 .request()
                 .subscribe(
-                        s -> view.setProgress(false),
-                        error -> {
+                        s -> {
+                            view.setProgress(false);
+                            Navigation.getInstance().switchLoginToProfile();
+                        }, error -> {
                             error.printStackTrace();
                             view.setProgress(false);
                             view.showError();

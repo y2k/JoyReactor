@@ -20,7 +20,10 @@ public class ProfilePresenter {
                 .subscribe(profile -> {
                     view.setProfile(profile);
                     view.setProgress(false);
-                }, Throwable::printStackTrace);
+                }, e -> {
+                    e.printStackTrace();
+                    Navigation.getInstance().switchProfileToLogin();
+                });
     }
 
     public void logout() {

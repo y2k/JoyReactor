@@ -53,7 +53,7 @@ public class PostListViewController extends UIViewController implements PostList
                 @Override
                 public void clicked(UIActionSheet actionSheet, long buttonIndex) {
                     if (buttonIndex == 0)
-                        getNavigationController().pushViewController(getStoryboard().instantiateViewController("Login"), true);
+                        getNavigationController().pushViewController(getStoryboard().instantiateViewController("Profile"), true);
                     else if (buttonIndex == 1)
                         getNavigationController().pushViewController(getStoryboard().instantiateViewController("MessageThreads"), true);
                 }

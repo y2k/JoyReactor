@@ -3,6 +3,7 @@ package y2k.joyreactor.platform;
 import org.robovm.apple.foundation.NSPathUtilities;
 import org.robovm.apple.foundation.NSSearchPathDirectory;
 import org.robovm.apple.foundation.NSSearchPathDomainMask;
+import y2k.joyreactor.Navigation;
 import y2k.joyreactor.Platform;
 
 import java.io.File;
@@ -19,5 +20,10 @@ public class PlatformImpl extends Platform {
                 NSSearchPathDirectory.DocumentDirectory,
                 NSSearchPathDomainMask.UserDomainMask, true);
         return new File(dirs.get(0));
+    }
+
+    @Override
+    public Navigation getNavigator() {
+        return new StoryboardNavigation();
     }
 }
