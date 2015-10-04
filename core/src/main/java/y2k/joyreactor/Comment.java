@@ -23,7 +23,7 @@ public class Comment {
             Observable<Comment.Collection> subscription = Observable
                     .create(subscriber -> Schedulers.io().createWorker().schedule(() -> {
                         try {
-                            CommentRequest request = new CommentRequest(postId);
+                            CommentListRequest request = new CommentListRequest(postId);
                             request.populate();
                             ChildrenCounter.compute(request.comments);
                             subscriber.onNext(request.comments);

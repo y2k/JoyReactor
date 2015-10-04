@@ -10,7 +10,6 @@ import y2k.joyreactor.images.ImageRequest;
 /**
  * Created by y2k on 28/09/15.
  */
-
 @CustomClass("PostViewController")
 public class PostViewController extends UIViewController implements PostPresenter.View {
 
@@ -25,6 +24,21 @@ public class PostViewController extends UIViewController implements PostPresente
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
+
+        getNavigationItem().getRightBarButtonItem().setOnClickListener(sender -> {
+            UIActionSheet menu = new UIActionSheet();
+            menu.addButton(Translator.get("Add comment"));
+            menu.setCancelButtonIndex(menu.addButton(Translator.get("Cancel")));
+            menu.setDelegate(new UIActionSheetDelegateAdapter() {
+
+                @Override
+                public void clicked(UIActionSheet actionSheet, long buttonIndex) {
+                    if (buttonIndex == 0)
+                        getNavigationController().pushViewController(getStoryboard().instantiateViewController("Profile"), true);
+                }
+            });
+            menu.showFrom(sender, true);
+        });
 
         list.setDataSource(dataSource = new CommentTableView.DataSource());
         list.setRowHeight(UITableView.getAutomaticDimension());

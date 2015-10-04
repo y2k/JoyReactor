@@ -510,7 +510,7 @@
         <!--Post-->
         <scene sceneID="Bc3-5D-pr8">
             <objects>
-                <viewController id="Cue-WN-Q4j" customClass="PostViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Post" id="Cue-WN-Q4j" customClass="PostViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="0Xo-2I-nxR"/>
                         <viewControllerLayoutGuide type="bottom" id="uX5-6R-djG"/>
@@ -640,6 +640,67 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="G4e-7p-NRF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="625" y="1107"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="o1e-4A-vTD">
+            <objects>
+                <viewController storyboardIdentifier="CreateComment" id="lbX-4a-WOG" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Bkk-er-NfC"/>
+                        <viewControllerLayoutGuide type="bottom" id="vTE-SR-1tL"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="mhV-jE-TKM">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e25-IZ-m9n">
+                                <rect key="frame" x="220" y="430" width="100" height="50"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="mFw-sL-fLs"/>
+                                    <constraint firstAttribute="width" constant="100" id="sjw-cG-7Ua"/>
+                                </constraints>
+                                <state key="normal" title="Write">
+                                    <color key="titleColor" red="1" green="0.81106535099999999" blue="0.26127857469999999" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q6c-bN-9E3">
+                                <rect key="frame" x="0.0" y="430" width="100" height="50"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="IPk-zz-eGw"/>
+                                    <constraint firstAttribute="width" constant="100" id="LpJ-F1-7NP"/>
+                                </constraints>
+                                <state key="normal" title="Cancel">
+                                    <color key="titleColor" red="1" green="0.81106535099999999" blue="0.26127857469999999" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                            </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Fvt-c0-Wc1">
+                                <rect key="frame" x="0.0" y="20" width="320" height="410"/>
+                                <animations/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="vTE-SR-1tL" firstAttribute="top" secondItem="e25-IZ-m9n" secondAttribute="bottom" id="6kE-6n-oMq"/>
+                            <constraint firstItem="Fvt-c0-Wc1" firstAttribute="leading" secondItem="mhV-jE-TKM" secondAttribute="leading" id="ECt-Fc-GOa"/>
+                            <constraint firstAttribute="trailing" secondItem="e25-IZ-m9n" secondAttribute="trailing" id="RIh-0R-Auc"/>
+                            <constraint firstItem="Q6c-bN-9E3" firstAttribute="leading" secondItem="mhV-jE-TKM" secondAttribute="leading" id="VDc-wE-Gkn"/>
+                            <constraint firstItem="Fvt-c0-Wc1" firstAttribute="top" secondItem="Bkk-er-NfC" secondAttribute="bottom" id="WLI-JY-mAM"/>
+                            <constraint firstAttribute="trailing" secondItem="Fvt-c0-Wc1" secondAttribute="trailing" id="lLA-OL-KM4"/>
+                            <constraint firstItem="vTE-SR-1tL" firstAttribute="top" secondItem="Q6c-bN-9E3" secondAttribute="bottom" id="pi9-d1-hxh"/>
+                            <constraint firstItem="Q6c-bN-9E3" firstAttribute="top" secondItem="Fvt-c0-Wc1" secondAttribute="bottom" id="qzt-GR-344"/>
+                        </constraints>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gDb-d8-Fij" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1034" y="1107"/>
         </scene>
         <!--Threads-->
         <scene sceneID="mYO-wh-Qpd">

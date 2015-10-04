@@ -17,7 +17,7 @@ public class PostPresenter {
 
     private void loadComments() {
         Comment.Collection
-                .request(2206485)
+                .request(2219757)
                 .subscribe(view::updateComments, Throwable::printStackTrace);
     }
 

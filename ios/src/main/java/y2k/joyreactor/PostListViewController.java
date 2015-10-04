@@ -125,5 +125,11 @@ public class PostListViewController extends UIViewController implements PostList
             Post post = posts.get(indexPath.getRow());
             return (tableView.getFrame().getWidth() - 16) / post.getAspect() + 66 + 16;
         }
+
+        @Override
+        public void didSelectRow(UITableView tableView, NSIndexPath indexPath) {
+            UIViewController vc = getStoryboard().instantiateViewController("Post");
+            getNavigationController().pushViewController(vc, true);
+        }
     }
 }

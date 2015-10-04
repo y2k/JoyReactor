@@ -10,13 +10,13 @@ import java.util.regex.Pattern;
 /**
  * Created by y2k on 9/29/15.
  */
-public class CommentRequest {
+public class CommentListRequest {
 
     public final Comment.Collection comments = new Comment.Collection();
 
     private final int postId;
 
-    public CommentRequest(int postId) {
+    public CommentListRequest(int postId) {
         this.postId = postId;
     }
 
