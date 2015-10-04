@@ -2,8 +2,11 @@ package y2k.joyreactor;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import rx.Observable;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,17 +15,26 @@ import java.util.regex.Pattern;
  */
 public class CommentListRequest {
 
-    public final Comment.Collection comments = new Comment.Collection();
-
     private final int postId;
+    private int commentId;
 
-    public CommentListRequest(int postId) {
+    public CommentListRequest(int postId, int commentId) {
         this.postId = postId;
+        this.commentId = commentId;
     }
 
-    public void populate() throws IOException {
-        Document doc = new HttpClient().getDocument("http://anime.reactor.cc/post/" + postId);
+    public Observable<List<Comment>> request() {
+        return ObservableUtils.create(() -> Observable
+                .from(getAllComments())
+                .filter(s -> s.parentId == commentId)
+                .toSortedList((a, b) -> (int) (b.rating - a.rating))
+                .toBlocking()
+                .single());
+    }
 
+    private List<Comment> getAllComments() throws IOException {
+        Document doc = new HttpClient().getDocument("http://anime.reactor.cc/post/" + postId);
+        List<Comment> result = new ArrayList<>();
         for (Element node : doc.select("div.comment")) {
             Comment comment = new Comment();
             comment.text = node.select("div.txt > div").first().text();
@@ -34,17 +46,31 @@ public class CommentListRequest {
             if ("comment_list".equals(parent.className()))
                 comment.parentId = NumberExtractor.get(parent.id());
 
-            comments.add(comment);
+            result.add(comment);
         }
+        ChildrenCounter.compute(result);
+        return result;
     }
 
-    static class NumberExtractor {
+    private static class NumberExtractor {
 
         static final Pattern NUMBER = Pattern.compile("\\d+");
 
-        public static int get(String text) {
+        static int get(String text) {
             Matcher m = NUMBER.matcher(text);
             return m.find() ? Integer.parseInt(m.group()) : 0;
+        }
+    }
+
+    private static class ChildrenCounter {
+
+        static void compute(List<Comment> comments) {
+            // TODO: оптимизировать
+            for (int i = 0; i < comments.size() - 1; i++) {
+                Comment c = comments.get(i);
+                for (int n = i + 1; n < comments.size(); n++)
+                    if (comments.get(n).parentId == c.id) c.childCount++;
+            }
         }
     }
 }

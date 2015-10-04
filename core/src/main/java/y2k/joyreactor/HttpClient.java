@@ -39,10 +39,6 @@ public class HttpClient {
         }
     }
 
-    public Observable<Document> getDocumentAsync(String url) {
-        return ObservableUtils.create(() -> getDocument(url));
-    }
-
     public Document getDocument(String url) throws IOException {
         InputStream stream = null;
         try {

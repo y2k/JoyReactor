@@ -7,13 +7,14 @@ import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
 import y2k.joyreactor.images.ImageRequest;
 
+import java.util.List;
+
 /**
  * Created by y2k on 28/09/15.
  */
 @CustomClass("PostViewController")
 public class PostViewController extends UIViewController implements PostPresenter.View {
 
-    CommentTableView.DataSource dataSource;
     UITableView list;
 
     @IBOutlet
@@ -21,30 +22,35 @@ public class PostViewController extends UIViewController implements PostPresente
         this.list = list;
     }
 
+    PostPresenter presenter;
+
+    List<Comment> comments;
+    Post post;
+
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
 
-        UILongPressGestureRecognizer gr = new UILongPressGestureRecognizer();
-        gr.setMinimumPressDuration(0.5);
-        gr.addListener(s -> {
-            if (s.getState() != UIGestureRecognizerState.Ended) return;
-
-            UIActionSheet menu = new UIActionSheet();
-            menu.addButton(Translator.get("Reply"));
-            menu.setCancelButtonIndex(menu.addButton(Translator.get("Cancel")));
-            menu.setDelegate(new UIActionSheetDelegateAdapter() {
-
-                @Override
-                public void clicked(UIActionSheet actionSheet, long buttonIndex) {
-                    if (buttonIndex == 0)
-                        getNavigationController().pushViewController(
-                                getStoryboard().instantiateViewController("CreateComment"), true);
-                }
-            });
-            menu.showFrom(getNavigationItem().getRightBarButtonItem(), true);
-        });
-        list.addGestureRecognizer(gr);
+//        UILongPressGestureRecognizer gr = new UILongPressGestureRecognizer();
+//        gr.setMinimumPressDuration(0.5);
+//        gr.addListener(s -> {
+//            if (s.getState() != UIGestureRecognizerState.Ended) return;
+//
+//            UIActionSheet menu = new UIActionSheet();
+//            menu.addButton(Translator.get("Reply"));
+//            menu.setCancelButtonIndex(menu.addButton(Translator.get("Cancel")));
+//            menu.setDelegate(new UIActionSheetDelegateAdapter() {
+//
+//                @Override
+//                public void clicked(UIActionSheet actionSheet, long buttonIndex) {
+//                    if (buttonIndex == 0)
+//                        getNavigationController().pushViewController(
+//                                getStoryboard().instantiateViewController("CreateComment"), true);
+//                }
+//            });
+//            menu.showFrom(getNavigationItem().getRightBarButtonItem(), true);
+//        });
+//        list.addGestureRecognizer(gr);
 
         getNavigationItem().getRightBarButtonItem().setOnClickListener(sender -> {
             UIActionSheet menu = new UIActionSheet();
@@ -62,74 +68,78 @@ public class PostViewController extends UIViewController implements PostPresente
             menu.showFrom(sender, true);
         });
 
-        list.setDataSource(dataSource = new CommentTableView.DataSource());
+        list.setDelegate(new CommentDelegate());
+        list.setDataSource(new CommentDataSource());
         list.setRowHeight(UITableView.getAutomaticDimension());
         list.setEstimatedRowHeight(44);
-        new PostPresenter(this);
+        presenter = new PostPresenter(this);
     }
 
     @Override
-    public void updateComments(Comment.Collection comments) {
-        dataSource.comments = comments;
+    public void updateComments(List<Comment> comments) {
+        this.comments = comments;
         list.reloadData();
     }
 
     @Override
     public void updatePostImage(Post post) {
-        dataSource.post = post;
+        this.post = post;
         list.reloadData();
     }
 
-    static class CommentTableView {
+    private class CommentDataSource extends UITableViewDataSourceAdapter {
 
-        static class DataSource extends UITableViewDataSourceAdapter {
+        @Override
+        public long getNumberOfRowsInSection(UITableView tableView, long section) {
+            return (comments == null ? 0 : comments.size()) + 1;
+        }
 
-            Comment.Collection comments;
-            Post post;
+        @Override
+        public UITableViewCell getCellForRow(UITableView tableView, NSIndexPath indexPath) {
+            return indexPath.getRow() == 0
+                    ? createHeaderCell(tableView)
+                    : createCommentCell(tableView, indexPath);
+        }
 
-            @Override
-            public long getNumberOfRowsInSection(UITableView tableView, long section) {
-                return (comments == null ? 0 : comments.size()) + 1;
-            }
-
-            @Override
-            public UITableViewCell getCellForRow(UITableView tableView, NSIndexPath indexPath) {
-                return indexPath.getRow() == 0
-                        ? createHeaderCell(tableView)
-                        : createCommentCell(tableView, indexPath);
-            }
-
-            UITableViewCell createHeaderCell(UITableView tableView) {
-                UITableViewCell cell;
-                cell = tableView.dequeueReusableCell("Header");
-                if (post != null) {
-                    UIImageView iv = (UIImageView) cell.getViewWithTag(1);
-                    new ImageRequest()
-                            .setUrl(post.image)
-                            .setSize(300, (int) (300 / post.getAspect()))
-                            .to(data -> iv.setImage(new UIImage(new NSData(data))));
-                }
-                return cell;
-            }
-
-            UITableViewCell createCommentCell(UITableView tableView, NSIndexPath indexPath) {
-                UITableViewCell cell;
-                cell = tableView.dequeueReusableCell("Comment");
-                Comment item = comments.get(indexPath.getRow() - 1);
-                ((UILabel) cell.getViewWithTag(1)).setText(item.text);
-
-                UIImageView iv = (UIImageView) cell.getViewWithTag(2);
-                iv.getLayer().setCornerRadius(iv.getFrame().getWidth() / 2);
+        UITableViewCell createHeaderCell(UITableView tableView) {
+            UITableViewCell cell;
+            cell = tableView.dequeueReusableCell("Header");
+            if (post != null) {
+                UIImageView iv = (UIImageView) cell.getViewWithTag(1);
                 new ImageRequest()
-                        .setUrl(item.userAvatar)
-                        .setSize((int) iv.getFrame().getWidth(), (int) iv.getFrame().getHeight())
-                        .to(bitmap -> iv.setImage(new UIImage(new NSData(bitmap))));
-
-                ((UILabel) cell.getViewWithTag(3)).setText("" + item.childCount);
-                ((UILabel) cell.getViewWithTag(4)).setText("" + item.rating);
-
-                return cell;
+                        .setUrl(post.image)
+                        .setSize(300, (int) (300 / post.getAspect()))
+                        .to(data -> iv.setImage(new UIImage(new NSData(data))));
             }
+            return cell;
+        }
+
+        UITableViewCell createCommentCell(UITableView tableView, NSIndexPath indexPath) {
+            UITableViewCell cell;
+            cell = tableView.dequeueReusableCell("Comment");
+            Comment item = comments.get(indexPath.getRow() - 1);
+            ((UILabel) cell.getViewWithTag(1)).setText(item.text);
+
+            UIImageView iv = (UIImageView) cell.getViewWithTag(2);
+            iv.getLayer().setCornerRadius(iv.getFrame().getWidth() / 2);
+            new ImageRequest()
+                    .setUrl(item.userAvatar)
+                    .setSize((int) iv.getFrame().getWidth(), (int) iv.getFrame().getHeight())
+                    .to(bitmap -> iv.setImage(new UIImage(new NSData(bitmap))));
+
+            ((UILabel) cell.getViewWithTag(3)).setText("" + item.childCount);
+            ((UILabel) cell.getViewWithTag(4)).setText("" + item.rating);
+
+            return cell;
+        }
+    }
+
+    private class CommentDelegate extends UITableViewDelegateAdapter {
+
+        @Override
+        public void didSelectRow(UITableView tableView, NSIndexPath indexPath) {
+            presenter.selectComment(comments.get(indexPath.getRow() - 1).id);
+            tableView.deselectRow(indexPath, true);
         }
     }
 }

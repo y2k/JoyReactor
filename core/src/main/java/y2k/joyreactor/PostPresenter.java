@@ -1,5 +1,6 @@
 package y2k.joyreactor;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -11,13 +12,14 @@ public class PostPresenter {
 
     public PostPresenter(View view) {
         this.view = view;
+
         loadComments();
         loadPost();
     }
 
     private void loadComments() {
-        Comment.Collection
-                .request(2219757)
+        new CommentListRequest(2214973, 0)
+                .request()
                 .subscribe(view::updateComments, Throwable::printStackTrace);
     }
 
@@ -32,9 +34,15 @@ public class PostPresenter {
         }, 2, TimeUnit.SECONDS);
     }
 
+    public void selectComment(int commentId) {
+        new CommentListRequest(2214973, commentId)
+                .request()
+                .subscribe(view::updateComments, Throwable::printStackTrace);
+    }
+
     public interface View {
 
-        void updateComments(Comment.Collection comments);
+        void updateComments(List<Comment> comments);
 
         void updatePostImage(Post post);
     }
