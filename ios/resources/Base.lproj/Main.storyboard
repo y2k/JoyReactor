@@ -519,13 +519,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="yYz-aB-eoZ">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="yYz-aB-eoZ">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Header" rowHeight="250" id="Jk9-eX-8nH">
-                                        <rect key="frame" x="0.0" y="28" width="320" height="250"/>
+                                        <rect key="frame" x="0.0" y="92" width="320" height="250"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Jk9-eX-8nH" id="igg-6s-XlJ">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="250"/>
@@ -550,7 +550,7 @@
                                         <animations/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Comment" rowHeight="70" id="c4l-n9-NMZ">
-                                        <rect key="frame" x="0.0" y="278" width="320" height="70"/>
+                                        <rect key="frame" x="0.0" y="342" width="320" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="c4l-n9-NMZ" id="kql-nz-EgN">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
@@ -628,10 +628,10 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Post" id="oUa-Mh-uXI">
-                        <barButtonItem key="leftBarButtonItem" image="MenuIcon.png" id="dal-28-nKV"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="action" id="hwG-hF-JEK"/>
                     </navigationItem>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="list" destination="yYz-aB-eoZ" id="Nrf-Tq-vjD"/>
@@ -660,7 +660,8 @@
                                     <constraint firstAttribute="height" constant="50" id="mFw-sL-fLs"/>
                                     <constraint firstAttribute="width" constant="100" id="sjw-cG-7Ua"/>
                                 </constraints>
-                                <state key="normal" title="Write">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Send">
                                     <color key="titleColor" red="1" green="0.81106535099999999" blue="0.26127857469999999" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                             </button>
@@ -671,6 +672,7 @@
                                     <constraint firstAttribute="height" constant="50" id="IPk-zz-eGw"/>
                                     <constraint firstAttribute="width" constant="100" id="LpJ-F1-7NP"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Cancel">
                                     <color key="titleColor" red="1" green="0.81106535099999999" blue="0.26127857469999999" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
@@ -891,6 +893,5 @@
         <image name="IconRating.png" width="12" height="12"/>
         <image name="IconReply.png" width="12" height="12"/>
         <image name="MenuHeader.png" width="270" height="136"/>
-        <image name="MenuIcon.png" width="24" height="24"/>
     </resources>
 </document>

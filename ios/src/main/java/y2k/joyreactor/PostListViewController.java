@@ -51,9 +51,11 @@ public class PostListViewController extends UIViewController implements PostList
                 @Override
                 public void clicked(UIActionSheet actionSheet, long buttonIndex) {
                     if (buttonIndex == 0)
-                        getNavigationController().pushViewController(getStoryboard().instantiateViewController("Profile"), true);
+                        getNavigationController().pushViewController(
+                                getStoryboard().instantiateViewController("Profile"), true);
                     else if (buttonIndex == 1)
-                        getNavigationController().pushViewController(getStoryboard().instantiateViewController("MessageThreads"), true);
+                        getNavigationController().pushViewController(
+                                getStoryboard().instantiateViewController("MessageThreads"), true);
                 }
             });
             menu.showFrom(sender, true);
@@ -128,8 +130,8 @@ public class PostListViewController extends UIViewController implements PostList
 
         @Override
         public void didSelectRow(UITableView tableView, NSIndexPath indexPath) {
-            UIViewController vc = getStoryboard().instantiateViewController("Post");
-            getNavigationController().pushViewController(vc, true);
+            getNavigationController().pushViewController(
+                    getStoryboard().instantiateViewController("Post"), true);
         }
     }
 }

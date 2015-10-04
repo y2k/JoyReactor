@@ -19,7 +19,7 @@ public class CreateCommentPresenter {
 
     public void create() {
         view.setIsBusy(true);
-        new CreateCommentRequest("2219757", null)
+        new CreateCommentRequest("2219757", "10412483")
                 .request(view.getCommentText())
                 .subscribe(s -> {
                     Navigation.getInstance().closeCreateComment();

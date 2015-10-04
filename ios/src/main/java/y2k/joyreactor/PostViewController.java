@@ -25,6 +25,27 @@ public class PostViewController extends UIViewController implements PostPresente
     public void viewDidLoad() {
         super.viewDidLoad();
 
+        UILongPressGestureRecognizer gr = new UILongPressGestureRecognizer();
+        gr.setMinimumPressDuration(0.5);
+        gr.addListener(s -> {
+            if (s.getState() != UIGestureRecognizerState.Ended) return;
+
+            UIActionSheet menu = new UIActionSheet();
+            menu.addButton(Translator.get("Reply"));
+            menu.setCancelButtonIndex(menu.addButton(Translator.get("Cancel")));
+            menu.setDelegate(new UIActionSheetDelegateAdapter() {
+
+                @Override
+                public void clicked(UIActionSheet actionSheet, long buttonIndex) {
+                    if (buttonIndex == 0)
+                        getNavigationController().pushViewController(
+                                getStoryboard().instantiateViewController("CreateComment"), true);
+                }
+            });
+            menu.showFrom(getNavigationItem().getRightBarButtonItem(), true);
+        });
+        list.addGestureRecognizer(gr);
+
         getNavigationItem().getRightBarButtonItem().setOnClickListener(sender -> {
             UIActionSheet menu = new UIActionSheet();
             menu.addButton(Translator.get("Add comment"));
