@@ -641,10 +641,10 @@
             </objects>
             <point key="canvasLocation" x="625" y="1107"/>
         </scene>
-        <!--View Controller-->
+        <!--Create Comment View Controller-->
         <scene sceneID="o1e-4A-vTD">
             <objects>
-                <viewController storyboardIdentifier="CreateComment" id="lbX-4a-WOG" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CreateComment" id="lbX-4a-WOG" customClass="CreateCommentViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Bkk-er-NfC"/>
                         <viewControllerLayoutGuide type="bottom" id="vTE-SR-1tL"/>
@@ -697,6 +697,11 @@
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="cancelButton" destination="Q6c-bN-9E3" id="XpN-Ik-vci"/>
+                        <outlet property="commentTextView" destination="Fvt-c0-Wc1" id="awg-Iu-A09"/>
+                        <outlet property="sendButton" destination="e25-IZ-m9n" id="Il7-SW-vur"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gDb-d8-Fij" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

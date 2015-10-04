@@ -34,7 +34,8 @@ public class PostViewController extends UIViewController implements PostPresente
                 @Override
                 public void clicked(UIActionSheet actionSheet, long buttonIndex) {
                     if (buttonIndex == 0)
-                        getNavigationController().pushViewController(getStoryboard().instantiateViewController("Profile"), true);
+                        getNavigationController().pushViewController(
+                                getStoryboard().instantiateViewController("CreateComment"), true);
                 }
             });
             menu.showFrom(sender, true);

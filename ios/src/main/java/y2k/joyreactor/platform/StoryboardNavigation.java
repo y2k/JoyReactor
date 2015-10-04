@@ -22,6 +22,11 @@ public class StoryboardNavigation extends Navigation {
         switchTo("Profile");
     }
 
+    @Override
+    public void closeCreateComment() {
+        getNavigationController().popViewController(true);
+    }
+
     private void switchTo(String storyboardId) {
         NSArray<UIViewController> stack = new NSMutableArray<>(getNavigationController().getViewControllers());
         stack.remove(stack.size() - 1);

@@ -2,6 +2,10 @@ package y2k.joyreactor;
 
 import rx.Observable;
 
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by y2k on 10/4/15.
  */
@@ -15,10 +19,10 @@ public class CreateCommentPresenter {
 
     public void create() {
         view.setIsBusy(true);
-        new CreateCommentRequest()
+        new CreateCommentRequest("2219757", null)
                 .request(view.getCommentText())
                 .subscribe(s -> {
-                    // TODO:
+                    Navigation.getInstance().closeCreateComment();
                     view.setIsBusy(false);
                 }, Throwable::printStackTrace);
     }
@@ -32,13 +36,35 @@ public class CreateCommentPresenter {
 
     private static class CreateCommentRequest {
 
-        public Observable<Void> request(String text) {
+        public static final Pattern TOKEN_REGEX = Pattern.compile("var token = '(.+?)'");
+        private String postId;
+        private String commentId;
+
+        private CreateCommentRequest(String postId, String commentId) {
+            this.postId = postId;
+            this.commentId = commentId;
+        }
+
+        public Observable<Void> request(String commentText) {
             return ObservableUtils.create(() -> {
-                // TODO:
-
+                new HttpClient()
+                        .beginForm()
+                        .put("parent_id", commentId == null ? "0" : commentId)
+                        .put("post_id", postId)
+                        .put("token", getToken())
+                        .put("comment_text", commentText)
+                        .putHeader("X-Requested-With", "XMLHttpRequest")
+                        .putHeader("Referer", "http://joyreactor.cc/post/" + postId)
+                        .send("http://joyreactor.cc/post_comment/create");
                 return null;
-
             });
+        }
+
+        private String getToken() throws IOException {
+            String document = new HttpClient().getText("http://joyreactor.cc/donate");
+            Matcher m = TOKEN_REGEX.matcher(document);
+            if (!m.find()) throw new IllegalStateException();
+            return m.group(1);
         }
     }
 }

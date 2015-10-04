@@ -4,9 +4,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import rx.Observable;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -22,6 +20,24 @@ import java.util.regex.Pattern;
 public class HttpClient {
 
     static final CookieStorage sCookies = new CookieStorage();
+
+    public String getText(String url) throws IOException {
+        InputStream stream = null;
+        try {
+            HttpURLConnection conn = createConnection(url);
+            stream = getInputStream(conn);
+            sCookies.grab(conn);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+            StringBuilder buffer = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null)
+                buffer.append(line).append("\n");
+            return buffer.toString();
+        } finally {
+            if (stream != null) stream.close();
+        }
+    }
 
     public Observable<Document> getDocumentAsync(String url) {
         return ObservableUtils.create(() -> getDocument(url));
