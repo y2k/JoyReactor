@@ -76,6 +76,10 @@ public class HttpClient {
         return new Form();
     }
 
+    public void clearCookies() {
+        sCookies.clear();
+    }
+
     public class Form {
 
         Map<String, String> form = new HashMap<>();
@@ -147,6 +151,10 @@ public class HttpClient {
                 if (!m.find()) throw new IllegalStateException(c);
                 storage.put(m.group(1), m.group(2));
             }
+        }
+
+        public void clear() {
+            storage.clear();
         }
     }
 }

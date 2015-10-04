@@ -10,23 +10,31 @@ public class SideMenu {
 
     static final float PanelWidth = 270;
 
-    final UIViewController parent;
-    final UIView parentView;
+    private final UIViewController parent;
+    private final UIView parentView;
 
-    final UIButton closeButton;
-    final UIView menuView;
+    private final UIButton closeButton;
+    private final UIView menuView;
+
+    private final UIViewController menuController;
 
     public SideMenu(UIViewController parent, String menuStoryboardId) {
         this.parent = parent;
         parentView = parent.getNavigationController().getView();
-        menuView = parent.getStoryboard().instantiateViewController(menuStoryboardId).getView();
+        menuController = parent.getStoryboard().instantiateViewController(menuStoryboardId);
+        menuView = menuController.getView();
 
         closeButton = new UIButton(parentView.getFrame());
         closeButton.addOnTouchUpInsideListener((sender, e) -> closeButtonClicked());
     }
 
     void closeButtonClicked() {
-        UIView.animate(0.3, this::restoreViewPosition, s -> removeMenuViews());
+        UIView.animate(0.3,
+                this::restoreViewPosition,
+                s -> {
+                    removeMenuViews();
+                    menuController.viewDidDisappear(false);
+                });
     }
 
     public void attach() {
@@ -59,11 +67,7 @@ public class SideMenu {
                 CGRect f = s.getFrame();
                 s.setFrame(f.offset(PanelWidth, 0));
             }
-        });
-    }
-
-    public void activate() {
-        // TODO:
+        }, s -> menuController.viewWillAppear(false));
     }
 
     public void deactive() {

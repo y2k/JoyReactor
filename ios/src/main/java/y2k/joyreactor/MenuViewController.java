@@ -7,6 +7,8 @@ import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
 import y2k.joyreactor.images.ImageRequest;
 
+import java.util.List;
+
 /**
  * Created by y2k on 9/26/15.
  */
@@ -14,19 +16,28 @@ import y2k.joyreactor.images.ImageRequest;
 public class MenuViewController extends UIViewController implements MenuPresenter.View {
 
     UITableView list;
-    Tag.Collection tags;
+    List<Tag> tags;
+    private MenuPresenter presenter;
 
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
 
-        new MenuPresenter(this);
+        presenter = new MenuPresenter(this);
         list.setDataSource(new TagDataSource());
         list.setDelegate(new TagDelegate());
     }
 
     @Override
-    public void reloadData(Tag.Collection tags) {
+    public void viewWillAppear(boolean animated) {
+        super.viewWillAppear(animated);
+        presenter.activate();
+    }
+
+    @Override
+    public void reloadData(List<Tag> tags) {
+        System.out.println("reloadData | " + tags);
+
         this.tags = tags;
         list.reloadData();
     }
@@ -40,7 +51,7 @@ public class MenuViewController extends UIViewController implements MenuPresente
 
         @Override
         public long getNumberOfRowsInSection(UITableView tableView, long section) {
-            return tags.size() + 1;
+            return (tags == null ? 0 : tags.size()) + 1;
         }
 
         @Override
