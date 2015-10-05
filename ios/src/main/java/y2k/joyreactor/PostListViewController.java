@@ -9,6 +9,8 @@ import org.robovm.objc.annotation.IBAction;
 import org.robovm.objc.annotation.IBOutlet;
 import y2k.joyreactor.images.ImageRequest;
 
+import java.util.List;
+
 /**
  * Created by y2k on 9/26/15.
  */
@@ -70,7 +72,7 @@ public class PostListViewController extends UIViewController implements PostList
     }
 
     @Override
-    public void reloadPosts(Post.Collection posts) {
+    public void reloadPosts(List<Post> posts) {
         dataSource.posts = posts;
         postDelegate.posts = posts;
         list.reloadData();
@@ -78,7 +80,7 @@ public class PostListViewController extends UIViewController implements PostList
 
     class PostDataSource extends UITableViewDataSourceAdapter {
 
-        Post.Collection posts;
+        List<Post> posts;
 
         @Override
         public long getNumberOfRowsInSection(UITableView tableView, long section) {
@@ -88,10 +90,12 @@ public class PostListViewController extends UIViewController implements PostList
 
         @Override
         public UITableViewCell getCellForRow(UITableView tableView, NSIndexPath indexPath) {
-            UITableViewCell cell;
             if (indexPath.getRow() == posts.size()) {
-                cell = tableView.dequeueReusableCell("LoadMore");
+                LoadMoreCell cell = (LoadMoreCell) tableView.dequeueReusableCell("LoadMore");
+                cell.presenter = presenter;
+                return cell;
             } else {
+                UITableViewCell cell;
                 cell = tableView.dequeueReusableCell("Post");
                 Post i = posts.get(indexPath.getRow());
 
@@ -109,8 +113,8 @@ public class PostListViewController extends UIViewController implements PostList
                 root.getLayer().setMasksToBounds(true);
                 root.getLayer().setBorderColor(UIColor.lightGray().getCGColor());
                 root.getLayer().setBorderWidth(1);
+                return cell;
             }
-            return cell;
         }
 
         void loadImage(String url, int width, int height, UIImageView iv) {
@@ -126,7 +130,7 @@ public class PostListViewController extends UIViewController implements PostList
 
     class PostDelegate extends UITableViewDelegateAdapter {
 
-        Post.Collection posts;
+        List<Post> posts;
 
         @Override
         public double getHeightForRow(UITableView tableView, NSIndexPath indexPath) {

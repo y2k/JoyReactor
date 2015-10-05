@@ -1,13 +1,18 @@
 package y2k.joyreactor;
 
+import java.util.List;
+
 /**
  * Created by y2k on 9/26/15.
  */
 public class PostListPresenter {
 
-    public PostListPresenter(View view) {
-        view.setBusy(true);
+    private View view;
 
+    public PostListPresenter(View view) {
+        this.view = view;
+
+        view.setBusy(true);
         Post.Collection
                 .request()
                 .subscribe(data -> {
@@ -16,10 +21,15 @@ public class PostListPresenter {
                 }, Throwable::printStackTrace);
     }
 
+    public void loadMore() {
+        // TODO:
+        view.reloadPosts(null);
+    }
+
     public interface View {
 
         void setBusy(boolean isBusy);
 
-        void reloadPosts(Post.Collection posts);
+        void reloadPosts(List<Post> posts);
     }
 }
