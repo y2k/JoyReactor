@@ -5,6 +5,7 @@ import org.robovm.apple.foundation.NSData;
 import org.robovm.apple.foundation.NSIndexPath;
 import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
+import org.robovm.objc.annotation.IBAction;
 import org.robovm.objc.annotation.IBOutlet;
 import y2k.joyreactor.images.ImageRequest;
 
@@ -81,29 +82,34 @@ public class PostListViewController extends UIViewController implements PostList
 
         @Override
         public long getNumberOfRowsInSection(UITableView tableView, long section) {
-            return posts == null ? 0 : posts.size();
+            int count = posts == null ? 0 : posts.size();
+            return count == 0 ? 0 : count + 1;
         }
 
         @Override
         public UITableViewCell getCellForRow(UITableView tableView, NSIndexPath indexPath) {
-            UITableViewCell cell = tableView.dequeueReusableCell("Post");
-            Post i = posts.get(indexPath.getRow());
+            UITableViewCell cell;
+            if (indexPath.getRow() == posts.size()) {
+                cell = tableView.dequeueReusableCell("LoadMore");
+            } else {
+                cell = tableView.dequeueReusableCell("Post");
+                Post i = posts.get(indexPath.getRow());
 
-            ((UILabel) cell.getViewWithTag(3)).setText(i.userName);
-            ((UILabel) cell.getViewWithTag(4)).setText(new PrettyTime().format(i.created));
+                ((UILabel) cell.getViewWithTag(3)).setText(i.userName);
+                ((UILabel) cell.getViewWithTag(4)).setText(new PrettyTime().format(i.created));
 
-            loadImage(i.image, 300, (int) (300 / i.getAspect()), (UIImageView) cell.getViewWithTag(1));
+                loadImage(i.image, 300, (int) (300 / i.getAspect()), (UIImageView) cell.getViewWithTag(1));
 
-            UIImageView userImageView = (UIImageView) cell.getViewWithTag(2);
-            loadImage(i.userImage, 50, 50, userImageView);
-            userImageView.getLayer().setCornerRadius(userImageView.getFrame().getWidth() / 2);
+                UIImageView userImageView = (UIImageView) cell.getViewWithTag(2);
+                loadImage(i.userImage, 50, 50, userImageView);
+                userImageView.getLayer().setCornerRadius(userImageView.getFrame().getWidth() / 2);
 
-            UIView root = cell.getViewWithTag(10);
-            root.getLayer().setCornerRadius(10);
-            root.getLayer().setMasksToBounds(true);
-            root.getLayer().setBorderColor(UIColor.lightGray().getCGColor());
-            root.getLayer().setBorderWidth(1);
-
+                UIView root = cell.getViewWithTag(10);
+                root.getLayer().setCornerRadius(10);
+                root.getLayer().setMasksToBounds(true);
+                root.getLayer().setBorderColor(UIColor.lightGray().getCGColor());
+                root.getLayer().setBorderWidth(1);
+            }
             return cell;
         }
 
@@ -124,6 +130,7 @@ public class PostListViewController extends UIViewController implements PostList
 
         @Override
         public double getHeightForRow(UITableView tableView, NSIndexPath indexPath) {
+            if (indexPath.getRow() == posts.size()) return -1;
             Post post = posts.get(indexPath.getRow());
             return (tableView.getFrame().getWidth() - 16) / post.getAspect() + 66 + 16;
         }
