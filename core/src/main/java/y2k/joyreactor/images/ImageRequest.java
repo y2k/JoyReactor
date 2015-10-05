@@ -96,7 +96,7 @@ public class ImageRequest {
         }
     }
 
-    class UrlBuilder {
+    static class UrlBuilder {
 
         String url;
         int width;
