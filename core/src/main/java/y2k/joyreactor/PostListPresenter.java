@@ -7,23 +7,27 @@ import java.util.List;
  */
 public class PostListPresenter {
 
+    private PostListService service = new PostListService();
     private View view;
 
     public PostListPresenter(View view) {
         this.view = view;
+        loadMore();
+    }
 
+    public void loadMore() {
         view.setBusy(true);
-        Post.Collection
-                .request()
+        service.loadNextPageAsync()
+                .subscribe(s -> reloadPosts());
+    }
+
+    private void reloadPosts() {
+        view.setBusy(true);
+        service.getList()
                 .subscribe(data -> {
                     view.reloadPosts(data);
                     view.setBusy(false);
                 }, Throwable::printStackTrace);
-    }
-
-    public void loadMore() {
-        // TODO:
-        view.reloadPosts(null);
     }
 
     public interface View {

@@ -2,23 +2,40 @@ package y2k.joyreactor;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import rx.Observable;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by y2k on 9/26/15.
  */
 public class PostRequest {
 
-    public Post.Collection getPosts() throws IOException {
-        Document doc = new HttpClient().getDocument("http://joyreactor.cc");
+    public List<Post> posts;
+    public String nextPageId;
 
-        Post.Collection posts = new Post.Collection();
+    private String pageId;
+
+    public PostRequest(String pageId) {
+        this.pageId = pageId;
+    }
+
+    public void request() throws IOException {
+        Document doc = new HttpClient().getDocument(buildUrl());
+
+        posts = new ArrayList<>();
         for (Element e : doc.select("div.postContainer"))
             posts.add(newPost(e));
 
-        return posts;
+        Element next = doc.select("a.next").first();
+        if (next != null) nextPageId = extractPageNumber(next);
+    }
+
+    private String buildUrl() {
+        return "http://joyreactor.cc/" + (pageId == null ? "" : pageId);
     }
 
     private Post newPost(Element element) {
@@ -33,9 +50,12 @@ public class PostRequest {
 
         result.userName = element.select("div.uhead_nick > a").text();
         result.userImage = element.select("div.uhead_nick > img").attr("src");
-
         result.created = new Date(1000L * Long.parseLong(element.select("span.date > span").attr("data-time")));
 
         return result;
+    }
+
+    private String extractPageNumber(Element next) {
+        return next.attr("href").substring(1);
     }
 }

@@ -1,8 +1,5 @@
 package y2k.joyreactor;
 
-import rx.Observable;
-
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -24,12 +21,5 @@ public class Post {
     public float getAspect() {
         float aspect = height == 0 ? 1 : (float) width / height;
         return Math.min(2, Math.max(1, aspect));
-    }
-
-    public static class Collection extends ArrayList<Post> {
-
-        public static Observable<Post.Collection> request() {
-            return ObservableUtils.create(() -> new PostRequest().getPosts());
-        }
     }
 }
