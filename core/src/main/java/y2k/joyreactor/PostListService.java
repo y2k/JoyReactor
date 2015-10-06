@@ -17,11 +17,23 @@ public class PostListService {
         return ObservableUtils.create(() -> {
             PostRequest request = new PostRequest(nextPageId);
             request.request();
-
-            buffer.addAll(request.posts);
+            return request;
+        }).map(request -> {
+            addNewPosts(request);
             nextPageId = request.nextPageId;
             return null;
         });
+    }
+
+    private void addNewPosts(PostRequest request) {
+        for (Post post : request.posts)
+            if (isNew(post)) buffer.add(post);
+    }
+
+    private boolean isNew(Post post) {
+        for (Post oldPost : buffer)
+            if (oldPost.id.equals(post.id)) return false;
+        return true;
     }
 
     public Observable<List<Post>> getList() {

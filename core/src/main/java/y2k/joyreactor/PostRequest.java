@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by y2k on 9/26/15.
@@ -51,11 +53,18 @@ public class PostRequest {
         result.userName = element.select("div.uhead_nick > a").text();
         result.userImage = element.select("div.uhead_nick > img").attr("src");
         result.created = new Date(1000L * Long.parseLong(element.select("span.date > span").attr("data-time")));
+        result.id = extractNumber(element.id());
 
         return result;
     }
 
     private String extractPageNumber(Element next) {
         return next.attr("href").substring(1);
+    }
+
+    private String extractNumber(String text) {
+        Matcher m = Pattern.compile("\\d+").matcher(text);
+        if (!m.find()) throw new IllegalStateException();
+        return m.group();
     }
 }

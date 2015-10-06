@@ -17,6 +17,7 @@ public class Post {
     public String userName;
 
     public Date created;
+    public String id;
 
     public float getAspect() {
         float aspect = height == 0 ? 1 : (float) width / height;
