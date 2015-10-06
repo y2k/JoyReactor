@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by y2k on 9/26/15.
  */
-public class PostListPresenter {
+public class PostListPresenter extends Presenter {
 
     private PostListService service = new PostListService();
     private View view;
@@ -13,6 +13,15 @@ public class PostListPresenter {
     public PostListPresenter(View view) {
         this.view = view;
         loadMore();
+    }
+
+    @Override
+    public void activate() {
+        super.activate();
+
+        Messenger.getDefault().register(this, m -> {
+            // TODO:
+        }, Messages.TagSelected.class);
     }
 
     public void loadMore() {

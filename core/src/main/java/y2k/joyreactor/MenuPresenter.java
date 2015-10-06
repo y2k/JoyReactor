@@ -28,6 +28,10 @@ public class MenuPresenter extends Presenter {
                 .subscribe(view::reloadData, Throwable::printStackTrace);
     }
 
+    public void selectTag(Tag item) {
+        Messenger.getDefault().send(new Messages.TagSelected());
+    }
+
     public interface View {
 
         void reloadData(List<Tag> tags);

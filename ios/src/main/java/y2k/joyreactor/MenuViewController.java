@@ -36,8 +36,6 @@ public class MenuViewController extends UIViewController implements MenuPresente
 
     @Override
     public void reloadData(List<Tag> tags) {
-        System.out.println("reloadData | " + tags);
-
         this.tags = tags;
         list.reloadData();
     }
@@ -80,6 +78,12 @@ public class MenuViewController extends UIViewController implements MenuPresente
         @Override
         public double getHeightForRow(UITableView tableView, NSIndexPath indexPath) {
             return indexPath.getRow() == 0 ? 136 : 50;
+        }
+
+        @Override
+        public void didSelectRow(UITableView tableView, NSIndexPath indexPath) {
+            presenter.selectTag(tags.get(indexPath.getRow() - 1));
+            tableView.deselectRow(indexPath, true);
         }
     }
 }
