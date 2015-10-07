@@ -6,5 +6,15 @@ package y2k.joyreactor;
 public class Messages {
 
     static class TagSelected {
+
+        Tag tag;
+
+        TagSelected(Tag tag) {
+            this.tag = tag;
+        }
+
+        public void broadcast() {
+            Messenger.getInstance().send(this);
+        }
     }
 }

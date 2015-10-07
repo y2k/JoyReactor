@@ -19,7 +19,7 @@ public class MessagesPresenter extends Presenter {
     @Override
     public void activate() {
         super.activate();
-        Messenger.getDefault().register(this,
+        Messenger.getInstance().register(this,
                 m -> reloadMessages(m.thread.username),
                 MessageThreadsPresenter.ThreadSelectedMessage.class);
     }

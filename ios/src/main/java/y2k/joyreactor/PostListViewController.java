@@ -66,6 +66,12 @@ public class PostListViewController extends UIViewController implements PostList
     }
 
     @Override
+    public void viewWillAppear(boolean animated) {
+        super.viewWillAppear(animated);
+        presenter.activate();
+    }
+
+    @Override
     public void setBusy(boolean isBusy) {
         if (isBusy) progress.startAnimating();
         else progress.stopAnimating();

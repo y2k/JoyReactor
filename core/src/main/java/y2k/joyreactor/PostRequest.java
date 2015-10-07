@@ -5,6 +5,7 @@ import org.jsoup.nodes.Element;
 import rx.Observable;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,9 +20,11 @@ public class PostRequest {
     public List<Post> posts;
     public String nextPageId;
 
+    private String tagId;
     private String pageId;
 
-    public PostRequest(String pageId) {
+    public PostRequest(String tagId, String pageId) {
+        this.tagId = tagId;
         this.pageId = pageId;
     }
 
@@ -33,11 +36,14 @@ public class PostRequest {
             posts.add(newPost(e));
 
         Element next = doc.select("a.next").first();
-        if (next != null) nextPageId = extractPageNumber(next);
+        if (next != null) nextPageId = extractNumber(next.attr("href"));
     }
 
     private String buildUrl() {
-        return "http://joyreactor.cc/" + (pageId == null ? "" : pageId);
+        String url = "http://joyreactor.cc";
+        if (tagId != null) url += "/tag/" + URLEncoder.encode(tagId);
+        if (pageId != null) url += "/" + pageId;
+        return url;
     }
 
     private Post newPost(Element element) {
@@ -54,12 +60,7 @@ public class PostRequest {
         result.userImage = element.select("div.uhead_nick > img").attr("src");
         result.created = new Date(1000L * Long.parseLong(element.select("span.date > span").attr("data-time")));
         result.id = extractNumber(element.id());
-
         return result;
-    }
-
-    private String extractPageNumber(Element next) {
-        return next.attr("href").substring(1);
     }
 
     private String extractNumber(String text) {

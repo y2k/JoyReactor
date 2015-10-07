@@ -29,7 +29,7 @@ public class MenuPresenter extends Presenter {
     }
 
     public void selectTag(Tag item) {
-        Messenger.getDefault().send(new Messages.TagSelected());
+        new Messages.TagSelected(item).broadcast();
     }
 
     public interface View {

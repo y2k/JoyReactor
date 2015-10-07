@@ -19,8 +19,9 @@ public class PostListPresenter extends Presenter {
     public void activate() {
         super.activate();
 
-        Messenger.getDefault().register(this, m -> {
-            // TODO:
+        Messenger.getInstance().register(this, m -> {
+            service.setCurrentTag(m.tag);
+            loadMore();
         }, Messages.TagSelected.class);
     }
 

@@ -9,6 +9,6 @@ public abstract class Presenter {
     }
 
     public void deactivate() {
-        Messenger.getDefault().unregister(this);
+        Messenger.getInstance().unregister(this);
     }
 }

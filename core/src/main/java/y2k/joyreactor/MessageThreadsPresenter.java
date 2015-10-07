@@ -19,7 +19,7 @@ public class MessageThreadsPresenter {
     }
 
     public void selectThread(int index) {
-        Messenger.getDefault().send(new ThreadSelectedMessage(threads.get(index)));
+        Messenger.getInstance().send(new ThreadSelectedMessage(threads.get(index)));
     }
 
     public static class ThreadSelectedMessage {

@@ -10,6 +10,10 @@ public class Tag {
     public String title;
     public String image;
 
+    public String getId() {
+        return title.toLowerCase();
+    }
+
     public static class Collection extends ArrayList<Tag> {
     }
 }
