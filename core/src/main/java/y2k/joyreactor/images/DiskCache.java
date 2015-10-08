@@ -7,7 +7,7 @@ import java.io.*;
 /**
  * Created by y2k on 9/27/15.
  */
-public class DiskCache {
+class DiskCache {
 
     public ReadAction load(String url) {
         if (!urlToFile(url).exists()) return null;

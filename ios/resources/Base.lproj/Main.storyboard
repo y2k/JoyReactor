@@ -402,7 +402,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Featured" id="P8z-RY-c2R">
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="Tkx-Qd-npW"/>
+                        <barButtonItem key="rightBarButtonItem" image="More.png" id="Tkx-Qd-npW"/>
                     </navigationItem>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
@@ -656,7 +656,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Post" id="oUa-Mh-uXI">
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="hwG-hF-JEK"/>
+                        <barButtonItem key="rightBarButtonItem" image="More.png" id="hwG-hF-JEK"/>
                     </navigationItem>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
@@ -921,5 +921,6 @@
         <image name="IconRating.png" width="12" height="12"/>
         <image name="IconReply.png" width="12" height="12"/>
         <image name="MenuHeader.png" width="270" height="136"/>
+        <image name="More.png" width="21" height="6"/>
     </resources>
 </document>
