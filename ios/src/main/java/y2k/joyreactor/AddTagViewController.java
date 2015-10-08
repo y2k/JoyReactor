@@ -26,7 +26,7 @@ public class AddTagViewController extends UIViewController implements AddTagPres
                 return false;
             }
         });
-        createButton.addOnTouchUpInsideListener((sender, e) -> presenter.addTag());
+//        createButton.addOnTouchUpInsideListener((sender, e) -> presenter.addTag());
     }
 
     @Override
