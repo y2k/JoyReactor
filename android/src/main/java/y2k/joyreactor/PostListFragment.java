@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import y2k.joyreactor.images.ImageRequest;
 
+import java.util.List;
+
 /**
  * Created by y2k on 9/26/15.
  */
@@ -24,7 +26,7 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
     }
 
     @Override
-    public void reloadPosts(Post.Collection posts) {
+    public void reloadPosts(List<Post> posts) {
         adapter.reloadData(posts);
     }
 
@@ -46,7 +48,7 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
 
     static class PostAdapter extends RecyclerView.Adapter {
 
-        Post.Collection posts;
+        List<Post> posts;
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int itemType) {
@@ -67,7 +69,7 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
             return posts == null ? 0 : posts.size();
         }
 
-        public void reloadData(Post.Collection posts) {
+        public void reloadData(List<Post> posts) {
             this.posts = posts;
             notifyDataSetChanged();
         }
