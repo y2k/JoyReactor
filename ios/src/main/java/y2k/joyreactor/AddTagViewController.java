@@ -11,22 +11,30 @@ import org.robovm.objc.annotation.IBOutlet;
 public class AddTagViewController extends UIViewController implements AddTagPresenter.View {
 
     UITextField tagNameView;
-    UIButton createButton;
+    UIActivityIndicatorView activityView;
+    UIBarButtonItem cancelButton;
 
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
         AddTagPresenter presenter = new AddTagPresenter(this);
 
+        cancelButton.setOnClickListener(sender -> {
+            tagNameView.resignFirstResponder();
+            dismissViewController(true, null);
+        });
+
         tagNameView.setDelegate(new UITextFieldDelegateAdapter() {
 
             @Override
             public boolean shouldReturn(UITextField textField) {
-                textField.becomeFirstResponder();
+                presenter.addTag();
                 return false;
             }
         });
-//        createButton.addOnTouchUpInsideListener((sender, e) -> presenter.addTag());
+
+        tagNameView.becomeFirstResponder();
+        activityView.stopAnimating();
     }
 
     @Override
@@ -34,8 +42,30 @@ public class AddTagViewController extends UIViewController implements AddTagPres
         return tagNameView.getText();
     }
 
+    @Override
+    public void setIsBusy(boolean isBusy) {
+        cancelButton.setEnabled(!isBusy);
+        if (isBusy) activityView.startAnimating();
+        else activityView.stopAnimating();
+    }
+
+    @Override
+    public UIStatusBarStyle getPreferredStatusBarStyle() {
+        return UIStatusBarStyle.LightContent;
+    }
+
     @IBOutlet
     void setTagNameView(UITextField tagNameView) {
         this.tagNameView = tagNameView;
+    }
+
+    @IBOutlet
+    void setActivityView(UIActivityIndicatorView activityView) {
+        this.activityView = activityView;
+    }
+
+    @IBOutlet
+    void setCancelButton(UIBarButtonItem cancelButton) {
+        this.cancelButton = cancelButton;
     }
 }

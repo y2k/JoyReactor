@@ -56,7 +56,8 @@ public class PostListViewController extends UIViewController implements PostList
                 public void clicked(UIActionSheet actionSheet, long buttonIndex) {
                     if (buttonIndex == 0) {
                         UIViewController vc = getStoryboard().instantiateViewController("AddTag");
-                        getNavigationController().pushViewController(vc, true);
+//                        getNavigationController().pushViewController(vc, true);
+                        presentViewController(vc, true, null);
                     } else if (buttonIndex == 1)
                         getNavigationController().pushViewController(
                                 getStoryboard().instantiateViewController("Profile"), true);

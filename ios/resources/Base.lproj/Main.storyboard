@@ -553,28 +553,55 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
                             </textField>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="W09-qz-NOc">
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W09-qz-NOc">
                                 <rect key="frame" x="0.0" y="20" width="320" height="44"/>
                                 <animations/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="barTintColor" red="0.8862745098" green="0.53333333329999999" blue="0.18039215689999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <textAttributes key="titleTextAttributes">
+                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </textAttributes>
                                 <items>
                                     <navigationItem title="Create tag" id="bRb-ln-bxz">
                                         <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="Eqh-MM-aOP"/>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Tb7-DH-yRP">
+                                <rect key="frame" x="150" y="110" width="20" height="20"/>
+                                <animations/>
+                                <color key="color" red="0.8862745098" green="0.53333333329999999" blue="0.18039215689999999" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kfy-6r-3MA">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
+                                <animations/>
+                                <color key="backgroundColor" red="0.8862745098" green="0.53333333329999999" blue="0.18039215689999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="g57-pr-75h"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="M61-Js-AHE" secondAttribute="trailing" constant="8" id="2uf-sD-QQi"/>
+                            <constraint firstItem="Tb7-DH-yRP" firstAttribute="centerX" secondItem="iZ0-Dn-hHv" secondAttribute="centerX" id="66E-LN-BfA"/>
                             <constraint firstItem="W09-qz-NOc" firstAttribute="top" secondItem="xKJ-Y3-f2L" secondAttribute="bottom" id="FBk-uM-dJV"/>
+                            <constraint firstItem="kfy-6r-3MA" firstAttribute="top" secondItem="iZ0-Dn-hHv" secondAttribute="top" id="Flq-el-erj"/>
                             <constraint firstItem="M61-Js-AHE" firstAttribute="top" secondItem="W09-qz-NOc" secondAttribute="bottom" constant="8" id="INd-qK-dBm"/>
+                            <constraint firstItem="kfy-6r-3MA" firstAttribute="leading" secondItem="iZ0-Dn-hHv" secondAttribute="leading" id="Jbd-4i-VXz"/>
                             <constraint firstAttribute="trailing" secondItem="W09-qz-NOc" secondAttribute="trailing" id="KnM-fy-xmo"/>
                             <constraint firstItem="M61-Js-AHE" firstAttribute="leading" secondItem="iZ0-Dn-hHv" secondAttribute="leading" constant="8" id="TmE-QP-yww"/>
                             <constraint firstItem="W09-qz-NOc" firstAttribute="leading" secondItem="iZ0-Dn-hHv" secondAttribute="leading" id="iWp-Pf-8dR"/>
+                            <constraint firstAttribute="trailing" secondItem="kfy-6r-3MA" secondAttribute="trailing" id="lSQ-9q-h4b"/>
+                            <constraint firstItem="Tb7-DH-yRP" firstAttribute="top" secondItem="M61-Js-AHE" secondAttribute="bottom" constant="8" id="tGJ-OW-Nyq"/>
                         </constraints>
                     </view>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
+                        <outlet property="activityView" destination="Tb7-DH-yRP" id="qZE-CS-gpt"/>
+                        <outlet property="cancelButton" destination="Eqh-MM-aOP" id="sRe-DV-4lN"/>
                         <outlet property="tagNameView" destination="M61-Js-AHE" id="aSc-ci-Vyu"/>
                     </connections>
                 </viewController>
