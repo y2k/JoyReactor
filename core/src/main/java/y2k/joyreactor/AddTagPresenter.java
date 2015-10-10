@@ -19,6 +19,8 @@ public class AddTagPresenter {
         ForegroundScheduler.getInstance().createWorker().schedule(() -> {
             // TODO
             view.setIsBusy(false);
+
+            Navigation.getInstance().closeAddTag();
         }, 2, TimeUnit.SECONDS);
 
     }

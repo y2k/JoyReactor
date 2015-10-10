@@ -14,4 +14,6 @@ public abstract class Navigation {
     public abstract void switchLoginToProfile();
 
     public abstract void closeCreateComment();
+
+    public abstract void closeAddTag();
 }

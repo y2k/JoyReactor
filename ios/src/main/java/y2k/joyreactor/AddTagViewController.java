@@ -12,17 +12,14 @@ public class AddTagViewController extends UIViewController implements AddTagPres
 
     UITextField tagNameView;
     UIActivityIndicatorView activityView;
-    UIBarButtonItem cancelButton;
 
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
         AddTagPresenter presenter = new AddTagPresenter(this);
 
-        cancelButton.setOnClickListener(sender -> {
-            tagNameView.resignFirstResponder();
-            dismissViewController(true, null);
-        });
+        getNavigationItem().getRightBarButtonItem()
+                .setOnClickListener(sender -> presenter.addTag());
 
         tagNameView.setDelegate(new UITextFieldDelegateAdapter() {
 
@@ -44,7 +41,8 @@ public class AddTagViewController extends UIViewController implements AddTagPres
 
     @Override
     public void setIsBusy(boolean isBusy) {
-        cancelButton.setEnabled(!isBusy);
+        getNavigationItem().getRightBarButtonItem().setEnabled(!isBusy);
+        getNavigationItem().setHidesBackButton(isBusy, true);
         if (isBusy) activityView.startAnimating();
         else activityView.stopAnimating();
     }
@@ -62,10 +60,5 @@ public class AddTagViewController extends UIViewController implements AddTagPres
     @IBOutlet
     void setActivityView(UIActivityIndicatorView activityView) {
         this.activityView = activityView;
-    }
-
-    @IBOutlet
-    void setCancelButton(UIBarButtonItem cancelButton) {
-        this.cancelButton = cancelButton;
     }
 }

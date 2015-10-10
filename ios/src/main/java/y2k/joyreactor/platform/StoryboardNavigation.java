@@ -27,6 +27,11 @@ public class StoryboardNavigation extends Navigation {
         getNavigationController().popViewController(true);
     }
 
+    @Override
+    public void closeAddTag() {
+        getNavigationController().popViewController(true);
+    }
+
     private void switchTo(String storyboardId) {
         NSArray<UIViewController> stack = new NSMutableArray<>(getNavigationController().getViewControllers());
         stack.remove(stack.size() - 1);
