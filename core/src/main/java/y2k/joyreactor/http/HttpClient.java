@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class HttpClient {
 
-    static final CookieStorage sCookies = new CookieStorage();
+    private static CookieStorage sCookies = new CookieStorage("cookies.dat");
 
     public String getText(String url) throws IOException {
         InputStream stream = null;
