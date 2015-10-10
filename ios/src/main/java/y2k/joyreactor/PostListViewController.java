@@ -45,27 +45,21 @@ public class PostListViewController extends UIViewController implements PostList
         new SideMenu(this, "Menu").attach();
 
         getNavigationItem().getRightBarButtonItem().setOnClickListener(sender -> {
-            UIActionSheet menu = new UIActionSheet();
-            menu.addButton(Translator.get("Add tag"));
-            menu.addButton(Translator.get("Profile"));
-            menu.addButton(Translator.get("Messages"));
-            menu.setCancelButtonIndex(menu.addButton(Translator.get("Cancel")));
-            menu.setDelegate(new UIActionSheetDelegateAdapter() {
-
-                @Override
-                public void clicked(UIActionSheet actionSheet, long buttonIndex) {
-                    if (buttonIndex == 0) {
-                        getNavigationController().pushViewController(
-                                getStoryboard().instantiateViewController("AddTag"), true);
-                    } else if (buttonIndex == 1)
-                        getNavigationController().pushViewController(
-                                getStoryboard().instantiateViewController("Profile"), true);
-                    else if (buttonIndex == 2)
-                        getNavigationController().pushViewController(
-                                getStoryboard().instantiateViewController("MessageThreads"), true);
-                }
-            });
-            menu.showFrom(sender, true);
+            UIAlertController alert = new UIAlertController();
+            alert.addAction(new UIAlertAction("Add tag", UIAlertActionStyle.Default, s -> {
+                getNavigationController().pushViewController(
+                        getStoryboard().instantiateViewController("AddTag"), true);
+            }));
+            alert.addAction(new UIAlertAction("Profile", UIAlertActionStyle.Default, s -> {
+                getNavigationController().pushViewController(
+                        getStoryboard().instantiateViewController("Profile"), true);
+            }));
+            alert.addAction(new UIAlertAction("Messages", UIAlertActionStyle.Default, s -> {
+                getNavigationController().pushViewController(
+                        getStoryboard().instantiateViewController("MessageThreads"), true);
+            }));
+            alert.addAction(new UIAlertAction("Cancel", UIAlertActionStyle.Cancel, null));
+            presentViewController(alert, true, null);
         });
     }
 

@@ -1,6 +1,9 @@
 package y2k.joyreactor;
 
-import java.util.concurrent.TimeUnit;
+import org.jsoup.nodes.Document;
+import rx.Observable;
+
+import java.net.URLEncoder;
 
 /**
  * Created by y2k on 08/10/15.
@@ -14,15 +17,13 @@ public class AddTagPresenter {
     }
 
     public void addTag() {
-        // TODO:
         view.setIsBusy(true);
-        ForegroundScheduler.getInstance().createWorker().schedule(() -> {
-            // TODO
-            view.setIsBusy(false);
-
-            Navigation.getInstance().closeAddTag();
-        }, 2, TimeUnit.SECONDS);
-
+        new AddTagRequest(view.getTagName())
+                .request()
+                .subscribe(s -> {
+                    view.setIsBusy(false);
+                    Navigation.getInstance().closeAddTag();
+                }, Throwable::printStackTrace);
     }
 
     public interface View {
@@ -30,5 +31,24 @@ public class AddTagPresenter {
         String getTagName();
 
         void setIsBusy(boolean isBusy);
+    }
+
+    static class AddTagRequest {
+
+        private String tagName;
+
+        AddTagRequest(String tagName) {
+            this.tagName = tagName;
+        }
+
+        public Observable<Void> request() {
+            return ObservableUtils.create(() -> {
+                String tagUrl = "http://joyreactor.cc/tag/" + URLEncoder.encode(tagName);
+                Document tagPage = new HttpClient().getDocument(tagUrl);
+                String addTagLink = tagPage.select("a.change_favorite_link").first().absUrl("href");
+                new HttpClient().getText(addTagLink);
+                return null;
+            });
+        }
     }
 }

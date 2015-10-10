@@ -24,7 +24,7 @@ public class LoginViewController extends UIViewController implements LoginPresen
         loginButton.addOnTouchUpInsideListener((sender, e) -> presenter.login());
         registerButton.addOnTouchUpInsideListener((sender, e) -> presenter.register());
 
-        username.setDelegate(new DefaultUITextFieldDelegate());
+        username.setDelegate(new DefaultUITextFieldDelegate(password));
         password.setDelegate(new DefaultUITextFieldDelegate());
     }
 
@@ -84,9 +84,19 @@ public class LoginViewController extends UIViewController implements LoginPresen
 
     private static class DefaultUITextFieldDelegate extends UITextFieldDelegateAdapter {
 
+        private UITextField next;
+
+        public DefaultUITextFieldDelegate(UITextField next) {
+            this.next = next;
+        }
+
+        public DefaultUITextFieldDelegate() {
+        }
+
         @Override
         public boolean shouldReturn(UITextField textField) {
-            textField.resignFirstResponder();
+            if (next == null) textField.resignFirstResponder();
+            else next.becomeFirstResponder();
             return true;
         }
     }

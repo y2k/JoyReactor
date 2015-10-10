@@ -5,6 +5,8 @@ import org.jsoup.nodes.Element;
 import rx.Observable;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -56,6 +58,7 @@ public class MenuPresenter extends Presenter {
                         break;
                     }
                 }
+                Collections.sort(tags, (l, r) -> l.title.compareToIgnoreCase(r.title));
                 return tags;
             });
         }
