@@ -2,6 +2,7 @@ package y2k.joyreactor;
 
 import org.jsoup.nodes.Document;
 import rx.Observable;
+import y2k.joyreactor.http.HttpClient;
 
 import java.net.URLEncoder;
 

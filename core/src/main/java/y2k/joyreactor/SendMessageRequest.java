@@ -1,6 +1,7 @@
 package y2k.joyreactor;
 
 import rx.Observable;
+import y2k.joyreactor.http.HttpClient;
 
 /**
  * Created by y2k on 10/2/15.

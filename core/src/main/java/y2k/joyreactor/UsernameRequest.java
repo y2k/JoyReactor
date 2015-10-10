@@ -2,8 +2,8 @@ package y2k.joyreactor;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import rx.Observable;
+import y2k.joyreactor.http.HttpClient;
 
 /**
  * Created by y2k on 10/4/15.
