@@ -40,6 +40,10 @@ public class PostListPresenter extends Presenter {
                 }, Throwable::printStackTrace);
     }
 
+    public void postClicked(Post post) {
+        Navigation.getInstance().openPost(post);
+    }
+
     public interface View {
 
         void setBusy(boolean isBusy);

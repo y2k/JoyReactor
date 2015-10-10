@@ -22,7 +22,7 @@ public class PostListService {
 
     public Observable<Void> loadNextPageAsync() {
         return ObservableUtils.create(() -> {
-            PostRequest request = new PostRequest(tag == null ? null : tag.getId(), nextPageId);
+            PostsForTagRequest request = new PostsForTagRequest(tag == null ? null : tag.getId(), nextPageId);
             request.request();
             return request;
         }).map(request -> {
@@ -38,7 +38,7 @@ public class PostListService {
 
     class PostMerger {
 
-        void addNewPosts(PostRequest request) {
+        void addNewPosts(PostsForTagRequest request) {
             for (Post post : request.posts)
                 if (isNew(post)) buffer.add(post);
         }

@@ -22,18 +22,7 @@ public class PostListViewController extends UIViewController implements PostList
     PostDelegate postDelegate;
 
     UITableView list;
-
-    @IBOutlet
-    void setList(UITableView list) {
-        this.list = list;
-    }
-
     UIActivityIndicatorView progress;
-
-    @IBOutlet
-    void setProgressView(UIActivityIndicatorView progress) {
-        this.progress = progress;
-    }
 
     @Override
     public void viewDidLoad() {
@@ -82,6 +71,16 @@ public class PostListViewController extends UIViewController implements PostList
         list.reloadData();
     }
 
+    @IBOutlet
+    void setList(UITableView list) {
+        this.list = list;
+    }
+
+    @IBOutlet
+    void setProgressView(UIActivityIndicatorView progress) {
+        this.progress = progress;
+    }
+
     class PostDataSource extends UITableViewDataSourceAdapter {
 
         List<Post> posts;
@@ -99,17 +98,17 @@ public class PostListViewController extends UIViewController implements PostList
                 cell.presenter = presenter;
                 return cell;
             } else {
-                UITableViewCell cell;
-                cell = tableView.dequeueReusableCell("Post");
-                Post i = posts.get(indexPath.getRow());
+                PostCell cell = (PostCell) tableView.dequeueReusableCell("Post");
+                Post post = posts.get(indexPath.getRow());
+                cell.update(presenter, post);
 
-                ((UILabel) cell.getViewWithTag(3)).setText(i.userName);
-                ((UILabel) cell.getViewWithTag(4)).setText(new PrettyTime().format(i.created));
+                ((UILabel) cell.getViewWithTag(3)).setText(post.userName);
+                ((UILabel) cell.getViewWithTag(4)).setText(new PrettyTime().format(post.created));
 
-                loadImage(i.image, 300, (int) (300 / i.getAspect()), (UIImageView) cell.getViewWithTag(1));
+                loadImage(post.image, 300, (int) (300 / post.getAspect()), (UIImageView) cell.getViewWithTag(1));
 
                 UIImageView userImageView = (UIImageView) cell.getViewWithTag(2);
-                loadImage(i.userImage, 50, 50, userImageView);
+                loadImage(post.userImage, 50, 50, userImageView);
                 userImageView.getLayer().setCornerRadius(userImageView.getFrame().getWidth() / 2);
 
                 UIView root = cell.getViewWithTag(10);
@@ -141,13 +140,6 @@ public class PostListViewController extends UIViewController implements PostList
             if (indexPath.getRow() == posts.size()) return -1;
             Post post = posts.get(indexPath.getRow());
             return (tableView.getFrame().getWidth() - 16) / post.getAspect() + 66 + 16;
-        }
-
-        @Override
-        public void didSelectRow(UITableView tableView, NSIndexPath indexPath) {
-            getNavigationController().pushViewController(
-                    getStoryboard().instantiateViewController("Post"), true);
-            tableView.deselectRow(indexPath, true);
         }
     }
 }

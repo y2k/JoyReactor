@@ -281,13 +281,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="310" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3Tb-xx-2IX">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="310" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3Tb-xx-2IX">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                                 <animations/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <inset key="scrollIndicatorInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Post" rowHeight="310" id="5Ro-Wk-r2I">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Post" rowHeight="310" id="5Ro-Wk-r2I" customClass="PostCell">
                                         <rect key="frame" x="0.0" y="92" width="320" height="310"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5Ro-Wk-r2I" id="6E6-b2-GcU">
@@ -323,16 +323,28 @@
                                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XqC-3G-zHP">
+                                                            <rect key="frame" x="0.0" y="0.0" width="304" height="294"/>
+                                                            <animations/>
+                                                            <state key="normal" title="Button"/>
+                                                            <connections>
+                                                                <action selector="clicked" destination="5Ro-Wk-r2I" eventType="touchUpInside" id="KaD-s7-Nhm"/>
+                                                            </connections>
+                                                        </button>
                                                     </subviews>
                                                     <animations/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
+                                                        <constraint firstItem="XqC-3G-zHP" firstAttribute="top" secondItem="u6G-dO-YRb" secondAttribute="top" id="98R-p3-tzn"/>
                                                         <constraint firstItem="4qi-4V-VOZ" firstAttribute="bottom" secondItem="9R5-ne-hWN" secondAttribute="bottom" id="AhS-Ud-Vbv"/>
+                                                        <constraint firstAttribute="trailing" secondItem="XqC-3G-zHP" secondAttribute="trailing" id="FBV-w7-4LS"/>
                                                         <constraint firstItem="4qi-4V-VOZ" firstAttribute="height" secondItem="9R5-ne-hWN" secondAttribute="height" multiplier="0.5" id="Mrg-kw-FiQ"/>
                                                         <constraint firstItem="9R5-ne-hWN" firstAttribute="top" secondItem="p14-PC-4AZ" secondAttribute="bottom" constant="8" id="OXS-y7-6Wr"/>
                                                         <constraint firstItem="p14-PC-4AZ" firstAttribute="leading" secondItem="u6G-dO-YRb" secondAttribute="leading" id="YmD-qK-npS"/>
                                                         <constraint firstItem="9R5-ne-hWN" firstAttribute="leading" secondItem="u6G-dO-YRb" secondAttribute="leading" constant="8" id="awo-uT-2kN"/>
                                                         <constraint firstItem="Vmk-bU-EhU" firstAttribute="height" secondItem="9R5-ne-hWN" secondAttribute="height" multiplier="0.5" id="dzq-cT-5VU"/>
+                                                        <constraint firstItem="XqC-3G-zHP" firstAttribute="leading" secondItem="u6G-dO-YRb" secondAttribute="leading" id="frk-wd-sXv"/>
+                                                        <constraint firstAttribute="bottom" secondItem="XqC-3G-zHP" secondAttribute="bottom" id="h61-ks-7d7"/>
                                                         <constraint firstAttribute="bottom" secondItem="9R5-ne-hWN" secondAttribute="bottom" constant="8" id="isa-yp-44c"/>
                                                         <constraint firstAttribute="trailing" secondItem="Vmk-bU-EhU" secondAttribute="trailing" constant="8" id="lTn-wX-BZM"/>
                                                         <constraint firstAttribute="trailing" secondItem="p14-PC-4AZ" secondAttribute="trailing" id="pku-nb-Qrh"/>

@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 /**
  * Created by y2k on 9/26/15.
  */
-public class PostRequest {
+public class PostsForTagRequest {
 
     public List<Post> posts;
     public String nextPageId;
@@ -23,7 +23,7 @@ public class PostRequest {
     private String tagId;
     private String pageId;
 
-    public PostRequest(String tagId, String pageId) {
+    public PostsForTagRequest(String tagId, String pageId) {
         this.tagId = tagId;
         this.pageId = pageId;
     }

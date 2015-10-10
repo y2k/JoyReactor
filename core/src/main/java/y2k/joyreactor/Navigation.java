@@ -16,4 +16,6 @@ public abstract class Navigation {
     public abstract void closeCreateComment();
 
     public abstract void closeAddTag();
+
+    public abstract void openPost(Post post);
 }
