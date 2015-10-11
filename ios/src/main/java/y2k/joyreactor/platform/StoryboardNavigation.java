@@ -14,6 +14,8 @@ import y2k.joyreactor.Post;
  */
 public class StoryboardNavigation extends Navigation {
 
+    private static Post sPostArgument; // TODO:
+
     @Override
     public void switchProfileToLogin() {
         switchTo("Login");
@@ -36,8 +38,13 @@ public class StoryboardNavigation extends Navigation {
 
     @Override
     public void openPost(Post post) {
-        // TODO:
+        sPostArgument = post;
         getNavigationController().pushViewController(instantiateViewController("Post"), true);
+    }
+
+    @Override
+    public Post getArgumentPost() {
+        return sPostArgument;
     }
 
     private void switchTo(String storyboardId) {

@@ -16,10 +16,10 @@ import java.util.regex.Pattern;
  */
 public class CommentListRequest {
 
-    private final int postId;
+    private String postId;
     private int commentId;
 
-    public CommentListRequest(int postId, int commentId) {
+    public CommentListRequest(String postId, int commentId) {
         this.postId = postId;
         this.commentId = commentId;
     }

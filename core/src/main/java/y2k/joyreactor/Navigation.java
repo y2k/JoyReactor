@@ -18,4 +18,6 @@ public abstract class Navigation {
     public abstract void closeAddTag();
 
     public abstract void openPost(Post post);
+
+    public abstract Post getArgumentPost();
 }

@@ -326,7 +326,6 @@
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XqC-3G-zHP">
                                                             <rect key="frame" x="0.0" y="0.0" width="304" height="294"/>
                                                             <animations/>
-                                                            <state key="normal" title="Button"/>
                                                             <connections>
                                                                 <action selector="clicked" destination="5Ro-Wk-r2I" eventType="touchUpInside" id="KaD-s7-Nhm"/>
                                                             </connections>
