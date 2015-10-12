@@ -5,18 +5,14 @@ import rx.Subscription;
 import rx.functions.Action1;
 import y2k.joyreactor.ForegroundScheduler;
 
-import java.io.*;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
-import static y2k.joyreactor.IoUtils.close;
 
 /**
  * Created by y2k on 12/10/15.
  */
 public abstract class BaseImageRequest<T> {
-
-    private static TaskExecutor DISK_EXECUTOR = new TaskExecutor(1);
 
     private static DiskCache sCache = new DiskCache();
     private static Map<Object, Subscription> sLinks = new HashMap<>();
@@ -45,18 +41,9 @@ public abstract class BaseImageRequest<T> {
     }
 
     private Observable<T> getFromCache() {
-        return Observable.create(subscriber -> DISK_EXECUTOR.execute(() -> {
-            DiskCache.ReadAction in = sCache.load(urlBuilder.buildString());
-            try {
-                if (in != null)
-                    subscriber.onNext(decode(in.getPath()));
-            } catch (Exception e) {
-                subscriber.onError(e);
-            } finally {
-                subscriber.onCompleted();
-                close(in);
-            }
-        }));
+        return sCache
+                .loadAsync(urlBuilder.buildString())
+                .map(this::decode);
     }
 
     private Observable<Object> putToCache() {
