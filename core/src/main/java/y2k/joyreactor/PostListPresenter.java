@@ -31,6 +31,14 @@ public class PostListPresenter extends Presenter {
                 .subscribe(s -> reloadPosts());
     }
 
+    public void postClicked(Post post) {
+        Navigation.getInstance().openPost(post);
+    }
+
+    public void reloadFirstPage() {
+        service.reset().subscribe(s -> loadMore());
+    }
+
     private void reloadPosts() {
         view.setBusy(true);
         service.getList()
@@ -38,10 +46,6 @@ public class PostListPresenter extends Presenter {
                     view.reloadPosts(data);
                     view.setBusy(false);
                 }, Throwable::printStackTrace);
-    }
-
-    public void postClicked(Post post) {
-        Navigation.getInstance().openPost(post);
     }
 
     public interface View {

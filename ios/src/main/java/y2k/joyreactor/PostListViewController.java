@@ -10,6 +10,7 @@ import org.robovm.objc.annotation.IBOutlet;
 import y2k.joyreactor.images.ImageRequest;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by y2k on 9/26/15.
@@ -17,21 +18,22 @@ import java.util.List;
 @CustomClass("PostListViewController")
 public class PostListViewController extends UIViewController implements PostListPresenter.View {
 
-    PostListPresenter presenter;
-    PostDataSource dataSource;
-    PostDelegate postDelegate;
-
     UITableView list;
     UIActivityIndicatorView progress;
+    UIRefreshControl refresher;
+
+    PostListPresenter presenter;
+    List<Post> posts;
 
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
-        presenter = new PostListPresenter(this);
-        list.setDataSource(dataSource = new PostDataSource());
-        list.setDelegate(postDelegate = new PostDelegate());
+        list.setDataSource(new PostDataSource());
+        list.setDelegate(new PostDelegate());
 
         new SideMenu(this, "Menu").attach();
+
+        list.addSubview(refresher = new UIRefreshControl());
 
         getNavigationItem().getRightBarButtonItem().setOnClickListener(sender -> {
             UIAlertController alert = new UIAlertController();
@@ -50,6 +52,8 @@ public class PostListViewController extends UIViewController implements PostList
             alert.addAction(new UIAlertAction("Cancel", UIAlertActionStyle.Cancel, null));
             presentViewController(alert, true, null);
         });
+
+        presenter = new PostListPresenter(this);
     }
 
     @Override
@@ -58,18 +62,30 @@ public class PostListViewController extends UIViewController implements PostList
         presenter.activate();
     }
 
+    // ==========================================
+    // Implement View methods
+    // ==========================================
+
     @Override
     public void setBusy(boolean isBusy) {
-        if (isBusy) progress.startAnimating();
-        else progress.stopAnimating();
+        if (isBusy) {
+            progress.startAnimating();
+            refresher.beginRefreshing();
+        } else {
+            progress.stopAnimating();
+            refresher.endRefreshing();
+        }
     }
 
     @Override
     public void reloadPosts(List<Post> posts) {
-        dataSource.posts = posts;
-        postDelegate.posts = posts;
+        this.posts = posts;
         list.reloadData();
     }
+
+    // ==========================================
+    // Outlets
+    // ==========================================
 
     @IBOutlet
     void setList(UITableView list) {
@@ -82,8 +98,6 @@ public class PostListViewController extends UIViewController implements PostList
     }
 
     class PostDataSource extends UITableViewDataSourceAdapter {
-
-        List<Post> posts;
 
         @Override
         public long getNumberOfRowsInSection(UITableView tableView, long section) {
@@ -133,13 +147,16 @@ public class PostListViewController extends UIViewController implements PostList
 
     class PostDelegate extends UITableViewDelegateAdapter {
 
-        List<Post> posts;
-
         @Override
         public double getHeightForRow(UITableView tableView, NSIndexPath indexPath) {
             if (indexPath.getRow() == posts.size()) return -1;
             Post post = posts.get(indexPath.getRow());
             return (tableView.getFrame().getWidth() - 16) / post.getAspect() + 66 + 16;
+        }
+
+        @Override
+        public void didEndDecelerating(UIScrollView scrollView) {
+            if (refresher.isRefreshing()) presenter.reloadFirstPage();
         }
     }
 }

@@ -36,6 +36,12 @@ public class PostListService {
         return Observable.just(buffer);
     }
 
+    public Observable<Void> reset() {
+        nextPageId = null;
+        buffer.clear();
+        return Observable.just(null);
+    }
+
     class PostMerger {
 
         void addNewPosts(PostsForTagRequest request) {
