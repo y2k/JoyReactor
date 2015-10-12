@@ -3,7 +3,10 @@ package y2k.joyreactor;
 import org.jsoup.nodes.Document;
 import rx.Observable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by y2k on 10/1/15.

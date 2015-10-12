@@ -1,7 +1,6 @@
 package y2k.joyreactor;
 
 import org.ocpsoft.prettytime.PrettyTime;
-import org.robovm.apple.foundation.NSData;
 import org.robovm.apple.foundation.NSIndexPath;
 import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;

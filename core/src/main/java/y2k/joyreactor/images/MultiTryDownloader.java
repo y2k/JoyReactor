@@ -7,8 +7,6 @@ import y2k.joyreactor.IoUtils;
 
 import java.io.*;
 import java.net.URL;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**

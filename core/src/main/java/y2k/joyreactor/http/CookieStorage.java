@@ -2,7 +2,10 @@ package y2k.joyreactor.http;
 
 import y2k.joyreactor.Platform;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Map;

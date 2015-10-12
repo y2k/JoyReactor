@@ -1,6 +1,8 @@
 package y2k.joyreactor;
 
-import org.robovm.apple.uikit.*;
+import org.robovm.apple.uikit.UIButton;
+import org.robovm.apple.uikit.UITextView;
+import org.robovm.apple.uikit.UIViewController;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
 
