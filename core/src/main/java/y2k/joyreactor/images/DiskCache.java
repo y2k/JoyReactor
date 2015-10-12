@@ -60,16 +60,18 @@ class DiskCache {
         };
     }
 
+    public Observable<?> putAsync(File newImageFile, String url) {
+        // TODO: оптимизировать
+        newImageFile.renameTo(urlToFile(url));
+        return Observable.just(null);
+    }
+
     File urlToFile(String url) {
         return new File(getCacheDirectory(), "" + url.hashCode());
     }
 
     File getCacheDirectory() {
         return Platform.Instance.getCurrentDirectory();
-    }
-
-    public Observable<?> putAsync(File newImageFile, String url) {
-        return null;
     }
 
     public interface ReadAction extends Closeable {
