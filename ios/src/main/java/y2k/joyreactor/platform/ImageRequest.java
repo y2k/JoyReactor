@@ -15,9 +15,4 @@ public class ImageRequest extends BaseImageRequest<UIImage> {
     protected UIImage decode(File path) {
         return new UIImage(path);
     }
-
-//    @Override
-//    protected void setImage(Object target, UIImage image) {
-//        ((UIImageView) target).setImage(image);
-//    }
 }
