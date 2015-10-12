@@ -1,5 +1,6 @@
 package y2k.joyreactor.images;
 
+import rx.Observable;
 import y2k.joyreactor.Platform;
 
 import java.io.*;
@@ -13,11 +14,18 @@ class DiskCache {
         if (!urlToFile(url).exists()) return null;
         return new ReadAction() {
 
+            @Deprecated
             InputStream stream;
 
             @Override
+            @Deprecated
             public InputStream getStream() throws IOException {
                 return stream = new FileInputStream(urlToFile(url));
+            }
+
+            @Override
+            public File getPath() {
+                return urlToFile(url);
             }
 
             @Override
@@ -27,11 +35,12 @@ class DiskCache {
         };
     }
 
+    @Deprecated
     public WriteAction save(String url) {
         return new WriteAction() {
 
             File tmp;
-            OutputStream stream;
+            FileOutputStream stream;
 
             @Override
             public OutputStream getStream() throws IOException {
@@ -59,17 +68,21 @@ class DiskCache {
         return Platform.Instance.getCurrentDirectory();
     }
 
-    public interface ReadAction {
-
-        InputStream getStream() throws IOException;
-
-        void close() throws IOException;
+    public Observable<?> putAsync(File newImageFile, String url) {
+        return null;
     }
 
-    interface WriteAction {
+    public interface ReadAction extends Closeable {
+
+        @Deprecated
+        InputStream getStream() throws IOException;
+
+        File getPath();
+    }
+
+    @Deprecated
+    interface WriteAction extends Closeable {
 
         OutputStream getStream() throws IOException;
-
-        void close() throws IOException;
     }
 }

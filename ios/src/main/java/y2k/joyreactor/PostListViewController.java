@@ -5,12 +5,10 @@ import org.robovm.apple.foundation.NSData;
 import org.robovm.apple.foundation.NSIndexPath;
 import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
-import org.robovm.objc.annotation.IBAction;
 import org.robovm.objc.annotation.IBOutlet;
-import y2k.joyreactor.images.ImageRequest;
+import y2k.joyreactor.platform.ImageRequest;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by y2k on 9/26/15.
@@ -136,12 +134,14 @@ public class PostListViewController extends UIViewController implements PostList
 
         void loadImage(String url, int width, int height, UIImageView iv) {
             iv.setAlpha(0);
-            new ImageRequest().setUrl(url)
+            new ImageRequest()
+                    .setUrl(url)
                     .setSize(width, height)
-                    .to(data -> {
-                        iv.setImage(new UIImage(new NSData(data)));
+                    .to(iv, data -> {
+                        iv.setImage(data);
                         UIView.animate(0.3, () -> iv.setAlpha(1));
-                    });
+                    })
+            ;
         }
     }
 
