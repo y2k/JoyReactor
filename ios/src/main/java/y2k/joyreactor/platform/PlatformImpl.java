@@ -14,12 +14,18 @@ import java.util.List;
  */
 public class PlatformImpl extends Platform {
 
-    @Override
-    public File getCurrentDirectory() {
+    private static final File CURRENT_DIRECTORY = dogGetCurrentDirectory();
+
+    private static File dogGetCurrentDirectory() {
         List<String> dirs = NSPathUtilities.getSearchPathForDirectoriesInDomains(
                 NSSearchPathDirectory.DocumentDirectory,
                 NSSearchPathDomainMask.UserDomainMask, true);
         return new File(dirs.get(0));
+    }
+
+    @Override
+    public File getCurrentDirectory() {
+        return CURRENT_DIRECTORY;
     }
 
     @Override
