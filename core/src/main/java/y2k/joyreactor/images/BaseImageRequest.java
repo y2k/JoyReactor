@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public abstract class BaseImageRequest<T> {
 
-    private static DiskCache sCache = new DiskCache();
+    private static DiskCache sDiskCache = new DiskCache();
     private static Map<Object, Subscription> sLinks = new HashMap<>();
 
     private UrlBuilder urlBuilder = new UrlBuilder();
@@ -41,16 +41,16 @@ public abstract class BaseImageRequest<T> {
     }
 
     private Observable<T> getFromCache() {
-        return sCache
+        return sDiskCache
                 .loadAsync(urlBuilder.buildString())
                 .map(this::decode);
     }
 
     private Observable<Object> putToCache() {
-        File dir = sCache.getCacheDirectory();
+        File dir = sDiskCache.getCacheDirectory();
         return new MultiTryDownloader(dir, urlBuilder.buildString())
                 .downloadAsync()
-                .flatMap(s -> sCache.putAsync(s, urlBuilder.buildString()));
+                .flatMap(s -> sDiskCache.putAsync(s, urlBuilder.buildString()));
     }
 
     protected abstract T decode(File path);

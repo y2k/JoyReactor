@@ -23,6 +23,7 @@ class DiskCache {
     Observable<?> putAsync(File newImageFile, String url) {
         return Observable.create(subscriber -> DISK_EXECUTOR.execute(() -> {
             newImageFile.renameTo(urlToFile(url));
+            subscriber.onNext(null);
             subscriber.onCompleted();
         }));
     }
