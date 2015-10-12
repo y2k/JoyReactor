@@ -3,6 +3,7 @@ package y2k.joyreactor.images;
 import rx.Observable;
 import rx.Subscriber;
 import y2k.joyreactor.ForegroundScheduler;
+import y2k.joyreactor.IoUtils;
 
 import java.io.*;
 import java.net.URL;
@@ -34,20 +35,17 @@ class MultiTryDownloader {
         ForegroundScheduler.getInstance().createWorker().schedule(() -> {
             DOWNLOAD_EXECUTOR.execute(() -> {
                 try {
-
-//                    System.out.println("try download | " + url); // FIXME
-
                     subscriber.onNext(tryDownloadSync());
                     subscriber.onCompleted();
                 } catch (Exception e) {
-                    if (tryNumber > MAX_TRY || !subscriber.isUnsubscribed()) subscriber.onError(e);
+                    if (tryNumber > MAX_TRY) subscriber.onError(e);
                     else downloadAsync(tryNumber + 1, subscriber);
                 }
             });
         }, 250 << tryNumber, TimeUnit.MILLISECONDS);
     }
 
-    private File tryDownloadSync() throws InterruptedException, IOException {
+    private File tryDownloadSync() throws IOException {
         InputStream in = null;
         OutputStream out = null;
         File result = null;
@@ -55,18 +53,14 @@ class MultiTryDownloader {
             in = new URL(url).openConnection().getInputStream();
             result = File.createTempFile("download_", null, dir);
             out = new FileOutputStream(result);
-            copy(in, out);
+            IoUtils.copy(in, out);
             return result;
-        } finally {
-            BaseImageRequest.close(in, out);
+        } catch (IOException e) {
+            IoUtils.close(in, out);
             if (result != null) result.delete();
+            throw e;
+        } finally {
+            IoUtils.close(in, out);
         }
-    }
-
-    private static void copy(InputStream in, OutputStream out) throws IOException {
-        byte[] buf = new byte[4 * 1024];
-        int count;
-        while ((count = in.read(buf)) != -1)
-            out.write(buf, 0, count);
     }
 }

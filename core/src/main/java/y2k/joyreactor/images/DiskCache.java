@@ -1,6 +1,7 @@
 package y2k.joyreactor.images;
 
 import rx.Observable;
+import y2k.joyreactor.IoUtils;
 import y2k.joyreactor.Platform;
 
 import java.io.*;
@@ -30,7 +31,7 @@ class DiskCache {
 
             @Override
             public void close() throws IOException {
-                stream.close();
+                IoUtils.close(stream);
             }
         };
     }
@@ -51,7 +52,7 @@ class DiskCache {
             @Override
             public void close() throws IOException {
                 try {
-                    stream.close();
+                    IoUtils.close(stream);
                     tmp.renameTo(urlToFile(url));
                 } finally {
                     tmp.delete();
@@ -74,7 +75,7 @@ class DiskCache {
         return Platform.Instance.getCurrentDirectory();
     }
 
-    public interface ReadAction extends Closeable {
+    interface ReadAction extends Closeable {
 
         @Deprecated
         InputStream getStream() throws IOException;

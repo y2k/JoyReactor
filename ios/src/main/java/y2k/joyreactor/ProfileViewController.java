@@ -1,10 +1,12 @@
 package y2k.joyreactor;
 
-import org.robovm.apple.foundation.NSData;
-import org.robovm.apple.uikit.*;
+import org.robovm.apple.uikit.UIButton;
+import org.robovm.apple.uikit.UIImageView;
+import org.robovm.apple.uikit.UILabel;
+import org.robovm.apple.uikit.UIViewController;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
-import y2k.joyreactor.images.ImageRequest;
+import y2k.joyreactor.platform.ImageRequest;
 
 /**
  * Created by y2k on 9/30/15.
@@ -36,7 +38,7 @@ public class ProfileViewController extends UIViewController implements ProfilePr
         new ImageRequest()
                 .setUrl(profile.userImage)
                 .setSize((int) userImage.getFrame().getWidth(), (int) userImage.getFrame().getHeight())
-                .to(bitmap -> userImage.setImage(new UIImage(new NSData(bitmap))));
+                .to(userImage, userImage::setImage);
         rating.setText(Translator.get("Rating: ") + profile.rating);
         stars.setStars(profile.stars);
         progressToNewStar.setValue(profile.progressToNewStar);

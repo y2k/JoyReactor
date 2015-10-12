@@ -9,6 +9,8 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import static y2k.joyreactor.IoUtils.close;
+
 /**
  * Created by y2k on 12/10/15.
  */
@@ -62,16 +64,6 @@ public abstract class BaseImageRequest<T> {
         return new MultiTryDownloader(dir, urlBuilder.buildString())
                 .downloadAsync()
                 .flatMap(s -> sCache.putAsync(s, urlBuilder.buildString()));
-    }
-
-    public static void close(Closeable... sourceList) {
-        for (Closeable source : sourceList) {
-            try {
-                if (source != null) source.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     protected abstract T decode(File path);

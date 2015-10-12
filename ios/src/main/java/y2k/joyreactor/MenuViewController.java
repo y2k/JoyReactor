@@ -5,7 +5,7 @@ import org.robovm.apple.foundation.NSIndexPath;
 import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
-import y2k.joyreactor.images.ImageRequest;
+import y2k.joyreactor.platform.ImageRequest;
 
 import java.util.List;
 
@@ -66,7 +66,7 @@ public class MenuViewController extends UIViewController implements MenuPresente
                 new ImageRequest()
                         .setUrl(i.image)
                         .setSize(40, 40)
-                        .to(data -> iv.setImage(new UIImage(new NSData(data))));
+                        .to(iv, iv::setImage);
                 ((UILabel) cell.getViewWithTag(2)).setText(i.title);
             }
             return cell;

@@ -9,7 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import y2k.joyreactor.images.ImageRequest;
+import y2k.joyreactor.platform.ImageRequest;
 
 import java.util.List;
 
@@ -60,8 +60,9 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
             Holder h = (Holder) viewHolder;
             Post i = posts.get(position);
-            new ImageRequest().setUrl(i.image).to(data ->
-                    h.image.setImageBitmap(BitmapFactory.decodeByteArray(data, 0, data.length)));
+            new ImageRequest()
+                    .setUrl(i.image)
+                    .to(h.image, data -> h.image.setImageBitmap(data));
         }
 
         @Override

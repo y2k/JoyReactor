@@ -119,5 +119,4 @@ public class HttpClient {
             return buffer.toString().getBytes();
         }
     }
-
 }

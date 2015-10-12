@@ -5,7 +5,7 @@ import org.robovm.apple.foundation.NSIndexPath;
 import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
-import y2k.joyreactor.images.ImageRequest;
+import y2k.joyreactor.platform.ImageRequest;
 
 import java.util.List;
 
@@ -109,7 +109,7 @@ public class PostViewController extends UIViewController implements PostPresente
                 new ImageRequest()
                         .setUrl(post.image)
                         .setSize(300, (int) (300 / post.getAspect()))
-                        .to(data -> iv.setImage(new UIImage(new NSData(data))));
+                        .to(iv, iv::setImage);
             }
             return cell;
         }
@@ -125,7 +125,7 @@ public class PostViewController extends UIViewController implements PostPresente
             new ImageRequest()
                     .setUrl(item.userAvatar)
                     .setSize((int) iv.getFrame().getWidth(), (int) iv.getFrame().getHeight())
-                    .to(bitmap -> iv.setImage(new UIImage(new NSData(bitmap))));
+                    .to(iv, iv::setImage);
 
             ((UILabel) cell.getViewWithTag(3)).setText("" + item.childCount);
             ((UILabel) cell.getViewWithTag(4)).setText("" + item.rating);
