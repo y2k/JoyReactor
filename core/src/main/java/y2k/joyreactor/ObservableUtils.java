@@ -15,6 +15,7 @@ public class ObservableUtils {
                 .create(subscriber -> Schedulers.io().createWorker().schedule(() -> {
                     try {
                         subscriber.onNext(action.call());
+                        subscriber.onCompleted();
                     } catch (Exception e) {
                         subscriber.onError(e);
                     }
