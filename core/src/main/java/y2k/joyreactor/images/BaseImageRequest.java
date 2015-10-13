@@ -18,6 +18,7 @@ public abstract class BaseImageRequest<T> {
     private static Map<Object, Subscription> sLinks = new HashMap<>();
 
     private UrlBuilder urlBuilder = new UrlBuilder();
+    private Subscription subscription;
 
     public BaseImageRequest<T> setSize(int width, int height) {
         urlBuilder.width = width;
@@ -31,13 +32,17 @@ public abstract class BaseImageRequest<T> {
     }
 
     public void to(Object target, Action1<T> callback) {
-        Subscription subscription = getFromCache()
+        System.out.println("to | " + sLinks.size());
+
+        subscription = getFromCache()
                 .switchIfEmpty(putToCache().flatMap(s -> getFromCache()))
                 .observeOn(ForegroundScheduler.getInstance())
-                .subscribe(callback::call, Throwable::printStackTrace, () -> sLinks.remove(target));
-
-        Subscription old = sLinks.put(target, subscription);
-        if (old != null) old.unsubscribe();
+                .filter(s -> sLinks.get(target) == subscription)
+                .subscribe(
+                        callback::call,
+                        Throwable::printStackTrace,
+                        () -> sLinks.remove(this));
+        sLinks.put(target, subscription);
     }
 
     private Observable<T> getFromCache() {
