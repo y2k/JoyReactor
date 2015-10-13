@@ -32,8 +32,6 @@ public abstract class BaseImageRequest<T> {
     }
 
     public void to(Object target, Action1<T> callback) {
-        System.out.println("to | " + sLinks.size());
-
         subscription = getFromCache()
                 .switchIfEmpty(putToCache().flatMap(s -> getFromCache()))
                 .observeOn(ForegroundScheduler.getInstance())
@@ -41,7 +39,7 @@ public abstract class BaseImageRequest<T> {
                 .subscribe(
                         callback::call,
                         Throwable::printStackTrace,
-                        () -> sLinks.remove(this));
+                        () -> sLinks.remove(target));
         sLinks.put(target, subscription);
     }
 
