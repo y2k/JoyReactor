@@ -7,8 +7,10 @@ public class Comment {
 
     public String text;
     public String userAvatar;
+
     public int id;
     public int parentId;
+
     public int childCount;
     public float rating;
 }
