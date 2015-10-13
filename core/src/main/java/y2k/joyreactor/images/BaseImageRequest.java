@@ -32,6 +32,12 @@ public abstract class BaseImageRequest<T> {
     }
 
     public void to(Object target, Action1<T> callback) {
+        if (urlBuilder.url == null) {
+            sLinks.remove(target);
+            callback.call(null);
+            return;
+        }
+
         subscription = getFromCache()
                 .switchIfEmpty(putToCache().flatMap(s -> getFromCache()))
                 .observeOn(ForegroundScheduler.getInstance())
