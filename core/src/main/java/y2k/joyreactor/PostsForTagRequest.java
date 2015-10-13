@@ -51,7 +51,8 @@ public class PostsForTagRequest {
         result.title = element.select("div.post_content").text();
         Element img = element.select("div.post_content img").first();
         if (img != null && img.hasAttr("width")) {
-            result.image = img.attr("src");
+            String image = img.attr("src");
+            result.image = image.replaceAll("(/post/).+(-\\d+\\.)", "$1$2");
             result.width = Integer.parseInt(img.attr("width"));
             result.height = Integer.parseInt(img.attr("height"));
         }
