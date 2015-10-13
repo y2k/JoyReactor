@@ -116,7 +116,7 @@ public class PostListViewController extends UIViewController implements PostList
                 loadImage(post.image, 300, (int) (300 / post.getAspect()), (UIImageView) cell.getViewWithTag(1));
 
                 UIImageView userImageView = (UIImageView) cell.getViewWithTag(2);
-                loadImage(post.userImage, 50, 50, userImageView);
+                loadImage(new UserImage(post.userImage).toString(), 50, 50, userImageView);
                 userImageView.getLayer().setCornerRadius(userImageView.getFrame().getWidth() / 2);
 
                 UIView root = cell.getViewWithTag(10);
