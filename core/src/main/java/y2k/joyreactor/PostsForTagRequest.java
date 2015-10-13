@@ -29,7 +29,7 @@ public class PostsForTagRequest {
     }
 
     public void request() throws IOException {
-        Document doc = new HttpClient().getDocument(buildUrl());
+        Document doc = HttpClient.getInstance().getDocument(buildUrl());
 
         posts = new ArrayList<>();
         for (Element e : doc.select("div.postContainer"))

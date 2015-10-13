@@ -3,10 +3,9 @@ package y2k.joyreactor.images;
 import rx.Observable;
 import rx.Subscriber;
 import y2k.joyreactor.ForegroundScheduler;
-import y2k.joyreactor.IoUtils;
+import y2k.joyreactor.http.HttpClient;
 
 import java.io.*;
-import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -33,7 +32,7 @@ class MultiTryDownloader {
         ForegroundScheduler.getInstance().createWorker().schedule(() -> {
             DOWNLOAD_EXECUTOR.execute(() -> {
                 try {
-                    subscriber.onNext(tryDownloadSync());
+                    subscriber.onNext(downloadToTempFile());
                     subscriber.onCompleted();
                 } catch (Exception e) {
                     if (tryNumber > MAX_TRY) subscriber.onError(e);
@@ -43,22 +42,15 @@ class MultiTryDownloader {
         }, 250 << tryNumber, TimeUnit.MILLISECONDS);
     }
 
-    private File tryDownloadSync() throws IOException {
-        InputStream in = null;
-        OutputStream out = null;
+    private File downloadToTempFile() throws IOException {
         File result = null;
         try {
-            in = new URL(url).openConnection().getInputStream();
             result = File.createTempFile("download_", null, dir);
-            out = new FileOutputStream(result);
-            IoUtils.copy(in, out);
+            HttpClient.getInstance().downloadToFile(url, result);
             return result;
         } catch (IOException e) {
-            IoUtils.close(in, out);
             if (result != null) result.delete();
             throw e;
-        } finally {
-            IoUtils.close(in, out);
         }
     }
 }

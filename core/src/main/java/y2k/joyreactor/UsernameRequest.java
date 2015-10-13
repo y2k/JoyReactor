@@ -12,7 +12,7 @@ public class UsernameRequest {
 
     Observable<String> request() {
         return ObservableUtils.create(() -> {
-            Document document = new HttpClient().getDocument("http://joyreactor.cc/donate");
+            Document document = HttpClient.getInstance().getDocument("http://joyreactor.cc/donate");
             Element node = document.select("a#settings").first();
             return node == null ? null : node.text();
         });

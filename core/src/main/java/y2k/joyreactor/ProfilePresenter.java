@@ -30,7 +30,7 @@ public class ProfilePresenter {
     }
 
     public void logout() {
-        new HttpClient().clearCookies();
+        HttpClient.getInstance().clearCookies();
         Navigation.getInstance().switchProfileToLogin();
     }
 
@@ -47,7 +47,7 @@ public class ProfilePresenter {
             return new UsernameRequest()
                     .request()
                     .flatMap(username -> ObservableUtils.create(() -> {
-                        Document page = new HttpClient().getDocument(getUrl(username));
+                        Document page = HttpClient.getInstance().getDocument(getUrl(username));
                         return new ProfileParser(page).parse();
                     }));
         }

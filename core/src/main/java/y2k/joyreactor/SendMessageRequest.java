@@ -16,7 +16,7 @@ public class SendMessageRequest {
 
     public Observable<Void> request(String message) {
         return ObservableUtils.create(() -> {
-            new HttpClient()
+            HttpClient.getInstance()
                     .beginForm()
                     .put("username", username)
                     .put("text", message)

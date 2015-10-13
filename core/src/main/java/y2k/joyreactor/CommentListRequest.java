@@ -34,7 +34,7 @@ public class CommentListRequest {
     }
 
     private List<Comment> getAllComments() throws IOException {
-        Document doc = new HttpClient().getDocument("http://anime.reactor.cc/post/" + postId);
+        Document doc = HttpClient.getInstance().getDocument("http://anime.reactor.cc/post/" + postId);
         List<Comment> result = new ArrayList<>();
         for (Element node : doc.select("div.comment")) {
             Comment comment = new Comment();

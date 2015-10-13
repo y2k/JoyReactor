@@ -32,7 +32,7 @@ public class MessagePageIterator {
     }
 
     public Document next() throws IOException {
-        return page = new HttpClient().getDocument(getUrlForNext());
+        return page = HttpClient.getInstance().getDocument(getUrlForNext());
     }
 
     private String getUrlForNext() {

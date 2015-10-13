@@ -48,7 +48,7 @@ public class CreateCommentPresenter {
 
         public Observable<Void> request(String commentText) {
             return ObservableUtils.create(() -> {
-                new HttpClient()
+                HttpClient.getInstance()
                         .beginForm()
                         .put("parent_id", commentId == null ? "0" : commentId)
                         .put("post_id", postId)
@@ -62,7 +62,7 @@ public class CreateCommentPresenter {
         }
 
         private String getToken() throws IOException {
-            String document = new HttpClient().getText("http://joyreactor.cc/donate");
+            String document = HttpClient.getInstance().getText("http://joyreactor.cc/donate");
             Matcher m = TOKEN_REGEX.matcher(document);
             if (!m.find()) throw new IllegalStateException();
             return m.group(1);

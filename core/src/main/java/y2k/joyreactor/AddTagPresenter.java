@@ -45,9 +45,9 @@ public class AddTagPresenter {
         public Observable<Void> request() {
             return ObservableUtils.create(() -> {
                 String tagUrl = "http://joyreactor.cc/tag/" + URLEncoder.encode(tagName);
-                Document tagPage = new HttpClient().getDocument(tagUrl);
+                Document tagPage = HttpClient.getInstance().getDocument(tagUrl);
                 String addTagLink = tagPage.select("a.change_favorite_link").first().absUrl("href");
-                new HttpClient().getText(addTagLink);
+                HttpClient.getInstance().getText(addTagLink);
                 return null;
             });
         }

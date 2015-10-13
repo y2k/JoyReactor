@@ -50,6 +50,8 @@ public class PostListViewController extends UIViewController implements PostList
             presentViewController(alert, true, null);
         });
 
+        progress.stopAnimating();
+
         presenter = new PostListPresenter(this);
     }
 
@@ -65,13 +67,8 @@ public class PostListViewController extends UIViewController implements PostList
 
     @Override
     public void setBusy(boolean isBusy) {
-        if (isBusy) {
-            progress.startAnimating();
-            refresher.beginRefreshing();
-        } else {
-            progress.stopAnimating();
-            refresher.endRefreshing();
-        }
+        if (isBusy) refresher.beginRefreshing();
+        else refresher.endRefreshing();
     }
 
     @Override

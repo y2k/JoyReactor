@@ -21,7 +21,7 @@ public class LoginRequest {
 
     public Observable<Void> request() {
         return ObservableUtils.create(() -> {
-            Document doc = new HttpClient()
+            Document doc = HttpClient.getInstance()
                     .beginForm()
                     .put("signin[username]", username)
                     .put("signin[password]", password)
@@ -31,7 +31,7 @@ public class LoginRequest {
 
 //            System.out.println(doc.html());
 
-// TODO:
+// FIXME:
 //            if (doc.getElementById("logout") == null)
 //                throw new IllegalStateException();
             return null;
@@ -39,7 +39,7 @@ public class LoginRequest {
     }
 
     private String getCsrf() throws IOException {
-        Document document = new HttpClient().getDocument("http://joyreactor.cc/login");
+        Document document = HttpClient.getInstance().getDocument("http://joyreactor.cc/login");
         return document.getElementById("signin__csrf_token").attr("value");
     }
 }

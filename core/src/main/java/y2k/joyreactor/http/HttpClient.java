@@ -2,6 +2,7 @@ package y2k.joyreactor.http;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import y2k.joyreactor.IoUtils;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -15,7 +16,32 @@ import java.util.Map;
  */
 public class HttpClient {
 
+    private static HttpClient sInstance = new HttpClient();
+
     private static CookieStorage sCookies = new CookieStorage("cookies.dat");
+
+    protected HttpClient() {
+    }
+
+    public static void setInstance(HttpClient instance) {
+        sInstance = instance;
+    }
+
+    public static HttpClient getInstance() {
+        return sInstance;
+    }
+
+    public void downloadToFile(String url, File file) throws IOException {
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            in = new URL(url).openConnection().getInputStream();
+            out = new FileOutputStream(file);
+            IoUtils.copy(in, out);
+        } finally {
+            IoUtils.close(in, out);
+        }
+    }
 
     public String getText(String url) throws IOException {
         InputStream stream = null;

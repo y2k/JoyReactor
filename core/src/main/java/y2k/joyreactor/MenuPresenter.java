@@ -49,7 +49,7 @@ public class MenuPresenter extends Presenter {
 
         public Observable<List<Tag>> request() {
             return ObservableUtils.create(() -> {
-                Document document = new HttpClient().getDocument("http://joyreactor.cc/user/" + username);
+                Document document = HttpClient.getInstance().getDocument("http://joyreactor.cc/user/" + username);
                 List<Tag> tags = new ArrayList<>();
                 for (Element h : document.select(".sideheader")) {
                     if ("Читает".equals(h.text())) {
