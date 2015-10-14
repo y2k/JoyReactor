@@ -40,8 +40,8 @@ public class PostsForTagRequest {
     }
 
     private String buildUrl() {
-        String url = "http://joyreactor.cc";
-        if (tagId != null) url += "/tag/" + URLEncoder.encode(tagId);
+        String url = "http://joyreactor.cc/";
+        if (tagId != null) url += "tag/" + URLEncoder.encode(tagId);
         if (pageId != null) url += "/" + pageId;
         return url;
     }
