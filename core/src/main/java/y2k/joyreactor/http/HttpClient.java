@@ -5,11 +5,10 @@ import org.jsoup.nodes.Document;
 import y2k.joyreactor.IoUtils;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Created by y2k on 9/29/15.
@@ -79,12 +78,15 @@ public class HttpClient {
             connection.disconnect();
             connection = createConnection(redirect);
         }
-        return connection.getResponseCode() < 300 ? connection.getInputStream() : connection.getErrorStream();
+
+        InputStream stream = connection.getResponseCode() < 300 ? connection.getInputStream() : connection.getErrorStream();
+        return "gzip".equals(connection.getContentEncoding()) ? new GZIPInputStream(stream) : stream;
     }
 
     private HttpURLConnection createConnection(String url) throws IOException {
         HttpURLConnection conn;
         conn = (HttpURLConnection) new URL(url).openConnection();
+        conn.setRequestProperty("Accept-Encoding", "gzip");
         conn.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko");
         sCookies.attach(conn);
         return conn;
