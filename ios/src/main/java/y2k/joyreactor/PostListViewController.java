@@ -61,6 +61,12 @@ public class PostListViewController extends UIViewController implements PostList
         presenter.activate();
     }
 
+    @Override
+    public void viewWillDisappear(boolean animated) {
+        super.viewWillDisappear(animated);
+        presenter.deactivate();
+    }
+
     // ==========================================
     // Implement View methods
     // ==========================================

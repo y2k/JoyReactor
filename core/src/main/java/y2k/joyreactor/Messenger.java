@@ -2,10 +2,7 @@ package y2k.joyreactor;
 
 import rx.functions.Action1;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 /**
  * Created by y2k on 01/10/15.
@@ -15,7 +12,7 @@ public class Messenger {
     private static final Messenger sInstance = new Messenger();
 
     private Map<Class, Observable> observers = new HashMap<>();
-    private HashMap<ActionObserver, Object> registrations = new HashMap<>();
+    private Map<ActionObserver, Object> registrations = new HashMap<>();
 
     public void send(Object message) {
         Observable observable = observers.get(message.getClass());
@@ -34,7 +31,13 @@ public class Messenger {
     }
 
     public void unregister(Object receiver) {
-        while (registrations.values().remove(receiver)) ;
+        Set<ActionObserver> keys = registrations.keySet();
+        for (ActionObserver key : keys.toArray(new ActionObserver[keys.size()]))
+            if (registrations.get(key) == receiver) {
+                registrations.remove(key);
+                for (Observable o : observers.values())
+                    o.deleteObserver(key);
+            }
     }
 
     public static Messenger getInstance() {
