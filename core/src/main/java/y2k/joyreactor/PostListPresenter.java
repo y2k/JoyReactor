@@ -21,6 +21,7 @@ public class PostListPresenter extends Presenter {
 
         Messenger.getInstance().register(this, m -> {
             service.setCurrentTag(m.tag);
+            view.reloadPosts(null);
             loadMore();
         }, Messages.TagSelected.class);
     }
