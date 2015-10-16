@@ -6,13 +6,16 @@ import java.net.URL;
 /**
  * Created by y2k on 12/10/15.
  */
-class UrlBuilder {
+public class ImageThumbnailUrlBuilder {
 
-    String url;
-    int width;
-    int height;
+    public String url;
+    public int width;
+    public int height;
 
     public URL build() throws MalformedURLException {
+        if (width == 0 || height == 0)
+            return new URL("http", "api-i-twister.net", 8010, "/cache/original?url=" + url);
+
         return new URL(
                 "http", "api-i-twister.net", 8010,
                 "/cache/fit?width=" + width + "&height=" + height + "&url=" + url);

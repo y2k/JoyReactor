@@ -17,7 +17,7 @@ public abstract class BaseImageRequest<T> {
     private static DiskCache sDiskCache = new DiskCache();
     private static Map<Object, Subscription> sLinks = new HashMap<>();
 
-    private UrlBuilder urlBuilder = new UrlBuilder();
+    private ImageThumbnailUrlBuilder urlBuilder = new ImageThumbnailUrlBuilder();
     private Subscription subscription;
 
     public BaseImageRequest<T> setSize(int width, int height) {

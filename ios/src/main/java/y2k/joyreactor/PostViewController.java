@@ -6,6 +6,7 @@ import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
 import y2k.joyreactor.platform.ImageRequest;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -82,6 +83,17 @@ public class PostViewController extends UIViewController implements PostPresente
     public void updatePostImage(Post post) {
         this.post = post;
         list.reloadData();
+    }
+
+    @Override
+    public void setIsBusy(boolean isBusy) {
+        getNavigationItem().setHidesBackButton(isBusy, true);
+        getNavigationItem().getRightBarButtonItem().setEnabled(!isBusy);
+    }
+
+    @Override
+    public void uploadToGallery(File imageFile) {
+        new UIImage(imageFile).saveToPhotosAlbum(null);
     }
 
     private class CommentDataSource extends UITableViewDataSourceAdapter {

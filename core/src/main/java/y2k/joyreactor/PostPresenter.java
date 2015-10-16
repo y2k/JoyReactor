@@ -1,5 +1,6 @@
 package y2k.joyreactor;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -41,7 +42,13 @@ public class PostPresenter {
     }
 
     public void saveImageToGallery() {
-        // TODO:
+        view.setIsBusy(true);
+        new ImageRequest(getArgumentPost().image)
+                .request()
+                .subscribe(imageFile -> {
+                    view.uploadToGallery(imageFile);
+                    view.setIsBusy(false);
+                });
     }
 
     public interface View {
@@ -49,5 +56,9 @@ public class PostPresenter {
         void updateComments(List<Comment> comments);
 
         void updatePostImage(Post post);
+
+        void setIsBusy(boolean isBusy);
+
+        void uploadToGallery(File imageFile);
     }
 }
