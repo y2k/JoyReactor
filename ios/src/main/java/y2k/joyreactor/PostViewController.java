@@ -54,12 +54,16 @@ public class PostViewController extends UIViewController implements PostPresente
         getNavigationItem().getRightBarButtonItem().setOnClickListener(sender -> {
             UIAlertController alert = new UIAlertController();
             alert.addAction(new UIAlertAction(Translator.get("Add comment"), UIAlertActionStyle.Default, s -> {
-                        getNavigationController().pushViewController(
-                                getStoryboard().instantiateViewController("CreateComment"), true);
+                getNavigationController().pushViewController(
+                        getStoryboard().instantiateViewController("CreateComment"), true);
             }));
+            alert.addAction(new UIAlertAction(Translator.get("Save image to gallery"),
+                    UIAlertActionStyle.Default, s -> presenter.saveImageToGallery()));
+            alert.addAction(new UIAlertAction(Translator.get("Open in Safari"),
+                    UIAlertActionStyle.Default, s -> presenter.openPostInBrowser()));
             alert.addAction(new UIAlertAction("Cancel", UIAlertActionStyle.Cancel, null));
             presentViewController(alert, true, null);
-       });
+        });
 
         list.setDelegate(new CommentDelegate());
         list.setDataSource(new CommentDataSource());

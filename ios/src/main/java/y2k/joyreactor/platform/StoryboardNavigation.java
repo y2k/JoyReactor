@@ -2,6 +2,7 @@ package y2k.joyreactor.platform;
 
 import org.robovm.apple.foundation.NSArray;
 import org.robovm.apple.foundation.NSMutableArray;
+import org.robovm.apple.foundation.NSURL;
 import org.robovm.apple.uikit.UIApplication;
 import org.robovm.apple.uikit.UINavigationController;
 import org.robovm.apple.uikit.UIViewController;
@@ -64,5 +65,10 @@ public class StoryboardNavigation extends Navigation {
                 .getSharedApplication()
                 .getWindows().get(0)
                 .getRootViewController();
+    }
+
+    @Override
+    public void openBrowser(String url) {
+        UIApplication.getSharedApplication().openURL(new NSURL(url));
     }
 }

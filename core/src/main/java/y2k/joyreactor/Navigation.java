@@ -20,4 +20,6 @@ public abstract class Navigation {
     public abstract void openPost(Post post);
 
     public abstract Post getArgumentPost();
+
+    public abstract void openBrowser(String url);
 }

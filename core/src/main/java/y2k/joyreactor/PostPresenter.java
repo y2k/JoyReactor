@@ -26,6 +26,10 @@ public class PostPresenter {
         view.updatePostImage(getArgumentPost());
     }
 
+    public void openPostInBrowser() {
+        Navigation.getInstance().openBrowser("http://joyreactor.cc/post/" + getArgumentPost().id);
+    }
+
     private Post getArgumentPost() {
         return Navigation.getInstance().getArgumentPost();
     }
@@ -34,6 +38,10 @@ public class PostPresenter {
         new CommentListRequest(getArgumentPost().id, commentId)
                 .request()
                 .subscribe(view::updateComments, Throwable::printStackTrace);
+    }
+
+    public void saveImageToGallery() {
+        // TODO:
     }
 
     public interface View {
