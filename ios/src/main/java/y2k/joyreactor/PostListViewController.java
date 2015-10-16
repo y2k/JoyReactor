@@ -142,8 +142,7 @@ public class PostListViewController extends UIViewController implements PostList
                     .to(iv, data -> {
                         iv.setImage(data);
                         UIView.animate(0.3, () -> iv.setAlpha(1));
-                    })
-            ;
+                    });
         }
     }
 
