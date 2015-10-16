@@ -52,20 +52,14 @@ public class PostViewController extends UIViewController implements PostPresente
 //        list.addGestureRecognizer(gr);
 
         getNavigationItem().getRightBarButtonItem().setOnClickListener(sender -> {
-            UIActionSheet menu = new UIActionSheet();
-            menu.addButton(Translator.get("Add comment"));
-            menu.setCancelButtonIndex(menu.addButton(Translator.get("Cancel")));
-            menu.setDelegate(new UIActionSheetDelegateAdapter() {
-
-                @Override
-                public void clicked(UIActionSheet actionSheet, long buttonIndex) {
-                    if (buttonIndex == 0)
+            UIAlertController alert = new UIAlertController();
+            alert.addAction(new UIAlertAction(Translator.get("Add comment"), UIAlertActionStyle.Default, s -> {
                         getNavigationController().pushViewController(
                                 getStoryboard().instantiateViewController("CreateComment"), true);
-                }
-            });
-            menu.showFrom(sender, true);
-        });
+            }));
+            alert.addAction(new UIAlertAction("Cancel", UIAlertActionStyle.Cancel, null));
+            presentViewController(alert, true, null);
+       });
 
         list.setDelegate(new CommentDelegate());
         list.setDataSource(new CommentDataSource());
