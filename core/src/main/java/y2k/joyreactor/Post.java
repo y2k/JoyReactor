@@ -19,6 +19,9 @@ public class Post {
     public Date created;
     public String id;
 
+    public int commentCount;
+    public float rating;
+
     public float getAspect() {
         float aspect = height == 0 ? 1 : (float) width / height;
         return Math.min(2, Math.max(1, aspect));

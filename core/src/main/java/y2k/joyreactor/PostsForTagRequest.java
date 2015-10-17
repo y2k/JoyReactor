@@ -2,6 +2,7 @@ package y2k.joyreactor;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import y2k.joyreactor.http.HttpClient;
 
 import java.io.IOException;
@@ -59,8 +60,13 @@ public class PostsForTagRequest {
 
         result.userName = element.select("div.uhead_nick > a").text();
         result.userImage = element.select("div.uhead_nick > img").attr("src");
-        result.created = new Date(1000L * Long.parseLong(element.select("span.date > span").attr("data-time")));
         result.id = extractNumber(element.id());
+
+        PostParser parser = new PostParser(element);
+        result.created = parser.getCreated();
+        result.commentCount = parser.getCommentCount();
+        result.rating = parser.getRating();
+
         return result;
     }
 
@@ -68,5 +74,35 @@ public class PostsForTagRequest {
         Matcher m = Pattern.compile("\\d+").matcher(text);
         if (!m.find()) throw new IllegalStateException();
         return m.group();
+    }
+
+    static class PostParser {
+
+        private static final Pattern COMMENT_COUNT_REGEX = Pattern.compile("\\d+");
+        private static final Pattern RATING_REGEX = Pattern.compile("[\\d\\.]+");
+        private Element element;
+
+        PostParser(Element element) {
+            this.element = element;
+        }
+
+        int getCommentCount() {
+            Element e = element.select("a.commentnum").first();
+            Matcher m = COMMENT_COUNT_REGEX.matcher(e.text());
+            if (!m.find()) throw new IllegalStateException();
+            return Integer.parseInt(m.group());
+        }
+
+        float getRating() {
+            Element e = element.select("span.post_rating > span").first();
+            Matcher m = RATING_REGEX.matcher(e.text());
+            if (!m.find()) throw new IllegalStateException();
+            return Float.parseFloat(m.group());
+        }
+
+        Date getCreated() {
+            Elements e = element.select("span.date > span");
+            return new Date(1000L * Long.parseLong(e.attr("data-time")));
+        }
     }
 }
