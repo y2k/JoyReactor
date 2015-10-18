@@ -1,0 +1,12 @@
+{
+    "commands": {
+        "ConsoleApp": "run"
+    },
+    "frameworks": {
+        "dnx451": {
+            "frameworkAssemblies": {
+                "System.Web" : "4.0.0.0"
+            }
+         }
+    }
+}

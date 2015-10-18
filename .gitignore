@@ -27,3 +27,6 @@ proguard/
 *.log
 .idea
 ios/robovm-build
+project.lock.json
+tags.keys.txt
+tags.values.txt
