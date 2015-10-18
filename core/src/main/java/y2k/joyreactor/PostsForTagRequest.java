@@ -96,8 +96,7 @@ public class PostsForTagRequest {
         float getRating() {
             Element e = element.select("span.post_rating > span").first();
             Matcher m = RATING_REGEX.matcher(e.text());
-            if (!m.find()) throw new IllegalStateException();
-            return Float.parseFloat(m.group());
+            return m.find() ? Float.parseFloat(m.group()) : 0;
         }
 
         Date getCreated() {
