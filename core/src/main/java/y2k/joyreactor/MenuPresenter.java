@@ -41,6 +41,7 @@ public class MenuPresenter extends Presenter {
 
     private static class MyTagsRequest {
 
+        private TagImageRequest imageRequest = new TagImageRequest();
         private String username;
 
         public MyTagsRequest(String username) {
@@ -63,9 +64,10 @@ public class MenuPresenter extends Presenter {
             });
         }
 
-        private static Tag createTag(String title) {
+        private Tag createTag(String title) {
             Tag tag = new Tag();
             tag.title = title;
+            tag.image = imageRequest.request(title);
             return tag;
         }
     }
