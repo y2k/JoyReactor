@@ -12,18 +12,15 @@ public class PostListPresenter extends Presenter {
 
     public PostListPresenter(View view) {
         this.view = view;
+
+        getMessages().add(this::currentTagChanged, Messages.TagSelected.class);
         loadMore();
     }
 
-    @Override
-    public void activate() {
-        super.activate();
-
-        Messenger.getInstance().register(this, m -> {
-            service.setCurrentTag(m.tag);
-            view.reloadPosts(null);
-            loadMore();
-        }, Messages.TagSelected.class);
+    private void currentTagChanged(Messages.TagSelected m) {
+        service.setCurrentTag(m.tag);
+        view.reloadPosts(null);
+        loadMore();
     }
 
     public void loadMore() {
