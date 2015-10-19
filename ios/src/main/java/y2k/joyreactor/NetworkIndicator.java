@@ -3,6 +3,7 @@ package y2k.joyreactor;
 import org.robovm.apple.uikit.UIApplication;
 import rx.Observable;
 import rx.Subscriber;
+import y2k.joyreactor.common.ForegroundScheduler;
 
 import java.util.concurrent.TimeUnit;
 

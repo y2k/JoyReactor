@@ -3,7 +3,7 @@ package y2k.joyreactor.images;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
-import y2k.joyreactor.ForegroundScheduler;
+import y2k.joyreactor.common.ForegroundScheduler;
 
 import java.io.File;
 import java.util.HashMap;

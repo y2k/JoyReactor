@@ -2,7 +2,7 @@ package y2k.joyreactor.http;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import y2k.joyreactor.IoUtils;
+import y2k.joyreactor.common.IoUtils;
 
 import java.io.*;
 import java.net.*;

@@ -1,7 +1,7 @@
 package y2k.joyreactor.requests;
 
 import rx.Observable;
-import y2k.joyreactor.ObservableUtils;
+import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.http.HttpClient;
 
 /**

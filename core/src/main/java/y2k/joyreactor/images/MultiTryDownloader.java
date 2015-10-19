@@ -2,7 +2,7 @@ package y2k.joyreactor.images;
 
 import rx.Observable;
 import rx.Subscriber;
-import y2k.joyreactor.ForegroundScheduler;
+import y2k.joyreactor.common.ForegroundScheduler;
 import y2k.joyreactor.http.HttpClient;
 
 import java.io.*;

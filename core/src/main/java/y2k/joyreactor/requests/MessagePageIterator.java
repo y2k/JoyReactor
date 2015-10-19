@@ -1,4 +1,4 @@
-package y2k.joyreactor;
+package y2k.joyreactor.requests;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Created by y2k on 10/1/15.
  */
-public class MessagePageIterator {
+class MessagePageIterator {
 
     private static final String START_URL = "http://joyreactor.cc/private/list";
     private Document page;

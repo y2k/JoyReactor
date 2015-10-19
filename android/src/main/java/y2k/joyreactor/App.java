@@ -1,6 +1,7 @@
 package y2k.joyreactor;
 
 import android.app.Application;
+import y2k.joyreactor.common.ForegroundScheduler;
 import y2k.joyreactor.platform.HandlerScheduler;
 
 /**

@@ -1,7 +1,8 @@
-package y2k.joyreactor;
+package y2k.joyreactor.common;
 
 import rx.Observable;
 import rx.schedulers.Schedulers;
+import y2k.joyreactor.common.ForegroundScheduler;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;

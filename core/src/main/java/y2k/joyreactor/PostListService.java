@@ -1,6 +1,7 @@
 package y2k.joyreactor;
 
 import rx.Observable;
+import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.requests.PostsForTagRequest;
 
 import java.util.ArrayList;
