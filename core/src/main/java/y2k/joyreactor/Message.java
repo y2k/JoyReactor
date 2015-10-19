@@ -18,5 +18,4 @@ public class Message {
     public static Observable<List<Message>> request(String name) {
         return new MessageRequest().request(name);
     }
-
 }
