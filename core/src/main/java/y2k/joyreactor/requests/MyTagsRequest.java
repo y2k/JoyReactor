@@ -7,6 +7,7 @@ import y2k.joyreactor.Tag;
 import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.http.HttpClient;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +40,7 @@ public class MyTagsRequest {
         });
     }
 
-    private Tag createTag(String title) {
+    private Tag createTag(String title) throws IOException {
         Tag tag = new Tag();
         tag.title = title;
         tag.image = imageRequest.request(title);
