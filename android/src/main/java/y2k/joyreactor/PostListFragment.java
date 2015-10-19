@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
         view.findViewById(R.id.error).setVisibility(View.GONE);
 
         RecyclerView list = (RecyclerView) view.findViewById(R.id.list);
-        list.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         list.setAdapter(adapter = new PostAdapter());
 
         new PostListPresenter(this);
@@ -62,7 +63,14 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
             Post i = posts.get(position);
             new ImageRequest()
                     .setUrl(i.image)
-                    .to(h.image, data -> h.image.setImageBitmap(data));
+                    .setSize(200, (int) (200 / i.getAspect(0.5f)))
+                    .to(h.image, h.image::setImageBitmap);
+
+            h.imagePanel.setAspect(i.getAspect(0.5f));
+
+            new ImageRequest()
+                    .setUrl(i.userImage)
+                    .to(h.userImage, h.userImage::setImageBitmap);
         }
 
         @Override
@@ -77,12 +85,15 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
 
         static class Holder extends RecyclerView.ViewHolder {
 
+            FixedAspectPanel imagePanel;
             WebImageView image;
+            WebImageView userImage;
 
             public Holder(View itemView) {
                 super(itemView);
                 image = (WebImageView) itemView.findViewById(R.id.image);
-                image.setMinimumHeight((int) (itemView.getResources().getDisplayMetrics().density * 200));
+                imagePanel = (FixedAspectPanel) itemView.findViewById(R.id.imagePanel);
+                userImage = (WebImageView) itemView.findViewById(R.id.userImage);
             }
         }
     }

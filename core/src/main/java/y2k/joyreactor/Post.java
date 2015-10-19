@@ -23,7 +23,11 @@ public class Post {
     public float rating;
 
     public float getAspect() {
+        return getAspect(1);
+    }
+
+    public float getAspect(float min) {
         float aspect = height == 0 ? 1 : (float) width / height;
-        return Math.min(2, Math.max(1, aspect));
+        return Math.min(2, Math.max(min, aspect));
     }
 }
