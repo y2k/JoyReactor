@@ -21,7 +21,7 @@ public class Program
             .ToList();
 
         File.WriteAllLines("tags.keys.txt", tags.Select(s => "\"" + s.key + "\","));
-        File.WriteAllLines("tags.values.txt", tags.Select(s => "\"" + s.value + "\","));
+        File.WriteAllLines("tags.values.txt", tags.Select(s => s.value + ","));
     }
 
     static string Decode(Match s)
