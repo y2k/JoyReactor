@@ -30,7 +30,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
         </y2k.joyreactor.FixedAspectPanel>
-        <y2k.joyreactor.RoundBorderLayour
+        <y2k.joyreactor.RoundBorderLayout
                 android:id="@+id/userImagePanel"
                 android:layout_below="@id/imagePanel"
                 android:layout_marginTop="9dp"
@@ -43,7 +43,7 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:scaleType="centerCrop"/>
-        </y2k.joyreactor.RoundBorderLayour>
+        </y2k.joyreactor.RoundBorderLayout>
         <TextView
                 android:id="@+id/userName"
                 android:layout_width="match_parent"
