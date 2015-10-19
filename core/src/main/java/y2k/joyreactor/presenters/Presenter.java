@@ -2,7 +2,7 @@ package y2k.joyreactor.presenters;
 
 import rx.functions.Action0;
 import rx.functions.Action1;
-import y2k.joyreactor.Messenger;
+import y2k.joyreactor.common.Messenger;
 
 import java.util.ArrayList;
 import java.util.List;

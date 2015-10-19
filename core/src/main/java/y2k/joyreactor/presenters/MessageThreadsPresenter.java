@@ -1,7 +1,7 @@
 package y2k.joyreactor.presenters;
 
 import y2k.joyreactor.MessageThread;
-import y2k.joyreactor.Messenger;
+import y2k.joyreactor.common.Messenger;
 
 import java.util.List;
 

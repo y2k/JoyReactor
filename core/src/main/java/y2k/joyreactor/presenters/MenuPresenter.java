@@ -4,6 +4,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import rx.Observable;
 import y2k.joyreactor.*;
+import y2k.joyreactor.common.Messages;
 import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.http.HttpClient;
 import y2k.joyreactor.requests.TagImageRequest;
