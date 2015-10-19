@@ -1,6 +1,5 @@
 package y2k.joyreactor;
 
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import y2k.joyreactor.platform.ImageRequest;
+import y2k.joyreactor.presenters.PostListPresenter;
 
 import java.util.List;
 

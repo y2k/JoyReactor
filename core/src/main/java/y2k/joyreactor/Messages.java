@@ -5,11 +5,11 @@ package y2k.joyreactor;
  */
 public class Messages {
 
-    static class TagSelected {
+    public static class TagSelected {
 
-        Tag tag;
+        public Tag tag;
 
-        TagSelected(Tag tag) {
+        public TagSelected(Tag tag) {
             this.tag = tag;
         }
 

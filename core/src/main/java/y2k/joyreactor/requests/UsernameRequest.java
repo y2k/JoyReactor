@@ -1,8 +1,9 @@
-package y2k.joyreactor;
+package y2k.joyreactor.requests;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import rx.Observable;
+import y2k.joyreactor.ObservableUtils;
 import y2k.joyreactor.http.HttpClient;
 
 /**
@@ -10,7 +11,7 @@ import y2k.joyreactor.http.HttpClient;
  */
 public class UsernameRequest {
 
-    Observable<String> request() {
+    public Observable<String> request() {
         return ObservableUtils.create(() -> {
             Document document = HttpClient.getInstance().getDocument("http://joyreactor.cc/donate");
             Element node = document.select("a#settings").first();

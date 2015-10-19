@@ -2,6 +2,7 @@ package y2k.joyreactor;
 
 import org.jsoup.nodes.Document;
 import rx.Observable;
+import y2k.joyreactor.requests.UserImageRequest;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,10 +13,10 @@ import java.util.List;
  */
 public class MessageThread {
 
-    String username;
-    String userImage;
-    String lastMessage;
-    Date date;
+    public String username;
+    public String userImage;
+    public String lastMessage;
+    public Date date;
 
     public static Observable<List<MessageThread>> request() {
         return new MessageThreadRequest().request();

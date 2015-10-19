@@ -4,6 +4,7 @@ import org.robovm.apple.foundation.NSURL;
 import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
+import y2k.joyreactor.presenters.LoginPresenter;
 
 /**
  * Created by y2k on 9/30/15.

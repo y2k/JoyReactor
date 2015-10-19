@@ -1,4 +1,4 @@
-package y2k.joyreactor;
+package y2k.joyreactor.requests;
 
 import java.util.Arrays;
 

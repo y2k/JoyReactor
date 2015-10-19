@@ -1,4 +1,8 @@
-package y2k.joyreactor;
+package y2k.joyreactor.presenters;
+
+import y2k.joyreactor.Message;
+import y2k.joyreactor.Messenger;
+import y2k.joyreactor.requests.SendMessageRequest;
 
 import java.util.List;
 

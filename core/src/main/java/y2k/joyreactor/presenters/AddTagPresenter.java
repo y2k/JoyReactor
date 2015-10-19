@@ -1,7 +1,9 @@
-package y2k.joyreactor;
+package y2k.joyreactor.presenters;
 
 import org.jsoup.nodes.Document;
 import rx.Observable;
+import y2k.joyreactor.Navigation;
+import y2k.joyreactor.ObservableUtils;
 import y2k.joyreactor.http.HttpClient;
 
 import java.net.URLEncoder;

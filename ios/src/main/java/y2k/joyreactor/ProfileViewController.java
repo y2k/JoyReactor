@@ -7,6 +7,7 @@ import org.robovm.apple.uikit.UIViewController;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
 import y2k.joyreactor.platform.ImageRequest;
+import y2k.joyreactor.presenters.ProfilePresenter;
 
 /**
  * Created by y2k on 9/30/15.

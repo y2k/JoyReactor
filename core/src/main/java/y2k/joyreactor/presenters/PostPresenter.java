@@ -1,4 +1,9 @@
-package y2k.joyreactor;
+package y2k.joyreactor.presenters;
+
+import y2k.joyreactor.Comment;
+import y2k.joyreactor.ImageRequest;
+import y2k.joyreactor.Navigation;
+import y2k.joyreactor.Post;
 
 import java.io.File;
 import java.util.List;

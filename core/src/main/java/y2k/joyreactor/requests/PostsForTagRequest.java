@@ -1,8 +1,9 @@
-package y2k.joyreactor;
+package y2k.joyreactor.requests;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import y2k.joyreactor.Post;
 import y2k.joyreactor.http.HttpClient;
 
 import java.io.IOException;
