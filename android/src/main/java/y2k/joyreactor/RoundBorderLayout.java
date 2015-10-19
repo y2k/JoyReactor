@@ -16,7 +16,8 @@ public class RoundBorderLayout extends FrameLayout {
     private Paint borderPaint;
 
     private Canvas clipCanvas;
-    private RectF rect;
+
+    private RectF rect = new RectF();
 
     public RoundBorderLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -38,18 +39,21 @@ public class RoundBorderLayout extends FrameLayout {
 
         int w = right - left;
         int h = bottom - top;
-        if (lastLayout[0] != w && lastLayout[1] != h) {
-            Bitmap canvasBitmap;
-            if (w > 0 && h > 0) {
-                canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-                clipCanvas = new Canvas(canvasBitmap);
-                rect = new RectF(0, 0, w, h);
-                clipPaint.setShader(new BitmapShader(canvasBitmap, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
-            } else {
-                clipCanvas = null;
-                clipPaint = null;
-                rect = null;
-            }
+        if (lastLayout[0] != w && lastLayout[1] != h)
+            updateLayoutCanvas(w, h);
+    }
+
+    private void updateLayoutCanvas(int w, int h) {
+        Bitmap canvasBitmap;
+        if (w > 0 && h > 0) {
+            canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            clipCanvas = new Canvas(canvasBitmap);
+            rect.set(0, 0, w, h);
+            clipPaint.setShader(new BitmapShader(canvasBitmap, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
+        } else {
+            clipCanvas = null;
+            clipPaint = null;
+            rect = null;
         }
     }
 
