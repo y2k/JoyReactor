@@ -1,6 +1,7 @@
-package y2k.joyreactor;
+package y2k.joyreactor.requests;
 
 import rx.Observable;
+import y2k.joyreactor.Platform;
 import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.http.HttpClient;
 import y2k.joyreactor.images.ImageThumbnailUrlBuilder;
@@ -12,11 +13,11 @@ import java.util.regex.Pattern;
 /**
  * Created by y2k on 16/10/15.
  */
-public class ImageRequest {
+public class OriginalImageRequest {
 
     private String imageUrl;
 
-    public ImageRequest(String imageUrl) {
+    public OriginalImageRequest(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 

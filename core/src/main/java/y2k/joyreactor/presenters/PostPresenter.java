@@ -1,7 +1,7 @@
 package y2k.joyreactor.presenters;
 
 import y2k.joyreactor.Comment;
-import y2k.joyreactor.ImageRequest;
+import y2k.joyreactor.requests.OriginalImageRequest;
 import y2k.joyreactor.Navigation;
 import y2k.joyreactor.Post;
 import y2k.joyreactor.requests.CommentListRequest;
@@ -49,7 +49,7 @@ public class PostPresenter {
 
     public void saveImageToGallery() {
         view.setIsBusy(true);
-        new ImageRequest(getArgumentPost().image)
+        new OriginalImageRequest(getArgumentPost().image)
                 .request()
                 .subscribe(imageFile -> {
                     view.uploadToGallery(imageFile);
