@@ -12,11 +12,11 @@ import java.util.List;
 /**
  * Created by y2k on 9/26/15.
  */
-public class MenuPresenter extends Presenter {
+public class TagsPresenter extends Presenter {
 
     private final View view;
 
-    public MenuPresenter(View view) {
+    public TagsPresenter(View view) {
         this.view = view;
     }
 
