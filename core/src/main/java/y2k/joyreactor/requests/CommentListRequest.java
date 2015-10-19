@@ -1,4 +1,4 @@
-package y2k.joyreactor.presenters;
+package y2k.joyreactor.requests;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
