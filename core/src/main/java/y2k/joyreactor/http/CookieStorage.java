@@ -1,34 +1,22 @@
 package y2k.joyreactor.http;
 
-import y2k.joyreactor.Platform;
+import y2k.joyreactor.common.PersistentMap;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Created by y2k on 10/11/15.
  */
-class CookieStorage {
+public class CookieStorage {
 
     private static Pattern COOKIE_PATTERN = Pattern.compile("(.+?)=([^;]+)");
-
-    private File cookieFile;
-    private Map<String, String> map = new ConcurrentHashMap<>();
-
-    public CookieStorage(String name) {
-        cookieFile = new File(Platform.Instance.getCurrentDirectory(), name);
-    }
+    private PersistentMap map = new PersistentMap("cookies.1.dat");
 
     public synchronized void attach(HttpURLConnection connection) throws IOException {
-        lazyInitialize();
         if (map.isEmpty()) return;
 
         StringBuilder cookie = new StringBuilder();
@@ -38,8 +26,6 @@ class CookieStorage {
     }
 
     public synchronized void grab(HttpURLConnection connection) throws IOException {
-        lazyInitialize();
-
         List<String> cookies = connection.getHeaderFields().get("Set-Cookie");
         if (cookies == null || cookies.isEmpty()) return;
         for (String c : cookies) {
@@ -47,60 +33,10 @@ class CookieStorage {
             if (!m.find()) throw new IllegalStateException(c);
             map.put(m.group(1), m.group(2));
         }
-
-        dump();
+        map.flush();
     }
 
-    private void lazyInitialize() throws IOException {
-        if (!cookieFile.exists()) return;
-
-        String data = new FileStringReader(cookieFile).readAll();
-        Matcher m = COOKIE_PATTERN.matcher(data);
-        while (m.find())
-            map.put(m.group(1), m.group(2));
-    }
-
-    private void dump() throws IOException {
-        if (map.isEmpty()) return;
-
-        StringBuilder cookie = new StringBuilder();
-        for (String key : map.keySet())
-            cookie.append(key).append("=").append(map.get(key)).append("; ");
-
-        new FileStringReader(cookieFile).writeAll(cookie.toString());
-    }
-
-    public synchronized void clear() {
-        cookieFile.delete();
+    public void clear() {
         map.clear();
-    }
-
-    private static class FileStringReader {
-
-        private File file;
-
-        public FileStringReader(File file) {
-            this.file = file;
-        }
-
-        public String readAll() throws IOException {
-            FileInputStream in = new FileInputStream(file);
-            try {
-                byte[] buf = new byte[(int) file.length()];
-                in.read(buf);
-                return new String(buf);
-            } finally {
-                in.close();
-            }
-        }
-
-        public void writeAll(String data) throws IOException {
-            FileOutputStream out = new FileOutputStream(file);
-            try {
-                out.write(data.getBytes());
-            } finally {
-                out.close();
-            }
-        }
     }
 }

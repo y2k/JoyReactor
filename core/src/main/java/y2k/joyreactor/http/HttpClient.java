@@ -17,7 +17,7 @@ public class HttpClient {
 
     private static HttpClient sInstance = new HttpClient();
 
-    private static CookieStorage sCookies = new CookieStorage("cookies.dat");
+    private static CookieStorage sCookies = new CookieStorage();
 
     protected HttpClient() {
     }
