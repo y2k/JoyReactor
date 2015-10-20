@@ -30,8 +30,16 @@ public class TagsPresenter extends Presenter {
                 .subscribe(view::reloadData, Throwable::printStackTrace);
     }
 
-    public void selectTag(Tag item) {
-        new Messages.TagSelected(item).broadcast();
+    public void selectTag(Tag tag) {
+        new Messages.TagSelected(tag).broadcast();
+    }
+
+    public void selectedFeatured() {
+        new Messages.TagSelected(null).broadcast();
+    }
+
+    public void selectedFavorite() {
+        // TODO:
     }
 
     public interface View {

@@ -54,11 +54,12 @@ public class MenuViewController extends UIViewController implements TagsPresente
 
         @Override
         public UITableViewCell getCellForRow(UITableView tableView, NSIndexPath indexPath) {
-            UITableViewCell cell;
             if (indexPath.getRow() == 0) {
-                cell = tableView.dequeueReusableCell("Header");
+                MenuHeaderCell cell = (MenuHeaderCell) tableView.dequeueReusableCell("Header");
+                cell.setPresenter(presenter);
+                return cell;
             } else {
-                cell = tableView.dequeueReusableCell("Tag");
+                UITableViewCell cell = tableView.dequeueReusableCell("Tag");
                 Tag i = tags.get(indexPath.getRow() - 1);
 
                 UIImageView iv = (UIImageView) cell.getViewWithTag(1);
@@ -68,8 +69,8 @@ public class MenuViewController extends UIViewController implements TagsPresente
                         .setSize(40, 40)
                         .to(iv, iv::setImage);
                 ((UILabel) cell.getViewWithTag(2)).setText(i.title);
+                return cell;
             }
-            return cell;
         }
     }
 

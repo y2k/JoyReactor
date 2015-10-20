@@ -464,7 +464,7 @@
                                 <animations/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Header" rowHeight="135" id="Wqu-jr-q4p">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Header" rowHeight="135" id="Wqu-jr-q4p" customClass="MenuHeaderCell">
                                         <rect key="frame" x="0.0" y="28" width="270" height="135"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Wqu-jr-q4p" id="LOX-nl-ovZ">
@@ -482,6 +482,9 @@
                                                     <state key="normal" title="Featured">
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
+                                                    <connections>
+                                                        <action selector="featuredClicked" destination="Wqu-jr-q4p" eventType="touchUpInside" id="avo-kn-Jyb"/>
+                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q4u-pW-nFK">
                                                     <rect key="frame" x="135" y="0.0" width="135" height="135"/>
@@ -490,6 +493,9 @@
                                                     <state key="normal" title="Favorite">
                                                         <color key="titleColor" red="0.94509803921568625" green="0.58823529411764708" blue="0.14901960784313725" alpha="1" colorSpace="calibratedRGB"/>
                                                     </state>
+                                                    <connections>
+                                                        <action selector="favoriteClicked" destination="Wqu-jr-q4p" eventType="touchUpInside" id="4xs-Qy-WYf"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <animations/>
