@@ -59,6 +59,9 @@ public class PostsForTagRequest {
             result.height = Integer.parseInt(img.attr("height"));
         }
 
+        if (result.image == null)
+            new YoutubeParser(element).load(result);
+
         result.userName = element.select("div.uhead_nick > a").text();
         result.userImage = element.select("div.uhead_nick > img").attr("src");
         result.id = extractNumber(element.id());
@@ -103,6 +106,28 @@ public class PostsForTagRequest {
         Date getCreated() {
             Elements e = element.select("span.date > span");
             return new Date(1000L * Long.parseLong(e.attr("data-time")));
+        }
+    }
+
+    static class YoutubeParser {
+
+        private static final Pattern SRC_PATTERN = Pattern.compile("/embed/([^\\?]+)");
+        private Element element;
+
+        YoutubeParser(Element element) {
+            this.element = element;
+        }
+
+        public void load(Post post) {
+            Element iframe = element.select("iframe.youtube-player").first();
+            if (iframe == null) return;
+
+            post.width = Integer.parseInt(iframe.attr("width"));
+            post.height = Integer.parseInt(iframe.attr("height"));
+
+            Matcher m = SRC_PATTERN.matcher(iframe.attr("src"));
+            if (!m.find()) throw new IllegalStateException(iframe.attr("src"));
+            post.image = "http://img.youtube.com/vi/" + m.group(1) + "/0.jpg";
         }
     }
 }
