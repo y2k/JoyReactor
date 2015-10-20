@@ -51,16 +51,9 @@ public class PostsForTagRequest {
     private Post newPost(Element element) {
         Post result = new Post();
         result.title = element.select("div.post_content").text();
-        Element img = element.select("div.post_content img").first();
-        if (img != null && img.hasAttr("width")) {
-            String image = img.attr("src");
-            result.image = image.replaceAll("(/post/).+(-\\d+\\.)", "$1$2");
-            result.width = Integer.parseInt(img.attr("width"));
-            result.height = Integer.parseInt(img.attr("height"));
-        }
 
-        if (result.image == null)
-            new YoutubeParser(element).load(result);
+        new ImageParser(element).load(result);
+        if (result.image == null) new YoutubeParser(element).load(result);
 
         result.userName = element.select("div.uhead_nick > a").text();
         result.userImage = element.select("div.uhead_nick > img").attr("src");
@@ -128,6 +121,25 @@ public class PostsForTagRequest {
             Matcher m = SRC_PATTERN.matcher(iframe.attr("src"));
             if (!m.find()) throw new IllegalStateException(iframe.attr("src"));
             post.image = "http://img.youtube.com/vi/" + m.group(1) + "/0.jpg";
+        }
+    }
+
+    static class ImageParser {
+
+        private Element element;
+
+        ImageParser(Element element) {
+            this.element = element;
+        }
+
+        public void load(Post post) {
+            Element img = element.select("div.post_content img").first();
+            if (img != null && img.hasAttr("width")) {
+                String image = img.attr("src");
+                post.image = image.replaceAll("(/post/).+(-\\d+\\.)", "$1$2");
+                post.width = Integer.parseInt(img.attr("width"));
+                post.height = Integer.parseInt(img.attr("height"));
+            }
         }
     }
 }
