@@ -52,8 +52,9 @@ public class PostsForTagRequest {
         Post result = new Post();
         result.title = element.select("div.post_content").text();
 
-        new ImageParser(element).load(result);
-        if (result.image == null) new YoutubeParser(element).load(result);
+        new ThumbnailParser(element).load(result);
+        if (result.image == null) new YoutubeThumbnailParser(element).load(result);
+        if (result.image == null) new VideoThumbnailParser(element).load(result);
 
         result.userName = element.select("div.uhead_nick > a").text();
         result.userImage = element.select("div.uhead_nick > img").attr("src");
@@ -102,12 +103,31 @@ public class PostsForTagRequest {
         }
     }
 
-    static class YoutubeParser {
+    static class ThumbnailParser {
+
+        private Element element;
+
+        ThumbnailParser(Element element) {
+            this.element = element;
+        }
+
+        public void load(Post post) {
+            Element img = element.select("div.post_content img").first();
+            if (img != null && img.hasAttr("width")) {
+                String image = img.attr("src");
+                post.image = image.replaceAll("(/post/).+(-\\d+\\.)", "$1$2");
+                post.width = Integer.parseInt(img.attr("width"));
+                post.height = Integer.parseInt(img.attr("height"));
+            }
+        }
+    }
+
+    static class YoutubeThumbnailParser {
 
         private static final Pattern SRC_PATTERN = Pattern.compile("/embed/([^\\?]+)");
         private Element element;
 
-        YoutubeParser(Element element) {
+        YoutubeThumbnailParser(Element element) {
             this.element = element;
         }
 
@@ -124,21 +144,25 @@ public class PostsForTagRequest {
         }
     }
 
-    static class ImageParser {
+    private class VideoThumbnailParser {
 
         private Element element;
 
-        ImageParser(Element element) {
+        public VideoThumbnailParser(Element element) {
             this.element = element;
         }
 
         public void load(Post post) {
-            Element img = element.select("div.post_content img").first();
-            if (img != null && img.hasAttr("width")) {
-                String image = img.attr("src");
-                post.image = image.replaceAll("(/post/).+(-\\d+\\.)", "$1$2");
-                post.width = Integer.parseInt(img.attr("width"));
-                post.height = Integer.parseInt(img.attr("height"));
+            Element video = element.select("video[poster]").first();
+            if (video == null) return;
+
+            try {
+                post.width = Integer.parseInt(video.attr("width"));
+                post.height = Integer.parseInt(video.attr("height"));
+                post.image = video.attr("poster").replaceAll("(/static/).+(-\\d+\\.)", "$1$2");
+            } catch (Exception e) {
+                System.out.println("ELEMENT | " + video);
+                throw e;
             }
         }
     }
