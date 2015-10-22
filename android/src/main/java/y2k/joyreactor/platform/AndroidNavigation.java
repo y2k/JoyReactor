@@ -42,4 +42,9 @@ public class AndroidNavigation extends Navigation {
     public void openBrowser(String url) {
         // TODO:
     }
+
+    @Override
+    public void openVideo(Post post) {
+        // TODO:
+    }
 }

@@ -49,6 +49,10 @@ public class PostListPresenter extends Presenter {
                 }, Throwable::printStackTrace);
     }
 
+    public void playClicked(Post post) {
+        Navigation.getInstance().openVideo(post);
+    }
+
     public interface View {
 
         void setBusy(boolean isBusy);

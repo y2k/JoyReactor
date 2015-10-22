@@ -22,6 +22,10 @@ public class Post {
     public int commentCount;
     public float rating;
 
+    public boolean isAnimated() {
+        return image != null && image.endsWith(".gif");
+    }
+
     public float getAspect() {
         return getAspect(1);
     }

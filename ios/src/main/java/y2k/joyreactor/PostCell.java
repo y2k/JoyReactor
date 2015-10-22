@@ -1,5 +1,6 @@
 package y2k.joyreactor;
 
+import org.robovm.apple.uikit.UIButton;
 import org.robovm.apple.uikit.UILabel;
 import org.robovm.apple.uikit.UITableViewCell;
 import org.robovm.objc.annotation.CustomClass;
@@ -18,10 +19,16 @@ public class PostCell extends UITableViewCell {
 
     UILabel replyCountView;
     UILabel ratingView;
+    UIButton playButton;
 
     @IBAction
     void clicked() {
         presenter.postClicked(post);
+    }
+
+    @IBAction
+    void play() {
+        presenter.playClicked(post);
     }
 
     public void update(PostListPresenter presenter, Post post) {
@@ -30,6 +37,8 @@ public class PostCell extends UITableViewCell {
 
         replyCountView.setText("" + post.commentCount);
         ratingView.setText("" + post.rating);
+
+        playButton.setHidden(!post.isAnimated());
     }
 
     @IBOutlet
@@ -40,5 +49,10 @@ public class PostCell extends UITableViewCell {
     @IBOutlet
     void setRatingView(UILabel ratingView) {
         this.ratingView = ratingView;
+    }
+
+    @IBOutlet
+    void setPlayButton(UIButton playButton) {
+        this.playButton = playButton;
     }
 }

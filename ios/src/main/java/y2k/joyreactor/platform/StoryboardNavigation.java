@@ -71,4 +71,10 @@ public class StoryboardNavigation extends Navigation {
     public void openBrowser(String url) {
         UIApplication.getSharedApplication().openURL(new NSURL(url));
     }
+
+    @Override
+    public void openVideo(Post post) {
+        sPostArgument = post;
+        getNavigationController().pushViewController(instantiateViewController("Video"), true);
+    }
 }
