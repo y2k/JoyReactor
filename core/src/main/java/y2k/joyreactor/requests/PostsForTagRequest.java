@@ -160,6 +160,7 @@ public class PostsForTagRequest {
                 post.width = Integer.parseInt(video.attr("width"));
                 post.height = Integer.parseInt(video.attr("height"));
                 post.image = video.attr("poster").replaceAll("(/static/).+(-\\d+\\.)", "$1$2");
+                post.mediaUrl = post.image.replaceAll("[^\\.]+$", "gif");
             } catch (Exception e) {
                 System.out.println("ELEMENT | " + video);
                 throw e;

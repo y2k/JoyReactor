@@ -12,16 +12,19 @@ public class VideoPresenter {
 
     public VideoPresenter(View view) {
         view.setBusy(true);
-        new OriginalImageRequest(getVideoUrl())
+        new OriginalImageRequest(getVideoUrl(), "mp4")
                 .request()
                 .subscribe(videoFile -> {
                     view.showVideo(videoFile);
                     view.setBusy(false);
-                }, Throwable::printStackTrace);
+                }, e -> {
+                    e.printStackTrace();
+                    view.setBusy(false);
+                });
     }
 
     private String getVideoUrl() {
-        return Navigation.getInstance().getArgumentPost().image;
+        return Navigation.getInstance().getArgumentPost().mediaUrl;
     }
 
     public interface View {

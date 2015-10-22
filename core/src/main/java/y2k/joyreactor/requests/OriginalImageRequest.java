@@ -16,9 +16,15 @@ import java.util.regex.Pattern;
 public class OriginalImageRequest {
 
     private String imageUrl;
+    private String format;
 
     public OriginalImageRequest(String imageUrl) {
+        this(imageUrl, null);
+    }
+
+    public OriginalImageRequest(String imageUrl, String format) {
         this.imageUrl = imageUrl;
+        this.format = format;
     }
 
     public Observable<File> request() {
@@ -41,6 +47,7 @@ public class OriginalImageRequest {
     private String getImageUrl() {
         ImageThumbnailUrlBuilder urlBuilder = new ImageThumbnailUrlBuilder();
         urlBuilder.url = imageUrl;
+        urlBuilder.format = format;
         return urlBuilder.buildString();
     }
 

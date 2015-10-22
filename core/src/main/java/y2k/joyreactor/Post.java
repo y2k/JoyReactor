@@ -22,8 +22,10 @@ public class Post {
     public int commentCount;
     public float rating;
 
+    public String mediaUrl;
+
     public boolean isAnimated() {
-        return image != null && image.endsWith(".gif");
+        return mediaUrl != null && mediaUrl.endsWith(".gif");
     }
 
     public float getAspect() {
