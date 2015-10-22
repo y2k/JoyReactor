@@ -27,9 +27,9 @@
     <orderEntry type="jdk" jdkName="RoboVM SDK 1.8.0" jdkType="RoboVM SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="core" exported="" />
-    <orderEntry type="library" exported="" name="robovm-rt-1.8.0" level="project" />
-    <orderEntry type="library" exported="" name="robovm-cocoatouch-1.8.0" level="project" />
-    <orderEntry type="library" exported="" name="robovm-objc-1.8.0" level="project" />
+    <orderEntry type="library" exported="" name="robovm-rt-1.9.0" level="project" />
+    <orderEntry type="library" exported="" name="robovm-cocoatouch-1.9.0" level="project" />
+    <orderEntry type="library" exported="" name="robovm-objc-1.9.0" level="project" />
     <orderEntry type="library" exported="" name="rxjava-1.0.14" level="project" />
     <orderEntry type="library" exported="" name="jsoup-1.8.3" level="project" />
     <orderEntry type="library" exported="" name="prettytime-3.2.7.Final" level="project" />
