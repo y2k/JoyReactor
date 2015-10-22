@@ -159,8 +159,9 @@ public class PostsForTagRequest {
             try {
                 post.width = Integer.parseInt(video.attr("width"));
                 post.height = Integer.parseInt(video.attr("height"));
-                post.image = video.attr("poster").replaceAll("(/static/).+(-\\d+\\.)", "$1$2");
-                post.mediaUrl = post.image.replaceAll("[^\\.]+$", "gif");
+                post.image = element
+                        .select("span.video_gif_holder > a").first().attr("href")
+                        .replaceAll("(/post/).+(-)", "$1$2");
             } catch (Exception e) {
                 System.out.println("ELEMENT | " + video);
                 throw e;

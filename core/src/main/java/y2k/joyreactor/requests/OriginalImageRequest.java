@@ -52,6 +52,8 @@ public class OriginalImageRequest {
     }
 
     private String getExtension() {
+        if (format != null) return format;
+
         Matcher m = Pattern.compile("\\.([^\\.]+)$").matcher(imageUrl);
         if (!m.find()) throw new IllegalStateException("can't find extension from url " + imageUrl);
         return m.group(1);

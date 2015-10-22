@@ -27,12 +27,25 @@ public class VideoViewController extends UIViewController implements VideoPresen
     }
 
     @Override
+    public void viewWillAppear(boolean animated) {
+        super.viewWillAppear(animated);
+        getNavigationController().setHidesBarsOnTap(true);
+    }
+
+    @Override
+    public void viewWillDisappear(boolean animated) {
+        super.viewWillDisappear(animated);
+        getNavigationController().setHidesBarsOnTap(false);
+    }
+
+    @Override
     public void showVideo(File videoFile) {
-        AVPlayer player = new AVPlayer(new NSURL(videoFile.getAbsolutePath()));
+        AVPlayer player = new AVPlayer(new NSURL(videoFile));
         AVPlayerLayer layer = new AVPlayerLayer();
 
         layer.setPlayer(player);
-        layer.setVideoGravity(AVLayerVideoGravity.ResizeAspectFill);
+        layer.setFrame(getView().getFrame());
+        layer.setVideoGravity(AVLayerVideoGravity.ResizeAspect);
 
         getView().getLayer().addSublayer(layer);
         player.play();
