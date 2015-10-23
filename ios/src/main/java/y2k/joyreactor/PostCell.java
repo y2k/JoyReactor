@@ -14,12 +14,17 @@ import y2k.joyreactor.presenters.PostListPresenter;
 @CustomClass("PostCell")
 public class PostCell extends UITableViewCell {
 
+    @IBOutlet
+    UILabel replyCountView;
+
+    @IBOutlet
+    UILabel ratingView;
+
+    @IBOutlet
+    UIButton playButton;
+
     private PostListPresenter presenter;
     private Post post;
-
-    UILabel replyCountView;
-    UILabel ratingView;
-    UIButton playButton;
 
     @IBAction
     void clicked() {
@@ -39,20 +44,5 @@ public class PostCell extends UITableViewCell {
         ratingView.setText("" + post.rating);
 
         playButton.setHidden(!post.isAnimated());
-    }
-
-    @IBOutlet
-    void setReplyCountView(UILabel replyCountView) {
-        this.replyCountView = replyCountView;
-    }
-
-    @IBOutlet
-    void setRatingView(UILabel ratingView) {
-        this.ratingView = ratingView;
-    }
-
-    @IBOutlet
-    void setPlayButton(UIButton playButton) {
-        this.playButton = playButton;
     }
 }
