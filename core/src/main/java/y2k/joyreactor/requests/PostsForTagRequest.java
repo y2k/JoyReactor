@@ -38,7 +38,7 @@ public class PostsForTagRequest {
             posts.add(newPost(e));
 
         Element next = doc.select("a.next").first();
-        if (next != null) nextPageId = extractNumber(next.attr("href"));
+        if (next != null) nextPageId = extractNumberFromEnd(next.attr("href"));
     }
 
     private String buildUrl() {
@@ -58,7 +58,7 @@ public class PostsForTagRequest {
 
         result.userName = element.select("div.uhead_nick > a").text();
         result.userImage = element.select("div.uhead_nick > img").attr("src");
-        result.id = extractNumber(element.id());
+        result.id = extractNumberFromEnd(element.id());
 
         PostParser parser = new PostParser(element);
         result.created = parser.getCreated();
@@ -68,8 +68,8 @@ public class PostsForTagRequest {
         return result;
     }
 
-    private String extractNumber(String text) {
-        Matcher m = Pattern.compile("\\d+").matcher(text);
+    private String extractNumberFromEnd(String text) {
+        Matcher m = Pattern.compile("\\d+$").matcher(text);
         if (!m.find()) throw new IllegalStateException();
         return m.group();
     }
