@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="zyg-bh-PNk">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="zyg-bh-PNk">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -268,6 +268,40 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PpH-zZ-Lu8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1034" y="-43"/>
+        </scene>
+        <!--Image View Controller-->
+        <scene sceneID="lxa-2N-TzP">
+            <objects>
+                <viewController storyboardIdentifier="Image" id="t7M-sv-wEM" customClass="ImageViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="10f-nb-xeP"/>
+                        <viewControllerLayoutGuide type="bottom" id="fZW-Dh-0aK"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Ep5-Dg-GN8">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="hGw-bl-Zbd">
+                                <rect key="frame" x="142" y="222" width="37" height="37"/>
+                                <animations/>
+                                <color key="color" red="0.87843137250000003" green="0.53725490200000003" blue="0.18039215689999999" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="hGw-bl-Zbd" firstAttribute="centerX" secondItem="Ep5-Dg-GN8" secondAttribute="centerX" id="ey5-qe-DYm"/>
+                            <constraint firstItem="hGw-bl-Zbd" firstAttribute="centerY" secondItem="Ep5-Dg-GN8" secondAttribute="centerY" id="jSK-wl-lGg"/>
+                        </constraints>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="indicatorView" destination="hGw-bl-Zbd" id="k1i-bs-90O"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="m7g-dg-cya" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1388" y="-586"/>
         </scene>
         <!--Video View Controller-->
         <scene sceneID="GDD-Zw-vdp">

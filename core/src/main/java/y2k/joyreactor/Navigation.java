@@ -24,4 +24,6 @@ public abstract class Navigation {
     public abstract void openBrowser(String url);
 
     public abstract void openVideo(Post post);
+
+    public abstract void openImageView(Post post);
 }

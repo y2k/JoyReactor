@@ -50,7 +50,8 @@ public class PostListPresenter extends Presenter {
     }
 
     public void playClicked(Post post) {
-        Navigation.getInstance().openVideo(post);
+        if (post.isAnimated()) Navigation.getInstance().openVideo(post);
+        else Navigation.getInstance().openImageView(post);
     }
 
     public interface View {

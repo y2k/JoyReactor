@@ -6,6 +6,7 @@ import org.robovm.apple.foundation.NSURL;
 import org.robovm.apple.uikit.UIApplication;
 import org.robovm.apple.uikit.UINavigationController;
 import org.robovm.apple.uikit.UIViewController;
+import y2k.joyreactor.ImageViewController;
 import y2k.joyreactor.Navigation;
 import y2k.joyreactor.Post;
 
@@ -76,5 +77,11 @@ public class StoryboardNavigation extends Navigation {
     public void openVideo(Post post) {
         sPostArgument = post;
         getNavigationController().pushViewController(instantiateViewController("Video"), true);
+    }
+
+    @Override
+    public void openImageView(Post post) {
+        sPostArgument = post;
+        getNavigationController().pushViewController(new ImageViewController(), true);
     }
 }

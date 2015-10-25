@@ -1,6 +1,7 @@
 package y2k.joyreactor;
 
 import org.robovm.apple.uikit.UIButton;
+import org.robovm.apple.uikit.UIControlState;
 import org.robovm.apple.uikit.UILabel;
 import org.robovm.apple.uikit.UITableViewCell;
 import org.robovm.objc.annotation.CustomClass;
@@ -43,6 +44,11 @@ public class PostCell extends UITableViewCell {
         replyCountView.setText("" + post.commentCount);
         ratingView.setText("" + post.rating);
 
-        playButton.setHidden(!post.isAnimated());
+        playButton.setHidden(post.image != null);
+        playButton.setTitle(getPlayButtonTitle(), UIControlState.Normal);
+    }
+
+    private String getPlayButtonTitle() {
+        return post.isAnimated() ? Translator.get("Play") : Translator.get("View");
     }
 }
