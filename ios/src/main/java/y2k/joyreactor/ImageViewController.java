@@ -9,7 +9,7 @@ import y2k.joyreactor.presenters.ImagePresenter;
 import java.io.File;
 
 /**
- * Created by igor on 10/25/15.
+ * Created by y2k on 10/25/15.
  */
 @CustomClass("ImageViewController")
 public class ImageViewController extends UIViewController implements ImagePresenter.View {

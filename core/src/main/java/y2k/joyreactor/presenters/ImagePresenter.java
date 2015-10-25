@@ -6,7 +6,7 @@ import y2k.joyreactor.requests.OriginalImageRequest;
 import java.io.File;
 
 /**
- * Created by igor on 10/25/15.
+ * Created by y2k on 10/25/15.
  */
 public class ImagePresenter {
 
