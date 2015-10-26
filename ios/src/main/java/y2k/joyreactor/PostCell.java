@@ -44,7 +44,7 @@ public class PostCell extends UITableViewCell {
         replyCountView.setText("" + post.commentCount);
         ratingView.setText("" + post.rating);
 
-        playButton.setHidden(post.image != null);
+        playButton.setHidden(post.image == null);
         playButton.setTitle(getPlayButtonTitle(), UIControlState.Normal);
     }
 

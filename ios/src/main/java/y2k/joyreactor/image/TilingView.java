@@ -1,11 +1,13 @@
 package y2k.joyreactor.image;
 
+import org.robovm.apple.coreanimation.CALayer;
 import org.robovm.apple.coreanimation.CATiledLayer;
 import org.robovm.apple.coregraphics.*;
 import org.robovm.apple.uikit.UIGraphics;
 import org.robovm.apple.uikit.UIImage;
 import org.robovm.apple.uikit.UIView;
 import org.robovm.objc.annotation.CustomClass;
+import org.robovm.objc.annotation.Method;
 import org.robovm.rt.bro.annotation.ByVal;
 import org.robovm.rt.bro.annotation.MachineSizedFloat;
 
@@ -63,5 +65,10 @@ public class TilingView extends UIView {
         CGImage cgImage = CGImage.createWithImageInRect(
                 image.getCGImage(), new CGRect(0, 0, 200, 200));
         return new UIImage(cgImage);
+    }
+
+    @Method(selector = "layerClass")
+    public static Class<? extends CALayer> getLayerClass() {
+        return CATiledLayer.class;
     }
 }

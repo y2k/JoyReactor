@@ -65,7 +65,7 @@ public class ImageScrollView extends UIScrollView {
 
     public void displayTiledImageNamed(String imageName, CGSize imageSize) {
         // clear views for the previous image
-        _zoomView.removeFromSuperview();
+        if (_zoomView != null) _zoomView.removeFromSuperview();
         _zoomView = null;
         _tilingView = null;
 

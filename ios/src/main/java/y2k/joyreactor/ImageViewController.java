@@ -1,9 +1,12 @@
 package y2k.joyreactor;
 
+import org.robovm.apple.coregraphics.CGSize;
 import org.robovm.apple.uikit.UIActivityIndicatorView;
+import org.robovm.apple.uikit.UIViewAutoresizing;
 import org.robovm.apple.uikit.UIViewController;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
+import y2k.joyreactor.image.ImageScrollView;
 import y2k.joyreactor.presenters.ImagePresenter;
 
 import java.io.File;
@@ -25,12 +28,17 @@ public class ImageViewController extends UIViewController implements ImagePresen
 
     @Override
     public void setBusy(boolean isBusy) {
-        if (isBusy) indicatorView.startAnimating();
-        else indicatorView.stopAnimating();
+        // FIXME:
+        //        if (isBusy) indicatorView.startAnimating();
+        //        else indicatorView.stopAnimating();
     }
 
     @Override
     public void showImage(File imageFile) {
-        // TODO:
+        ImageScrollView scrollView = new ImageScrollView(getView().getFrame());
+        scrollView.setAutoresizingMask(new UIViewAutoresizing((1 << 1) + (1 << 4)));
+        getView().addSubview(scrollView);
+
+        scrollView.displayTiledImageNamed("", new CGSize(1000, 1000));
     }
 }
