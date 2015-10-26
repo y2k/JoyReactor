@@ -47,4 +47,9 @@ public class AndroidNavigation extends Navigation {
     public void openVideo(Post post) {
         // TODO:
     }
+
+    @Override
+    public void openImageView(Post post) {
+        // TODO:
+    }
 }
