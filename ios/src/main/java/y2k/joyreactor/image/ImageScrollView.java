@@ -20,7 +20,7 @@ public class ImageScrollView extends UIScrollView {
     private UIImageView _zoomView;
     private CGPoint _pointToCenterAfterResize;
     private double _scaleToRestoreAfterResize;
-
+    private TilingView _tilingView;
     private CGSize _imageSize;
 
     public ImageScrollView(CGRect frame) {
@@ -61,6 +61,39 @@ public class ImageScrollView extends UIScrollView {
         }
 
         _zoomView.setFrame(frameToCenter);
+    }
+
+    public void displayTiledImageNamed(String imageName, CGSize imageSize) {
+        // clear views for the previous image
+        _zoomView.removeFromSuperview();
+        _zoomView = null;
+        _tilingView = null;
+
+        // reset our zoomScale to 1.0 before doing any further calculations
+        setZoomScale(1);
+
+        // make views to display the new image
+        _zoomView = new UIImageView(new CGRect(CGPoint.Zero(), imageSize));
+        _zoomView.setImage(placeholderImageNamed(imageName));
+        addSubview(_zoomView);
+
+        _tilingView = new TilingView(imageName, imageSize);
+        _tilingView.setFrame(_zoomView.getBounds());
+        _zoomView.addSubview(_tilingView);
+
+        configureForImageSize(imageSize);
+    }
+
+    private UIImage placeholderImageNamed(Object imageName) {
+        // TODO:
+        return null;
+    }
+
+    private void configureForImageSize(CGSize imageSize) {
+        _imageSize = imageSize;
+        setContentSize(imageSize);
+        setMaxMinZoomScalesForCurrentBounds();
+        setZoomScale(getMinimumZoomScale());
     }
 
     @Override
@@ -114,8 +147,6 @@ public class ImageScrollView extends UIScrollView {
     }
 
     private void setMaxMinZoomScalesForCurrentBounds() {
-        // TODO:
-
         CGSize boundsSize = getBounds().getSize();
 
         // calculate min/max zoomscale
