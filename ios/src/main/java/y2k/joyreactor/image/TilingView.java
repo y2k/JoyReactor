@@ -40,8 +40,12 @@ public class TilingView extends UIView {
         CATiledLayer tiledLayer = (CATiledLayer) getLayer();
         CGSize tileSize = tiledLayer.getTileSize();
 
+//        System.out.println("draw (1) | " + tileSize);
+
         tileSize.setWidth(tileSize.getWidth() / scale);
         tileSize.setHeight(tileSize.getHeight() / scale);
+
+//        System.out.println("draw (2) | " + tileSize);
 
         int firstCol = (int) Math.floor(rect.getMinX() / tileSize.getWidth());
         int lastCol = (int) Math.floor((rect.getMaxX() - 1) / tileSize.getWidth());
@@ -50,6 +54,7 @@ public class TilingView extends UIView {
 
         for (int row = firstRow; row <= lastRow; row++) {
             for (int col = firstCol; col <= lastCol; col++) {
+
                 UIImage tile = tileForScale(scale, row, col);
                 CGRect tileRect = new CGRect(
                         tileSize.getWidth() * col, tileSize.getHeight() * row,
@@ -61,9 +66,12 @@ public class TilingView extends UIView {
     }
 
     private UIImage tileForScale(double scale, int row, int col) {
+        System.out.println("tileForScale | " + scale + " | " + row + " | " + col);
+
         UIImage image = UIImage.getImage("LaunchScreenGirl.png");
         CGImage cgImage = CGImage.createWithImageInRect(
-                image.getCGImage(), new CGRect(0, 0, 200, 200));
+                image.getCGImage(), new CGRect(100, 100, 100, 100));
+
         return new UIImage(cgImage);
     }
 

@@ -29,8 +29,8 @@ public class ImageViewController extends UIViewController implements ImagePresen
     @Override
     public void setBusy(boolean isBusy) {
         // FIXME:
-        //        if (isBusy) indicatorView.startAnimating();
-        //        else indicatorView.stopAnimating();
+//        if (isBusy) indicatorView.startAnimating();
+//        else indicatorView.stopAnimating();
     }
 
     @Override
@@ -39,6 +39,11 @@ public class ImageViewController extends UIViewController implements ImagePresen
         scrollView.setAutoresizingMask(new UIViewAutoresizing((1 << 1) + (1 << 4)));
         getView().addSubview(scrollView);
 
-        scrollView.displayTiledImageNamed("", new CGSize(1000, 1000));
+        scrollView.displayTiledImageNamed(imageFile.getAbsolutePath(), getImageSize());
+    }
+
+    private CGSize getImageSize() {
+        Post post = Navigation.getInstance().getArgumentPost();
+        return new CGSize(post.width, post.height);
     }
 }
