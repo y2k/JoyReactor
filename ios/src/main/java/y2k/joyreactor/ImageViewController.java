@@ -2,6 +2,7 @@ package y2k.joyreactor;
 
 import org.robovm.apple.coregraphics.CGSize;
 import org.robovm.apple.uikit.UIActivityIndicatorView;
+import org.robovm.apple.uikit.UIImage;
 import org.robovm.apple.uikit.UIViewAutoresizing;
 import org.robovm.apple.uikit.UIViewController;
 import org.robovm.objc.annotation.CustomClass;
@@ -39,11 +40,10 @@ public class ImageViewController extends UIViewController implements ImagePresen
         scrollView.setAutoresizingMask(new UIViewAutoresizing((1 << 1) + (1 << 4)));
         getView().addSubview(scrollView);
 
-        scrollView.displayTiledImageNamed(imageFile.getAbsolutePath(), getImageSize());
+        scrollView.displayTiledImageNamed(imageFile.getAbsolutePath(), getImageSize(imageFile));
     }
 
-    private CGSize getImageSize() {
-        Post post = Navigation.getInstance().getArgumentPost();
-        return new CGSize(post.width, post.height);
+    private CGSize getImageSize(File imageFile) {
+        return new UIImage(imageFile).getSize();
     }
 }

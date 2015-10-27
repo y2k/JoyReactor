@@ -114,11 +114,16 @@ public class PostsForTagRequest {
         public void load(Post post) {
             Element img = element.select("div.post_content img").first();
             if (img != null && img.hasAttr("width")) {
-                String image = img.attr("src");
-                post.image = image.replaceAll("(/post/).+(-\\d+\\.)", "$1$2");
                 post.width = Integer.parseInt(img.attr("width"));
                 post.height = Integer.parseInt(img.attr("height"));
+                post.image = hasFull(img)
+                        ? img.parent().attr("href").replaceAll("(/full/).+(-\\d+\\.)", "$1$2")
+                        : img.attr("src").replaceAll("(/post/).+(-\\d+\\.)", "$1$2");
             }
+        }
+
+        private boolean hasFull(Element img) {
+            return "a".equals(img.parent().tagName());
         }
     }
 
