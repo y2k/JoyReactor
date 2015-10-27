@@ -56,6 +56,9 @@ public class TagsPresenter extends Presenter {
             addTag("Красивые картинки", "31505");
             addTag("Игры", "753");
 
+            addTag("Длинные картинки", "2851");
+            addTag("hi-res", "2851");
+
             addTag("Комиксы", "27");
             addTag("Гифки", "116");
             addTag("Песочница", "10891");

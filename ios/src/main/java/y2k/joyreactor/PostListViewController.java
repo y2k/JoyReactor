@@ -16,8 +16,10 @@ import java.util.List;
 @CustomClass("PostListViewController")
 public class PostListViewController extends UIViewController implements PostListPresenter.View {
 
+    @IBOutlet
     UITableView list;
-    UIActivityIndicatorView progress;
+    @IBOutlet
+    UIActivityIndicatorView progressView;
     UIRefreshControl refresher;
 
     PostListPresenter presenter;
@@ -51,7 +53,7 @@ public class PostListViewController extends UIViewController implements PostList
             presentViewController(alert, true, null);
         });
 
-        progress.stopAnimating();
+        progressView.stopAnimating();
 
         presenter = new PostListPresenter(this);
     }
@@ -87,16 +89,6 @@ public class PostListViewController extends UIViewController implements PostList
     // ==========================================
     // Outlets
     // ==========================================
-
-    @IBOutlet
-    void setList(UITableView list) {
-        this.list = list;
-    }
-
-    @IBOutlet
-    void setProgressView(UIActivityIndicatorView progress) {
-        this.progress = progress;
-    }
 
     class PostDataSource extends UITableViewDataSourceAdapter {
 

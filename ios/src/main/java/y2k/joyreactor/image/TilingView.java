@@ -3,13 +3,18 @@ package y2k.joyreactor.image;
 import org.robovm.apple.coreanimation.CALayer;
 import org.robovm.apple.coreanimation.CATiledLayer;
 import org.robovm.apple.coregraphics.*;
+import org.robovm.apple.imageio.CGImageDestination;
+import org.robovm.apple.imageio.CGImagePropertyPNGData;
 import org.robovm.apple.uikit.UIGraphics;
 import org.robovm.apple.uikit.UIImage;
+import org.robovm.apple.uikit.UIImageAsset;
 import org.robovm.apple.uikit.UIView;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.Method;
 import org.robovm.rt.bro.annotation.ByVal;
 import org.robovm.rt.bro.annotation.MachineSizedFloat;
+
+import java.io.File;
 
 /**
  * Created by y2k on 10/25/15.
@@ -17,11 +22,11 @@ import org.robovm.rt.bro.annotation.MachineSizedFloat;
 @CustomClass("TilingView")
 public class TilingView extends UIView {
 
-    private Object imageName;
+    private String imageName;
 
-    public TilingView(Object name, CGSize size) {
+    public TilingView(String imageName, CGSize size) {
         super(new CGRect(CGPoint.Zero(), size));
-        imageName = name;
+        this.imageName = imageName;
 
         CATiledLayer tiledLayer = (CATiledLayer) getLayer();
         tiledLayer.setLevelsOfDetail(4);
@@ -40,12 +45,8 @@ public class TilingView extends UIView {
         CATiledLayer tiledLayer = (CATiledLayer) getLayer();
         CGSize tileSize = tiledLayer.getTileSize();
 
-//        System.out.println("draw (1) | " + tileSize);
-
         tileSize.setWidth(tileSize.getWidth() / scale);
         tileSize.setHeight(tileSize.getHeight() / scale);
-
-//        System.out.println("draw (2) | " + tileSize);
 
         int firstCol = (int) Math.floor(rect.getMinX() / tileSize.getWidth());
         int lastCol = (int) Math.floor((rect.getMaxX() - 1) / tileSize.getWidth());
@@ -68,11 +69,15 @@ public class TilingView extends UIView {
     private UIImage tileForScale(double scale, int row, int col) {
         System.out.println("tileForScale | " + scale + " | " + row + " | " + col);
 
-        UIImage image = UIImage.getImage("LaunchScreenGirl.png");
-        CGImage cgImage = CGImage.createWithImageInRect(
-                image.getCGImage(), new CGRect(100, 100, 100, 100));
+        CGRect rect = new CGRect();
+        rect.setWidth(256);
+        rect.setHeight(256);
+        rect.setX(col * 256 / scale);
+        rect.setY(row * 256 / scale);
 
-        return new UIImage(cgImage);
+        CGImage original = new UIImage(new File(imageName)).getCGImage();
+        UIImage uiImage = new UIImage(CGImage.createWithImageInRect(original, rect));
+        return new UIImage(uiImage.toPNGData());
     }
 
     @Method(selector = "layerClass")
