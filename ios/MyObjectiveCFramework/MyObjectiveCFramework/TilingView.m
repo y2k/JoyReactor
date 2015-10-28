@@ -143,7 +143,7 @@
     UIImage* ui2 = [UIImage imageWithCGImage:gi1];
     CGImageRelease(gi1);
     
-    return ui2;
+    return [UIImage imageWithData:UIImagePNGRepresentation(ui2)];
 }
 
 @end
