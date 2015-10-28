@@ -4,7 +4,6 @@ import rx.Observable;
 import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.requests.PostsForTagRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,13 +11,19 @@ import java.util.List;
  */
 public class PostListService {
 
-    private List<Post> buffer = new ArrayList<>();
+    private Repository<Post> repository;
     private String nextPageId;
     private Tag tag;
 
+    public PostListService() {
+        repository = new Repository<>("posts." + null + ".1.txt");
+    }
+
     public void setCurrentTag(Tag tag) {
         this.tag = tag;
-        buffer.clear();
+
+        repository = new Repository<>("posts." + tag.getId() + ".1.txt");
+        repository.clear();
         nextPageId = null;
     }
 
@@ -35,12 +40,12 @@ public class PostListService {
     }
 
     public Observable<List<Post>> getList() {
-        return Observable.just(buffer);
+        return Observable.just(repository.getAll());
     }
 
     public Observable<Void> reset() {
         nextPageId = null;
-        buffer.clear();
+        repository.clear();
         return Observable.just(null);
     }
 
@@ -48,11 +53,11 @@ public class PostListService {
 
         void addNewPosts(PostsForTagRequest request) {
             for (Post post : request.posts)
-                if (isNew(post)) buffer.add(post);
+                if (isNew(post)) repository.add(post);
         }
 
         private boolean isNew(Post post) {
-            for (Post oldPost : buffer)
+            for (Post oldPost : repository.getAll())
                 if (oldPost.id.equals(post.id)) return false;
             return true;
         }

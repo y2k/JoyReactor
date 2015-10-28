@@ -1,11 +1,12 @@
 package y2k.joyreactor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by y2k on 9/27/15.
  */
-public class Post {
+public class Post implements Serializable {
 
     public String title;
     public String image;
