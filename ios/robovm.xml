@@ -29,4 +29,10 @@
         <pattern>org.ocpsoft.prettytime.i18n.*</pattern>
         <pattern>java.util.logging.*</pattern>
     </forceLinkClasses>
+    <frameworks>
+        <framework>MyObjectiveCFramework</framework>
+    </frameworks>
+    <frameworkPaths>
+        <path>MyObjectiveCFramework/build</path>
+    </frameworkPaths>
 </config>

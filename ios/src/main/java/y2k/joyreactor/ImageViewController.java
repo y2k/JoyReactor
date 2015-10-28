@@ -7,7 +7,6 @@ import org.robovm.apple.uikit.UIViewAutoresizing;
 import org.robovm.apple.uikit.UIViewController;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
-import y2k.joyreactor.image.ImageScrollView;
 import y2k.joyreactor.presenters.ImagePresenter;
 
 import java.io.File;

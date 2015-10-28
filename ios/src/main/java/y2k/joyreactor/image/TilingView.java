@@ -19,8 +19,9 @@ import java.io.File;
 /**
  * Created by y2k on 10/25/15.
  */
+@Deprecated
 @CustomClass("TilingView")
-public class TilingView extends UIView {
+class TilingView extends UIView {
 
     private String imageName;
     private CGSize size;

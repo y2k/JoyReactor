@@ -10,6 +10,7 @@ import org.robovm.rt.bro.annotation.ByVal;
 /**
  * Created by y2k on 10/25/15.
  */
+@Deprecated
 @CustomClass("ImageScrollView")
 public class ImageScrollView extends UIScrollView {
 
