@@ -23,10 +23,12 @@ import java.io.File;
 public class TilingView extends UIView {
 
     private String imageName;
+    private CGSize size;
 
     public TilingView(String imageName, CGSize size) {
         super(new CGRect(CGPoint.Zero(), size));
         this.imageName = imageName;
+        this.size = size;
 
         CATiledLayer tiledLayer = (CATiledLayer) getLayer();
         tiledLayer.setLevelsOfDetail(4);
@@ -67,17 +69,33 @@ public class TilingView extends UIView {
     }
 
     private UIImage tileForScale(double scale, int row, int col) {
-        System.out.println("tileForScale | " + scale + " | " + row + " | " + col);
-
         CGRect rect = new CGRect();
-        rect.setWidth(256);
-        rect.setHeight(256);
         rect.setX(col * 256 / scale);
         rect.setY(row * 256 / scale);
+        rect.setWidth(256 / 1);
+        rect.setHeight(256 / 1);
+
+//        rect.setX(-col * 256 * 1);
+//        rect.setY(-row * 256 * 1);
+//        rect.setWidth(size.getWidth() * scale);
+//        rect.setHeight(size.getHeight() * scale);
+
+        System.out.println("tileForScale | " + scale + " | " + row + " | " + col + " | rect = " + rect);
 
         CGImage original = new UIImage(new File(imageName)).getCGImage();
-        UIImage uiImage = new UIImage(CGImage.createWithImageInRect(original, rect));
+        CGImage cg = CGImage.createWithImageInRect(original, rect);
+        UIImage uiImage = new UIImage(cg);
+        cg.release();
+
         return new UIImage(uiImage.toPNGData());
+
+//        UIImage original = new UIImage(new File(imageName));
+//
+//        UIGraphics.beginImageContext(new CGSize(266, 256));
+//        original.draw(rect);
+//        UIImage result = UIGraphics.getImageFromCurrentImageContext();
+//        UIGraphics.endImageContext();
+//        return result;
     }
 
     @Method(selector = "layerClass")
