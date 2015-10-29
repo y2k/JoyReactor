@@ -24,8 +24,16 @@ public class PostCell extends UITableViewCell {
     @IBOutlet
     UIButton playButton;
 
+    @IBOutlet
+    UIButton rateButton;
+
     private PostListPresenter presenter;
     private Post post;
+
+    @IBAction
+    void rate() {
+        // TODO:
+    }
 
     @IBAction
     void clicked() {

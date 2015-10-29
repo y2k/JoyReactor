@@ -432,6 +432,9 @@
                                                                 <constraint firstAttribute="width" constant="40" id="WYA-rg-ihu"/>
                                                             </constraints>
                                                             <state key="normal" image="IconThumbUp.png"/>
+                                                            <connections>
+                                                                <action selector="rate" destination="5Ro-Wk-r2I" eventType="touchUpInside" id="M6w-Bv-Sbg"/>
+                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                     <animations/>
@@ -477,6 +480,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <connections>
                                             <outlet property="playButton" destination="gJF-oW-aaa" id="pgK-Pf-h46"/>
+                                            <outlet property="rateButton" destination="fOe-6s-9F0" id="pkq-h3-Sit"/>
                                             <outlet property="ratingView" destination="mi3-M7-8sw" id="vEf-YT-vKi"/>
                                             <outlet property="replyCountView" destination="Wg1-NU-ib7" id="WgM-aq-c7f"/>
                                         </connections>
