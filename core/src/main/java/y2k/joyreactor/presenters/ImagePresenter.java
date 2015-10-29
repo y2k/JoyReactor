@@ -24,7 +24,7 @@ public class ImagePresenter {
     }
 
     private String getVideoUrl() {
-        return Navigation.getInstance().getArgumentPost().image;
+        return Navigation.getInstance().getArgumentPost().image.fullUrl(null);
     }
 
     public interface View {

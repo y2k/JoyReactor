@@ -12,7 +12,7 @@ public class VideoPresenter {
 
     public VideoPresenter(View view) {
         view.setBusy(true);
-        new OriginalImageRequest(getVideoUrl(), "mp4")
+        new OriginalImageRequest(getVideoUrl())
                 .request()
                 .subscribe(videoFile -> {
                     view.showVideo(videoFile);
@@ -24,7 +24,7 @@ public class VideoPresenter {
     }
 
     private String getVideoUrl() {
-        return Navigation.getInstance().getArgumentPost().image;
+        return Navigation.getInstance().getArgumentPost().image.fullUrl("mp4");
     }
 
     public interface View {

@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class Tag implements Serializable {
 
     public String title;
-    public String image;
+    public Image image;
 
     public String getId() {
         return title.toLowerCase();

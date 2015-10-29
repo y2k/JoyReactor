@@ -133,7 +133,7 @@ public class PostViewController extends UIViewController implements PostPresente
             UIImageView iv = (UIImageView) cell.getViewWithTag(2);
             iv.getLayer().setCornerRadius(iv.getFrame().getWidth() / 2);
             new ImageRequest()
-                    .setUrl(new UserImage(item.userAvatar).toString())
+                    .setUrl(new UserImage(item.userAvatar).toImage())
                     .setSize((int) iv.getFrame().getWidth(), (int) iv.getFrame().getHeight())
                     .to(iv, iv::setImage);
 

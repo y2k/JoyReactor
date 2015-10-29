@@ -4,7 +4,6 @@ import rx.Observable;
 import y2k.joyreactor.Platform;
 import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.http.HttpClient;
-import y2k.joyreactor.images.ImageThumbnailUrlBuilder;
 
 import java.io.File;
 import java.util.regex.Matcher;
@@ -16,15 +15,9 @@ import java.util.regex.Pattern;
 public class OriginalImageRequest {
 
     private String imageUrl;
-    private String format;
 
     public OriginalImageRequest(String imageUrl) {
-        this(imageUrl, null);
-    }
-
-    public OriginalImageRequest(String imageUrl, String format) {
         this.imageUrl = imageUrl;
-        this.format = format;
     }
 
     public Observable<File> request() {
@@ -45,14 +38,12 @@ public class OriginalImageRequest {
     }
 
     private String getImageUrl() {
-        ImageThumbnailUrlBuilder urlBuilder = new ImageThumbnailUrlBuilder();
-        urlBuilder.url = imageUrl;
-        urlBuilder.format = format;
-        return urlBuilder.buildString();
+        return imageUrl;
     }
 
     private String getExtension() {
-        if (format != null) return format;
+        Matcher fm = Pattern.compile("format=([^&]+)").matcher(imageUrl);
+        if (fm.find()) return fm.group(1);
 
         Matcher m = Pattern.compile("\\.([^\\.]+)$").matcher(imageUrl);
         if (!m.find()) throw new IllegalStateException("can't find extension from url " + imageUrl);

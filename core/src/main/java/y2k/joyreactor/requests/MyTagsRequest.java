@@ -3,6 +3,7 @@ package y2k.joyreactor.requests;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import rx.Observable;
+import y2k.joyreactor.Image;
 import y2k.joyreactor.Tag;
 import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.http.HttpClient;
@@ -43,7 +44,7 @@ public class MyTagsRequest {
     private Tag createTag(String title) throws IOException {
         Tag tag = new Tag();
         tag.title = title;
-        tag.image = imageRequest.request(title);
+        tag.image = new Image(imageRequest.request(title));
         return tag;
     }
 }

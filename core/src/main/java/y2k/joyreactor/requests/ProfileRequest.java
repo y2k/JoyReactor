@@ -2,6 +2,7 @@ package y2k.joyreactor.requests;
 
 import org.jsoup.nodes.Document;
 import rx.Observable;
+import y2k.joyreactor.Image;
 import y2k.joyreactor.Profile;
 import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.http.HttpClient;
@@ -40,7 +41,7 @@ public class ProfileRequest {
         Profile parse() {
             Profile profile = new Profile();
             profile.userName = document.select("div.sidebarContent > div.user > span").text();
-            profile.userImage = document.select("div.sidebarContent > div.user > img").attr("src");
+            profile.userImage = new Image(document.select("div.sidebarContent > div.user > img").attr("src"));
             profile.progressToNewStar = getProgressToNewStar();
             profile.rating = Float.parseFloat(document.select("#rating-text > b").text());
             profile.stars = document.select(".star-row-0 > .star-0").size();

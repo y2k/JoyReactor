@@ -9,12 +9,9 @@ import java.util.Date;
 public class Post implements Serializable {
 
     public String title;
-    public String image;
+    public Image image;
 
-    public int width;
-    public int height;
-
-    public String userImage;
+    public Image userImage;
     public String userName;
 
     public Date created;
@@ -23,16 +20,18 @@ public class Post implements Serializable {
     public int commentCount;
     public float rating;
 
+    @Deprecated
     public boolean isAnimated() {
-        return image != null && image.endsWith(".gif");
+        return image != null && image.isAnimated();
     }
 
+    @Deprecated
     public float getAspect() {
-        return getAspect(1);
+        return image == null ? 1 : image.getAspect(1);
     }
 
+    @Deprecated
     public float getAspect(float min) {
-        float aspect = height == 0 ? 1 : (float) width / height;
-        return Math.min(2, Math.max(min, aspect));
+        return image == null ? min : image.getAspect(min);
     }
 }

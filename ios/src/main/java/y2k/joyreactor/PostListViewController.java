@@ -115,7 +115,7 @@ public class PostListViewController extends UIViewController implements PostList
                 loadImage(post.image, 300, (int) (300 / post.getAspect()), (UIImageView) cell.getViewWithTag(1));
 
                 UIImageView userImageView = (UIImageView) cell.getViewWithTag(2);
-                loadImage(new UserImage(post.userImage).toString(), 50, 50, userImageView);
+                loadImage(new UserImage(post.userImage).toImage(), 50, 50, userImageView);
                 userImageView.getLayer().setCornerRadius(userImageView.getFrame().getWidth() / 2);
 
                 UIView root = cell.getViewWithTag(10);
@@ -127,10 +127,10 @@ public class PostListViewController extends UIViewController implements PostList
             }
         }
 
-        void loadImage(String url, int width, int height, UIImageView iv) {
+        void loadImage(Image image, int width, int height, UIImageView iv) {
             iv.setAlpha(0);
             new ImageRequest()
-                    .setUrl(url)
+                    .setUrl(image)
                     .setSize(width, height)
                     .to(iv, data -> {
                         iv.setImage(data);

@@ -10,14 +10,13 @@ public class UserImage {
 
     private String userImage;
 
-    UserImage(String userImage) {
-        this.userImage = SITE_DEFAULT_USER_IMAGE.equals(userImage)
+    UserImage(Image userImage) {
+        this.userImage = SITE_DEFAULT_USER_IMAGE.equals(userImage.url)
                 ? APP_DEFAULT_USER_IMAGE
-                : userImage;
+                : userImage.url;
     }
 
-    @Override
-    public String toString() {
-        return userImage;
+    public Image toImage() {
+        return new Image(userImage);
     }
 }

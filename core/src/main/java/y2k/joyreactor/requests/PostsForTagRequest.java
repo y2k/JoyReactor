@@ -3,6 +3,7 @@ package y2k.joyreactor.requests;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import y2k.joyreactor.Image;
 import y2k.joyreactor.Post;
 import y2k.joyreactor.http.HttpClient;
 
@@ -57,7 +58,7 @@ public class PostsForTagRequest {
         if (result.image == null) new VideoThumbnailParser(element).load(result);
 
         result.userName = element.select("div.uhead_nick > a").text();
-        result.userImage = element.select("div.uhead_nick > img").attr("src");
+        result.userImage = new Image(element.select("div.uhead_nick > img").attr("src"));
         result.id = extractNumberFromEnd(element.id());
 
         PostParser parser = new PostParser(element);
@@ -114,9 +115,10 @@ public class PostsForTagRequest {
         public void load(Post post) {
             Element img = element.select("div.post_content img").first();
             if (img != null && img.hasAttr("width")) {
-                post.width = Integer.parseInt(img.attr("width"));
-                post.height = Integer.parseInt(img.attr("height"));
-                post.image = hasFull(img)
+                post.image = new Image();
+                post.image.width = Integer.parseInt(img.attr("width"));
+                post.image.height = Integer.parseInt(img.attr("height"));
+                post.image.url = hasFull(img)
                         ? img.parent().attr("href").replaceAll("(/full/).+(-\\d+\\.)", "$1$2")
                         : img.attr("src").replaceAll("(/post/).+(-\\d+\\.)", "$1$2");
             }
@@ -140,12 +142,13 @@ public class PostsForTagRequest {
             Element iframe = element.select("iframe.youtube-player").first();
             if (iframe == null) return;
 
-            post.width = Integer.parseInt(iframe.attr("width"));
-            post.height = Integer.parseInt(iframe.attr("height"));
+            post.image = new Image();
+            post.image.width = Integer.parseInt(iframe.attr("width"));
+            post.image.height = Integer.parseInt(iframe.attr("height"));
 
             Matcher m = SRC_PATTERN.matcher(iframe.attr("src"));
             if (!m.find()) throw new IllegalStateException(iframe.attr("src"));
-            post.image = "http://img.youtube.com/vi/" + m.group(1) + "/0.jpg";
+            post.image.url = "http://img.youtube.com/vi/" + m.group(1) + "/0.jpg";
         }
     }
 
@@ -162,9 +165,10 @@ public class PostsForTagRequest {
             if (video == null) return;
 
             try {
-                post.width = Integer.parseInt(video.attr("width"));
-                post.height = Integer.parseInt(video.attr("height"));
-                post.image = element
+                post.image = new Image();
+                post.image.width = Integer.parseInt(video.attr("width"));
+                post.image.height = Integer.parseInt(video.attr("height"));
+                post.image.url = element
                         .select("span.video_gif_holder > a").first().attr("href")
                         .replaceAll("(/post/).+(-)", "$1$2");
             } catch (Exception e) {

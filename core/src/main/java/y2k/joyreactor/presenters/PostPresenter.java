@@ -49,7 +49,7 @@ public class PostPresenter {
 
     public void saveImageToGallery() {
         view.setIsBusy(true);
-        new OriginalImageRequest(getArgumentPost().image)
+        new OriginalImageRequest(getArgumentPost().image.fullUrl(null))
                 .request()
                 .subscribe(imageFile -> {
                     view.uploadToGallery(imageFile);

@@ -4,6 +4,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import rx.Observable;
 import y2k.joyreactor.Comment;
+import y2k.joyreactor.Image;
 import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.http.HttpClient;
 
@@ -41,7 +42,7 @@ public class CommentListRequest {
         for (Element node : doc.select("div.comment")) {
             Comment comment = new Comment();
             comment.text = node.select("div.txt > div").first().text();
-            comment.userAvatar = node.select("img.avatar").attr("src");
+            comment.userAvatar = new Image(node.select("img.avatar").attr("src"));
             comment.id = Integer.parseInt(node.select("span.comment_rating").attr("comment_id"));
             comment.rating = Float.parseFloat(node.select("span.comment_rating").text().trim());
 

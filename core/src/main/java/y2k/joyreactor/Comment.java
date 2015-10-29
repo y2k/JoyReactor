@@ -6,7 +6,7 @@ package y2k.joyreactor;
 public class Comment {
 
     public String text;
-    public String userAvatar;
+    public Image userAvatar;
 
     public int id;
     public int parentId;

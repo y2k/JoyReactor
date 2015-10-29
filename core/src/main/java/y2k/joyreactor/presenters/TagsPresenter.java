@@ -78,7 +78,7 @@ public class TagsPresenter extends Presenter {
         private void addTag(String title, String tagId) {
             Tag tag = new Tag();
             tag.title = title;
-            tag.image = "http://img0.joyreactor.cc/pics/avatar/tag/" + tagId;
+            tag.image = new Image("http://img0.joyreactor.cc/pics/avatar/tag/" + tagId);
             tags.add(tag);
         }
 

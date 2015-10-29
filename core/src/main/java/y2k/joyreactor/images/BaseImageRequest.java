@@ -3,6 +3,7 @@ package y2k.joyreactor.images;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
+import y2k.joyreactor.Image;
 import y2k.joyreactor.common.ForegroundScheduler;
 
 import java.io.File;
@@ -17,22 +18,25 @@ public abstract class BaseImageRequest<T> {
     private static DiskCache sDiskCache = new DiskCache();
     private static Map<Object, Subscription> sLinks = new HashMap<>();
 
-    private ImageThumbnailUrlBuilder urlBuilder = new ImageThumbnailUrlBuilder();
     private Subscription subscription;
 
+    private Image image;
+    private int width;
+    private int height;
+
     public BaseImageRequest<T> setSize(int width, int height) {
-        urlBuilder.width = width;
-        urlBuilder.height = height;
+        this.width = width;
+        this.height = height;
         return this;
     }
 
-    public BaseImageRequest<T> setUrl(String url) {
-        urlBuilder.url = url;
+    public BaseImageRequest<T> setUrl(Image image) {
+        this.image = image;
         return this;
     }
 
     public void to(Object target, Action1<T> callback) {
-        if (urlBuilder.url == null) {
+        if (image == null) {
             sLinks.remove(target);
             callback.call(null);
             return;
@@ -51,15 +55,19 @@ public abstract class BaseImageRequest<T> {
 
     private Observable<T> getFromCache() {
         return sDiskCache
-                .loadAsync(urlBuilder.buildString())
+                .loadAsync(toURLString())
                 .map(this::decode);
     }
 
     private Observable<Object> putToCache() {
         File dir = sDiskCache.getCacheDirectory();
-        return new MultiTryDownloader(dir, urlBuilder.buildString())
+        return new MultiTryDownloader(dir, toURLString())
                 .downloadAsync()
-                .flatMap(s -> sDiskCache.putAsync(s, urlBuilder.buildString()));
+                .flatMap(s -> sDiskCache.putAsync(s, toURLString()));
+    }
+
+    private String toURLString() {
+        return image.thumbnailUrl(width, height);
     }
 
     protected abstract T decode(File path);

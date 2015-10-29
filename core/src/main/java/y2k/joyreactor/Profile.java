@@ -6,7 +6,7 @@ package y2k.joyreactor;
 public class Profile {
 
     public String userName;
-    public String userImage;
+    public Image userImage;
     public float rating;
     public int stars;
     public float progressToNewStar;
