@@ -385,21 +385,21 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 hours ago" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4qi-4V-VOZ">
-                                                            <rect key="frame" x="212" y="261" width="84" height="25"/>
+                                                            <rect key="frame" x="180" y="261" width="84" height="25"/>
                                                             <animations/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="99.9" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mi3-M7-8sw">
-                                                            <rect key="frame" x="174" y="265" width="30" height="17"/>
+                                                            <rect key="frame" x="142" y="265" width="30" height="17"/>
                                                             <animations/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="9999" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wg1-NU-ib7">
-                                                            <rect key="frame" x="130" y="265" width="36" height="17"/>
+                                                            <rect key="frame" x="98" y="265" width="36" height="17"/>
                                                             <animations/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -424,6 +424,15 @@
                                                                 <action selector="play" destination="5Ro-Wk-r2I" eventType="touchUpInside" id="ni0-CH-y4N"/>
                                                             </connections>
                                                         </button>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fOe-6s-9F0">
+                                                            <rect key="frame" x="264" y="254" width="40" height="40"/>
+                                                            <animations/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="40" id="Gzx-xj-h1e"/>
+                                                                <constraint firstAttribute="width" constant="40" id="WYA-rg-ihu"/>
+                                                            </constraints>
+                                                            <state key="normal" image="IconThumbUp.png"/>
+                                                        </button>
                                                     </subviews>
                                                     <animations/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -431,8 +440,10 @@
                                                         <constraint firstItem="mi3-M7-8sw" firstAttribute="leading" secondItem="Wg1-NU-ib7" secondAttribute="trailing" constant="8" id="3jO-Lb-veJ"/>
                                                         <constraint firstItem="XqC-3G-zHP" firstAttribute="top" secondItem="u6G-dO-YRb" secondAttribute="top" id="98R-p3-tzn"/>
                                                         <constraint firstItem="4qi-4V-VOZ" firstAttribute="bottom" secondItem="9R5-ne-hWN" secondAttribute="bottom" id="AhS-Ud-Vbv"/>
+                                                        <constraint firstAttribute="bottom" secondItem="fOe-6s-9F0" secondAttribute="bottom" id="Cik-zR-nbW"/>
                                                         <constraint firstAttribute="trailing" secondItem="XqC-3G-zHP" secondAttribute="trailing" id="FBV-w7-4LS"/>
                                                         <constraint firstAttribute="bottom" secondItem="mi3-M7-8sw" secondAttribute="bottom" constant="12" id="Hd5-3x-3Rb"/>
+                                                        <constraint firstAttribute="trailing" secondItem="fOe-6s-9F0" secondAttribute="trailing" id="J3q-Qo-zmx"/>
                                                         <constraint firstItem="4qi-4V-VOZ" firstAttribute="height" secondItem="9R5-ne-hWN" secondAttribute="height" multiplier="0.5" id="Mrg-kw-FiQ"/>
                                                         <constraint firstItem="9R5-ne-hWN" firstAttribute="top" secondItem="p14-PC-4AZ" secondAttribute="bottom" constant="8" id="OXS-y7-6Wr"/>
                                                         <constraint firstItem="gJF-oW-aaa" firstAttribute="top" secondItem="u6G-dO-YRb" secondAttribute="top" id="Rqs-K7-8tt"/>
@@ -448,7 +459,7 @@
                                                         <constraint firstAttribute="trailing" secondItem="Vmk-bU-EhU" secondAttribute="trailing" constant="8" id="lTn-wX-BZM"/>
                                                         <constraint firstAttribute="trailing" secondItem="p14-PC-4AZ" secondAttribute="trailing" id="pku-nb-Qrh"/>
                                                         <constraint firstItem="Vmk-bU-EhU" firstAttribute="top" secondItem="9R5-ne-hWN" secondAttribute="top" id="seP-5i-iFq"/>
-                                                        <constraint firstAttribute="trailing" secondItem="4qi-4V-VOZ" secondAttribute="trailing" constant="8" id="sng-pl-WiG"/>
+                                                        <constraint firstAttribute="trailing" secondItem="4qi-4V-VOZ" secondAttribute="trailing" constant="40" id="sng-pl-WiG"/>
                                                         <constraint firstItem="p14-PC-4AZ" firstAttribute="top" secondItem="u6G-dO-YRb" secondAttribute="top" id="tkL-t6-Dj4"/>
                                                         <constraint firstItem="Vmk-bU-EhU" firstAttribute="leading" secondItem="9R5-ne-hWN" secondAttribute="trailing" constant="8" id="wr3-yM-WNN"/>
                                                     </constraints>
@@ -1102,6 +1113,7 @@
     <resources>
         <image name="IconRating.png" width="12" height="12"/>
         <image name="IconReply.png" width="12" height="12"/>
+        <image name="IconThumbUp.png" width="25" height="25"/>
         <image name="MenuHeader.png" width="270" height="136"/>
         <image name="More.png" width="20" height="6"/>
     </resources>
