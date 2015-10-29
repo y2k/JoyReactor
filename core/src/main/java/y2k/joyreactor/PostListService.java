@@ -22,7 +22,7 @@ public class PostListService {
     public void setCurrentTag(Tag tag) {
         this.tag = tag;
 
-        repository = new Repository<>("posts." + tag.getId() + ".1.txt");
+        repository = new Repository<>("posts." + tag.getId() + ".1");
         repository.clear();
         nextPageId = null;
     }

@@ -18,7 +18,7 @@ public class PostListPresenter extends Presenter {
 
         getMessages().add(this::currentTagChanged, Messages.TagSelected.class);
         reloadPosts();
-//        loadMore();
+        loadMore();
     }
 
     private void currentTagChanged(Messages.TagSelected m) {

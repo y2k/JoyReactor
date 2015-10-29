@@ -22,12 +22,19 @@ public class TagsPresenter extends Presenter {
 
     @Override
     public void activate() {
+        Repository<Tag> repository = new Repository<>("my-tags.1");
+        System.out.println("GET TAGS | " + repository.getAll());
+        view.reloadData(repository.getAll());
+
         new UsernameRequest()
                 .request()
                 .flatMap(username -> username == null
                         ? new DefaultTagRequest().request()
                         : new MyTagsRequest(username).request())
-                .subscribe(view::reloadData, Throwable::printStackTrace);
+                .subscribe(tags -> {
+                    repository.replaceAll(tags);
+                    view.reloadData(tags);
+                }, Throwable::printStackTrace);
     }
 
     public void selectTag(Tag tag) {

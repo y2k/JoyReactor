@@ -15,19 +15,19 @@ public class Repository<T> {
     private File file;
 
     public Repository(String name) {
-        file = new File(Platform.Instance.getCurrentDirectory(), name);
+        file = new File(Platform.Instance.getCurrentDirectory(), name + ".txt");
         loadFromFile();
     }
 
     private void loadFromFile() {
         if (!file.exists())
             return;
-
         try {
             ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file));
             try {
-                while (stream.available() > 0)
+                while (true)
                     inMemoryCache.add((T) stream.readObject());
+            } catch (EOFException e) {
             } finally {
                 IoUtils.close(stream);
             }
@@ -43,6 +43,12 @@ public class Repository<T> {
 
     public void add(T row) {
         inMemoryCache.add(row);
+        dumpAll();
+    }
+
+    public void replaceAll(List<T> rows) {
+        inMemoryCache.clear();
+        inMemoryCache.addAll(rows);
         dumpAll();
     }
 
