@@ -61,7 +61,7 @@ public class StoryboardNavigation extends Navigation {
                 .instantiateViewController(storyboardId);
     }
 
-    private UINavigationController getNavigationController() {
+    public static UINavigationController getNavigationController() {
         return (UINavigationController) UIApplication
                 .getSharedApplication()
                 .getWindows().get(0)

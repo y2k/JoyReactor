@@ -1,12 +1,10 @@
 package y2k.joyreactor;
 
-import org.robovm.apple.uikit.UIButton;
-import org.robovm.apple.uikit.UIControlState;
-import org.robovm.apple.uikit.UILabel;
-import org.robovm.apple.uikit.UITableViewCell;
+import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBAction;
 import org.robovm.objc.annotation.IBOutlet;
+import y2k.joyreactor.platform.StoryboardNavigation;
 import y2k.joyreactor.presenters.PostListPresenter;
 
 /**
@@ -32,7 +30,15 @@ public class PostCell extends UITableViewCell {
 
     @IBAction
     void rate() {
-        // TODO:
+        UIAlertController alert = new UIAlertController();
+        alert.addAction(new UIAlertAction(Translator.get("Like"), UIAlertActionStyle.Default, s -> {
+            // TODO:
+        }));
+        alert.addAction(new UIAlertAction(Translator.get("Dislike"), UIAlertActionStyle.Destructive, s -> {
+            // TODO:
+        }));
+        alert.addAction(new UIAlertAction(Translator.get("Cancel"), UIAlertActionStyle.Cancel, null));
+        StoryboardNavigation.getNavigationController().presentViewController(alert, true, null);
     }
 
     @IBAction
