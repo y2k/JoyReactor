@@ -1,6 +1,9 @@
 package y2k.joyreactor;
 
+import rx.Observable;
+import rx.Single;
 import y2k.joyreactor.common.IoUtils;
+import y2k.joyreactor.common.ObservableUtils;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -17,24 +20,6 @@ public class Repository<T> {
     public Repository(String name, int version) {
         file = new File(new File(Platform.Instance.getCurrentDirectory(), "repositories"), name + "." + version + ".dat");
         file.getParentFile().mkdirs();
-        loadFromFile();
-    }
-
-    private void loadFromFile() {
-        if (!file.exists())
-            return;
-        try {
-            ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file));
-            try {
-                while (true)
-                    inMemoryCache.add((T) stream.readObject());
-            } catch (EOFException e) {
-            } finally {
-                IoUtils.close(stream);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public void clear() {
@@ -70,7 +55,29 @@ public class Repository<T> {
         }
     }
 
+    public Observable<List<T>> getAllAsync() {
+        return ObservableUtils.create(this::getAll);
+    }
+
     public List<T> getAll() {
+        if (inMemoryCache.isEmpty()) loadFromFile();
         return inMemoryCache;
+    }
+
+    private void loadFromFile() {
+        if (!file.exists())
+            return;
+        try {
+            ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file));
+            try {
+                while (true)
+                    inMemoryCache.add((T) stream.readObject());
+            } catch (EOFException e) {
+            } finally {
+                IoUtils.close(stream);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

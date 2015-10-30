@@ -2,6 +2,7 @@ package y2k.joyreactor.presenters;
 
 import y2k.joyreactor.*;
 import y2k.joyreactor.common.Messages;
+import y2k.joyreactor.requests.PostsForTagRequest;
 
 import java.util.List;
 
@@ -10,45 +11,67 @@ import java.util.List;
  */
 public class PostListPresenter extends Presenter {
 
-    private PostListService service = new PostListService();
+    //    private PostListService service;
     private View view;
 
     public PostListPresenter(View view) {
         this.view = view;
 
         getMessages().add(this::currentTagChanged, Messages.TagSelected.class);
-        reloadPosts();
-        loadMore();
+//        reloadPosts();
+//        loadMore();
+
+        view.setBusy(true);
+        Repository<Post> repository = new Repository<>("posts", 1);
+        repository
+                .getAllAsync()
+                .subscribe(posts -> {
+                    view.reloadPosts(posts);
+                    PostsForTagRequest req = new PostsForTagRequest(null, null);
+                    req.requestAsync()
+                            .subscribe(ignore -> {
+                                new PostMerger(repository).merge(req.posts);
+                                repository
+                                        .getAllAsync()
+                                        .subscribe(posts2 -> {
+                                            view.reloadPosts(posts2);
+                                            view.setBusy(false);
+                                        });
+                            });
+                });
     }
 
     private void currentTagChanged(Messages.TagSelected m) {
-        service.setCurrentTag(m.tag);
+//        service.setCurrentTag(m.tag);
+//        service = new PostListService(m.tag);
+
         view.reloadPosts(null);
         loadMore();
     }
 
     public void loadMore() {
         view.setBusy(true);
-        service.loadNextPageAsync()
-                .subscribe(s -> reloadPosts());
+//        service.loadNextPageAsync()
+//                .subscribe(s -> reloadPosts());
+    }
+
+    public void reloadFirstPage() {
+//        service.reset().subscribe(s -> loadMore());
+//        service = new PostListService(service.getTag());
     }
 
     public void postClicked(Post post) {
         Navigation.getInstance().openPost(post);
     }
 
-    public void reloadFirstPage() {
-        service.reset().subscribe(s -> loadMore());
-    }
-
-    private void reloadPosts() {
-        view.setBusy(true);
-        service.getList()
-                .subscribe(data -> {
-                    view.reloadPosts(data);
-                    view.setBusy(false);
-                }, Throwable::printStackTrace);
-    }
+//    private void reloadPosts() {
+//        view.setBusy(true);
+//        service.getList()
+//                .subscribe(data -> {
+//                    view.reloadPosts(data);
+//                    view.setBusy(false);
+//                }, Throwable::printStackTrace);
+//    }
 
     public void playClicked(Post post) {
         if (post.isAnimated()) Navigation.getInstance().openVideo(post);

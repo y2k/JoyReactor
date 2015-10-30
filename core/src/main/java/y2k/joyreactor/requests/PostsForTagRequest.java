@@ -3,8 +3,10 @@ package y2k.joyreactor.requests;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import rx.Observable;
 import y2k.joyreactor.Image;
 import y2k.joyreactor.Post;
+import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.http.HttpClient;
 
 import java.io.IOException;
@@ -73,6 +75,13 @@ public class PostsForTagRequest {
         Matcher m = Pattern.compile("\\d+$").matcher(text);
         if (!m.find()) throw new IllegalStateException();
         return m.group();
+    }
+
+    public Observable requestAsync() {
+        return ObservableUtils.create(() -> {
+            request();
+            return null;
+        });
     }
 
     static class PostParser {
