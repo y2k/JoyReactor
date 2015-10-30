@@ -12,6 +12,10 @@ class DiskCache {
 
     private static TaskExecutor DISK_EXECUTOR = new TaskExecutor(1);
 
+    public DiskCache() {
+        getCacheDirectory().mkdirs();
+    }
+
     Observable<File> loadAsync(String url) {
         return Observable.create(subscriber -> DISK_EXECUTOR.execute(() -> {
             if (urlToFile(url).exists())
@@ -33,6 +37,6 @@ class DiskCache {
     }
 
     File getCacheDirectory() {
-        return Platform.Instance.getCurrentDirectory();
+        return new File(Platform.Instance.getCurrentDirectory(), "images");
     }
 }

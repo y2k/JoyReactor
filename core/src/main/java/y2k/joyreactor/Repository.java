@@ -14,8 +14,9 @@ public class Repository<T> {
     private List<T> inMemoryCache = new ArrayList<>();
     private File file;
 
-    public Repository(String name) {
-        file = new File(Platform.Instance.getCurrentDirectory(), name + ".txt");
+    public Repository(String name, int version) {
+        file = new File(new File(Platform.Instance.getCurrentDirectory(), "repositories"), name + "." + version + ".dat");
+        file.getParentFile().mkdirs();
         loadFromFile();
     }
 

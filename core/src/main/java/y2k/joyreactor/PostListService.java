@@ -16,13 +16,13 @@ public class PostListService {
     private Tag tag;
 
     public PostListService() {
-        repository = new Repository<>("posts." + null + ".1.txt");
+        repository = new Repository<>("posts." + null, 1);
     }
 
     public void setCurrentTag(Tag tag) {
         this.tag = tag;
 
-        repository = new Repository<>("posts." + tag.getId() + ".1");
+        repository = new Repository<>("posts." + tag.getId(), 1);
         repository.clear();
         nextPageId = null;
     }
