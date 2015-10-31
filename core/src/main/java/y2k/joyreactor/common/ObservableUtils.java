@@ -12,6 +12,13 @@ import java.util.concurrent.Executor;
  */
 public class ObservableUtils {
 
+    public static Observable<Void> create(UnsafeAction0 action0) {
+        return ObservableUtils.create(() -> {
+            action0.call();
+            return null;
+        });
+    }
+
     public static <T> Observable<T> create(Callable<T> action) {
         Observable<T> result = Observable
                 .create(subscriber -> Schedulers.io().createWorker().schedule(() -> {
@@ -36,5 +43,10 @@ public class ObservableUtils {
                     }
                 }));
         return result.observeOn(ForegroundScheduler.getInstance());
+    }
+
+    public interface UnsafeAction0 {
+
+        void call() throws Exception;
     }
 }

@@ -1,5 +1,8 @@
 package y2k.joyreactor;
 
+import rx.Observable;
+import y2k.joyreactor.common.ObservableUtils;
+
 import java.util.List;
 
 /**
@@ -7,11 +10,29 @@ import java.util.List;
  */
 public class PostMerger {
 
+    private Repository<Post> repository;
+
     public PostMerger(Repository<Post> repository) {
-        // TODO:
+        this.repository = repository;
     }
 
-    public void merge(List<Post> posts) {
-        // TODO:
+    public Observable<Void> mergeFirstPage(List<Post> posts) {
+        return ObservableUtils.create(() -> {
+            // TODO
+        });
+    }
+
+    public boolean hasNew(List<Post> posts) {
+        return false;
+    }
+
+    public Observable<Void> mergeNextPage(List<Post> posts) {
+        return ObservableUtils.create(() -> {
+            // TODO
+        });
+    }
+
+    public int getDivider() {
+        return 0;
     }
 }

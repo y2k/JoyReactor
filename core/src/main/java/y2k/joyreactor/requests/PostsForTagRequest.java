@@ -33,6 +33,10 @@ public class PostsForTagRequest {
         this.pageId = pageId;
     }
 
+    public Observable<Void> requestAsync() {
+        return ObservableUtils.create(this::request);
+    }
+
     public void request() throws IOException {
         Document doc = HttpClient.getInstance().getDocument(buildUrl());
 
@@ -75,13 +79,6 @@ public class PostsForTagRequest {
         Matcher m = Pattern.compile("\\d+$").matcher(text);
         if (!m.find()) throw new IllegalStateException();
         return m.group();
-    }
-
-    public Observable requestAsync() {
-        return ObservableUtils.create(() -> {
-            request();
-            return null;
-        });
     }
 
     static class PostParser {

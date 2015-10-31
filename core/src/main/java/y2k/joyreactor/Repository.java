@@ -22,6 +22,10 @@ public class Repository<T> {
         file.getParentFile().mkdirs();
     }
 
+    public Observable<Void> clearAsync() {
+        return ObservableUtils.create(this::clear);
+    }
+
     public void clear() {
         inMemoryCache.clear();
         dumpAll();
@@ -55,7 +59,7 @@ public class Repository<T> {
         }
     }
 
-    public Observable<List<T>> getAllAsync() {
+    public Observable<List<T>> queryAsync() {
         return ObservableUtils.create(this::getAll);
     }
 

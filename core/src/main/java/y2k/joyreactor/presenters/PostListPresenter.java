@@ -1,6 +1,10 @@
 package y2k.joyreactor.presenters;
 
-import y2k.joyreactor.*;
+import rx.Observable;
+import y2k.joyreactor.Navigation;
+import y2k.joyreactor.Post;
+import y2k.joyreactor.PostMerger;
+import y2k.joyreactor.Repository;
 import y2k.joyreactor.common.Messages;
 import y2k.joyreactor.requests.PostsForTagRequest;
 
@@ -11,67 +15,100 @@ import java.util.List;
  */
 public class PostListPresenter extends Presenter {
 
-    //    private PostListService service;
     private View view;
+    private TagState tagState;
 
     public PostListPresenter(View view) {
         this.view = view;
-
         getMessages().add(this::currentTagChanged, Messages.TagSelected.class);
-//        reloadPosts();
-//        loadMore();
-
-        view.setBusy(true);
-        Repository<Post> repository = new Repository<>("posts", 1);
-        repository
-                .getAllAsync()
-                .subscribe(posts -> {
-                    view.reloadPosts(posts);
-                    PostsForTagRequest req = new PostsForTagRequest(null, null);
-                    req.requestAsync()
-                            .subscribe(ignore -> {
-                                new PostMerger(repository).merge(req.posts);
-                                repository
-                                        .getAllAsync()
-                                        .subscribe(posts2 -> {
-                                            view.reloadPosts(posts2);
-                                            view.setBusy(false);
-                                        });
-                            });
-                });
+        tagState = new TagState();
     }
 
     private void currentTagChanged(Messages.TagSelected m) {
-//        service.setCurrentTag(m.tag);
-//        service = new PostListService(m.tag);
+        tagState = new TagState();
+    }
 
-        view.reloadPosts(null);
-        loadMore();
+    public void applyNew() {
+        tagState.applyNew();
     }
 
     public void loadMore() {
-        view.setBusy(true);
-//        service.loadNextPageAsync()
-//                .subscribe(s -> reloadPosts());
+        tagState.loadMore();
     }
 
     public void reloadFirstPage() {
-//        service.reset().subscribe(s -> loadMore());
-//        service = new PostListService(service.getTag());
+        tagState.reloadFirstPage();
+    }
+
+    class TagState {
+
+        private PostsForTagRequest request;
+        private PostMerger merger;
+
+        void State() {
+            getFromRepository().subscribe(posts -> view.reloadPosts(posts, posts.size()));
+
+            view.setBusy(true);
+            request = getPostsForTagRequest();
+            request.requestAsync()
+                    .map(s -> merger.hasNew(request.posts))
+                    .subscribe((hasNewPosts) -> {
+                        view.setHasNewPosts(hasNewPosts);
+                        view.setBusy(false);
+                    });
+        }
+
+        public void applyNew() {
+            merger.mergeFirstPage(request.posts)
+                    .flatMap(s -> getFromRepository())
+                    .subscribe(posts -> {
+                        view.setHasNewPosts(false);
+                        view.reloadPosts(posts, merger.getDivider());
+                    });
+        }
+
+        public void loadMore() {
+            view.setBusy(true);
+
+            request = getPostsForTagRequest();
+            request.requestAsync()
+                    .flatMap(s -> merger.mergeNextPage(request.posts))
+                    .flatMap(s -> getFromRepository())
+                    .subscribe(posts -> {
+                        view.reloadPosts(posts, merger.getDivider());
+                        view.setBusy(false);
+                    });
+        }
+
+        public void reloadFirstPage() {
+            view.setBusy(true);
+            request = getPostsForTagRequest();
+            request.requestAsync()
+                    .flatMap(s -> getRepository().clearAsync())
+                    .flatMap(s -> merger.mergeFirstPage(request.posts))
+                    .flatMap(s -> getFromRepository())
+                    .subscribe(posts -> {
+                        view.reloadPosts(posts, posts.size());
+                        view.setBusy(false);
+                    });
+        }
+
+        private PostsForTagRequest getPostsForTagRequest() {
+            return new PostsForTagRequest(null, null);
+        }
+
+        private Observable<List<Post>> getFromRepository() {
+            return getRepository().queryAsync();
+        }
+
+        private Repository<Post> getRepository() {
+            return new Repository<>("posts", 1);
+        }
     }
 
     public void postClicked(Post post) {
         Navigation.getInstance().openPost(post);
     }
-
-//    private void reloadPosts() {
-//        view.setBusy(true);
-//        service.getList()
-//                .subscribe(data -> {
-//                    view.reloadPosts(data);
-//                    view.setBusy(false);
-//                }, Throwable::printStackTrace);
-//    }
 
     public void playClicked(Post post) {
         if (post.isAnimated()) Navigation.getInstance().openVideo(post);
@@ -82,6 +119,8 @@ public class PostListPresenter extends Presenter {
 
         void setBusy(boolean isBusy);
 
-        void reloadPosts(List<Post> posts);
+        void reloadPosts(List<Post> posts, int divider);
+
+        void setHasNewPosts(boolean hasNewPosts);
     }
 }
