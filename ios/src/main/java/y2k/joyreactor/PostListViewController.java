@@ -37,23 +37,13 @@ public class PostListViewController extends UIViewController implements PostList
 
         list.addSubview(refresher = new UIRefreshControl());
 
-        getNavigationItem().getRightBarButtonItem().setOnClickListener(sender -> {
-            UIAlertController alert = new UIAlertController();
-            alert.addAction(new UIAlertAction("Add tag", UIAlertActionStyle.Default, s -> {
-                getNavigationController().pushViewController(
-                        getStoryboard().instantiateViewController("AddTag"), true);
-            }));
-            alert.addAction(new UIAlertAction("Profile", UIAlertActionStyle.Default, s -> {
-                getNavigationController().pushViewController(
-                        getStoryboard().instantiateViewController("Profile"), true);
-            }));
-            alert.addAction(new UIAlertAction("Messages", UIAlertActionStyle.Default, s -> {
-                getNavigationController().pushViewController(
-                        getStoryboard().instantiateViewController("MessageThreads"), true);
-            }));
-            alert.addAction(new UIAlertAction("Cancel", UIAlertActionStyle.Cancel, null));
-            presentViewController(alert, true, null);
-        });
+        getNavigationItem().getRightBarButtonItem().setOnClickListener(sender ->
+                new MenuController(this)
+                        .addNavigation("Add tag", "AddTag")
+                        .addNavigation("Profile", "Profile")
+                        .addNavigation("Messages", "MessageThreads")
+                        .addCancel("Cancel")
+                        .present());
 
         progressView.stopAnimating();
 
