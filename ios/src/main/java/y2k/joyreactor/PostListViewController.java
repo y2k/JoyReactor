@@ -20,6 +20,8 @@ public class PostListViewController extends UIViewController implements PostList
     UITableView list;
     @IBOutlet
     UIActivityIndicatorView progressView;
+    @IBOutlet
+    UIButton applyButton;
     UIRefreshControl refresher;
 
     PostListPresenter presenter;
@@ -55,6 +57,8 @@ public class PostListViewController extends UIViewController implements PostList
 
         progressView.stopAnimating();
 
+        applyButton.addOnTouchUpInsideListener((sender, e) -> presenter.applyNew());
+
         presenter = new PostListPresenter(this);
     }
 
@@ -81,14 +85,15 @@ public class PostListViewController extends UIViewController implements PostList
     }
 
     @Override
-    public void reloadPosts(List<Post> posts) {
+    public void reloadPosts(List<Post> posts, Integer divider) {
         this.posts = posts;
         list.reloadData();
     }
 
-    // ==========================================
-    // Outlets
-    // ==========================================
+    @Override
+    public void setHasNewPosts(boolean hasNewPosts) {
+        new BottomButton(applyButton).setHidden(!hasNewPosts);
+    }
 
     class PostDataSource extends UITableViewDataSourceAdapter {
 

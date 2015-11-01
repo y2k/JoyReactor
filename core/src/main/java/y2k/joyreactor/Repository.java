@@ -1,7 +1,6 @@
 package y2k.joyreactor;
 
 import rx.Observable;
-import rx.Single;
 import y2k.joyreactor.common.IoUtils;
 import y2k.joyreactor.common.ObservableUtils;
 
@@ -60,12 +59,12 @@ public class Repository<T> {
     }
 
     public Observable<List<T>> queryAsync() {
-        return ObservableUtils.create(this::getAll);
+        return ObservableUtils.create(this::query);
     }
 
-    public List<T> getAll() {
+    public List<T> query() {
         if (inMemoryCache.isEmpty()) loadFromFile();
-        return inMemoryCache;
+        return new ArrayList<>(inMemoryCache);
     }
 
     private void loadFromFile() {

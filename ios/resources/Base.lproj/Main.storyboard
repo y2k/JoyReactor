@@ -520,16 +520,28 @@
                                 <animations/>
                                 <color key="color" red="0.94509803920000002" green="0.58823529409999997" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
                             </activityIndicatorView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hj3-rR-kKH">
+                                <rect key="frame" x="0.0" y="426" width="320" height="54"/>
+                                <animations/>
+                                <color key="backgroundColor" red="0.8862745098" green="0.53333333329999999" blue="0.18039215689999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="54" id="xLs-jz-PBo"/>
+                                </constraints>
+                                <state key="normal" title="Has new posts"/>
+                            </button>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" red="0.97647058823529409" green="0.97647058823529409" blue="0.97647058823529409" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Hj3-rR-kKH" secondAttribute="trailing" id="DpI-Fs-GZA"/>
+                            <constraint firstItem="GRf-jy-2iC" firstAttribute="top" secondItem="Hj3-rR-kKH" secondAttribute="bottom" id="ENf-Bq-Mi4"/>
                             <constraint firstItem="GRf-jy-2iC" firstAttribute="top" secondItem="3Tb-xx-2IX" secondAttribute="bottom" id="Kwl-Uu-coX"/>
                             <constraint firstItem="3Tb-xx-2IX" firstAttribute="top" secondItem="xOT-TG-81E" secondAttribute="top" id="LgE-Yb-0wv"/>
                             <constraint firstItem="jCg-BN-mSk" firstAttribute="centerY" secondItem="xOT-TG-81E" secondAttribute="centerY" id="Q90-bs-NG2"/>
                             <constraint firstAttribute="trailing" secondItem="3Tb-xx-2IX" secondAttribute="trailing" id="YTv-W7-luc"/>
                             <constraint firstItem="3Tb-xx-2IX" firstAttribute="leading" secondItem="xOT-TG-81E" secondAttribute="leading" id="d3f-iN-JDw"/>
                             <constraint firstItem="jCg-BN-mSk" firstAttribute="centerX" secondItem="xOT-TG-81E" secondAttribute="centerX" id="sNQ-0h-2Pj"/>
+                            <constraint firstItem="Hj3-rR-kKH" firstAttribute="leading" secondItem="xOT-TG-81E" secondAttribute="leading" id="ueP-jg-kFR"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Featured" id="P8z-RY-c2R">
@@ -537,6 +549,7 @@
                     </navigationItem>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
+                        <outlet property="applyButton" destination="Hj3-rR-kKH" id="cq8-Gx-xHh"/>
                         <outlet property="list" destination="3Tb-xx-2IX" id="Oim-ws-X1H"/>
                         <outlet property="progressView" destination="jCg-BN-mSk" id="c23-uT-4O0"/>
                     </connections>

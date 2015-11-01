@@ -27,8 +27,13 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
     }
 
     @Override
-    public void reloadPosts(List<Post> posts) {
+    public void reloadPosts(List<Post> posts, Integer divider) {
         adapter.reloadData(posts);
+    }
+
+    @Override
+    public void setHasNewPosts(boolean hasNewPosts) {
+
     }
 
     @Nullable

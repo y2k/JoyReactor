@@ -23,7 +23,7 @@ public class TagsPresenter extends Presenter {
     @Override
     public void activate() {
         Repository<Tag> repository = new Repository<>("my-tags", 1);
-       view.reloadData(repository.getAll());
+       view.reloadData(repository.query());
 
         new UsernameRequest()
                 .request()

@@ -16,45 +16,49 @@ import java.util.List;
 public class PostListPresenter extends Presenter {
 
     private View view;
-    private TagState tagState;
+    private StateForTag state;
 
     public PostListPresenter(View view) {
         this.view = view;
         getMessages().add(this::currentTagChanged, Messages.TagSelected.class);
-        tagState = new TagState();
+        state = new StateForTag();
     }
 
     private void currentTagChanged(Messages.TagSelected m) {
-        tagState = new TagState();
+        state = new StateForTag();
     }
 
     public void applyNew() {
-        tagState.applyNew();
+        state.applyNew();
     }
 
     public void loadMore() {
-        tagState.loadMore();
+        state.loadMore();
     }
 
     public void reloadFirstPage() {
-        tagState.reloadFirstPage();
+        state.reloadFirstPage();
     }
 
-    class TagState {
+    class StateForTag {
 
         private PostsForTagRequest request;
+        private Repository<Post> repository;
         private PostMerger merger;
 
-        void State() {
-            getFromRepository().subscribe(posts -> view.reloadPosts(posts, posts.size()));
+        StateForTag() {
+            repository = new Repository<>("posts", 1);
+            merger = new PostMerger(repository);
 
             view.setBusy(true);
+            getFromRepository().subscribe(posts -> view.reloadPosts(posts, null));
             request = getPostsForTagRequest();
             request.requestAsync()
-                    .map(s -> merger.hasNew(request.posts))
-                    .subscribe((hasNewPosts) -> {
+                    .flatMap(s -> merger.hasNew(request.posts))
+                    .subscribe(hasNewPosts -> {
                         view.setHasNewPosts(hasNewPosts);
                         view.setBusy(false);
+                        if (!hasNewPosts) applyNew();
                     });
         }
 
@@ -69,7 +73,6 @@ public class PostListPresenter extends Presenter {
 
         public void loadMore() {
             view.setBusy(true);
-
             request = getPostsForTagRequest();
             request.requestAsync()
                     .flatMap(s -> merger.mergeNextPage(request.posts))
@@ -84,7 +87,7 @@ public class PostListPresenter extends Presenter {
             view.setBusy(true);
             request = getPostsForTagRequest();
             request.requestAsync()
-                    .flatMap(s -> getRepository().clearAsync())
+                    .flatMap(s -> repository.clearAsync())
                     .flatMap(s -> merger.mergeFirstPage(request.posts))
                     .flatMap(s -> getFromRepository())
                     .subscribe(posts -> {
@@ -98,11 +101,7 @@ public class PostListPresenter extends Presenter {
         }
 
         private Observable<List<Post>> getFromRepository() {
-            return getRepository().queryAsync();
-        }
-
-        private Repository<Post> getRepository() {
-            return new Repository<>("posts", 1);
+            return repository.queryAsync();
         }
     }
 
@@ -119,7 +118,7 @@ public class PostListPresenter extends Presenter {
 
         void setBusy(boolean isBusy);
 
-        void reloadPosts(List<Post> posts, int divider);
+        void reloadPosts(List<Post> posts, Integer divider);
 
         void setHasNewPosts(boolean hasNewPosts);
     }
