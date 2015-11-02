@@ -23,33 +23,34 @@ public class PostMerger {
     }
 
     public Observable<Void> mergeFirstPage(List<Post> posts) {
-        return repository.queryAsync()
-                .flatMap(merged ->
-                        ObservableUtils.create(() -> {
-                            for (Iterator<Post> iterator = merged.iterator(); iterator.hasNext(); ) {
-                                Post element = iterator.next();
-                                for (Post s : posts)
-                                    if (s.id.equals(element.id)) {
-                                        iterator.remove();
-                                        break;
-                                    }
+        return repository
+                .queryAsync()
+                .map(merged -> {
+                    for (Iterator<Post> iterator = merged.iterator(); iterator.hasNext(); ) {
+                        Post element = iterator.next();
+                        for (Post s : posts)
+                            if (s.id.equals(element.id)) {
+                                iterator.remove();
+                                break;
                             }
-                            merged.addAll(0, posts);
+                    }
+                    merged.addAll(0, posts);
 
-                            repository.replaceAll(merged);
-                            divider = posts.size();
-                        }));
+                    divider = posts.size();
+                    return merged;
+                })
+                .flatMap(repository::replaceAllAsync);
     }
 
     public Observable<Boolean> hasNew(List<Post> newPosts) {
-        return repository.queryAsync()
-                .flatMap(posts ->
-                        ObservableUtils.create(() -> {
-                            if (newPosts.size() > posts.size()) return true;
-                            for (int i = 0; i < newPosts.size(); i++)
-                                if (!posts.get(i).id.equals(newPosts.get(i).id)) return true;
-                            return false;
-                        }));
+        return repository
+                .queryAsync()
+                .map(posts -> {
+                    if (newPosts.size() > posts.size()) return true;
+                    for (int i = 0; i < newPosts.size(); i++)
+                        if (!posts.get(i).id.equals(newPosts.get(i).id)) return true;
+                    return false;
+                });
     }
 
     public Observable<Void> mergeNextPage(List<Post> newPosts) {

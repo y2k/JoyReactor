@@ -43,6 +43,10 @@ public class Repository<T> {
         dumpAll();
     }
 
+    public Observable<Void> replaceAllAsync(List<T> rows) {
+        return ObservableUtils.create(() -> replaceAll(rows));
+    }
+
     public void replaceAll(List<T> rows) {
         inMemoryCache.clear();
         inMemoryCache.addAll(rows);

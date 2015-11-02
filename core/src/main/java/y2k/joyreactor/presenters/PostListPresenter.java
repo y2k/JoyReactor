@@ -19,14 +19,16 @@ public class PostListPresenter extends Presenter {
     private StateForTag state;
 
     private Repository<Post> repository;
+    private PostsForTagRequest.Factory requestFactory;
 
     public PostListPresenter(View view) {
-        this(view, new Repository<>(Post.class));
+        this(view, new Repository<>(Post.class), new PostsForTagRequest.Factory());
     }
 
-    public PostListPresenter(View view, Repository<Post> repository) {
+    public PostListPresenter(View view, Repository<Post> repository, PostsForTagRequest.Factory requestFactory) {
         this.view = view;
         this.repository = repository;
+        this.requestFactory = requestFactory;
 
         getMessages().add(this::currentTagChanged, Messages.TagSelected.class);
         state = new StateForTag();
@@ -50,8 +52,8 @@ public class PostListPresenter extends Presenter {
 
     class StateForTag {
 
-        private PostsForTagRequest request;
         private PostMerger merger;
+        private PostsForTagRequest request;
 
         StateForTag() {
             merger = new PostMerger(repository);
@@ -60,7 +62,7 @@ public class PostListPresenter extends Presenter {
             getFromRepository().subscribe(posts -> view.reloadPosts(posts, null));
             request = getPostsForTagRequest();
             request.requestAsync()
-                    .flatMap(s -> merger.hasNew(request.posts))
+                    .flatMap(s -> merger.hasNew(request.getPosts()))
                     .subscribe(hasNewPosts -> {
                         view.setHasNewPosts(hasNewPosts);
                         view.setBusy(false);
@@ -69,7 +71,7 @@ public class PostListPresenter extends Presenter {
         }
 
         public void applyNew() {
-            merger.mergeFirstPage(request.posts)
+            merger.mergeFirstPage(request.getPosts())
                     .flatMap(s -> getFromRepository())
                     .subscribe(posts -> {
                         view.setHasNewPosts(false);
@@ -81,7 +83,7 @@ public class PostListPresenter extends Presenter {
             view.setBusy(true);
             request = getPostsForTagRequest();
             request.requestAsync()
-                    .flatMap(s -> merger.mergeNextPage(request.posts))
+                    .flatMap(s -> merger.mergeNextPage(request.getPosts()))
                     .flatMap(s -> getFromRepository())
                     .subscribe(posts -> {
                         view.reloadPosts(posts, merger.getDivider());
@@ -94,7 +96,7 @@ public class PostListPresenter extends Presenter {
             request = getPostsForTagRequest();
             request.requestAsync()
                     .flatMap(s -> repository.clearAsync())
-                    .flatMap(s -> merger.mergeFirstPage(request.posts))
+                    .flatMap(s -> merger.mergeFirstPage(request.getPosts()))
                     .flatMap(s -> getFromRepository())
                     .subscribe(posts -> {
                         view.reloadPosts(posts, posts.size());
@@ -103,7 +105,7 @@ public class PostListPresenter extends Presenter {
         }
 
         private PostsForTagRequest getPostsForTagRequest() {
-            return new PostsForTagRequest(null, null);
+            return requestFactory.make(null, null);
         }
 
         private Observable<List<Post>> getFromRepository() {

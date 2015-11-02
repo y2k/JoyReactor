@@ -22,13 +22,13 @@ import java.util.regex.Pattern;
  */
 public class PostsForTagRequest {
 
-    public List<Post> posts;
     public String nextPageId;
 
+    private List<Post> posts;
     private String tagId;
     private String pageId;
 
-    public PostsForTagRequest(String tagId, String pageId) {
+    private PostsForTagRequest(String tagId, String pageId) {
         this.tagId = tagId;
         this.pageId = pageId;
     }
@@ -42,7 +42,7 @@ public class PostsForTagRequest {
 
         posts = new ArrayList<>();
         for (Element e : doc.select("div.postContainer"))
-            posts.add(newPost(e));
+            getPosts().add(newPost(e));
 
         Element next = doc.select("a.next").first();
         if (next != null) nextPageId = extractNumberFromEnd(next.attr("href"));
@@ -79,6 +79,10 @@ public class PostsForTagRequest {
         Matcher m = Pattern.compile("\\d+$").matcher(text);
         if (!m.find()) throw new IllegalStateException();
         return m.group();
+    }
+
+    public List<Post> getPosts() {
+        return posts;
     }
 
     static class PostParser {
@@ -181,6 +185,13 @@ public class PostsForTagRequest {
                 System.out.println("ELEMENT | " + video);
                 throw e;
             }
+        }
+    }
+
+    public static class Factory {
+
+        public PostsForTagRequest make(String tagId, String pageId) {
+            return new PostsForTagRequest(tagId, pageId);
         }
     }
 }
