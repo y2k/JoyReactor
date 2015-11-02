@@ -13,9 +13,17 @@ import java.util.List;
  */
 public class Repository<T> {
 
+    private static final int VERSION = 1;
+
     private List<T> inMemoryCache = new ArrayList<>();
     private File file;
 
+
+    public Repository(Class<T> cls) {
+        this(cls.getName().toLowerCase(), VERSION);
+    }
+
+    @Deprecated
     public Repository(String name, int version) {
         file = new File(new File(Platform.Instance.getCurrentDirectory(), "repositories"), name + "." + version + ".dat");
         file.getParentFile().mkdirs();

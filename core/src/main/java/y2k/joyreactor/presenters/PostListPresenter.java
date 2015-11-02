@@ -18,8 +18,16 @@ public class PostListPresenter extends Presenter {
     private View view;
     private StateForTag state;
 
+    private Repository<Post> repository;
+
     public PostListPresenter(View view) {
+        this(view, new Repository<>(Post.class));
+    }
+
+    public PostListPresenter(View view, Repository<Post> repository) {
         this.view = view;
+        this.repository = repository;
+
         getMessages().add(this::currentTagChanged, Messages.TagSelected.class);
         state = new StateForTag();
     }
@@ -43,11 +51,9 @@ public class PostListPresenter extends Presenter {
     class StateForTag {
 
         private PostsForTagRequest request;
-        private Repository<Post> repository;
         private PostMerger merger;
 
         StateForTag() {
-            repository = new Repository<>("posts", 1);
             merger = new PostMerger(repository);
 
             view.setBusy(true);
