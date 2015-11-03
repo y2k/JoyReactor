@@ -55,19 +55,20 @@ public class PostMerger {
     }
 
     public Observable<Void> mergeNextPage(List<Post> newPosts) {
-        return repository.queryAsync()
-                .flatMap(posts ->
-                        ObservableUtils.create(() -> {
-                            List<Post> actualPosts = posts.subList(0, divider);
-                            List<Post> expiredPosts = posts.subList(divider, posts.size());
+        return repository
+                .queryAsync()
+                .map(posts -> {
+                    List<Post> actualPosts = posts.subList(0, divider);
+                    List<Post> expiredPosts = posts.subList(divider, posts.size());
 
-                            for (Post p : newPosts) {
-                                addIfNew(actualPosts, p);
-                                remove(expiredPosts, p);
-                            }
-                            divider = actualPosts.size();
-                            repository.replaceAll(union(actualPosts, expiredPosts));
-                        }));
+                    for (Post p : newPosts) {
+                        addIfNew(actualPosts, p);
+                        remove(expiredPosts, p);
+                    }
+                    divider = actualPosts.size();
+                    return union(actualPosts, expiredPosts);
+                })
+                .flatMap(repository::replaceAllAsync);
     }
 
     private void remove(List<Post> list, Post item) {

@@ -25,6 +25,19 @@ import static org.mockito.Mockito.when;
  */
 public class PostListPresenterTest {
 
+    Post[] FIRST_PAGE = new Post[10];
+
+    {
+        for (int i = 0; i < FIRST_PAGE.length; i++)
+            FIRST_PAGE[i] = makePost("" + i);
+    }
+
+    private Post makePost(String id) {
+        Post p = new Post();
+        p.id = id;
+        return p;
+    }
+
     @Mock
     PostListPresenter.View mockView;
     @Mock
@@ -37,6 +50,8 @@ public class PostListPresenterTest {
     @Captor
     ArgumentCaptor<List<Post>> captor;
 
+    PostListPresenter presenter;
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -48,20 +63,38 @@ public class PostListPresenterTest {
             return Observable.just(null);
         });
 
-        when(mockRequest.getPosts()).thenReturn(Arrays.asList(new Post[10]));
-        when(mockRequest.requestAsync()).thenReturn(Observable.just(null));
+//        when(mockRequest.getPosts()).thenAnswer(s -> Arrays.asList(FIRST_PAGE));
+//        when(mockRequest.requestAsync()).thenReturn(Observable.just(null));
+        when(mockRequest.requestAsync()).thenAnswer(s -> {
+
+            when(mockRequest.getPosts()).thenAnswer(s2 -> Arrays.asList(FIRST_PAGE));
+
+            return Observable.just(null);
+        });
 
         when(mockFactory.make(anyString(), anyString())).thenReturn(mockRequest);
+
+        presenter = new PostListPresenter(mockView, mockRepository, mockFactory);
     }
 
     @Test
-    public void testConstructor() throws Exception {
-        new PostListPresenter(mockView, mockRepository, mockFactory);
+    public void test() throws Exception {
+        testConstructor();
+        subTestLoadNext();
+    }
 
+    private void testConstructor() {
         verify(mockView).reloadPosts(captor.capture(), isNull(Integer.class));
         assertEquals(0, captor.getValue().size());
 
         verify(mockView).reloadPosts(captor.capture(), eq(10));
         assertEquals(10, captor.getValue().size());
+    }
+
+    private void subTestLoadNext() throws Exception {
+        presenter.loadMore();
+
+        verify(mockView).reloadPosts(captor.capture(), eq(20));
+        assertEquals(20, captor.getValue().size());
     }
 }

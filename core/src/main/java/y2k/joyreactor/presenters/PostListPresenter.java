@@ -81,7 +81,7 @@ public class PostListPresenter extends Presenter {
 
         public void loadMore() {
             view.setBusy(true);
-            request = getPostsForTagRequest();
+            request = getPostsForTagRequest(request.getNextPageId());
             request.requestAsync()
                     .flatMap(s -> merger.mergeNextPage(request.getPosts()))
                     .flatMap(s -> getFromRepository())
@@ -104,8 +104,8 @@ public class PostListPresenter extends Presenter {
                     });
         }
 
-        private PostsForTagRequest getPostsForTagRequest() {
-            return requestFactory.make(null, null);
+        private PostsForTagRequest getPostsForTagRequest(String pageId) {
+            return requestFactory.make(null, pageId);
         }
 
         private Observable<List<Post>> getFromRepository() {

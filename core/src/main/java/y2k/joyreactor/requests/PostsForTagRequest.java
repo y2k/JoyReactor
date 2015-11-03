@@ -22,9 +22,9 @@ import java.util.regex.Pattern;
  */
 public class PostsForTagRequest {
 
-    public String nextPageId;
-
+    private String nextPageId;
     private List<Post> posts;
+
     private String tagId;
     private String pageId;
 
@@ -83,6 +83,10 @@ public class PostsForTagRequest {
 
     public List<Post> getPosts() {
         return posts;
+    }
+
+    public String getNextPageId() {
+        return nextPageId;
     }
 
     static class PostParser {
