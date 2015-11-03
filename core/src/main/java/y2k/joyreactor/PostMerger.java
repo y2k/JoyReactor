@@ -42,10 +42,11 @@ public class PostMerger {
                 .flatMap(repository::replaceAllAsync);
     }
 
-    public Observable<Boolean> hasNew(List<Post> newPosts) {
+    public Observable<Boolean> isUnsafeUpdate(List<Post> newPosts) {
         return repository
                 .queryAsync()
                 .map(posts -> {
+                    if (posts.size() == 0) return false;
                     if (newPosts.size() > posts.size()) return true;
                     for (int i = 0; i < newPosts.size(); i++)
                         if (!posts.get(i).id.equals(newPosts.get(i).id)) return true;

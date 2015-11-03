@@ -62,11 +62,11 @@ public class PostListPresenter extends Presenter {
             getFromRepository().subscribe(posts -> view.reloadPosts(posts, null));
             request = getPostsForTagRequest();
             request.requestAsync()
-                    .flatMap(s -> merger.hasNew(request.getPosts()))
-                    .subscribe(hasNewPosts -> {
-                        view.setHasNewPosts(hasNewPosts);
+                    .flatMap(s -> merger.isUnsafeUpdate(request.getPosts()))
+                    .subscribe(unsafeUpdate -> {
+                        view.setHasNewPosts(unsafeUpdate);
                         view.setBusy(false);
-                        if (!hasNewPosts) applyNew();
+                        if (!unsafeUpdate) applyNew();
                     });
         }
 
