@@ -3,6 +3,7 @@ package y2k.joyreactor;
 import rx.Observable;
 import y2k.joyreactor.common.ObservableUtils;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class PostMerger {
     private Repository<Post> repository;
     private int divider;
 
-    public PostMerger(Repository<Post> repository) {
+    PostMerger(Repository<Post> repository) {
         this.repository = repository;
     }
 
@@ -22,21 +23,22 @@ public class PostMerger {
         return divider;
     }
 
-    public Observable<Void> mergeFirstPage(List<Post> posts) {
+    public Observable<Void> mergeFirstPage(List<Post> newPosts) {
         return repository
                 .queryAsync()
-                .map(merged -> {
+                .map(posts -> {
+                    ArrayList<Post> merged = new ArrayList<>(posts);
                     for (Iterator<Post> iterator = merged.iterator(); iterator.hasNext(); ) {
                         Post element = iterator.next();
-                        for (Post s : posts)
+                        for (Post s : newPosts)
                             if (s.id.equals(element.id)) {
                                 iterator.remove();
                                 break;
                             }
                     }
-                    merged.addAll(0, posts);
+                    merged.addAll(0, newPosts);
 
-                    divider = posts.size();
+                    divider = newPosts.size();
                     return merged;
                 })
                 .flatMap(repository::replaceAllAsync);
@@ -85,5 +87,12 @@ public class PostMerger {
     private List<Post> union(List<Post> left, List<Post> right) {
         left.addAll(right);
         return left;
+    }
+
+    public static class Fabric {
+
+        public PostMerger make(Repository<Post> repository) {
+            return new PostMerger(repository);
+        }
     }
 }

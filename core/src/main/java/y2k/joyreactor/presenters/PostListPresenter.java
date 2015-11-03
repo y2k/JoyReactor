@@ -20,15 +20,23 @@ public class PostListPresenter extends Presenter {
 
     private Repository<Post> repository;
     private PostsForTagRequest.Factory requestFactory;
+    private PostMerger.Fabric mergerFabric;
 
     public PostListPresenter(View view) {
-        this(view, new Repository<>(Post.class), new PostsForTagRequest.Factory());
+        this(view,
+                new Repository<>(Post.class),
+                new PostsForTagRequest.Factory(),
+                new PostMerger.Fabric());
     }
 
-    public PostListPresenter(View view, Repository<Post> repository, PostsForTagRequest.Factory requestFactory) {
+    public PostListPresenter(View view,
+                             Repository<Post> repository,
+                             PostsForTagRequest.Factory requestFactory,
+                             PostMerger.Fabric mergerFabric) {
         this.view = view;
         this.repository = repository;
         this.requestFactory = requestFactory;
+        this.mergerFabric = mergerFabric;
 
         getMessages().add(this::currentTagChanged, Messages.TagSelected.class);
         state = new StateForTag();
@@ -56,11 +64,11 @@ public class PostListPresenter extends Presenter {
         private PostsForTagRequest request;
 
         StateForTag() {
-            merger = new PostMerger(repository);
+            merger = mergerFabric.make(repository);
 
             view.setBusy(true);
             getFromRepository().subscribe(posts -> view.reloadPosts(posts, null));
-            request = getPostsForTagRequest();
+            request = getPostsForTagRequest(null);
             request.requestAsync()
                     .flatMap(s -> merger.isUnsafeUpdate(request.getPosts()))
                     .subscribe(unsafeUpdate -> {
@@ -93,7 +101,7 @@ public class PostListPresenter extends Presenter {
 
         public void reloadFirstPage() {
             view.setBusy(true);
-            request = getPostsForTagRequest();
+            request = getPostsForTagRequest(null);
             request.requestAsync()
                     .flatMap(s -> repository.clearAsync())
                     .flatMap(s -> merger.mergeFirstPage(request.getPosts()))
