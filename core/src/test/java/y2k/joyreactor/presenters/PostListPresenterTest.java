@@ -6,14 +6,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import rx.Observable;
 import y2k.joyreactor.Post;
 import y2k.joyreactor.PostListSynchronizer;
-import y2k.joyreactor.PostMerger;
 import y2k.joyreactor.Repository;
-import y2k.joyreactor.requests.PostsForTagRequest;
+import y2k.joyreactor.common.PostGenerator;
 
 import java.util.*;
 
@@ -47,23 +44,14 @@ public class PostListPresenterTest {
 
     @Before
     public void setUp() throws Exception {
-        FIRST_PAGE = new ArrayList<>();
-        for (int i = 0; i < 10; i++)
-            FIRST_PAGE.add(makePost("" + i));
-        NEXT_PAGE = new ArrayList<>();
-        for (int i = 0; i < 10; i++)
-            NEXT_PAGE.add(makePost("" + (FIRST_PAGE.size() + i)));
+        FIRST_PAGE = PostGenerator.getMockFirstPage(0);
+        NEXT_PAGE = PostGenerator.getMockFirstPage(FIRST_PAGE.size());
 
         MockitoAnnotations.initMocks(this);
 
         when(synchronizerFactory.make()).thenReturn(synchronizer);
     }
 
-    private Post makePost(String id) {
-        Post p = new Post();
-        p.id = id;
-        return p;
-    }
 
     @Test
     public void testLoadFirstPage() throws Exception {
@@ -89,7 +77,6 @@ public class PostListPresenterTest {
     public void testLoadNextPage() throws Exception {
         testLoadFirstPage();
 
-//        when(synchronizer.loadNextPage()).thenReturn(Observable.just(null));
         when(synchronizer.loadNextPage()).then(s -> {
             List<Post> union = new ArrayList<>(FIRST_PAGE);
             union.addAll(NEXT_PAGE);

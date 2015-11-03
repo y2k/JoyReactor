@@ -4,7 +4,7 @@ import rx.Observable;
 import y2k.joyreactor.requests.PostsForTagRequest;
 
 /**
- * Created by Mr.X on 03/11/15.
+ * Created by y2k on 03/11/15.
  */
 public class PostListSynchronizer {
 
