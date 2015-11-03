@@ -57,7 +57,7 @@ public class PostListPresenterTest {
     public void testLoadFirstPage() throws Exception {
         when(mockRepository.queryAsync()).thenReturn(Observable.just(Collections.emptyList()));
 
-        when(synchronizer.checkIsUnsafeReload()).thenReturn(Observable.just(false));
+        when(synchronizer.preloadNewPosts()).thenReturn(Observable.just(false));
         when(synchronizer.applyNew()).then(s -> {
             when(mockRepository.queryAsync()).thenReturn(Observable.just(FIRST_PAGE));
             when(synchronizer.getDivider()).thenReturn(FIRST_PAGE.size());

@@ -8,9 +8,12 @@ import rx.Observable;
 import y2k.joyreactor.common.PostGenerator;
 import y2k.joyreactor.requests.PostsForTagRequest;
 
+import java.util.Collections;
+
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -20,8 +23,6 @@ public class PostListSynchronizerTest {
 
     @Mock
     private Repository<Post> repository;
-    @Mock
-    private PostMerger merger;
 
     @Mock
     private PostsForTagRequest.Factory requestFactory;
@@ -36,14 +37,20 @@ public class PostListSynchronizerTest {
 
         when(requestFactory.make(anyString(), anyString())).thenReturn(request);
 
-        synchronizer = new PostListSynchronizer(repository, merger, requestFactory);
+        synchronizer = new PostListSynchronizer(repository, requestFactory);
     }
 
     @Test
     public void test() throws Exception {
+        when(request.getPosts()).thenReturn(PostGenerator.getMockFirstPage(0));
         when(request.requestAsync()).thenReturn(Observable.just(null));
-        when(merger.isUnsafeUpdate(any())).thenReturn(Observable.just(false));
+        when(repository.queryAsync()).thenReturn(Observable.just(Collections.emptyList()));
 
-        assertFalse(synchronizer.checkIsUnsafeReload().toBlocking().first());
+        boolean actual = synchronizer.preloadNewPosts().toBlocking().last();
+        verify(request).requestAsync();
+        assertFalse(actual);
+
+        synchronizer.applyNew().toBlocking().last();
+        verify(repository).replaceAll(PostGenerator.getMockFirstPage(0));
     }
 }

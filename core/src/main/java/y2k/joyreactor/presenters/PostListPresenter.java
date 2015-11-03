@@ -3,7 +3,6 @@ package y2k.joyreactor.presenters;
 import rx.Observable;
 import y2k.joyreactor.*;
 import y2k.joyreactor.common.Messages;
-import y2k.joyreactor.requests.PostsForTagRequest;
 
 import java.util.List;
 
@@ -58,7 +57,7 @@ public class PostListPresenter extends Presenter {
 
             view.setBusy(true);
             getFromRepository().subscribe(posts -> view.reloadPosts(posts, null));
-            synchronizer.checkIsUnsafeReload()
+            synchronizer.preloadNewPosts()
                     .subscribe(unsafeUpdate -> {
                         view.setHasNewPosts(unsafeUpdate);
                         view.setBusy(false);

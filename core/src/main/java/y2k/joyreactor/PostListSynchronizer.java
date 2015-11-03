@@ -15,14 +15,13 @@ public class PostListSynchronizer {
     private PostsForTagRequest request;
 
     PostListSynchronizer(Repository<Post> repository,
-                         PostMerger merger,
                          PostsForTagRequest.Factory requestFactory) {
+        this.merger = new PostMerger(repository);
         this.repository = repository;
-        this.merger = merger;
         this.requestFactory = requestFactory;
     }
 
-    public Observable<Boolean> checkIsUnsafeReload() {
+    public Observable<Boolean> preloadNewPosts() {
         request = getPostsForTagRequest(null);
         return request
                 .requestAsync()
@@ -59,11 +58,10 @@ public class PostListSynchronizer {
     public static class Factory {
 
         private Repository<Post> repository = new Repository<>(Post.class);
-        private PostMerger.Fabric mergerFabric = new PostMerger.Fabric();
         private PostsForTagRequest.Factory requestFactory = new PostsForTagRequest.Factory();
 
         public PostListSynchronizer make() {
-            return new PostListSynchronizer(repository, mergerFabric.make(repository), requestFactory);
+            return new PostListSynchronizer(repository, requestFactory);
         }
     }
 }

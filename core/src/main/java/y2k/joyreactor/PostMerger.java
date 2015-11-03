@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by y2k on 10/31/15.
  */
-public class PostMerger {
+class PostMerger {
 
     private Repository<Post> repository;
     private int divider;
@@ -87,12 +87,5 @@ public class PostMerger {
     private List<Post> union(List<Post> left, List<Post> right) {
         left.addAll(right);
         return left;
-    }
-
-    public static class Fabric {
-
-        public PostMerger make(Repository<Post> repository) {
-            return new PostMerger(repository);
-        }
     }
 }
