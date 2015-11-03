@@ -10,6 +10,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import rx.Observable;
 import y2k.joyreactor.Post;
+import y2k.joyreactor.PostListSynchronizer;
 import y2k.joyreactor.PostMerger;
 import y2k.joyreactor.Repository;
 import y2k.joyreactor.requests.PostsForTagRequest;
@@ -26,21 +27,8 @@ import static org.mockito.Mockito.when;
  */
 public class PostListPresenterTest {
 
-    Post[] FIRST_PAGE = new Post[10];
-    Post[] NEXT_PAGE = new Post[10];
-
-    {
-        for (int i = 0; i < FIRST_PAGE.length; i++)
-            FIRST_PAGE[i] = makePost("" + i);
-        for (int i = 0; i < NEXT_PAGE.length; i++)
-            NEXT_PAGE[i] = makePost("" + (FIRST_PAGE.length + i));
-    }
-
-    private Post makePost(String id) {
-        Post p = new Post();
-        p.id = id;
-        return p;
-    }
+    List<Post> FIRST_PAGE;
+    List<Post> NEXT_PAGE;
 
     @Mock
     PostListPresenter.View mockView;
@@ -48,14 +36,9 @@ public class PostListPresenterTest {
     Repository<Post> mockRepository;
 
     @Mock
-    PostsForTagRequest mockRequest;
+    PostListSynchronizer.Factory synchronizerFactory;
     @Mock
-    PostsForTagRequest.Factory mockFactory;
-
-    @Mock
-    PostMerger mockMerger;
-    @Mock
-    PostMerger.Fabric mockMergerFactory;
+    PostListSynchronizer synchronizer;
 
     @Captor
     ArgumentCaptor<List<Post>> captor;
@@ -64,38 +47,37 @@ public class PostListPresenterTest {
 
     @Before
     public void setUp() throws Exception {
-        initialize();
+        FIRST_PAGE = new ArrayList<>();
+        for (int i = 0; i < 10; i++)
+            FIRST_PAGE.add(makePost("" + i));
+        NEXT_PAGE = new ArrayList<>();
+        for (int i = 0; i < 10; i++)
+            NEXT_PAGE.add(makePost("" + (FIRST_PAGE.size() + i)));
 
-        when(mockRequest.requestAsync()).thenAnswer(s -> {
-            when(mockRequest.getPosts()).thenAnswer(s2 -> Arrays.asList(FIRST_PAGE));
-            return Observable.just(null);
-        });
-
-        when(mockFactory.make(anyString(), anyString())).thenReturn(mockRequest);
-        when(mockMergerFactory.make(any())).thenReturn(mockMerger);
-
-//        PostMerger.Fabric mockMergerFactory = mock(PostMerger.Fabric.class);
-        presenter = new PostListPresenter(mockView, mockRepository, mockFactory, mockMergerFactory);
-    }
-
-    private void initialize() {
         MockitoAnnotations.initMocks(this);
 
-        when(mockRepository.queryAsync()).thenAnswer(s -> Observable.just(new ArrayList<>()));
-        when(mockRepository.replaceAllAsync(any())).thenAnswer(s -> {
-            List<Post> arg = (List<Post>) s.getArguments()[0];
-            when(mockRepository.queryAsync()).thenReturn(Observable.just(new ArrayList<>(arg)));
-            return Observable.just(null);
-        });
+        when(synchronizerFactory.make()).thenReturn(synchronizer);
+    }
+
+    private Post makePost(String id) {
+        Post p = new Post();
+        p.id = id;
+        return p;
     }
 
     @Test
-    public void test() throws Exception {
-        testConstructor();
-        subTestLoadNext();
-    }
+    public void testLoadFirstPage() throws Exception {
+        when(mockRepository.queryAsync()).thenReturn(Observable.just(Collections.emptyList()));
 
-    private void testConstructor() {
+        when(synchronizer.checkIsUnsafeReload()).thenReturn(Observable.just(false));
+        when(synchronizer.applyNew()).then(s -> {
+            when(mockRepository.queryAsync()).thenReturn(Observable.just(FIRST_PAGE));
+            when(synchronizer.getDivider()).thenReturn(FIRST_PAGE.size());
+            return Observable.just(null);
+        });
+
+        presenter = new PostListPresenter(mockView, mockRepository, synchronizerFactory);
+
         verify(mockView).reloadPosts(captor.capture(), isNull(Integer.class));
         assertEquals(0, captor.getValue().size());
 
@@ -103,11 +85,17 @@ public class PostListPresenterTest {
         assertEquals(10, captor.getValue().size());
     }
 
-    private void subTestLoadNext() throws Exception {
-        initialize();
+    @Test
+    public void testLoadNextPage() throws Exception {
+        testLoadFirstPage();
 
-        when(mockRequest.requestAsync()).thenAnswer(s -> {
-            when(mockRequest.getPosts()).thenReturn(Arrays.asList(NEXT_PAGE));
+//        when(synchronizer.loadNextPage()).thenReturn(Observable.just(null));
+        when(synchronizer.loadNextPage()).then(s -> {
+            List<Post> union = new ArrayList<>(FIRST_PAGE);
+            union.addAll(NEXT_PAGE);
+
+            when(mockRepository.queryAsync()).thenReturn(Observable.just(union));
+            when(synchronizer.getDivider()).thenReturn(union.size());
             return Observable.just(null);
         });
 

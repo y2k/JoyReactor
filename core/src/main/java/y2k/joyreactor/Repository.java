@@ -18,7 +18,6 @@ public class Repository<T> {
     private List<T> inMemoryCache = new ArrayList<>();
     private File file;
 
-
     public Repository(Class<T> cls) {
         this(cls.getName().toLowerCase(), VERSION);
     }

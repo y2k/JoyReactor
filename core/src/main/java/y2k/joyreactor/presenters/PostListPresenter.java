@@ -1,10 +1,7 @@
 package y2k.joyreactor.presenters;
 
 import rx.Observable;
-import y2k.joyreactor.Navigation;
-import y2k.joyreactor.Post;
-import y2k.joyreactor.PostMerger;
-import y2k.joyreactor.Repository;
+import y2k.joyreactor.*;
 import y2k.joyreactor.common.Messages;
 import y2k.joyreactor.requests.PostsForTagRequest;
 
@@ -19,24 +16,18 @@ public class PostListPresenter extends Presenter {
     private StateForTag state;
 
     private Repository<Post> repository;
-    private PostsForTagRequest.Factory requestFactory;
-    private PostMerger.Fabric mergerFabric;
+    private PostListSynchronizer.Factory synchronizerFactory;
 
     public PostListPresenter(View view) {
-        this(view,
-                new Repository<>(Post.class),
-                new PostsForTagRequest.Factory(),
-                new PostMerger.Fabric());
+        this(view, new Repository<>(Post.class), new PostListSynchronizer.Factory());
     }
 
-    public PostListPresenter(View view,
-                             Repository<Post> repository,
-                             PostsForTagRequest.Factory requestFactory,
-                             PostMerger.Fabric mergerFabric) {
+    PostListPresenter(View view,
+                      Repository<Post> repository,
+                      PostListSynchronizer.Factory synchronizerFactory) {
         this.view = view;
         this.repository = repository;
-        this.requestFactory = requestFactory;
-        this.mergerFabric = mergerFabric;
+        this.synchronizerFactory = synchronizerFactory;
 
         getMessages().add(this::currentTagChanged, Messages.TagSelected.class);
         state = new StateForTag();
@@ -60,17 +51,14 @@ public class PostListPresenter extends Presenter {
 
     class StateForTag {
 
-        private PostMerger merger;
-        private PostsForTagRequest request;
+        private PostListSynchronizer synchronizer;
 
         StateForTag() {
-            merger = mergerFabric.make(repository);
+            synchronizer = synchronizerFactory.make();
 
             view.setBusy(true);
             getFromRepository().subscribe(posts -> view.reloadPosts(posts, null));
-            request = getPostsForTagRequest(null);
-            request.requestAsync()
-                    .flatMap(s -> merger.isUnsafeUpdate(request.getPosts()))
+            synchronizer.checkIsUnsafeReload()
                     .subscribe(unsafeUpdate -> {
                         view.setHasNewPosts(unsafeUpdate);
                         view.setBusy(false);
@@ -79,41 +67,32 @@ public class PostListPresenter extends Presenter {
         }
 
         public void applyNew() {
-            merger.mergeFirstPage(request.getPosts())
+            synchronizer.applyNew()
                     .flatMap(s -> getFromRepository())
                     .subscribe(posts -> {
                         view.setHasNewPosts(false);
-                        view.reloadPosts(posts, merger.getDivider());
+                        view.reloadPosts(posts, synchronizer.getDivider());
                     });
         }
 
         public void loadMore() {
             view.setBusy(true);
-            request = getPostsForTagRequest(request.getNextPageId());
-            request.requestAsync()
-                    .flatMap(s -> merger.mergeNextPage(request.getPosts()))
+            synchronizer.loadNextPage()
                     .flatMap(s -> getFromRepository())
                     .subscribe(posts -> {
-                        view.reloadPosts(posts, merger.getDivider());
+                        view.reloadPosts(posts, synchronizer.getDivider());
                         view.setBusy(false);
                     });
         }
 
         public void reloadFirstPage() {
             view.setBusy(true);
-            request = getPostsForTagRequest(null);
-            request.requestAsync()
-                    .flatMap(s -> repository.clearAsync())
-                    .flatMap(s -> merger.mergeFirstPage(request.getPosts()))
+            synchronizer.reloadFirstPage()
                     .flatMap(s -> getFromRepository())
                     .subscribe(posts -> {
                         view.reloadPosts(posts, posts.size());
                         view.setBusy(false);
                     });
-        }
-
-        private PostsForTagRequest getPostsForTagRequest(String pageId) {
-            return requestFactory.make(null, pageId);
         }
 
         private Observable<List<Post>> getFromRepository() {
