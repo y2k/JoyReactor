@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class PostGenerator {
 
-    public static List<Post> getMockFirstPage(int startIndex) {
+    public static List<Post> getPage(int startIndex) {
         List<Post> result = new ArrayList<>();
         for (int i = 0; i < 10; i++)
             result.add(makePost("" + (startIndex + i)));

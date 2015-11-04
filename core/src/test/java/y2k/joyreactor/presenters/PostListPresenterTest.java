@@ -44,8 +44,8 @@ public class PostListPresenterTest {
 
     @Before
     public void setUp() throws Exception {
-        FIRST_PAGE = PostGenerator.getMockFirstPage(0);
-        NEXT_PAGE = PostGenerator.getMockFirstPage(FIRST_PAGE.size());
+        FIRST_PAGE = PostGenerator.getPage(0);
+        NEXT_PAGE = PostGenerator.getPage(FIRST_PAGE.size());
 
         MockitoAnnotations.initMocks(this);
 

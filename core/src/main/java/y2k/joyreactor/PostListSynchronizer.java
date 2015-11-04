@@ -3,6 +3,8 @@ package y2k.joyreactor;
 import rx.Observable;
 import y2k.joyreactor.requests.PostsForTagRequest;
 
+import java.util.List;
+
 /**
  * Created by y2k on 03/11/15.
  */
