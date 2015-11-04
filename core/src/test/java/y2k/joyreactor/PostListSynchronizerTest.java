@@ -64,8 +64,6 @@ public class PostListSynchronizerTest {
                 .thenReturn(Observable.just(null));
         synchronizer.applyNew().toBlocking().last();
 
-        repository.replaceAllAsync(PostGenerator.getPage(0));
-
         verify(repository).replaceAllAsync(argThat(new ListArgumentMatcher(PostGenerator.getPage(0))));
         assertEquals(10, (int) synchronizer.getDivider());
     }
