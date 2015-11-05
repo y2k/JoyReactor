@@ -43,8 +43,7 @@ public class PostListSynchronizerTest {
     @Test
     public void testLoadNextPage() {
         createInitState();
-        when(repository.replaceAllAsync(anyListOf(Post.class)))
-                .thenReturn(Observable.just(null));
+        when(repository.replaceAllAsync(anyListOf(Post.class))).thenReturn(Observable.just(null));
         synchronizer.preloadNewPosts();
         synchronizer.applyNew().toBlocking().last();
 
@@ -74,8 +73,7 @@ public class PostListSynchronizerTest {
         createInitState();
         synchronizer.preloadNewPosts();
 
-        when(repository.replaceAllAsync(anyListOf(Post.class)))
-                .thenReturn(Observable.just(null));
+        when(repository.replaceAllAsync(anyListOf(Post.class))).thenReturn(Observable.just(null));
         synchronizer.applyNew().toBlocking().last();
 
         verify(repository).replaceAllAsync(argThat(new ListArgumentMatcher(PostGenerator.getPageRange(0, 1))));
