@@ -61,7 +61,7 @@ class PostMerger {
                 .queryAsync()
                 .map(posts -> {
                     List<Post> actualPosts = posts.subList(0, divider);
-                    List<Post> expiredPosts = posts.subList(divider, posts.size());
+                    List<Post> expiredPosts = new ArrayList<>(posts.subList(divider, posts.size()));
 
                     for (Post p : newPosts) {
                         addIfNew(actualPosts, p);
@@ -75,7 +75,7 @@ class PostMerger {
 
     private void remove(List<Post> list, Post item) {
         for (Iterator<Post> iterator = list.iterator(); iterator.hasNext(); )
-        if (iterator.next().id.equals(item.id)) iterator.remove();
+            if (iterator.next().id.equals(item.id)) iterator.remove();
     }
 
     private void addIfNew(List<Post> list, Post item) {

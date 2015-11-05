@@ -45,16 +45,17 @@ public class PostListSynchronizerTest {
         createInitState();
         when(repository.replaceAllAsync(anyListOf(Post.class)))
                 .thenReturn(Observable.just(null));
-
         synchronizer.preloadNewPosts();
         synchronizer.applyNew().toBlocking().last();
 
-        when(repository.queryAsync()).thenReturn(Observable.just(PostGenerator.getPage(0)));
-        when(request.getPosts()).thenReturn(PostGenerator.getPageRange(1, 1));
+        for (int page = 0; page < 3; page++) {
+            when(repository.queryAsync()).thenReturn(Observable.just(PostGenerator.getPageRange(0, page + 1)));
+            when(request.getPosts()).thenReturn(PostGenerator.getPageRange(page + 1, 1));
 
-        synchronizer.loadNextPage().toBlocking().last();
+            synchronizer.loadNextPage().toBlocking().last();
 
-        verify(repository).replaceAllAsync(argThat(new ListArgumentMatcher(PostGenerator.getPages(0, 2))));
+            verify(repository).replaceAllAsync(argThat(new ListArgumentMatcher(PostGenerator.getPageRange(0, page + 2))));
+        }
     }
 
     @Test
@@ -77,12 +78,12 @@ public class PostListSynchronizerTest {
                 .thenReturn(Observable.just(null));
         synchronizer.applyNew().toBlocking().last();
 
-        verify(repository).replaceAllAsync(argThat(new ListArgumentMatcher(PostGenerator.getPage(0))));
+        verify(repository).replaceAllAsync(argThat(new ListArgumentMatcher(PostGenerator.getPageRange(0, 1))));
         assertEquals(10, (int) synchronizer.getDivider());
     }
 
     private void createInitState() {
-        when(request.getPosts()).thenReturn(PostGenerator.getPage(0));
+        when(request.getPosts()).thenReturn(PostGenerator.getPageRange(0, 1));
         when(request.requestAsync()).thenReturn(Observable.just(null));
         when(repository.queryAsync()).thenReturn(Observable.just(Collections.emptyList()));
     }
