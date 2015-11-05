@@ -41,11 +41,30 @@ public class PostListSynchronizerTest {
     }
 
     @Test
+    public void testLoadNextPageWithUnion() {
+        final int pageSize = 10;
+        loadFirstPage();
+
+        // page 2
+        when(repository.queryAsync()).thenReturn(Observable.just(PostGenerator.getPostRange(0, pageSize)));
+        when(request.getPosts()).thenReturn(PostGenerator.getPostRange(pageSize / 2, pageSize));
+
+        synchronizer.loadNextPage().toBlocking().last();
+
+        verify(repository).replaceAllAsync(argThat(new ListArgumentMatcher(PostGenerator.getPostRange(0, pageSize + pageSize / 2))));
+
+        // page 3
+        when(repository.queryAsync()).thenReturn(Observable.just(PostGenerator.getPostRange(0, pageSize + pageSize / 2)));
+        when(request.getPosts()).thenReturn(PostGenerator.getPostRange(pageSize + pageSize / 2, pageSize));
+
+        synchronizer.loadNextPage().toBlocking().last();
+
+        verify(repository).replaceAllAsync(argThat(new ListArgumentMatcher(PostGenerator.getPostRange(0, 2 * pageSize))));
+    }
+
+    @Test
     public void testLoadNextPage() {
-        createInitState();
-        when(repository.replaceAllAsync(anyListOf(Post.class))).thenReturn(Observable.just(null));
-        synchronizer.preloadNewPosts();
-        synchronizer.applyNew().toBlocking().last();
+        loadFirstPage();
 
         for (int page = 0; page < 3; page++) {
             when(repository.queryAsync()).thenReturn(Observable.just(PostGenerator.getPageRange(0, page + 1)));
@@ -55,6 +74,13 @@ public class PostListSynchronizerTest {
 
             verify(repository).replaceAllAsync(argThat(new ListArgumentMatcher(PostGenerator.getPageRange(0, page + 2))));
         }
+    }
+
+    private void loadFirstPage() {
+        createInitState();
+        when(repository.replaceAllAsync(anyListOf(Post.class))).thenReturn(Observable.just(null));
+        synchronizer.preloadNewPosts();
+        synchronizer.applyNew().toBlocking().last();
     }
 
     @Test

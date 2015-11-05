@@ -19,6 +19,13 @@ public class PostGenerator {
         return result;
     }
 
+    public static List<Post> getPostRange(int startIndex, int postCount) {
+        List<Post> result = new ArrayList<>();
+        for (int i = 0; i < postCount; i++)
+            result.add(makePost("" + (startIndex + i)));
+        return result;
+    }
+
     private static Post makePost(String id) {
         Post p = new Post();
         p.id = id;
