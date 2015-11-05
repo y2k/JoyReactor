@@ -42,43 +42,39 @@ public class PostListSynchronizerTest {
 
     @Test
     public void testLoadNextPageWithUnion() {
-        final int pageSize = 10;
+        final int pageSize = PostGenerator.PAGE_SIZE;
         loadFirstPage();
 
-        // page 2
-        when(repository.queryAsync()).thenReturn(Observable.just(PostGenerator.getPostRange(0, pageSize)));
-        when(request.getPosts()).thenReturn(PostGenerator.getPostRange(pageSize / 2, pageSize));
+        for (int n = 0; n < 9; n++) {
+            when(repository.queryAsync()).thenReturn(Observable.just(PostGenerator.getPostRange(0, pageSize + n * (pageSize / 2))));
+            when(request.getPosts()).thenReturn(PostGenerator.getPostRange(pageSize / 2 + n * (pageSize / 2), pageSize));
 
-        synchronizer.loadNextPage().toBlocking().last();
+            synchronizer.loadNextPage().toBlocking().last();
 
-        verify(repository).replaceAllAsync(argThat(new ListArgumentMatcher(PostGenerator.getPostRange(0, pageSize + pageSize / 2))));
-
-        // page 3
-        when(repository.queryAsync()).thenReturn(Observable.just(PostGenerator.getPostRange(0, pageSize + pageSize / 2)));
-        when(request.getPosts()).thenReturn(PostGenerator.getPostRange(pageSize + pageSize / 2, pageSize));
-
-        synchronizer.loadNextPage().toBlocking().last();
-
-        verify(repository).replaceAllAsync(argThat(new ListArgumentMatcher(PostGenerator.getPostRange(0, 2 * pageSize))));
+            verify(repository).replaceAllAsync(argThat(new ListArgumentMatcher(PostGenerator.getPostRange(0, pageSize + pageSize / 2 + n * (pageSize / 2)))));
+            assertEquals(pageSize / 2 * (3 + n), (int) synchronizer.getDivider());
+        }
     }
 
     @Test
     public void testLoadNextPage() {
         loadFirstPage();
 
-        for (int page = 0; page < 3; page++) {
+        for (int page = 0; page < 9; page++) {
             when(repository.queryAsync()).thenReturn(Observable.just(PostGenerator.getPageRange(0, page + 1)));
             when(request.getPosts()).thenReturn(PostGenerator.getPageRange(page + 1, 1));
 
             synchronizer.loadNextPage().toBlocking().last();
 
             verify(repository).replaceAllAsync(argThat(new ListArgumentMatcher(PostGenerator.getPageRange(0, page + 2))));
+            assertEquals(PostGenerator.PAGE_SIZE * (2 + page), (int) synchronizer.getDivider());
         }
     }
 
     private void loadFirstPage() {
         createInitState();
         when(repository.replaceAllAsync(anyListOf(Post.class))).thenReturn(Observable.just(null));
+
         synchronizer.preloadNewPosts();
         synchronizer.applyNew().toBlocking().last();
     }
