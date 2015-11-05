@@ -10,10 +10,23 @@ import java.util.List;
  */
 public class PostGenerator {
 
+    @Deprecated
     public static List<Post> getPage(int startIndex) {
+        return getPages(startIndex, 1);
+    }
+
+    @Deprecated
+    public static List<Post> getPages(int startIndex, int pageCount) {
         List<Post> result = new ArrayList<>();
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 10 * pageCount; i++)
             result.add(makePost("" + (startIndex + i)));
+        return result;
+    }
+
+    public static List<Post> getPageRange(int startPageId, int pageCount) {
+        List<Post> result = new ArrayList<>();
+        for (int i = 0; i < 10 * pageCount; i++)
+            result.add(makePost("" + (10 * startPageId + i)));
         return result;
     }
 

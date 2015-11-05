@@ -24,14 +24,10 @@ public class PostListSynchronizerTest {
 
     @Mock
     private Repository<Post> repository;
-
     @Mock
     private PostsForTagRequest.Factory requestFactory;
     @Mock
     private PostsForTagRequest request;
-
-//    @Captor
-//    private ArgumentCaptor<ArrayList<Post>> captor;
 
     private PostListSynchronizer synchronizer;
 
@@ -42,6 +38,23 @@ public class PostListSynchronizerTest {
         when(requestFactory.make(anyString(), anyString())).thenReturn(request);
 
         synchronizer = new PostListSynchronizer(repository, requestFactory);
+    }
+
+    @Test
+    public void testLoadNextPage() {
+        createInitState();
+        when(repository.replaceAllAsync(anyListOf(Post.class)))
+                .thenReturn(Observable.just(null));
+
+        synchronizer.preloadNewPosts();
+        synchronizer.applyNew().toBlocking().last();
+
+        when(repository.queryAsync()).thenReturn(Observable.just(PostGenerator.getPage(0)));
+        when(request.getPosts()).thenReturn(PostGenerator.getPageRange(1, 1));
+
+        synchronizer.loadNextPage().toBlocking().last();
+
+        verify(repository).replaceAllAsync(argThat(new ListArgumentMatcher(PostGenerator.getPages(0, 2))));
     }
 
     @Test
