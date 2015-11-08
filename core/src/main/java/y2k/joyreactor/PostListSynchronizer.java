@@ -15,9 +15,12 @@ public class PostListSynchronizer {
     private PostsForTagRequest.Factory requestFactory;
 
     private PostsForTagRequest request;
+    private Tag tag;
 
-    PostListSynchronizer(Repository<Post> repository,
+    PostListSynchronizer(Tag tag,
+                         Repository<Post> repository,
                          PostsForTagRequest.Factory requestFactory) {
+        this.tag = tag;
         this.merger = new PostMerger(repository);
         this.repository = repository;
         this.requestFactory = requestFactory;
@@ -54,7 +57,7 @@ public class PostListSynchronizer {
     }
 
     private PostsForTagRequest getPostsForTagRequest(String pageId) {
-        return requestFactory.make(null, pageId);
+        return requestFactory.make(tag, pageId);
     }
 
     public static class Factory {
@@ -62,8 +65,8 @@ public class PostListSynchronizer {
         private Repository<Post> repository = new Repository<>(Post.class);
         private PostsForTagRequest.Factory requestFactory = new PostsForTagRequest.Factory();
 
-        public PostListSynchronizer make() {
-            return new PostListSynchronizer(repository, requestFactory);
+        public PostListSynchronizer make(Tag tag) {
+            return new PostListSynchronizer(tag, repository, requestFactory);
         }
     }
 }

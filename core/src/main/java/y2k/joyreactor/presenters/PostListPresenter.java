@@ -29,11 +29,11 @@ public class PostListPresenter extends Presenter {
         this.synchronizerFactory = synchronizerFactory;
 
         getMessages().add(this::currentTagChanged, Messages.TagSelected.class);
-        state = new StateForTag();
+        state = new StateForTag(Tag.makeFeatured());
     }
 
     private void currentTagChanged(Messages.TagSelected m) {
-        state = new StateForTag();
+        state = new StateForTag(m.tag);
     }
 
     public void applyNew() {
@@ -52,8 +52,8 @@ public class PostListPresenter extends Presenter {
 
         private PostListSynchronizer synchronizer;
 
-        StateForTag() {
-            synchronizer = synchronizerFactory.make();
+        StateForTag(Tag tag) {
+            synchronizer = synchronizerFactory.make(tag);
 
             view.setBusy(true);
             getFromRepository().subscribe(posts -> view.reloadPosts(posts, null));

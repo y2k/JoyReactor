@@ -6,11 +6,11 @@ import org.jsoup.select.Elements;
 import rx.Observable;
 import y2k.joyreactor.Image;
 import y2k.joyreactor.Post;
+import y2k.joyreactor.Tag;
 import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.http.HttpClient;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,13 +24,10 @@ public class PostsForTagRequest {
 
     private String nextPageId;
     private List<Post> posts;
+    private String url;
 
-    private String tagId;
-    private String pageId;
-
-    private PostsForTagRequest(String tagId, String pageId) {
-        this.tagId = tagId;
-        this.pageId = pageId;
+    private PostsForTagRequest(Tag tagId, String pageId) {
+        url = new UrlBuilder().build(tagId, pageId);
     }
 
     public Observable<Void> requestAsync() {
@@ -38,7 +35,7 @@ public class PostsForTagRequest {
     }
 
     public void request() throws IOException {
-        Document doc = HttpClient.getInstance().getDocument(buildUrl());
+        Document doc = HttpClient.getInstance().getDocument(url);
 
         posts = new ArrayList<>();
         for (Element e : doc.select("div.postContainer"))
@@ -46,13 +43,6 @@ public class PostsForTagRequest {
 
         Element next = doc.select("a.next").first();
         if (next != null) nextPageId = extractNumberFromEnd(next.attr("href"));
-    }
-
-    private String buildUrl() {
-        String url = "http://joyreactor.cc/";
-        if (tagId != null) url += "tag/" + URLEncoder.encode(tagId);
-        if (pageId != null) url += "/" + pageId;
-        return url;
     }
 
     private Post newPost(Element element) {
@@ -194,7 +184,7 @@ public class PostsForTagRequest {
 
     public static class Factory {
 
-        public PostsForTagRequest make(String tagId, String pageId) {
+        public PostsForTagRequest make(Tag tagId, String pageId) {
             return new PostsForTagRequest(tagId, pageId);
         }
     }

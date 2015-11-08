@@ -49,7 +49,7 @@ public class PostListPresenterTest {
 
         MockitoAnnotations.initMocks(this);
 
-        when(synchronizerFactory.make()).thenReturn(synchronizer);
+        when(synchronizerFactory.make(tag)).thenReturn(synchronizer);
     }
 
 

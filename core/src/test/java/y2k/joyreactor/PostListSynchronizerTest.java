@@ -7,7 +7,6 @@ import rx.Observable;
 import y2k.joyreactor.common.PostGenerator;
 import y2k.joyreactor.requests.PostsForTagRequest;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -37,7 +36,7 @@ public class PostListSynchronizerTest {
 
         when(requestFactory.make(anyString(), anyString())).thenReturn(request);
 
-        synchronizer = new PostListSynchronizer(repository, requestFactory);
+        synchronizer = new PostListSynchronizer(tag, repository, requestFactory);
     }
 
     @Test
