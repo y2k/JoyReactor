@@ -1,12 +1,12 @@
 {
-    "commands": {
-        "ConsoleApp": "run"
-    },
     "frameworks": {
-        "dnx451": {
-            "frameworkAssemblies": {
-                "System.Web" : "4.0.0.0"
-            }
+         "dnxcore50": {
+             "dependencies": {
+                 "System.Net.Utilities": "4.0.0-beta-23409",
+                 "System.Text.RegularExpressions": "4.0.11-beta-*",
+                 "System.Linq": "4.0.1-beta-*",
+                 "System.Net.Http": "4.0.1-beta-*"
+             }
          }
     }
 }

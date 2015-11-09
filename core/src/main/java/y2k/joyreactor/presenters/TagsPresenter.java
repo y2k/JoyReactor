@@ -40,11 +40,13 @@ public class TagsPresenter extends Presenter {
     }
 
     public void selectedFeatured() {
-        new Messages.TagSelected(null).broadcast();
+        new Messages.TagSelected(Tag.makeFeatured()).broadcast();
     }
 
     public void selectedFavorite() {
-        // TODO:
+        new UsernameRequest()
+                .request()
+                .subscribe(username -> new Messages.TagSelected(Tag.makeFavorite(username)).broadcast());
     }
 
     public interface View {
