@@ -61,7 +61,7 @@ class PostMerger {
                 .queryAsync()
                 .map(posts -> {
                     List<Post> actualPosts = posts.subList(0, divider);
-                    List<Post> expiredPosts = posts.subList(divider, posts.size());
+                    List<Post> expiredPosts = new ArrayList<>(posts.subList(divider, posts.size()));
 
                     for (Post p : newPosts) {
                         addIfNew(actualPosts, p);

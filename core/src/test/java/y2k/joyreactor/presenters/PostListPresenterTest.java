@@ -44,8 +44,8 @@ public class PostListPresenterTest {
 
     @Before
     public void setUp() throws Exception {
-        FIRST_PAGE = PostGenerator.getPage(0);
-        NEXT_PAGE = PostGenerator.getPage(FIRST_PAGE.size());
+        FIRST_PAGE = PostGenerator.getPageRange(0, 1);
+        NEXT_PAGE = PostGenerator.getPageRange(1, 1);
 
         MockitoAnnotations.initMocks(this);
 
@@ -69,8 +69,8 @@ public class PostListPresenterTest {
         verify(mockView).reloadPosts(captor.capture(), isNull(Integer.class));
         assertEquals(0, captor.getValue().size());
 
-        verify(mockView).reloadPosts(captor.capture(), eq(10));
-        assertEquals(10, captor.getValue().size());
+        verify(mockView).reloadPosts(captor.capture(), eq(PostGenerator.PAGE_SIZE));
+        assertEquals(PostGenerator.PAGE_SIZE, captor.getValue().size());
     }
 
     @Test
@@ -88,7 +88,7 @@ public class PostListPresenterTest {
 
         presenter.loadMore();
 
-        verify(mockView).reloadPosts(captor.capture(), eq(20));
-        assertEquals(20, captor.getValue().size());
+        verify(mockView).reloadPosts(captor.capture(), eq(PostGenerator.PAGE_SIZE));
+        assertEquals(PostGenerator.PAGE_SIZE, captor.getValue().size());
     }
 }
