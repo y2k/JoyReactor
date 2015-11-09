@@ -1,11 +1,13 @@
 package y2k.joyreactor;
 
 import rx.Observable;
+import rx.functions.Func1;
 import y2k.joyreactor.common.IoUtils;
 import y2k.joyreactor.common.ObservableUtils;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -26,15 +28,6 @@ public class Repository<T> {
     public Repository(String name, int version) {
         file = new File(new File(Platform.Instance.getCurrentDirectory(), "repositories"), name + "." + version + ".dat");
         file.getParentFile().mkdirs();
-    }
-
-    public Observable<Void> clearAsync() {
-        return ObservableUtils.create(this::clear);
-    }
-
-    public void clear() {
-        inMemoryCache.clear();
-        dumpAll();
     }
 
     public void add(T row) {
@@ -93,5 +86,22 @@ public class Repository<T> {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Observable<Void> deleteWhere(Query query) {
+        return null;
+    }
+
+    public Observable<List<T>> queryAsync(Query query) {
+        return null;
+    }
+
+    public Observable<Void> insertOrUpdate(List<T> rows) {
+        return null;
+    }
+
+    public interface Query<T> {
+
+        boolean compare(T row);
     }
 }

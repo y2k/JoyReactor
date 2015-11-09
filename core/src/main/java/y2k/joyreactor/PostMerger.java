@@ -12,10 +12,10 @@ import java.util.List;
  */
 class PostMerger {
 
-    private Repository<Post> repository;
+    private TagPostMapping repository;
     private Integer divider;
 
-    PostMerger(Repository<Post> repository) {
+    PostMerger(TagPostMapping repository) {
         this.repository = repository;
     }
 
@@ -75,7 +75,7 @@ class PostMerger {
 
     private void remove(List<Post> list, Post item) {
         for (Iterator<Post> iterator = list.iterator(); iterator.hasNext(); )
-        if (iterator.next().id.equals(item.id)) iterator.remove();
+            if (iterator.next().id.equals(item.id)) iterator.remove();
     }
 
     private void addIfNew(List<Post> list, Post item) {

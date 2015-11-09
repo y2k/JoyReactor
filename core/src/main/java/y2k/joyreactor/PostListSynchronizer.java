@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class PostListSynchronizer {
 
-    private Repository<Post> repository;
+    private TagPostMapping repository;
     private PostMerger merger;
     private PostsForTagRequest.Factory requestFactory;
 
@@ -18,7 +18,7 @@ public class PostListSynchronizer {
     private Tag tag;
 
     PostListSynchronizer(Tag tag,
-                         Repository<Post> repository,
+                         TagPostMapping repository,
                          PostsForTagRequest.Factory requestFactory) {
         this.tag = tag;
         this.merger = new PostMerger(repository);
@@ -62,11 +62,10 @@ public class PostListSynchronizer {
 
     public static class Factory {
 
-        private Repository<Post> repository = new Repository<>(Post.class);
         private PostsForTagRequest.Factory requestFactory = new PostsForTagRequest.Factory();
 
         public PostListSynchronizer make(Tag tag) {
-            return new PostListSynchronizer(tag, repository, requestFactory);
+            return new PostListSynchronizer(tag, new TagPostMapping(tag), requestFactory);
         }
     }
 }
