@@ -10,8 +10,8 @@ import java.util.List;
  */
 public class TagPostMapping {
 
-    private Repository<Post> postRepository = new Repository<>(Post.class);
-    private Repository<TagPost> tagPostRepository = new Repository<>(TagPost.class);
+    private y2k.joyreactor.repository.Repository<Post> postRepository = new y2k.joyreactor.repository.Repository<>(Post.class);
+    private y2k.joyreactor.repository.Repository<TagPost> tagPostRepository = new y2k.joyreactor.repository.Repository<>(TagPost.class);
 
     private Tag tag;
 
@@ -21,26 +21,26 @@ public class TagPostMapping {
 
     public Observable<Void> clearAsync() {
         return postRepository
-                .deleteWhere(new PostsForTagQuery(tag))
-                .flatMap(s -> tagPostRepository.deleteWhere(new TagPostsForTagQuery(tag)));
+                .deleteWhere(new y2k.joyreactor.repository.PostsForTagQuery(tag))
+                .flatMap(s -> tagPostRepository.deleteWhere(new y2k.joyreactor.repository.TagPostsForTagQuery(tag)));
     }
 
     public Observable<List<Post>> queryAsync() {
-        return postRepository.queryAsync(new PostsForTagQuery(tag));
+        return postRepository.queryAsync(new y2k.joyreactor.repository.PostsForTagQuery(tag));
     }
 
     public Observable<Void> replaceAllAsync(List<Post> posts) {
         return clearAsync()
-                .flatMap(s -> postRepository.insertOrUpdate(posts))
+                .flatMap(s -> postRepository.insertAll(posts))
                 .map(s -> {
                     List<TagPost> links = new ArrayList<>();
                     for (Post p : posts)
                         links.add(new TagPost(tag.getId(), p.id));
                     return links;
-                }).flatMap(tagPostRepository::insertOrUpdate);
+                }).flatMap(tagPostRepository::insertAll);
     }
 
-    static class TagPost {
+    public static class TagPost {
 
         public String tagId;
         public String postId;

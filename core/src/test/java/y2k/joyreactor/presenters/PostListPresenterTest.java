@@ -9,7 +9,7 @@ import org.mockito.MockitoAnnotations;
 import rx.Observable;
 import y2k.joyreactor.Post;
 import y2k.joyreactor.PostListSynchronizer;
-import y2k.joyreactor.Repository;
+import y2k.joyreactor.repository.Repository;
 import y2k.joyreactor.common.PostGenerator;
 
 import java.util.*;

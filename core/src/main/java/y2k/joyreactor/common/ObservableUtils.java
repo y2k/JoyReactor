@@ -19,6 +19,13 @@ public class ObservableUtils {
         });
     }
 
+    public static Observable<Void> create(UnsafeAction0 action0, Executor executor) {
+        return ObservableUtils.create(() -> {
+            action0.call();
+            return null;
+        }, executor);
+    }
+
     public static <T> Observable<T> create(Callable<T> action) {
         Observable<T> result = Observable
                 .create(subscriber -> Schedulers.io().createWorker().schedule(() -> {

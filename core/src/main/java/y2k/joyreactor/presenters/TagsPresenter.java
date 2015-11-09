@@ -3,6 +3,7 @@ package y2k.joyreactor.presenters;
 import rx.Observable;
 import y2k.joyreactor.*;
 import y2k.joyreactor.common.Messages;
+import y2k.joyreactor.repository.Repository;
 import y2k.joyreactor.requests.MyTagsRequest;
 import y2k.joyreactor.requests.UsernameRequest;
 
@@ -23,15 +24,16 @@ public class TagsPresenter extends Presenter {
     @Override
     public void activate() {
         Repository<Tag> repository = new Repository<>(Tag.class);
-        view.reloadData(repository.query());
 
-        new UsernameRequest()
+        Observable<List<Tag>> subscription = new UsernameRequest()
                 .request()
                 .flatMap(username -> username == null
                         ? new DefaultTagRequest().request()
                         : new MyTagsRequest(username).request())
                 .flatMap(repository::replaceAllAsync)
-                .flatMap(s -> repository.queryAsync())
+                .flatMap(s -> repository.queryAsync());
+
+        repository.queryAsync().mergeWith(subscription)
                 .subscribe(view::reloadData, Throwable::printStackTrace);
     }
 

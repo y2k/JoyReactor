@@ -14,15 +14,15 @@ public class PostListPresenter extends Presenter {
     private View view;
     private StateForTag state;
 
-    private Repository<Post> repository;
+    private y2k.joyreactor.repository.Repository<Post> repository;
     private PostListSynchronizer.Factory synchronizerFactory;
 
     public PostListPresenter(View view) {
-        this(view, new Repository<>(Post.class), new PostListSynchronizer.Factory());
+        this(view, new y2k.joyreactor.repository.Repository<>(Post.class), new PostListSynchronizer.Factory());
     }
 
     PostListPresenter(View view,
-                      Repository<Post> repository,
+                      y2k.joyreactor.repository.Repository<Post> repository,
                       PostListSynchronizer.Factory synchronizerFactory) {
         this.view = view;
         this.repository = repository;

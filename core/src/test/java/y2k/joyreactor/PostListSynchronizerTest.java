@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class PostListSynchronizerTest {
 
     @Mock
-    private Repository<Post> repository;
+    private y2k.joyreactor.repository.Repository<Post> repository;
     @Mock
     private PostsForTagRequest.Factory requestFactory;
     @Mock
