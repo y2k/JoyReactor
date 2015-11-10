@@ -2,6 +2,7 @@ package y2k.joyreactor;
 
 import rx.Observable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class TagPostMapping {
                 }).flatMap(tagPostRepository::insertAll);
     }
 
-    public static class TagPost {
+    public static class TagPost implements Serializable {
 
         public String tagId;
         public String postId;

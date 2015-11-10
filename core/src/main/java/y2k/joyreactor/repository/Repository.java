@@ -32,8 +32,9 @@ public class Repository<T> {
     public Observable<Void> insertAll(List<T> newRows) {
         return queryAsync()
                 .map(rows -> {
-                    rows.addAll(newRows);
-                    return rows;
+                    ArrayList<T> result = new ArrayList<>(rows);
+                    result.addAll(newRows);
+                    return result;
                 }).flatMap(this::replaceAllAsync);
     }
 
@@ -45,11 +46,6 @@ public class Repository<T> {
         return queryAsync(new Query() {
 
             @Override
-            public Observable<Void> init() {
-                return Observable.just(null);
-            }
-
-            @Override
             public boolean compare(Object row) {
                 return true;
             }
@@ -57,27 +53,29 @@ public class Repository<T> {
     }
 
     public Observable<List<T>> queryAsync(Query query) {
-        return ObservableUtils.create(() -> {
-            if (!file.exists())
-                return Collections.emptyList();
+        return query
+                .initialize()
+                .flatMap(s -> ObservableUtils.create(() -> {
+                    if (!file.exists())
+                        return Collections.emptyList();
 
-            try {
-                ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file));
-                List<T> buffer = new ArrayList<>();
-                try {
-                    while (true) {
-                        T row = (T) stream.readObject();
-                        if (query.compare(row)) buffer.add(row);
+                    try {
+                        ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file));
+                        List<T> buffer = new ArrayList<>();
+                        try {
+                            while (true) {
+                                T row = (T) stream.readObject();
+                                if (query.compare(row)) buffer.add(row);
+                            }
+                        } catch (EOFException e) {
+                        } finally {
+                            IoUtils.close(stream);
+                        }
+                        return buffer;
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
                     }
-                } catch (EOFException e) {
-                } finally {
-                    IoUtils.close(stream);
-                }
-                return buffer;
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }, sSingleAccessExecutor);
+                }, sSingleAccessExecutor));
     }
 
     public Observable<Void> replaceAllAsync(List<T> rows) {
@@ -99,8 +97,12 @@ public class Repository<T> {
         }, sSingleAccessExecutor);
     }
 
-    public interface Query<T> {
+    public static abstract class Query<TRow> {
 
-        boolean compare(T row);
+        public abstract boolean compare(TRow row);
+
+        public Observable<Void> initialize() {
+            return Observable.just(null);
+        }
     }
 }

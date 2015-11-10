@@ -6,7 +6,7 @@ import y2k.joyreactor.TagPostMapping;
 /**
  * Created by y2k on 11/9/15.
  */
-public class TagPostsForTagQuery implements Repository.Query<TagPostMapping.TagPost> {
+public class TagPostsForTagQuery extends Repository.Query<TagPostMapping.TagPost> {
 
     private Tag tag;
 
