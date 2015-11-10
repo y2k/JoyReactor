@@ -9,6 +9,7 @@ import org.mockito.MockitoAnnotations;
 import rx.Observable;
 import y2k.joyreactor.Post;
 import y2k.joyreactor.PostListSynchronizer;
+import y2k.joyreactor.Tag;
 import y2k.joyreactor.repository.Repository;
 import y2k.joyreactor.common.PostGenerator;
 
@@ -49,7 +50,7 @@ public class PostListPresenterTest {
 
         MockitoAnnotations.initMocks(this);
 
-        when(synchronizerFactory.make(tag)).thenReturn(synchronizer);
+        when(synchronizerFactory.make(new Tag())).thenReturn(synchronizer);
     }
 
 

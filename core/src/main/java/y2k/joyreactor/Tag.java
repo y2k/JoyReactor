@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class Tag implements Serializable {
 
-    static final String MARK_USERNAME = "username:";
+    private static final String MARK_USERNAME = "username:";
 
     public String title;
     public Image image;

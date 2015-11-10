@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class PostListSynchronizerTest {
 
     @Mock
-    private y2k.joyreactor.repository.Repository<Post> repository;
+    private TagPostMapping repository;
     @Mock
     private PostsForTagRequest.Factory requestFactory;
     @Mock
@@ -34,9 +34,9 @@ public class PostListSynchronizerTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        when(requestFactory.make(anyString(), anyString())).thenReturn(request);
+        when(requestFactory.make(any(), anyString())).thenReturn(request);
 
-        synchronizer = new PostListSynchronizer(tag, repository, requestFactory);
+        synchronizer = new PostListSynchronizer(new Tag(), repository, requestFactory);
     }
 
     @Test
