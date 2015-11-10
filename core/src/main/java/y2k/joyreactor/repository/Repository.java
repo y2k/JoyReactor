@@ -42,7 +42,18 @@ public class Repository<T> {
     }
 
     public Observable<List<T>> queryAsync() {
-        return queryAsync(row -> true);
+        return queryAsync(new Query() {
+
+            @Override
+            public Observable<Void> init() {
+                return Observable.just(null);
+            }
+
+            @Override
+            public boolean compare(Object row) {
+                return true;
+            }
+        });
     }
 
     public Observable<List<T>> queryAsync(Query query) {

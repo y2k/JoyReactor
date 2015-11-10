@@ -8,13 +8,14 @@ import y2k.joyreactor.TagPostMapping;
  */
 public class TagPostsForTagQuery implements Repository.Query<TagPostMapping.TagPost> {
 
+    private Tag tag;
+
     public TagPostsForTagQuery(Tag tag) {
-        // TODO
+        this.tag = tag;
     }
 
     @Override
     public boolean compare(TagPostMapping.TagPost row) {
-        // TODO
-        return false;
+        return row.tagId.equals(tag.getId());
     }
 }

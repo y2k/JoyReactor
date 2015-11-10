@@ -8,13 +8,14 @@ import y2k.joyreactor.Tag;
  */
 public class PostsForTagQuery implements Repository.Query<Post> {
 
+    private Tag tag;
+
     public PostsForTagQuery(Tag tag) {
-        // TODO:
+        this.tag = tag;
     }
 
     @Override
     public boolean compare(Post row) {
-        // TODO:
-        return false;
+        throw new UnsupportedOperationException();
     }
 }
