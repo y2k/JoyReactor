@@ -30,3 +30,6 @@ ios/robovm-build
 project.lock.json
 tags.keys.txt
 tags.values.txt
+log.txt
+records.txt
+index.txt
