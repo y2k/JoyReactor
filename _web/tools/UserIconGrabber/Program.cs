@@ -20,7 +20,7 @@ public class Program {
             .Where(s => !string.IsNullOrEmpty(s.icon))
             .Select(s => s.name + " ; " + s.icon);
             
-        File.AppendAllLines("records.txt", lines);
+        File.WriteAllLines("records.txt", lines);
     }
     
     static MatchCollection MatchUsers(string page) {
