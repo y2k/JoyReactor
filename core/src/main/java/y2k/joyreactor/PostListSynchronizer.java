@@ -3,14 +3,12 @@ package y2k.joyreactor;
 import rx.Observable;
 import y2k.joyreactor.requests.PostsForTagRequest;
 
-import java.util.List;
-
 /**
  * Created by y2k on 03/11/15.
  */
 public class PostListSynchronizer {
 
-    private TagPostMapping repository;
+    private PostSubRepositoryForTag repository;
     private PostMerger merger;
     private PostsForTagRequest.Factory requestFactory;
 
@@ -18,7 +16,7 @@ public class PostListSynchronizer {
     private Tag tag;
 
     PostListSynchronizer(Tag tag,
-                         TagPostMapping repository,
+                         PostSubRepositoryForTag repository,
                          PostsForTagRequest.Factory requestFactory) {
         this.tag = tag;
         this.merger = new PostMerger(repository);
@@ -65,7 +63,7 @@ public class PostListSynchronizer {
         private PostsForTagRequest.Factory requestFactory = new PostsForTagRequest.Factory();
 
         public PostListSynchronizer make(Tag tag) {
-            return new PostListSynchronizer(tag, new TagPostMapping(tag), requestFactory);
+            return new PostListSynchronizer(tag, new PostSubRepositoryForTag(tag), requestFactory);
         }
     }
 }

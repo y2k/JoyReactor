@@ -1,6 +1,7 @@
 package y2k.joyreactor;
 
 import rx.Observable;
+import y2k.joyreactor.repository.Repository;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,14 +10,14 @@ import java.util.List;
 /**
  * Created by y2k on 11/8/15.
  */
-public class TagPostMapping {
+public class PostSubRepositoryForTag {
 
-    private y2k.joyreactor.repository.Repository<Post> postRepository = new y2k.joyreactor.repository.Repository<>(Post.class);
-    private y2k.joyreactor.repository.Repository<TagPost> tagPostRepository = new y2k.joyreactor.repository.Repository<>(TagPost.class);
+    private Repository<Post> postRepository = new Repository<>(Post.class);
+    private Repository<TagPost> tagPostRepository = new Repository<>(TagPost.class);
 
     private Tag tag;
 
-    public TagPostMapping(Tag tag) {
+    public PostSubRepositoryForTag(Tag tag) {
         this.tag = tag;
     }
 

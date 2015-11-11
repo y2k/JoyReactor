@@ -1,7 +1,6 @@
 package y2k.joyreactor;
 
 import rx.Observable;
-import y2k.joyreactor.common.ObservableUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,10 +11,10 @@ import java.util.List;
  */
 class PostMerger {
 
-    private TagPostMapping repository;
+    private PostSubRepositoryForTag repository;
     private Integer divider;
 
-    PostMerger(TagPostMapping repository) {
+    PostMerger(PostSubRepositoryForTag repository) {
         this.repository = repository;
     }
 
