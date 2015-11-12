@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">JoyReactor (beta)</string>
+    <string name="app_name">JoyReactor</string>
     <string name="add_tag">Add tag</string>
     <string name="profile">Profile</string>
     <string name="settings">Settings</string>
@@ -40,4 +40,16 @@
     <string name="private_message_service_label">Check new private messages</string>
     <string name="not_yet_implemented">Not yet implemented</string>
     <string name="comment_sent">Comment sent</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Example action</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

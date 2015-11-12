@@ -73,9 +73,7 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
 
             h.imagePanel.setAspect(i.getAspect(0.5f));
 
-            new ImageRequest()
-                    .setUrl(i.userImage)
-                    .to(h.userImage, h.userImage::setImageBitmap);
+            h.userImage.setImage(i.userImage);
         }
 
         @Override
