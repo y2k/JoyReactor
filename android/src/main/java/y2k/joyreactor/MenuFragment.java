@@ -1,9 +1,7 @@
 package y2k.joyreactor;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -55,19 +53,27 @@ public class MenuFragment extends Fragment implements TagsPresenter.View {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_subscription, parent, false));
+            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false));
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             ViewHolder vh = (ViewHolder) holder;
-            vh.title.setText(tags.get(position).title);
-            vh.icon.setImage(tags.get(position).image);
+            if (position > 0) {
+                Tag item = tags.get(position - 1);
+                vh.title.setText(item.title);
+                vh.icon.setImage(item.image);
+            }
         }
 
         @Override
         public int getItemCount() {
-            return tags == null ? 0 : tags.size();
+            return (tags == null ? 0 : tags.size()) + 1;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return position == 0 ? R.layout.layout_subscriptions_header : R.layout.item_subscription;
         }
 
         public void updateData(List<Tag> tags) {

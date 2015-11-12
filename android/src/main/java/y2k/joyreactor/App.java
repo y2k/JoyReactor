@@ -19,6 +19,8 @@ public class App extends Application {
         ForegroundScheduler.setInstance(new HandlerScheduler());
         Platform.Instance = new Platform() {
 
+            AndroidNavigation navigation = new AndroidNavigation(App.this);
+
             @Override
             public File getCurrentDirectory() {
                 return getFilesDir();
@@ -26,7 +28,7 @@ public class App extends Application {
 
             @Override
             public Navigation getNavigator() {
-                return new AndroidNavigation();
+                return navigation;
             }
         };
     }
