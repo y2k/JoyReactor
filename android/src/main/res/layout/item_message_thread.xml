@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:paddingRight="11dp"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <y2k.joyreactor.RoundBorderLayout
+            android:layout_marginLeft="9dp"
+            android:layout_marginTop="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        <y2k.joyreactor.WebImageView
+                android:id="@+id/userImage"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:scaleType="centerCrop"/>
+    </y2k.joyreactor.RoundBorderLayout>
+    <TextView
+            android:layout_marginLeft="54dp"
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:id="@+id/userName"/>
+    <TextView
+            android:layout_below="@id/userName"
+            android:layout_marginLeft="54dp"
+            android:layout_marginTop="2dp"
+            android:textSize="12sp"
+            android:singleLine="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lastMessage"/>
+    <TextView
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/lastMessage"
+            android:layout_marginTop="4dp"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/time"/>
+</RelativeLayout>

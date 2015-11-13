@@ -5,4 +5,7 @@
     <item android:id="@+id/profile"
           android:title="@string/profile"
           app:showAsAction="never"/>
+    <item android:id="@+id/messages"
+          android:title="@string/messages"
+          app:showAsAction="never"/>
 </menu>

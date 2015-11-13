@@ -28,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.profile) {
             startActivity(new Intent(this, ProfileActivity.class));
             return true;
+        } else if (item.getItemId() == R.id.messages) {
+            startActivity(new Intent(this, MessagesActivity.class));
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
