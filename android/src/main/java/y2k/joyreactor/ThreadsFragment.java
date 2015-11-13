@@ -64,7 +64,7 @@ public class ThreadsFragment extends Fragment {
         public void onBindViewHolder(ViewHolder holder, int position) {
             MessageThread t = threads.get(position);
             holder.userImage.setImage(new Image(t.userImage));
-            holder.userName.setText(t.username);
+            holder.userName.setText(t.userName);
             holder.lastMessage.setText(t.lastMessage);
             holder.time.setText("" + t.date);
         }

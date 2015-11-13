@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class MessageThread {
 
-    public String username;
+    public String userName;
     public String userImage;
     public String lastMessage;
     public Date date;

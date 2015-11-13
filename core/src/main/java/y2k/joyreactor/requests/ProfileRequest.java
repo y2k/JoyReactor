@@ -6,7 +6,6 @@ import y2k.joyreactor.Image;
 import y2k.joyreactor.Profile;
 import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.http.HttpClient;
-import y2k.joyreactor.requests.UsernameRequest;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,7 +16,7 @@ import java.util.regex.Pattern;
 public class ProfileRequest {
 
     public Observable<Profile> request() {
-        return new UsernameRequest()
+        return new UserNameRequest()
                 .request()
                 .flatMap(username -> ObservableUtils.create(() -> {
                     Document page = HttpClient.getInstance().getDocument(getUrl(username));

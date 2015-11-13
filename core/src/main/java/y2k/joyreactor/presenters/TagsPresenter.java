@@ -5,7 +5,7 @@ import y2k.joyreactor.*;
 import y2k.joyreactor.common.Messages;
 import y2k.joyreactor.repository.Repository;
 import y2k.joyreactor.requests.MyTagsRequest;
-import y2k.joyreactor.requests.UsernameRequest;
+import y2k.joyreactor.requests.UserNameRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class TagsPresenter extends Presenter {
     public void activate() {
         Repository<Tag> repository = new Repository<>(Tag.class);
 
-        Observable<List<Tag>> subscription = new UsernameRequest()
+        Observable<List<Tag>> subscription = new UserNameRequest()
                 .request()
                 .flatMap(username -> username == null
                         ? new DefaultTagRequest().request()
@@ -48,7 +48,7 @@ public class TagsPresenter extends Presenter {
     }
 
     public void selectedFavorite() {
-        new UsernameRequest()
+        new UserNameRequest()
                 .request()
                 .subscribe(username -> new Messages.TagSelected(Tag.makeFavorite(username)).broadcast());
     }

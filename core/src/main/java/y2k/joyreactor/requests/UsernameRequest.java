@@ -9,7 +9,7 @@ import y2k.joyreactor.http.HttpClient;
 /**
  * Created by y2k on 10/4/15.
  */
-public class UsernameRequest {
+public class UserNameRequest {
 
     public Observable<String> request() {
         return ObservableUtils.create(() -> {

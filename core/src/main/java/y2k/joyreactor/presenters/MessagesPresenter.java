@@ -24,7 +24,7 @@ public class MessagesPresenter extends Presenter {
     public void activate() {
         super.activate();
         Messenger.getInstance().register(this,
-                m -> reloadMessages(m.thread.username),
+                m -> reloadMessages(m.thread.userName),
                 MessageThreadsPresenter.ThreadSelectedMessage.class);
     }
 
