@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class PostListFragment extends Fragment implements PostListPresenter.View {
 
-    private PostAdapter adapter;
+    PostAdapter adapter;
 
     @Override
     public void setBusy(boolean isBusy) {
@@ -33,7 +33,7 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
 
     @Override
     public void setHasNewPosts(boolean hasNewPosts) {
-
+        ((ReloadButton) getView().findViewById(R.id.apply)).setVisibility(hasNewPosts);
     }
 
     @Nullable
@@ -47,7 +47,9 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
         list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         list.setAdapter(adapter = new PostAdapter());
 
-        new PostListPresenter(this);
+        PostListPresenter presenter = new PostListPresenter(this);
+
+        view.findViewById(R.id.apply).setOnClickListener(v -> presenter.applyNew());
 
         return view;
     }
@@ -73,9 +75,7 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
 
             h.imagePanel.setAspect(i.getAspect(0.5f));
 
-            new ImageRequest()
-                    .setUrl(i.userImage)
-                    .to(h.userImage, h.userImage::setImageBitmap);
+            h.userImage.setImage(i.userImage);
         }
 
         @Override

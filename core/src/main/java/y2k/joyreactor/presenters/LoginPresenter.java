@@ -15,16 +15,16 @@ public class LoginPresenter {
     }
 
     public void login() {
-        view.setProgress(true);
+        view.setBusy(true);
         new LoginRequest(view.getUsername(), view.getPassword())
                 .request()
                 .subscribe(
                         s -> {
-                            view.setProgress(false);
+                            view.setBusy(false);
                             Navigation.getInstance().switchLoginToProfile();
                         }, error -> {
                             error.printStackTrace();
-                            view.setProgress(false);
+                            view.setBusy(false);
                             view.showError();
                         });
     }
@@ -39,7 +39,7 @@ public class LoginPresenter {
 
         String getPassword();
 
-        void setProgress(boolean isProgress);
+        void setBusy(boolean isBusy);
 
         void showError();
 

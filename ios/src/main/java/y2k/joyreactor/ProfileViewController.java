@@ -46,9 +46,9 @@ public class ProfileViewController extends UIViewController implements ProfilePr
     }
 
     @Override
-    public void setProgress(boolean isProgress) {
-        logoutButton.setEnabled(!isProgress);
-        getNavigationItem().setHidesBackButton(isProgress, true);
+    public void setBusy(boolean isBusy) {
+        logoutButton.setEnabled(!isBusy);
+        getNavigationItem().setHidesBackButton(isBusy, true);
     }
 
     // ==========================================

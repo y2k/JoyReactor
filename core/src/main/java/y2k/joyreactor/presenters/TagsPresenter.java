@@ -33,7 +33,9 @@ public class TagsPresenter extends Presenter {
                 .flatMap(repository::replaceAllAsync)
                 .flatMap(s -> repository.queryAsync());
 
-        repository.queryAsync().mergeWith(subscription)
+        repository
+                .queryAsync()
+                .mergeWith(subscription)
                 .subscribe(view::reloadData, Throwable::printStackTrace);
     }
 
