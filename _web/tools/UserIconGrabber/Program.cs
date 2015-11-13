@@ -5,23 +5,29 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 public class Program {
 
     public static void Main() {
-        var lines = new PageLoader().Get()
-            .SelectMany(page => MatchUsers(page.Document).OfType<Match>())
-            .Select(s => s.Groups[1].Value)
-            .Select(s => new { 
-                name = ClearName(Regex.Match(s, "href=\"/user/[^\"]+\">(.+?)</a>").Groups[1].Value),
-                icon = Regex.Match(s, "<img src=\"[^\"]+/user/(\\d+)\"").Groups[1].Value 
-            })
-            .Where(s => !string.IsNullOrEmpty(s.icon))
-            .Select(s => s.icon + " " + s.name);
-            
-        File.WriteAllLines("records.txt", lines);
+        if (!File.Exists("records.txt")) {
+            var lines = new PageLoader().Get()
+                .SelectMany(page => MatchUsers(page.Document).OfType<Match>())
+                .Select(s => s.Groups[1].Value)
+                .Select(s => new { 
+                    name = ClearName(Regex.Match(s, "href=\"/user/[^\"]+\">(.+?)</a>").Groups[1].Value),
+                    icon = Regex.Match(s, "<img src=\"[^\"]+/user/(\\d+)\"").Groups[1].Value 
+                })
+                .Where(s => !string.IsNullOrEmpty(s.icon))
+                .Select(s => s.icon + " " + s.name);
+            File.WriteAllLines("records.txt", lines);
+        }
+        
+        File.ReadAllLines("records.txt")
+            .Select(s => s.Split(new char[] { ' ' }, 2))
+            .Select(s => new { icon = s[0], name = s[1] })
+            .Select(s => s.icon + " | " + s.name)
+            .Take(100).ToList().ForEach(s => Console.WriteLine(s));
     }
     
     static MatchCollection MatchUsers(string page) {
