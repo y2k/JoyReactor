@@ -15,12 +15,12 @@ public class ProfilePresenter {
     public ProfilePresenter(View view) {
         this.view = view;
 
-        this.view.setProgress(true);
+        this.view.setBusy(true);
         new ProfileRequest()
                 .request()
                 .subscribe(profile -> {
                     this.view.setProfile(profile);
-                    this.view.setProgress(false);
+                    this.view.setBusy(false);
                 }, e -> {
                     e.printStackTrace();
                     Navigation.getInstance().switchProfileToLogin();
@@ -36,6 +36,6 @@ public class ProfilePresenter {
 
         void setProfile(Profile profile);
 
-        void setProgress(boolean isProgress);
+        void setBusy(boolean isBusy);
     }
 }

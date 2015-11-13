@@ -2,7 +2,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
-    <include layout="@layout/toolbar"/>
     <LinearLayout
             android:orientation="vertical"
             android:gravity="center"
@@ -90,18 +89,18 @@
         <View android:background="#E4E4E4"
               android:layout_width="match_parent"
               android:layout_height="1dp"/>
-        <Button android:layout_width="300dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="32dp"
+        <Button android:id="@+id/logout"
                 android:textColor="@color/text_primary"
                 android:background="@drawable/drawable_yellow_button"
                 android:textSize="18sp"
                 android:text="@string/logout"
-                android:id="@+id/logout"/>
+                android:layout_width="300dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="32dp"/>
     </LinearLayout>
     <LinearLayout
-            android:visibility="gone"
             android:id="@+id/progress"
+            android:visibility="gone"
             android:background="@android:color/white"
             android:gravity="center"
             android:orientation="vertical"
@@ -121,4 +120,5 @@
                 android:fontFamily="sans-serif-light"
                 android:text="@string/get_profile"/>
     </LinearLayout>
+    <include layout="@layout/toolbar"/>
 </FrameLayout>

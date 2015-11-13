@@ -44,9 +44,9 @@ public class LoginViewController extends UIViewController implements LoginPresen
     }
 
     @Override
-    public void setProgress(boolean isProgress) {
-        getNavigationItem().setHidesBackButton(isProgress);
-        loginButton.setEnabled(!isProgress);
+    public void setBusy(boolean isBusy) {
+        getNavigationItem().setHidesBackButton(isBusy);
+        loginButton.setEnabled(!isBusy);
     }
 
     @Override

@@ -5,7 +5,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="y2k.joyreactor.LoginActivity">
-    <include layout="@layout/toolbar"/>
     <LinearLayout
             android:orientation="vertical"
             android:gravity="center"
@@ -44,8 +43,8 @@
                 android:background="@drawable/drawable_yellow_button"/>
     </LinearLayout>
     <LinearLayout
-            android:visibility="gone"
             android:id="@+id/progress"
+            android:visibility="gone"
             android:background="@android:color/white"
             android:gravity="center"
             android:orientation="vertical"
@@ -64,4 +63,5 @@
                   android:fontFamily="sans-serif-light"
                   android:text="@string/authorization"/>
     </LinearLayout>
+    <include layout="@layout/toolbar"/>
 </FrameLayout>
