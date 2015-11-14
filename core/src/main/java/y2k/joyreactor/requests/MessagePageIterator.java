@@ -16,6 +16,9 @@ class MessagePageIterator {
     private Document page;
 
     public Observable<Document> observable() {
+
+        "".hashCode();
+
         return Observable.create(subscriber -> {
             try {
                 while (hasNext())

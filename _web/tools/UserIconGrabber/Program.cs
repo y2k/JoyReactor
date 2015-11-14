@@ -26,7 +26,10 @@ public class Program {
         File.ReadAllLines("records.txt")
             .Select(s => s.Split(new char[] { ' ' }, 2))
             .Select(s => new { icon = s[0], name = s[1] })
-            .Select(s => s.icon + " | " + s.name)
+            .GroupBy(s => HashCode(s.name))
+            .Where(s => s.Count() > 1)
+            .Select(s => s.Key + " | " + s.Select(a => a.name).Aggregate((a, b) => a + ", " + b))
+            //.Select(s => s.icon + " | " + s.name)
             .Take(100).ToList().ForEach(s => Console.WriteLine(s));
     }
     
@@ -37,7 +40,18 @@ public class Program {
     static string ClearName(string s) {
         return WebUtility.HtmlDecode(s.Trim());
     }
-    
+        
+    static int HashCode(string str) {
+        char[] val = str.ToCharArray();
+        int h = 0;
+        unchecked {
+            for (int i = 0; i < str.Length; i++) {
+                h = 31 * h + val[i];
+            }
+        }
+        return h;
+    }
+        
     class PageLoader {
     
         Page lastPage;
