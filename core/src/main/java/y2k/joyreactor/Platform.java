@@ -12,4 +12,6 @@ public abstract class Platform {
     public abstract File getCurrentDirectory();
 
     public abstract Navigation getNavigator();
+
+    public abstract byte[] loadFromBundle(String name, String ext);
 }

@@ -1,8 +1,6 @@
 package y2k.joyreactor.platform;
 
-import org.robovm.apple.foundation.NSPathUtilities;
-import org.robovm.apple.foundation.NSSearchPathDirectory;
-import org.robovm.apple.foundation.NSSearchPathDomainMask;
+import org.robovm.apple.foundation.*;
 import y2k.joyreactor.Navigation;
 import y2k.joyreactor.Platform;
 
@@ -31,5 +29,11 @@ public class PlatformImpl extends Platform {
     @Override
     public Navigation getNavigator() {
         return new StoryboardNavigation();
+    }
+
+    @Override
+    public byte[] loadFromBundle(String name, String ext) {
+        String path = NSBundle.getMainBundle().findResourcePath(name, ext);
+        return NSData.read(new File(path)).getBytes();
     }
 }
