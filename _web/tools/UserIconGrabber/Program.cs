@@ -23,14 +23,15 @@ public class Program {
             File.WriteAllLines("records.txt", lines);
         }
         
-        File.ReadAllLines("records.txt")
+        var info = File.ReadAllLines("records.txt")
             .Select(s => s.Split(new char[] { ' ' }, 2))
             .Select(s => new { icon = s[0], name = s[1] })
             .GroupBy(s => HashCode(s.name))
-            .Where(s => s.Count() > 1)
-            .Select(s => s.Key + " | " + s.Select(a => a.name).Aggregate((a, b) => a + ", " + b))
-            //.Select(s => s.icon + " | " + s.name)
-            .Take(100).ToList().ForEach(s => Console.WriteLine(s));
+            .Select(s => new { nameHash = s.Key, icon = int.Parse(s.First().icon) })
+            .ToList();
+            
+        File.WriteAllBytes("user.names.dat", info.SelectMany(s => BitConverter.GetBytes(s.nameHash)).ToArray());
+        File.WriteAllBytes("user.icons.dat", info.SelectMany(s => BitConverter.GetBytes(s.icon)).ToArray());
     }
     
     static MatchCollection MatchUsers(string page) {
@@ -44,11 +45,8 @@ public class Program {
     static int HashCode(string str) {
         char[] val = str.ToCharArray();
         int h = 0;
-        unchecked {
-            for (int i = 0; i < str.Length; i++) {
-                h = 31 * h + val[i];
-            }
-        }
+        for (int i = 0; i < str.Length; i++)
+            h = 31 * h + val[i];
         return h;
     }
         
