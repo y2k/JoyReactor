@@ -28,6 +28,7 @@ public class Program {
             .Select(s => new { icon = s[0], name = s[1] })
             .GroupBy(s => HashCode(s.name))
             .Select(s => new { nameHash = s.Key, icon = int.Parse(s.First().icon) })
+            .OrderBy(s => s.nameHash)
             .ToList();
             
         File.WriteAllBytes("user.names.dat", info.SelectMany(s => BitConverter.GetBytes(s.nameHash)).ToArray());
