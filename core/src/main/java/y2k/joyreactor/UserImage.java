@@ -10,6 +10,10 @@ public class UserImage {
 
     private String userImage;
 
+    UserImage() {
+        userImage = APP_DEFAULT_USER_IMAGE;
+    }
+
     UserImage(Image userImage) {
         this.userImage = SITE_DEFAULT_USER_IMAGE.equals(userImage.url)
                 ? APP_DEFAULT_USER_IMAGE

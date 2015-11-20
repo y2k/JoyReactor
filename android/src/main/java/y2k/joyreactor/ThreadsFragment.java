@@ -17,6 +17,8 @@ import java.util.List;
  */
 public class ThreadsFragment extends Fragment {
 
+    private MessageThreadsPresenter presenter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_threads, container, false);
@@ -28,7 +30,7 @@ public class ThreadsFragment extends Fragment {
 
         View progress = view.findViewById(R.id.progress);
 
-        new MessageThreadsPresenter(new MessageThreadsPresenter.View() {
+        presenter = new MessageThreadsPresenter(new MessageThreadsPresenter.View() {
 
             @Override
             public void setIsBusy(boolean isBusy) {
@@ -44,7 +46,7 @@ public class ThreadsFragment extends Fragment {
         return view;
     }
 
-    static class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder> {
+    class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder> {
 
         private List<Message> threads;
 
@@ -63,7 +65,7 @@ public class ThreadsFragment extends Fragment {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             Message t = threads.get(position);
-            holder.userImage.setImage(new Image(t.userImage));
+            holder.userImage.setImage(t.getUserImage().toImage());
             holder.userName.setText(t.userName);
             holder.lastMessage.setText(t.text);
             holder.time.setText("" + t.date);
@@ -74,7 +76,7 @@ public class ThreadsFragment extends Fragment {
             return threads == null ? 0 : threads.size();
         }
 
-        static class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder {
 
             WebImageView userImage;
             TextView userName;
@@ -83,10 +85,14 @@ public class ThreadsFragment extends Fragment {
 
             public ViewHolder(View view) {
                 super(view);
+
                 userImage = (WebImageView) view.findViewById(R.id.userImage);
                 userName = (TextView) view.findViewById(R.id.userName);
                 lastMessage = (TextView) view.findViewById(R.id.lastMessage);
                 time = (TextView) view.findViewById(R.id.time);
+
+                view.findViewById(R.id.button).setOnClickListener(
+                        v -> presenter.selectThread(getAdapterPosition()));
             }
         }
     }

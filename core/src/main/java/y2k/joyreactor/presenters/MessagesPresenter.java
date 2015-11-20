@@ -26,12 +26,8 @@ public class MessagesPresenter extends Presenter {
 
         // FIXME:
         reloadMessages(getUsername());
-    }
 
-    @Override
-    public void activate() {
-        super.activate();
-        Messenger.getInstance().register(this,
+        getMessages().add(
                 m -> reloadMessages(m.thread.userName),
                 MessageThreadsPresenter.ThreadSelectedMessage.class);
     }
