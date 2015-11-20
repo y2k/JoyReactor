@@ -1,7 +1,8 @@
 package y2k.joyreactor;
 
 import rx.Observable;
-import y2k.joyreactor.requests.MessageRequest;
+import y2k.joyreactor.repository.MessageForUser;
+import y2k.joyreactor.repository.Repository;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -15,9 +16,11 @@ public class Message implements Serializable {
     public String text;
     public Date date;
     public boolean isMine;
-    public String userName;
 
-    public static Observable<List<Message>> request(String name) {
-        return new MessageRequest().request(name);
+    public String userName;
+    public String userImage;
+
+    public UserImage getUserImage() {
+        return new UserImage(new Image(userImage));
     }
 }

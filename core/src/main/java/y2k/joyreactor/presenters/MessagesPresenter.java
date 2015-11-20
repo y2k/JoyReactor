@@ -2,6 +2,8 @@ package y2k.joyreactor.presenters;
 
 import y2k.joyreactor.Message;
 import y2k.joyreactor.common.Messenger;
+import y2k.joyreactor.repository.MessageForUser;
+import y2k.joyreactor.repository.Repository;
 import y2k.joyreactor.requests.SendMessageRequest;
 
 import java.util.List;
@@ -12,9 +14,15 @@ import java.util.List;
 public class MessagesPresenter extends Presenter {
 
     private View view;
+    private Repository<Message> repository;
 
     public MessagesPresenter(View view) {
+        this(view, new Repository<>(Message.class));
+    }
+
+    public MessagesPresenter(View view, Repository<Message> repository) {
         this.view = view;
+        this.repository = repository;
 
         // FIXME:
         reloadMessages(getUsername());
@@ -37,7 +45,8 @@ public class MessagesPresenter extends Presenter {
 
     private void reloadMessages(String username) {
         view.setIdBusy(true);
-        Message.request(username)
+        repository
+                .queryAsync(new MessageForUser(username))
                 .subscribe((messages) -> {
                     view.updateMessages(messages);
                     view.setIdBusy(false);

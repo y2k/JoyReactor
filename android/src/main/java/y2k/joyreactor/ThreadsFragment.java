@@ -36,7 +36,7 @@ public class ThreadsFragment extends Fragment {
             }
 
             @Override
-            public void reloadData(List<MessageThread> threads) {
+            public void reloadData(List<Message> threads) {
                 adapter.updateData(threads);
             }
         });
@@ -46,9 +46,9 @@ public class ThreadsFragment extends Fragment {
 
     static class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder> {
 
-        private List<MessageThread> threads;
+        private List<Message> threads;
 
-        public void updateData(List<MessageThread> threads) {
+        public void updateData(List<Message> threads) {
             this.threads = threads;
             notifyDataSetChanged();
         }
@@ -62,10 +62,10 @@ public class ThreadsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            MessageThread t = threads.get(position);
+            Message t = threads.get(position);
             holder.userImage.setImage(new Image(t.userImage));
             holder.userName.setText(t.userName);
-            holder.lastMessage.setText(t.lastMessage);
+            holder.lastMessage.setText(t.text);
             holder.time.setText("" + t.date);
         }
 

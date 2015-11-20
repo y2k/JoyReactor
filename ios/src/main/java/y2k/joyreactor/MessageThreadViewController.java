@@ -15,7 +15,7 @@ import java.util.List;
 public class MessageThreadViewController extends UIViewController implements MessageThreadsPresenter.View {
 
     UITableView list;
-    List<MessageThread> threads;
+    List<Message> threads;
 
     @Override
     public void viewDidLoad() {
@@ -30,8 +30,8 @@ public class MessageThreadViewController extends UIViewController implements Mes
             @Override
             public UITableViewCell getCellForRow(UITableView tableView, NSIndexPath indexPath) {
                 UITableViewCell cell = tableView.dequeueReusableCell("Thread");
-                MessageThread thread = threads.get(indexPath.getRow());
-                cell.getTextLabel().setText(thread.lastMessage);
+                Message thread = threads.get(indexPath.getRow());
+                cell.getTextLabel().setText(thread.text);
                 return cell;
             }
         });
@@ -53,7 +53,7 @@ public class MessageThreadViewController extends UIViewController implements Mes
     }
 
     @Override
-    public void reloadData(List<MessageThread> threads) {
+    public void reloadData(List<Message> threads) {
         this.threads = threads;
         list.reloadData();
     }

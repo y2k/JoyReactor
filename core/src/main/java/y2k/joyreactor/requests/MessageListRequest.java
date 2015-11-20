@@ -1,10 +1,9 @@
 package y2k.joyreactor.requests;
 
 import org.jsoup.nodes.Document;
-import rx.Observable;
+import org.jsoup.nodes.Element;
 import y2k.joyreactor.Message;
-import y2k.joyreactor.MessageThread;
-import y2k.joyreactor.common.ObservableUtils;
+import y2k.joyreactor.http.HttpClient;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,53 +15,35 @@ import java.util.List;
 public class MessageListRequest {
 
     public List<Message> getMessages() {
-        return null;
+        return messages;
     }
 
     public String getNextPage() {
-        return null;
+        return nextPage;
     }
 
-    public Observable async(String page) {
-        return ObservableUtils.create(() -> {
-            List<MessageThread> threads = new ArrayList<>();
-            new MessagePageIterator()
-                    .observable()
-                    .flatMap(s -> new Parser(s).parse())
-                    .filter(s -> !alreadyAdded(threads, s.userName))
-                    .forEach(threads::add);
-        });
-    }
+    private List<Message> messages = new ArrayList<>();
+    private String nextPage;
 
-    private boolean alreadyAdded(List<MessageThread> threads, String name) {
-        for (MessageThread t : threads)
-            if (t.userName.equals(name)) return true;
-        return false;
-    }
+    public void execute(String page) throws Exception {
+        Document document = HttpClient.getInstance().getDocument(getUrl(page));
 
-    public void execute() {
-        throw new UnsupportedOperationException();
-    }
-
-    private static class Parser {
-
-        private Document document;
-
-        Parser(Document document) {
-            this.document = document;
+        for (Element s : document.select("div.messages_wr > div.article")) {
+            Message m = new Message();
+            m.userName = s.select("div.mess_from > a").text();
+            m.userImage = new UserImageRequest(m.userName).execute();
+            m.text = s.select("div.mess_text").text();
+            m.date = new Date(1000 * Long.parseLong(s.select("span[data-time]").attr("data-time")));
+            messages.add(m);
         }
 
-        Observable<MessageThread> parse() {
-            return Observable
-                    .from(document.select("div.messages_wr > div.article"))
-                    .map(s -> {
-                        MessageThread thread = new MessageThread();
-                        thread.userName = s.select("div.mess_from > a").text();
-                        thread.userImage = new UserImageRequest(thread.userName).execute();
-                        thread.lastMessage = s.select("div.mess_text").text();
-                        thread.date = new Date(1000 * Long.parseLong(s.select("span[data-time]").attr("data-time")));
-                        return thread;
-                    });
-        }
+        Element nextNode = document.select("a.next").first();
+        nextPage = nextNode == null ? null : nextNode.absUrl("href");
+    }
+
+    private String getUrl(String page) {
+        return page == null
+                ? "http://joyreactor.cc/private/list"
+                : "http://joyreactor.cc/private/list/" + page;
     }
 }
