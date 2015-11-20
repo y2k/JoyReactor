@@ -40,9 +40,9 @@ public class App extends Application {
                 String path = name + "." + ext;
                 InputStream in = null;
                 try {
-                    byte[] result = new byte[(int) getAssets().openFd(path).getLength()];
                     in = getAssets().open(path);
-                    in.read(result);
+                    byte[] result = new byte[in.available()];
+                    int count = in.read(result);
                     return result;
                 } catch (IOException e) {
                     throw new RuntimeException(e);

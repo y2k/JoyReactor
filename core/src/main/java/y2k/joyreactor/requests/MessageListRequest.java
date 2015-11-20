@@ -41,5 +41,12 @@ public class MessageListRequest {
 
         Element nextNode = document.select("a.next").first();
         nextPage = nextNode == null ? null : nextNode.absUrl("href");
+
+        loadUserImages();
+    }
+
+    private void loadUserImages() {
+        for (Message m : messages)
+            m.userImage = new UserImageRequest(m.userName).execute();
     }
 }
