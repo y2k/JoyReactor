@@ -26,7 +26,8 @@ public class MessageListRequest {
     private String nextPage;
 
     public void execute(String page) throws Exception {
-        Document document = HttpClient.getInstance().getDocument(getUrl(page));
+        String url = page != null ? page : "http://joyreactor.cc/private/list";
+        Document document = HttpClient.getInstance().getDocument(url);
 
         for (Element s : document.select("div.messages_wr > div.article")) {
             Message m = new Message();
@@ -34,16 +35,11 @@ public class MessageListRequest {
             m.userImage = new UserImageRequest(m.userName).execute();
             m.text = s.select("div.mess_text").text();
             m.date = new Date(1000 * Long.parseLong(s.select("span[data-time]").attr("data-time")));
+            m.isMine = s.select("div.mess_reply").isEmpty();
             messages.add(m);
         }
 
         Element nextNode = document.select("a.next").first();
         nextPage = nextNode == null ? null : nextNode.absUrl("href");
-    }
-
-    private String getUrl(String page) {
-        return page == null
-                ? "http://joyreactor.cc/private/list"
-                : "http://joyreactor.cc/private/list/" + page;
     }
 }

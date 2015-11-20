@@ -29,10 +29,14 @@ public class Repository<T> {
         file.getParentFile().mkdirs();
     }
 
-    public Observable<Void> insertAll(List<T> newRows) {
+    public void insertAll(List<T> list) {
+        insertAllAsync(list).toBlocking().single();
+    }
+
+    public Observable<Void> insertAllAsync(List<T> newRows) {
         return queryAsync()
                 .map(rows -> {
-                    ArrayList<T> result = new ArrayList<>(rows);
+                    List<T> result = new ArrayList<>(rows);
                     result.addAll(newRows);
                     return result;
                 }).flatMap(this::replaceAllAsync);
@@ -60,27 +64,30 @@ public class Repository<T> {
     public Observable<List<T>> queryAsync(Query query) {
         return query
                 .initialize()
-                .flatMap(s -> ObservableUtils.create(() -> {
-                    if (!file.exists())
-                        return Collections.emptyList();
+                .flatMap(s -> ObservableUtils.create(() -> innerQuery(query), sSingleAccessExecutor));
+    }
 
-                    try {
-                        ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file));
-                        List<T> buffer = new ArrayList<>();
-                        try {
-                            while (true) {
-                                T row = (T) stream.readObject();
-                                if (query.compare(row)) buffer.add(row);
-                            }
-                        } catch (EOFException e) {
-                        } finally {
-                            IoUtils.close(stream);
-                        }
-                        return buffer;
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }, sSingleAccessExecutor));
+    @SuppressWarnings("unchecked")
+    private List<T> innerQuery(Query query) {
+        if (!file.exists())
+            return Collections.emptyList();
+
+        try {
+            ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file));
+            List<T> buffer = new ArrayList<>();
+            try {
+                while (true) {
+                    T row = (T) stream.readObject();
+                    if (query.compare(row)) buffer.add(row);
+                }
+            } catch (EOFException e) {
+            } finally {
+                IoUtils.close(stream);
+            }
+            return buffer;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Observable<Void> replaceAllAsync(List<T> rows) {

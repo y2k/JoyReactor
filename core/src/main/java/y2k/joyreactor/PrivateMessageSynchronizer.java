@@ -35,8 +35,6 @@ public class PrivateMessageSynchronizer {
             while (true) {
                 request.execute(request.getNextPage());
 
-//                System.out.println("SAVE | " + request.getMessages() + " | " + request.getNextPage());
-
                 updateLastMessageDates();
                 boolean needLoadNext = isNeedLoadNext();
 
@@ -78,10 +76,8 @@ public class PrivateMessageSynchronizer {
                 if (isNotInRepository(m))
                     newMessages.add(m);
 
-            if (!newMessages.isEmpty()) {
-                System.out.println("INSERT | " + newMessages);
+            if (!newMessages.isEmpty())
                 repository.insertAll(newMessages);
-            }
         }
 
         private boolean isNotInRepository(Message m) {

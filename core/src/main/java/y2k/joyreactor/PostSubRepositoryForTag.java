@@ -33,13 +33,13 @@ public class PostSubRepositoryForTag {
 
     public Observable<Void> replaceAllAsync(List<Post> posts) {
         return clearAsync()
-                .flatMap(s -> postRepository.insertAll(posts))
+                .flatMap(s -> postRepository.insertAllAsync(posts))
                 .map(s -> {
                     List<TagPost> links = new ArrayList<>();
                     for (Post p : posts)
                         links.add(new TagPost(tag.getId(), p.id));
                     return links;
-                }).flatMap(tagPostRepository::insertAll);
+                }).flatMap(tagPostRepository::insertAllAsync);
     }
 
     public static class TagPost implements Serializable {

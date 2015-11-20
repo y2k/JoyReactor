@@ -26,9 +26,6 @@ public class MessageThreadsPresenter {
 
         view.setIsBusy(true);
         get().subscribe(threads -> {
-
-            System.out.println("PRESENTER | " + threads);
-
             view.setIsBusy(false);
             view.reloadData(threads);
         }, Throwable::printStackTrace);
