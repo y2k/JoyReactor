@@ -42,6 +42,11 @@ public class Repository<T> {
         return queryAsync(query).flatMap(this::replaceAllAsync);
     }
 
+    public T queryFirst(Query query) {
+        List<T> list = queryAsync(query).toBlocking().first();
+        return list.isEmpty() ? null : list.get(list.size() - 1);
+    }
+
     public Observable<List<T>> queryAsync() {
         return queryAsync(new Query() {
 

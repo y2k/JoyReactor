@@ -1,7 +1,10 @@
 package y2k.joyreactor.presenters;
 
+import rx.Observable;
 import y2k.joyreactor.MessageThread;
+import y2k.joyreactor.PrivateMessageSynchronizer;
 import y2k.joyreactor.common.Messenger;
+import y2k.joyreactor.repository.Repository;
 
 import java.util.List;
 
@@ -10,15 +13,29 @@ import java.util.List;
  */
 public class MessageThreadsPresenter {
 
+    private Repository<MessageThread> repository;
+    private PrivateMessageSynchronizer fetcher;
+
     private List<MessageThread> threads;
 
     public MessageThreadsPresenter(View view) {
+        this(view, new Repository<>(MessageThread.class), new PrivateMessageSynchronizer());
+    }
+
+    public MessageThreadsPresenter(View view, Repository<MessageThread> repository, PrivateMessageSynchronizer fetcher) {
+        this.repository = repository;
+        this.fetcher = fetcher;
+
         view.setIsBusy(true);
-        MessageThread.request()
-                .subscribe(threads -> {
-                    view.setIsBusy(false);
-                    view.reloadData(threads);
-                }, Throwable::printStackTrace);
+        request().subscribe(threads -> {
+            view.setIsBusy(false);
+            view.reloadData(threads);
+        }, Throwable::printStackTrace);
+    }
+
+    public Observable<List<MessageThread>> request() {
+        return repository.queryAsync()
+                .mergeWith(fetcher.async().flatMap(s -> repository.queryAsync()));
     }
 
     public void selectThread(int index) {
