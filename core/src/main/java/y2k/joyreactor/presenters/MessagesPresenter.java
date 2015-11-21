@@ -1,7 +1,6 @@
 package y2k.joyreactor.presenters;
 
 import y2k.joyreactor.Message;
-import y2k.joyreactor.common.Messenger;
 import y2k.joyreactor.repository.MessageForUser;
 import y2k.joyreactor.repository.Repository;
 import y2k.joyreactor.requests.SendMessageRequest;
@@ -33,19 +32,19 @@ public class MessagesPresenter extends Presenter {
     }
 
     public void reply(String message) {
-        view.setIdBusy(true);
+        view.setIsBusy(true);
         new SendMessageRequest(getUsername())
                 .request(message)
                 .subscribe(s -> reloadMessages(getUsername()), Throwable::printStackTrace);
     }
 
     private void reloadMessages(String username) {
-        view.setIdBusy(true);
+        view.setIsBusy(true);
         repository
                 .queryAsync(new MessageForUser(username))
                 .subscribe((messages) -> {
                     view.updateMessages(messages);
-                    view.setIdBusy(false);
+                    view.setIsBusy(false);
                 }, Throwable::printStackTrace);
     }
 
@@ -57,6 +56,6 @@ public class MessagesPresenter extends Presenter {
 
         void updateMessages(List<Message> messages);
 
-        void setIdBusy(boolean isBusy);
+        void setIsBusy(boolean isBusy);
     }
 }

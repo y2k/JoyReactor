@@ -61,7 +61,7 @@ public class MessageViewController extends UIViewController implements MessagesP
     }
 
     @Override
-    public void setIdBusy(boolean isBusy) {
+    public void setIsBusy(boolean isBusy) {
         // TODO:
         getNavigationItem().setHidesBackButton(isBusy, true);
     }

@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name" translatable="false">JoyReactor</string>
     <string name="add_tag">Add tag</string>
     <string name="profile">Profile</string>
     <string name="settings">Settings</string>
@@ -23,14 +22,14 @@
     <string name="rating">Rating:</string>
     <string name="star_progress">New star progress:</string>
     <string name="login_error">Can\'t login. Try later.</string>
-    <string name="your_new_message_here">Your new message here…</string>
+    <string name="your_new_message_here">Напишите здесь свое сообщение…</string>
     <string name="you_are_not_authorized">You are not authorized</string>
     <string name="send_feedback">Send feedback</string>
     <string name="updates_available">Updates available</string>
     <string name="open">Open</string>
     <string name="write_feedback">Write feedback</string>
     <string name="error_email_client_not_installed">You don\'t have any email client installed.</string>
-    <string name="unknow_error">Error. Try again later.</string>
+    <string name="unknow_error">Произошла ошибка. Пожалуйста, попробуйте позже.</string>
     <string name="authorization">Authorization</string>
     <string name="get_profile">Get profile</string>
     <string name="write_comment">Write comment</string>
@@ -56,6 +55,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_login">Login</string>
-    <string name="unknown_error_occurred">Unknown error occurred</string>
     <string name="messages">Messages</string>
+    <string name="unknown_error_occurred">Неизвестная ошибка</string>
 </resources>

@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import org.ocpsoft.prettytime.PrettyTime;
 import y2k.joyreactor.presenters.MessagesPresenter;
@@ -18,15 +19,20 @@ import java.util.List;
  */
 public class MessageFragment extends Fragment implements MessagesPresenter.View {
 
-    private MyAdapter adapter;
+    private MessageAdapter adapter;
     private MessagesPresenter presenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_messages, container, false);
+
         RecyclerView list = (RecyclerView) view.findViewById(R.id.list);
         list.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true));
-        list.setAdapter(adapter = new MyAdapter());
+        list.setAdapter(adapter = new MessageAdapter());
+
+        EditText newMessage = (EditText) view.findViewById(R.id.newMessage);
+        view.findViewById(R.id.createMessage)
+                .setOnClickListener(v -> presenter.reply("" + newMessage.getText()));
 
         presenter = new MessagesPresenter(this);
         return view;
@@ -50,11 +56,11 @@ public class MessageFragment extends Fragment implements MessagesPresenter.View 
     }
 
     @Override
-    public void setIdBusy(boolean isBusy) {
+    public void setIsBusy(boolean isBusy) {
         // TODO:
     }
 
-    static class MyAdapter extends RecyclerView.Adapter<ViewHolderImpl> {
+    static class MessageAdapter extends RecyclerView.Adapter<ViewHolderImpl> {
 
         private List<Message> items;
 

@@ -6,6 +6,34 @@
         android:layout_height="match_parent">
     <android.support.v7.widget.RecyclerView
             android:id="@+id/list"
+            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="0dp"/>
+    <LinearLayout
+            android:id="@+id/inputPanel"
+            android:background="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <EditText
+                android:id="@+id/newMessage"
+                android:paddingLeft="20dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingRight="8dp"
+                android:background="@null"
+                android:hint="@string/your_new_message_here"
+                android:textColorHint="#bdbdbd"
+                android:textColor="@color/text_secondary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="48dp"
+                android:inputType="textMultiLine"/>
+        <ImageButton
+                android:id="@+id/createMessage"
+                android:src="@drawable/ic_send_grey600_24dp"
+                android:background="?android:listChoiceBackgroundIndicator"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"/>
+    </LinearLayout>
 </LinearLayout>
