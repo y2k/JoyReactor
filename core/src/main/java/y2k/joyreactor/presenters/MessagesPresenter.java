@@ -1,7 +1,7 @@
 package y2k.joyreactor.presenters;
 
 import y2k.joyreactor.Message;
-import y2k.joyreactor.repository.MessageForUser;
+import y2k.joyreactor.repository.MessageForUserQuery;
 import y2k.joyreactor.repository.Repository;
 import y2k.joyreactor.requests.SendMessageRequest;
 
@@ -41,7 +41,7 @@ public class MessagesPresenter extends Presenter {
     private void reloadMessages(String username) {
         view.setIsBusy(true);
         repository
-                .queryAsync(new MessageForUser(username))
+                .queryAsync(new MessageForUserQuery(username))
                 .subscribe((messages) -> {
                     view.updateMessages(messages);
                     view.setIsBusy(false);

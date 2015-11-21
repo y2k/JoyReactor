@@ -61,10 +61,15 @@ public class Repository<T> {
         });
     }
 
+    @SuppressWarnings("unchecked")
     public Observable<List<T>> queryAsync(Query query) {
         return query
                 .initialize()
-                .flatMap(s -> ObservableUtils.create(() -> innerQuery(query), sSingleAccessExecutor));
+                .flatMap(s -> ObservableUtils.create(() -> innerQuery(query), sSingleAccessExecutor))
+                .map(s -> {
+                    query.sort((List) s);
+                    return s;
+                });
     }
 
     @SuppressWarnings("unchecked")
@@ -115,6 +120,9 @@ public class Repository<T> {
 
         public Observable<Void> initialize() {
             return Observable.just(null);
+        }
+
+        public void sort(List<TRow> items) {
         }
     }
 }
