@@ -1,6 +1,7 @@
-package y2k.joyreactor;
+package y2k.joyreactor.synchronizers;
 
 import rx.Observable;
+import y2k.joyreactor.Message;
 import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.repository.MessageForDateQuery;
 import y2k.joyreactor.repository.Repository;

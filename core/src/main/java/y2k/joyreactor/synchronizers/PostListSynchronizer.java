@@ -1,6 +1,8 @@
-package y2k.joyreactor;
+package y2k.joyreactor.synchronizers;
 
 import rx.Observable;
+import y2k.joyreactor.PostSubRepositoryForTag;
+import y2k.joyreactor.Tag;
 import y2k.joyreactor.requests.PostsForTagRequest;
 
 /**

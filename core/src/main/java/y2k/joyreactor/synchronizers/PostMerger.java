@@ -1,6 +1,8 @@
-package y2k.joyreactor;
+package y2k.joyreactor.synchronizers;
 
 import rx.Observable;
+import y2k.joyreactor.Post;
+import y2k.joyreactor.PostSubRepositoryForTag;
 
 import java.util.ArrayList;
 import java.util.Iterator;

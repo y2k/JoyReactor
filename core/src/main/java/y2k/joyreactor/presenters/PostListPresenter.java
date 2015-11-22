@@ -3,6 +3,7 @@ package y2k.joyreactor.presenters;
 import rx.Observable;
 import y2k.joyreactor.*;
 import y2k.joyreactor.common.Messages;
+import y2k.joyreactor.synchronizers.PostListSynchronizer;
 
 import java.util.List;
 

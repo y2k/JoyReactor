@@ -1,9 +1,12 @@
-package y2k.joyreactor;
+package y2k.joyreactor.synchronizers;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
 import rx.Observable;
+import y2k.joyreactor.Post;
+import y2k.joyreactor.PostSubRepositoryForTag;
+import y2k.joyreactor.Tag;
 import y2k.joyreactor.common.PostGenerator;
 import y2k.joyreactor.requests.PostsForTagRequest;
 

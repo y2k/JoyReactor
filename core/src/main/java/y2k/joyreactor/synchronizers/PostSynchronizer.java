@@ -1,6 +1,8 @@
-package y2k.joyreactor;
+package y2k.joyreactor.synchronizers;
 
 import rx.Observable;
+import y2k.joyreactor.Comment;
+import y2k.joyreactor.Post;
 import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.repository.CommentsForPostQuery;
 import y2k.joyreactor.repository.Repository;
