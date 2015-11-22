@@ -28,7 +28,7 @@ public class PostGenerator {
 
     private static Post makePost(String id) {
         Post p = new Post();
-        p.id = id;
+        p.serverId = id;
         return p;
     }
 }

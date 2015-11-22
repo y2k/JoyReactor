@@ -2,6 +2,7 @@ package y2k.joyreactor.repository;
 
 import rx.Observable;
 import y2k.joyreactor.Platform;
+import y2k.joyreactor.Post;
 import y2k.joyreactor.common.IoUtils;
 import y2k.joyreactor.common.ObservableUtils;
 
@@ -9,6 +10,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -42,27 +44,35 @@ public class Repository<T> {
                 }).flatMap(this::replaceAllAsync);
     }
 
-    public Observable<Void> deleteWhere(Query query) {
+    public void deleteWhere(Query<T> query) {
+        deleteWhereAsync(query).toBlocking().single();
+    }
+
+    public Observable<Void> deleteWhereAsync(Query<T> query) {
         return queryAsync(query).flatMap(this::replaceAllAsync);
     }
 
-    public T queryFirst(Query query) {
+    public Observable<T> queryFirstAsync(Query query) {
+        return ObservableUtils.create(() -> queryFirst(query));
+    }
+
+    public T queryFirst(Query<T> query) {
         List<T> list = queryAsync(query).toBlocking().first();
         return list.isEmpty() ? null : list.get(list.size() - 1);
     }
 
     public Observable<List<T>> queryAsync() {
-        return queryAsync(new Query() {
+        return queryAsync(new Query<T>() {
 
             @Override
-            public boolean compare(Object row) {
+            public boolean compare(T row) {
                 return true;
             }
         });
     }
 
     @SuppressWarnings("unchecked")
-    public Observable<List<T>> queryAsync(Query query) {
+    public Observable<List<T>> queryAsync(Query<T> query) {
         return query
                 .initialize()
                 .flatMap(s -> ObservableUtils.create(() -> innerQuery(query), sSingleAccessExecutor))
@@ -112,6 +122,10 @@ public class Repository<T> {
                 throw new RuntimeException(e);
             }
         }, sSingleAccessExecutor);
+    }
+
+    public void insertOrUpdate(T row) {
+        throw new UnsupportedOperationException(); // FIXME:
     }
 
     public static abstract class Query<TRow> {

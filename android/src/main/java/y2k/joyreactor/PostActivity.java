@@ -25,8 +25,8 @@ public class PostActivity extends AppCompatActivity {
 
         RecyclerView list = (RecyclerView) findViewById(R.id.list);
         list.setLayoutManager(new LinearLayoutManager(this));
-        MyAdapter adapter;
-        list.setAdapter(adapter = new MyAdapter());
+        CommentAdapter adapter;
+        list.setAdapter(adapter = new CommentAdapter());
 
         new PostPresenter(new PostPresenter.View() {
 
@@ -52,7 +52,16 @@ public class PostActivity extends AppCompatActivity {
         });
     }
 
-    static class MyAdapter extends RecyclerView.Adapter<ViewHolder> {
+    static abstract class ViewHolder extends RecyclerView.ViewHolder {
+
+        public ViewHolder(View view) {
+            super(view);
+        }
+
+        public abstract void bind(int position);
+    }
+
+    static class CommentAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         private List<Comment> comments;
         private Post post;
@@ -102,12 +111,16 @@ public class PostActivity extends AppCompatActivity {
 
         class CommentViewHolder extends ViewHolder {
 
+            TextView rating;
             TextView text;
+            WebImageView avatar;
 
             public CommentViewHolder(ViewGroup parent) {
                 super(LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_comment, parent, false));
+                rating = (TextView) itemView.findViewById(R.id.rating);
                 text = (TextView) itemView.findViewById(R.id.text);
+                avatar = (WebImageView) itemView.findViewById(R.id.avatar);
             }
 
             @Override
@@ -115,16 +128,9 @@ public class PostActivity extends AppCompatActivity {
                 // TODO
                 Comment c = comments.get(position);
                 text.setText(c.text);
+                avatar.setImage(c.getUserImage().toImage());
+                rating.setText("" + c.rating);
             }
         }
-    }
-
-    static abstract class ViewHolder extends RecyclerView.ViewHolder {
-
-        public ViewHolder(View view) {
-            super(view);
-        }
-
-        public abstract void bind(int position);
     }
 }

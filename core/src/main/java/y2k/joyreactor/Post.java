@@ -8,6 +8,8 @@ import java.util.Date;
  */
 public class Post implements Serializable {
 
+    public int id;
+
     public String title;
     public Image image;
 
@@ -15,7 +17,7 @@ public class Post implements Serializable {
     public String userName;
 
     public Date created;
-    public String id;
+    public String serverId;
 
     public int commentCount;
     public float rating;

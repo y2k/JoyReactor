@@ -45,7 +45,7 @@ public class PostsForTagRequest {
         if (next != null) nextPageId = extractNumberFromEnd(next.attr("href"));
     }
 
-    private Post newPost(Element element) {
+    static Post newPost(Element element) {
         Post result = new Post();
         result.title = element.select("div.post_content").text();
 
@@ -55,7 +55,7 @@ public class PostsForTagRequest {
 
         result.userName = element.select("div.uhead_nick > a").text();
         result.userImage = new Image(element.select("div.uhead_nick > img").attr("src"));
-        result.id = extractNumberFromEnd(element.id());
+        result.serverId = extractNumberFromEnd(element.id());
 
         PostParser parser = new PostParser(element);
         result.created = parser.getCreated();
@@ -65,7 +65,7 @@ public class PostsForTagRequest {
         return result;
     }
 
-    private String extractNumberFromEnd(String text) {
+    private static String extractNumberFromEnd(String text) {
         Matcher m = Pattern.compile("\\d+$").matcher(text);
         if (!m.find()) throw new IllegalStateException();
         return m.group();
@@ -156,7 +156,7 @@ public class PostsForTagRequest {
         }
     }
 
-    private class VideoThumbnailParser {
+    static class VideoThumbnailParser {
 
         private Element element;
 

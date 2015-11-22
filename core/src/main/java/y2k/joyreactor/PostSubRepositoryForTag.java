@@ -23,8 +23,8 @@ public class PostSubRepositoryForTag {
 
     public Observable<Void> clearAsync() {
         return postRepository
-                .deleteWhere(new y2k.joyreactor.repository.PostsForTagQuery(tag))
-                .flatMap(s -> tagPostRepository.deleteWhere(new y2k.joyreactor.repository.TagPostsForTagQuery(tag)));
+                .deleteWhereAsync(new y2k.joyreactor.repository.PostsForTagQuery(tag))
+                .flatMap(s -> tagPostRepository.deleteWhereAsync(new y2k.joyreactor.repository.TagPostsForTagQuery(tag)));
     }
 
     public Observable<List<Post>> queryAsync() {
@@ -37,7 +37,7 @@ public class PostSubRepositoryForTag {
                 .map(s -> {
                     List<TagPost> links = new ArrayList<>();
                     for (Post p : posts)
-                        links.add(new TagPost(tag.getId(), p.id));
+                        links.add(new TagPost(tag.getId(), p.serverId));
                     return links;
                 }).flatMap(tagPostRepository::insertAllAsync);
     }

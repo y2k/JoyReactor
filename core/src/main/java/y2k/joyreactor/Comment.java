@@ -5,6 +5,8 @@ package y2k.joyreactor;
  */
 public class Comment {
 
+    public int postId;
+
     public String text;
     public Image userAvatar;
 
@@ -13,4 +15,8 @@ public class Comment {
 
     public int childCount;
     public float rating;
+
+    public UserImage getUserImage() {
+        return new UserImage(userAvatar);
+    }
 }

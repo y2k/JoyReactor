@@ -2,12 +2,10 @@ package y2k.joyreactor.requests;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import rx.Observable;
 import y2k.joyreactor.Comment;
 import y2k.joyreactor.Image;
-import y2k.joyreactor.common.ObservableUtils;
-import y2k.joyreactor.http.HttpClient;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,27 +15,15 @@ import java.util.regex.Pattern;
 /**
  * Created by y2k on 9/29/15.
  */
-public class CommentListRequest {
+class PostCommentsRequest {
 
-    private String postId;
-    private int commentId;
+    private List<Comment> comments;
 
-    public CommentListRequest(String postId, int commentId) {
-        this.postId = postId;
-        this.commentId = commentId;
+    public List<Comment> getComments() {
+        return comments;
     }
 
-    public Observable<List<Comment>> request() {
-        return ObservableUtils.create(() -> Observable
-                .from(getAllComments())
-                .filter(s -> s.parentId == commentId)
-                .toSortedList((a, b) -> (int) (b.rating - a.rating))
-                .toBlocking()
-                .single());
-    }
-
-    private List<Comment> getAllComments() throws IOException {
-        Document doc = HttpClient.getInstance().getDocument("http://anime.reactor.cc/post/" + postId);
+    public void request(Document doc) throws IOException {
         List<Comment> result = new ArrayList<>();
         for (Element node : doc.select("div.comment")) {
             Comment comment = new Comment();
@@ -52,8 +38,9 @@ public class CommentListRequest {
 
             result.add(comment);
         }
+
         ChildrenCounter.compute(result);
-        return result;
+        comments = result;
     }
 
     private static class NumberExtractor {

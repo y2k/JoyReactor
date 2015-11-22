@@ -2,7 +2,10 @@ package y2k.joyreactor.http;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import rx.Observable;
 import y2k.joyreactor.common.IoUtils;
+import y2k.joyreactor.common.ObjectUtils;
+import y2k.joyreactor.common.ObservableUtils;
 
 import java.io.*;
 import java.net.*;
@@ -58,6 +61,10 @@ public class HttpClient {
         } finally {
             if (stream != null) stream.close();
         }
+    }
+
+    public Observable<Document> getDocumentAsync(String url) {
+        return ObservableUtils.create(() -> getDocument(url));
     }
 
     public Document getDocument(String url) throws IOException {

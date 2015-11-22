@@ -30,7 +30,7 @@ class PostMerger {
                     for (Iterator<Post> iterator = merged.iterator(); iterator.hasNext(); ) {
                         Post element = iterator.next();
                         for (Post s : newPosts)
-                            if (s.id.equals(element.id)) {
+                            if (s.serverId.equals(element.serverId)) {
                                 iterator.remove();
                                 break;
                             }
@@ -50,7 +50,7 @@ class PostMerger {
                     if (posts.size() == 0) return false;
                     if (newPosts.size() > posts.size()) return true;
                     for (int i = 0; i < newPosts.size(); i++)
-                        if (!posts.get(i).id.equals(newPosts.get(i).id)) return true;
+                        if (!posts.get(i).serverId.equals(newPosts.get(i).serverId)) return true;
                     return false;
                 });
     }
@@ -74,12 +74,12 @@ class PostMerger {
 
     private void remove(List<Post> list, Post item) {
         for (Iterator<Post> iterator = list.iterator(); iterator.hasNext(); )
-            if (iterator.next().id.equals(item.id)) iterator.remove();
+            if (iterator.next().serverId.equals(item.serverId)) iterator.remove();
     }
 
     private void addIfNew(List<Post> list, Post item) {
         for (Post s : list)
-            if (s.id.equals(item.id)) return;
+            if (s.serverId.equals(item.serverId)) return;
         list.add(item);
     }
 

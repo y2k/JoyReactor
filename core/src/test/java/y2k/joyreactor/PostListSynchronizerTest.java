@@ -120,7 +120,7 @@ public class PostListSynchronizerTest {
             List<Post> actual = (List<Post>) argument;
             if (expected.size() != actual.size()) return false;
             for (int i = 0; i < actual.size(); i++)
-                if (!Objects.equals(expected.get(i).id, actual.get(i).id)) return false;
+                if (!Objects.equals(expected.get(i).serverId, actual.get(i).serverId)) return false;
             return true;
         }
     }

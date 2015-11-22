@@ -11,6 +11,8 @@ import y2k.joyreactor.*;
  */
 public class AndroidNavigation extends Navigation {
 
+    static Post sPostArgument; // FIXME:
+    static String sPostIdArgument = "2294127"; // FIXME:
     Activity currentActivity;
 
     public AndroidNavigation(Application app) {
@@ -41,12 +43,24 @@ public class AndroidNavigation extends Navigation {
 
     @Override
     public void openPost(Post post) {
-        // TODO:
+        sPostArgument = post;
+        currentActivity.startActivity(new Intent(currentActivity, PostActivity.class));
     }
 
     @Override
     public Post getArgumentPost() {
-        return null;
+        return sPostArgument;
+    }
+
+    @Override
+    public void openPost(String postId) {
+        sPostIdArgument = postId;
+        currentActivity.startActivity(new Intent(currentActivity, PostActivity.class));
+    }
+
+    @Override
+    public String getArgumentPostId() {
+        return sPostIdArgument;
     }
 
     @Override
