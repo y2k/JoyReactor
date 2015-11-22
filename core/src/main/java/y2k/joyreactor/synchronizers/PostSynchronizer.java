@@ -5,6 +5,7 @@ import y2k.joyreactor.Comment;
 import y2k.joyreactor.Post;
 import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.repository.CommentsForPostQuery;
+import y2k.joyreactor.repository.PostByIdQuery;
 import y2k.joyreactor.repository.Repository;
 import y2k.joyreactor.requests.PostRequest;
 
@@ -25,7 +26,7 @@ public class PostSynchronizer {
             postRequest.request(postId);
 
             Post post = postRequest.getPost();
-            postRepository.insertOrUpdate(post);
+            postRepository.insertOrUpdate(new PostByIdQuery(post.serverId), post);
 
             List<Comment> comments = postRequest.getComments();
             for (Comment c : comments)

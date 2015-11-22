@@ -7,12 +7,14 @@ import y2k.joyreactor.Post;
  */
 public class PostByIdQuery extends Repository.Query<Post> {
 
+    private String postId;
+
     public PostByIdQuery(String postId) {
-        // TODO:
+        this.postId = postId;
     }
 
     @Override
     public boolean compare(Post post) {
-        return false;
+        return postId.equals(post.serverId);
     }
 }
