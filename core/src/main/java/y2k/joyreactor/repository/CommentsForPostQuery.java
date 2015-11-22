@@ -7,16 +7,22 @@ import y2k.joyreactor.Comment;
  */
 public class CommentsForPostQuery extends Repository.Query<Comment> {
 
+    private int postId;
+    private int parentCommentId;
+
     public CommentsForPostQuery(int postId) {
-        // FIXME:
+        this(postId, -1);
     }
 
     public CommentsForPostQuery(int postId, int parentCommentId) {
-        // FIXME:
+        this.postId = postId;
+        this.parentCommentId = parentCommentId;
     }
 
     @Override
     public boolean compare(Comment comment) {
-        return false;
+        if (parentCommentId >= 0 && comment.parentId != parentCommentId)
+            return false;
+        return comment.postId == postId;
     }
 }

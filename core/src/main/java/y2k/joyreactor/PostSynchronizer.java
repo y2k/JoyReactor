@@ -1,6 +1,5 @@
 package y2k.joyreactor;
 
-import org.jsoup.nodes.Document;
 import rx.Observable;
 import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.repository.CommentsForPostQuery;
@@ -32,11 +31,6 @@ public class PostSynchronizer {
 
             commentRepository.deleteWhere(new CommentsForPostQuery(post.id));
             commentRepository.insertAll(comments);
-
         });
-    }
-
-    private Observable<Post> parse(Document doc) {
-        return null;
     }
 }
