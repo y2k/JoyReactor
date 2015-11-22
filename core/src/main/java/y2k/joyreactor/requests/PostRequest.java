@@ -28,7 +28,7 @@ public class PostRequest {
     public void request(String postId) throws IOException {
         Document page = HttpClient.getInstance().getDocument(getPostUrl(postId));
 
-        Element postNode = page.select("div.post_content").first();
+        Element postNode = page.select("div.postContainer").first();
         post = PostsForTagRequest.newPost(postNode); // TODO:
 
         commentsRequest.request(page);
