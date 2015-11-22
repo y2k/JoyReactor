@@ -8,6 +8,7 @@ import y2k.joyreactor.common.ObservableUtils;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -99,8 +100,37 @@ public class Repository<T> {
 
     public void insertOrUpdate(Query<T> query, T row) throws Exception {
         executeSync(() -> {
-            // TODO:
+            query.initialize().toBlocking().single();
+
+            File file = null;
+            String[] fileNames = directory.list();
+            for (String name : fileNames) {
+                T old = readObject(new File(directory, name));
+                if (query.compare(old)) {
+                    file = new File(directory, name);
+                    break;
+                }
+            }
+
+            if (file == null) {
+                int rowID = 0;
+                for (String name : fileNames)
+                    rowID = Math.max(rowID, Integer.parseInt(name));
+
+                rowID++;
+                setRowID(row, rowID);
+                writeObject(new File(directory, "" + rowID), row);
+            } else {
+                file.delete();
+                setRowID(row, Integer.parseInt(file.getName()));
+                writeObject(file, row);
+            }
+            return null;
         });
+    }
+
+    private void setRowID(T row, int rowID) throws Exception {
+        row.getClass().getField("id").setInt(row, rowID);
     }
 
     @SuppressWarnings("unchecked")
@@ -122,7 +152,7 @@ public class Repository<T> {
         }
     }
 
-    private void executeSync(Runnable action) throws ExecutionException, InterruptedException {
+    private void executeSync(Callable<Void> action) throws ExecutionException, InterruptedException {
         sSingleAccessExecutor.submit(action).get();
     }
 
