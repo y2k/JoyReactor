@@ -7,7 +7,6 @@ import y2k.joyreactor.common.ObservableUtils;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -79,34 +78,22 @@ public class Repository<T> {
                 });
     }
 
-    @SuppressWarnings("unchecked")
-    private List<T> innerQuery(Query query) throws IOException, ClassNotFoundException {
-        ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file));
-        List<T> buffer = new ArrayList<>();
-        try {
-            while (true) {
-                T row = (T) stream.readObject();
-                if (query.compare(row)) buffer.add(row);
-            }
-        } catch (EOFException e) {
-        } finally {
-            IoUtils.close(stream);
+    private List<T> innerQuery(Query<T> query) throws IOException, ClassNotFoundException {
+        List<T> result = new ArrayList<>();
+        for (File f : directory.listFiles()) {
+            T row = readObject(f);
+            if (query.compare(row)) result.add(row);
         }
-        return buffer;
+        return result;
     }
 
     public Observable<Void> replaceAllAsync(List<T> rows) {
         return ObservableUtils.create(() -> {
-            if (rows.isEmpty()) {
-                file.delete();
-            } else {
-                ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(file));
-                try {
-                    for (T row : rows) stream.writeObject(row);
-                } finally {
-                    IoUtils.close(stream);
-                }
-            }
+            for (File f : directory.listFiles())
+                f.delete();
+
+            for (int i = 0; i < rows.size(); i++)
+                writeObject(new File(directory, "" + i), rows.get(i));
         }, sSingleAccessExecutor);
     }
 
@@ -114,6 +101,25 @@ public class Repository<T> {
         executeSync(() -> {
             // TODO:
         });
+    }
+
+    @SuppressWarnings("unchecked")
+    private T readObject(File f) throws IOException, ClassNotFoundException {
+        ObjectInputStream stream = new ObjectInputStream(new FileInputStream(f));
+        try {
+            return (T) stream.readObject();
+        } finally {
+            IoUtils.close(stream);
+        }
+    }
+
+    private void writeObject(File file, T row) throws Exception {
+        ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(file));
+        try {
+            stream.writeObject(row);
+        } finally {
+            IoUtils.close(stream);
+        }
     }
 
     private void executeSync(Runnable action) throws ExecutionException, InterruptedException {
