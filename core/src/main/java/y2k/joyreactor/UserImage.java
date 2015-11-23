@@ -6,7 +6,7 @@ package y2k.joyreactor;
 public class UserImage {
 
     private static final String SITE_DEFAULT_USER_IMAGE = "http://img0.joyreactor.cc/images/default_avatar.jpeg";
-    private static final String APP_DEFAULT_USER_IMAGE = "https://raw.githubusercontent.com/y2k/JoyReactorNext/master/ios/resources/Images.xcassets/AppIcon.appiconset/Icon-60%403x.png";
+    private static final String APP_DEFAULT_USER_IMAGE = "https://raw.githubusercontent.com/y2k/JoyReactor/master/ios/resources/Images.xcassets/AppIcon.appiconset/Icon-60%403x.png";
 
     private String userImage;
 
