@@ -12,11 +12,16 @@ import java.net.URLEncoder;
  */
 public class TagImageRequest {
 
+    private static IconStorage sStorage;
+
     private PersistentMap cache = new PersistentMap("tag-images.1.dat");
 
     public String request(String tag) throws IOException {
+        sStorage = IconStorage.get(sStorage, "tag.names", "tag.icons");
+
         String clearTag = tag.toLowerCase();
-        String imageId = TagPreloadedImages.get(clearTag);
+        String imageId = getImageId(clearTag);
+
         if (imageId == null) imageId = cache.get(clearTag);
         if (imageId == null) {
             imageId = getFromWeb(clearTag);
@@ -25,6 +30,11 @@ public class TagImageRequest {
 
         if (imageId == null) throw new IllegalStateException();
         return imageId;
+    }
+
+    private String getImageId(String clearTag) {
+        Integer id = sStorage.getImageId(clearTag);
+        return id == null ? null : "http://img0.reactor.cc/pics/avatar/tag/" + id;
     }
 
     private String getFromWeb(String tag) throws IOException {
