@@ -6,7 +6,7 @@ JoyReactor
 ### Макет приложения
 <img src="/_web/AI-01.png" alt="Screenshots" width="200" />
 <img src="/_web/AI-02.png" alt="Screenshots" width="200" />
-<img src="/_web/AI-03.png" alt="Screenshots" width="200" />
+<img src="/_web/AI-03.png" alt="Screenshots" width="200" /><br />
 <img src="/_web/AI-04.png" alt="Screenshots" width="200" />
 <img src="/_web/AI-05.png" alt="Screenshots" width="200" />
 <img src="/_web/AI-07.png" alt="Screenshots" width="200" />
