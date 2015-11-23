@@ -10,7 +10,7 @@ public class Comment implements Serializable {
     public int postId;
 
     public String text;
-    public Image userAvatar;
+    public String userImage;
 
     public int id;
     public int parentId;
@@ -19,6 +19,6 @@ public class Comment implements Serializable {
     public float rating;
 
     public UserImage getUserImage() {
-        return new UserImage(userAvatar);
+        return userImage == null ? new UserImage() : new UserImage(new Image(userImage));
     }
 }

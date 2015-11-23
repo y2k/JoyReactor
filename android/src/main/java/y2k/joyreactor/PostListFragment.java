@@ -1,9 +1,7 @@
 package y2k.joyreactor;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -19,7 +17,25 @@ import java.util.List;
  */
 public class PostListFragment extends Fragment implements PostListPresenter.View {
 
+    PostListPresenter presenter;
     PostAdapter adapter;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_posts, container, false);
+
+        view.findViewById(R.id.error).setVisibility(View.GONE);
+
+        RecyclerView list = (RecyclerView) view.findViewById(R.id.list);
+        list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        list.setAdapter(adapter = new PostAdapter());
+
+        presenter = new PostListPresenter(this);
+
+        view.findViewById(R.id.apply).setOnClickListener(v -> presenter.applyNew());
+
+        return view;
+    }
 
     @Override
     public void setBusy(boolean isBusy) {
@@ -36,37 +52,19 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
         ((ReloadButton) getView().findViewById(R.id.apply)).setVisibility(hasNewPosts);
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_posts, container, false);
-
-        view.findViewById(R.id.error).setVisibility(View.GONE);
-
-        RecyclerView list = (RecyclerView) view.findViewById(R.id.list);
-        list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        list.setAdapter(adapter = new PostAdapter());
-
-        PostListPresenter presenter = new PostListPresenter(this);
-
-        view.findViewById(R.id.apply).setOnClickListener(v -> presenter.applyNew());
-
-        return view;
-    }
-
-    static class PostAdapter extends RecyclerView.Adapter {
+    class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
 
         List<Post> posts;
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int itemType) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_feed, viewGroup, false);
-            return new Holder(view);
+        public PostViewHolder onCreateViewHolder(ViewGroup viewGroup, int itemType) {
+            View view = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(R.layout.item_feed, viewGroup, false);
+            return new PostViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-            Holder h = (Holder) viewHolder;
+        public void onBindViewHolder(PostViewHolder h, int position) {
             Post i = posts.get(position);
             new ImageRequest()
                     .setUrl(i.image)
@@ -74,8 +72,7 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
                     .to(h.image, h.image::setImageBitmap);
 
             h.imagePanel.setAspect(i.getAspect(0.5f));
-
-            h.userImage.setImage(i.userImage);
+            h.userImage.setImage(i.getUserImage().toImage());
         }
 
         @Override
@@ -87,19 +84,24 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
             this.posts = posts;
             notifyDataSetChanged();
         }
+    }
 
-        static class Holder extends RecyclerView.ViewHolder {
+    static class PostViewHolder extends RecyclerView.ViewHolder {
 
-            FixedAspectPanel imagePanel;
-            WebImageView image;
-            WebImageView userImage;
+        FixedAspectPanel imagePanel;
+        WebImageView image;
+        WebImageView userImage;
 
-            public Holder(View itemView) {
-                super(itemView);
-                image = (WebImageView) itemView.findViewById(R.id.image);
-                imagePanel = (FixedAspectPanel) itemView.findViewById(R.id.imagePanel);
-                userImage = (WebImageView) itemView.findViewById(R.id.userImage);
-            }
+        public PostViewHolder(View view) {
+            super(view);
+
+            image = (WebImageView) view.findViewById(R.id.image);
+            imagePanel = (FixedAspectPanel) view.findViewById(R.id.imagePanel);
+            userImage = (WebImageView) view.findViewById(R.id.userImage);
+
+            view.findViewById(R.id.action).setOnClickListener(v -> {
+                // TODO:
+            });
         }
     }
 }

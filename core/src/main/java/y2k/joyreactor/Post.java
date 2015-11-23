@@ -13,7 +13,12 @@ public class Post implements Serializable {
     public String title;
     public Image image;
 
-    public Image userImage;
+    public String userImage;
+
+    public UserImage getUserImage() {
+        return UserImage.fromUrl(userImage);
+    }
+
     public String userName;
 
     public Date created;

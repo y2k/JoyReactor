@@ -23,4 +23,8 @@ public class UserImage {
     public Image toImage() {
         return new Image(userImage);
     }
+
+    public static UserImage fromUrl(String url) {
+        return url == null ? new UserImage() : new UserImage(new Image(url));
+    }
 }

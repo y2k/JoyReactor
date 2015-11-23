@@ -54,7 +54,7 @@ public class PostsForTagRequest {
         if (result.image == null) new VideoThumbnailParser(element).load(result);
 
         result.userName = element.select("div.uhead_nick > a").text();
-        result.userImage = new Image(element.select("div.uhead_nick > img").attr("src"));
+        result.userImage = element.select("div.uhead_nick > img").attr("src");
         result.serverId = extractNumberFromEnd(element.id());
 
         PostParser parser = new PostParser(element);

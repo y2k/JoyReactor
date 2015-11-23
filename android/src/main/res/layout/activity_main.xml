@@ -9,12 +9,11 @@
                   android:layout_width="match_parent"
                   android:layout_height="match_parent">
         <include layout="@layout/toolbar"/>
-        <fragment
-                android:id="@+id/container"
-                android:name="y2k.joyreactor.PostListFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:layout="@layout/fragment_posts"/>
+        <fragment android:id="@+id/container"
+                  android:name="y2k.joyreactor.PostListFragment"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  tools:layout="@layout/fragment_posts"/>
     </LinearLayout>
     <fragment android:id="@+id/navigation_drawer"
               android:layout_width="@dimen/navigation_drawer_width"

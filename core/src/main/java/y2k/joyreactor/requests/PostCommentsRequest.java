@@ -28,7 +28,7 @@ class PostCommentsRequest {
         for (Element node : doc.select("div.comment")) {
             Comment comment = new Comment();
             comment.text = node.select("div.txt > div").first().text();
-            comment.userAvatar = new Image(node.select("img.avatar").attr("src"));
+            comment.userImage = node.select("img.avatar").attr("src");
             comment.id = Integer.parseInt(node.select("span.comment_rating").attr("comment_id"));
             comment.rating = Float.parseFloat(node.select("span.comment_rating").text().trim());
 
