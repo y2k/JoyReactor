@@ -23,7 +23,7 @@ public class Repository<T> {
     private File directory;
 
     public Repository(Class<T> cls) {
-        String name = cls.getName().toLowerCase();
+        String name = cls.getSimpleName().toLowerCase() + "s";
         directory = new File(new File(Platform.Instance.getCurrentDirectory(), "repositories"), name);
         directory.mkdirs();
     }

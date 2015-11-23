@@ -52,7 +52,7 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
         ((ReloadButton) getView().findViewById(R.id.apply)).setVisibility(hasNewPosts);
     }
 
-    class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
+    class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
         List<Post> posts;
 
@@ -84,24 +84,23 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
             this.posts = posts;
             notifyDataSetChanged();
         }
-    }
 
-    static class PostViewHolder extends RecyclerView.ViewHolder {
+        class PostViewHolder extends RecyclerView.ViewHolder {
 
-        FixedAspectPanel imagePanel;
-        WebImageView image;
-        WebImageView userImage;
+            FixedAspectPanel imagePanel;
+            WebImageView image;
+            WebImageView userImage;
 
-        public PostViewHolder(View view) {
-            super(view);
+            public PostViewHolder(View view) {
+                super(view);
 
-            image = (WebImageView) view.findViewById(R.id.image);
-            imagePanel = (FixedAspectPanel) view.findViewById(R.id.imagePanel);
-            userImage = (WebImageView) view.findViewById(R.id.userImage);
+                image = (WebImageView) view.findViewById(R.id.image);
+                imagePanel = (FixedAspectPanel) view.findViewById(R.id.imagePanel);
+                userImage = (WebImageView) view.findViewById(R.id.userImage);
 
-            view.findViewById(R.id.action).setOnClickListener(v -> {
-                // TODO:
-            });
+                view.findViewById(R.id.action).setOnClickListener(
+                        v -> presenter.postClicked(posts.get(getAdapterPosition())));
+            }
         }
     }
 }

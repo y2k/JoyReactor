@@ -3,6 +3,7 @@ package y2k.joyreactor.presenters;
 import rx.Observable;
 import y2k.joyreactor.*;
 import y2k.joyreactor.common.Messages;
+import y2k.joyreactor.repository.Repository;
 import y2k.joyreactor.synchronizers.PostListSynchronizer;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class PostListPresenter extends Presenter {
     private View view;
     private StateForTag state;
 
-    private y2k.joyreactor.repository.Repository<Post> repository;
+    private Repository<Post> repository;
     private PostListSynchronizer.Factory synchronizerFactory;
 
     public PostListPresenter(View view) {
@@ -101,7 +102,7 @@ public class PostListPresenter extends Presenter {
     }
 
     public void postClicked(Post post) {
-        Navigation.getInstance().openPost(post);
+        Navigation.getInstance().openPost(post.serverId);
     }
 
     public void playClicked(Post post) {

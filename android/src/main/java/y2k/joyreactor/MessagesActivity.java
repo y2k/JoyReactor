@@ -21,6 +21,5 @@ public class MessagesActivity extends AppCompatActivity {
 
         new ActionBarDrawerToggle(this, (DrawerLayout) findViewById(R.id.drawer_layout),
                 toolbar, R.string.app_name, R.string.app_name).syncState();
-
     }
 }
