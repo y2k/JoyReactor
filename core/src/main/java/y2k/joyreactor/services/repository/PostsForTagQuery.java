@@ -3,6 +3,7 @@ package y2k.joyreactor.services.repository;
 import rx.Observable;
 import y2k.joyreactor.Post;
 import y2k.joyreactor.Tag;
+import y2k.joyreactor.TagPost;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public class PostsForTagQuery extends Repository.Query<Post> {
 
     private Tag tag;
-    private List<PostSubRepositoryForTag.TagPost> links;
+    private List<TagPost> links;
 
     public PostsForTagQuery(Tag tag) {
         this.tag = tag;
@@ -20,7 +21,7 @@ public class PostsForTagQuery extends Repository.Query<Post> {
 
     @Override
     public boolean compare(Post row) {
-        for (PostSubRepositoryForTag.TagPost s : links)
+        for (TagPost s : links)
             if (s.postId.equals(row.serverId))
                 return true;
         return false;
@@ -28,7 +29,7 @@ public class PostsForTagQuery extends Repository.Query<Post> {
 
     @Override
     public Observable<Void> initialize() {
-        return new Repository<>(PostSubRepositoryForTag.TagPost.class)
+        return new Repository<>(TagPost.class)
                 .queryAsync(new TagPostsForTagQuery(tag))
                 .map(links -> {
                     this.links = links;

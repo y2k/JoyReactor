@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.mockito.*;
 import rx.Observable;
 import y2k.joyreactor.Post;
-import y2k.joyreactor.services.repository.PostSubRepositoryForTag;
 import y2k.joyreactor.Tag;
 import y2k.joyreactor.common.PostGenerator;
 import y2k.joyreactor.services.requests.PostsForTagRequest;

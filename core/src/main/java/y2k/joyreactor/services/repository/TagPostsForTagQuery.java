@@ -1,12 +1,13 @@
 package y2k.joyreactor.services.repository;
 
 import y2k.joyreactor.Tag;
+import y2k.joyreactor.TagPost;
 import y2k.joyreactor.common.ObjectUtils;
 
 /**
  * Created by y2k on 11/9/15.
  */
-public class TagPostsForTagQuery extends Repository.Query<PostSubRepositoryForTag.TagPost> {
+public class TagPostsForTagQuery extends Repository.Query<TagPost> {
 
     private Tag tag;
 
@@ -15,7 +16,7 @@ public class TagPostsForTagQuery extends Repository.Query<PostSubRepositoryForTa
     }
 
     @Override
-    public boolean compare(PostSubRepositoryForTag.TagPost row) {
+    public boolean compare(TagPost row) {
         return ObjectUtils.equals(row.tagId, tag.getId());
     }
 }

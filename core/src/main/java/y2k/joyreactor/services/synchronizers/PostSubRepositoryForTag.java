@@ -1,17 +1,18 @@
-package y2k.joyreactor.services.repository;
+package y2k.joyreactor.services.synchronizers;
 
 import rx.Observable;
 import y2k.joyreactor.Post;
 import y2k.joyreactor.Tag;
+import y2k.joyreactor.TagPost;
+import y2k.joyreactor.services.repository.Repository;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by y2k on 11/8/15.
  */
-public class PostSubRepositoryForTag {
+class PostSubRepositoryForTag {
 
     private Repository<Post> postRepository = new Repository<>(Post.class);
     private Repository<TagPost> tagPostRepository = new Repository<>(TagPost.class);
@@ -41,16 +42,5 @@ public class PostSubRepositoryForTag {
                         links.add(new TagPost(tag.getId(), p.serverId));
                     return links;
                 }).flatMap(tagPostRepository::insertAllAsync);
-    }
-
-    public static class TagPost implements Serializable {
-
-        public String tagId;
-        public String postId;
-
-        public TagPost(String tagId, String postId) {
-            this.tagId = tagId;
-            this.postId = postId;
-        }
     }
 }
