@@ -1,4 +1,4 @@
-package y2k.joyreactor.synchronizers;
+package y2k.joyreactor.services.synchronizers;
 
 import rx.Observable;
 import y2k.joyreactor.Comment;

@@ -6,7 +6,7 @@ import y2k.joyreactor.Post;
 import y2k.joyreactor.services.repository.CommentsForPostQuery;
 import y2k.joyreactor.services.repository.PostByIdQuery;
 import y2k.joyreactor.services.repository.Repository;
-import y2k.joyreactor.synchronizers.PostSynchronizer;
+import y2k.joyreactor.services.synchronizers.PostSynchronizer;
 
 import java.util.List;
 

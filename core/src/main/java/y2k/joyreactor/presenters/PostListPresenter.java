@@ -6,7 +6,7 @@ import y2k.joyreactor.common.Messages;
 import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.TagService;
-import y2k.joyreactor.synchronizers.PostListSynchronizer;
+import y2k.joyreactor.services.synchronizers.PostListSynchronizer;
 
 import java.util.List;
 

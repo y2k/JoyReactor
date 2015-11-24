@@ -2,7 +2,7 @@ package y2k.joyreactor.presenters;
 
 import rx.Observable;
 import y2k.joyreactor.Message;
-import y2k.joyreactor.synchronizers.PrivateMessageSynchronizer;
+import y2k.joyreactor.services.synchronizers.PrivateMessageSynchronizer;
 import y2k.joyreactor.services.repository.MessageThreadQuery;
 import y2k.joyreactor.services.repository.Repository;
 

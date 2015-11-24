@@ -1,4 +1,4 @@
-package y2k.joyreactor.synchronizers;
+package y2k.joyreactor.services.synchronizers;
 
 import org.junit.Before;
 import org.junit.Test;
