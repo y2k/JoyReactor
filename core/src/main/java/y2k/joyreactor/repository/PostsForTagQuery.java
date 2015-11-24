@@ -3,7 +3,6 @@ package y2k.joyreactor.repository;
 import rx.Observable;
 import y2k.joyreactor.Post;
 import y2k.joyreactor.Tag;
-import y2k.joyreactor.PostSubRepositoryForTag;
 
 import java.util.List;
 

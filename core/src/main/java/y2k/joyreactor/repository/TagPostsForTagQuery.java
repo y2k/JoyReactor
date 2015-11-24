@@ -1,7 +1,6 @@
 package y2k.joyreactor.repository;
 
 import y2k.joyreactor.Tag;
-import y2k.joyreactor.PostSubRepositoryForTag;
 import y2k.joyreactor.common.ObjectUtils;
 
 /**

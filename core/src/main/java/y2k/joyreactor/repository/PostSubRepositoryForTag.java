@@ -1,7 +1,8 @@
-package y2k.joyreactor;
+package y2k.joyreactor.repository;
 
 import rx.Observable;
-import y2k.joyreactor.repository.Repository;
+import y2k.joyreactor.Post;
+import y2k.joyreactor.Tag;
 
 import java.io.Serializable;
 import java.util.ArrayList;
