@@ -2,7 +2,7 @@ package y2k.joyreactor.synchronizers;
 
 import rx.Observable;
 import y2k.joyreactor.Post;
-import y2k.joyreactor.repository.PostSubRepositoryForTag;
+import y2k.joyreactor.services.repository.PostSubRepositoryForTag;
 
 import java.util.ArrayList;
 import java.util.Iterator;

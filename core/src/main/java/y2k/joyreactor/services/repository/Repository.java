@@ -1,4 +1,4 @@
-package y2k.joyreactor.repository;
+package y2k.joyreactor.services.repository;
 
 import rx.Observable;
 import y2k.joyreactor.platform.Platform;

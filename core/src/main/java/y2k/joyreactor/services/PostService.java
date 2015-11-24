@@ -3,9 +3,9 @@ package y2k.joyreactor.services;
 import rx.Observable;
 import y2k.joyreactor.Comment;
 import y2k.joyreactor.Post;
-import y2k.joyreactor.repository.CommentsForPostQuery;
-import y2k.joyreactor.repository.PostByIdQuery;
-import y2k.joyreactor.repository.Repository;
+import y2k.joyreactor.services.repository.CommentsForPostQuery;
+import y2k.joyreactor.services.repository.PostByIdQuery;
+import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.synchronizers.PostSynchronizer;
 
 import java.util.List;

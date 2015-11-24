@@ -3,7 +3,7 @@ package y2k.joyreactor.services;
 import rx.Observable;
 import y2k.joyreactor.Post;
 import y2k.joyreactor.Tag;
-import y2k.joyreactor.repository.Repository;
+import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.synchronizers.PostListSynchronizer;
 
 import java.util.List;

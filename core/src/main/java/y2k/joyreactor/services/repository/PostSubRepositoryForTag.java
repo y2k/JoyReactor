@@ -1,4 +1,4 @@
-package y2k.joyreactor.repository;
+package y2k.joyreactor.services.repository;
 
 import rx.Observable;
 import y2k.joyreactor.Post;
@@ -24,12 +24,12 @@ public class PostSubRepositoryForTag {
 
     public Observable<Void> clearAsync() {
         return postRepository
-                .deleteWhereAsync(new y2k.joyreactor.repository.PostsForTagQuery(tag))
-                .flatMap(s -> tagPostRepository.deleteWhereAsync(new y2k.joyreactor.repository.TagPostsForTagQuery(tag)));
+                .deleteWhereAsync(new y2k.joyreactor.services.repository.PostsForTagQuery(tag))
+                .flatMap(s -> tagPostRepository.deleteWhereAsync(new y2k.joyreactor.services.repository.TagPostsForTagQuery(tag)));
     }
 
     public Observable<List<Post>> queryAsync() {
-        return postRepository.queryAsync(new y2k.joyreactor.repository.PostsForTagQuery(tag));
+        return postRepository.queryAsync(new y2k.joyreactor.services.repository.PostsForTagQuery(tag));
     }
 
     public Observable<Void> replaceAllAsync(List<Post> posts) {

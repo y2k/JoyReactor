@@ -1,8 +1,8 @@
 package y2k.joyreactor.presenters;
 
 import y2k.joyreactor.Message;
-import y2k.joyreactor.repository.MessageForUserQuery;
-import y2k.joyreactor.repository.Repository;
+import y2k.joyreactor.services.repository.MessageForUserQuery;
+import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.requests.SendMessageRequest;
 
 import java.util.List;

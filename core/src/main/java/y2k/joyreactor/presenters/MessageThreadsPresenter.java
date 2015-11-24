@@ -3,8 +3,8 @@ package y2k.joyreactor.presenters;
 import rx.Observable;
 import y2k.joyreactor.Message;
 import y2k.joyreactor.synchronizers.PrivateMessageSynchronizer;
-import y2k.joyreactor.repository.MessageThreadQuery;
-import y2k.joyreactor.repository.Repository;
+import y2k.joyreactor.services.repository.MessageThreadQuery;
+import y2k.joyreactor.services.repository.Repository;
 
 import java.util.List;
 

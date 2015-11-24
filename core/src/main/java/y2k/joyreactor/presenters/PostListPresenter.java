@@ -4,7 +4,7 @@ import rx.Observable;
 import y2k.joyreactor.*;
 import y2k.joyreactor.common.Messages;
 import y2k.joyreactor.platform.Navigation;
-import y2k.joyreactor.repository.Repository;
+import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.TagService;
 import y2k.joyreactor.synchronizers.PostListSynchronizer;
 

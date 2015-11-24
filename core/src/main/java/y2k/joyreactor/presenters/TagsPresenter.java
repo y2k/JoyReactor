@@ -3,7 +3,7 @@ package y2k.joyreactor.presenters;
 import rx.Observable;
 import y2k.joyreactor.*;
 import y2k.joyreactor.common.Messages;
-import y2k.joyreactor.repository.Repository;
+import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.requests.MyTagsRequest;
 import y2k.joyreactor.services.requests.UserNameRequest;
 
