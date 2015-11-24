@@ -52,6 +52,18 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
         ((ReloadButton) getView().findViewById(R.id.apply)).setVisibility(hasNewPosts);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.activate();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.deactivate();
+    }
+
     class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
         List<Post> posts;

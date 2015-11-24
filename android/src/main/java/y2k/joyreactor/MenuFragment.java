@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import y2k.joyreactor.presenters.TagsPresenter;
 
 import java.util.List;
@@ -47,18 +48,18 @@ public class MenuFragment extends Fragment implements TagsPresenter.View {
         adapter.updateData(tags);
     }
 
-    private static class TagsAdapter extends RecyclerView.Adapter {
+    private class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
 
         private List<Tag> tags;
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false));
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
+            return new ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            ViewHolder vh = (ViewHolder) holder;
+        public void onBindViewHolder(ViewHolder vh, int position) {
             if (position > 0) {
                 Tag item = tags.get(position - 1);
                 vh.title.setText(item.title);
@@ -81,15 +82,24 @@ public class MenuFragment extends Fragment implements TagsPresenter.View {
             notifyDataSetChanged();
         }
 
-        private static class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder {
 
             TextView title;
             WebImageView icon;
 
-            public ViewHolder(View itemView) {
-                super(itemView);
-                title = (TextView) itemView.findViewById(R.id.title);
-                icon = (WebImageView) itemView.findViewById(R.id.icon);
+            public ViewHolder(View view) {
+                super(view);
+
+                title = (TextView) view.findViewById(R.id.title);
+                icon = (WebImageView) view.findViewById(R.id.icon);
+
+                View action = view.findViewById(R.id.action);
+                if (action == null) {
+                    view.findViewById(R.id.selectFeatured).setOnClickListener(v -> presenter.selectedFeatured());
+                    view.findViewById(R.id.selectFavorite).setOnClickListener(v -> presenter.selectedFavorite());
+                } else {
+                    action.setOnClickListener(v -> presenter.selectTag(tags.get(getAdapterPosition())));
+                }
             }
         }
     }

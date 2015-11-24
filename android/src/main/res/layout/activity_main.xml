@@ -5,9 +5,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="y2k.joyreactor.Main2Activity">
-    <LinearLayout android:orientation="vertical"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent">
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         <include layout="@layout/toolbar"/>
         <fragment android:id="@+id/container"
                   android:name="y2k.joyreactor.PostListFragment"

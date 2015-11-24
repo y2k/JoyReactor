@@ -1,46 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#42403d"
-    android:minHeight="137dp"
-    android:gravity="center"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="#42403d"
+        android:minHeight="137dp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <FrameLayout
-        android:id="@+id/selectFeatured"
-        android:paddingRight="21dp"
-        android:clickable="true"
-        android:foreground="?android:attr/listChoiceBackgroundIndicator"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent">
-        <TextView
-            android:layout_gravity="right|center_vertical"
-            android:gravity="center_horizontal"
-            android:drawableTop="@drawable/ic_featured"
-            android:drawablePadding="10dp"
-            android:textSize="14sp"
-            android:textColor="@color/text_primary"
-            android:text="@string/feed"
-            android:layout_width="75dp"
-            android:layout_height="wrap_content" />
+            android:id="@+id/selectFeatured"
+            android:paddingRight="21dp"
+            android:clickable="true"
+            android:foreground="?android:attr/listChoiceBackgroundIndicator"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+        <TextView android:layout_gravity="right|center_vertical"
+                  android:gravity="center_horizontal"
+                  android:drawableTop="@drawable/ic_featured"
+                  android:drawablePadding="10dp"
+                  android:textSize="14sp"
+                  android:textColor="@color/text_primary"
+                  android:text="@string/feed"
+                  android:layout_width="75dp"
+                  android:layout_height="wrap_content"/>
     </FrameLayout>
     <FrameLayout
-        android:id="@+id/selectFavorite"
-        android:paddingLeft="21dp"
-        android:clickable="true"
-        android:foreground="?android:attr/listChoiceBackgroundIndicator"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent">
-        <TextView
-            android:layout_gravity="left|center_vertical"
-            android:gravity="center_horizontal"
-            android:drawableTop="@drawable/ic_favorite"
-            android:drawablePadding="10dp"
-            android:textSize="14sp"
-            android:textColor="@color/primary"
-            android:text="@string/favorite"
-            android:layout_width="75dp"
-            android:layout_height="wrap_content" />
+            android:id="@+id/selectFavorite"
+            android:paddingLeft="21dp"
+            android:clickable="true"
+            android:foreground="?android:attr/listChoiceBackgroundIndicator"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+        <TextView android:layout_gravity="left|center_vertical"
+                  android:gravity="center_horizontal"
+                  android:drawableTop="@drawable/ic_favorite"
+                  android:drawablePadding="10dp"
+                  android:textSize="14sp"
+                  android:textColor="@color/primary"
+                  android:text="@string/favorite"
+                  android:layout_width="75dp"
+                  android:layout_height="wrap_content"/>
     </FrameLayout>
 </LinearLayout>
