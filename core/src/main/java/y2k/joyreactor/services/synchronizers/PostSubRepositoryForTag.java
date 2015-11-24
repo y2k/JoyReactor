@@ -33,14 +33,14 @@ class PostSubRepositoryForTag {
         return postRepository.queryAsync(new y2k.joyreactor.services.repository.PostsForTagQuery(tag));
     }
 
-    public Observable<Void> replaceAllAsync(List<Post> posts) {
-        return clearAsync()
-                .flatMap(s -> postRepository.insertAllAsync(posts))
-                .map(s -> {
-                    List<TagPost> links = new ArrayList<>();
-                    for (Post p : posts)
-                        links.add(new TagPost(tag.getId(), p.serverId));
-                    return links;
-                }).flatMap(tagPostRepository::insertAllAsync);
-    }
+//    public Observable<Void> replaceAllAsync(List<Post> posts) {
+//        return clearAsync()
+//                .flatMap(s -> postRepository.insertAllAsync(posts))
+//                .map(s -> {
+//                    List<TagPost> links = new ArrayList<>();
+//                    for (Post p : posts)
+//                        links.add(new TagPost(tag.getId(), p.serverId));
+//                    return links;
+//                }).flatMap(tagPostRepository::insertAllAsync);
+//    }
 }

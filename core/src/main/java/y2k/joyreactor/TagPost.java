@@ -7,10 +7,10 @@ import java.io.Serializable;
  */
 public class TagPost implements Serializable {
 
-    public String tagId;
-    public String postId;
+    public int tagId;
+    public int postId;
 
-    public TagPost(String tagId, String postId) {
+    public TagPost(int tagId, int postId) {
         this.tagId = tagId;
         this.postId = postId;
     }

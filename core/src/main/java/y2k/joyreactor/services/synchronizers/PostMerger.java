@@ -1,7 +1,11 @@
 package y2k.joyreactor.services.synchronizers;
 
+import javafx.geometry.Pos;
 import rx.Observable;
 import y2k.joyreactor.Post;
+import y2k.joyreactor.common.ObservableUtils;
+import y2k.joyreactor.services.repository.PostByIdQuery;
+import y2k.joyreactor.services.repository.Repository;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,10 +17,13 @@ import java.util.List;
 class PostMerger {
 
     private PostSubRepositoryForTag repository;
+    private Repository<Post> postRepository;
+
     private Integer divider;
 
-    PostMerger(PostSubRepositoryForTag repository) {
+    PostMerger(PostSubRepositoryForTag repository, Repository<Post> postRepository) {
         this.repository = repository;
+        this.postRepository = postRepository;
     }
 
     public Integer getDivider() {
@@ -24,24 +31,26 @@ class PostMerger {
     }
 
     public Observable<Void> mergeFirstPage(List<Post> newPosts) {
-        return repository
-                .queryAsync()
-                .map(posts -> {
-                    ArrayList<Post> merged = new ArrayList<>(posts);
-                    for (Iterator<Post> iterator = merged.iterator(); iterator.hasNext(); ) {
-                        Post element = iterator.next();
-                        for (Post s : newPosts)
-                            if (s.serverId.equals(element.serverId)) {
-                                iterator.remove();
-                                break;
-                            }
-                    }
-                    merged.addAll(0, newPosts);
+        return updatePostsAsync(newPosts).flatMap(_void -> {
+            return repository
+                    .queryAsync()
+                    .map(posts -> {
+                        ArrayList<Post> merged = new ArrayList<>(posts);
+                        for (Iterator<Post> iterator = merged.iterator(); iterator.hasNext(); ) {
+                            Post element = iterator.next();
+                            for (Post s : newPosts)
+                                if (s.serverId.equals(element.serverId)) {
+                                    iterator.remove();
+                                    break;
+                                }
+                        }
+                        merged.addAll(0, newPosts);
 
-                    divider = newPosts.size();
-                    return merged;
-                })
-                .flatMap(repository::replaceAllAsync);
+                        divider = newPosts.size();
+                        return merged;
+                    })
+                    .flatMap(s -> replaceAllAsync(s));
+        });
     }
 
     public Observable<Boolean> isUnsafeUpdate(List<Post> newPosts) {
@@ -57,20 +66,36 @@ class PostMerger {
     }
 
     public Observable<Void> mergeNextPage(List<Post> newPosts) {
-        return repository
-                .queryAsync()
-                .map(posts -> {
-                    List<Post> actualPosts = posts.subList(0, divider);
-                    List<Post> expiredPosts = new ArrayList<>(posts.subList(divider, posts.size()));
+        updatePostsAsync(newPosts).flatMap(_void -> {
+            return repository
+                    .queryAsync()
+                    .map(posts -> {
+                        List<Post> actualPosts = posts.subList(0, divider);
+                        List<Post> expiredPosts = new ArrayList<>(posts.subList(divider, posts.size()));
 
-                    for (Post p : newPosts) {
-                        addIfNew(actualPosts, p);
-                        remove(expiredPosts, p);
-                    }
-                    divider = actualPosts.size();
-                    return union(actualPosts, expiredPosts);
-                })
-                .flatMap(repository::replaceAllAsync);
+                        for (Post p : newPosts) {
+                            addIfNew(actualPosts, p);
+                            remove(expiredPosts, p);
+                        }
+                        divider = actualPosts.size();
+                        return union(actualPosts, expiredPosts);
+                    })
+                    .flatMap(s -> replaceAllAsync(s));
+        });
+    }
+
+    private Observable<Void> updatePostsAsync(List<Post> newPosts) {
+        return ObservableUtils.create(() -> {
+            for (Post p : newPosts) {
+                postRepository.insertOrUpdate(new PostByIdQuery(p.serverId), p);
+            }
+        });
+    }
+
+    private Observable<Void> replaceAllAsync(List<Post> posts) {
+        return ObservableUtils.create(() -> {
+            // TODO:
+        });
     }
 
     private void remove(List<Post> list, Post item) {

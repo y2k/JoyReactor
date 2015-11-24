@@ -9,6 +9,8 @@ public class Tag implements Serializable {
 
     private static final String MARK_USERNAME = "username:";
 
+    public int id;
+
     public String title;
     public Image image;
 

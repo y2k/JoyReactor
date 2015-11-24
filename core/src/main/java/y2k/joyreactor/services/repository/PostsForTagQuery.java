@@ -22,7 +22,7 @@ public class PostsForTagQuery extends Repository.Query<Post> {
     @Override
     public boolean compare(Post row) {
         for (TagPost s : links)
-            if (s.postId.equals(row.serverId))
+            if (s.postId == row.id)
                 return true;
         return false;
     }
