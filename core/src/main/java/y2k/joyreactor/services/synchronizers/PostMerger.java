@@ -18,15 +18,13 @@ import java.util.List;
  */
 class PostMerger {
 
-    private PostSubRepositoryForTag repository;
     private Repository<Post> postRepository;
     private Repository<TagPost> tagPostRepository;
     private Tag tag;
 
     private Integer divider;
 
-    PostMerger(PostSubRepositoryForTag repository, Tag tag, Repository<Post> postRepository, Repository<TagPost> tagPostRepository) {
-        this.repository = repository;
+    PostMerger(Tag tag, Repository<Post> postRepository, Repository<TagPost> tagPostRepository) {
         this.tag = tag;
         this.postRepository = postRepository;
         this.tagPostRepository = tagPostRepository;
@@ -62,13 +60,13 @@ class PostMerger {
     }
 
     public Observable<Boolean> isUnsafeUpdate(List<Post> newPosts) {
-        return repository
-                .queryAsync()
-                .map(posts -> {
-                    if (posts.size() == 0) return false;
-                    if (newPosts.size() > posts.size()) return true;
+        return tagPostRepository
+                .queryAsync(new TagPostsForTagQuery(tag))
+                .map(links -> {
+                    if (links.size() == 0) return false;
+                    if (newPosts.size() > links.size()) return true;
                     for (int i = 0; i < newPosts.size(); i++)
-                        if (!posts.get(i).serverId.equals(newPosts.get(i).serverId)) return true;
+                        if (links.get(i).postId != newPosts.get(i).id) return true;
                     return false;
                 });
     }
@@ -77,9 +75,9 @@ class PostMerger {
         return updatePostsAsync(newPosts).flatMap(_void -> {
             return tagPostRepository
                     .queryAsync(new TagPostsForTagQuery(tag))
-                    .map(posts -> {
-                        List<TagPost> actualPosts = posts.subList(0, divider);
-                        List<TagPost> expiredPosts = new ArrayList<>(posts.subList(divider, posts.size()));
+                    .map(links -> {
+                        List<TagPost> actualPosts = links.subList(0, divider);
+                        List<TagPost> expiredPosts = new ArrayList<>(links.subList(divider, links.size()));
 
                         for (Post p : newPosts) {
                             addIfNew(actualPosts, p);

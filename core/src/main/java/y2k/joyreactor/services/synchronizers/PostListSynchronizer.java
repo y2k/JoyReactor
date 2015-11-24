@@ -5,6 +5,7 @@ import y2k.joyreactor.Post;
 import y2k.joyreactor.Tag;
 import y2k.joyreactor.TagPost;
 import y2k.joyreactor.services.repository.Repository;
+import y2k.joyreactor.services.repository.TagPostsForTagQuery;
 import y2k.joyreactor.services.requests.PostsForTagRequest;
 
 /**
@@ -12,21 +13,20 @@ import y2k.joyreactor.services.requests.PostsForTagRequest;
  */
 public class PostListSynchronizer {
 
-    private PostSubRepositoryForTag repository;
     private PostMerger merger;
     private PostsForTagRequest.Factory requestFactory;
 
     private PostsForTagRequest request;
     private Tag tag;
+    private Repository<TagPost> tagPostRepository;
 
     PostListSynchronizer(Tag tag,
-                         PostSubRepositoryForTag repository,
                          PostsForTagRequest.Factory requestFactory,
                          Repository<Post> postRepository,
                          Repository<TagPost> tagPostRepository) {
         this.tag = tag;
-        this.merger = new PostMerger(repository, tag, postRepository, tagPostRepository);
-        this.repository = repository;
+        this.tagPostRepository = tagPostRepository;
+        this.merger = new PostMerger(tag, postRepository, tagPostRepository);
         this.requestFactory = requestFactory;
     }
 
@@ -56,8 +56,8 @@ public class PostListSynchronizer {
         request = getPostsForTagRequest(null);
         return request
                 .requestAsync()
-                .flatMap(s -> repository.clearAsync())
-                .flatMap(s -> merger.mergeFirstPage(request.getPosts()));
+                .flatMap(_void -> tagPostRepository.deleteWhereAsync(new TagPostsForTagQuery(tag)))
+                .flatMap(_void -> merger.mergeFirstPage(request.getPosts()));
     }
 
     private PostsForTagRequest getPostsForTagRequest(String pageId) {
@@ -77,8 +77,7 @@ public class PostListSynchronizer {
         }
 
         public PostListSynchronizer make(Tag tag) {
-            return new PostListSynchronizer(tag, new PostSubRepositoryForTag(tag),
-                    requestFactory, postRepository, tagPostRepository);
+            return new PostListSynchronizer(tag, requestFactory, postRepository, tagPostRepository);
         }
     }
 }
