@@ -17,8 +17,7 @@ public class PostListPresenter extends Presenter {
 
     private View view;
     private TagService serviceFactory;
-
-    private StateForTag state;
+    private TagService service;
 
     public PostListPresenter(View view) {
         this(view, new TagService(new Repository<>(Post.class), new PostListSynchronizer.Factory()));
@@ -36,71 +35,50 @@ public class PostListPresenter extends Presenter {
         this.serviceFactory = serviceFactory;
 
         getMessages().add(this::currentTagChanged, Messages.TagSelected.class);
-        state = new StateForTag(Tag.makeFeatured());
+        currentTagChanged(new Messages.TagSelected(Tag.makeFeatured());
     }
 
     private void currentTagChanged(Messages.TagSelected m) {
-        state = new StateForTag(m.tag);
+        service = serviceFactory.make(m.tag);
+
+        view.setBusy(true);
+        getFromRepository().subscribe(posts -> view.reloadPosts(posts, null));
+        service.preloadNewPosts()
+                .subscribe(unsafeUpdate -> {
+                    view.setHasNewPosts(unsafeUpdate);
+                    view.setBusy(false);
+                    if (!unsafeUpdate) applyNew();
+                });
     }
 
     public void applyNew() {
-        state.applyNew();
+        service.applyNew()
+                .subscribe(posts -> {
+                    view.setHasNewPosts(false);
+                    view.reloadPosts(posts, service.getDivider());
+                });
     }
 
     public void loadMore() {
-        state.loadMore();
+        view.setBusy(true);
+        service.loadNextPage()
+                .subscribe(posts -> {
+                    view.reloadPosts(posts, service.getDivider());
+                    view.setBusy(false);
+                });
     }
 
     public void reloadFirstPage() {
-        state.reloadFirstPage();
+        view.setBusy(true);
+        service.reloadFirstPage()
+                .subscribe(posts -> {
+                    view.reloadPosts(posts, posts.size());
+                    view.setBusy(false);
+                });
     }
 
-    class StateForTag {
-
-        private TagService service;
-
-        StateForTag(Tag tag) {
-            service = serviceFactory.make(tag);
-
-            view.setBusy(true);
-            getFromRepository().subscribe(posts -> view.reloadPosts(posts, null));
-            service.preloadNewPosts()
-                    .subscribe(unsafeUpdate -> {
-                        view.setHasNewPosts(unsafeUpdate);
-                        view.setBusy(false);
-                        if (!unsafeUpdate) applyNew();
-                    });
-        }
-
-        public void applyNew() {
-            service.applyNew()
-                    .subscribe(posts -> {
-                        view.setHasNewPosts(false);
-                        view.reloadPosts(posts, service.getDivider());
-                    });
-        }
-
-        public void loadMore() {
-            view.setBusy(true);
-            service.loadNextPage()
-                    .subscribe(posts -> {
-                        view.reloadPosts(posts, service.getDivider());
-                        view.setBusy(false);
-                    });
-        }
-
-        public void reloadFirstPage() {
-            view.setBusy(true);
-            service.reloadFirstPage()
-                    .subscribe(posts -> {
-                        view.reloadPosts(posts, posts.size());
-                        view.setBusy(false);
-                    });
-        }
-
-        private Observable<List<Post>> getFromRepository() {
-            return service.queryAsync();
-        }
+    private Observable<List<Post>> getFromRepository() {
+        return service.queryAsync();
     }
 
     public void postClicked(Post post) {
