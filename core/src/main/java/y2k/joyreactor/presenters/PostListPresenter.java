@@ -20,7 +20,8 @@ public class PostListPresenter extends Presenter {
     private TagService service;
 
     public PostListPresenter(View view) {
-        this(view, new TagService(new Repository<>(Post.class), new PostListSynchronizer.Factory()));
+        this(view, new TagService(new Repository<>(Post.class),
+                new PostListSynchronizer.Factory(new Repository<>(Post.class), new Repository<>(TagPost.class))));
     }
 
     @Deprecated

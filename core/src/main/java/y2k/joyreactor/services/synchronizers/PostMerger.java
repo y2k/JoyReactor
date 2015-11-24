@@ -1,11 +1,13 @@
 package y2k.joyreactor.services.synchronizers;
 
-import javafx.geometry.Pos;
 import rx.Observable;
 import y2k.joyreactor.Post;
+import y2k.joyreactor.Tag;
+import y2k.joyreactor.TagPost;
 import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.services.repository.PostByIdQuery;
 import y2k.joyreactor.services.repository.Repository;
+import y2k.joyreactor.services.repository.TagPostsForTagQuery;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,12 +20,16 @@ class PostMerger {
 
     private PostSubRepositoryForTag repository;
     private Repository<Post> postRepository;
+    private Repository<TagPost> tagPostRepository;
+    private Tag tag;
 
     private Integer divider;
 
-    PostMerger(PostSubRepositoryForTag repository, Repository<Post> postRepository) {
+    PostMerger(PostSubRepositoryForTag repository, Tag tag, Repository<Post> postRepository, Repository<TagPost> tagPostRepository) {
         this.repository = repository;
+        this.tag = tag;
         this.postRepository = postRepository;
+        this.tagPostRepository = tagPostRepository;
     }
 
     public Integer getDivider() {
@@ -32,24 +38,26 @@ class PostMerger {
 
     public Observable<Void> mergeFirstPage(List<Post> newPosts) {
         return updatePostsAsync(newPosts).flatMap(_void -> {
-            return repository
-                    .queryAsync()
-                    .map(posts -> {
-                        ArrayList<Post> merged = new ArrayList<>(posts);
-                        for (Iterator<Post> iterator = merged.iterator(); iterator.hasNext(); ) {
-                            Post element = iterator.next();
+            return tagPostRepository
+                    .queryAsync(new TagPostsForTagQuery(tag))
+                    .map(links -> {
+                        List<TagPost> merged = new ArrayList<>(links);
+                        for (Iterator<TagPost> iterator = merged.iterator(); iterator.hasNext(); ) {
+                            TagPost element = iterator.next();
                             for (Post s : newPosts)
-                                if (s.serverId.equals(element.serverId)) {
+                                if (s.id == element.postId) {
                                     iterator.remove();
                                     break;
                                 }
                         }
-                        merged.addAll(0, newPosts);
+
+                        for (int i = 0; i < newPosts.size(); i++)
+                            merged.add(i, new TagPost(tag.id, newPosts.get(i).id));
 
                         divider = newPosts.size();
                         return merged;
                     })
-                    .flatMap(s -> replaceAllAsync(s));
+                    .flatMap(s -> tagPostRepository.replaceAllAsync(new TagPostsForTagQuery(tag), s));
         });
     }
 
@@ -66,12 +74,12 @@ class PostMerger {
     }
 
     public Observable<Void> mergeNextPage(List<Post> newPosts) {
-        updatePostsAsync(newPosts).flatMap(_void -> {
-            return repository
-                    .queryAsync()
+        return updatePostsAsync(newPosts).flatMap(_void -> {
+            return tagPostRepository
+                    .queryAsync(new TagPostsForTagQuery(tag))
                     .map(posts -> {
-                        List<Post> actualPosts = posts.subList(0, divider);
-                        List<Post> expiredPosts = new ArrayList<>(posts.subList(divider, posts.size()));
+                        List<TagPost> actualPosts = posts.subList(0, divider);
+                        List<TagPost> expiredPosts = new ArrayList<>(posts.subList(divider, posts.size()));
 
                         for (Post p : newPosts) {
                             addIfNew(actualPosts, p);
@@ -79,8 +87,9 @@ class PostMerger {
                         }
                         divider = actualPosts.size();
                         return union(actualPosts, expiredPosts);
+
                     })
-                    .flatMap(s -> replaceAllAsync(s));
+                    .flatMap(s -> tagPostRepository.replaceAllAsync(new TagPostsForTagQuery(tag), s));
         });
     }
 
@@ -92,24 +101,18 @@ class PostMerger {
         });
     }
 
-    private Observable<Void> replaceAllAsync(List<Post> posts) {
-        return ObservableUtils.create(() -> {
-            // TODO:
-        });
+    private void addIfNew(List<TagPost> list, Post item) {
+        for (TagPost s : list)
+            if (s.postId == item.id) return;
+        list.add(new TagPost(tag.id, item.id));
     }
 
-    private void remove(List<Post> list, Post item) {
-        for (Iterator<Post> iterator = list.iterator(); iterator.hasNext(); )
-            if (iterator.next().serverId.equals(item.serverId)) iterator.remove();
+    private void remove(List<TagPost> list, Post item) {
+        for (Iterator<TagPost> iterator = list.iterator(); iterator.hasNext(); )
+            if (iterator.next().postId == item.id) iterator.remove();
     }
 
-    private void addIfNew(List<Post> list, Post item) {
-        for (Post s : list)
-            if (s.serverId.equals(item.serverId)) return;
-        list.add(item);
-    }
-
-    private List<Post> union(List<Post> left, List<Post> right) {
+    private List<TagPost> union(List<TagPost> left, List<TagPost> right) {
         left.addAll(right);
         return left;
     }

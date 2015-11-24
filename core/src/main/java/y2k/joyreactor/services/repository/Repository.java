@@ -8,6 +8,7 @@ import y2k.joyreactor.common.ObservableUtils;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -154,6 +155,10 @@ public class Repository<T> {
 
     private void executeSync(Callable<Void> action) throws ExecutionException, InterruptedException {
         sSingleAccessExecutor.submit(action).get();
+    }
+
+    public Observable<Void> replaceAllAsync(Query<T> query, List<T> row) {
+        throw new UnsupportedOperationException(); // FIXME:
     }
 
     public static abstract class Query<TRow> {

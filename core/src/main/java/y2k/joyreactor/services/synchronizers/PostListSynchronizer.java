@@ -1,7 +1,10 @@
 package y2k.joyreactor.services.synchronizers;
 
 import rx.Observable;
+import y2k.joyreactor.Post;
 import y2k.joyreactor.Tag;
+import y2k.joyreactor.TagPost;
+import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.requests.PostsForTagRequest;
 
 /**
@@ -18,9 +21,11 @@ public class PostListSynchronizer {
 
     PostListSynchronizer(Tag tag,
                          PostSubRepositoryForTag repository,
-                         PostsForTagRequest.Factory requestFactory) {
+                         PostsForTagRequest.Factory requestFactory,
+                         Repository<Post> postRepository,
+                         Repository<TagPost> tagPostRepository) {
         this.tag = tag;
-        this.merger = new PostMerger(repository);
+        this.merger = new PostMerger(repository, tag, postRepository, tagPostRepository);
         this.repository = repository;
         this.requestFactory = requestFactory;
     }
@@ -63,8 +68,17 @@ public class PostListSynchronizer {
 
         private PostsForTagRequest.Factory requestFactory = new PostsForTagRequest.Factory();
 
+        private Repository<Post> postRepository;
+        private Repository<TagPost> tagPostRepository;
+
+        public Factory(Repository<Post> postRepository, Repository<TagPost> tagPostRepository) {
+            this.postRepository = postRepository;
+            this.tagPostRepository = tagPostRepository;
+        }
+
         public PostListSynchronizer make(Tag tag) {
-            return new PostListSynchronizer(tag, new PostSubRepositoryForTag(tag), requestFactory);
+            return new PostListSynchronizer(tag, new PostSubRepositoryForTag(tag),
+                    requestFactory, postRepository, tagPostRepository);
         }
     }
 }
