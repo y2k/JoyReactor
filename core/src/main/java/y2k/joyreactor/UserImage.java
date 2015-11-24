@@ -14,10 +14,10 @@ public class UserImage {
         userImage = APP_DEFAULT_USER_IMAGE;
     }
 
-    UserImage(Image userImage) {
-        this.userImage = SITE_DEFAULT_USER_IMAGE.equals(userImage.url)
+    public UserImage(String url) {
+        this.userImage = SITE_DEFAULT_USER_IMAGE.equals(url)
                 ? APP_DEFAULT_USER_IMAGE
-                : userImage.url;
+                : url;
     }
 
     public Image toImage() {
@@ -25,6 +25,6 @@ public class UserImage {
     }
 
     public static UserImage fromUrl(String url) {
-        return url == null ? new UserImage() : new UserImage(new Image(url));
+        return url == null ? new UserImage() : new UserImage(url);
     }
 }

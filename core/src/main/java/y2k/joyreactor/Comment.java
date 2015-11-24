@@ -19,6 +19,6 @@ public class Comment implements Serializable {
     public float rating;
 
     public UserImage getUserImage() {
-        return userImage == null ? new UserImage() : new UserImage(new Image(userImage));
+        return userImage == null ? new UserImage() : new UserImage(userImage);
     }
 }

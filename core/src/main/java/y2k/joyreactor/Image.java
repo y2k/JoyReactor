@@ -9,7 +9,7 @@ import java.net.URL;
  */
 public class Image implements Serializable {
 
-    public String url;
+    private String url;
     private int width;
     private int height;
 
@@ -42,7 +42,7 @@ public class Image implements Serializable {
         }
     }
 
-    URL toURL(int width, int height, String format) throws MalformedURLException {
+    private URL toURL(int width, int height, String format) throws MalformedURLException {
         if (width == 0 || height == 0)
             return new URL("http", "api-i-twister.net", 8010, "/cache/original?url=" + url + getFormatPart(format));
 

@@ -16,6 +16,6 @@ public class Message implements Serializable {
     public String userImage;
 
     public UserImage getUserImage() {
-        return userImage == null ? new UserImage() : new UserImage(new Image(userImage));
+        return userImage == null ? new UserImage() : new UserImage(userImage);
     }
 }
