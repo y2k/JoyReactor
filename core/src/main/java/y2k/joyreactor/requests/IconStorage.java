@@ -1,6 +1,6 @@
 package y2k.joyreactor.requests;
 
-import y2k.joyreactor.Platform;
+import y2k.joyreactor.platform.Platform;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

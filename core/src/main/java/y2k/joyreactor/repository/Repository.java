@@ -1,7 +1,7 @@
 package y2k.joyreactor.repository;
 
 import rx.Observable;
-import y2k.joyreactor.Platform;
+import y2k.joyreactor.platform.Platform;
 import y2k.joyreactor.common.IoUtils;
 import y2k.joyreactor.common.ObservableUtils;
 

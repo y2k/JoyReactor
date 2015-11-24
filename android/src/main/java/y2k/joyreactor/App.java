@@ -1,11 +1,12 @@
 package y2k.joyreactor;
 
 import android.app.Application;
-import android.content.res.AssetManager;
 import y2k.joyreactor.common.ForegroundScheduler;
 import y2k.joyreactor.common.IoUtils;
 import y2k.joyreactor.platform.AndroidNavigation;
 import y2k.joyreactor.platform.HandlerScheduler;
+import y2k.joyreactor.platform.Navigation;
+import y2k.joyreactor.platform.Platform;
 
 import java.io.File;
 import java.io.IOException;

@@ -8,6 +8,7 @@ import y2k.joyreactor.common.ForegroundScheduler;
 import y2k.joyreactor.http.HttpClient;
 import y2k.joyreactor.platform.IosMainQueueScheduler;
 import y2k.joyreactor.platform.NetworkActivityIndicatorHttpClient;
+import y2k.joyreactor.platform.Platform;
 import y2k.joyreactor.platform.PlatformImpl;
 
 public class Main extends UIApplicationDelegateAdapter {

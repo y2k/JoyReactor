@@ -1,7 +1,7 @@
 package y2k.joyreactor.images;
 
 import rx.Observable;
-import y2k.joyreactor.Platform;
+import y2k.joyreactor.platform.Platform;
 
 import java.io.File;
 

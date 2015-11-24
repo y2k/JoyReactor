@@ -1,4 +1,6 @@
-package y2k.joyreactor;
+package y2k.joyreactor.platform;
+
+import y2k.joyreactor.Post;
 
 /**
  * Created by y2k on 02/10/15.

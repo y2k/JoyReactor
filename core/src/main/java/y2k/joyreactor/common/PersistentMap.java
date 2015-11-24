@@ -1,6 +1,6 @@
 package y2k.joyreactor.common;
 
-import y2k.joyreactor.Platform;
+import y2k.joyreactor.platform.Platform;
 
 import java.io.BufferedReader;
 import java.io.File;

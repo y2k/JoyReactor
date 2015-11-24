@@ -1,8 +1,6 @@
 package y2k.joyreactor.platform;
 
 import org.robovm.apple.foundation.*;
-import y2k.joyreactor.Navigation;
-import y2k.joyreactor.Platform;
 
 import java.io.File;
 import java.util.List;

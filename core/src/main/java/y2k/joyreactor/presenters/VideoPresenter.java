@@ -1,6 +1,6 @@
 package y2k.joyreactor.presenters;
 
-import y2k.joyreactor.Navigation;
+import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.requests.OriginalImageRequest;
 
 import java.io.File;
