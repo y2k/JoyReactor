@@ -8,7 +8,6 @@ import y2k.joyreactor.common.ObservableUtils;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -114,9 +113,7 @@ public class Repository<T> {
             }
 
             if (file == null) {
-                int rowID = 0;
-                for (String name : fileNames)
-                    rowID = Math.max(rowID, Integer.parseInt(name));
+                int rowID = getNewFreeRowID(fileNames);
 
                 rowID++;
                 setRowID(row, rowID);
@@ -128,10 +125,6 @@ public class Repository<T> {
             }
             return null;
         });
-    }
-
-    private void setRowID(T row, int rowID) throws Exception {
-        row.getClass().getField("id").setInt(row, rowID);
     }
 
     @SuppressWarnings("unchecked")
@@ -157,8 +150,44 @@ public class Repository<T> {
         sSingleAccessExecutor.submit(action).get();
     }
 
-    public Observable<Void> replaceAllAsync(Query<T> query, List<T> row) {
-        throw new UnsupportedOperationException(); // FIXME:
+    public Observable<Void> replaceAllAsync(Query<T> query, List<T> rows) {
+        return query
+                .initialize()
+                .flatMap(_void -> {
+                    return ObservableUtils.create(() -> {
+                        String[] names = directory.list();
+                        for (String name : names) {
+                            File file = new File(directory, name);
+                            if (query.compare(readObject(file))) file.delete();
+                        }
+
+                        int freeRowID = getNewFreeRowID(names);
+                        for (T row : rows) {
+                            trySetRowID(row, freeRowID);
+                            writeObject(new File(directory, "" + freeRowID), row);
+                            freeRowID++;
+                        }
+                    }, sSingleAccessExecutor);
+                });
+    }
+
+    private void trySetRowID(T row, int rowID) throws Exception {
+        try {
+            setRowID(row, rowID);
+        } catch (NoSuchFieldException e) {
+            // Ignore row has not ID field
+        }
+    }
+
+    private void setRowID(T row, int rowID) throws Exception {
+        row.getClass().getField("id").setInt(row, rowID);
+    }
+
+    private int getNewFreeRowID(String[] fileNames) {
+        int rowID = 0;
+        for (String name : fileNames)
+            rowID = Math.max(rowID, Integer.parseInt(name));
+        return rowID + 1;
     }
 
     public static abstract class Query<TRow> {
