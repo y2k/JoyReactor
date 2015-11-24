@@ -35,7 +35,7 @@ public class PostListPresenter extends Presenter {
         this.serviceFactory = serviceFactory;
 
         getMessages().add(this::currentTagChanged, Messages.TagSelected.class);
-        currentTagChanged(new Messages.TagSelected(Tag.makeFeatured());
+        currentTagChanged(new Messages.TagSelected(Tag.makeFeatured()));
     }
 
     private void currentTagChanged(Messages.TagSelected m) {
