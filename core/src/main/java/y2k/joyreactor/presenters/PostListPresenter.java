@@ -5,6 +5,7 @@ import y2k.joyreactor.*;
 import y2k.joyreactor.common.Messages;
 import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.repository.Repository;
+import y2k.joyreactor.services.TagService;
 import y2k.joyreactor.synchronizers.PostListSynchronizer;
 
 import java.util.List;
@@ -15,21 +16,24 @@ import java.util.List;
 public class PostListPresenter extends Presenter {
 
     private View view;
+    private TagService serviceFactory;
+
     private StateForTag state;
 
-    private Repository<Post> repository;
-    private PostListSynchronizer.Factory synchronizerFactory;
-
     public PostListPresenter(View view) {
-        this(view, new Repository<>(Post.class), new PostListSynchronizer.Factory());
+        this(view, new TagService(new Repository<>(Post.class), new PostListSynchronizer.Factory()));
     }
 
+    @Deprecated
     PostListPresenter(View view,
-                      y2k.joyreactor.repository.Repository<Post> repository,
+                      Repository<Post> repository,
                       PostListSynchronizer.Factory synchronizerFactory) {
+        this(view, new TagService(repository, synchronizerFactory));
+    }
+
+    PostListPresenter(View view, TagService serviceFactory) {
         this.view = view;
-        this.repository = repository;
-        this.synchronizerFactory = synchronizerFactory;
+        this.serviceFactory = serviceFactory;
 
         getMessages().add(this::currentTagChanged, Messages.TagSelected.class);
         state = new StateForTag(Tag.makeFeatured());
@@ -53,14 +57,14 @@ public class PostListPresenter extends Presenter {
 
     class StateForTag {
 
-        private PostListSynchronizer synchronizer;
+        private TagService service;
 
         StateForTag(Tag tag) {
-            synchronizer = synchronizerFactory.make(tag);
+            service = serviceFactory.make(tag);
 
             view.setBusy(true);
             getFromRepository().subscribe(posts -> view.reloadPosts(posts, null));
-            synchronizer.preloadNewPosts()
+            service.preloadNewPosts()
                     .subscribe(unsafeUpdate -> {
                         view.setHasNewPosts(unsafeUpdate);
                         view.setBusy(false);
@@ -69,28 +73,25 @@ public class PostListPresenter extends Presenter {
         }
 
         public void applyNew() {
-            synchronizer.applyNew()
-                    .flatMap(s -> getFromRepository())
+            service.applyNew()
                     .subscribe(posts -> {
                         view.setHasNewPosts(false);
-                        view.reloadPosts(posts, synchronizer.getDivider());
+                        view.reloadPosts(posts, service.getDivider());
                     });
         }
 
         public void loadMore() {
             view.setBusy(true);
-            synchronizer.loadNextPage()
-                    .flatMap(s -> getFromRepository())
+            service.loadNextPage()
                     .subscribe(posts -> {
-                        view.reloadPosts(posts, synchronizer.getDivider());
+                        view.reloadPosts(posts, service.getDivider());
                         view.setBusy(false);
                     });
         }
 
         public void reloadFirstPage() {
             view.setBusy(true);
-            synchronizer.reloadFirstPage()
-                    .flatMap(s -> getFromRepository())
+            service.reloadFirstPage()
                     .subscribe(posts -> {
                         view.reloadPosts(posts, posts.size());
                         view.setBusy(false);
@@ -98,7 +99,7 @@ public class PostListPresenter extends Presenter {
         }
 
         private Observable<List<Post>> getFromRepository() {
-            return repository.queryAsync();
+            return service.queryAsync();
         }
     }
 

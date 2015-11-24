@@ -4,9 +4,8 @@ import rx.Observable;
 import y2k.joyreactor.Comment;
 import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.Post;
+import y2k.joyreactor.services.PostService;
 import y2k.joyreactor.synchronizers.PostSynchronizer;
-import y2k.joyreactor.repository.CommentsForPostQuery;
-import y2k.joyreactor.repository.PostByIdQuery;
 import y2k.joyreactor.repository.Repository;
 import y2k.joyreactor.requests.OriginalImageRequest;
 
@@ -19,41 +18,33 @@ import java.util.List;
 public class PostPresenter {
 
     private View view;
-    private Repository<Post> repository;
-    private Repository<Comment> commentRepository;
-    private PostSynchronizer synchronizer;
+    private PostService service;
 
     public PostPresenter(View view) {
-        this(view, new Repository<>(Post.class), new PostSynchronizer(), new Repository<>(Comment.class));
+        this(view, new PostService(new Repository<>(Post.class), new PostSynchronizer(), new Repository<>(Comment.class)));
     }
 
-    public PostPresenter(View view, Repository<Post> repository, PostSynchronizer synchronizer, Repository<Comment> commentRepository) {
+    PostPresenter(View view, PostService service) {
         this.view = view;
-        this.repository = repository;
-        this.synchronizer = synchronizer;
-        this.commentRepository = commentRepository;
-
+        this.service = service;
         initialize();
     }
 
     private void initialize() {
         view.setIsBusy(true);
-        synchronizer
-                .synchronizeWithWeb(getArgumentPostId())
-                .flatMap(_void -> getPostFromRepository())
+        service.synchronizePostAsync(getArgumentPostId())
                 .subscribe(post -> {
                     view.setIsBusy(false);
                     view.updatePostImage(post);
 
-                    commentRepository
-                            .queryAsync(new CommentsForPostQuery(post.id, 0))
+                    service.getCommentsAsync(post.id, 0)
                             .subscribe(view::updateComments, Throwable::printStackTrace);
                 });
     }
 
     public void selectComment(int commentId) {
         getPostFromRepository()
-                .flatMap(post -> commentRepository.queryAsync(new CommentsForPostQuery(post.id, commentId)))
+                .flatMap(post -> service.getCommentsAsync(post.id, commentId))
                 .subscribe(view::updateComments, Throwable::printStackTrace);
     }
 
@@ -72,7 +63,7 @@ public class PostPresenter {
     }
 
     private Observable<Post> getPostFromRepository() {
-        return repository.queryFirstAsync(new PostByIdQuery(getArgumentPostId()));
+        return service.queryFirstAsync(getArgumentPostId());
     }
 
     private String getArgumentPostId() {
