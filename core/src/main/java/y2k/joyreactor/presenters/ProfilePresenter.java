@@ -3,7 +3,7 @@ package y2k.joyreactor.presenters;
 import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.Profile;
 import y2k.joyreactor.http.HttpClient;
-import y2k.joyreactor.requests.ProfileRequest;
+import y2k.joyreactor.services.requests.ProfileRequest;
 
 /**
  * Created by y2k on 9/30/15.

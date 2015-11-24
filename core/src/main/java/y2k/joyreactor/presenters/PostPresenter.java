@@ -7,7 +7,7 @@ import y2k.joyreactor.Post;
 import y2k.joyreactor.services.PostService;
 import y2k.joyreactor.synchronizers.PostSynchronizer;
 import y2k.joyreactor.repository.Repository;
-import y2k.joyreactor.requests.OriginalImageRequest;
+import y2k.joyreactor.services.requests.OriginalImageRequest;
 
 import java.io.File;
 import java.util.List;

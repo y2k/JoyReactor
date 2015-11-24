@@ -1,6 +1,6 @@
 package y2k.joyreactor.presenters;
 
-import y2k.joyreactor.requests.LoginRequest;
+import y2k.joyreactor.services.requests.LoginRequest;
 import y2k.joyreactor.platform.Navigation;
 
 /**

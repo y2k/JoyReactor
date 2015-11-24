@@ -4,8 +4,8 @@ import rx.Observable;
 import y2k.joyreactor.*;
 import y2k.joyreactor.common.Messages;
 import y2k.joyreactor.repository.Repository;
-import y2k.joyreactor.requests.MyTagsRequest;
-import y2k.joyreactor.requests.UserNameRequest;
+import y2k.joyreactor.services.requests.MyTagsRequest;
+import y2k.joyreactor.services.requests.UserNameRequest;
 
 import java.util.ArrayList;
 import java.util.List;

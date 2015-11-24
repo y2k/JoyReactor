@@ -1,11 +1,9 @@
-package y2k.joyreactor.requests;
+package y2k.joyreactor.services.requests;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import y2k.joyreactor.Comment;
-import y2k.joyreactor.Image;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

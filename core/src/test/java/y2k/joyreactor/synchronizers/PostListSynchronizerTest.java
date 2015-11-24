@@ -8,7 +8,7 @@ import y2k.joyreactor.Post;
 import y2k.joyreactor.repository.PostSubRepositoryForTag;
 import y2k.joyreactor.Tag;
 import y2k.joyreactor.common.PostGenerator;
-import y2k.joyreactor.requests.PostsForTagRequest;
+import y2k.joyreactor.services.requests.PostsForTagRequest;
 
 import java.util.Collections;
 import java.util.List;

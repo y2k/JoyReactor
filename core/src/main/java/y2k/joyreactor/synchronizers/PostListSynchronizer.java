@@ -3,7 +3,7 @@ package y2k.joyreactor.synchronizers;
 import rx.Observable;
 import y2k.joyreactor.repository.PostSubRepositoryForTag;
 import y2k.joyreactor.Tag;
-import y2k.joyreactor.requests.PostsForTagRequest;
+import y2k.joyreactor.services.requests.PostsForTagRequest;
 
 /**
  * Created by y2k on 03/11/15.

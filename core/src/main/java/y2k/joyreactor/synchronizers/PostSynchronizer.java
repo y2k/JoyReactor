@@ -7,7 +7,7 @@ import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.repository.CommentsForPostQuery;
 import y2k.joyreactor.repository.PostByIdQuery;
 import y2k.joyreactor.repository.Repository;
-import y2k.joyreactor.requests.PostRequest;
+import y2k.joyreactor.services.requests.PostRequest;
 
 import java.util.List;
 

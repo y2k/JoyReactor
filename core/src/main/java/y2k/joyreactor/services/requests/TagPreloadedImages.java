@@ -1,4 +1,4 @@
-//package y2k.joyreactor.requests;
+//package y2k.joyreactor.services.requests;
 //
 //import java.util.Arrays;
 //

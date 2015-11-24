@@ -1,4 +1,4 @@
-package y2k.joyreactor.requests;
+package y2k.joyreactor.services.requests;
 
 /**
  * Created by y2k on 01/10/15.

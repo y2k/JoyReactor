@@ -5,7 +5,7 @@ import y2k.joyreactor.Message;
 import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.repository.MessageForDateQuery;
 import y2k.joyreactor.repository.Repository;
-import y2k.joyreactor.requests.MessageListRequest;
+import y2k.joyreactor.services.requests.MessageListRequest;
 
 import java.util.ArrayList;
 import java.util.Date;

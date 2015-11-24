@@ -1,7 +1,7 @@
 package y2k.joyreactor.presenters;
 
 import y2k.joyreactor.platform.Navigation;
-import y2k.joyreactor.requests.CreateCommentRequest;
+import y2k.joyreactor.services.requests.CreateCommentRequest;
 
 /**
  * Created by y2k on 10/4/15.

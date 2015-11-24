@@ -1,7 +1,7 @@
 package y2k.joyreactor.presenters;
 
 import y2k.joyreactor.platform.Navigation;
-import y2k.joyreactor.requests.AddTagRequest;
+import y2k.joyreactor.services.requests.AddTagRequest;
 
 /**
  * Created by y2k on 08/10/15.
