@@ -119,12 +119,12 @@ public class PostsForTagRequest {
         public void load(Post post) {
             Element img = element.select("div.post_content img").first();
             if (img != null && img.hasAttr("width")) {
-                post.image = new Image();
-                post.image.width = Integer.parseInt(img.attr("width"));
-                post.image.height = Integer.parseInt(img.attr("height"));
-                post.image.url = hasFull(img)
-                        ? img.parent().attr("href").replaceAll("(/full/).+(-\\d+\\.)", "$1$2")
-                        : img.attr("src").replaceAll("(/post/).+(-\\d+\\.)", "$1$2");
+                post.image = new Image(
+                        hasFull(img)
+                                ? img.parent().attr("href").replaceAll("(/full/).+(-\\d+\\.)", "$1$2")
+                                : img.attr("src").replaceAll("(/post/).+(-\\d+\\.)", "$1$2"),
+                        Integer.parseInt(img.attr("width")),
+                        Integer.parseInt(img.attr("height")));
             }
         }
 
@@ -146,13 +146,13 @@ public class PostsForTagRequest {
             Element iframe = element.select("iframe.youtube-player").first();
             if (iframe == null) return;
 
-            post.image = new Image();
-            post.image.width = Integer.parseInt(iframe.attr("width"));
-            post.image.height = Integer.parseInt(iframe.attr("height"));
 
             Matcher m = SRC_PATTERN.matcher(iframe.attr("src"));
             if (!m.find()) throw new IllegalStateException(iframe.attr("src"));
-            post.image.url = "http://img.youtube.com/vi/" + m.group(1) + "/0.jpg";
+            post.image = new Image(
+                    "http://img.youtube.com/vi/" + m.group(1) + "/0.jpg",
+                    Integer.parseInt(iframe.attr("width")),
+                    Integer.parseInt(iframe.attr("height")));
         }
     }
 
@@ -169,12 +169,11 @@ public class PostsForTagRequest {
             if (video == null) return;
 
             try {
-                post.image = new Image();
-                post.image.width = Integer.parseInt(video.attr("width"));
-                post.image.height = Integer.parseInt(video.attr("height"));
-                post.image.url = element
-                        .select("span.video_gif_holder > a").first().attr("href")
-                        .replaceAll("(/post/).+(-)", "$1$2");
+                post.image = new Image(
+                        element.select("span.video_gif_holder > a").first().attr("href")
+                                .replaceAll("(/post/).+(-)", "$1$2"),
+                        Integer.parseInt(video.attr("width")),
+                        Integer.parseInt(video.attr("height")));
             } catch (Exception e) {
                 System.out.println("ELEMENT | " + video);
                 throw e;

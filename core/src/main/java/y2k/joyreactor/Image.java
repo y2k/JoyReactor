@@ -10,14 +10,20 @@ import java.net.URL;
 public class Image implements Serializable {
 
     public String url;
-    public int width;
-    public int height;
+    private int width;
+    private int height;
 
     public Image() {
     }
 
     public Image(String url) {
+        this(url, 0, 0);
+    }
+
+    public Image(String url, int width, int height) {
         this.url = url;
+        this.width = width;
+        this.height = height;
     }
 
     public String fullUrl(String format) {
@@ -51,6 +57,10 @@ public class Image implements Serializable {
 
     public boolean isAnimated() {
         return url != null && url.endsWith(".gif");
+    }
+
+    public float getAspect() {
+        return getAspect(0);
     }
 
     public float getAspect(float min) {

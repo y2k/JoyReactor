@@ -66,13 +66,22 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
         @Override
         public void onBindViewHolder(PostViewHolder h, int position) {
             Post i = posts.get(position);
-            new ImageRequest()
-                    .setUrl(i.image)
-                    .setSize(200, (int) (200 / i.getAspect(0.5f)))
-                    .to(h.image, h.image::setImageBitmap);
 
-            h.imagePanel.setAspect(i.getAspect(0.5f));
+            Image image = i.image;
+            if (image == null) {
+                h.imagePanel.setVisibility(View.GONE);
+            } else {
+                h.imagePanel.setVisibility(View.VISIBLE);
+                h.imagePanel.setAspect(image.getAspect(0.5f));
+
+                new ImageRequest()
+                        .setUrl(i.image)
+                        .setSize(200, (int) (200 / image.getAspect(0.5f)))
+                        .to(h.image, h.image::setImageBitmap);
+            }
+
             h.userImage.setImage(i.getUserImage().toImage());
+            h.videoMark.setVisibility(image != null && image.isAnimated() ? View.VISIBLE : View.GONE);
         }
 
         @Override
@@ -90,6 +99,7 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
             FixedAspectPanel imagePanel;
             WebImageView image;
             WebImageView userImage;
+            View videoMark;
 
             public PostViewHolder(View view) {
                 super(view);
@@ -97,6 +107,7 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
                 image = (WebImageView) view.findViewById(R.id.image);
                 imagePanel = (FixedAspectPanel) view.findViewById(R.id.imagePanel);
                 userImage = (WebImageView) view.findViewById(R.id.userImage);
+                videoMark = view.findViewById(R.id.videoMark);
 
                 view.findViewById(R.id.action).setOnClickListener(
                         v -> presenter.postClicked(posts.get(getAdapterPosition())));

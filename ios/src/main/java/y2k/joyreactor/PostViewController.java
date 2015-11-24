@@ -116,10 +116,16 @@ public class PostViewController extends UIViewController implements PostPresente
             cell = tableView.dequeueReusableCell("Header");
             if (post != null) {
                 UIImageView iv = (UIImageView) cell.getViewWithTag(1);
-                new ImageRequest()
-                        .setUrl(post.image)
-                        .setSize(300, (int) (300 / post.getAspect()))
-                        .to(iv, iv::setImage);
+
+                Image image = post.image;
+                if (image == null) {
+                    // TODO:
+                } else {
+                    new ImageRequest()
+                            .setUrl(post.image)
+                            .setSize(300, (int) (300 / image.getAspect()))
+                            .to(iv, iv::setImage);
+                }
             }
             return cell;
         }

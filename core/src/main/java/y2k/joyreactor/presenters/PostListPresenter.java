@@ -20,7 +20,7 @@ public class PostListPresenter extends Presenter {
     private PostListSynchronizer.Factory synchronizerFactory;
 
     public PostListPresenter(View view) {
-        this(view, new y2k.joyreactor.repository.Repository<>(Post.class), new PostListSynchronizer.Factory());
+        this(view, new Repository<>(Post.class), new PostListSynchronizer.Factory());
     }
 
     PostListPresenter(View view,
@@ -106,7 +106,7 @@ public class PostListPresenter extends Presenter {
     }
 
     public void playClicked(Post post) {
-        if (post.isAnimated()) Navigation.getInstance().openVideo(post);
+        if (post.image.isAnimated()) Navigation.getInstance().openVideo(post);
         else Navigation.getInstance().openImageView(post);
     }
 

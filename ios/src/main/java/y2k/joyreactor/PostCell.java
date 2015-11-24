@@ -63,6 +63,7 @@ public class PostCell extends UITableViewCell {
     }
 
     private String getPlayButtonTitle() {
-        return post.isAnimated() ? Translator.get("Play") : Translator.get("View");
+        return post.image != null && post.image.isAnimated()
+                ? Translator.get("Play") : Translator.get("View");
     }
 }

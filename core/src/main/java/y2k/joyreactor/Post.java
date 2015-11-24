@@ -11,13 +11,14 @@ public class Post implements Serializable {
     public int id;
 
     public String title;
-    public Image image;
 
-    public String userImage;
+    public Image image;
 
     public UserImage getUserImage() {
         return UserImage.fromUrl(userImage);
     }
+
+    public String userImage;
 
     public String userName;
 
@@ -26,19 +27,4 @@ public class Post implements Serializable {
 
     public int commentCount;
     public float rating;
-
-    @Deprecated
-    public boolean isAnimated() {
-        return image != null && image.isAnimated();
-    }
-
-    @Deprecated
-    public float getAspect() {
-        return image == null ? 1 : image.getAspect(1);
-    }
-
-    @Deprecated
-    public float getAspect(float min) {
-        return image == null ? min : image.getAspect(min);
-    }
 }
