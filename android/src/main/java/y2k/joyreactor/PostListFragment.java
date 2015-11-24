@@ -66,7 +66,7 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
 
     class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
-        List<Post> posts;
+        private List<Post> posts;
 
         @Override
         public PostViewHolder onCreateViewHolder(ViewGroup viewGroup, int itemType) {
