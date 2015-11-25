@@ -3,6 +3,7 @@ package y2k.joyreactor.presenters;
 import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.Profile;
 import y2k.joyreactor.http.HttpClient;
+import y2k.joyreactor.services.ProfileService;
 import y2k.joyreactor.services.requests.ProfileRequest;
 
 /**
@@ -10,17 +11,20 @@ import y2k.joyreactor.services.requests.ProfileRequest;
  */
 public class ProfilePresenter {
 
-    private final View view;
+    private ProfileService service;
 
     public ProfilePresenter(View view) {
-        this.view = view;
+        this(view, new ProfileService());
+    }
 
-        this.view.setBusy(true);
-        new ProfileRequest()
-                .request()
+    ProfilePresenter(View view, ProfileService service) {
+        this.service = service;
+
+        view.setBusy(true);
+        service.get()
                 .subscribe(profile -> {
-                    this.view.setProfile(profile);
-                    this.view.setBusy(false);
+                    view.setProfile(profile);
+                    view.setBusy(false);
                 }, e -> {
                     e.printStackTrace();
                     Navigation.getInstance().switchProfileToLogin();
@@ -28,8 +32,7 @@ public class ProfilePresenter {
     }
 
     public void logout() {
-        HttpClient.getInstance().clearCookies();
-        Navigation.getInstance().switchProfileToLogin();
+        service.logout().subscribe(_void -> Navigation.getInstance().switchProfileToLogin());
     }
 
     public interface View {

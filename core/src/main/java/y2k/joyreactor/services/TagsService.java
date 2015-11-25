@@ -4,6 +4,7 @@ import rx.Observable;
 import y2k.joyreactor.Image;
 import y2k.joyreactor.Tag;
 import y2k.joyreactor.presenters.TagsPresenter;
+import y2k.joyreactor.services.repository.MainTagQuery;
 import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.requests.MyTagsRequest;
 import y2k.joyreactor.services.requests.UserNameRequest;
@@ -29,7 +30,7 @@ public class TagsService {
                         ? new DefaultTagRequest().request()
                         : new MyTagsRequest(username).request())
                 .flatMap(repository::replaceAllAsync)
-                .flatMap(s -> repository.queryAsync());
+                .flatMap(s -> repository.queryAsync(new MainTagQuery()));
         return repository.queryAsync().mergeWith(subscription);
     }
 

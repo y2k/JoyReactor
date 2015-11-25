@@ -11,6 +11,8 @@ public class Tag implements Serializable {
 
     public int id;
 
+    public boolean isMainTag;
+
     public String title;
     public Image image;
 
