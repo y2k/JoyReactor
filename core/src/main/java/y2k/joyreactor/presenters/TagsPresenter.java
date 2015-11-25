@@ -5,6 +5,7 @@ import y2k.joyreactor.common.Messages;
 import y2k.joyreactor.services.TagsService;
 import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.requests.UserNameRequest;
+import y2k.joyreactor.services.synchronizers.MyTagSynchronizer;
 
 import java.util.List;
 
@@ -17,7 +18,8 @@ public class TagsPresenter extends Presenter {
     private TagsService service;
 
     public TagsPresenter(View view) {
-        this(view, new TagsService(new Repository<>(Tag.class)));
+        this(view, new TagsService(new Repository<>(Tag.class),
+                new MyTagSynchronizer(new Repository<>(Tag.class))));
     }
 
     TagsPresenter(View view, TagsService service) {
@@ -27,7 +29,7 @@ public class TagsPresenter extends Presenter {
 
     @Override
     public void activate() {
-        service.get().subscribe(view::reloadData, Throwable::printStackTrace);
+        service.getMyTags().subscribe(view::reloadData, Throwable::printStackTrace);
     }
 
     public void selectTag(Tag tag) {

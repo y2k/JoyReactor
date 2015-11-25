@@ -13,8 +13,8 @@ class UrlBuilder {
         String url = "http://joyreactor.cc/";
         if (tag.isFavorite())
             url += "user/" + URLEncoder.encode(tag.getUsername());
-        else if (tag.getId() != null)
-            url += "tag/" + URLEncoder.encode(tag.getId());
+        else if (tag.getServerId() != null)
+            url += "tag/" + URLEncoder.encode(tag.getServerId());
         if (pageId != null) url += "/" + pageId;
         return url;
     }

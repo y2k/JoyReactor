@@ -16,12 +16,12 @@ import java.util.List;
 /**
  * Created by y2k on 19/10/15.
  */
-public class MyTagsRequest {
+public class TagsForUserRequest {
 
     private TagImageRequest imageRequest = new TagImageRequest();
     private String username;
 
-    public MyTagsRequest(String username) {
+    public TagsForUserRequest(String username) {
         this.username = username;
     }
 

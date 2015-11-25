@@ -11,12 +11,12 @@ public class Tag implements Serializable {
 
     public int id;
 
-    public boolean isMainTag;
+    public boolean isMine;
 
     public String title;
     public Image image;
 
-    public String getId() {
+    public String getServerId() {
         return title == null ? null : title.toLowerCase();
     }
 
