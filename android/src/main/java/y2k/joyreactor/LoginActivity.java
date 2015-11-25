@@ -24,17 +24,10 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         LoginPresenter presenter = new LoginPresenter(this);
-        findViewById(R.id.login).setOnClickListener(v -> presenter.login());
-    }
 
-    @Override
-    public String getUsername() {
-        return "" + ((TextView) findViewById(R.id.username)).getText();
-    }
-
-    @Override
-    public String getPassword() {
-        return "" + ((TextView) findViewById(R.id.password)).getText();
+        findViewById(R.id.login).setOnClickListener(v -> presenter.login(
+                "" + ((TextView) findViewById(R.id.username)).getText(),
+                "" + ((TextView) findViewById(R.id.password)).getText()));
     }
 
     @Override

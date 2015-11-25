@@ -1,5 +1,6 @@
 package y2k.joyreactor.presenters;
 
+import y2k.joyreactor.services.ProfileService;
 import y2k.joyreactor.services.requests.LoginRequest;
 import y2k.joyreactor.platform.Navigation;
 
@@ -8,25 +9,29 @@ import y2k.joyreactor.platform.Navigation;
  */
 public class LoginPresenter {
 
-    private final View view;
+    private View view;
+    private ProfileService service;
 
     public LoginPresenter(View view) {
-        this.view = view;
+        this(view, new ProfileService());
     }
 
-    public void login() {
+    LoginPresenter(View view, ProfileService service) {
+        this.view = view;
+        this.service = service;
+    }
+
+    public void login(String username, String password) {
         view.setBusy(true);
-        new LoginRequest(view.getUsername(), view.getPassword())
-                .request()
-                .subscribe(
-                        s -> {
-                            view.setBusy(false);
-                            Navigation.getInstance().switchLoginToProfile();
-                        }, error -> {
-                            error.printStackTrace();
-                            view.setBusy(false);
-                            view.showError();
-                        });
+        service.login(username, password)
+                .subscribe(s -> {
+                    view.setBusy(false);
+                    Navigation.getInstance().switchLoginToProfile();
+                }, error -> {
+                    error.printStackTrace();
+                    view.setBusy(false);
+                    view.showError();
+                });
     }
 
     public void register() {
@@ -34,10 +39,6 @@ public class LoginPresenter {
     }
 
     public interface View {
-
-        String getUsername();
-
-        String getPassword();
 
         void setBusy(boolean isBusy);
 

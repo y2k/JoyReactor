@@ -22,7 +22,8 @@ public class LoginViewController extends UIViewController implements LoginPresen
         super.viewDidLoad();
         LoginPresenter presenter = new LoginPresenter(this);
 
-        loginButton.addOnTouchUpInsideListener((sender, e) -> presenter.login());
+        loginButton.addOnTouchUpInsideListener((sender, e) -> presenter.login(
+                username.getText(), password.getText()));
         registerButton.addOnTouchUpInsideListener((sender, e) -> presenter.register());
 
         username.setDelegate(new DefaultUITextFieldDelegate(password));
@@ -32,16 +33,6 @@ public class LoginViewController extends UIViewController implements LoginPresen
     // ==========================================
     // Implement View methods
     // ==========================================
-
-    @Override
-    public String getUsername() {
-        return username.getText();
-    }
-
-    @Override
-    public String getPassword() {
-        return password.getText();
-    }
 
     @Override
     public void setBusy(boolean isBusy) {
