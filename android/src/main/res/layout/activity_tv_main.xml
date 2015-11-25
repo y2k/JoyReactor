@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
-    <fragment android:name="y2k.joyreactor.tv.MainFragment"
-              android:id="@+id/main_content"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"/>
+    <fragment
+            android:id="@+id/header_container"
+            android:name="y2k.joyreactor.tv.TagHeadersFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="top|left"/>
 
-</LinearLayout>
+    <FrameLayout
+            android:id="@+id/rows_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="top|left"
+            android:layout_marginLeft="300dp"/>
+
+</FrameLayout>
