@@ -69,8 +69,10 @@ public class AndroidNavigation extends Navigation {
     }
 
     @Override
-    public void openVideo(Post post) {
+    public void openVideo(String postId) {
         // TODO:
+        sPostIdArgument = postId;
+        currentActivity.startActivity(new Intent(currentActivity, VideoActivity.class));
     }
 
     @Override

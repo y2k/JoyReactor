@@ -59,4 +59,5 @@
     <string name="unknown_error_occurred">Unknown error occurred</string>
     <string name="messages">Messages</string>
     <string name="title_activity_post">Post</string>
+    <string name="title_activity_video">VideoActivity</string>
 </resources>

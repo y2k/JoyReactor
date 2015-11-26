@@ -85,8 +85,8 @@ public class StoryboardNavigation extends Navigation {
     }
 
     @Override
-    public void openVideo(Post post) {
-        sPostArgument = post;
+    public void openVideo(String postId) {
+        sPostIdArgument = postId;
         getNavigationController().pushViewController(instantiateViewController("Video"), true);
     }
 

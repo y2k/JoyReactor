@@ -35,7 +35,7 @@ public class PostService {
         return commentRepository.queryAsync(new CommentsForPostQuery(postId, parentCommentId));
     }
 
-    public Observable<Post> queryFirstAsync(String postId) {
+    public Observable<Post> getFromCache(String postId) {
         return repository.queryFirstAsync(new PostByIdQuery(postId));
     }
 }

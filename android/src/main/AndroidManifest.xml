@@ -1,65 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" android:installLocation="preferExternal"
-          package="y2k.joyreactor">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="y2k.joyreactor"
+    android:installLocation="preferExternal" >
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-            android:name=".App"
-            android:allowBackup="false"
-            android:hardwareAccelerated="true"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
-                  android:label="@string/app_name">
+        android:name=".App"
+        android:allowBackup="false"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ProfileActivity"
-                  android:label="@string/title_activity_profile">
+        <activity
+            android:name=".ProfileActivity"
+            android:label="@string/title_activity_profile" >
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="y2k.joyreactor.MainActivity"/>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="y2k.joyreactor.MainActivity" />
         </activity>
-        <activity android:name=".LoginActivity"
-                  android:label="@string/title_activity_login">
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login" >
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="y2k.joyreactor.MainActivity"/>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="y2k.joyreactor.MainActivity" />
         </activity>
-        <activity android:name=".MessagesActivity"
-                  android:label="@string/messages">
+        <activity
+            android:name=".MessagesActivity"
+            android:label="@string/messages" >
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="y2k.joyreactor.MainActivity"/>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="y2k.joyreactor.MainActivity" />
         </activity>
-        <activity android:name=".PostActivity"
-                  android:label="@string/title_activity_post">
+        <activity
+            android:name=".PostActivity"
+            android:label="@string/title_activity_post" >
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="y2k.joyreactor.MainActivity"/>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="y2k.joyreactor.MainActivity" />
         </activity>
 
         <!-- TV -->
         <activity
-                android:name=".tv.MainActivity"
-                android:theme="@style/Theme.Leanback.Browse"
-                android:banner="@drawable/app_icon_your_company"
-                android:icon="@drawable/app_icon_your_company"
-                android:label="@string/app_name"
-                android:logo="@drawable/app_icon_your_company"
-                android:screenOrientation="landscape"
-                tools:ignore="UnusedAttribute">
+            android:name=".tv.MainActivity"
+            android:banner="@drawable/app_icon_your_company"
+            android:icon="@drawable/app_icon_your_company"
+            android:label="@string/app_name"
+            android:logo="@drawable/app_icon_your_company"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.Leanback.Browse"
+            tools:ignore="UnusedAttribute" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LEANBACK_LAUNCHER"/>
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".VideoActivity"
+            android:label="@string/title_activity_video"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="y2k.joyreactor.MainActivity" />
+        </activity>
     </application>
+
 </manifest>

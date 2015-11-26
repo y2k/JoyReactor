@@ -63,7 +63,7 @@ public class PostPresenter {
     }
 
     private Observable<Post> getPostFromRepository() {
-        return service.queryFirstAsync(getArgumentPostId());
+        return service.getFromCache(getArgumentPostId());
     }
 
     private String getArgumentPostId() {

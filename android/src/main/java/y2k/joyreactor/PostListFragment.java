@@ -121,8 +121,10 @@ public class PostListFragment extends Fragment implements PostListPresenter.View
                 userImage = (WebImageView) view.findViewById(R.id.userImage);
                 videoMark = view.findViewById(R.id.videoMark);
 
-                view.findViewById(R.id.action).setOnClickListener(
+                view.findViewById(R.id.card).setOnClickListener(
                         v -> presenter.postClicked(posts.get(getAdapterPosition())));
+                view.findViewById(R.id.videoMark).setOnClickListener(
+                        v -> presenter.playClicked(posts.get(getAdapterPosition())));
             }
         }
     }

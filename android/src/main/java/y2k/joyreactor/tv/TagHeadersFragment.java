@@ -26,7 +26,6 @@ public class TagHeadersFragment extends HeadersFragment {
 
             @Override
             public void onHeaderSelected(RowHeaderPresenter.ViewHolder viewHolder, Row row) {
-                // TODO:
                 if (row.getId() == 0) presenter.selectedFeatured();
                 else if (row.getId() == 1) presenter.selectedFavorite();
                 else presenter.selectTag(tags.get((int) (row.getId() - 2)));
