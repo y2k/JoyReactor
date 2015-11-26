@@ -6,7 +6,7 @@ import android.support.v17.leanback.app.OnHeaderViewSelectedListenerImpl;
 import android.support.v17.leanback.widget.*;
 import y2k.joyreactor.R;
 import y2k.joyreactor.Tag;
-import y2k.joyreactor.presenters.TvPresenter;
+import y2k.joyreactor.presenters.TagsPresenter;
 
 import java.util.List;
 
@@ -14,6 +14,9 @@ import java.util.List;
  * Created by y2k on 11/25/15.
  */
 public class TagHeadersFragment extends HeadersFragment {
+
+    TagsPresenter presenter;
+    List<Tag> tags;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -24,13 +27,17 @@ public class TagHeadersFragment extends HeadersFragment {
             @Override
             public void onHeaderSelected(RowHeaderPresenter.ViewHolder viewHolder, Row row) {
                 // TODO:
+                if (row.getId() == 0) presenter.selectedFeatured();
+                else if (row.getId() == 1) presenter.selectedFavorite();
+                else presenter.selectTag(tags.get((int) (row.getId() - 2)));
             }
         });
 
-        new TvPresenter(new TvPresenter.View() {
+        presenter = new TagsPresenter(new TagsPresenter.View() {
 
             @Override
-            public void updateTags(List<Tag> tags) {
+            public void reloadData(List<Tag> tags) {
+                TagHeadersFragment.this.tags = tags;
                 ArrayObjectAdapter adapter = new ArrayObjectAdapter(new ListRowPresenter());
 
                 addRow(adapter, getString(R.string.feed));
@@ -42,9 +49,20 @@ public class TagHeadersFragment extends HeadersFragment {
             }
 
             private void addRow(ArrayObjectAdapter adapter, String title) {
-                ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter();
-                adapter.add(new ListRow(new HeaderItem(title), listRowAdapter));
+                adapter.add(new Row(adapter.size(), new HeaderItem(title)));
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.activate();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.deactivate();
     }
 }

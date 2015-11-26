@@ -3,8 +3,8 @@
     <string name="profile">Profile</string>
     <string name="settings">Settings</string>
     <string name="about">About</string>
-    <string name="favorite">Favorite</string>
-    <string name="feed">Feed</string>
+    <string name="favorite">Избранное</string>
+    <string name="feed">Лента</string>
     <string name="post_acitivty">Post</string>
     <string name="create_tag">Create tag</string>
     <string name="tag_name">Tag name</string>
