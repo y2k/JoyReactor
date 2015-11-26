@@ -2,9 +2,8 @@ package y2k.joyreactor.tv;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v17.leanback.app.BrowseFragment;
 import android.support.v17.leanback.app.HeadersFragment;
-import android.support.v17.leanback.app.HeadersFragment.OnHeaderViewSelectedListener;
+import android.support.v17.leanback.app.OnHeaderViewSelectedListenerImpl;
 import android.support.v17.leanback.widget.*;
 import y2k.joyreactor.R;
 import y2k.joyreactor.Tag;
@@ -21,14 +20,13 @@ public class TagHeadersFragment extends HeadersFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-//        this.setOnHeaderViewSelectedListener(new OnHeaderViewSelectedListener() {
-//            @Override
-//            public void onHeaderSelected(RowHeaderPresenter.ViewHolder viewHolder, Row row) {
-//
-//            }
-//        });
-        BrowseFragment a;
-        OnHeaderViewSelectedListener b;
+        this.setOnHeaderViewSelectedListener(new OnHeaderViewSelectedListenerImpl() {
+
+            @Override
+            public void onHeaderSelected(RowHeaderPresenter.ViewHolder viewHolder, Row row) {
+                // TODO:
+            }
+        });
 
         getView().setBackgroundColor(Color.RED);
 

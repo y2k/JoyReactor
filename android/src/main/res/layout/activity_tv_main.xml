@@ -12,7 +12,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="top|left"/>
 
-    <FrameLayout
+    <fragment
+            android:name="y2k.joyreactor.tv.PostsFragment"
             android:id="@+id/rows_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
