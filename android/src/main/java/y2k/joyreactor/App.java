@@ -17,9 +17,17 @@ import java.io.InputStream;
  */
 public class App extends Application {
 
+    private static App sInstance;
+
+    public static App getInstance() {
+        return sInstance;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+
+        sInstance = this;
 
         ForegroundScheduler.setInstance(new HandlerScheduler());
         Platform.Instance = new Platform() {
@@ -43,7 +51,7 @@ public class App extends Application {
                 try {
                     in = getAssets().open(path);
                     byte[] result = new byte[in.available()];
-                    int count = in.read(result);
+                    in.read(result);
                     return result;
                 } catch (IOException e) {
                     throw new RuntimeException(e);

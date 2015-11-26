@@ -34,7 +34,9 @@ public class FixedAspectPanel extends ViewGroup {
         } else if (MeasureSpec.getSize(widthMeasureSpec) != 0) {
             h = MeasureSpec.getSize(heightMeasureSpec);
             w = (int) (h * aspect);
-        } else throw new IllegalStateException();
+        } else {
+            throw new IllegalStateException();
+        }
         setMeasuredDimension(w, h);
 
         for (int i = 0; i < getChildCount(); i++)

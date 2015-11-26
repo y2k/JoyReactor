@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-    <fragment
-            android:id="@+id/header_container"
-            android:name="y2k.joyreactor.tv.TagHeadersFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="top|left"/>
+    <fragment android:id="@+id/header_container"
+              android:name="y2k.joyreactor.tv.TagHeadersFragment"
+              android:layout_width="300dp"
+              android:layout_height="match_parent"/>
 
-    <fragment
-            android:name="y2k.joyreactor.tv.PostsFragment"
-            android:id="@+id/rows_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="top|left"
-            android:layout_marginLeft="300dp"/>
+    <fragment android:id="@+id/rows_container"
+              android:name="y2k.joyreactor.tv.PostsFragment"
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_weight="1"/>
 
-</FrameLayout>
+</LinearLayout>
