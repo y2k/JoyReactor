@@ -1,9 +1,9 @@
 package y2k.joyreactor;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.VideoView;
 import y2k.joyreactor.presenters.VideoPresenter;
 
 import java.io.File;
@@ -15,16 +15,20 @@ public class VideoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
 
+        VideoView videoView = (VideoView) findViewById(R.id.video);
+        videoView.setOnPreparedListener(mp -> mp.setLooping(true));
+
         new VideoPresenter(new VideoPresenter.View() {
 
             @Override
             public void showVideo(File videoFile) {
-                // TODO:
+                videoView.setVideoPath(videoFile.getAbsolutePath());
+                videoView.start();
             }
 
             @Override
             public void setBusy(boolean isBusy) {
-                // TODO:
+                findViewById(R.id.progress).setVisibility(isBusy ? View.VISIBLE : View.GONE);
             }
         });
     }
