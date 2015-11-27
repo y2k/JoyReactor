@@ -1,6 +1,5 @@
 package y2k.joyreactor.presenters;
 
-import rx.Observable;
 import y2k.joyreactor.Comment;
 import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.Post;
@@ -10,7 +9,6 @@ import y2k.joyreactor.services.synchronizers.PostSynchronizer;
 import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.requests.OriginalImageRequest;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -44,7 +42,7 @@ public class PostPresenter {
     }
 
     public void selectComment(int commentId) {
-        getPostFromRepository()
+        service.getFromCache(getArgumentPostId())
                 .flatMap(post -> service.getCommentsAsync(post.id, commentId))
                 .subscribe(view::updateComments, Throwable::printStackTrace);
     }
@@ -55,17 +53,13 @@ public class PostPresenter {
 
     public void saveImageToGallery() {
         view.setIsBusy(true);
-        getPostFromRepository()
+        service.getFromCache(getArgumentPostId())
                 .flatMap(post -> new OriginalImageRequest(post.image.fullUrl(null)).request())
                 .flatMap(imageFile -> Platform.Instance.saveToGallery(imageFile))
                 .subscribe(_void -> {
                     view.showImageSuccessSavedToGallery();
                     view.setIsBusy(false);
                 }, Throwable::printStackTrace);
-    }
-
-    private Observable<Post> getPostFromRepository() {
-        return service.getFromCache(getArgumentPostId());
     }
 
     private String getArgumentPostId() {
