@@ -44,6 +44,11 @@ public class AddTagViewController extends UIViewController implements AddTagPres
     }
 
     @Override
+    public void showErrorMessage() {
+        // TODO:
+    }
+
+    @Override
     public UIStatusBarStyle getPreferredStatusBarStyle() {
         return UIStatusBarStyle.LightContent;
     }
