@@ -5,7 +5,7 @@ import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
 import y2k.joyreactor.platform.ImageRequest;
-import y2k.joyreactor.presenters.TagsPresenter;
+import y2k.joyreactor.presenters.TagListPresenter;
 
 import java.util.List;
 
@@ -13,17 +13,17 @@ import java.util.List;
  * Created by y2k on 9/26/15.
  */
 @CustomClass("MenuViewController")
-public class MenuViewController extends UIViewController implements TagsPresenter.View {
+public class MenuViewController extends UIViewController implements TagListPresenter.View {
 
     UITableView list;
     List<Tag> tags;
-    private TagsPresenter presenter;
+    private TagListPresenter presenter;
 
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
 
-        presenter = new TagsPresenter(this);
+        presenter = new TagListPresenter(this);
         list.setDataSource(new TagDataSource());
         list.setDelegate(new TagDelegate());
     }

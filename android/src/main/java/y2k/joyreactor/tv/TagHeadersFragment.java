@@ -6,7 +6,7 @@ import android.support.v17.leanback.app.OnHeaderViewSelectedListenerImpl;
 import android.support.v17.leanback.widget.*;
 import y2k.joyreactor.R;
 import y2k.joyreactor.Tag;
-import y2k.joyreactor.presenters.TagsPresenter;
+import y2k.joyreactor.presenters.TagListPresenter;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class TagHeadersFragment extends HeadersFragment {
 
-    TagsPresenter presenter;
+    TagListPresenter presenter;
     List<Tag> tags;
 
     @Override
@@ -32,7 +32,7 @@ public class TagHeadersFragment extends HeadersFragment {
             }
         });
 
-        presenter = new TagsPresenter(new TagsPresenter.View() {
+        presenter = new TagListPresenter(new TagListPresenter.View() {
 
             @Override
             public void reloadData(List<Tag> tags) {

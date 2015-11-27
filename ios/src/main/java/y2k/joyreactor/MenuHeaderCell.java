@@ -3,7 +3,7 @@ package y2k.joyreactor;
 import org.robovm.apple.uikit.UITableViewCell;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBAction;
-import y2k.joyreactor.presenters.TagsPresenter;
+import y2k.joyreactor.presenters.TagListPresenter;
 
 /**
  * Created by y2k on 20/10/15.
@@ -11,9 +11,9 @@ import y2k.joyreactor.presenters.TagsPresenter;
 @CustomClass("MenuHeaderCell")
 public class MenuHeaderCell extends UITableViewCell {
 
-    private TagsPresenter presenter;
+    private TagListPresenter presenter;
 
-    public void setPresenter(TagsPresenter presenter) {
+    public void setPresenter(TagListPresenter presenter) {
         this.presenter = presenter;
     }
 

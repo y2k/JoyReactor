@@ -8,18 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-import y2k.joyreactor.presenters.TagsPresenter;
+import y2k.joyreactor.presenters.TagListPresenter;
 
 import java.util.List;
 
 /**
  * Created by y2k on 11/12/15.
  */
-public class MenuFragment extends Fragment implements TagsPresenter.View {
+public class MenuFragment extends Fragment implements TagListPresenter.View {
 
     TagsAdapter adapter;
-    TagsPresenter presenter;
+    TagListPresenter presenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,7 +33,7 @@ public class MenuFragment extends Fragment implements TagsPresenter.View {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        presenter = new TagsPresenter(this);
+        presenter = new TagListPresenter(this);
     }
 
     @Override

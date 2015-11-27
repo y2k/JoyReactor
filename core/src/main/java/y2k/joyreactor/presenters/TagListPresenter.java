@@ -12,17 +12,17 @@ import java.util.List;
 /**
  * Created by y2k on 9/26/15.
  */
-public class TagsPresenter extends Presenter {
+public class TagListPresenter extends Presenter {
 
     private View view;
     private TagsService service;
 
-    public TagsPresenter(View view) {
+    public TagListPresenter(View view) {
         this(view, new TagsService(new Repository<>(Tag.class),
                 new MyTagSynchronizer(new Repository<>(Tag.class))));
     }
 
-    TagsPresenter(View view, TagsService service) {
+    TagListPresenter(View view, TagsService service) {
         this.view = view;
         this.service = service;
     }
