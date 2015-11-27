@@ -2,6 +2,9 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="y2k.joyreactor.Main2Activity">
+    <item android:id="@+id/addTag"
+          android:title="@string/add_tag"
+          app:showAsAction="never"/>
     <item android:id="@+id/profile"
           android:title="@string/profile"
           app:showAsAction="never"/>

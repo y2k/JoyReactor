@@ -1,5 +1,5 @@
 <resources>
-    <string name="add_tag">Add tag</string>
+    <string name="add_tag">Добавить тег</string>
     <string name="profile">Профиль</string>
     <string name="settings">Settings</string>
     <string name="about">About</string>
@@ -7,7 +7,7 @@
     <string name="feed">Лента</string>
     <string name="post_acitivty">Post</string>
     <string name="create_tag">Create tag</string>
-    <string name="tag_name">Tag name</string>
+    <string name="tag_name">Имя тега</string>
     <string name="example_tag">Example: Android, Anime</string>
     <string name="required_field">Required field</string>
     <string name="username">Имя пользователя</string>

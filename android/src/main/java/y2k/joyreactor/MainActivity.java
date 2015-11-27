@@ -31,13 +31,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.profile) {
+        if (item.getItemId() == R.id.profile)
             startActivity(new Intent(this, ProfileActivity.class));
-            return true;
-        } else if (item.getItemId() == R.id.messages) {
+        else if (item.getItemId() == R.id.messages)
             startActivity(new Intent(this, MessagesActivity.class));
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        else if (item.getItemId() == R.id.addTag)
+            new AddTagDialogFragment().show(getSupportFragmentManager(), "add_tag");
+        else return super.onOptionsItemSelected(item);
+        return true;
     }
 }

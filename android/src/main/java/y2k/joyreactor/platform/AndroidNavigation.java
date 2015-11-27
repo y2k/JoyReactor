@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import y2k.joyreactor.*;
 
 /**
@@ -14,7 +15,7 @@ public class AndroidNavigation extends Navigation {
 
     static Post sPostArgument; // FIXME:
     static String sPostIdArgument = "2294127"; // FIXME:
-    Activity currentActivity;
+    AppCompatActivity currentActivity;
 
     public AndroidNavigation(Application app) {
         app.registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
@@ -39,7 +40,9 @@ public class AndroidNavigation extends Navigation {
 
     @Override
     public void closeAddTag() {
-        // TODO:
+        AddTagDialogFragment dialog = (AddTagDialogFragment) currentActivity
+                .getSupportFragmentManager().findFragmentByTag("add_tag");
+        dialog.dismiss();
     }
 
     @Override
@@ -85,7 +88,7 @@ public class AndroidNavigation extends Navigation {
 
         @Override
         public void onActivityResumed(Activity activity) {
-            currentActivity = activity;
+            currentActivity = (AppCompatActivity) activity;
         }
 
         @Override

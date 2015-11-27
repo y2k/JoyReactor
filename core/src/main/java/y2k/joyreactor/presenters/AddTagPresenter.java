@@ -1,11 +1,13 @@
 package y2k.joyreactor.presenters;
 
 import y2k.joyreactor.Tag;
+import y2k.joyreactor.common.ForegroundScheduler;
 import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.services.TagsService;
 import y2k.joyreactor.services.repository.Repository;
-import y2k.joyreactor.services.requests.AddTagRequest;
 import y2k.joyreactor.services.synchronizers.MyTagSynchronizer;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by y2k on 08/10/15.
@@ -30,11 +32,17 @@ public class AddTagPresenter {
                 .subscribe(s -> {
                     view.setIsBusy(false);
                     Navigation.getInstance().closeAddTag();
-                }, Throwable::printStackTrace);
+                }, e -> {
+                    e.printStackTrace();
+                    view.setIsBusy(false);
+                    view.showErrorMessage();
+                });
     }
 
     public interface View {
 
         void setIsBusy(boolean isBusy);
+
+        void showErrorMessage();
     }
 }
