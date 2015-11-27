@@ -58,7 +58,7 @@ class PostCommentsRequest {
             for (int i = 0; i < comments.size() - 1; i++) {
                 Comment c = comments.get(i);
                 for (int n = i + 1; n < comments.size(); n++)
-                    if (comments.get(n).parentId == c.id) c.childCount++;
+                    if (comments.get(n).parentId == c.id) c.replies++;
             }
         }
     }

@@ -1,6 +1,5 @@
 package y2k.joyreactor;
 
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,8 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import y2k.joyreactor.presenters.PostPresenter;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.List;
 
 public class PostActivity extends AppCompatActivity {
@@ -70,7 +67,7 @@ public class PostActivity extends AppCompatActivity {
         return true;
     }
 
-    static class CommentAdapter extends RecyclerView.Adapter<ViewHolder> {
+    static class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
 
         private List<Comment> comments;
         private Post post;
@@ -105,6 +102,15 @@ public class PostActivity extends AppCompatActivity {
             notifyDataSetChanged();
         }
 
+        static abstract class ViewHolder extends RecyclerView.ViewHolder {
+
+            public ViewHolder(View view) {
+                super(view);
+            }
+
+            public abstract void bind(int position);
+        }
+
         class HeaderViewHolder extends ViewHolder {
 
             public HeaderViewHolder(ViewGroup parent) {
@@ -122,6 +128,7 @@ public class PostActivity extends AppCompatActivity {
 
             TextView rating;
             TextView text;
+            TextView replies;
             WebImageView avatar;
 
             public CommentViewHolder(ViewGroup parent) {
@@ -130,6 +137,7 @@ public class PostActivity extends AppCompatActivity {
                 rating = (TextView) itemView.findViewById(R.id.rating);
                 text = (TextView) itemView.findViewById(R.id.text);
                 avatar = (WebImageView) itemView.findViewById(R.id.avatar);
+                replies = (TextView) itemView.findViewById(R.id.replies);
             }
 
             @Override
@@ -139,16 +147,8 @@ public class PostActivity extends AppCompatActivity {
                 text.setText(c.text);
                 avatar.setImage(c.getUserImage().toImage());
                 rating.setText("" + c.rating);
+                replies.setText("" + c.replies);
             }
         }
-    }
-
-    static abstract class ViewHolder extends RecyclerView.ViewHolder {
-
-        public ViewHolder(View view) {
-            super(view);
-        }
-
-        public abstract void bind(int position);
     }
 }

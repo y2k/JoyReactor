@@ -15,7 +15,7 @@ public class Comment implements Serializable {
     public int id;
     public int parentId;
 
-    public int childCount;
+    public int replies;
     public float rating;
 
     public UserImage getUserImage() {

@@ -7,7 +7,6 @@ import org.robovm.objc.annotation.IBOutlet;
 import y2k.joyreactor.platform.ImageRequest;
 import y2k.joyreactor.presenters.PostPresenter;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -143,7 +142,7 @@ public class PostViewController extends UIViewController implements PostPresente
                     .setSize((int) iv.getFrame().getWidth(), (int) iv.getFrame().getHeight())
                     .to(iv, iv::setImage);
 
-            ((UILabel) cell.getViewWithTag(3)).setText("" + item.childCount);
+            ((UILabel) cell.getViewWithTag(3)).setText("" + item.replies);
             ((UILabel) cell.getViewWithTag(4)).setText("" + item.rating);
 
             return cell;
