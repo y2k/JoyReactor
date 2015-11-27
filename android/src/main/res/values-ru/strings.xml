@@ -13,14 +13,14 @@
     <string name="username">Имя пользователя</string>
     <string name="password">Пароль</string>
     <string name="login">Войти</string>
-    <string name="logout">Sign out</string>
+    <string name="logout">Выйти</string>
     <string name="activity_private_messages">Private messages</string>
     <string name="new_posts">Есть новые посты</string>
     <string name="apply_caps">ОБНОВИТЬ</string>
     <string name="load_more_caps">LOAD MORE</string>
     <string name="old_posts">old posts</string>
-    <string name="rating">Rating:</string>
-    <string name="star_progress">New star progress:</string>
+    <string name="rating">Рейтинг:</string>
+    <string name="star_progress">Прогресс до следующей звезды:</string>
     <string name="login_error">Can\'t login. Try later.</string>
     <string name="your_new_message_here">Напишите здесь свое сообщение…</string>
     <string name="you_are_not_authorized">You are not authorized</string>
@@ -31,7 +31,7 @@
     <string name="error_email_client_not_installed">You don\'t have any email client installed.</string>
     <string name="unknow_error">Произошла ошибка. Пожалуйста, попробуйте позже.</string>
     <string name="authorization">Authorization</string>
-    <string name="get_profile">Get profile</string>
+    <string name="get_profile">Загрузка профиля</string>
     <string name="write_comment">Write comment</string>
     <string name="reply">Reply</string>
     <string name="new_messages">You have new private messages</string>
