@@ -20,24 +20,19 @@ public class AddTagViewController extends UIViewController implements AddTagPres
         AddTagPresenter presenter = new AddTagPresenter(this);
 
         getNavigationItem().getRightBarButtonItem()
-                .setOnClickListener(sender -> presenter.addTag());
+                .setOnClickListener(sender -> presenter.add(tagNameView.getText()));
 
         tagNameView.setDelegate(new UITextFieldDelegateAdapter() {
 
             @Override
             public boolean shouldReturn(UITextField textField) {
-                presenter.addTag();
+                presenter.add(tagNameView.getText());
                 return false;
             }
         });
 
         tagNameView.becomeFirstResponder();
         activityView.stopAnimating();
-    }
-
-    @Override
-    public String getTagName() {
-        return tagNameView.getText();
     }
 
     @Override

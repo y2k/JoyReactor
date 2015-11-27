@@ -4,6 +4,7 @@ import rx.Observable;
 import y2k.joyreactor.Tag;
 import y2k.joyreactor.services.repository.MyTagQuery;
 import y2k.joyreactor.services.repository.Repository;
+import y2k.joyreactor.services.requests.AddTagRequest;
 import y2k.joyreactor.services.synchronizers.MyTagSynchronizer;
 
 import java.util.List;
@@ -29,5 +30,9 @@ public class TagsService {
 
     private Observable<List<Tag>> getFromRepo() {
         return repository.queryAsync(new MyTagQuery());
+    }
+
+    public Observable<?> addTag(String tag) {
+        return new AddTagRequest(tag).request();
     }
 }
