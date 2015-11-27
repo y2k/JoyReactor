@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         else if (item.getItemId() == R.id.messages)
             startActivity(new Intent(this, MessagesActivity.class));
         else if (item.getItemId() == R.id.addTag)
-            new AddTagDialogFragment().show(getSupportFragmentManager(), "add_tag");
+            AddTagDialogFragment.show(getSupportFragmentManager());
         else return super.onOptionsItemSelected(item);
         return true;
     }

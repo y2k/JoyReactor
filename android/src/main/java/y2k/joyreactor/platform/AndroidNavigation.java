@@ -40,9 +40,7 @@ public class AndroidNavigation extends Navigation {
 
     @Override
     public void closeAddTag() {
-        AddTagDialogFragment dialog = (AddTagDialogFragment) currentActivity
-                .getSupportFragmentManager().findFragmentByTag("add_tag");
-        dialog.dismiss();
+        AddTagDialogFragment.dismiss(currentActivity);
     }
 
     @Override
