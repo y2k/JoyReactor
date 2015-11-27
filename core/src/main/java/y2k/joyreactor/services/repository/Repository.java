@@ -20,6 +20,7 @@ public class Repository<T> {
 
     private static final ExecutorService sSingleAccessExecutor = Executors.newSingleThreadExecutor();
 
+    private IdWrapper<T> idWrapper = new IdWrapper<>();
     private File directory;
 
     public Repository(Class<T> cls) {
@@ -93,8 +94,18 @@ public class Repository<T> {
             for (File f : directory.listFiles())
                 f.delete();
 
-            for (int i = 0; i < rows.size(); i++)
-                writeObject(new File(directory, "" + i), rows.get(i));
+            int maxId = 0;
+            for (T row : rows)
+                maxId = Math.max(maxId, idWrapper.getId(row));
+            maxId++;
+
+            for (T row : rows) {
+                int id = idWrapper.getId(row);
+                if (id == 0)
+                    idWrapper.setRowID(row, id = maxId++);
+
+                writeObject(new File(directory, "" + id), row);
+            }
         }, sSingleAccessExecutor);
     }
 
@@ -188,6 +199,26 @@ public class Repository<T> {
         for (String name : fileNames)
             rowID = Math.max(rowID, Integer.parseInt(name));
         return rowID + 1;
+    }
+
+    private static class IdWrapper<T> {
+
+        public int getId(T row) throws IllegalAccessException {
+            try {
+                return row.getClass().getField("id").getInt(row);
+            } catch (NoSuchFieldException e) {
+                // Ignore row has not ID field
+                return 0;
+            }
+        }
+
+        public void setRowID(T row, int rowID) throws Exception {
+            try {
+                row.getClass().getField("id").setInt(row, rowID);
+            } catch (NoSuchFieldException e) {
+                // Ignore row has not ID field
+            }
+        }
     }
 
     public static abstract class Query<TRow> {

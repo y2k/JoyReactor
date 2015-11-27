@@ -3,6 +3,7 @@ package y2k.joyreactor.services;
 import rx.Observable;
 import y2k.joyreactor.Post;
 import y2k.joyreactor.Tag;
+import y2k.joyreactor.services.repository.PostsForTagQuery;
 import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.synchronizers.PostListSynchronizer;
 
@@ -13,6 +14,7 @@ import java.util.List;
  */
 public class TagService {
 
+    private Tag tag;
     private Repository<Post> repository;
     private PostListSynchronizer synchronizer;
     private PostListSynchronizer.Factory synchronizerFactory;
@@ -23,13 +25,14 @@ public class TagService {
         this.synchronizerFactory = synchronizerFactory;
     }
 
-    private TagService(Repository<Post> repository, PostListSynchronizer synchronizer) {
+    private TagService(Tag tag, Repository<Post> repository, PostListSynchronizer synchronizer) {
+        this.tag = tag;
         this.repository = repository;
         this.synchronizer = synchronizer;
     }
 
     public TagService make(Tag tag) {
-        return new TagService(repository, synchronizerFactory.make(tag));
+        return new TagService(tag, repository, synchronizerFactory.make(tag));
     }
 
     public Observable<Boolean> preloadNewPosts() {
@@ -57,6 +60,6 @@ public class TagService {
     }
 
     private Observable<List<Post>> getFromRepository() {
-        return repository.queryAsync();
+        return repository.queryAsync(new PostsForTagQuery(tag));
     }
 }

@@ -97,7 +97,7 @@ public class MenuFragment extends Fragment implements TagListPresenter.View {
                     view.findViewById(R.id.selectFeatured).setOnClickListener(v -> presenter.selectedFeatured());
                     view.findViewById(R.id.selectFavorite).setOnClickListener(v -> presenter.selectedFavorite());
                 } else {
-                    action.setOnClickListener(v -> presenter.selectTag(tags.get(getAdapterPosition())));
+                    action.setOnClickListener(v -> presenter.selectTag(tags.get(getAdapterPosition() - 1)));
                 }
             }
         }
