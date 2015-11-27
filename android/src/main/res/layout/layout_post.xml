@@ -38,20 +38,20 @@
             android:layout_height="100dp"
             android:layout_alignRight="@id/thumbnails"
             android:layout_alignBottom="@id/thumbnails"/>
+    <!--<y2k.joyreactor.WebImageView-->
+            <!--android:id="@+id/imageBackground"-->
+            <!--android:scaleType="centerCrop"-->
+            <!--android:layout_toLeftOf="@id/thumbnails"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_marginRight="1dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="302dp"/>-->
     <y2k.joyreactor.WebImageView
-            android:layout_toLeftOf="@id/thumbnails"
-            android:layout_alignParentLeft="true"
-            android:id="@+id/imageBackground"
-            android:scaleType="centerCrop"
-            android:layout_marginRight="1dp"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="302dp"/>
-    <y2k.joyreactor.WebImageView
-            android:layout_toLeftOf="@id/thumbnails"
-            android:layout_alignParentLeft="true"
             android:id="@+id/image"
             android:scaleType="fitCenter"
+            android:layout_toLeftOf="@id/thumbnails"
+            android:layout_alignParentLeft="true"
             android:layout_marginRight="1dp"
             android:layout_weight="1"
             android:layout_width="0dp"

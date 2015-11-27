@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.TextView;
 import android.widget.Toast;
+import y2k.joyreactor.platform.ImageRequest;
 import y2k.joyreactor.presenters.PostPresenter;
 
 import java.util.List;
@@ -113,14 +114,23 @@ public class PostActivity extends AppCompatActivity {
 
         class HeaderViewHolder extends ViewHolder {
 
+            WebImageView image;
+
             public HeaderViewHolder(ViewGroup parent) {
                 super(LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.layout_post, parent, false));
+                image = (WebImageView) itemView.findViewById(R.id.image);
             }
 
             @Override
             public void bind(int position) {
                 // TODO
+                if (post != null) {
+                    new ImageRequest()
+                            .setUrl(post.image)
+                            .setSize(200, (int) (200 / post.image.getAspect(0.5f)))
+                            .to(image, image::setImageBitmap);
+                }
             }
         }
 
