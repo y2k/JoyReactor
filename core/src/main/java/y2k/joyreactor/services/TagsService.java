@@ -5,6 +5,7 @@ import y2k.joyreactor.Tag;
 import y2k.joyreactor.services.repository.MyTagQuery;
 import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.requests.AddTagRequest;
+import y2k.joyreactor.services.requests.UserNameRequest;
 import y2k.joyreactor.services.synchronizers.MyTagSynchronizer;
 
 import java.util.List;
@@ -34,5 +35,9 @@ public class TagsService {
 
     public Observable<?> addTag(String tag) {
         return new AddTagRequest(tag).request();
+    }
+
+    public Observable<Tag> getTagForFavorite() {
+        return new UserNameRequest().request().map(Tag::makeFavorite);
     }
 }

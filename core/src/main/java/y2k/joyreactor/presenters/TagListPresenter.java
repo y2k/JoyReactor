@@ -1,10 +1,9 @@
 package y2k.joyreactor.presenters;
 
-import y2k.joyreactor.*;
+import y2k.joyreactor.Tag;
 import y2k.joyreactor.common.Messages;
 import y2k.joyreactor.services.TagsService;
 import y2k.joyreactor.services.repository.Repository;
-import y2k.joyreactor.services.requests.UserNameRequest;
 import y2k.joyreactor.services.synchronizers.MyTagSynchronizer;
 
 import java.util.List;
@@ -41,9 +40,8 @@ public class TagListPresenter extends Presenter {
     }
 
     public void selectedFavorite() {
-        new UserNameRequest()
-                .request()
-                .subscribe(username -> new Messages.TagSelected(Tag.makeFavorite(username)).broadcast());
+        service.getTagForFavorite()
+                .subscribe(tag -> new Messages.TagSelected(tag).broadcast());
     }
 
     public interface View {
