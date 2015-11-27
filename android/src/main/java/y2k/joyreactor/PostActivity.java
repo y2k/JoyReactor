@@ -1,5 +1,10 @@
 package y2k.joyreactor;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.TextView;
 import android.widget.Toast;
+import y2k.joyreactor.common.ObservableUtils;
+import y2k.joyreactor.platform.AndroidNavigation;
 import y2k.joyreactor.platform.ImageRequest;
 import y2k.joyreactor.presenters.PostPresenter;
 
@@ -63,9 +70,20 @@ public class PostActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.openInBrowser) presenter.openPostInBrowser();
-        else if (item.getItemId() == R.id.saveImageToGallery) presenter.saveImageToGallery();
+        else if (item.getItemId() == R.id.saveImageToGallery) saveImageToGallery();
         else super.onOptionsItemSelected(item);
         return true;
+    }
+
+    private void saveImageToGallery() {
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            presenter.saveImageToGallery();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[] {
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            }, 1);
+        }
     }
 
     static class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
