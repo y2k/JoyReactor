@@ -57,4 +57,7 @@
     <string name="title_activity_login">Login</string>
     <string name="messages">Messages</string>
     <string name="unknown_error_occurred">Неизвестная ошибка</string>
+    <string name="open_in_browser">Открыть в браузере</string>
+    <string name="save_image_to_gallery">Сохранить в галерею</string>
+    <string name="image_saved_to_gallery">Картинка сохранена в галерею</string>
 </resources>

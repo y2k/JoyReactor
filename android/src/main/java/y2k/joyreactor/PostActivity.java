@@ -1,20 +1,23 @@
 package y2k.joyreactor;
 
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.TextView;
+import android.widget.Toast;
 import y2k.joyreactor.presenters.PostPresenter;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public class PostActivity extends AppCompatActivity {
+
+    PostPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +32,7 @@ public class PostActivity extends AppCompatActivity {
         CommentAdapter adapter;
         list.setAdapter(adapter = new CommentAdapter());
 
-        new PostPresenter(new PostPresenter.View() {
+        presenter = new PostPresenter(new PostPresenter.View() {
 
             @Override
             public void updateComments(List<Comment> comments) {
@@ -47,19 +50,24 @@ public class PostActivity extends AppCompatActivity {
             }
 
             @Override
-            public void uploadToGallery(File imageFile) {
-                // TODO:
+            public void showImageSuccessSavedToGallery() {
+                Toast.makeText(getApplicationContext(), R.string.image_saved_to_gallery, Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    static abstract class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_post, menu);
+        return true;
+    }
 
-        public ViewHolder(View view) {
-            super(view);
-        }
-
-        public abstract void bind(int position);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.openInBrowser) presenter.openPostInBrowser();
+        else if (item.getItemId() == R.id.saveImageToGallery) presenter.saveImageToGallery();
+        else super.onOptionsItemSelected(item);
+        return true;
     }
 
     static class CommentAdapter extends RecyclerView.Adapter<ViewHolder> {
@@ -133,5 +141,14 @@ public class PostActivity extends AppCompatActivity {
                 rating.setText("" + c.rating);
             }
         }
+    }
+
+    static abstract class ViewHolder extends RecyclerView.ViewHolder {
+
+        public ViewHolder(View view) {
+            super(view);
+        }
+
+        public abstract void bind(int position);
     }
 }

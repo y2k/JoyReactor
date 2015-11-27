@@ -60,4 +60,7 @@
     <string name="messages">Messages</string>
     <string name="title_activity_post">Post</string>
     <string name="title_activity_video">VideoActivity</string>
+    <string name="open_in_browser">Open in browser</string>
+    <string name="save_image_to_gallery">Save to gallery</string>
+    <string name="image_saved_to_gallery">Image saved to gallery</string>
 </resources>

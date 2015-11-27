@@ -1,5 +1,7 @@
 package y2k.joyreactor.platform;
 
+import rx.Observable;
+
 import java.io.File;
 
 /**
@@ -14,4 +16,6 @@ public abstract class Platform {
     public abstract Navigation getNavigator();
 
     public abstract byte[] loadFromBundle(String name, String ext);
+
+    public abstract Observable<?> saveToGallery(File imageFile);
 }

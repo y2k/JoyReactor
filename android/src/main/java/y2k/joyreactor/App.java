@@ -1,8 +1,11 @@
 package y2k.joyreactor;
 
 import android.app.Application;
+import android.provider.MediaStore;
+import rx.Observable;
 import y2k.joyreactor.common.ForegroundScheduler;
 import y2k.joyreactor.common.IoUtils;
+import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.platform.AndroidNavigation;
 import y2k.joyreactor.platform.HandlerScheduler;
 import y2k.joyreactor.platform.Navigation;
@@ -58,6 +61,12 @@ public class App extends Application {
                 } finally {
                     IoUtils.close(in);
                 }
+            }
+
+            @Override
+            public Observable<?> saveToGallery(File imageFile) {
+                return ObservableUtils.create(() ->
+                        MediaStore.Images.Media.insertImage(getContentResolver(), imageFile.getAbsolutePath(), null, null));
             }
         };
     }

@@ -93,8 +93,8 @@ public class PostViewController extends UIViewController implements PostPresente
     }
 
     @Override
-    public void uploadToGallery(File imageFile) {
-        new UIImage(imageFile).saveToPhotosAlbum(null);
+    public void showImageSuccessSavedToGallery() {
+        // TODO
     }
 
     private class CommentDataSource extends UITableViewDataSourceAdapter {

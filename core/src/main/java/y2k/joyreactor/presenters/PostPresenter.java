@@ -4,6 +4,7 @@ import rx.Observable;
 import y2k.joyreactor.Comment;
 import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.Post;
+import y2k.joyreactor.platform.Platform;
 import y2k.joyreactor.services.PostService;
 import y2k.joyreactor.services.synchronizers.PostSynchronizer;
 import y2k.joyreactor.services.repository.Repository;
@@ -56,10 +57,11 @@ public class PostPresenter {
         view.setIsBusy(true);
         getPostFromRepository()
                 .flatMap(post -> new OriginalImageRequest(post.image.fullUrl(null)).request())
-                .subscribe(imageFile -> {
-                    view.uploadToGallery(imageFile);
+                .flatMap(imageFile -> Platform.Instance.saveToGallery(imageFile))
+                .subscribe(_void -> {
+                    view.showImageSuccessSavedToGallery();
                     view.setIsBusy(false);
-                });
+                }, Throwable::printStackTrace);
     }
 
     private Observable<Post> getPostFromRepository() {
@@ -78,6 +80,6 @@ public class PostPresenter {
 
         void setIsBusy(boolean isBusy);
 
-        void uploadToGallery(File imageFile);
+        void showImageSuccessSavedToGallery();
     }
 }

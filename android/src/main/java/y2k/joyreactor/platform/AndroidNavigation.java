@@ -3,6 +3,7 @@ package y2k.joyreactor.platform;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import y2k.joyreactor.*;
 
@@ -65,7 +66,7 @@ public class AndroidNavigation extends Navigation {
 
     @Override
     public void openBrowser(String url) {
-        // TODO:
+        currentActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
 
     @Override

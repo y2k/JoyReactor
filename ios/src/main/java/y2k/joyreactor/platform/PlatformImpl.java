@@ -1,6 +1,9 @@
 package y2k.joyreactor.platform;
 
 import org.robovm.apple.foundation.*;
+import org.robovm.apple.uikit.UIImage;
+import rx.Observable;
+import y2k.joyreactor.common.ObservableUtils;
 
 import java.io.File;
 import java.util.List;
@@ -33,5 +36,11 @@ public class PlatformImpl extends Platform {
     public byte[] loadFromBundle(String name, String ext) {
         String path = NSBundle.getMainBundle().findResourcePath(name, ext);
         return NSData.read(new File(path)).getBytes();
+    }
+
+    @Override
+    public Observable<?> saveToGallery(File imageFile) {
+        return ObservableUtils.create(() ->
+                new UIImage(imageFile).saveToPhotosAlbum(null));
     }
 }
