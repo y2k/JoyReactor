@@ -15,7 +15,7 @@ public class AndroidNavigation extends Navigation {
 
     static Post sPostArgument; // FIXME:
     static String sPostIdArgument = "2294127"; // FIXME:
-    AppCompatActivity currentActivity;
+    Activity currentActivity;
 
     public AndroidNavigation(Application app) {
         app.registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
@@ -40,7 +40,7 @@ public class AndroidNavigation extends Navigation {
 
     @Override
     public void closeAddTag() {
-        AddTagDialogFragment.dismiss(currentActivity);
+        AddTagDialogFragment.dismiss((AppCompatActivity) currentActivity);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class AndroidNavigation extends Navigation {
 
         @Override
         public void onActivityResumed(Activity activity) {
-            currentActivity = (AppCompatActivity) activity;
+            currentActivity = activity;
         }
 
         @Override
