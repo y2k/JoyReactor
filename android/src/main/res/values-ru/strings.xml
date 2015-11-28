@@ -61,4 +61,5 @@
     <string name="save_image_to_gallery">Сохранить в галерею</string>
     <string name="image_saved_to_gallery">Картинка сохранена в галерею</string>
     <string name="title_activity_post">Пост</string>
+    <string name="title_activity_video">VideoActivity</string>
 </resources>
