@@ -50,7 +50,17 @@ public class Repository<T> {
         return queryAsync(query).flatMap(this::replaceAllAsync);
     }
 
-    public Observable<T> queryFirstAsync(Query query) {
+    public Observable<T> queryFirstByIdAsync(int id) {
+        return queryFirstAsync(new Query<T>() {
+
+            @Override
+            public boolean compare(T o) {
+                return idWrapper.getId(o) == id;
+            }
+        });
+    }
+
+    public Observable<T> queryFirstAsync(Query<T> query) {
         return ObservableUtils.create(() -> queryFirst(query));
     }
 
@@ -203,12 +213,14 @@ public class Repository<T> {
 
     private static class IdWrapper<T> {
 
-        public int getId(T row) throws IllegalAccessException {
+        public int getId(T row) {
             try {
                 return row.getClass().getField("id").getInt(row);
             } catch (NoSuchFieldException e) {
                 // Ignore row has not ID field
                 return 0;
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
             }
         }
 

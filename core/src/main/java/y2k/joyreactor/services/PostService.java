@@ -9,8 +9,6 @@ import y2k.joyreactor.services.repository.PostByIdQuery;
 import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.synchronizers.PostSynchronizer;
 
-import java.util.List;
-
 /**
  * Created by y2k on 11/24/15.
  */
@@ -32,13 +30,16 @@ public class PostService {
                 .flatMap(_void -> repository.queryFirstAsync(new PostByIdQuery(postId)));
     }
 
-    @Deprecated
-    public Observable<List<Comment>> getCommentsAsync(int postId, int parentCommentId) {
-        return commentRepository.queryAsync(new CommentsForPostQuery(postId, parentCommentId));
-    }
-
-    public Observable<CommentGroup> getCommentsAsync2(int postId, int parentCommentId) {
-        throw new UnsupportedOperationException();
+    public Observable<CommentGroup> getCommentsAsync(int postId, int parentCommentId) {
+        if (parentCommentId == 0)
+            return commentRepository
+                    .queryAsync(new CommentsForPostQuery(postId, 0))
+                    .map(CommentGroup::new);
+        return commentRepository
+                .queryFirstByIdAsync(parentCommentId)
+                .flatMap(parent -> commentRepository
+                        .queryAsync(new CommentsForPostQuery(postId, parentCommentId))
+                        .map(children -> new CommentGroup(parent, children)));
     }
 
     public Observable<Post> getFromCache(String postId) {

@@ -10,8 +10,6 @@ import y2k.joyreactor.services.synchronizers.PostSynchronizer;
 import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.requests.OriginalImageRequest;
 
-import java.util.List;
-
 /**
  * Created by y2k on 28/09/15.
  */
@@ -37,14 +35,14 @@ public class PostPresenter {
                     view.setIsBusy(false);
                     view.updatePostImage(post);
 
-                    service.getCommentsAsync2(post.id, 0)
+                    service.getCommentsAsync(post.id, 0)
                             .subscribe(view::updateComments, Throwable::printStackTrace);
                 });
     }
 
     public void selectComment(int commentId) {
         service.getFromCache(getArgumentPostId())
-                .flatMap(post -> service.getCommentsAsync2(post.id, commentId))
+                .flatMap(post -> service.getCommentsAsync(post.id, commentId))
                 .subscribe(view::updateComments, Throwable::printStackTrace);
     }
 
