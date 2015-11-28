@@ -16,7 +16,10 @@ public class FixedAspectPanel extends ViewGroup {
     }
 
     public void setAspect(float aspect) {
-        this.aspect = aspect;
+        if (this.aspect != aspect) {
+            this.aspect = aspect;
+            requestLayout();
+        }
     }
 
     @Override
