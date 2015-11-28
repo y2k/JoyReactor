@@ -24,7 +24,7 @@ public class PostViewController extends UIViewController implements PostPresente
 
     PostPresenter presenter;
 
-    List<Comment> comments;
+    CommentGroup comments;
     Post post;
 
     @Override
@@ -74,7 +74,7 @@ public class PostViewController extends UIViewController implements PostPresente
     }
 
     @Override
-    public void updateComments(List<Comment> comments) {
+    public void updateComments(CommentGroup comments) {
         this.comments = comments;
         list.reloadData();
     }

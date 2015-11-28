@@ -2,6 +2,7 @@ package y2k.joyreactor.services;
 
 import rx.Observable;
 import y2k.joyreactor.Comment;
+import y2k.joyreactor.CommentGroup;
 import y2k.joyreactor.Post;
 import y2k.joyreactor.services.repository.CommentsForPostQuery;
 import y2k.joyreactor.services.repository.PostByIdQuery;
@@ -31,8 +32,13 @@ public class PostService {
                 .flatMap(_void -> repository.queryFirstAsync(new PostByIdQuery(postId)));
     }
 
+    @Deprecated
     public Observable<List<Comment>> getCommentsAsync(int postId, int parentCommentId) {
         return commentRepository.queryAsync(new CommentsForPostQuery(postId, parentCommentId));
+    }
+
+    public Observable<CommentGroup> getCommentsAsync2(int postId, int parentCommentId) {
+        throw new UnsupportedOperationException();
     }
 
     public Observable<Post> getFromCache(String postId) {

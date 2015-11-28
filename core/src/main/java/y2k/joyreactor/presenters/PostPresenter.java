@@ -1,6 +1,7 @@
 package y2k.joyreactor.presenters;
 
 import y2k.joyreactor.Comment;
+import y2k.joyreactor.CommentGroup;
 import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.Post;
 import y2k.joyreactor.platform.Platform;
@@ -36,14 +37,14 @@ public class PostPresenter {
                     view.setIsBusy(false);
                     view.updatePostImage(post);
 
-                    service.getCommentsAsync(post.id, 0)
+                    service.getCommentsAsync2(post.id, 0)
                             .subscribe(view::updateComments, Throwable::printStackTrace);
                 });
     }
 
     public void selectComment(int commentId) {
         service.getFromCache(getArgumentPostId())
-                .flatMap(post -> service.getCommentsAsync(post.id, commentId))
+                .flatMap(post -> service.getCommentsAsync2(post.id, commentId))
                 .subscribe(view::updateComments, Throwable::printStackTrace);
     }
 
@@ -68,7 +69,7 @@ public class PostPresenter {
 
     public interface View {
 
-        void updateComments(List<Comment> comments);
+        void updateComments(CommentGroup comments);
 
         void updatePostImage(Post post);
 

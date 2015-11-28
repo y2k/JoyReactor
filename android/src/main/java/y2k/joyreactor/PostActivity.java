@@ -2,23 +2,18 @@ package y2k.joyreactor;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.provider.MediaStore;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.TextView;
 import android.widget.Toast;
-import y2k.joyreactor.common.ObservableUtils;
-import y2k.joyreactor.platform.AndroidNavigation;
 import y2k.joyreactor.platform.ImageRequest;
 import y2k.joyreactor.presenters.PostPresenter;
-
-import java.util.List;
 
 public class PostActivity extends AppCompatActivity {
 
@@ -40,7 +35,7 @@ public class PostActivity extends AppCompatActivity {
         presenter = new PostPresenter(new PostPresenter.View() {
 
             @Override
-            public void updateComments(List<Comment> comments) {
+            public void updateComments(CommentGroup comments) {
                 adapter.updatePostComments(comments);
             }
 
@@ -80,15 +75,15 @@ public class PostActivity extends AppCompatActivity {
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             presenter.saveImageToGallery();
         } else {
-            ActivityCompat.requestPermissions(this, new String[] {
+            ActivityCompat.requestPermissions(this, new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
             }, 1);
         }
     }
 
-    static class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
+    class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
 
-        private List<Comment> comments;
+        private CommentGroup comments;
         private Post post;
 
         @Override
@@ -116,12 +111,12 @@ public class PostActivity extends AppCompatActivity {
             notifyDataSetChanged();
         }
 
-        public void updatePostComments(List<Comment> comments) {
+        public void updatePostComments(CommentGroup comments) {
             this.comments = comments;
             notifyDataSetChanged();
         }
 
-        static abstract class ViewHolder extends RecyclerView.ViewHolder {
+        abstract class ViewHolder extends RecyclerView.ViewHolder {
 
             public ViewHolder(View view) {
                 super(view);
@@ -158,6 +153,7 @@ public class PostActivity extends AppCompatActivity {
             TextView text;
             TextView replies;
             WebImageView avatar;
+            View divider;
 
             public CommentViewHolder(ViewGroup parent) {
                 super(LayoutInflater.from(parent.getContext())
@@ -166,11 +162,16 @@ public class PostActivity extends AppCompatActivity {
                 text = (TextView) itemView.findViewById(R.id.text);
                 avatar = (WebImageView) itemView.findViewById(R.id.avatar);
                 replies = (TextView) itemView.findViewById(R.id.replies);
+                divider = itemView.findViewById(R.id.divider);
+
+                itemView.findViewById(R.id.action).setOnClickListener(v ->
+                        presenter.selectComment(comments.getId(getAdapterPosition() - 1)));
             }
 
             @Override
             public void bind(int position) {
-                // TODO
+                divider.setVisibility(comments.isChild(position) ? View.VISIBLE : View.GONE);
+
                 Comment c = comments.get(position);
                 text.setText(c.text);
                 avatar.setImage(c.getUserImage().toImage());
