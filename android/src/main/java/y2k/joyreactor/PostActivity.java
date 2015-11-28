@@ -153,6 +153,7 @@ public class PostActivity extends AppCompatActivity {
             TextView text;
             TextView replies;
             WebImageView avatar;
+            WebImageView attachment;
             View divider;
 
             public CommentViewHolder(ViewGroup parent) {
@@ -163,6 +164,7 @@ public class PostActivity extends AppCompatActivity {
                 avatar = (WebImageView) itemView.findViewById(R.id.avatar);
                 replies = (TextView) itemView.findViewById(R.id.replies);
                 divider = itemView.findViewById(R.id.divider);
+                attachment = (WebImageView) itemView.findViewById(R.id.attachment);
 
                 itemView.findViewById(R.id.action).setOnClickListener(v ->
                         presenter.selectComment(comments.getId(getAdapterPosition() - 1)));
@@ -177,6 +179,8 @@ public class PostActivity extends AppCompatActivity {
                 avatar.setImage(c.getUserImage().toImage());
                 rating.setText("" + c.rating);
                 replies.setText("" + c.replies);
+
+                attachment.setVisibility(View.GONE);
             }
         }
     }
