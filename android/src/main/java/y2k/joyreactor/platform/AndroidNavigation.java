@@ -44,12 +44,6 @@ public class AndroidNavigation extends Navigation {
     }
 
     @Override
-    public void openPost(Post post) {
-        sPostArgument = post;
-        currentActivity.startActivity(new Intent(currentActivity, PostActivity.class));
-    }
-
-    @Override
     public Post getArgumentPost() {
         return sPostArgument;
     }

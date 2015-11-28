@@ -38,12 +38,6 @@ public class StoryboardNavigation extends Navigation {
     }
 
     @Override
-    public void openPost(Post post) {
-        sPostArgument = post;
-        getNavigationController().pushViewController(instantiateViewController("Post"), true);
-    }
-
-    @Override
     public Post getArgumentPost() {
         return sPostArgument;
     }

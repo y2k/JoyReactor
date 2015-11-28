@@ -20,9 +20,6 @@ public abstract class Navigation {
     public abstract void closeAddTag();
 
     @Deprecated
-    public abstract void openPost(Post post);
-
-    @Deprecated
     public abstract Post getArgumentPost();
 
     public abstract void openPost(String postId);
