@@ -180,7 +180,8 @@ public class PostActivity extends AppCompatActivity {
                 rating.setText("" + c.rating);
                 replies.setText("" + c.replies);
 
-                attachment.setVisibility(View.GONE);
+                attachment.setVisibility(c.getAttachment() == null ? View.GONE : View.VISIBLE);
+                attachment.setImage(c.getAttachment());
             }
         }
     }

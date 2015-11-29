@@ -34,11 +34,22 @@ class PostCommentsRequest {
             if ("comment_list".equals(parent.className()))
                 comment.parentId = NumberExtractor.get(parent.id());
 
+            Element imgElement = node.select("div.image > img").first();
+            if (imgElement != null)
+                comment.setAttachment(
+                        clearImageUrl(imgElement.absUrl("src")),
+                        Integer.parseInt(imgElement.attr("width")),
+                        Integer.parseInt(imgElement.attr("height")));
+
             result.add(comment);
         }
 
         ChildrenCounter.compute(result);
         comments = result;
+    }
+
+    private String clearImageUrl(String url) {
+        return url.replaceAll("(/comment/).+(-\\d+\\.[\\w\\d]+)$","$1$2");
     }
 
     private static class NumberExtractor {

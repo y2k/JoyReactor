@@ -21,4 +21,14 @@ public class Comment implements Serializable {
     public UserImage getUserImage() {
         return userImage == null ? new UserImage() : new UserImage(userImage);
     }
+
+    public Image getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(String url, int width, int height) {
+        attachment = new Image(url, width, height);
+    }
+
+    private Image attachment;
 }
