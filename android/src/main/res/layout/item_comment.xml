@@ -69,6 +69,7 @@
     </LinearLayout>
     <ImageButton
             android:id="@+id/commentMenu"
+            android:tint="@color/primary"
             android:src="@drawable/ic_more_vert_white_24dp"
             android:background="?android:attr/listChoiceBackgroundIndicator"
             android:layout_gravity="top"
