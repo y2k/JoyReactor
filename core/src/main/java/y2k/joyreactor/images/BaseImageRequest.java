@@ -50,6 +50,8 @@ public abstract class BaseImageRequest<T> {
                         callback::call,
                         Throwable::printStackTrace,
                         () -> sLinks.remove(target));
+
+        callback.call(null);
         sLinks.put(target, subscription);
     }
 
