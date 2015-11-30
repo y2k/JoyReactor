@@ -5,8 +5,10 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
@@ -64,7 +66,8 @@ public class PostActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.openInBrowser) presenter.openPostInBrowser();
+        if (item.getItemId() == R.id.reply) presenter.replyToPost();
+        else if (item.getItemId() == R.id.openInBrowser) presenter.openPostInBrowser();
         else if (item.getItemId() == R.id.saveImageToGallery) saveImageToGallery();
         else super.onOptionsItemSelected(item);
         return true;
@@ -167,7 +170,23 @@ public class PostActivity extends AppCompatActivity {
                 attachment = (WebImageView) itemView.findViewById(R.id.attachment);
 
                 itemView.findViewById(R.id.action).setOnClickListener(v ->
-                        presenter.selectComment(comments.getId(getAdapterPosition() - 1)));
+                        presenter.selectComment(comments.getId(getCommentPosition())));
+
+                View commentButton = itemView.findViewById(R.id.commentMenu);
+                commentButton.setOnClickListener(v -> {
+                    PopupMenu menu = new PopupMenu(parent.getContext(), commentButton);
+                    menu.setOnMenuItemClickListener(menuItem -> {
+                        if (menuItem.getItemId() == R.id.reply)
+                            presenter.replyToComment(comments.get(getCommentPosition()));
+                        return true;
+                    });
+                    menu.inflate(R.menu.comment);
+                    menu.show();
+                });
+            }
+
+            private int getCommentPosition() {
+                return getAdapterPosition() - 1;
             }
 
             @Override

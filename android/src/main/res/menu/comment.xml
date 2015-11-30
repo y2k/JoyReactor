@@ -9,7 +9,4 @@
     <item android:id="@+id/saveImageToGallery"
           android:title="@string/save_image_to_gallery"
           app:showAsAction="never"/>
-    <item android:id="@+id/openInBrowser"
-          android:title="@string/open_in_browser"
-          app:showAsAction="never"/>
 </menu>

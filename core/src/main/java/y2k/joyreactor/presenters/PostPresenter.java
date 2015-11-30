@@ -65,6 +65,14 @@ public class PostPresenter {
         return Navigation.getInstance().getArgumentPostId();
     }
 
+    public void replyToComment(Comment comment) {
+        // TODO:
+    }
+
+    public void replyToPost() {
+        // TODO:
+    }
+
     public interface View {
 
         void updateComments(CommentGroup comments);

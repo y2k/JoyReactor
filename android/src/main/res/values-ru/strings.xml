@@ -33,7 +33,7 @@
     <string name="authorization">Авторизация</string>
     <string name="get_profile">Загрузка профиля</string>
     <string name="write_comment">Write comment</string>
-    <string name="reply">Reply</string>
+    <string name="reply">Ответить</string>
     <string name="new_messages">You have new private messages</string>
     <string name="click_to_open">Click to show</string>
     <string name="private_message_service_label">Check new private messages</string>
