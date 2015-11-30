@@ -17,11 +17,11 @@
     <string name="activity_private_messages">Private messages</string>
     <string name="new_posts">Есть новые посты</string>
     <string name="apply_caps">ОБНОВИТЬ</string>
-    <string name="load_more_caps">LOAD MORE</string>
-    <string name="old_posts">old posts</string>
+    <string name="load_more_caps">ДАЛЬШЕ</string>
+    <string name="old_posts">неактуальные посты</string>
     <string name="rating">Рейтинг:</string>
     <string name="star_progress">Прогресс до следующей звезды:</string>
-    <string name="login_error">Can\'t login. Try later.</string>
+    <string name="login_error">Не удалось авторизоваться. Пожалуйста, попробуйте позже.</string>
     <string name="your_new_message_here">Напишите здесь свое сообщение…</string>
     <string name="you_are_not_authorized">You are not authorized</string>
     <string name="send_feedback">Send feedback</string>
