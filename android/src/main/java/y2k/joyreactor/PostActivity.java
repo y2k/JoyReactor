@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -14,8 +13,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.TextView;
 import android.widget.Toast;
+import y2k.joyreactor.common.ComplexViewHolder;
 import y2k.joyreactor.platform.ImageRequest;
 import y2k.joyreactor.presenters.PostPresenter;
+
+import java.util.Collections;
+import java.util.List;
 
 public class PostActivity extends AppCompatActivity {
 
@@ -31,8 +34,8 @@ public class PostActivity extends AppCompatActivity {
 
         RecyclerView list = (RecyclerView) findViewById(R.id.list);
         list.setLayoutManager(new LinearLayoutManager(this));
-        CommentAdapter adapter;
-        list.setAdapter(adapter = new CommentAdapter());
+        Adapter adapter;
+        list.setAdapter(adapter = new Adapter());
 
         presenter = new PostPresenter(new PostPresenter.View() {
 
@@ -54,6 +57,11 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void showImageSuccessSavedToGallery() {
                 Toast.makeText(getApplicationContext(), R.string.image_saved_to_gallery, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void updatePostImages(List<Image> images) {
+                adapter.updatePostImages(images);
             }
         });
     }
@@ -84,24 +92,26 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
-    class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
+    class Adapter extends RecyclerView.Adapter<ComplexViewHolder> {
 
         private CommentGroup comments;
         private Post post;
+        private List<Image> images = Collections.emptyList();
 
         @Override
         public int getItemViewType(int position) {
-            return position == 0 ? 0 : 1;
+            return Math.min(1, position);
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return viewType == 0 ? new HeaderViewHolder(parent) : new CommentViewHolder(parent);
+        public ComplexViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            if (viewType == 0) return new HeaderViewHolder(parent);
+            return new CommentViewHolder(parent);
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bind(position - 1);
+        public void onBindViewHolder(ComplexViewHolder holder, int position) {
+            holder.bind();
         }
 
         @Override
@@ -111,46 +121,48 @@ public class PostActivity extends AppCompatActivity {
 
         public void updatePostDetails(Post post) {
             this.post = post;
-            notifyDataSetChanged();
+            notifyItemChanged(0);
+        }
+
+        public void updatePostImages(List<Image> images) {
+            this.images = images;
+            notifyItemChanged(0);
         }
 
         public void updatePostComments(CommentGroup comments) {
             this.comments = comments;
-            notifyDataSetChanged();
+            notifyItemRangeChanged(1, comments.size());
         }
 
-        abstract class ViewHolder extends RecyclerView.ViewHolder {
-
-            public ViewHolder(View view) {
-                super(view);
-            }
-
-            public abstract void bind(int position);
-        }
-
-        class HeaderViewHolder extends ViewHolder {
+        class HeaderViewHolder extends ComplexViewHolder {
 
             WebImageView image;
+            ImagePanel imagePanel;
+            FixedAspectPanel posterPanel;
 
             public HeaderViewHolder(ViewGroup parent) {
                 super(LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.layout_post, parent, false));
                 image = (WebImageView) itemView.findViewById(R.id.image);
+                imagePanel = (ImagePanel) itemView.findViewById(R.id.images);
+                posterPanel = (FixedAspectPanel) itemView.findViewById(R.id.posterPanel);
             }
 
             @Override
-            public void bind(int position) {
+            public void bind() {
                 // TODO
                 if (post != null) {
+                    posterPanel.setAspect(post.image.getAspect(1.25f));
                     new ImageRequest()
                             .setUrl(post.image)
                             .setSize(200, (int) (200 / post.image.getAspect(0.5f)))
                             .to(image, image::setImageBitmap);
                 }
+                imagePanel.setImages(images);
             }
         }
 
-        class CommentViewHolder extends ViewHolder {
+        class CommentViewHolder extends ComplexViewHolder {
 
             TextView rating;
             TextView text;
@@ -170,14 +182,14 @@ public class PostActivity extends AppCompatActivity {
                 attachment = (WebImageView) itemView.findViewById(R.id.attachment);
 
                 itemView.findViewById(R.id.action).setOnClickListener(v ->
-                        presenter.selectComment(comments.getId(getCommentPosition())));
+                        presenter.selectComment(comments.getId(getRealPosition())));
 
                 View commentButton = itemView.findViewById(R.id.commentMenu);
                 commentButton.setOnClickListener(v -> {
                     PopupMenu menu = new PopupMenu(parent.getContext(), commentButton);
                     menu.setOnMenuItemClickListener(menuItem -> {
                         if (menuItem.getItemId() == R.id.reply)
-                            presenter.replyToComment(comments.get(getCommentPosition()));
+                            presenter.replyToComment(comments.get(getRealPosition()));
                         return true;
                     });
                     menu.inflate(R.menu.comment);
@@ -185,15 +197,11 @@ public class PostActivity extends AppCompatActivity {
                 });
             }
 
-            private int getCommentPosition() {
-                return getAdapterPosition() - 1;
-            }
-
             @Override
-            public void bind(int position) {
-                divider.setVisibility(comments.isChild(position) ? View.VISIBLE : View.GONE);
+            public void bind() {
+                divider.setVisibility(comments.isChild(getRealPosition()) ? View.VISIBLE : View.GONE);
 
-                Comment c = comments.get(position);
+                Comment c = comments.get(getRealPosition());
                 text.setText(c.text);
                 avatar.setImage(c.getUserImage().toImage());
                 rating.setText("" + c.rating);
@@ -201,6 +209,10 @@ public class PostActivity extends AppCompatActivity {
 
                 attachment.setVisibility(c.getAttachment() == null ? View.GONE : View.VISIBLE);
                 attachment.setImage(c.getAttachment());
+            }
+
+            private int getRealPosition() {
+                return getAdapterPosition() - 1;
             }
         }
     }

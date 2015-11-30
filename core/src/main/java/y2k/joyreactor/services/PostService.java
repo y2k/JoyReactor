@@ -3,11 +3,12 @@ package y2k.joyreactor.services;
 import rx.Observable;
 import y2k.joyreactor.Comment;
 import y2k.joyreactor.CommentGroup;
+import y2k.joyreactor.Image;
 import y2k.joyreactor.Post;
-import y2k.joyreactor.services.repository.CommentsForPostQuery;
-import y2k.joyreactor.services.repository.PostByIdQuery;
-import y2k.joyreactor.services.repository.Repository;
+import y2k.joyreactor.services.repository.*;
 import y2k.joyreactor.services.synchronizers.PostSynchronizer;
+
+import java.util.List;
 
 /**
  * Created by y2k on 11/24/15.
@@ -44,5 +45,17 @@ public class PostService {
 
     public Observable<Post> getFromCache(String postId) {
         return repository.queryFirstAsync(new PostByIdQuery(postId));
+    }
+
+    public Observable<List<Image>> getPostImages(int postId) {
+        return commentRepository
+                .queryAsync(new CommentsWithImagesQuery(postId, 10))
+                .flatMap(comments -> Observable.from(comments).map(Comment::getAttachment).toList());
+    }
+
+    public Observable<CommentGroup> getTopComments(int postId, int maxCount) {
+        return commentRepository
+                .queryAsync(new TopCommentsQuery(postId, maxCount))
+                .map(CommentGroup::new);
     }
 }

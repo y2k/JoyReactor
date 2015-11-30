@@ -2,6 +2,7 @@ package y2k.joyreactor.presenters;
 
 import y2k.joyreactor.Comment;
 import y2k.joyreactor.CommentGroup;
+import y2k.joyreactor.Image;
 import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.Post;
 import y2k.joyreactor.platform.Platform;
@@ -9,6 +10,8 @@ import y2k.joyreactor.services.PostService;
 import y2k.joyreactor.services.synchronizers.PostSynchronizer;
 import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.requests.OriginalImageRequest;
+
+import java.util.List;
 
 /**
  * Created by y2k on 28/09/15.
@@ -35,7 +38,9 @@ public class PostPresenter {
                     view.setIsBusy(false);
                     view.updatePostImage(post);
 
-                    service.getCommentsAsync(post.id, 0)
+                    service.getPostImages(post.id)
+                            .subscribe(view::updatePostImages, Throwable::printStackTrace);
+                    service.getTopComments(post.id, 10)
                             .subscribe(view::updateComments, Throwable::printStackTrace);
                 });
     }
@@ -82,5 +87,7 @@ public class PostPresenter {
         void setIsBusy(boolean isBusy);
 
         void showImageSuccessSavedToGallery();
+
+        void updatePostImages(List<Image> images);
     }
 }

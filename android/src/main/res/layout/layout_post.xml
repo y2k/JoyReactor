@@ -1,64 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <LinearLayout
-            android:id="@+id/thumbnails"
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_alignParentRight="true"
+
+    <y2k.joyreactor.FixedAspectPanel
+            android:id="@+id/posterPanel"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <y2k.joyreactor.WebImageView
-                android:scaleType="centerCrop"
-                android:background="#f0f0f0"
-                android:layout_marginBottom="1dp"
-                android:layout_width="100dp"
-                android:layout_height="100dp"/>
-        <y2k.joyreactor.WebImageView
-                android:scaleType="centerCrop"
-                android:background="#f0f0f0"
-                android:layout_marginBottom="1dp"
-                android:layout_width="100dp"
-                android:layout_height="100dp"/>
-        <y2k.joyreactor.WebImageView
-                android:scaleType="centerCrop"
-                android:background="#f0f0f0"
-                android:layout_width="100dp"
-                android:layout_height="100dp"/>
-    </LinearLayout>
-    <TextView
-            android:background="#A000"
-            android:textColor="@android:color/white"
-            android:textSize="40sp"
-            android:fontFamily="sans-serif-light"
-            android:gravity="center"
-            android:id="@+id/imageCount"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignRight="@id/thumbnails"
-            android:layout_alignBottom="@id/thumbnails"/>
-    <!--<y2k.joyreactor.WebImageView-->
-            <!--android:id="@+id/imageBackground"-->
-            <!--android:scaleType="centerCrop"-->
-            <!--android:layout_toLeftOf="@id/thumbnails"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:layout_marginRight="1dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="302dp"/>-->
-    <y2k.joyreactor.WebImageView
-            android:id="@+id/image"
-            android:scaleType="fitCenter"
-            android:layout_toLeftOf="@id/thumbnails"
-            android:layout_alignParentLeft="true"
-            android:layout_marginRight="1dp"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="302dp"/>
-    <View android:id="@+id/shadow"
-          android:layout_below="@id/thumbnails"
-          android:background="@drawable/drawable_shadow"
-          android:layout_width="match_parent"
-          android:layout_height="6dp"/>
-</RelativeLayout>
+                android:id="@+id/image"
+                android:scaleType="fitCenter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+    </y2k.joyreactor.FixedAspectPanel>
+
+    <y2k.joyreactor.ImagePanel
+            android:id="@+id/images"
+            android:layout_margin="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+</LinearLayout>

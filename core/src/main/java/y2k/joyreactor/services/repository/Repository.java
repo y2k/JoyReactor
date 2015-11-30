@@ -87,7 +87,8 @@ public class Repository<T> {
                 .map(s -> {
                     query.sort((List) s);
                     return s;
-                });
+                })
+                .map(rows -> query.haven((List) rows));
     }
 
     private List<T> innerQuery(Query<T> query) throws IOException, ClassNotFoundException {
@@ -242,6 +243,10 @@ public class Repository<T> {
         }
 
         public void sort(List<TRow> items) {
+        }
+
+        public List<TRow> haven(List<TRow> items) {
+            return items;
         }
     }
 }

@@ -13,6 +13,10 @@ public class FixedAspectPanel extends ViewGroup {
 
     public FixedAspectPanel(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        if (isInEditMode()) {
+            aspect = 1;
+        }
     }
 
     public void setAspect(float aspect) {
@@ -34,7 +38,7 @@ public class FixedAspectPanel extends ViewGroup {
         if (MeasureSpec.getSize(widthMeasureSpec) != 0) {
             w = MeasureSpec.getSize(widthMeasureSpec);
             h = (int) (w / aspect);
-        } else if (MeasureSpec.getSize(widthMeasureSpec) != 0) {
+        } else if (MeasureSpec.getSize(heightMeasureSpec) != 0) {
             h = MeasureSpec.getSize(heightMeasureSpec);
             w = (int) (h * aspect);
         } else {
