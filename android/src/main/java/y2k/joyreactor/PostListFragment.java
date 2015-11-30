@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import org.ocpsoft.prettytime.PrettyTime;
+import y2k.joyreactor.common.ComplexViewHolder;
 import y2k.joyreactor.common.ItemDividerDecoration;
+import y2k.joyreactor.common.Optional;
 import y2k.joyreactor.platform.ImageRequest;
 import y2k.joyreactor.presenters.PostListPresenter;
 
@@ -43,7 +45,7 @@ public class PostListFragment extends Fragment {
 
             @Override
             public void reloadPosts(List<Post> posts, Integer divider) {
-                adapter.reloadData(posts);
+                adapter.reloadData(posts, Optional.ofNullable(divider));
             }
 
             @Override
@@ -68,53 +70,45 @@ public class PostListFragment extends Fragment {
         presenter.deactivate();
     }
 
-    class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
+    class PostAdapter extends RecyclerView.Adapter<ComplexViewHolder> {
 
         private PrettyTime prettyTime = new PrettyTime();
+        private Optional<Integer> divider = Optional.empty();
         private List<Post> posts;
 
         @Override
-        public PostViewHolder onCreateViewHolder(ViewGroup viewGroup, int itemType) {
-            View view = LayoutInflater.from(viewGroup.getContext())
-                    .inflate(R.layout.item_feed, viewGroup, false);
-            return new PostViewHolder(view);
+        public int getItemViewType(int position) {
+            return divider.isPresent() && divider.get() == position ? 1 : 0;
         }
 
         @Override
-        public void onBindViewHolder(PostViewHolder h, int position) {
-            Post i = posts.get(position);
+        public ComplexViewHolder onCreateViewHolder(ViewGroup viewGroup, int itemType) {
+            return itemType == 0 ? new PostViewHolder(viewGroup) : new DividerHolder(viewGroup);
+        }
 
-            Image image = i.image;
-            if (image == null) {
-                h.imagePanel.setVisibility(View.GONE);
-            } else {
-                h.imagePanel.setVisibility(View.VISIBLE);
-                h.imagePanel.setAspect(image.getAspect(0.5f));
-
-                new ImageRequest()
-                        .setUrl(i.image)
-                        .setSize(200, (int) (200 / image.getAspect(0.5f)))
-                        .to(h.image, h.image::setImageBitmap);
-            }
-
-            h.userImage.setImage(i.getUserImage().toImage());
-            h.videoMark.setVisibility(image != null && image.isAnimated() ? View.VISIBLE : View.GONE);
-
-            h.commentCount.setText("" + i.commentCount);
-            h.time.setText(prettyTime.format(i.created));
+        @Override
+        public void onBindViewHolder(ComplexViewHolder h, int position) {
+            h.bind();
         }
 
         @Override
         public int getItemCount() {
-            return posts == null ? 0 : posts.size();
+            return (posts == null ? 0 : posts.size()) + (divider.isPresent() ? 1 : 0);
         }
 
-        public void reloadData(List<Post> posts) {
+        public void reloadData(List<Post> posts, Optional<Integer> divider) {
             this.posts = posts;
+            this.divider = divider;
             notifyDataSetChanged();
         }
 
-        class PostViewHolder extends RecyclerView.ViewHolder {
+        private Post getPost(int position) {
+            if (divider.isPresent() && position > divider.get())
+                position--;
+            return posts.get(position);
+        }
+
+        class PostViewHolder extends ComplexViewHolder {
 
             FixedAspectPanel imagePanel;
             WebImageView image;
@@ -123,20 +117,56 @@ public class PostListFragment extends Fragment {
             TextView commentCount;
             TextView time;
 
-            public PostViewHolder(View view) {
-                super(view);
+            public PostViewHolder(ViewGroup parent) {
+                super(LayoutInflater.from(parent.getContext()).inflate(
+                        R.layout.item_feed, parent, false));
 
-                image = (WebImageView) view.findViewById(R.id.image);
-                imagePanel = (FixedAspectPanel) view.findViewById(R.id.imagePanel);
-                userImage = (WebImageView) view.findViewById(R.id.userImage);
-                videoMark = view.findViewById(R.id.videoMark);
-                commentCount = (TextView) view.findViewById(R.id.commentCount);
-                time = (TextView) view.findViewById(R.id.time);
+                image = (WebImageView) itemView.findViewById(R.id.image);
+                imagePanel = (FixedAspectPanel) itemView.findViewById(R.id.imagePanel);
+                userImage = (WebImageView) itemView.findViewById(R.id.userImage);
+                videoMark = itemView.findViewById(R.id.videoMark);
+                commentCount = (TextView) itemView.findViewById(R.id.commentCount);
+                time = (TextView) itemView.findViewById(R.id.time);
 
-                view.findViewById(R.id.card).setOnClickListener(
+                itemView.findViewById(R.id.card).setOnClickListener(
                         v -> presenter.postClicked(posts.get(getAdapterPosition())));
-                view.findViewById(R.id.videoMark).setOnClickListener(
+                itemView.findViewById(R.id.videoMark).setOnClickListener(
                         v -> presenter.playClicked(posts.get(getAdapterPosition())));
+            }
+
+            @Override
+            public void bind() {
+                Post i = getPost(getAdapterPosition());
+                PostViewHolder h = this; // TODO
+
+                Image image = i.image;
+                if (image == null) {
+                    h.imagePanel.setVisibility(View.GONE);
+                } else {
+                    h.imagePanel.setVisibility(View.VISIBLE);
+                    h.imagePanel.setAspect(image.getAspect(0.5f));
+
+                    new ImageRequest()
+                            .setUrl(i.image)
+                            .setSize(200, (int) (200 / image.getAspect(0.5f)))
+                            .to(h.image, h.image::setImageBitmap);
+                }
+
+                h.userImage.setImage(i.getUserImage().toImage());
+                h.videoMark.setVisibility(image != null && image.isAnimated() ? View.VISIBLE : View.GONE);
+
+                h.commentCount.setText("" + i.commentCount);
+                h.time.setText(prettyTime.format(i.created));
+            }
+        }
+
+        class DividerHolder extends ComplexViewHolder {
+
+            public DividerHolder(ViewGroup parent) {
+                super(LayoutInflater.from(parent.getContext()).inflate(
+                        R.layout.item_post_divider, parent, false));
+                ((StaggeredGridLayoutManager.LayoutParams) itemView.getLayoutParams()).setFullSpan(true);
+                itemView.findViewById(R.id.dividerButton).setOnClickListener(v -> presenter.loadMore());
             }
         }
     }
