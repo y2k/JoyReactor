@@ -1,10 +1,7 @@
 package y2k.joyreactor.presenters;
 
-import y2k.joyreactor.Comment;
-import y2k.joyreactor.CommentGroup;
-import y2k.joyreactor.Image;
+import y2k.joyreactor.*;
 import y2k.joyreactor.platform.Navigation;
-import y2k.joyreactor.Post;
 import y2k.joyreactor.platform.Platform;
 import y2k.joyreactor.services.PostService;
 import y2k.joyreactor.services.synchronizers.PostSynchronizer;
@@ -89,5 +86,7 @@ public class PostPresenter {
         void showImageSuccessSavedToGallery();
 
         void updatePostImages(List<Image> images);
+
+        void updateSimilarPosts(List<SimilarPost> similarPosts);
     }
 }

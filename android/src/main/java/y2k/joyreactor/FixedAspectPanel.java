@@ -15,7 +15,7 @@ public class FixedAspectPanel extends ViewGroup {
         super(context, attrs);
 
         if (isInEditMode()) {
-            aspect = 1;
+            aspect = 2;
         }
     }
 

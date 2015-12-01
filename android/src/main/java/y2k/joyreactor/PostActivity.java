@@ -63,6 +63,11 @@ public class PostActivity extends AppCompatActivity {
             public void updatePostImages(List<Image> images) {
                 adapter.updatePostImages(images);
             }
+
+            @Override
+            public void updateSimilarPosts(List<SimilarPost> similarPosts) {
+                // TODO:
+            }
         });
     }
 
@@ -86,7 +91,7 @@ public class PostActivity extends AppCompatActivity {
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             presenter.saveImageToGallery();
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{
+            ActivityCompat.requestPermissions(this, new String[] {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
             }, 1);
         }
@@ -138,6 +143,7 @@ public class PostActivity extends AppCompatActivity {
 
             WebImageView image;
             ImagePanel imagePanel;
+            ImagePanel similar;
             FixedAspectPanel posterPanel;
 
             public HeaderViewHolder(ViewGroup parent) {

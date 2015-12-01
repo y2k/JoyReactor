@@ -96,6 +96,16 @@ public class PostViewController extends UIViewController implements PostPresente
         // TODO
     }
 
+    @Override
+    public void updatePostImages(List<Image> images) {
+        // TODO
+    }
+
+    @Override
+    public void updateSimilarPosts(List<SimilarPost> similarPosts) {
+        // TODO
+    }
+
     private class CommentDataSource extends UITableViewDataSourceAdapter {
 
         @Override
