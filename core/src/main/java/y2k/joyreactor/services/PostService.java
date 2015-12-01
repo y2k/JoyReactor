@@ -1,10 +1,7 @@
 package y2k.joyreactor.services;
 
 import rx.Observable;
-import y2k.joyreactor.Comment;
-import y2k.joyreactor.CommentGroup;
-import y2k.joyreactor.Image;
-import y2k.joyreactor.Post;
+import y2k.joyreactor.*;
 import y2k.joyreactor.services.repository.*;
 import y2k.joyreactor.services.synchronizers.PostSynchronizer;
 
@@ -15,14 +12,19 @@ import java.util.List;
  */
 public class PostService {
 
-    private final Repository<Post> repository;
-    private final PostSynchronizer synchronizer;
-    private final Repository<Comment> commentRepository;
+    private Repository<Post> repository;
+    private PostSynchronizer synchronizer;
+    private Repository<Comment> commentRepository;
+    private Repository<SimilarPost> similarPostRepository;
 
-    public PostService(Repository<Post> repository, PostSynchronizer synchronizer, Repository<Comment> commentRepository) {
+    public PostService(Repository<Post> repository,
+                       PostSynchronizer synchronizer,
+                       Repository<Comment> commentRepository,
+                       Repository<SimilarPost> similarPostRepository) {
         this.repository = repository;
         this.synchronizer = synchronizer;
         this.commentRepository = commentRepository;
+        this.similarPostRepository = similarPostRepository;
     }
 
     public Observable<Post> synchronizePostAsync(String postId) {
@@ -57,5 +59,10 @@ public class PostService {
         return commentRepository
                 .queryAsync(new TopCommentsQuery(postId, maxCount))
                 .map(CommentGroup::new);
+    }
+
+    public Observable<List<SimilarPost>> getSimilarPosts(int postId) {
+        return similarPostRepository
+                .queryAsync(new SimilarPostQuery(postId));
     }
 }

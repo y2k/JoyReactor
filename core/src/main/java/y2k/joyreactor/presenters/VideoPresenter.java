@@ -2,6 +2,7 @@ package y2k.joyreactor.presenters;
 
 import y2k.joyreactor.Comment;
 import y2k.joyreactor.Post;
+import y2k.joyreactor.SimilarPost;
 import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.services.PostService;
 import y2k.joyreactor.services.repository.Repository;
@@ -18,8 +19,9 @@ public class VideoPresenter {
     public VideoPresenter(View view) {
         this(view, new PostService(
                 new Repository<>(Post.class),
-                new PostSynchronizer(),
-                new Repository<>(Comment.class)));
+                new PostSynchronizer(new Repository<>(SimilarPost.class)),
+                new Repository<>(Comment.class),
+                new Repository<>(SimilarPost.class)));
     }
 
     VideoPresenter(View view, PostService service) {

@@ -19,7 +19,11 @@ public class PostPresenter {
     private PostService service;
 
     public PostPresenter(View view) {
-        this(view, new PostService(new Repository<>(Post.class), new PostSynchronizer(), new Repository<>(Comment.class)));
+        this(view, new PostService(
+                new Repository<>(Post.class),
+                new PostSynchronizer(new Repository<>(SimilarPost.class)),
+                new Repository<>(Comment.class),
+                new Repository<>(SimilarPost.class)));
     }
 
     PostPresenter(View view, PostService service) {
@@ -39,6 +43,8 @@ public class PostPresenter {
                             .subscribe(view::updatePostImages, Throwable::printStackTrace);
                     service.getTopComments(post.id, 10)
                             .subscribe(view::updateComments, Throwable::printStackTrace);
+                    service.getSimilarPosts(post.id)
+                            .subscribe(view::updateSimilarPosts, Throwable::printStackTrace);
                 });
     }
 

@@ -2,6 +2,7 @@ package y2k.joyreactor;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +18,7 @@ import y2k.joyreactor.common.ComplexViewHolder;
 import y2k.joyreactor.platform.ImageRequest;
 import y2k.joyreactor.presenters.PostPresenter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -66,7 +68,7 @@ public class PostActivity extends AppCompatActivity {
 
             @Override
             public void updateSimilarPosts(List<SimilarPost> similarPosts) {
-                // TODO:
+                adapter.updateSimilarPosts(similarPosts);
             }
         });
     }
@@ -91,7 +93,7 @@ public class PostActivity extends AppCompatActivity {
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             presenter.saveImageToGallery();
         } else {
-            ActivityCompat.requestPermissions(this, new String[] {
+            ActivityCompat.requestPermissions(this, new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
             }, 1);
         }
@@ -102,6 +104,7 @@ public class PostActivity extends AppCompatActivity {
         private CommentGroup comments;
         private Post post;
         private List<Image> images = Collections.emptyList();
+        private List<SimilarPost> similarPosts = Collections.emptyList();
 
         @Override
         public int getItemViewType(int position) {
@@ -124,6 +127,11 @@ public class PostActivity extends AppCompatActivity {
             return 1 + (comments == null ? 0 : comments.size());
         }
 
+        public void updatePostComments(CommentGroup comments) {
+            this.comments = comments;
+            notifyItemRangeChanged(1, comments.size());
+        }
+
         public void updatePostDetails(Post post) {
             this.post = post;
             notifyItemChanged(0);
@@ -134,9 +142,9 @@ public class PostActivity extends AppCompatActivity {
             notifyItemChanged(0);
         }
 
-        public void updatePostComments(CommentGroup comments) {
-            this.comments = comments;
-            notifyItemRangeChanged(1, comments.size());
+        public void updateSimilarPosts(List<SimilarPost> similarPosts) {
+            this.similarPosts = similarPosts;
+            notifyItemChanged(0);
         }
 
         class HeaderViewHolder extends ComplexViewHolder {
@@ -151,6 +159,7 @@ public class PostActivity extends AppCompatActivity {
                         .inflate(R.layout.layout_post, parent, false));
                 image = (WebImageView) itemView.findViewById(R.id.image);
                 imagePanel = (ImagePanel) itemView.findViewById(R.id.images);
+                similar = (ImagePanel) itemView.findViewById(R.id.similar);
                 posterPanel = (FixedAspectPanel) itemView.findViewById(R.id.posterPanel);
             }
 
@@ -164,7 +173,16 @@ public class PostActivity extends AppCompatActivity {
                             .setSize(200, (int) (200 / post.image.getAspect(0.5f)))
                             .to(image, image::setImageBitmap);
                 }
+
                 imagePanel.setImages(images);
+                similar.setImages(toImages());
+            }
+
+            private List<Image> toImages() {
+                List<Image> result = new ArrayList<>();
+                for (SimilarPost s : similarPosts)
+                    result.add(s.image);
+                return result;
             }
         }
 

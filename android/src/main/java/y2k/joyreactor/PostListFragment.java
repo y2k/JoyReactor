@@ -1,5 +1,6 @@
 package y2k.joyreactor;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -116,6 +117,7 @@ public class PostListFragment extends Fragment {
             View videoMark;
             TextView commentCount;
             TextView time;
+            TextView userName;
 
             public PostViewHolder(ViewGroup parent) {
                 super(LayoutInflater.from(parent.getContext()).inflate(
@@ -127,6 +129,7 @@ public class PostListFragment extends Fragment {
                 videoMark = itemView.findViewById(R.id.videoMark);
                 commentCount = (TextView) itemView.findViewById(R.id.commentCount);
                 time = (TextView) itemView.findViewById(R.id.time);
+                userName = (TextView) itemView.findViewById(R.id.userName);
 
                 itemView.findViewById(R.id.card).setOnClickListener(
                         v -> presenter.postClicked(posts.get(getAdapterPosition())));
@@ -137,26 +140,25 @@ public class PostListFragment extends Fragment {
             @Override
             public void bind() {
                 Post i = getPost(getAdapterPosition());
-                PostViewHolder h = this; // TODO
 
-                Image image = i.image;
-                if (image == null) {
-                    h.imagePanel.setVisibility(View.GONE);
+                if (i.image == null) {
+                    imagePanel.setVisibility(View.GONE);
                 } else {
-                    h.imagePanel.setVisibility(View.VISIBLE);
-                    h.imagePanel.setAspect(image.getAspect(0.5f));
+                    imagePanel.setVisibility(View.VISIBLE);
+                    imagePanel.setAspect(i.image.getAspect(0.5f));
 
                     new ImageRequest()
                             .setUrl(i.image)
-                            .setSize(200, (int) (200 / image.getAspect(0.5f)))
-                            .to(h.image, h.image::setImageBitmap);
+                            .setSize(200, (int) (200 / i.image.getAspect(0.5f)))
+                            .to(i.image, image::setImageBitmap);
                 }
 
-                h.userImage.setImage(i.getUserImage().toImage());
-                h.videoMark.setVisibility(image != null && image.isAnimated() ? View.VISIBLE : View.GONE);
+                userImage.setImage(i.getUserImage().toImage());
+                userName.setText(i.userName);
+                videoMark.setVisibility(i.image != null && i.image.isAnimated() ? View.VISIBLE : View.GONE);
 
-                h.commentCount.setText("" + i.commentCount);
-                h.time.setText(prettyTime.format(i.created));
+                commentCount.setText("" + i.commentCount);
+                time.setText(prettyTime.format(i.created));
             }
         }
 
