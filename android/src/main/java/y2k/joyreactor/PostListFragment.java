@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import org.ocpsoft.prettytime.PrettyTime;
+import y2k.joyreactor.common.ChangeNotificator;
 import y2k.joyreactor.common.ComplexViewHolder;
 import y2k.joyreactor.common.ItemDividerDecoration;
 import y2k.joyreactor.common.Optional;
@@ -78,6 +79,7 @@ public class PostListFragment extends Fragment {
 
         private PrettyTime prettyTime = new PrettyTime();
         private List<Post> posts = Collections.emptyList();
+        private ChangeNotificator changeNotificator = new ChangeNotificator(this);
 
         @Override
         public int getItemViewType(int position) {
@@ -100,10 +102,11 @@ public class PostListFragment extends Fragment {
         }
 
         public void reloadData(List<Post> posts, Optional<Integer> divider) {
+            List<Post> old = this.posts;
             this.posts = new ArrayList<>(posts);
             if (divider.isPresent()) this.posts.add(divider.get(), DIVIDER);
 
-            notifyDataSetChanged();
+            changeNotificator.update(old, this.posts);
         }
 
         class PostViewHolder extends ComplexViewHolder {

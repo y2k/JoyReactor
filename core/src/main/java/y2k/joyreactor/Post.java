@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * Created by y2k on 9/27/15.
  */
-public class Post implements Serializable {
+public class Post implements Serializable, Comparable<Post> {
 
     public int id;
 
@@ -27,4 +27,9 @@ public class Post implements Serializable {
 
     public int commentCount;
     public float rating;
+
+    @Override
+    public int compareTo(Post post) {
+        return id - post.id;
+    }
 }
