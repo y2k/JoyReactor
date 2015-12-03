@@ -49,7 +49,7 @@ public class PostListPresenter extends Presenter {
                     view.setHasNewPosts(unsafeUpdate);
                     view.setBusy(false);
                     if (!unsafeUpdate) applyNew();
-                });
+                }, Throwable::printStackTrace);
     }
 
     public void applyNew() {
@@ -57,7 +57,7 @@ public class PostListPresenter extends Presenter {
                 .subscribe(posts -> {
                     view.setHasNewPosts(false);
                     view.reloadPosts(posts, service.getDivider());
-                });
+                }, Throwable::printStackTrace);
     }
 
     public void loadMore() {
@@ -66,7 +66,7 @@ public class PostListPresenter extends Presenter {
                 .subscribe(posts -> {
                     view.reloadPosts(posts, service.getDivider());
                     view.setBusy(false);
-                });
+                }, Throwable::printStackTrace);
     }
 
     public void reloadFirstPage() {
@@ -75,7 +75,7 @@ public class PostListPresenter extends Presenter {
                 .subscribe(posts -> {
                     view.reloadPosts(posts, posts.size());
                     view.setBusy(false);
-                });
+                }, Throwable::printStackTrace);
     }
 
     private Observable<List<Post>> getFromRepository() {
