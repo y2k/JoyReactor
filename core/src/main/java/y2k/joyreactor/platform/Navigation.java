@@ -31,4 +31,6 @@ public abstract class Navigation {
     public abstract void openVideo(String postId);
 
     public abstract void openImageView(Post post);
+
+    public abstract void openCreateComment();
 }

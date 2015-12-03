@@ -76,6 +76,11 @@ public class AndroidNavigation extends Navigation {
         // TODO:
     }
 
+    @Override
+    public void openCreateComment() {
+        currentActivity.startActivity(new Intent(currentActivity, CreateCommentActivity.class));
+    }
+
     private class MyActivityLifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
 
         @Override
