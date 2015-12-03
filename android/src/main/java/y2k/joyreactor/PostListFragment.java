@@ -1,6 +1,5 @@
 package y2k.joyreactor;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -16,12 +15,16 @@ import y2k.joyreactor.common.Optional;
 import y2k.joyreactor.platform.ImageRequest;
 import y2k.joyreactor.presenters.PostListPresenter;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by y2k on 9/26/15.
  */
 public class PostListFragment extends Fragment {
+
+    private static Post DIVIDER = new Post();
 
     PostListPresenter presenter;
     PostAdapter adapter;
@@ -74,12 +77,11 @@ public class PostListFragment extends Fragment {
     class PostAdapter extends RecyclerView.Adapter<ComplexViewHolder> {
 
         private PrettyTime prettyTime = new PrettyTime();
-        private Optional<Integer> divider = Optional.empty();
-        private List<Post> posts;
+        private List<Post> posts = Collections.emptyList();
 
         @Override
         public int getItemViewType(int position) {
-            return divider.isPresent() && divider.get() == position ? 1 : 0;
+            return posts.get(position) == DIVIDER ? 1 : 0;
         }
 
         @Override
@@ -94,19 +96,14 @@ public class PostListFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return (posts == null ? 0 : posts.size()) + (divider.isPresent() ? 1 : 0);
+            return posts.size();
         }
 
         public void reloadData(List<Post> posts, Optional<Integer> divider) {
-            this.posts = posts;
-            this.divider = divider;
-            notifyDataSetChanged();
-        }
+            this.posts = new ArrayList<>(posts);
+            if (divider.isPresent()) this.posts.add(divider.get(), DIVIDER);
 
-        private Post getPost(int position) {
-            if (divider.isPresent() && position > divider.get())
-                position--;
-            return posts.get(position);
+            notifyDataSetChanged();
         }
 
         class PostViewHolder extends ComplexViewHolder {
@@ -139,7 +136,7 @@ public class PostListFragment extends Fragment {
 
             @Override
             public void bind() {
-                Post i = getPost(getAdapterPosition());
+                Post i = posts.get(getAdapterPosition());
 
                 if (i.image == null) {
                     imagePanel.setVisibility(View.GONE);
