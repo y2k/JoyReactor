@@ -45,7 +45,7 @@ public class PostPresenter {
                             .subscribe(view::updateComments, Throwable::printStackTrace);
                     service.getSimilarPosts(post.id)
                             .subscribe(view::updateSimilarPosts, Throwable::printStackTrace);
-                });
+                }, Throwable::printStackTrace);
     }
 
     public void selectComment(int commentId) {
