@@ -63,4 +63,6 @@
     <string name="open_in_browser">Open in browser</string>
     <string name="save_image_to_gallery">Save to gallery</string>
     <string name="image_saved_to_gallery">Image saved to gallery</string>
+    <string name="title_activity_create_comment">Create comment</string>
+    <string name="create">Create</string>
 </resources>

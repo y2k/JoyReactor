@@ -1,0 +1,23 @@
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="y2k.joyreactor.CreateCommentActivity">
+
+    <EditText android:id="@+id/text"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"/>
+
+    <ProgressBar style="?android:progressBarStyle"
+                 android:id="@+id/progress"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"/>
+
+    <Button android:id="@+id/send"
+            android:text="@string/create"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+</LinearLayout>

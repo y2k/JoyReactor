@@ -14,10 +14,10 @@ public class CreateCommentPresenter {
         this.view = view;
     }
 
-    public void create() {
+    public void create(String commentText) {
         view.setIsBusy(true);
         new CreateCommentRequest("2219757", "10412483")
-                .request(view.getCommentText())
+                .request(commentText)
                 .subscribe(s -> {
                     Navigation.getInstance().closeCreateComment();
                     view.setIsBusy(false);
@@ -25,8 +25,6 @@ public class CreateCommentPresenter {
     }
 
     public interface View {
-
-        String getCommentText();
 
         void setIsBusy(boolean isBusy);
     }

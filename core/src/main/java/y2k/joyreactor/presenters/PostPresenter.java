@@ -79,6 +79,7 @@ public class PostPresenter {
 
     public void replyToPost() {
         // TODO:
+        // Navigation.getInstance().openCreateComment();
     }
 
     public interface View {
