@@ -11,18 +11,16 @@ import java.util.regex.Pattern;
 /**
  * Created by y2k on 19/10/15.
  */
-public class CreateCommentRequest {
+public class CreateCommentRequestFactory {
 
     public static final Pattern TOKEN_REGEX = Pattern.compile("var token = '(.+?)'");
-    private String postId;
     private String commentId;
 
-    public CreateCommentRequest(String postId, String commentId) {
-        this.postId = postId;
-        this.commentId = commentId;
+    public CreateCommentRequestFactory() {
+        // TODO
     }
 
-    public Observable<Void> request(String commentText) {
+    public Observable<Void> create(String postId, String commentText) {
         return ObservableUtils.create(() -> {
             HttpClient.getInstance()
                     .beginForm()

@@ -57,6 +57,16 @@
                 app:layout_gravity="fill_vertical"
                 android:layout_width="50dp"/>
 
+        <ProgressBar
+                android:id="@+id/progress"
+                style="?progressBarStyle"
+                app:layout_column="2"
+                app:layout_row="1"
+                app:layout_gravity="center"
+                android:visibility="gone"
+                android:layout_width="30dp"
+                android:layout_height="30dp"/>
+
     </android.support.v7.widget.GridLayout>
 
 </FrameLayout>

@@ -2,6 +2,7 @@ package y2k.joyreactor;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 import y2k.joyreactor.presenters.CreateCommentPresenter;
 
@@ -14,12 +15,27 @@ public class CreateCommentActivity extends AppCompatActivity {
 
         TextView nameView = (TextView) findViewById(R.id.userName);
         TextView textView = (TextView) findViewById(R.id.text);
+        View sendButton = findViewById(R.id.send);
+        View progress = findViewById(R.id.progress);
 
         CreateCommentPresenter presenter = new CreateCommentPresenter(new CreateCommentPresenter.View() {
 
             @Override
             public void setIsBusy(boolean isBusy) {
                 // TODO
+                if (isBusy) {
+                    progress.setVisibility(View.VISIBLE);
+                    progress.setAlpha(0);
+                    progress.animate().alpha(1);
+
+                    sendButton.animate().alpha(0).withEndAction(() -> sendButton.setVisibility(View.INVISIBLE));
+                } else {
+                    sendButton.setVisibility(View.VISIBLE);
+                    sendButton.setAlpha(0);
+                    sendButton.animate().alpha(1);
+
+                    progress.animate().alpha(0).withEndAction(() -> progress.setVisibility(View.GONE));
+                }
             }
 
             @Override
@@ -32,6 +48,6 @@ public class CreateCommentActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.send).setOnClickListener(v -> presenter.create("" + textView.getText()));
+        sendButton.setOnClickListener(v -> presenter.create("" + textView.getText()));
     }
 }
