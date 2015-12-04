@@ -20,4 +20,45 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
+    <android.support.v7.widget.GridLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:columnCount="3"
+            app:rowCount="2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <y2k.joyreactor.WebImageView
+                android:id="@+id/userImage"
+                android:src="@mipmap/ic_launcher"
+                android:layout_width="36dp"
+                android:layout_height="36dp"/>
+
+        <TextView android:id="@+id/userName"
+                  android:text="Test User 1"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_columnWeight="1"
+        />
+
+        <ImageButton
+                android:id="@+id/addImage"
+                android:src="@drawable/ic_camera"
+                android:background="?listChoiceBackgroundIndicator"
+                app:layout_row="1"
+                app:layout_column="0"
+                android:layout_width="60dp"
+        />
+
+        <EditText android:id="@+id/commentText"
+                  app:layout_columnWeight="1"
+        />
+
+        <ImageButton
+                android:src="@drawable/ic_send_orange"
+                android:background="?listChoiceBackgroundIndicator"
+                android:layout_width="50dp"/>
+
+
+    </android.support.v7.widget.GridLayout>
+
 </LinearLayout>

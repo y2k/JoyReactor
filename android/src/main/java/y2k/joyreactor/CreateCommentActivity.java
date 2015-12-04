@@ -20,6 +20,11 @@ public class CreateCommentActivity extends AppCompatActivity {
             public void setIsBusy(boolean isBusy) {
                 // TODO
             }
+
+            @Override
+            public void setUser(Profile profile) {
+                // TODO:
+            }
         });
 
         TextView text = (TextView) findViewById(R.id.text);
