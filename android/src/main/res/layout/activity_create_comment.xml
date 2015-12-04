@@ -1,64 +1,62 @@
-<LinearLayout
+<FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context="y2k.joyreactor.CreateCommentActivity">
 
-    <EditText android:id="@+id/text"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"/>
-
-    <ProgressBar style="?android:progressBarStyle"
-                 android:id="@+id/progress"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"/>
-
-    <Button android:id="@+id/send"
-            android:text="@string/create"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
     <android.support.v7.widget.GridLayout
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             app:columnCount="3"
             app:rowCount="2"
+            android:paddingTop="8dp"
+            android:background="@android:color/white"
+            android:layout_gravity="bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <y2k.joyreactor.WebImageView
-                android:id="@+id/userImage"
-                android:src="@mipmap/ic_launcher"
-                android:layout_width="36dp"
-                android:layout_height="36dp"/>
+        <y2k.joyreactor.RoundBorderLayout
+                app:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            <y2k.joyreactor.WebImageView
+                    android:id="@+id/userImage"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"/>
+        </y2k.joyreactor.RoundBorderLayout>
 
         <TextView android:id="@+id/userName"
-                  android:text="Test User 1"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  app:layout_columnWeight="1"
-        />
+                  android:textSize="16sp"
+                  android:fontFamily="sans-serif-light"
+                  tools:text="Test User 1"
+                  app:layout_gravity="center_vertical"
+                  app:layout_columnSpan="2"
+                  app:layout_columnWeight="1"/>
 
         <ImageButton
                 android:id="@+id/addImage"
                 android:src="@drawable/ic_camera"
                 android:background="?listChoiceBackgroundIndicator"
+                android:layout_width="60dp"
                 app:layout_row="1"
                 app:layout_column="0"
-                android:layout_width="60dp"
-        />
+                app:layout_gravity="fill_vertical"/>
 
-        <EditText android:id="@+id/commentText"
-                  app:layout_columnWeight="1"
-        />
+        <EditText android:id="@+id/text"
+                  app:layout_columnWeight="1">
+            <requestFocus/>
+        </EditText>
 
         <ImageButton
+                android:id="@+id/send"
                 android:src="@drawable/ic_send_orange"
                 android:background="?listChoiceBackgroundIndicator"
+                app:layout_gravity="fill_vertical"
                 android:layout_width="50dp"/>
-
 
     </android.support.v7.widget.GridLayout>
 
-</LinearLayout>
+</FrameLayout>

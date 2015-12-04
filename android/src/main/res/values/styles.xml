@@ -7,6 +7,7 @@
     <color name="text_primary">#fff</color>
     <color name="text_secondary">#616161</color>
     <color name="window_background">#fafafa</color>
+    <color name="activity_create_comment_background">#8000</color>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
@@ -45,9 +46,9 @@
         <item name="background">@color/primary</item>
     </style>
 
-    <style name="AppTheme.WriteComment">
+    <style name="AppTheme.CreateComment">
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowBackground">@color/activity_create_comment_background</item>
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

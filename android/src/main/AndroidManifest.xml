@@ -58,6 +58,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="y2k.joyreactor.MainActivity" />
         </activity>
+        <activity
+            android:windowSoftInputMode="stateVisible"
+            android:theme="@style/AppTheme.CreateComment"
+            android:name=".CreateCommentActivity"
+            android:label="@string/title_activity_create_comment" >
+        </activity>
 
         <!-- TV -->
         <activity
@@ -74,10 +80,6 @@
 
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".CreateCommentActivity"
-            android:label="@string/title_activity_create_comment" >
         </activity>
     </application>
 
