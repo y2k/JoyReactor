@@ -37,28 +37,30 @@ class PostMerger {
     }
 
     public Observable<Void> mergeFirstPage(List<Post> newPosts) {
-        return updatePostsAsync(newPosts).flatMap(_void -> {
-            return tagPostRepository
-                    .queryAsync(new TagPostsForTagQuery(tag))
-                    .map(links -> {
-                        List<TagPost> merged = new ArrayList<>(links);
-                        for (Iterator<TagPost> iterator = merged.iterator(); iterator.hasNext(); ) {
-                            TagPost element = iterator.next();
-                            for (Post s : newPosts)
-                                if (s.id == element.postId) {
-                                    iterator.remove();
-                                    break;
-                                }
-                        }
+        return updatePostsAsync(newPosts)
+                .flatMap(_void -> {
+                    return tagPostRepository
+                            .queryAsync(new TagPostsForTagQuery(tag))
+                            .map(links -> {
+                                List<TagPost> result = new ArrayList<>();
 
-                        for (int i = 0; i < newPosts.size(); i++)
-                            merged.add(i, new TagPost(tag.id, newPosts.get(i).id));
+                                for (Post s : newPosts)
+                                    result.add(new TagPost(tag.id, s.id));
+                                for (TagPost s : links)
+                                    if (!contains(result, s))
+                                        result.add(s);
 
-                        divider = newPosts.size();
-                        return merged;
-                    })
-                    .flatMap(s -> tagPostRepository.replaceAllAsync(new TagPostsForTagQuery(tag), s));
-        });
+                                divider = newPosts.size();
+                                return result;
+                            })
+                            .flatMap(s -> tagPostRepository.replaceAllAsync(new TagPostsForTagQuery(tag), s));
+                });
+    }
+
+    private boolean contains(List<TagPost> list, TagPost tagPost) {
+        for (TagPost s : list)
+            if (s.postId == tagPost.postId) return true;
+        return false;
     }
 
     public Observable<Boolean> isUnsafeUpdate(List<Post> newPosts) {
@@ -77,23 +79,23 @@ class PostMerger {
     }
 
     public Observable<Void> mergeNextPage(List<Post> newPosts) {
-        return updatePostsAsync(newPosts).flatMap(_void -> {
-            return tagPostRepository
-                    .queryAsync(new TagPostsForTagQuery(tag))
-                    .map(links -> {
-                        List<TagPost> actualPosts = links.subList(0, divider);
-                        List<TagPost> expiredPosts = new ArrayList<>(links.subList(divider, links.size()));
+        return updatePostsAsync(newPosts)
+                .flatMap(_void -> {
+                    return tagPostRepository
+                            .queryAsync(new TagPostsForTagQuery(tag))
+                            .map(links -> {
+                                List<TagPost> actualPosts = links.subList(0, divider);
+                                List<TagPost> expiredPosts = new ArrayList<>(links.subList(divider, links.size()));
 
-                        for (Post p : newPosts) {
-                            addIfNew(actualPosts, p);
-                            remove(expiredPosts, p);
-                        }
-                        divider = actualPosts.size();
-                        return union(actualPosts, expiredPosts);
-
-                    })
-                    .flatMap(s -> tagPostRepository.replaceAllAsync(new TagPostsForTagQuery(tag), s));
-        });
+                                for (Post p : newPosts) {
+                                    addIfNew(actualPosts, p);
+                                    remove(expiredPosts, p);
+                                }
+                                divider = actualPosts.size();
+                                return union(actualPosts, expiredPosts);
+                            })
+                            .flatMap(s -> tagPostRepository.replaceAllAsync(new TagPostsForTagQuery(tag), s));
+                });
     }
 
     private Observable<Void> updatePostsAsync(List<Post> newPosts) {
