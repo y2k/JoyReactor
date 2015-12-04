@@ -2,15 +2,11 @@ package y2k.joyreactor;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.*;
 import android.view.*;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -138,7 +134,6 @@ public class PostActivity extends AppCompatActivity {
 
         public void updatePostComments(CommentGroup comments) {
             this.comments = comments;
-//            notifyItemRangeChanged(1, comments.size());
             notifyDataSetChanged();
         }
 
@@ -203,7 +198,6 @@ public class PostActivity extends AppCompatActivity {
             TextView replies;
             WebImageView avatar;
             WebImageView attachment;
-            View divider;
 
             public CommentViewHolder(ViewGroup parent) {
                 super(LayoutInflater.from(parent.getContext())
@@ -212,7 +206,6 @@ public class PostActivity extends AppCompatActivity {
                 text = (TextView) itemView.findViewById(R.id.text);
                 avatar = (WebImageView) itemView.findViewById(R.id.avatar);
                 replies = (TextView) itemView.findViewById(R.id.replies);
-                divider = itemView.findViewById(R.id.divider);
                 attachment = (WebImageView) itemView.findViewById(R.id.attachment);
 
                 itemView.findViewById(R.id.action).setOnClickListener(v ->
@@ -233,7 +226,8 @@ public class PostActivity extends AppCompatActivity {
 
             @Override
             public void bind() {
-                divider.setVisibility(comments.isChild(getRealPosition()) ? View.VISIBLE : View.GONE);
+                ((ViewGroup.MarginLayoutParams) itemView.getLayoutParams()).leftMargin =
+                        comments.isChild(getRealPosition()) ? toPx(64) : toPx(8);
 
                 Comment c = comments.get(getRealPosition());
                 text.setText(c.text);
@@ -247,6 +241,10 @@ public class PostActivity extends AppCompatActivity {
 
             private int getRealPosition() {
                 return getAdapterPosition() - 1;
+            }
+
+            private int toPx(int dip) {
+                return (int) (dip * itemView.getResources().getDisplayMetrics().density);
             }
         }
     }
