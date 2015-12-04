@@ -4,8 +4,10 @@ import rx.Observable;
 import y2k.joyreactor.Post;
 import y2k.joyreactor.Tag;
 import y2k.joyreactor.TagPost;
+import y2k.joyreactor.common.ObjectUtils;
 import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.services.repository.PostByIdQuery;
+import y2k.joyreactor.services.repository.PostsForTagQuery;
 import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.repository.TagPostsForTagQuery;
 
@@ -60,13 +62,16 @@ class PostMerger {
     }
 
     public Observable<Boolean> isUnsafeUpdate(List<Post> newPosts) {
-        return tagPostRepository
-                .queryAsync(new TagPostsForTagQuery(tag))
-                .map(links -> {
-                    if (links.size() == 0) return false;
-                    if (newPosts.size() > links.size()) return true;
-                    for (int i = 0; i < newPosts.size(); i++)
-                        if (links.get(i).postId != newPosts.get(i).id) return true;
+        return postRepository
+                .queryAsync(new PostsForTagQuery(tag))
+                .map(oldPosts -> {
+                    if (oldPosts.size() == 0) return false;
+                    if (newPosts.size() > oldPosts.size()) return true;
+                    for (int i = 0; i < newPosts.size(); i++) {
+                        String oldId = oldPosts.get(i).serverId;
+                        String newId = newPosts.get(i).serverId;
+                        if (!ObjectUtils.equals(oldId, newId)) return true;
+                    }
                     return false;
                 });
     }
