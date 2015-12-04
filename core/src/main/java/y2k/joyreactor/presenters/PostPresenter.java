@@ -41,7 +41,7 @@ public class PostPresenter {
 
                     service.getPostImages(post.id)
                             .subscribe(view::updatePostImages, Throwable::printStackTrace);
-                    service.getTopComments(post.id, 10)
+                    service.getCommentsAsync(post.id, 0)
                             .subscribe(view::updateComments, Throwable::printStackTrace);
                     service.getSimilarPosts(post.id)
                             .subscribe(view::updateSimilarPosts, Throwable::printStackTrace);
@@ -79,7 +79,7 @@ public class PostPresenter {
 
     public void replyToPost() {
         // TODO:
-         Navigation.getInstance().openCreateComment();
+        Navigation.getInstance().openCreateComment();
     }
 
     public interface View {

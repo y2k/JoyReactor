@@ -106,6 +106,15 @@ public class PostActivity extends AppCompatActivity {
         private List<Image> images = Collections.emptyList();
         private List<SimilarPost> similarPosts = Collections.emptyList();
 
+        public Adapter() {
+            setHasStableIds(true);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position == 0 ? 0 : comments.get(position - 1).id;
+        }
+
         @Override
         public int getItemViewType(int position) {
             return Math.min(1, position);
@@ -129,7 +138,8 @@ public class PostActivity extends AppCompatActivity {
 
         public void updatePostComments(CommentGroup comments) {
             this.comments = comments;
-            notifyItemRangeChanged(1, comments.size());
+//            notifyItemRangeChanged(1, comments.size());
+            notifyDataSetChanged();
         }
 
         public void updatePostDetails(Post post) {
