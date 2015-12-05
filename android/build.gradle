@@ -53,5 +53,6 @@ dependencies {
     compile "com.android.support:cardview-v7:${supportLibVersion}"
     compile "com.android.support:leanback-v17:${supportLibVersion}"
     compile "com.android.support:gridlayout-v7:${supportLibVersion}"
+    compile "com.android.support:design:${supportLibVersion}"
     compile project(':core')
 }

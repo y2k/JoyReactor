@@ -2,10 +2,6 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="y2k.joyreactor.PostActivity">
-    <item android:id="@+id/reply"
-          android:title="@string/reply"
-          android:icon="@drawable/ic_comment_white_24dp"
-          app:showAsAction="ifRoom"/>
     <item android:id="@+id/saveImageToGallery"
           android:title="@string/save_image_to_gallery"
           app:showAsAction="never"/>

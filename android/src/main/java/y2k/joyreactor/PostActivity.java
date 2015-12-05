@@ -3,6 +3,7 @@ package y2k.joyreactor;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +35,8 @@ public class PostActivity extends AppCompatActivity {
         list.setLayoutManager(new LinearLayoutManager(this));
         Adapter adapter;
         list.setAdapter(adapter = new Adapter());
+
+        findViewById(R.id.createComment).setOnClickListener(v -> presenter.replyToPost());
 
         presenter = new PostPresenter(new PostPresenter.View() {
 
