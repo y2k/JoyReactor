@@ -4,6 +4,7 @@ import rx.Observable;
 import y2k.joyreactor.Profile;
 import y2k.joyreactor.SimilarPost;
 import y2k.joyreactor.common.ForegroundScheduler;
+import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.services.CommentService;
 import y2k.joyreactor.services.ProfileService;
 import y2k.joyreactor.services.repository.Repository;
@@ -36,20 +37,12 @@ public class CreateCommentPresenter {
     }
 
     public void create(String commentText) {
-//        view.setIsBusy(true);
-//        service.createComment("2219757", commentText)
-//                .subscribe(_void -> {
-//                    Navigation.getInstance().closeCreateComment();
-//                    view.setIsBusy(false);
-//                }, Throwable::printStackTrace);
-
         view.setIsBusy(true);
-        Observable
-                .timer(1, TimeUnit.SECONDS)
-                .observeOn(ForegroundScheduler.getInstance())
+        service.createComment("2219757", commentText)
                 .subscribe(_void -> {
+                    Navigation.getInstance().closeCreateComment();
                     view.setIsBusy(false);
-                });
+                }, Throwable::printStackTrace);
     }
 
     public interface View {

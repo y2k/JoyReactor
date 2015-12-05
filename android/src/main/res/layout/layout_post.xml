@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"/>
 
     <TextView
-            android:text="Top 10 comments"
+            android:text="Comments"
             android:textColor="@android:color/darker_gray"
             android:textSize="18sp"
             android:fontFamily="sans-serif-light"

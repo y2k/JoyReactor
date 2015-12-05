@@ -35,7 +35,7 @@ public class AndroidNavigation extends Navigation {
 
     @Override
     public void closeCreateComment() {
-        // TODO:
+        currentActivity.finish();
     }
 
     @Override
