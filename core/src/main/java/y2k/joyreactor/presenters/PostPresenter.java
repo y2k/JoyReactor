@@ -18,16 +18,7 @@ public class PostPresenter {
     private View view;
     private PostService service;
 
-    public PostPresenter(View view) {
-        this(view, new PostService(
-                new Repository<>(Post.class),
-                new PostSynchronizer(new Repository<>(SimilarPost.class), new Repository<>(Attachment.class)),
-                new Repository<>(Comment.class),
-                new Repository<>(SimilarPost.class),
-                new Repository<>(Attachment.class)));
-    }
-
-    PostPresenter(View view, PostService service) {
+    public PostPresenter(View view, PostService service) {
         this.view = view;
         this.service = service;
         initialize();

@@ -13,6 +13,7 @@ import android.support.v17.leanback.widget.VerticalGridPresenter;
 import android.view.ViewGroup;
 import y2k.joyreactor.App;
 import y2k.joyreactor.Post;
+import y2k.joyreactor.common.DependencyInjection;
 import y2k.joyreactor.platform.ImageRequest;
 import y2k.joyreactor.presenters.PostListPresenter;
 
@@ -34,25 +35,26 @@ public class PostsFragment extends VerticalGridFragment {
         ArrayObjectAdapter adapter = new ArrayObjectAdapter(new CardPresenter());
         setAdapter(adapter);
 
-        new PostListPresenter(new PostListPresenter.View() {
+        DependencyInjection.getInstance().providePostListPresenter(
+                new PostListPresenter.View() {
 
-            @Override
-            public void setBusy(boolean isBusy) {
-                // TODO:
-            }
+                    @Override
+                    public void setBusy(boolean isBusy) {
+                        // TODO:
+                    }
 
-            @Override
-            public void reloadPosts(List<Post> posts, Integer divider) {
-                // TODO:
-                adapter.clear();
-                adapter.addAll(0, posts);
-            }
+                    @Override
+                    public void reloadPosts(List<Post> posts, Integer divider) {
+                        // TODO:
+                        adapter.clear();
+                        adapter.addAll(0, posts);
+                    }
 
-            @Override
-            public void setHasNewPosts(boolean hasNewPosts) {
-                // TODO:
-            }
-        });
+                    @Override
+                    public void setHasNewPosts(boolean hasNewPosts) {
+                        // TODO:
+                    }
+                });
     }
 
     public static class CardPresenter extends Presenter {

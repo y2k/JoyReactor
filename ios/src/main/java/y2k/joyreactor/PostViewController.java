@@ -4,6 +4,7 @@ import org.robovm.apple.foundation.NSIndexPath;
 import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
+import y2k.joyreactor.common.DependencyInjection;
 import y2k.joyreactor.platform.ImageRequest;
 import y2k.joyreactor.presenters.PostPresenter;
 
@@ -70,7 +71,8 @@ public class PostViewController extends UIViewController implements PostPresente
         list.setDataSource(new CommentDataSource());
         list.setRowHeight(UITableView.getAutomaticDimension());
         list.setEstimatedRowHeight(44);
-        presenter = new PostPresenter(this);
+
+        DependencyInjection.getInstance().providePostPresenter(this);
     }
 
     @Override

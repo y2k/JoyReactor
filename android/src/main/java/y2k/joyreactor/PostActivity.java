@@ -11,6 +11,7 @@ import android.view.*;
 import android.widget.TextView;
 import android.widget.Toast;
 import y2k.joyreactor.common.ComplexViewHolder;
+import y2k.joyreactor.common.DependencyInjection;
 import y2k.joyreactor.platform.ImageRequest;
 import y2k.joyreactor.presenters.PostPresenter;
 
@@ -37,38 +38,39 @@ public class PostActivity extends AppCompatActivity {
 
         findViewById(R.id.createComment).setOnClickListener(v -> presenter.replyToPost());
 
-        presenter = new PostPresenter(new PostPresenter.View() {
+        presenter = DependencyInjection.getInstance().providePostPresenter(
+                new PostPresenter.View() {
 
-            @Override
-            public void updateComments(CommentGroup comments) {
-                adapter.updatePostComments(comments);
-            }
+                    @Override
+                    public void updateComments(CommentGroup comments) {
+                        adapter.updatePostComments(comments);
+                    }
 
-            @Override
-            public void updatePostImage(Post post) {
-                adapter.updatePostDetails(post);
-            }
+                    @Override
+                    public void updatePostImage(Post post) {
+                        adapter.updatePostDetails(post);
+                    }
 
-            @Override
-            public void setIsBusy(boolean isBusy) {
-                // TODO:
-            }
+                    @Override
+                    public void setIsBusy(boolean isBusy) {
+                        // TODO:
+                    }
 
-            @Override
-            public void showImageSuccessSavedToGallery() {
-                Toast.makeText(getApplicationContext(), R.string.image_saved_to_gallery, Toast.LENGTH_LONG).show();
-            }
+                    @Override
+                    public void showImageSuccessSavedToGallery() {
+                        Toast.makeText(getApplicationContext(), R.string.image_saved_to_gallery, Toast.LENGTH_LONG).show();
+                    }
 
-            @Override
-            public void updatePostImages(List<Image> images) {
-                adapter.updatePostImages(images);
-            }
+                    @Override
+                    public void updatePostImages(List<Image> images) {
+                        adapter.updatePostImages(images);
+                    }
 
-            @Override
-            public void updateSimilarPosts(List<SimilarPost> similarPosts) {
-                adapter.updateSimilarPosts(similarPosts);
-            }
-        });
+                    @Override
+                    public void updateSimilarPosts(List<SimilarPost> similarPosts) {
+                        adapter.updateSimilarPosts(similarPosts);
+                    }
+                });
     }
 
     @Override

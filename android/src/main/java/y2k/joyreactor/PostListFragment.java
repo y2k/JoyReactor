@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import org.ocpsoft.prettytime.PrettyTime;
 import y2k.joyreactor.common.ComplexViewHolder;
+import y2k.joyreactor.common.DependencyInjection;
 import y2k.joyreactor.common.ItemDividerDecoration;
 import y2k.joyreactor.common.Optional;
 import y2k.joyreactor.platform.ImageRequest;
@@ -40,23 +41,24 @@ public class PostListFragment extends Fragment {
         list.setAdapter(adapter = new PostAdapter());
         list.addItemDecoration(new ItemDividerDecoration(list));
 
-        presenter = new PostListPresenter(new PostListPresenter.View() {
+        presenter = DependencyInjection.getInstance().providePostListPresenter(
+                new PostListPresenter.View() {
 
-            @Override
-            public void setBusy(boolean isBusy) {
-                // TODO:
-            }
+                    @Override
+                    public void setBusy(boolean isBusy) {
+                        // TODO:
+                    }
 
-            @Override
-            public void reloadPosts(List<Post> posts, Integer divider) {
-                adapter.reloadData(posts, Optional.ofNullable(divider));
-            }
+                    @Override
+                    public void reloadPosts(List<Post> posts, Integer divider) {
+                        adapter.reloadData(posts, Optional.ofNullable(divider));
+                    }
 
-            @Override
-            public void setHasNewPosts(boolean hasNewPosts) {
-                ((ReloadButton) getView().findViewById(R.id.apply)).setVisibility(hasNewPosts);
-            }
-        });
+                    @Override
+                    public void setHasNewPosts(boolean hasNewPosts) {
+                        ((ReloadButton) getView().findViewById(R.id.apply)).setVisibility(hasNewPosts);
+                    }
+                });
 
         view.findViewById(R.id.apply).setOnClickListener(v -> presenter.applyNew());
         return view;
