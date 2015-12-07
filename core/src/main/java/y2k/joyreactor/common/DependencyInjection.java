@@ -7,10 +7,10 @@ import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.requests.CreateCommentRequestFactory;
 import y2k.joyreactor.services.requests.LoginRequestFactory;
 import y2k.joyreactor.services.requests.ProfileRequestFactory;
-import y2k.joyreactor.services.synchronizers.MyTagSynchronizer;
-import y2k.joyreactor.services.synchronizers.PostListSynchronizer;
-import y2k.joyreactor.services.synchronizers.PostSynchronizer;
-import y2k.joyreactor.services.synchronizers.PrivateMessageSynchronizer;
+import y2k.joyreactor.services.synchronizers.MyTagFetcher;
+import y2k.joyreactor.services.synchronizers.PostListFetcher;
+import y2k.joyreactor.services.synchronizers.PostFetcher;
+import y2k.joyreactor.services.synchronizers.PrivateMessageFetcher;
 
 /**
  * Created by y2k on 07/12/15.
@@ -101,16 +101,16 @@ public class DependencyInjection {
     // Models
     // ==========================================
 
-    public PostListSynchronizer.Factory providePostListSynchronizerFactory() {
-        return new PostListSynchronizer.Factory(providePostRepository(), provideRepositoryTagPost());
+    public PostListFetcher.Factory providePostListSynchronizerFactory() {
+        return new PostListFetcher.Factory(providePostRepository(), provideRepositoryTagPost());
     }
 
     public Repository<TagPost> provideRepositoryTagPost() {
         return new Repository<>(TagPost.class);
     }
 
-    public PostSynchronizer providePostSynchronizer() {
-        return new PostSynchronizer(provideSimilarPostRepository(), provideAttachmentRepository());
+    public PostFetcher providePostSynchronizer() {
+        return new PostFetcher(provideSimilarPostRepository(), provideAttachmentRepository());
     }
 
     public Repository<Attachment> provideAttachmentRepository() {
@@ -129,8 +129,8 @@ public class DependencyInjection {
         return new Repository<>(Post.class);
     }
 
-    public MyTagSynchronizer provideMyTagSynchronizer() {
-        return new MyTagSynchronizer(provideRepositoryTag());
+    public MyTagFetcher provideMyTagSynchronizer() {
+        return new MyTagFetcher(provideRepositoryTag());
     }
 
     public Repository<Tag> provideRepositoryTag() {
@@ -153,7 +153,7 @@ public class DependencyInjection {
         return new Repository<>(Message.class);
     }
 
-    private PrivateMessageSynchronizer providePrivateMessageSynchronizer() {
-        return new PrivateMessageSynchronizer();
+    private PrivateMessageFetcher providePrivateMessageSynchronizer() {
+        return new PrivateMessageFetcher();
     }
 }

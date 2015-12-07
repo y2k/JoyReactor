@@ -5,7 +5,7 @@ import y2k.joyreactor.Message;
 import y2k.joyreactor.services.repository.MessageForUserQuery;
 import y2k.joyreactor.services.repository.MessageThreadQuery;
 import y2k.joyreactor.services.repository.Repository;
-import y2k.joyreactor.services.synchronizers.PrivateMessageSynchronizer;
+import y2k.joyreactor.services.synchronizers.PrivateMessageFetcher;
 
 import java.util.List;
 
@@ -14,10 +14,10 @@ import java.util.List;
  */
 public class MessageService {
 
-    private PrivateMessageSynchronizer fetcher;
+    private PrivateMessageFetcher fetcher;
     private Repository<Message> repository;
 
-    public MessageService(PrivateMessageSynchronizer fetcher, Repository<Message> repository) {
+    public MessageService(PrivateMessageFetcher fetcher, Repository<Message> repository) {
         this.fetcher = fetcher;
         this.repository = repository;
     }

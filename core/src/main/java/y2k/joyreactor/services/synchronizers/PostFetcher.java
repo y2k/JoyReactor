@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by y2k on 11/21/15.
  */
-public class PostSynchronizer {
+public class PostFetcher {
 
     private PostRequest postRequest = new PostRequest();
 
@@ -24,8 +24,8 @@ public class PostSynchronizer {
     private Repository<SimilarPost> similarPostRepository;
     private Repository<Attachment> attachmentRepository;
 
-    public PostSynchronizer(Repository<SimilarPost> similarPostRepository,
-                            Repository<Attachment> attachmentRepository) {
+    public PostFetcher(Repository<SimilarPost> similarPostRepository,
+                       Repository<Attachment> attachmentRepository) {
         this.similarPostRepository = similarPostRepository;
         this.attachmentRepository = attachmentRepository;
     }

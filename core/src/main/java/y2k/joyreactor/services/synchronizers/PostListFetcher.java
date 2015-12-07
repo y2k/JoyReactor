@@ -11,7 +11,7 @@ import y2k.joyreactor.services.requests.PostsForTagRequest;
 /**
  * Created by y2k on 03/11/15.
  */
-public class PostListSynchronizer {
+public class PostListFetcher {
 
     private PostMerger merger;
     private PostsForTagRequest.Factory requestFactory;
@@ -20,10 +20,10 @@ public class PostListSynchronizer {
     private Tag tag;
     private Repository<TagPost> tagPostRepository;
 
-    PostListSynchronizer(Tag tag,
-                         PostsForTagRequest.Factory requestFactory,
-                         Repository<Post> postRepository,
-                         Repository<TagPost> tagPostRepository) {
+    PostListFetcher(Tag tag,
+                    PostsForTagRequest.Factory requestFactory,
+                    Repository<Post> postRepository,
+                    Repository<TagPost> tagPostRepository) {
         this.tag = tag;
         this.tagPostRepository = tagPostRepository;
         this.merger = new PostMerger(tag, postRepository, tagPostRepository);
@@ -76,8 +76,8 @@ public class PostListSynchronizer {
             this.tagPostRepository = tagPostRepository;
         }
 
-        public PostListSynchronizer make(Tag tag) {
-            return new PostListSynchronizer(tag, requestFactory, postRepository, tagPostRepository);
+        public PostListFetcher make(Tag tag) {
+            return new PostListFetcher(tag, requestFactory, postRepository, tagPostRepository);
         }
     }
 }

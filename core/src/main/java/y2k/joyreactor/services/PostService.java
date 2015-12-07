@@ -3,7 +3,7 @@ package y2k.joyreactor.services;
 import rx.Observable;
 import y2k.joyreactor.*;
 import y2k.joyreactor.services.repository.*;
-import y2k.joyreactor.services.synchronizers.PostSynchronizer;
+import y2k.joyreactor.services.synchronizers.PostFetcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,13 +14,13 @@ import java.util.List;
 public class PostService {
 
     private Repository<Post> repository;
-    private PostSynchronizer synchronizer;
+    private PostFetcher synchronizer;
     private Repository<Comment> commentRepository;
     private Repository<SimilarPost> similarPostRepository;
     private Repository<Attachment> attachmentRepository;
 
     public PostService(Repository<Post> repository,
-                       PostSynchronizer synchronizer,
+                       PostFetcher synchronizer,
                        Repository<Comment> commentRepository,
                        Repository<SimilarPost> similarPostRepository,
                        Repository<Attachment> attachmentRepository) {

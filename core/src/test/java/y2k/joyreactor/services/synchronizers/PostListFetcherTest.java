@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by y2k on 03/11/15.
  */
-public class PostListSynchronizerTest {
+public class PostListFetcherTest {
 
     @Mock
     private PostSubRepositoryForTag repository;
@@ -30,7 +30,7 @@ public class PostListSynchronizerTest {
     @Mock
     private PostsForTagRequest request;
 
-    private PostListSynchronizer synchronizer;
+    private PostListFetcher synchronizer;
 
     @Before
     public void setUp() throws Exception {
@@ -38,7 +38,7 @@ public class PostListSynchronizerTest {
 
         when(requestFactory.make(any(), anyString())).thenReturn(request);
 
-        synchronizer = new PostListSynchronizer(new Tag(), repository, requestFactory);
+        synchronizer = new PostListFetcher(new Tag(), repository, requestFactory);
     }
 
     @Test

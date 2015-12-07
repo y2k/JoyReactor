@@ -13,11 +13,11 @@ import java.util.List;
 /**
  * Created by y2k on 11/25/15.
  */
-public class MyTagSynchronizer {
+public class MyTagFetcher {
 
     private Repository<Tag> repository;
 
-    public MyTagSynchronizer(Repository<Tag> repository) {
+    public MyTagFetcher(Repository<Tag> repository) {
         this.repository = repository;
     }
 

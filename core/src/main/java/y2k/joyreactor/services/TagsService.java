@@ -6,7 +6,7 @@ import y2k.joyreactor.services.repository.MyTagQuery;
 import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.requests.AddTagRequest;
 import y2k.joyreactor.services.requests.UserNameRequest;
-import y2k.joyreactor.services.synchronizers.MyTagSynchronizer;
+import y2k.joyreactor.services.synchronizers.MyTagFetcher;
 
 import java.util.List;
 
@@ -16,9 +16,9 @@ import java.util.List;
 public class TagsService {
 
     private Repository<Tag> repository;
-    private MyTagSynchronizer synchronizer;
+    private MyTagFetcher synchronizer;
 
-    public TagsService(Repository<Tag> repository, MyTagSynchronizer synchronizer) {
+    public TagsService(Repository<Tag> repository, MyTagFetcher synchronizer) {
         this.repository = repository;
         this.synchronizer = synchronizer;
     }

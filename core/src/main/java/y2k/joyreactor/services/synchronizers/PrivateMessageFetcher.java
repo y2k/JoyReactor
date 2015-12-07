@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by y2k on 11/17/15.
  */
-public class PrivateMessageSynchronizer {
+public class PrivateMessageFetcher {
 
     private MessageListRequest request;
     private Repository<Message> repository;
@@ -22,11 +22,11 @@ public class PrivateMessageSynchronizer {
     private Date mineOldest;
     private Date theirOldest;
 
-    public PrivateMessageSynchronizer() {
+    public PrivateMessageFetcher() {
         this(new MessageListRequest(), new Repository<>(Message.class));
     }
 
-    public PrivateMessageSynchronizer(MessageListRequest request, Repository<Message> repository) {
+    public PrivateMessageFetcher(MessageListRequest request, Repository<Message> repository) {
         this.request = request;
         this.repository = repository;
     }

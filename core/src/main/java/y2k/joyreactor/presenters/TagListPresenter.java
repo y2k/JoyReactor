@@ -3,8 +3,6 @@ package y2k.joyreactor.presenters;
 import y2k.joyreactor.Tag;
 import y2k.joyreactor.common.Messages;
 import y2k.joyreactor.services.TagsService;
-import y2k.joyreactor.services.repository.Repository;
-import y2k.joyreactor.services.synchronizers.MyTagSynchronizer;
 
 import java.util.List;
 

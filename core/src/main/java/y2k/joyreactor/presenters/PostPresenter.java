@@ -4,8 +4,6 @@ import y2k.joyreactor.*;
 import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.platform.Platform;
 import y2k.joyreactor.services.PostService;
-import y2k.joyreactor.services.synchronizers.PostSynchronizer;
-import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.requests.OriginalImageRequest;
 
 import java.util.List;

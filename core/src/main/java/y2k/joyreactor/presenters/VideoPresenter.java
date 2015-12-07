@@ -8,7 +8,7 @@ import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.services.PostService;
 import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.requests.OriginalImageRequest;
-import y2k.joyreactor.services.synchronizers.PostSynchronizer;
+import y2k.joyreactor.services.synchronizers.PostFetcher;
 
 import java.io.File;
 
@@ -20,7 +20,7 @@ public class VideoPresenter {
     public VideoPresenter(View view) {
         this(view, new PostService(
                 new Repository<>(Post.class),
-                new PostSynchronizer(new Repository<>(SimilarPost.class), new Repository<>(Attachment.class)),
+                new PostFetcher(new Repository<>(SimilarPost.class), new Repository<>(Attachment.class)),
                 new Repository<>(Comment.class),
                 new Repository<>(SimilarPost.class),
                 new Repository<>(Attachment.class)));

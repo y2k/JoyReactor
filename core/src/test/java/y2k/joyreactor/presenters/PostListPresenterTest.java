@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import rx.Observable;
 import y2k.joyreactor.Post;
-import y2k.joyreactor.services.synchronizers.PostListSynchronizer;
+import y2k.joyreactor.services.synchronizers.PostListFetcher;
 import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.common.PostGenerator;
 
@@ -33,9 +33,9 @@ public class PostListPresenterTest {
     Repository<Post> mockRepository;
 
     @Mock
-    PostListSynchronizer.Factory synchronizerFactory;
+    PostListFetcher.Factory synchronizerFactory;
     @Mock
-    PostListSynchronizer synchronizer;
+    PostListFetcher synchronizer;
 
     @Captor
     ArgumentCaptor<List<Post>> captor;
