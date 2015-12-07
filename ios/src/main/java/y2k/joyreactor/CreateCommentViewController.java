@@ -25,7 +25,7 @@ public class CreateCommentViewController extends UIViewController implements Cre
         cancelButton.addOnTouchUpInsideListener(
                 (sender, e) -> getNavigationController().popViewController(true));
         sendButton.addOnTouchUpInsideListener(
-                (sender, e) -> presenter.create());
+                (sender, e) -> presenter.create(commentTextView.getText()));
     }
 
     // ==========================================
@@ -33,13 +33,13 @@ public class CreateCommentViewController extends UIViewController implements Cre
     // ==========================================
 
     @Override
-    public String getCommentText() {
-        return commentTextView.getText();
+    public void setIsBusy(boolean isBusy) {
+        getNavigationItem().setHidesBackButton(isBusy, true);
     }
 
     @Override
-    public void setIsBusy(boolean isBusy) {
-        getNavigationItem().setHidesBackButton(isBusy, true);
+    public void setUser(Profile profile) {
+        // TODO
     }
 
     // ==========================================

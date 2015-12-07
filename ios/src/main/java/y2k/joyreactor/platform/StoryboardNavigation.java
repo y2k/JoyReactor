@@ -89,4 +89,9 @@ public class StoryboardNavigation extends Navigation {
         sPostArgument = post;
         getNavigationController().pushViewController(new ImageViewController(), true);
     }
+
+    @Override
+    public void openCreateComment() {
+        // TODO:
+    }
 }
