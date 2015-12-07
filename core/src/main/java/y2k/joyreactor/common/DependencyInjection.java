@@ -1,13 +1,12 @@
 package y2k.joyreactor.common;
 
 import y2k.joyreactor.*;
-import y2k.joyreactor.presenters.PostListPresenter;
-import y2k.joyreactor.presenters.PostPresenter;
-import y2k.joyreactor.presenters.TagListPresenter;
-import y2k.joyreactor.services.PostService;
-import y2k.joyreactor.services.TagService;
-import y2k.joyreactor.services.TagsService;
+import y2k.joyreactor.presenters.*;
+import y2k.joyreactor.services.*;
 import y2k.joyreactor.services.repository.Repository;
+import y2k.joyreactor.services.requests.CreateCommentRequestFactory;
+import y2k.joyreactor.services.requests.LoginRequestFactory;
+import y2k.joyreactor.services.requests.ProfileRequestFactory;
 import y2k.joyreactor.services.synchronizers.MyTagSynchronizer;
 import y2k.joyreactor.services.synchronizers.PostListSynchronizer;
 import y2k.joyreactor.services.synchronizers.PostSynchronizer;
@@ -39,20 +38,24 @@ public class DependencyInjection {
         return new TagListPresenter(view, provideTagsService());
     }
 
+    public ProfilePresenter provideProfilePresenter(ProfilePresenter.View view) {
+        return new ProfilePresenter(view, provideProfileService());
+    }
+
+    public CreateCommentPresenter provideCreateCommentPresenter(CreateCommentPresenter.View view) {
+        return new CreateCommentPresenter(view, provideProfileService(), provideCommentService());
+    }
+
+    public LoginPresenter provideLoginPresenter(LoginPresenter.View view) {
+        return new LoginPresenter(view, provideProfileService());
+    }
+
     // ==========================================
-    // Models
+    // Services
     // ==========================================
 
     public TagService provideTagService() {
         return new TagService(providePostRepository(), providePostListSynchronizerFactory());
-    }
-
-    public PostListSynchronizer.Factory providePostListSynchronizerFactory() {
-        return new PostListSynchronizer.Factory(providePostRepository(), provideRepositoryTagPost());
-    }
-
-    public Repository<TagPost> provideRepositoryTagPost() {
-        return new Repository<>(TagPost.class);
     }
 
     public PostService providePostService() {
@@ -63,6 +66,30 @@ public class DependencyInjection {
                 provideSimilarPostRepository(),
                 provideAttachmentRepository()
         );
+    }
+
+    public TagsService provideTagsService() {
+        return new TagsService(provideRepositoryTag(), provideMyTagSynchronizer());
+    }
+
+    public CommentService provideCommentService() {
+        return new CommentService(provideCreateCommentRequestFactory(), providePostSynchronizer());
+    }
+
+    private ProfileService provideProfileService() {
+        return new ProfileService(provideProfileRequestFactory(), provideLoginRequestFactory());
+    }
+
+    // ==========================================
+    // Models
+    // ==========================================
+
+    public PostListSynchronizer.Factory providePostListSynchronizerFactory() {
+        return new PostListSynchronizer.Factory(providePostRepository(), provideRepositoryTagPost());
+    }
+
+    public Repository<TagPost> provideRepositoryTagPost() {
+        return new Repository<>(TagPost.class);
     }
 
     public PostSynchronizer providePostSynchronizer() {
@@ -85,15 +112,23 @@ public class DependencyInjection {
         return new Repository<>(Post.class);
     }
 
-    public TagsService provideTagsService() {
-        return new TagsService(provideRepositoryTag(), provideMyTagSynchronizer());
-    }
-
     public MyTagSynchronizer provideMyTagSynchronizer() {
         return new MyTagSynchronizer(provideRepositoryTag());
     }
 
     public Repository<Tag> provideRepositoryTag() {
         return new Repository<>(Tag.class);
+    }
+
+    public LoginRequestFactory provideLoginRequestFactory() {
+        return new LoginRequestFactory();
+    }
+
+    public ProfileRequestFactory provideProfileRequestFactory() {
+        return new ProfileRequestFactory();
+    }
+
+    public CreateCommentRequestFactory provideCreateCommentRequestFactory() {
+        return new CreateCommentRequestFactory();
     }
 }

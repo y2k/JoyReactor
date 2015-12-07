@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import y2k.joyreactor.common.DependencyInjection;
 import y2k.joyreactor.presenters.LoginPresenter;
 
 
@@ -23,7 +24,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        LoginPresenter presenter = new LoginPresenter(this);
+        LoginPresenter presenter = DependencyInjection.getInstance().provideLoginPresenter(this);
 
         findViewById(R.id.login).setOnClickListener(v -> presenter.login(
                 "" + ((TextView) findViewById(R.id.username)).getText(),

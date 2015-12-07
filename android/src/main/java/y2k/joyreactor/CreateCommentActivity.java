@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import y2k.joyreactor.common.DependencyInjection;
 import y2k.joyreactor.presenters.CreateCommentPresenter;
 
 public class CreateCommentActivity extends AppCompatActivity {
@@ -18,35 +19,36 @@ public class CreateCommentActivity extends AppCompatActivity {
         View sendButton = findViewById(R.id.send);
         View progress = findViewById(R.id.progress);
 
-        CreateCommentPresenter presenter = new CreateCommentPresenter(new CreateCommentPresenter.View() {
+        CreateCommentPresenter presenter = DependencyInjection.getInstance().provideCreateCommentPresenter(
+                new CreateCommentPresenter.View() {
 
-            @Override
-            public void setIsBusy(boolean isBusy) {
-                // TODO
-                if (isBusy) {
-                    progress.setVisibility(View.VISIBLE);
-                    progress.setAlpha(0);
-                    progress.animate().alpha(1);
+                    @Override
+                    public void setIsBusy(boolean isBusy) {
+                        // TODO
+                        if (isBusy) {
+                            progress.setVisibility(View.VISIBLE);
+                            progress.setAlpha(0);
+                            progress.animate().alpha(1);
 
-                    sendButton.animate().alpha(0).withEndAction(() -> sendButton.setVisibility(View.INVISIBLE));
-                } else {
-                    sendButton.setVisibility(View.VISIBLE);
-                    sendButton.setAlpha(0);
-                    sendButton.animate().alpha(1);
+                            sendButton.animate().alpha(0).withEndAction(() -> sendButton.setVisibility(View.INVISIBLE));
+                        } else {
+                            sendButton.setVisibility(View.VISIBLE);
+                            sendButton.setAlpha(0);
+                            sendButton.animate().alpha(1);
 
-                    progress.animate().alpha(0).withEndAction(() -> progress.setVisibility(View.GONE));
-                }
-            }
+                            progress.animate().alpha(0).withEndAction(() -> progress.setVisibility(View.GONE));
+                        }
+                    }
 
-            @Override
-            public void setUser(Profile profile) {
-                ((WebImageView) findViewById(R.id.userImage)).setImage(profile.userImage);
+                    @Override
+                    public void setUser(Profile profile) {
+                        ((WebImageView) findViewById(R.id.userImage)).setImage(profile.userImage);
 
-                nameView.setText(profile.userName);
-                nameView.setAlpha(0);
-                nameView.animate().alpha(1);
-            }
-        });
+                        nameView.setText(profile.userName);
+                        nameView.setAlpha(0);
+                        nameView.animate().alpha(1);
+                    }
+                });
 
         sendButton.setOnClickListener(v -> presenter.create("" + textView.getText()));
     }

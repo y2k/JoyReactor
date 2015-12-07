@@ -1,7 +1,6 @@
 package y2k.joyreactor.presenters;
 
 import y2k.joyreactor.services.ProfileService;
-import y2k.joyreactor.services.requests.LoginRequest;
 import y2k.joyreactor.platform.Navigation;
 
 /**
@@ -12,11 +11,7 @@ public class LoginPresenter {
     private View view;
     private ProfileService service;
 
-    public LoginPresenter(View view) {
-        this(view, new ProfileService());
-    }
-
-    LoginPresenter(View view, ProfileService service) {
+    public LoginPresenter(View view, ProfileService service) {
         this.view = view;
         this.service = service;
     }

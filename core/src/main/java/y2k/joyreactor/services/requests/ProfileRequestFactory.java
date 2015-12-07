@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 /**
  * Created by y2k on 19/10/15.
  */
-public class ProfileRequest {
+public class ProfileRequestFactory {
 
     public Observable<Profile> request() {
         return new UserNameRequest()

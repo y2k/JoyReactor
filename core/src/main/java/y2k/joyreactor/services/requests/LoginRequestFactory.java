@@ -10,17 +10,9 @@ import java.io.IOException;
 /**
  * Created by y2k on 9/30/15.
  */
-public class LoginRequest {
+public class LoginRequestFactory {
 
-    String username;
-    String password;
-
-    public LoginRequest(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    public Observable<Void> request() {
+    public Observable<Void> request(String username, String password) {
         return ObservableUtils.create(() -> {
             Document doc = HttpClient.getInstance()
                     .beginForm()

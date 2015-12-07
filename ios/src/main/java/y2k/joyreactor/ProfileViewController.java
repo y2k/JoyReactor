@@ -6,6 +6,7 @@ import org.robovm.apple.uikit.UILabel;
 import org.robovm.apple.uikit.UIViewController;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
+import y2k.joyreactor.common.DependencyInjection;
 import y2k.joyreactor.platform.ImageRequest;
 import y2k.joyreactor.presenters.ProfilePresenter;
 
@@ -25,7 +26,7 @@ public class ProfileViewController extends UIViewController implements ProfilePr
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
-        ProfilePresenter presenter = new ProfilePresenter(this);
+        ProfilePresenter presenter = DependencyInjection.getInstance().provideProfilePresenter(this);
         logoutButton.addOnTouchUpInsideListener((sender, e) -> presenter.logout());
     }
 

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import y2k.joyreactor.common.DependencyInjection;
 import y2k.joyreactor.presenters.ProfilePresenter;
 
 public class ProfileActivity extends AppCompatActivity implements ProfilePresenter.View {
@@ -21,7 +22,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePresent
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ProfilePresenter presenter = new ProfilePresenter(this);
+        ProfilePresenter presenter = DependencyInjection.getInstance().provideProfilePresenter(this);
         findViewById(R.id.logout).setOnClickListener(v -> presenter.logout());
     }
 
