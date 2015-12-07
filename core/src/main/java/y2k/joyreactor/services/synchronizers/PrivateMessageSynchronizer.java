@@ -31,8 +31,8 @@ public class PrivateMessageSynchronizer {
         this.repository = repository;
     }
 
-    public Observable execute() {
-        return ObservableUtils.create(() -> {
+    public Observable<?> execute() {
+        return ObservableUtils.action(() -> {
             while (true) {
                 request.execute(request.getNextPage());
 

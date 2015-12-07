@@ -22,15 +22,16 @@ public class MessageService {
         this.repository = repository;
     }
 
-    public Observable<List<Message>> queryAsync(String username) {
-        return repository.queryAsync(new MessageForUserQuery(username));
-    }
-
-    public Observable<List<Message>> get() {
-        return getFromRepo().mergeWith(fetcher.execute().flatMap(s -> getFromRepo()));
+    public Observable<List<Message>> getThreads() {
+        return getFromRepo().mergeWith(
+                fetcher.execute().flatMap(_void -> getFromRepo()));
     }
 
     private Observable<List<Message>> getFromRepo() {
         return repository.queryAsync(new MessageThreadQuery());
+    }
+
+    public Observable<List<Message>> getMessages(String username) {
+        return repository.queryAsync(new MessageForUserQuery(username));
     }
 }

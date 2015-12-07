@@ -12,6 +12,21 @@ import java.util.concurrent.Executor;
  */
 public class ObservableUtils {
 
+    public static Observable<?> action(UnsafeAction0 action0) {
+        return Observable
+                .create(subscriber -> {
+                    try {
+                        action0.call();
+                        subscriber.onNext(null);
+                        subscriber.onCompleted();
+                    } catch (Exception e) {
+                        subscriber.onError(e);
+                    }
+                })
+                .observeOn(ForegroundScheduler.getInstance())
+                .subscribeOn(Schedulers.io());
+    }
+
     public static Observable<Void> create(UnsafeAction0 action0) {
         return ObservableUtils.create(() -> {
             action0.call();

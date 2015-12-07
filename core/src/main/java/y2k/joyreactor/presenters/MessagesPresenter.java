@@ -35,7 +35,7 @@ public class MessagesPresenter extends Presenter {
 
     private void reloadMessages(String username) {
         view.setIsBusy(true);
-        service.queryAsync(username)
+        service.getMessages(username)
                 .subscribe(messages -> {
                     view.updateMessages(messages);
                     view.setIsBusy(false);

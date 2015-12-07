@@ -12,7 +12,7 @@ public class MessageThreadsPresenter {
 
     public MessageThreadsPresenter(View view, MessageService service) {
         view.setIsBusy(true);
-        service.get()
+        service.getThreads()
                 .subscribe(threads -> {
                     view.setIsBusy(false);
                     view.reloadData(threads);
