@@ -35,14 +35,18 @@ public class PostService {
 
     public Observable<CommentGroup> getCommentsAsync(int postId, int parentCommentId) {
         if (parentCommentId == 0)
-            return commentRepository
-                    .queryAsync(new CommentsForPostQuery(postId, 0))
-                    .map(CommentGroup::new);
+            return getCommentForPost(postId);
         return commentRepository
                 .queryFirstByIdAsync(parentCommentId)
                 .flatMap(parent -> commentRepository
                         .queryAsync(new CommentsForPostQuery(postId, parentCommentId))
-                        .map(children -> new CommentGroup(parent, children)));
+                        .map(children -> new CommentGroup.OneLevel(parent, children)));
+    }
+
+    private Observable<CommentGroup> getCommentForPost(int postId) {
+        return commentRepository
+                .queryAsync(new TwoLeverCommentQuery(postId))
+                .map(CommentGroup.TwoLevel::new);
     }
 
     public Observable<Post> getFromCache(String postId) {
@@ -58,7 +62,7 @@ public class PostService {
     public Observable<CommentGroup> getTopComments(int postId, int maxCount) {
         return commentRepository
                 .queryAsync(new TopCommentsQuery(postId, maxCount))
-                .map(CommentGroup::new);
+                .map(CommentGroup.OneLevel::new);
     }
 
     public Observable<List<SimilarPost>> getSimilarPosts(int postId) {
