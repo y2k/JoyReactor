@@ -10,6 +10,7 @@ import y2k.joyreactor.services.requests.ProfileRequestFactory;
 import y2k.joyreactor.services.synchronizers.MyTagSynchronizer;
 import y2k.joyreactor.services.synchronizers.PostListSynchronizer;
 import y2k.joyreactor.services.synchronizers.PostSynchronizer;
+import y2k.joyreactor.services.synchronizers.PrivateMessageSynchronizer;
 
 /**
  * Created by y2k on 07/12/15.
@@ -54,6 +55,14 @@ public class DependencyInjection {
         return new AddTagPresenter(view, provideTagsService());
     }
 
+    public MessagesPresenter provideMessagesPresenter(MessagesPresenter.View view) {
+        return new MessagesPresenter(view, provideMessageService());
+    }
+
+    public MessageThreadsPresenter provideMessageThreadsPresenter(MessageThreadsPresenter.View view) {
+        return new MessageThreadsPresenter(view, provideMessageService());
+    }
+
     // ==========================================
     // Services
     // ==========================================
@@ -82,6 +91,10 @@ public class DependencyInjection {
 
     private ProfileService provideProfileService() {
         return new ProfileService(provideProfileRequestFactory(), provideLoginRequestFactory());
+    }
+
+    public MessageService provideMessageService() {
+        return new MessageService(providePrivateMessageSynchronizer(), provideRepositoryMessage());
     }
 
     // ==========================================
@@ -134,5 +147,13 @@ public class DependencyInjection {
 
     public CreateCommentRequestFactory provideCreateCommentRequestFactory() {
         return new CreateCommentRequestFactory();
+    }
+
+    private Repository<Message> provideRepositoryMessage() {
+        return new Repository<>(Message.class);
+    }
+
+    private PrivateMessageSynchronizer providePrivateMessageSynchronizer() {
+        return new PrivateMessageSynchronizer();
     }
 }

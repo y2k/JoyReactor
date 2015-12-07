@@ -1,10 +1,7 @@
 package y2k.joyreactor.presenters;
 
-import rx.Observable;
 import y2k.joyreactor.Message;
-import y2k.joyreactor.services.synchronizers.PrivateMessageSynchronizer;
-import y2k.joyreactor.services.repository.MessageThreadQuery;
-import y2k.joyreactor.services.repository.Repository;
+import y2k.joyreactor.services.MessageService;
 
 import java.util.List;
 
@@ -13,30 +10,13 @@ import java.util.List;
  */
 public class MessageThreadsPresenter {
 
-    private Repository<Message> repository;
-    private PrivateMessageSynchronizer fetcher;
-
-    public MessageThreadsPresenter(View view) {
-        this(view, new Repository<>(Message.class), new PrivateMessageSynchronizer());
-    }
-
-    public MessageThreadsPresenter(View view, Repository<Message> repository, PrivateMessageSynchronizer fetcher) {
-        this.repository = repository;
-        this.fetcher = fetcher;
-
+    public MessageThreadsPresenter(View view, MessageService service) {
         view.setIsBusy(true);
-        get().subscribe(threads -> {
-            view.setIsBusy(false);
-            view.reloadData(threads);
-        }, Throwable::printStackTrace);
-    }
-
-    private Observable<List<Message>> get() {
-        return getFromRepo().mergeWith(fetcher.execute().flatMap(s -> getFromRepo()));
-    }
-
-    private Observable<List<Message>> getFromRepo() {
-        return repository.queryAsync(new MessageThreadQuery());
+        service.get()
+                .subscribe(threads -> {
+                    view.setIsBusy(false);
+                    view.reloadData(threads);
+                }, Throwable::printStackTrace);
     }
 
     public void selectThread(int index) {

@@ -4,6 +4,7 @@ import org.robovm.apple.foundation.NSIndexPath;
 import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
+import y2k.joyreactor.common.DependencyInjection;
 import y2k.joyreactor.presenters.MessagesPresenter;
 
 import java.util.List;
@@ -50,7 +51,7 @@ public class MessageViewController extends UIViewController implements MessagesP
         sendButton.addOnTouchUpInsideListener(
                 (sender, e) -> presenter.reply(newMessage.getText()));
 
-        presenter = new MessagesPresenter(this);
+        presenter = DependencyInjection.getInstance().provideMessagesPresenter(this);
     }
 
     @Override

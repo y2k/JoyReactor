@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import org.ocpsoft.prettytime.PrettyTime;
+import y2k.joyreactor.common.DependencyInjection;
 import y2k.joyreactor.presenters.MessagesPresenter;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class MessageFragment extends Fragment implements MessagesPresenter.View 
         view.findViewById(R.id.createMessage)
                 .setOnClickListener(v -> presenter.reply("" + newMessage.getText()));
 
-        presenter = new MessagesPresenter(this);
+        presenter = DependencyInjection.getInstance().provideMessagesPresenter(this);
         return view;
     }
 
