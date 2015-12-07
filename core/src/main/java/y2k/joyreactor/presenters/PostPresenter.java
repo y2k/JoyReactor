@@ -21,9 +21,10 @@ public class PostPresenter {
     public PostPresenter(View view) {
         this(view, new PostService(
                 new Repository<>(Post.class),
-                new PostSynchronizer(new Repository<>(SimilarPost.class)),
+                new PostSynchronizer(new Repository<>(SimilarPost.class), new Repository<>(Attachment.class)),
                 new Repository<>(Comment.class),
-                new Repository<>(SimilarPost.class)));
+                new Repository<>(SimilarPost.class),
+                new Repository<>(Attachment.class)));
     }
 
     PostPresenter(View view, PostService service) {

@@ -5,6 +5,7 @@ import y2k.joyreactor.*;
 import y2k.joyreactor.services.repository.*;
 import y2k.joyreactor.services.synchronizers.PostSynchronizer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,15 +17,18 @@ public class PostService {
     private PostSynchronizer synchronizer;
     private Repository<Comment> commentRepository;
     private Repository<SimilarPost> similarPostRepository;
+    private Repository<Attachment> attachmentRepository;
 
     public PostService(Repository<Post> repository,
                        PostSynchronizer synchronizer,
                        Repository<Comment> commentRepository,
-                       Repository<SimilarPost> similarPostRepository) {
+                       Repository<SimilarPost> similarPostRepository,
+                       Repository<Attachment> attachmentRepository) {
         this.repository = repository;
         this.synchronizer = synchronizer;
         this.commentRepository = commentRepository;
         this.similarPostRepository = similarPostRepository;
+        this.attachmentRepository = attachmentRepository;
     }
 
     public Observable<Post> synchronizePostAsync(String postId) {
@@ -54,9 +58,20 @@ public class PostService {
     }
 
     public Observable<List<Image>> getPostImages(int postId) {
-        return commentRepository
+        Observable<List<Image>> postAttachments = attachmentRepository
+                .queryAsync(new AttachmentsQuery(postId))
+                .flatMap(attachments -> Observable.from(attachments).map(s -> s.image).toList());
+        Observable<List<Image>> commentAttachments = commentRepository
                 .queryAsync(new CommentsWithImagesQuery(postId, 10))
                 .flatMap(comments -> Observable.from(comments).map(Comment::getAttachment).toList());
+        return postAttachments
+                .flatMap(s -> commentAttachments.map(s2 -> union(s, s2)));
+    }
+
+    private List<Image> union(List<Image> s, List<Image> s2) {
+        List<Image> result = new ArrayList<>(s);
+        result.addAll(s2);
+        return result;
     }
 
     public Observable<CommentGroup> getTopComments(int postId, int maxCount) {

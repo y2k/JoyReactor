@@ -21,9 +21,16 @@ public class Image implements Serializable {
     }
 
     public Image(String url, int width, int height) {
-        this.url = url;
+        this.url = clearUrl(url);
         this.width = width;
         this.height = height;
+    }
+
+    private static String clearUrl(String url) {
+        return url
+                .replaceAll("(/comment/).+(-\\d+\\.[\\w\\d]+)$", "$1$2")
+                .replaceAll("(/full/).+(-\\d+\\.)", "$1$2")
+                .replaceAll("(/post/).+(-\\d+\\.)", "$1$2");
     }
 
     public String fullUrl(String format) {

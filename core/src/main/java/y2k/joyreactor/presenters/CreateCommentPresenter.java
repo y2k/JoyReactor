@@ -1,17 +1,14 @@
 package y2k.joyreactor.presenters;
 
-import rx.Observable;
+import y2k.joyreactor.Attachment;
 import y2k.joyreactor.Profile;
 import y2k.joyreactor.SimilarPost;
-import y2k.joyreactor.common.ForegroundScheduler;
 import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.services.CommentService;
 import y2k.joyreactor.services.ProfileService;
 import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.requests.CreateCommentRequestFactory;
 import y2k.joyreactor.services.synchronizers.PostSynchronizer;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by y2k on 10/4/15.
@@ -26,7 +23,7 @@ public class CreateCommentPresenter {
                 new ProfileService(),
                 new CommentService(
                         new CreateCommentRequestFactory(),
-                        new PostSynchronizer(new Repository<>(SimilarPost.class))));
+                        new PostSynchronizer(new Repository<>(SimilarPost.class), new Repository<>(Attachment.class))));
     }
 
     CreateCommentPresenter(View view, ProfileService profileService, CommentService service) {

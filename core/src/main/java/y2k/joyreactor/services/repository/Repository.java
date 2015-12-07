@@ -30,7 +30,8 @@ public class Repository<T> {
     }
 
     public void insertAll(List<T> list) {
-        insertAllAsync(list).toBlocking().single();
+        if (!list.isEmpty())
+            insertAllAsync(list).toBlocking().single();
     }
 
     public Observable<Void> insertAllAsync(List<T> newRows) {

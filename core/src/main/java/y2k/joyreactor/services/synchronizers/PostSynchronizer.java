@@ -1,14 +1,12 @@
 package y2k.joyreactor.services.synchronizers;
 
 import rx.Observable;
+import y2k.joyreactor.Attachment;
 import y2k.joyreactor.Comment;
 import y2k.joyreactor.Post;
 import y2k.joyreactor.SimilarPost;
 import y2k.joyreactor.common.ObservableUtils;
-import y2k.joyreactor.services.repository.CommentsForPostQuery;
-import y2k.joyreactor.services.repository.PostByIdQuery;
-import y2k.joyreactor.services.repository.Repository;
-import y2k.joyreactor.services.repository.SimilarPostQuery;
+import y2k.joyreactor.services.repository.*;
 import y2k.joyreactor.services.requests.PostRequest;
 
 import java.util.List;
@@ -24,9 +22,12 @@ public class PostSynchronizer {
     private Repository<Comment> commentRepository = new Repository<>(Comment.class);
 
     private Repository<SimilarPost> similarPostRepository;
+    private Repository<Attachment> attachmentRepository;
 
-    public PostSynchronizer(Repository<SimilarPost> similarPostRepository) {
+    public PostSynchronizer(Repository<SimilarPost> similarPostRepository,
+                            Repository<Attachment> attachmentRepository) {
         this.similarPostRepository = similarPostRepository;
+        this.attachmentRepository = attachmentRepository;
     }
 
     public Observable<Void> synchronizeWithWeb(String postId) {
@@ -38,7 +39,17 @@ public class PostSynchronizer {
 
             saveComments(post);
             saveSimilarPosts(post);
+            saveAttachments(post.id);
         });
+    }
+
+    private void saveAttachments(int postId) {
+        List<Attachment> attachments = postRequest.getAttachments();
+        for (Attachment a : attachments)
+            a.postId = postId;
+
+        attachmentRepository.deleteWhere(new AttachmentsQuery(postId));
+        attachmentRepository.insertAll(attachments);
     }
 
     private void saveComments(Post post) {
