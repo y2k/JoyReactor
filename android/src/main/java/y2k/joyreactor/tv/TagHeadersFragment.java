@@ -6,6 +6,7 @@ import android.support.v17.leanback.app.OnHeaderViewSelectedListenerImpl;
 import android.support.v17.leanback.widget.*;
 import y2k.joyreactor.R;
 import y2k.joyreactor.Tag;
+import y2k.joyreactor.common.DependencyInjection;
 import y2k.joyreactor.presenters.TagListPresenter;
 
 import java.util.List;
@@ -32,25 +33,26 @@ public class TagHeadersFragment extends HeadersFragment {
             }
         });
 
-        presenter = new TagListPresenter(new TagListPresenter.View() {
+        presenter = DependencyInjection.getInstance().provideTagListPresenter(
+                new TagListPresenter.View() {
 
-            @Override
-            public void reloadData(List<Tag> tags) {
-                TagHeadersFragment.this.tags = tags;
-                ArrayObjectAdapter adapter = new ArrayObjectAdapter(new ListRowPresenter());
+                    @Override
+                    public void reloadData(List<Tag> tags) {
+                        TagHeadersFragment.this.tags = tags;
+                        ArrayObjectAdapter adapter = new ArrayObjectAdapter(new ListRowPresenter());
 
-                addRow(adapter, getString(R.string.feed));
-                addRow(adapter, getString(R.string.favorite));
-                for (Tag tag : tags)
-                    addRow(adapter, tag.title);
+                        addRow(adapter, getString(R.string.feed));
+                        addRow(adapter, getString(R.string.favorite));
+                        for (Tag tag : tags)
+                            addRow(adapter, tag.title);
 
-                setAdapter(adapter);
-            }
+                        setAdapter(adapter);
+                    }
 
-            private void addRow(ArrayObjectAdapter adapter, String title) {
-                adapter.add(new Row(adapter.size(), new HeaderItem(title)));
-            }
-        });
+                    private void addRow(ArrayObjectAdapter adapter, String title) {
+                        adapter.add(new Row(adapter.size(), new HeaderItem(title)));
+                    }
+                });
     }
 
     @Override

@@ -4,6 +4,7 @@ import org.robovm.apple.foundation.NSIndexPath;
 import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
+import y2k.joyreactor.common.DependencyInjection;
 import y2k.joyreactor.platform.ImageRequest;
 import y2k.joyreactor.presenters.TagListPresenter;
 
@@ -23,7 +24,7 @@ public class MenuViewController extends UIViewController implements TagListPrese
     public void viewDidLoad() {
         super.viewDidLoad();
 
-        presenter = new TagListPresenter(this);
+        presenter = DependencyInjection.getInstance().provideTagListPresenter(this);
         list.setDataSource(new TagDataSource());
         list.setDelegate(new TagDelegate());
     }

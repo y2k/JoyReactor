@@ -16,12 +16,7 @@ public class TagListPresenter extends Presenter {
     private View view;
     private TagsService service;
 
-    public TagListPresenter(View view) {
-        this(view, new TagsService(new Repository<>(Tag.class),
-                new MyTagSynchronizer(new Repository<>(Tag.class))));
-    }
-
-    TagListPresenter(View view, TagsService service) {
+    public TagListPresenter(View view, TagsService service) {
         this.view = view;
         this.service = service;
     }

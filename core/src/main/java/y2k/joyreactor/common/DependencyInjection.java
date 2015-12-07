@@ -3,9 +3,12 @@ package y2k.joyreactor.common;
 import y2k.joyreactor.*;
 import y2k.joyreactor.presenters.PostListPresenter;
 import y2k.joyreactor.presenters.PostPresenter;
+import y2k.joyreactor.presenters.TagListPresenter;
 import y2k.joyreactor.services.PostService;
 import y2k.joyreactor.services.TagService;
+import y2k.joyreactor.services.TagsService;
 import y2k.joyreactor.services.repository.Repository;
+import y2k.joyreactor.services.synchronizers.MyTagSynchronizer;
 import y2k.joyreactor.services.synchronizers.PostListSynchronizer;
 import y2k.joyreactor.services.synchronizers.PostSynchronizer;
 
@@ -20,16 +23,28 @@ public class DependencyInjection {
         return sInstance;
     }
 
+    // ==========================================
+    // Presenters
+    // ==========================================
+
     public PostListPresenter providePostListPresenter(PostListPresenter.View view) {
         return new PostListPresenter(view, provideTagService());
     }
 
-    public TagService provideTagService() {
-        return new TagService(providePostRepository(), providePostListSynchronizerFactory());
-    }
-
     public PostPresenter providePostPresenter(PostPresenter.View view) {
         return new PostPresenter(view, providePostService());
+    }
+
+    public TagListPresenter provideTagListPresenter(TagListPresenter.View view) {
+        return new TagListPresenter(view, provideTagsService());
+    }
+
+    // ==========================================
+    // Models
+    // ==========================================
+
+    public TagService provideTagService() {
+        return new TagService(providePostRepository(), providePostListSynchronizerFactory());
     }
 
     public PostListSynchronizer.Factory providePostListSynchronizerFactory() {
@@ -68,5 +83,17 @@ public class DependencyInjection {
 
     public Repository<Post> providePostRepository() {
         return new Repository<>(Post.class);
+    }
+
+    public TagsService provideTagsService() {
+        return new TagsService(provideRepositoryTag(), provideMyTagSynchronizer());
+    }
+
+    public MyTagSynchronizer provideMyTagSynchronizer() {
+        return new MyTagSynchronizer(provideRepositoryTag());
+    }
+
+    public Repository<Tag> provideRepositoryTag() {
+        return new Repository<>(Tag.class);
     }
 }
