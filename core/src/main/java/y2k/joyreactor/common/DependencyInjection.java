@@ -50,6 +50,10 @@ public class DependencyInjection {
         return new LoginPresenter(view, provideProfileService());
     }
 
+    public AddTagPresenter provideAddTagPresenter(AddTagPresenter.View view) {
+        return new AddTagPresenter(view, provideTagsService());
+    }
+
     // ==========================================
     // Services
     // ==========================================

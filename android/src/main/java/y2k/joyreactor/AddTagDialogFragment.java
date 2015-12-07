@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import y2k.joyreactor.common.DependencyInjection;
 import y2k.joyreactor.presenters.AddTagPresenter;
 
 /**
@@ -27,21 +28,22 @@ public class AddTagDialogFragment extends AppCompatDialogFragment {
         View okButton = view.findViewById(R.id.ok);
         TextView tagView = (TextView) view.findViewById(R.id.tag);
 
-        AddTagPresenter presenter = new AddTagPresenter(new AddTagPresenter.View() {
+        AddTagPresenter presenter = DependencyInjection.getInstance().provideAddTagPresenter(
+                new AddTagPresenter.View() {
 
-            @Override
-            public void setIsBusy(boolean isBusy) {
-                okButton.setEnabled(!isBusy);
-                cancelButton.setEnabled(!isBusy);
-                tagView.setEnabled(!isBusy);
-                setCancelable(!isBusy);
-            }
+                    @Override
+                    public void setIsBusy(boolean isBusy) {
+                        okButton.setEnabled(!isBusy);
+                        cancelButton.setEnabled(!isBusy);
+                        tagView.setEnabled(!isBusy);
+                        setCancelable(!isBusy);
+                    }
 
-            @Override
-            public void showErrorMessage() {
-                Toast.makeText(App.getInstance(), R.string.unknown_error_occurred, Toast.LENGTH_LONG).show();
-            }
-        });
+                    @Override
+                    public void showErrorMessage() {
+                        Toast.makeText(App.getInstance(), R.string.unknown_error_occurred, Toast.LENGTH_LONG).show();
+                    }
+                });
 
         cancelButton.setOnClickListener(v -> dismiss());
         okButton.setOnClickListener(v -> presenter.add("" + tagView.getText()));

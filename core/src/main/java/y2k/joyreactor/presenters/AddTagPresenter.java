@@ -1,13 +1,7 @@
 package y2k.joyreactor.presenters;
 
-import y2k.joyreactor.Tag;
-import y2k.joyreactor.common.ForegroundScheduler;
 import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.services.TagsService;
-import y2k.joyreactor.services.repository.Repository;
-import y2k.joyreactor.services.synchronizers.MyTagSynchronizer;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by y2k on 08/10/15.
@@ -17,11 +11,7 @@ public class AddTagPresenter {
     private View view;
     private TagsService service;
 
-    public AddTagPresenter(View view) {
-        this(view, new TagsService(new Repository<>(Tag.class), new MyTagSynchronizer(new Repository<>(Tag.class))));
-    }
-
-    AddTagPresenter(View view, TagsService service) {
+    public AddTagPresenter(View view, TagsService service) {
         this.view = view;
         this.service = service;
     }
