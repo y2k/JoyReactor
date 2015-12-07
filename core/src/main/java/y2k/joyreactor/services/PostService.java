@@ -3,8 +3,10 @@ package y2k.joyreactor.services;
 import rx.Observable;
 import y2k.joyreactor.*;
 import y2k.joyreactor.services.repository.*;
+import y2k.joyreactor.services.requests.OriginalImageRequestFactory;
 import y2k.joyreactor.services.synchronizers.PostFetcher;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,22 +15,25 @@ import java.util.List;
  */
 public class PostService {
 
-    private Repository<Post> repository;
+    private OriginalImageRequestFactory imageRequestFactory;
     private PostFetcher synchronizer;
+    private Repository<Post> repository;
     private Repository<Comment> commentRepository;
     private Repository<SimilarPost> similarPostRepository;
     private Repository<Attachment> attachmentRepository;
 
-    public PostService(Repository<Post> repository,
-                       PostFetcher synchronizer,
+    public PostService(PostFetcher synchronizer,
+                       Repository<Post> repository,
                        Repository<Comment> commentRepository,
                        Repository<SimilarPost> similarPostRepository,
-                       Repository<Attachment> attachmentRepository) {
+                       Repository<Attachment> attachmentRepository,
+                       OriginalImageRequestFactory imageRequestFactory) {
         this.repository = repository;
         this.synchronizer = synchronizer;
         this.commentRepository = commentRepository;
         this.similarPostRepository = similarPostRepository;
         this.attachmentRepository = attachmentRepository;
+        this.imageRequestFactory = imageRequestFactory;
     }
 
     public Observable<Post> synchronizePostAsync(String postId) {
@@ -83,5 +88,12 @@ public class PostService {
     public Observable<List<SimilarPost>> getSimilarPosts(int postId) {
         return similarPostRepository
                 .queryAsync(new SimilarPostQuery(postId));
+    }
+
+    public Observable<File> mainImage(String serverPostId) {
+        return repository
+                .queryFirstAsync(new PostByIdQuery(serverPostId))
+                .map(post -> post.image.fullUrl(null))
+                .flatMap(url -> imageRequestFactory.request(url));
     }
 }

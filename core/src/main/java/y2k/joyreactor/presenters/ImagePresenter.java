@@ -1,7 +1,7 @@
 package y2k.joyreactor.presenters;
 
 import y2k.joyreactor.platform.Navigation;
-import y2k.joyreactor.services.requests.OriginalImageRequest;
+import y2k.joyreactor.services.PostService;
 
 import java.io.File;
 
@@ -10,10 +10,9 @@ import java.io.File;
  */
 public class ImagePresenter {
 
-    public ImagePresenter(View view) {
+    public ImagePresenter(View view, PostService service) {
         view.setBusy(true);
-        new OriginalImageRequest(getVideoUrl())
-                .request()
+        service.mainImage(Navigation.getInstance().getArgumentPostId())
                 .subscribe(imageFile -> {
                     view.showImage(imageFile);
                     view.setBusy(false);
@@ -21,10 +20,6 @@ public class ImagePresenter {
                     e.printStackTrace();
                     view.setBusy(false);
                 });
-    }
-
-    private String getVideoUrl() {
-        return Navigation.getInstance().getArgumentPost().image.fullUrl(null);
     }
 
     public interface View {

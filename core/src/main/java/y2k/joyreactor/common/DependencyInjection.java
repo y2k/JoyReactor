@@ -6,6 +6,7 @@ import y2k.joyreactor.services.*;
 import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.requests.CreateCommentRequestFactory;
 import y2k.joyreactor.services.requests.LoginRequestFactory;
+import y2k.joyreactor.services.requests.OriginalImageRequestFactory;
 import y2k.joyreactor.services.requests.ProfileRequestFactory;
 import y2k.joyreactor.services.synchronizers.MyTagFetcher;
 import y2k.joyreactor.services.synchronizers.PostListFetcher;
@@ -63,6 +64,10 @@ public class DependencyInjection {
         return new MessageThreadsPresenter(view, provideMessageService());
     }
 
+    public ImagePresenter provideImagePresenter(ImagePresenter.View view) {
+        return new ImagePresenter(view, providePostService());
+    }
+
     // ==========================================
     // Services
     // ==========================================
@@ -73,12 +78,11 @@ public class DependencyInjection {
 
     public PostService providePostService() {
         return new PostService(
-                providePostRepository(),
-                providePostSynchronizer(),
+                providePostSynchronizer(), providePostRepository(),
                 provideCommentRepository(),
                 provideSimilarPostRepository(),
-                provideAttachmentRepository()
-        );
+                provideAttachmentRepository(),
+                provideImageRequestFactory());
     }
 
     public TagsService provideTagsService() {
@@ -100,6 +104,10 @@ public class DependencyInjection {
     // ==========================================
     // Models
     // ==========================================
+
+    private OriginalImageRequestFactory provideImageRequestFactory() {
+        return new OriginalImageRequestFactory();
+    }
 
     public PostListFetcher.Factory providePostListSynchronizerFactory() {
         return new PostListFetcher.Factory(providePostRepository(), provideRepositoryTagPost());

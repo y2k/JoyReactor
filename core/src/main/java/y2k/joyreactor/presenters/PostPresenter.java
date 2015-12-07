@@ -4,7 +4,7 @@ import y2k.joyreactor.*;
 import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.platform.Platform;
 import y2k.joyreactor.services.PostService;
-import y2k.joyreactor.services.requests.OriginalImageRequest;
+import y2k.joyreactor.services.requests.OriginalImageRequestFactory;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class PostPresenter {
     public void saveImageToGallery() {
         view.setIsBusy(true);
         service.getFromCache(getArgumentPostId())
-                .flatMap(post -> new OriginalImageRequest(post.image.fullUrl(null)).request())
+                .flatMap(post -> service.mainImage(post.serverId))
                 .flatMap(imageFile -> Platform.Instance.saveToGallery(imageFile))
                 .subscribe(_void -> {
                     view.showImageSuccessSavedToGallery();
@@ -76,6 +76,7 @@ public class PostPresenter {
 
         void updateComments(CommentGroup comments);
 
+        @Deprecated
         void updatePostImage(Post post);
 
         void setIsBusy(boolean isBusy);

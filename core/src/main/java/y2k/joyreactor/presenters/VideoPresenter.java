@@ -7,7 +7,7 @@ import y2k.joyreactor.SimilarPost;
 import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.services.PostService;
 import y2k.joyreactor.services.repository.Repository;
-import y2k.joyreactor.services.requests.OriginalImageRequest;
+import y2k.joyreactor.services.requests.OriginalImageRequestFactory;
 import y2k.joyreactor.services.synchronizers.PostFetcher;
 
 import java.io.File;
@@ -19,18 +19,18 @@ public class VideoPresenter {
 
     public VideoPresenter(View view) {
         this(view, new PostService(
-                new Repository<>(Post.class),
-                new PostFetcher(new Repository<>(SimilarPost.class), new Repository<>(Attachment.class)),
+                new PostFetcher(new Repository<>(SimilarPost.class), new Repository<>(Attachment.class)), new Repository<>(Post.class),
                 new Repository<>(Comment.class),
                 new Repository<>(SimilarPost.class),
-                new Repository<>(Attachment.class)));
+                new Repository<>(Attachment.class),
+                new OriginalImageRequestFactory()));
     }
 
     VideoPresenter(View view, PostService service) {
         view.setBusy(true);
         service.getFromCache(Navigation.getInstance().getArgumentPostId())
                 .map(post -> post.image.fullUrl("mp4"))
-                .flatMap(url -> new OriginalImageRequest(url).request())
+                .flatMap(url -> new OriginalImageRequestFactory().request(url))
                 .subscribe(videoFile -> {
                     view.showVideo(videoFile);
                     view.setBusy(false);

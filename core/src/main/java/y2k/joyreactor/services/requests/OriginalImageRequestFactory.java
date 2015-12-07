@@ -12,15 +12,12 @@ import java.util.regex.Pattern;
 /**
  * Created by y2k on 16/10/15.
  */
-public class OriginalImageRequest {
+public class OriginalImageRequestFactory {
 
     private String imageUrl;
 
-    public OriginalImageRequest(String imageUrl) {
+    public Observable<File> request(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public Observable<File> request() {
         return ObservableUtils.create(() -> {
 
             File file = new File(Platform.Instance.getCurrentDirectory(), "" + imageUrl.hashCode() + "." + getExtension());
