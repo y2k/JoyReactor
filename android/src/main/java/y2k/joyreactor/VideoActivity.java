@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.VideoView;
+import y2k.joyreactor.common.DependencyInjection;
 import y2k.joyreactor.presenters.VideoPresenter;
 
 import java.io.File;
@@ -18,18 +19,19 @@ public class VideoActivity extends AppCompatActivity {
         VideoView videoView = (VideoView) findViewById(R.id.video);
         videoView.setOnPreparedListener(mp -> mp.setLooping(true));
 
-        new VideoPresenter(new VideoPresenter.View() {
+        DependencyInjection.getInstance().provideVideoPresenter(
+                new VideoPresenter.View() {
 
-            @Override
-            public void showVideo(File videoFile) {
-                videoView.setVideoPath(videoFile.getAbsolutePath());
-                videoView.start();
-            }
+                    @Override
+                    public void showVideo(File videoFile) {
+                        videoView.setVideoPath(videoFile.getAbsolutePath());
+                        videoView.start();
+                    }
 
-            @Override
-            public void setBusy(boolean isBusy) {
-                findViewById(R.id.progress).setVisibility(isBusy ? View.VISIBLE : View.GONE);
-            }
-        });
+                    @Override
+                    public void setBusy(boolean isBusy) {
+                        findViewById(R.id.progress).setVisibility(isBusy ? View.VISIBLE : View.GONE);
+                    }
+                });
     }
 }

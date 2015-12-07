@@ -68,6 +68,10 @@ public class DependencyInjection {
         return new ImagePresenter(view, providePostService());
     }
 
+    public VideoPresenter provideVideoPresenter(VideoPresenter.View view) {
+        return new VideoPresenter(view, providePostService());
+    }
+
     // ==========================================
     // Services
     // ==========================================

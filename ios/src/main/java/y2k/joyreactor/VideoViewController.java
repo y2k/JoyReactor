@@ -10,6 +10,7 @@ import org.robovm.apple.uikit.UIActivityIndicatorView;
 import org.robovm.apple.uikit.UIViewController;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
+import y2k.joyreactor.common.DependencyInjection;
 import y2k.joyreactor.presenters.VideoPresenter;
 
 import java.io.File;
@@ -28,7 +29,7 @@ public class VideoViewController extends UIViewController implements VideoPresen
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
-        new VideoPresenter(this);
+        DependencyInjection.getInstance().provideVideoPresenter(this);
         getNavigationController().setNavigationBarHidden(true, true);
     }
 
