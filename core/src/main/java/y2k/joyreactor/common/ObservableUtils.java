@@ -67,6 +67,20 @@ public class ObservableUtils {
         return result.observeOn(ForegroundScheduler.getInstance());
     }
 
+    public static <T> Observable<T> func(Callable<T> action) {
+        return Observable
+                .<T>create(subscriber -> {
+                    try {
+                        subscriber.onNext(action.call());
+                        subscriber.onCompleted();
+                    } catch (Exception e) {
+                        subscriber.onError(e);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(ForegroundScheduler.getInstance());
+    }
+
     public interface UnsafeAction0 {
 
         void call() throws Exception;

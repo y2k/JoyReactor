@@ -15,6 +15,7 @@ import y2k.joyreactor.common.DependencyInjection;
 import y2k.joyreactor.platform.ImageRequest;
 import y2k.joyreactor.presenters.PostPresenter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
 public class PostActivity extends AppCompatActivity {
 
     PostPresenter presenter;
+    File imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +49,7 @@ public class PostActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void updatePostImage(Post post) {
+                    public void updatePostInformation(Post post) {
                         adapter.updatePostDetails(post);
                     }
 
@@ -69,6 +71,12 @@ public class PostActivity extends AppCompatActivity {
                     @Override
                     public void updateSimilarPosts(List<SimilarPost> similarPosts) {
                         adapter.updateSimilarPosts(similarPosts);
+                    }
+
+                    @Override
+                    public void updatePostImage(File imagePath) {
+                        PostActivity.this.imagePath = imagePath;
+                        adapter.notifyItemChanged(0);
                     }
                 });
     }
@@ -158,7 +166,7 @@ public class PostActivity extends AppCompatActivity {
 
         class HeaderViewHolder extends ComplexViewHolder {
 
-            WebImageView image;
+            LargeImageView image;
             ImagePanel imagePanel;
             ImagePanel similar;
             FixedAspectPanel posterPanel;
@@ -166,7 +174,7 @@ public class PostActivity extends AppCompatActivity {
             public HeaderViewHolder(ViewGroup parent) {
                 super(LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.layout_post, parent, false));
-                image = (WebImageView) itemView.findViewById(R.id.image);
+                image = (LargeImageView) itemView.findViewById(R.id.image);
                 imagePanel = (ImagePanel) itemView.findViewById(R.id.images);
                 similar = (ImagePanel) itemView.findViewById(R.id.similar);
                 posterPanel = (FixedAspectPanel) itemView.findViewById(R.id.posterPanel);
@@ -175,13 +183,10 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void bind() {
                 // TODO
-                if (post != null) {
-                    posterPanel.setAspect(post.image.getAspect(1.25f));
-                    new ImageRequest()
-                            .setUrl(post.image)
-                            .setSize(200, (int) (200 / post.image.getAspect(0.5f)))
-                            .to(image, image::setImageBitmap);
-                }
+                if (post != null)
+                    posterPanel.setAspect(post.image.getAspect());
+                if (imagePath != null)
+                    image.setImage(imagePath);
 
                 imagePanel.setImages(images);
                 similar.setImages(toImages());

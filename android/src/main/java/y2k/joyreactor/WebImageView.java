@@ -3,6 +3,7 @@ package y2k.joyreactor;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+import y2k.joyreactor.common.ObjectUtils;
 import y2k.joyreactor.platform.ImageRequest;
 
 /**
@@ -10,11 +11,16 @@ import y2k.joyreactor.platform.ImageRequest;
  */
 public class WebImageView extends ImageView {
 
+    private Image image;
+
     public WebImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
     public void setImage(Image image) {
+        if (ObjectUtils.equals(this.image, image)) return;
+        this.image = image;
+
         new ImageRequest()
                 .setSize(getSize(), getSize())
                 .setUrl(image)

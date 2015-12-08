@@ -8,6 +8,7 @@ import y2k.joyreactor.common.DependencyInjection;
 import y2k.joyreactor.platform.ImageRequest;
 import y2k.joyreactor.presenters.PostPresenter;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -82,7 +83,7 @@ public class PostViewController extends UIViewController implements PostPresente
     }
 
     @Override
-    public void updatePostImage(Post post) {
+    public void updatePostInformation(Post post) {
         this.post = post;
         list.reloadData();
     }
@@ -106,6 +107,11 @@ public class PostViewController extends UIViewController implements PostPresente
     @Override
     public void updateSimilarPosts(List<SimilarPost> similarPosts) {
         // TODO
+    }
+
+    @Override
+    public void updatePostImage(File image) {
+        // TODO:
     }
 
     private class CommentDataSource extends UITableViewDataSourceAdapter {

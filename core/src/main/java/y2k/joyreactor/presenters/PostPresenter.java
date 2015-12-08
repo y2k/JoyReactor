@@ -4,8 +4,8 @@ import y2k.joyreactor.*;
 import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.platform.Platform;
 import y2k.joyreactor.services.PostService;
-import y2k.joyreactor.services.requests.OriginalImageRequestFactory;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -27,7 +27,7 @@ public class PostPresenter {
         service.synchronizePostAsync(getArgumentPostId())
                 .subscribe(post -> {
                     view.setIsBusy(false);
-                    view.updatePostImage(post);
+                    view.updatePostInformation(post);
 
                     service.getPostImages(post.id)
                             .subscribe(view::updatePostImages, Throwable::printStackTrace);
@@ -35,6 +35,8 @@ public class PostPresenter {
                             .subscribe(view::updateComments, Throwable::printStackTrace);
                     service.getSimilarPosts(post.id)
                             .subscribe(view::updateSimilarPosts, Throwable::printStackTrace);
+                    service.mainImage(post.serverId)
+                            .subscribe(view::updatePostImage, Throwable::printStackTrace);
                 }, Throwable::printStackTrace);
     }
 
@@ -77,7 +79,7 @@ public class PostPresenter {
         void updateComments(CommentGroup comments);
 
         @Deprecated
-        void updatePostImage(Post post);
+        void updatePostInformation(Post post);
 
         void setIsBusy(boolean isBusy);
 
@@ -86,5 +88,7 @@ public class PostPresenter {
         void updatePostImages(List<Image> images);
 
         void updateSimilarPosts(List<SimilarPost> similarPosts);
+
+        void updatePostImage(File image);
     }
 }

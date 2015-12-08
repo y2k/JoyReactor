@@ -1,5 +1,7 @@
 package y2k.joyreactor;
 
+import y2k.joyreactor.common.ObjectUtils;
+
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -73,5 +75,10 @@ public class Image implements Serializable {
     public float getAspect(float min) {
         float aspect = height == 0 ? 1 : (float) width / height;
         return Math.min(2, Math.max(min, aspect));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Image) && ObjectUtils.equals(((Image) obj).url, url);
     }
 }
