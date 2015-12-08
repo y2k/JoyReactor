@@ -114,6 +114,11 @@ public class PostViewController extends UIViewController implements PostPresente
         // TODO:
     }
 
+    @Override
+    public void updateImageDownloadProgress(int progress, int maxProgress) {
+        // TODO:
+    }
+
     private class CommentDataSource extends UITableViewDataSourceAdapter {
 
         @Override

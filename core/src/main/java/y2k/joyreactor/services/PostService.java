@@ -2,6 +2,7 @@ package y2k.joyreactor.services;
 
 import rx.Observable;
 import y2k.joyreactor.*;
+import y2k.joyreactor.common.PartialResult;
 import y2k.joyreactor.services.repository.*;
 import y2k.joyreactor.services.requests.OriginalImageRequestFactory;
 import y2k.joyreactor.services.synchronizers.PostFetcher;
@@ -95,5 +96,12 @@ public class PostService {
                 .queryFirstAsync(new PostByIdQuery(serverPostId))
                 .map(post -> post.image.fullUrl(null))
                 .flatMap(url -> imageRequestFactory.request(url));
+    }
+
+    public Observable<PartialResult<File>> mainImagePartial(String serverPostId) {
+        return repository
+                .queryFirstAsync(new PostByIdQuery(serverPostId))
+                .map(post -> post.image.fullUrl(null))
+                .flatMap(url -> imageRequestFactory.requestPartial(url));
     }
 }

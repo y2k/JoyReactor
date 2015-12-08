@@ -11,6 +11,8 @@ import java.net.URL;
  */
 public class Image implements Serializable {
 
+    private static final long serialVersionUID = 0;
+
     private String url;
     private int width;
     private int height;

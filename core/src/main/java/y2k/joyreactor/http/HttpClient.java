@@ -3,6 +3,7 @@ package y2k.joyreactor.http;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import rx.Observable;
+import rx.functions.Action2;
 import y2k.joyreactor.common.IoUtils;
 import y2k.joyreactor.common.ObjectUtils;
 import y2k.joyreactor.common.ObservableUtils;
@@ -33,13 +34,31 @@ public class HttpClient {
         return sInstance;
     }
 
-    public void downloadToFile(String url, File file) throws IOException {
+    public void downloadToFile(String url, File file, Action2<Integer, Integer> callback) throws IOException {
         InputStream in = null;
         OutputStream out = null;
         try {
-            in = new URL(url).openConnection().getInputStream();
+            URLConnection connection = new URL(url).openConnection();
+            in = connection.getInputStream();
             out = new FileOutputStream(file);
-            IoUtils.copy(in, out);
+
+            byte[] buf = new byte[4 * 1024];
+            int count, transfer = 0;
+            while ((count = in.read(buf)) != -1) {
+                out.write(buf, 0, count);
+
+                if (callback != null) {
+                    transfer += count;
+//                    try {
+//                        Thread.sleep(200);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+
+                    callback.call(transfer, connection.getContentLength());
+                }
+            }
+
         } finally {
             IoUtils.close(in, out);
         }

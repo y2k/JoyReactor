@@ -46,7 +46,7 @@ class MultiTryDownloader {
         File result = null;
         try {
             result = File.createTempFile("download_", null, dir);
-            HttpClient.getInstance().downloadToFile(url, result);
+            HttpClient.getInstance().downloadToFile(url, result, null);
             return result;
         } catch (IOException e) {
             if (result != null) result.delete();

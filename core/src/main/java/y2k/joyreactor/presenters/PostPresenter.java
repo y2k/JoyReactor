@@ -35,8 +35,14 @@ public class PostPresenter {
                             .subscribe(view::updateComments, Throwable::printStackTrace);
                     service.getSimilarPosts(post.id)
                             .subscribe(view::updateSimilarPosts, Throwable::printStackTrace);
-                    service.mainImage(post.serverId)
-                            .subscribe(view::updatePostImage, Throwable::printStackTrace);
+                    service.mainImagePartial(post.serverId)
+                            .subscribe(partial -> {
+                                if (partial.result == null) {
+                                    view.updateImageDownloadProgress(partial.progress, partial.max);
+                                } else {
+                                    view.updatePostImage(partial.result);
+                                }
+                            }, Throwable::printStackTrace);
                 }, Throwable::printStackTrace);
     }
 
@@ -90,5 +96,7 @@ public class PostPresenter {
         void updateSimilarPosts(List<SimilarPost> similarPosts);
 
         void updatePostImage(File image);
+
+        void updateImageDownloadProgress(int progress, int maxProgress);
     }
 }

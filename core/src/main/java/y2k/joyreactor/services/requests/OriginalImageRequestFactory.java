@@ -1,6 +1,9 @@
 package y2k.joyreactor.services.requests;
 
 import rx.Observable;
+import rx.schedulers.Schedulers;
+import y2k.joyreactor.common.ForegroundScheduler;
+import y2k.joyreactor.common.PartialResult;
 import y2k.joyreactor.platform.Platform;
 import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.http.HttpClient;
@@ -14,17 +17,14 @@ import java.util.regex.Pattern;
  */
 public class OriginalImageRequestFactory {
 
-    private String imageUrl;
-
     public Observable<File> request(String imageUrl) {
-        this.imageUrl = imageUrl;
         return ObservableUtils.create(() -> {
 
-            File file = new File(Platform.Instance.getCurrentDirectory(), "" + imageUrl.hashCode() + "." + getExtension());
+            File file = new File(Platform.Instance.getCurrentDirectory(), "" + imageUrl.hashCode() + "." + getExtension(imageUrl));
             if (file.exists()) return file;
 
             try {
-                HttpClient.getInstance().downloadToFile(getImageUrl(), file);
+                HttpClient.getInstance().downloadToFile(imageUrl, file, null);
             } catch (Exception e) {
                 file.delete();
                 throw e;
@@ -34,11 +34,31 @@ public class OriginalImageRequestFactory {
         });
     }
 
-    private String getImageUrl() {
-        return imageUrl;
+    public Observable<PartialResult<File>> requestPartial(String imageUrl) {
+        return Observable
+                .<PartialResult<File>>create(subscriber -> {
+                    // TODO
+
+                    File file = new File(Platform.Instance.getCurrentDirectory(), "" + imageUrl.hashCode() + "." + getExtension(imageUrl));
+                    if (file.exists()) subscriber.onNext(PartialResult.complete(file));
+
+                    try {
+                        HttpClient.getInstance().downloadToFile(
+                                imageUrl, file,
+                                (progress, max) -> subscriber.onNext(PartialResult.<File>inProgress(progress, max)));
+
+                        subscriber.onNext(PartialResult.complete(file));
+                    } catch (Exception e) {
+                        file.delete();
+                        subscriber.onError(e);
+                    }
+
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(ForegroundScheduler.getInstance());
     }
 
-    private String getExtension() {
+    private static String getExtension(String imageUrl) {
         Matcher fm = Pattern.compile("format=([^&]+)").matcher(imageUrl);
         if (fm.find()) return fm.group(1);
 

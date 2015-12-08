@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.*;
 import android.view.*;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import y2k.joyreactor.common.ComplexViewHolder;
@@ -37,6 +38,8 @@ public class PostActivity extends AppCompatActivity {
         list.setLayoutManager(new LinearLayoutManager(this));
         Adapter adapter;
         list.setAdapter(adapter = new Adapter());
+
+        ProgressBar imageProgress = (ProgressBar) findViewById(R.id.imageProgress);
 
         findViewById(R.id.createComment).setOnClickListener(v -> presenter.replyToPost());
 
@@ -77,6 +80,13 @@ public class PostActivity extends AppCompatActivity {
                     public void updatePostImage(File imagePath) {
                         PostActivity.this.imagePath = imagePath;
                         adapter.notifyItemChanged(0);
+                        imageProgress.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void updateImageDownloadProgress(int progress, int maxProgress) {
+                        imageProgress.setProgress(progress);
+                        imageProgress.setMax(maxProgress);
                     }
                 });
     }
