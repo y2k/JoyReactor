@@ -1,6 +1,7 @@
 package y2k.joyreactor.platform;
 
 import org.jsoup.nodes.Document;
+import rx.functions.Action2;
 import y2k.joyreactor.NetworkIndicator;
 import y2k.joyreactor.http.HttpClient;
 
@@ -35,10 +36,10 @@ public class NetworkActivityIndicatorHttpClient extends HttpClient {
     }
 
     @Override
-    public void downloadToFile(String url, File file) throws IOException {
+    public void downloadToFile(String url, File file, Action2<Integer, Integer> callback) throws IOException {
         try {
             indicator.setEnabled(true);
-            super.downloadToFile(url, file);
+            super.downloadToFile(url, file, callback);
         } finally {
             indicator.setEnabled(false);
         }

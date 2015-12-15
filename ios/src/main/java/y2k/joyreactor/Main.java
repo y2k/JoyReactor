@@ -6,7 +6,7 @@ import org.robovm.apple.uikit.UIApplicationDelegateAdapter;
 import org.robovm.apple.uikit.UIApplicationLaunchOptions;
 import y2k.joyreactor.common.ForegroundScheduler;
 import y2k.joyreactor.http.HttpClient;
-import y2k.joyreactor.platform.IosMainQueueScheduler;
+import y2k.joyreactor.platform.DispatchQueueSchedulerFactory;
 import y2k.joyreactor.platform.NetworkActivityIndicatorHttpClient;
 import y2k.joyreactor.platform.Platform;
 import y2k.joyreactor.platform.PlatformImpl;
@@ -16,7 +16,7 @@ public class Main extends UIApplicationDelegateAdapter {
     @Override
     public boolean didFinishLaunching(UIApplication application, UIApplicationLaunchOptions launchOptions) {
         Platform.Instance = new PlatformImpl();
-        ForegroundScheduler.setInstance(new IosMainQueueScheduler());
+        ForegroundScheduler.setInstance(new DispatchQueueSchedulerFactory().make());
         HttpClient.setInstance(new NetworkActivityIndicatorHttpClient());
         return true;
     }

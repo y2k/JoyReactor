@@ -44,18 +44,16 @@ public class HttpClient {
 
             byte[] buf = new byte[4 * 1024];
             int count, transfer = 0;
+            long lastCallTime = 0;
             while ((count = in.read(buf)) != -1) {
                 out.write(buf, 0, count);
 
                 if (callback != null) {
                     transfer += count;
-//                    try {
-//                        Thread.sleep(200);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-
-                    callback.call(transfer, connection.getContentLength());
+                    if (System.currentTimeMillis() - lastCallTime > 1000 / 60) {
+                        callback.call(transfer, connection.getContentLength());
+                        lastCallTime = System.currentTimeMillis();
+                    }
                 }
             }
 

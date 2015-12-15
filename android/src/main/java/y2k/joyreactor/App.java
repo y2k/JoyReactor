@@ -7,7 +7,7 @@ import y2k.joyreactor.common.ForegroundScheduler;
 import y2k.joyreactor.common.IoUtils;
 import y2k.joyreactor.common.ObservableUtils;
 import y2k.joyreactor.platform.AndroidNavigation;
-import y2k.joyreactor.platform.HandlerScheduler;
+import y2k.joyreactor.platform.HandlerSchedulerFactory;
 import y2k.joyreactor.platform.Navigation;
 import y2k.joyreactor.platform.Platform;
 
@@ -32,7 +32,7 @@ public class App extends Application {
 
         sInstance = this;
 
-        ForegroundScheduler.setInstance(new HandlerScheduler());
+        ForegroundScheduler.setInstance(new HandlerSchedulerFactory().make());
         Platform.Instance = new Platform() {
 
             AndroidNavigation navigation = new AndroidNavigation(App.this);
