@@ -1,26 +1,28 @@
 package y2k.joyreactor.common;
 
+import rx.functions.Func1;
+
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
  * Created by y2k on 11/30/15.
  */
+
 /**
  * A container object which may or may not contain a non-null value.
  * If a value is present, {@code isPresent()} will return {@code true} and
  * {@code get()} will return the value.
- *
+ * <p>
  * <p>Additional methods that depend on the presence or absence of a contained
  * value are provided, such as {@link #orElse(java.lang.Object) orElse()}
  * (return a default value if value not present) and
  * {@link #ifPresent(java.util.function.Consumer) ifPresent()} (execute a block
  * of code if the value is present).
- *
+ * <p>
  * <p>This is a <a href="../lang/doc-files/ValueBased.html">value-based</a>
  * class; use of identity-sensitive operations (including reference equality
  * ({@code ==}), identity hash code, or synchronization) on instances of
@@ -183,19 +185,19 @@ public final class Optional<T> {
      * {@code map} returns an {@code Optional<FileInputStream>} for the desired
      * file if one exists.
      */
-    public <U> Optional<U> map(Function<? super T, ? extends U> mapper) {
+    public <U> Optional<U> map(Func1<? super T, ? extends U> mapper) {
         Objects.requireNonNull(mapper);
         if (!isPresent())
             return empty();
         else {
-            return Optional.ofNullable(mapper.apply(value));
+            return Optional.ofNullable(mapper.call(value));
         }
     }
 
     /**
      * If a value is present, apply the provided {@code Optional}-bearing
      * mapping function to it, return that result, otherwise return an empty
-     * {@code Optional}.  This method is similar to {@link #map(Function)},
+     * {@code Optional}.  This method is similar to {@link #map(Func1)},
      * but the provided mapper is one whose result is already an {@code Optional},
      * and if invoked, {@code flatMap} does not wrap it with an additional
      * {@code Optional}.
@@ -209,12 +211,12 @@ public final class Optional<T> {
      * @throws NullPointerException if the mapping function is null or returns
      *                              a null result
      */
-    public <U> Optional<U> flatMap(Function<? super T, Optional<U>> mapper) {
+    public <U> Optional<U> flatMap(Func1<? super T, Optional<U>> mapper) {
         Objects.requireNonNull(mapper);
         if (!isPresent())
             return empty();
         else {
-            return Objects.requireNonNull(mapper.apply(value));
+            return Objects.requireNonNull(mapper.call(value));
         }
     }
 
