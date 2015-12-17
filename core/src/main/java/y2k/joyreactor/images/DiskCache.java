@@ -20,7 +20,7 @@ class DiskCache {
         getCacheDirectory().mkdirs();
     }
 
-    Observable<Optional<File>> loadOptionalAsync(String url) {
+    Observable<Optional<File>> get(String url) {
         return Observable.<Optional<File>>create(subscriber -> {
             File file = urlToFile(url);
             subscriber.onNext(file.exists() ? Optional.of(file) : Optional.<File>empty());
@@ -28,7 +28,7 @@ class DiskCache {
         }).subscribeOn(Schedulers.from(DISK_EXECUTOR));
     }
 
-    Observable<?> putAsync(File newImageFile, String url) {
+    Observable<?> put(File newImageFile, String url) {
         return Observable.create(subscriber -> {
             newImageFile.renameTo(urlToFile(url));
             subscriber.onNext(null);

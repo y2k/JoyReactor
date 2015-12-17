@@ -60,7 +60,7 @@ public abstract class BaseImageRequest<T> {
 
     private Observable<Optional<T>> getFromCache() {
         return sDiskCache
-                .loadOptionalAsync(toURLString())
+                .get(toURLString())
                 .map(optionalFile -> optionalFile.map(this::decode));
     }
 
@@ -68,7 +68,7 @@ public abstract class BaseImageRequest<T> {
         File dir = sDiskCache.getCacheDirectory();
         return new MultiTryDownloader(dir, toURLString())
                 .downloadAsync()
-                .flatMap(s -> sDiskCache.putAsync(s, toURLString()));
+                .flatMap(s -> sDiskCache.put(s, toURLString()));
     }
 
     private String toURLString() {
