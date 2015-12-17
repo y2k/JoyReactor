@@ -1,8 +1,8 @@
 package y2k.joyreactor.common;
 
 import rx.Observable;
+import rx.Scheduler;
 import rx.schedulers.Schedulers;
-import y2k.joyreactor.common.ForegroundScheduler;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
@@ -13,6 +13,11 @@ import java.util.concurrent.Executor;
 public class ObservableUtils {
 
     public static Observable<?> action(UnsafeAction0 action0) {
+        return action(action0, null);
+    }
+
+    public static Observable<?> action(UnsafeAction0 action0, Executor executor) {
+        Scheduler scheduler = executor == null ? Schedulers.io() : Schedulers.from(executor);
         return Observable
                 .create(subscriber -> {
                     try {
@@ -23,10 +28,30 @@ public class ObservableUtils {
                         subscriber.onError(e);
                     }
                 })
-                .observeOn(ForegroundScheduler.getInstance())
-                .subscribeOn(Schedulers.io());
+                .subscribeOn(scheduler)
+                .observeOn(ForegroundScheduler.getInstance());
     }
 
+    public static <T> Observable<T> func(Callable<T> action) {
+        return func(action, null);
+    }
+
+    public static <T> Observable<T> func(Callable<T> action, Executor executor) {
+        Scheduler scheduler = executor == null ? Schedulers.io() : Schedulers.from(executor);
+        return Observable
+                .<T>create(subscriber -> {
+                    try {
+                        subscriber.onNext(action.call());
+                        subscriber.onCompleted();
+                    } catch (Exception e) {
+                        subscriber.onError(e);
+                    }
+                })
+                .subscribeOn(scheduler)
+                .observeOn(ForegroundScheduler.getInstance());
+    }
+
+    @Deprecated
     public static Observable<Void> create(UnsafeAction0 action0) {
         return ObservableUtils.create(() -> {
             action0.call();
@@ -34,6 +59,7 @@ public class ObservableUtils {
         });
     }
 
+    @Deprecated
     public static Observable<Void> create(UnsafeAction0 action0, Executor executor) {
         return ObservableUtils.create(() -> {
             action0.call();
@@ -41,6 +67,7 @@ public class ObservableUtils {
         }, executor);
     }
 
+    @Deprecated
     public static <T> Observable<T> create(Callable<T> action) {
         Observable<T> result = Observable
                 .create(subscriber -> Schedulers.io().createWorker().schedule(() -> {
@@ -54,6 +81,7 @@ public class ObservableUtils {
         return result.observeOn(ForegroundScheduler.getInstance());
     }
 
+    @Deprecated
     public static <T> Observable<T> create(Callable<T> action, Executor executor) {
         Observable<T> result = Observable
                 .create(subscriber -> executor.execute(() -> {
@@ -65,20 +93,6 @@ public class ObservableUtils {
                     }
                 }));
         return result.observeOn(ForegroundScheduler.getInstance());
-    }
-
-    public static <T> Observable<T> func(Callable<T> action) {
-        return Observable
-                .<T>create(subscriber -> {
-                    try {
-                        subscriber.onNext(action.call());
-                        subscriber.onCompleted();
-                    } catch (Exception e) {
-                        subscriber.onError(e);
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(ForegroundScheduler.getInstance());
     }
 
     public interface UnsafeAction0 {
