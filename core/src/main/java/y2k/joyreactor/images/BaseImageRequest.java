@@ -5,6 +5,7 @@ import rx.Subscription;
 import rx.functions.Action1;
 import y2k.joyreactor.Image;
 import y2k.joyreactor.common.ForegroundScheduler;
+import y2k.joyreactor.common.Optional;
 
 import java.io.File;
 import java.util.HashMap;
@@ -43,7 +44,9 @@ public abstract class BaseImageRequest<T> {
         }
 
         subscription = getFromCache()
-                .switchIfEmpty(putToCache().flatMap(s -> getFromCache()))
+                .flatMap(image -> image.isPresent()
+                        ? Observable.just(image.get())
+                        : putToCache().flatMap(s -> getFromCache()).map(Optional::get))
                 .observeOn(ForegroundScheduler.getInstance())
                 .filter(s -> sLinks.get(target) == subscription)
                 .subscribe(
@@ -55,10 +58,10 @@ public abstract class BaseImageRequest<T> {
         sLinks.put(target, subscription);
     }
 
-    private Observable<T> getFromCache() {
+    private Observable<Optional<T>> getFromCache() {
         return sDiskCache
-                .loadAsync(toURLString())
-                .map(this::decode);
+                .loadOptionalAsync(toURLString())
+                .map(optionalFile -> optionalFile.map(this::decode));
     }
 
     private Observable<Object> putToCache() {

@@ -1,5 +1,6 @@
 package y2k.joyreactor.images;
 
+import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -24,6 +25,10 @@ class TaskExecutor {
                 e.printStackTrace();
             }
         });
+    }
+
+    public Executor asExecutor() {
+        return executor;
     }
 
     interface UnsafeRunnable {
