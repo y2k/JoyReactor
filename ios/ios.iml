@@ -31,7 +31,7 @@
     <orderEntry type="library" exported="" name="robovm-rt-1.12.0" level="project" />
     <orderEntry type="library" exported="" name="robovm-cocoatouch-1.12.0" level="project" />
     <orderEntry type="library" exported="" name="robovm-objc-1.12.0" level="project" />
-    <orderEntry type="library" exported="" name="rxjava-1.0.14" level="project" />
+    <orderEntry type="library" exported="" name="rxjava-1.1.0" level="project" />
     <orderEntry type="library" exported="" name="jsoup-1.8.3" level="project" />
     <orderEntry type="library" exported="" name="prettytime-3.2.7.Final" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="junit-4.12" level="project" />

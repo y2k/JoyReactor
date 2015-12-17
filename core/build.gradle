@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    compile 'io.reactivex:rxjava:1.0.14'
+    compile 'io.reactivex:rxjava:1.1.0'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'org.ocpsoft.prettytime:prettytime:3.2.7.Final'
 
