@@ -11,6 +11,8 @@ import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.VerticalGridPresenter;
 import android.view.ViewGroup;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import y2k.joyreactor.App;
 import y2k.joyreactor.Post;
 import y2k.joyreactor.common.DependencyInjection;
@@ -44,8 +46,7 @@ public class PostsFragment extends VerticalGridFragment {
                     }
 
                     @Override
-                    public void reloadPosts(List<Post> posts, Integer divider) {
-                        // TODO:
+                    public void reloadPosts(@NotNull List<? extends Post> posts, @Nullable Integer divider) {
                         adapter.clear();
                         adapter.addAll(0, posts);
                     }
