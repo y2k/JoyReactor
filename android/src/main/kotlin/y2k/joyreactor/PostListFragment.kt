@@ -95,7 +95,8 @@ class PostListFragment : Fragment() {
         }
 
         fun reloadData(posts: List<Post>, divider: Optional<Int>) {
-            this.posts = ArrayList(posts)
+            this.posts.clear()
+            this.posts.addAll(posts)
             if (divider.isPresent) this.posts.add(divider.get(), DIVIDER)
             notifyDataSetChanged()
         }
@@ -103,13 +104,13 @@ class PostListFragment : Fragment() {
         internal inner class PostViewHolder(parent: ViewGroup) :
                 ComplexViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_feed, parent, false)) {
 
-            var imagePanel: FixedAspectPanel
-            var image: WebImageView
-            var userImage: WebImageView
-            var videoMark: View
-            var commentCount: TextView
-            var time: TextView
-            var userName: TextView
+            val imagePanel: FixedAspectPanel
+            val image: WebImageView
+            val userImage: WebImageView
+            val videoMark: View
+            val commentCount: TextView
+            val time: TextView
+            val userName: TextView
 
             init {
 
