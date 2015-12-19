@@ -16,6 +16,7 @@ import y2k.joyreactor.services.synchronizers.PrivateMessageFetcher;
 /**
  * Created by y2k on 07/12/15.
  */
+// TODO: переимновать в ServiceLocator
 public class DependencyInjection {
 
     private static DependencyInjection sInstance = new DependencyInjection();
