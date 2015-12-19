@@ -40,7 +40,7 @@ public class ThreadsFragment extends Fragment {
                     }
 
                     @Override
-                    public void reloadData(List<Message> threads) {
+                    public void reloadData(List<? extends Message> threads) {
                         adapter.updateData(threads);
                     }
                 });
@@ -50,9 +50,9 @@ public class ThreadsFragment extends Fragment {
 
     class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder> {
 
-        private List<Message> threads;
+        private List<? extends Message> threads;
 
-        public void updateData(List<Message> threads) {
+        public void updateData(List<? extends Message> threads) {
             this.threads = threads;
             notifyDataSetChanged();
         }

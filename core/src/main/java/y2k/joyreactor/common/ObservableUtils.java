@@ -12,14 +12,14 @@ import java.util.concurrent.Executor;
  */
 public class ObservableUtils {
 
-    public static Observable<?> action(UnsafeAction0 action0) {
+    public static Observable<Void> action(UnsafeAction0 action0) {
         return action(action0, null);
     }
 
-    public static Observable<?> action(UnsafeAction0 action0, Executor executor) {
+    public static Observable<Void> action(UnsafeAction0 action0, Executor executor) {
         Scheduler scheduler = executor == null ? Schedulers.io() : Schedulers.from(executor);
         return Observable
-                .create(subscriber -> {
+                .<Void>create(subscriber -> {
                     try {
                         action0.call();
                         subscriber.onNext(null);

@@ -48,7 +48,7 @@ public class MessagesPresenter extends Presenter {
 
     public interface View {
 
-        void updateMessages(List<Message> messages);
+        void updateMessages(List<? extends Message> messages);
 
         void setIsBusy(boolean isBusy);
     }

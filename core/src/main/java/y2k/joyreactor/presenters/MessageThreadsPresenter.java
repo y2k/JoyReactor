@@ -37,6 +37,6 @@ public class MessageThreadsPresenter {
 
         void setIsBusy(boolean isBusy);
 
-        void reloadData(List<Message> threads);
+        void reloadData(List<? extends Message> threads);
     }
 }

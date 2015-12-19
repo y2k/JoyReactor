@@ -31,7 +31,7 @@ public class PrivateMessageFetcher {
         this.repository = repository;
     }
 
-    public Observable<?> execute() {
+    public Observable<Void> execute() {
         return ObservableUtils.action(() -> {
             while (true) {
                 request.execute(request.getNextPage());

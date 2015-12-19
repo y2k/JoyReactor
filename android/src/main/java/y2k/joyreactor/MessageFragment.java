@@ -52,7 +52,7 @@ public class MessageFragment extends Fragment implements MessagesPresenter.View 
     }
 
     @Override
-    public void updateMessages(List<Message> messages) {
+    public void updateMessages(List<? extends Message> messages) {
         adapter.update(messages);
     }
 
@@ -63,9 +63,9 @@ public class MessageFragment extends Fragment implements MessagesPresenter.View 
 
     static class MessageAdapter extends RecyclerView.Adapter<ViewHolderImpl> {
 
-        private List<Message> items;
+        private List<? extends Message> items;
 
-        public void update(List<Message> items) {
+        public void update(List<? extends Message> items) {
             this.items = items;
             notifyDataSetChanged();
         }
