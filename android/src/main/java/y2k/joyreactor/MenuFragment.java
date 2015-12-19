@@ -44,13 +44,13 @@ public class MenuFragment extends Fragment implements TagListPresenter.View {
     }
 
     @Override
-    public void reloadData(List<Tag> tags) {
+    public void reloadData(List<? extends Tag> tags) {
         adapter.updateData(tags);
     }
 
     private class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
 
-        private List<Tag> tags;
+        private List<? extends Tag> tags;
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -77,7 +77,7 @@ public class MenuFragment extends Fragment implements TagListPresenter.View {
             return position == 0 ? R.layout.layout_subscriptions_header : R.layout.item_subscription;
         }
 
-        public void updateData(List<Tag> tags) {
+        public void updateData(List<? extends Tag> tags) {
             this.tags = tags;
             notifyDataSetChanged();
         }

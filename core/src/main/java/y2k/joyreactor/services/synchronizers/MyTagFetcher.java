@@ -21,7 +21,7 @@ public class MyTagFetcher {
         this.repository = repository;
     }
 
-    public Observable<?> synchronize() {
+    public Observable<Void> synchronize() {
         return new UserNameRequest()
                 .request()
                 .flatMap(username -> username == null

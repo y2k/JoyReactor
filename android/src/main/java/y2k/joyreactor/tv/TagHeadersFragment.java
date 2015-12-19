@@ -17,7 +17,7 @@ import java.util.List;
 public class TagHeadersFragment extends HeadersFragment {
 
     TagListPresenter presenter;
-    List<Tag> tags;
+    List<? extends Tag> tags;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -37,7 +37,7 @@ public class TagHeadersFragment extends HeadersFragment {
                 new TagListPresenter.View() {
 
                     @Override
-                    public void reloadData(List<Tag> tags) {
+                    public void reloadData(List<? extends Tag> tags) {
                         TagHeadersFragment.this.tags = tags;
                         ArrayObjectAdapter adapter = new ArrayObjectAdapter(new ListRowPresenter());
 

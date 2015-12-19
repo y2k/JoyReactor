@@ -39,6 +39,6 @@ public class TagListPresenter extends Presenter {
 
     public interface View {
 
-        void reloadData(List<Tag> tags);
+        void reloadData(List<? extends Tag> tags);
     }
 }
