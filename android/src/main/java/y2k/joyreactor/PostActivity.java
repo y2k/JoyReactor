@@ -67,12 +67,12 @@ public class PostActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void updatePostImages(List<Image> images) {
+                    public void updatePostImages(List<? extends Image> images) {
                         adapter.updatePostImages(images);
                     }
 
                     @Override
-                    public void updateSimilarPosts(List<SimilarPost> similarPosts) {
+                    public void updateSimilarPosts(List<? extends SimilarPost> similarPosts) {
                         adapter.updateSimilarPosts(similarPosts);
                     }
 
@@ -121,8 +121,8 @@ public class PostActivity extends AppCompatActivity {
 
         private CommentGroup comments;
         private Post post;
-        private List<Image> images = Collections.emptyList();
-        private List<SimilarPost> similarPosts = Collections.emptyList();
+        private List<? extends Image> images = Collections.emptyList();
+        private List<? extends SimilarPost> similarPosts = Collections.emptyList();
 
         public Adapter() {
             setHasStableIds(true);
@@ -164,12 +164,12 @@ public class PostActivity extends AppCompatActivity {
             notifyItemChanged(0);
         }
 
-        public void updatePostImages(List<Image> images) {
+        public void updatePostImages(List<? extends Image> images) {
             this.images = images;
             notifyItemChanged(0);
         }
 
-        public void updateSimilarPosts(List<SimilarPost> similarPosts) {
+        public void updateSimilarPosts(List<? extends SimilarPost> similarPosts) {
             this.similarPosts = similarPosts;
             notifyItemChanged(0);
         }

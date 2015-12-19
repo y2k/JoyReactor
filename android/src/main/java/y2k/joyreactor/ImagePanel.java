@@ -28,7 +28,7 @@ public class ImagePanel extends FrameLayout {
             imageViews.add((WebImageView) ((ViewGroup) root.getChildAt(i)).getChildAt(0));
     }
 
-    public void setImages(List<Image> images) {
+    public void setImages(List<? extends Image> images) {
         for (int i = 0; i < Math.min(images.size(), imageViews.size()); i++)
             imageViews.get(i).setImage(images.get(i));
 

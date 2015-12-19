@@ -91,9 +91,9 @@ public class PostPresenter {
 
         void showImageSuccessSavedToGallery();
 
-        void updatePostImages(List<Image> images);
+        void updatePostImages(List<? extends Image> images);
 
-        void updateSimilarPosts(List<SimilarPost> similarPosts);
+        void updateSimilarPosts(List<? extends SimilarPost> similarPosts);
 
         void updatePostImage(File image);
 
