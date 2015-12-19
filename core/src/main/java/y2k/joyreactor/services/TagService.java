@@ -14,10 +14,11 @@ import java.util.List;
  */
 public class TagService {
 
-    private Tag tag;
     private Repository<Post> repository;
-    private PostListFetcher synchronizer;
     private PostListFetcher.Factory synchronizerFactory;
+
+    private PostListFetcher synchronizer;
+    private Tag tag;
 
     public TagService(Repository<Post> repository,
                       PostListFetcher.Factory synchronizerFactory) {
@@ -25,14 +26,9 @@ public class TagService {
         this.synchronizerFactory = synchronizerFactory;
     }
 
-    private TagService(Tag tag, Repository<Post> repository, PostListFetcher synchronizer) {
+    public void setTag(Tag tag) {
         this.tag = tag;
-        this.repository = repository;
-        this.synchronizer = synchronizer;
-    }
-
-    public TagService make(Tag tag) {
-        return new TagService(tag, repository, synchronizerFactory.make(tag));
+        this.synchronizer = synchronizerFactory.make(tag);
     }
 
     public Observable<Boolean> preloadNewPosts() {
@@ -40,7 +36,9 @@ public class TagService {
     }
 
     public Observable<List<Post>> applyNew() {
-        return synchronizer.applyNew().flatMap(s -> getFromRepository());
+        return synchronizer
+                .applyNew()
+                .flatMap(s -> getFromRepository());
     }
 
     public Integer getDivider() {

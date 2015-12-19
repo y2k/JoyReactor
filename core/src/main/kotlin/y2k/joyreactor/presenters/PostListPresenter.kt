@@ -9,9 +9,9 @@ import y2k.joyreactor.services.TagService
 /**
  * Created by y2k on 9/26/15.
  */
-class PostListPresenter(private val view: PostListPresenter.View, private val serviceFactory: TagService) : Presenter() {
-
-    private var service: TagService? = null
+class PostListPresenter(
+        private val view: PostListPresenter.View,
+        private val service: TagService) : Presenter() {
 
     init {
         getMessages().add({ this.currentTagChanged(it) }, Messages.TagSelected::class.java)
@@ -19,12 +19,12 @@ class PostListPresenter(private val view: PostListPresenter.View, private val se
     }
 
     private fun currentTagChanged(m: Messages.TagSelected) {
-        service = serviceFactory.make(m.tag)
+        service.setTag(m.tag)
 
         view.setBusy(true)
         fromRepository.subscribe { posts -> view.reloadPosts(posts, null) }
 
-        service!!.preloadNewPosts().subscribe(
+        service.preloadNewPosts().subscribe(
                 { unsafeUpdate ->
                     view.setHasNewPosts(unsafeUpdate!!)
                     view.setBusy(false)
@@ -33,25 +33,25 @@ class PostListPresenter(private val view: PostListPresenter.View, private val se
     }
 
     fun applyNew() {
-        service!!.applyNew().subscribe(
+        service.applyNew().subscribe(
                 { posts ->
                     view.setHasNewPosts(false)
-                    view.reloadPosts(posts, service!!.divider)
+                    view.reloadPosts(posts, service.divider)
                 }, { it.printStackTrace() })
     }
 
     fun loadMore() {
         view.setBusy(true)
-        service!!.loadNextPage().subscribe(
+        service.loadNextPage().subscribe(
                 { posts ->
-                    view.reloadPosts(posts, service!!.divider)
+                    view.reloadPosts(posts, service.divider)
                     view.setBusy(false)
                 }, { it.printStackTrace() })
     }
 
     fun reloadFirstPage() {
         view.setBusy(true)
-        service!!.reloadFirstPage().subscribe(
+        service.reloadFirstPage().subscribe(
                 { posts ->
                     view.reloadPosts(posts, posts.size)
                     view.setBusy(false)
@@ -59,7 +59,7 @@ class PostListPresenter(private val view: PostListPresenter.View, private val se
     }
 
     private val fromRepository: Observable<List<Post>>
-        get() = service!!.queryAsync()
+        get() = service.queryAsync()
 
     fun postClicked(post: Post) {
         Navigation.getInstance().openPost(post.serverId)
