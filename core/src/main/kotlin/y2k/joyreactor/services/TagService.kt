@@ -26,24 +26,31 @@ class TagService(private val repository: Repository<Post>,
     }
 
     fun applyNew(): Observable<List<Post>> {
-        return synchronizer!!.applyNew().flatMap({ s -> fromRepository })
+        return synchronizer!!
+                .applyNew()
+                .flatMap({ s -> getFromRepository() })
     }
 
     val divider: Int?
         get() = synchronizer!!.divider
 
     fun loadNextPage(): Observable<List<Post>> {
-        return synchronizer!!.loadNextPage().flatMap({ s -> fromRepository })
+        return synchronizer!!
+                .loadNextPage()
+                .flatMap({ s -> getFromRepository() })
     }
 
     fun reloadFirstPage(): Observable<List<Post>> {
-        return synchronizer!!.reloadFirstPage().flatMap({ s -> fromRepository })
+        return synchronizer!!
+                .reloadFirstPage()
+                .flatMap({ s -> getFromRepository() })
     }
 
     fun queryAsync(): Observable<List<Post>> {
-        return fromRepository
+        return getFromRepository()
     }
 
-    private val fromRepository: Observable<List<Post>>
-        get() = repository.queryAsync(PostsForTagQuery(tag))
+    private fun getFromRepository(): Observable<List<Post>> {
+        return repository.queryAsync(PostsForTagQuery(tag))
+    }
 }
