@@ -11,7 +11,7 @@ class CommentService(
         private val requestFactory: CreateCommentRequestFactory,
         private val postFetcher: PostFetcher) {
 
-    fun createComment(postId: String, commentText: String): Observable<*> {
+    fun createComment(postId: String, commentText: String): Observable<Void> {
         return requestFactory
                 .create(postId, commentText)
                 .flatMap { postFetcher.synchronizeWithWeb(postId) }

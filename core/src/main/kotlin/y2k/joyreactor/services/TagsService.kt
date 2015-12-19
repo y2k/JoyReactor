@@ -25,7 +25,7 @@ class TagsService(
         return repository.queryAsync(MyTagQuery())
     }
 
-    fun addTag(tag: String): Observable<*> {
+    fun addTag(tag: String): Observable<Void> {
         return AddTagRequest(tag).request()
     }
 

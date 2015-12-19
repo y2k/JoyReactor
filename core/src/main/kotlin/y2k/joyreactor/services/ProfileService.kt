@@ -14,7 +14,7 @@ class ProfileService(
         private val profileRequestFactory: ProfileRequestFactory,
         private val loginRequestFactory: LoginRequestFactory) {
 
-    fun login(username: String, password: String): Observable<*> {
+    fun login(username: String, password: String): Observable<Void> {
         return loginRequestFactory.request(username, password)
     }
 
@@ -22,7 +22,7 @@ class ProfileService(
         return profileRequestFactory.request()
     }
 
-    fun logout(): Observable<*> {
+    fun logout(): Observable<Void> {
         return ObservableUtils.create { HttpClient.getInstance().clearCookies() }
     }
 }
