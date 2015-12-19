@@ -1,21 +1,28 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
+
     dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'org.robovm:robovm-gradle-plugin:1.12.0'
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'robovm'
+apply plugin: 'kotlin'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
-    mavenCentral()
+    jcenter()
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+}
+
+sourceSets {
+    main.java.srcDirs += 'src/main/kotlin'
 }
 
 ext {
@@ -28,6 +35,7 @@ robovm {
 dependencies {
     compile "org.robovm:robovm-rt:${roboVMVersion}"
     compile "org.robovm:robovm-cocoatouch:${roboVMVersion}"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     testCompile "junit:junit:4.12"
     compile project(':core')
 }
