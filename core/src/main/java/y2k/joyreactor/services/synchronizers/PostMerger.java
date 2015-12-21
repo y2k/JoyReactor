@@ -45,7 +45,7 @@ class PostMerger {
                                 List<TagPost> result = new ArrayList<>();
 
                                 for (Post s : newPosts)
-                                    result.add(new TagPost(tag.id, s.getId()));
+                                    result.add(new TagPost(tag.getId(), s.getId()));
                                 for (TagPost s : links)
                                     if (!contains(result, s))
                                         result.add(s);
@@ -109,7 +109,7 @@ class PostMerger {
     private void addIfNew(List<TagPost> list, Post item) {
         for (TagPost s : list)
             if (s.getPostId() == item.getId()) return;
-        list.add(new TagPost(tag.id, item.getId()));
+        list.add(new TagPost(tag.getId(), item.getId()));
     }
 
     private void remove(List<TagPost> list, Post item) {

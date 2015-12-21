@@ -66,10 +66,10 @@ public class MenuViewController extends UIViewController implements TagListPrese
                 UIImageView iv = (UIImageView) cell.getViewWithTag(1);
                 iv.getLayer().setCornerRadius(iv.getFrame().getWidth() / 2);
                 new ImageRequest()
-                        .setUrl(i.image)
+                        .setUrl(i.getImage())
                         .setSize(40, 40)
                         .to(iv, iv::setImage);
-                ((UILabel) cell.getViewWithTag(2)).setText(i.title);
+                ((UILabel) cell.getViewWithTag(2)).setText(i.getTitle());
                 return cell;
             }
         }

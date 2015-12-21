@@ -44,7 +44,7 @@ public class TagHeadersFragment extends HeadersFragment {
                         addRow(adapter, getString(R.string.feed));
                         addRow(adapter, getString(R.string.favorite));
                         for (Tag tag : tags)
-                            addRow(adapter, tag.title);
+                            addRow(adapter, tag.getTitle());
 
                         setAdapter(adapter);
                     }

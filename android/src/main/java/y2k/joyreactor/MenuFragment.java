@@ -62,8 +62,8 @@ public class MenuFragment extends Fragment implements TagListPresenter.View {
         public void onBindViewHolder(ViewHolder vh, int position) {
             if (position > 0) {
                 Tag item = tags.get(position - 1);
-                vh.title.setText(item.title);
-                vh.icon.setImage(item.image);
+                vh.title.setText(item.getTitle());
+                vh.icon.setImage(item.getImage());
             }
         }
 

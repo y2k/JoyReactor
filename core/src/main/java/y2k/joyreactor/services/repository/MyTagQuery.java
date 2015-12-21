@@ -9,6 +9,6 @@ public class MyTagQuery extends Repository.Query<Tag> {
 
     @Override
     public boolean compare(Tag tag) {
-        return tag.isMine;
+        return tag.isMine();
     }
 }

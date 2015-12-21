@@ -15,7 +15,7 @@ class TagsForUserRequest(private val username: String) {
     private val imageRequest = TagImageRequest()
 
     fun request(): Observable<List<Tag>> {
-        return ObservableUtils.create<List<Tag>> {
+        return ObservableUtils.func <List<Tag>> {
             val document = HttpClient.getInstance()
                     .getDocument("http://joyreactor.cc/user/" + username)
             val tags = ArrayList<Tag>()
@@ -26,7 +26,7 @@ class TagsForUserRequest(private val username: String) {
                     break
                 }
             }
-            Collections.sort(tags) { l, r -> l.title.compareTo(r.title, ignoreCase = true) }
+            Collections.sort(tags) { l, r -> l.title!!.compareTo(r.title!!, ignoreCase = true) }
             tags
         }
     }

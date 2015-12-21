@@ -34,8 +34,8 @@ public class MyTagFetcher {
     private Observable<List<Tag>> merge(List<Tag> oldTags, List<? extends Tag> newTags) {
         List<Tag> result = new ArrayList<>();
 
-        for (Tag s : oldTags) s.isMine = false;
-        for (Tag s : newTags) s.isMine = true;
+        for (Tag s : oldTags) s.setMine(false);
+        for (Tag s : newTags) s.setMine(true);
 
         result.addAll(oldTags);
         addOrReplaceAll(result, newTags);
@@ -49,7 +49,7 @@ public class MyTagFetcher {
             if (old == null) {
                 left.add(tag);
             } else {
-                tag.id = old.id;
+                tag.setId(old.getId());
                 left.set(left.indexOf(old), tag);
             }
         }
@@ -84,8 +84,8 @@ public class MyTagFetcher {
 
         private void addTag(String title, String tagId) {
             Tag tag = new Tag();
-            tag.title = title;
-            tag.image = new Image("http://img0.joyreactor.cc/pics/avatar/tag/" + tagId, 0, 0);
+            tag.setTitle(title);
+            tag.setImage(new Image("http://img0.joyreactor.cc/pics/avatar/tag/" + tagId, 0, 0));
             tags.add(tag);
         }
 
