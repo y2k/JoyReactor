@@ -15,6 +15,6 @@ public class AttachmentsQuery extends Repository.Query<Attachment> {
 
     @Override
     public boolean compare(Attachment attachment) {
-        return attachment.postId == postId;
+        return attachment.getPostId() == postId;
     }
 }

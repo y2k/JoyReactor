@@ -46,7 +46,7 @@ public class PostFetcher {
     private void saveAttachments(int postId) {
         List<Attachment> attachments = postRequest.getAttachments();
         for (Attachment a : attachments)
-            a.postId = postId;
+            a.setPostId(postId);
 
         attachmentRepository.deleteWhere(new AttachmentsQuery(postId));
         attachmentRepository.insertAll(attachments);

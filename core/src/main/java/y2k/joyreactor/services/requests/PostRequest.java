@@ -54,10 +54,9 @@ public class PostRequest {
         Elements imgElement = postNode.select("div.image > img");
         if (imgElement.size() > 1)
             for (Element e : imgElement.subList(1, imgElement.size() - 1)) {
-                Attachment a = new Attachment();
-                a.image = new Image(e.absUrl("src"),
+                Attachment a = new Attachment(new Image(e.absUrl("src"),
                         Integer.parseInt(e.attr("width")),
-                        Integer.parseInt(e.attr("height")));
+                        Integer.parseInt(e.attr("height"))));
                 attachments.add(a);
             }
     }
