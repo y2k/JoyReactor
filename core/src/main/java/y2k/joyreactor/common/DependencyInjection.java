@@ -4,10 +4,7 @@ import y2k.joyreactor.*;
 import y2k.joyreactor.presenters.*;
 import y2k.joyreactor.services.*;
 import y2k.joyreactor.services.repository.Repository;
-import y2k.joyreactor.services.requests.CreateCommentRequestFactory;
-import y2k.joyreactor.services.requests.LoginRequestFactory;
-import y2k.joyreactor.services.requests.OriginalImageRequestFactory;
-import y2k.joyreactor.services.requests.ProfileRequestFactory;
+import y2k.joyreactor.services.requests.*;
 import y2k.joyreactor.services.synchronizers.MyTagFetcher;
 import y2k.joyreactor.services.synchronizers.PostListFetcher;
 import y2k.joyreactor.services.synchronizers.PostFetcher;
@@ -77,24 +74,25 @@ public class DependencyInjection {
     // Services
     // ==========================================
 
-    public TagService provideTagService() {
-        return new TagService(providePostRepository(), providePostListSynchronizerFactory());
+    private TagService provideTagService() {
+        return new TagService(provideRepository(Post.class), providePostListSynchronizerFactory());
     }
 
-    public PostService providePostService() {
+    private PostService providePostService() {
         return new PostService(
-                providePostSynchronizer(), providePostRepository(),
-                provideCommentRepository(),
-                provideSimilarPostRepository(),
-                provideAttachmentRepository(),
+                providePostSynchronizer(),
+                provideRepository(Post.class),
+                provideRepository(Comment.class),
+                provideRepository(SimilarPost.class),
+                provideRepository(Attachment.class),
                 provideImageRequestFactory());
     }
 
-    public TagsService provideTagsService() {
-        return new TagsService(provideRepositoryTag(), provideMyTagSynchronizer());
+    private TagsService provideTagsService() {
+        return new TagsService(provideRepository(Tag.class), provideMyTagSynchronizer());
     }
 
-    public CommentService provideCommentService() {
+    private CommentService provideCommentService() {
         return new CommentService(provideCreateCommentRequestFactory(), providePostSynchronizer());
     }
 
@@ -102,7 +100,7 @@ public class DependencyInjection {
         return new ProfileService(provideProfileRequestFactory(), provideLoginRequestFactory());
     }
 
-    public MessageService provideMessageService() {
+    private MessageService provideMessageService() {
         return new MessageService(providePrivateMessageSynchronizer(), provideRepositoryMessage());
     }
 
@@ -114,51 +112,31 @@ public class DependencyInjection {
         return new OriginalImageRequestFactory();
     }
 
-    public PostListFetcher.Factory providePostListSynchronizerFactory() {
-        return new PostListFetcher.Factory(providePostRepository(), provideRepositoryTagPost());
+    private PostListFetcher.Factory providePostListSynchronizerFactory() {
+        return new PostListFetcher.Factory(provideRepository(Post.class), provideRepositoryTagPost());
     }
 
-    public Repository<TagPost> provideRepositoryTagPost() {
+    private Repository<TagPost> provideRepositoryTagPost() {
         return new Repository<>(TagPost.class);
     }
 
-    public PostFetcher providePostSynchronizer() {
-        return new PostFetcher(provideSimilarPostRepository(), provideAttachmentRepository());
+    private PostFetcher providePostSynchronizer() {
+        return new PostFetcher(provideRepository(SimilarPost.class), provideRepository(Attachment.class));
     }
 
-    public Repository<Attachment> provideAttachmentRepository() {
-        return new Repository<>(Attachment.class);
+    private MyTagFetcher provideMyTagSynchronizer() {
+        return new MyTagFetcher(provideRepository(Tag.class));
     }
 
-    public Repository<SimilarPost> provideSimilarPostRepository() {
-        return new Repository<>(SimilarPost.class);
-    }
-
-    public Repository<Comment> provideCommentRepository() {
-        return new Repository<>(Comment.class);
-    }
-
-    public Repository<Post> providePostRepository() {
-        return new Repository<>(Post.class);
-    }
-
-    public MyTagFetcher provideMyTagSynchronizer() {
-        return new MyTagFetcher(provideRepositoryTag());
-    }
-
-    public Repository<Tag> provideRepositoryTag() {
-        return new Repository<>(Tag.class);
-    }
-
-    public LoginRequestFactory provideLoginRequestFactory() {
+    private LoginRequestFactory provideLoginRequestFactory() {
         return new LoginRequestFactory();
     }
 
-    public ProfileRequestFactory provideProfileRequestFactory() {
+    private ProfileRequestFactory provideProfileRequestFactory() {
         return new ProfileRequestFactory();
     }
 
-    public CreateCommentRequestFactory provideCreateCommentRequestFactory() {
+    private CreateCommentRequestFactory provideCreateCommentRequestFactory() {
         return new CreateCommentRequestFactory();
     }
 
@@ -167,6 +145,16 @@ public class DependencyInjection {
     }
 
     private PrivateMessageFetcher providePrivateMessageSynchronizer() {
-        return new PrivateMessageFetcher();
+        return new PrivateMessageFetcher(
+                provideMessageListRequest(),
+                provideRepository(Message.class));
+    }
+
+    private <T> Repository<T> provideRepository(Class<T> aClass) {
+        return new Repository<>(aClass);
+    }
+
+    private MessageListRequest provideMessageListRequest() {
+        return new MessageListRequest();
     }
 }

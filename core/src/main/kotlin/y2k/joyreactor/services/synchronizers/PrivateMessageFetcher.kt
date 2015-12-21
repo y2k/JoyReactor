@@ -13,9 +13,9 @@ import java.util.Date
 /**
  * Created by y2k on 11/17/15.
  */
-class PrivateMessageFetcher constructor(
-        private val request: MessageListRequest = MessageListRequest(),
-        private val repository: Repository<Message> = Repository(Message::class.java)) {
+class PrivateMessageFetcher(
+        private val request: MessageListRequest,
+        private val repository: Repository<Message>) {
 
     private var mineOldest: Date? = null
     private var theirOldest: Date? = null
