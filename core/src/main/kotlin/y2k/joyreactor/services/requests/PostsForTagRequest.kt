@@ -13,7 +13,7 @@ import java.util.regex.Pattern
 /**
  * Created by y2k on 9/26/15.
  */
-class PostsForTagRequest private constructor(tagId: Tag, pageId: String) {
+class PostsForTagRequest private constructor(tagId: Tag, pageId: String?) {
 
     var nextPageId: String? = null
         private set
@@ -133,7 +133,7 @@ class PostsForTagRequest private constructor(tagId: Tag, pageId: String) {
 
     class Factory {
 
-        fun make(tagId: Tag, pageId: String): PostsForTagRequest {
+        fun make(tagId: Tag, pageId: String?): PostsForTagRequest {
             return PostsForTagRequest(tagId, pageId)
         }
     }
