@@ -21,7 +21,7 @@ public class UserImage {
     }
 
     public Image toImage() {
-        return new Image(userImage);
+        return new Image(userImage, 0, 0);
     }
 
     public static UserImage fromUrl(String url) {

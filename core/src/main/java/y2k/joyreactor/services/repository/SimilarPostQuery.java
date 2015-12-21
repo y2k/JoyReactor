@@ -1,5 +1,6 @@
 package y2k.joyreactor.services.repository;
 
+import y2k.joyreactor.Image;
 import y2k.joyreactor.SimilarPost;
 
 /**

@@ -40,7 +40,7 @@ public class ProfileRequestFactory {
         Profile parse() {
             Profile profile = new Profile();
             profile.userName = document.select("div.sidebarContent > div.user > span").text();
-            profile.userImage = new Image(document.select("div.sidebarContent > div.user > img").attr("src"));
+            profile.userImage = new Image(document.select("div.sidebarContent > div.user > img").attr("src"), 0, 0);
             profile.progressToNewStar = getProgressToNewStar();
             profile.rating = Float.parseFloat(document.select("#rating-text > b").text());
             profile.stars = document.select(".star-row-0 > .star-0").size();

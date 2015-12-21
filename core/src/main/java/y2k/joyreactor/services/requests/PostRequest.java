@@ -47,7 +47,7 @@ public class PostRequest {
 
         for (Element e : page.select(".similar_post img")) {
             SimilarPost similarPost = new SimilarPost();
-            similarPost.image = new Image(e.absUrl("src"));
+            similarPost.image = new Image(e.absUrl("src"), 0, 0);
             similarPost.postId = getPostId(e.parent().attr("href"));
             similarPosts.add(similarPost);
         }

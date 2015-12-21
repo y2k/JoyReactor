@@ -44,7 +44,7 @@ public class TagsForUserRequest {
     private Tag createTag(String title) throws IOException {
         Tag tag = new Tag();
         tag.title = title;
-        tag.image = new Image(imageRequest.request(title));
+        tag.image = new Image(imageRequest.request(title), 0, 0);
         return tag;
     }
 }
