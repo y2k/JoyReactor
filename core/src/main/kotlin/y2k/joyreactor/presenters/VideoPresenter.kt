@@ -14,7 +14,7 @@ class VideoPresenter(view: VideoPresenter.View, service: PostService) {
     init {
         view.setBusy(true)
         service.getFromCache(Navigation.getInstance().argumentPostId)
-                .map({ post -> post.image.fullUrl("mp4") })
+                .map({ post -> post.image!!.fullUrl("mp4") })
                 .flatMap({ url -> OriginalImageRequestFactory().request(url) })
                 .subscribe({ videoFile ->
                     view.showVideo(videoFile)

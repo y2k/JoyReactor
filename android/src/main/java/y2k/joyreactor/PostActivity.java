@@ -194,7 +194,7 @@ public class PostActivity extends AppCompatActivity {
             public void bind() {
                 // TODO
                 if (post != null)
-                    posterPanel.setAspect(post.image.getAspect());
+                    posterPanel.setAspect(post.getImage().getAspect());
                 if (imagePath != null)
                     image.setImage(imagePath);
 

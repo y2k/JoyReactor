@@ -59,7 +59,7 @@ class PostService(private val synchronizer: PostFetcher,
                 .flatMap({ comments ->
                     Observable
                             .from<Comment>(comments)
-                            .map({ it.getAttachment() })
+                            .map({ it.attachment })
                             .toList()
                 })
 
@@ -85,14 +85,14 @@ class PostService(private val synchronizer: PostFetcher,
     fun mainImage(serverPostId: String): Observable<File> {
         return repository
                 .queryFirstAsync(PostByIdQuery(serverPostId))
-                .map({ post -> post.image.fullUrl(null) })
+                .map({ post -> post.image!!.fullUrl(null) })
                 .flatMap({ url -> imageRequestFactory.request(url) })
     }
 
     fun mainImagePartial(serverPostId: String): Observable<PartialResult<File>> {
         return repository
                 .queryFirstAsync(PostByIdQuery(serverPostId))
-                .map({ post -> post.image.fullUrl(null) })
+                .map({ post -> post.image!!.fullUrl(null) })
                 .flatMap({ url -> imageRequestFactory.requestPartial(url) })
     }
 }

@@ -45,7 +45,7 @@ class PostMerger {
                                 List<TagPost> result = new ArrayList<>();
 
                                 for (Post s : newPosts)
-                                    result.add(new TagPost(tag.id, s.id));
+                                    result.add(new TagPost(tag.id, s.getId()));
                                 for (TagPost s : links)
                                     if (!contains(result, s))
                                         result.add(s);
@@ -70,8 +70,8 @@ class PostMerger {
                     if (oldPosts.size() == 0) return false;
                     if (newPosts.size() > oldPosts.size()) return true;
                     for (int i = 0; i < newPosts.size(); i++) {
-                        String oldId = oldPosts.get(i).serverId;
-                        String newId = newPosts.get(i).serverId;
+                        String oldId = oldPosts.get(i).getServerId();
+                        String newId = newPosts.get(i).getServerId();
                         if (!ObjectUtils.equals(oldId, newId)) return true;
                     }
                     return false;
@@ -101,20 +101,20 @@ class PostMerger {
     private Observable<Void> updatePostsAsync(List<Post> newPosts) {
         return ObservableUtils.create(() -> {
             for (Post p : newPosts) {
-                postRepository.insertOrUpdate(new PostByIdQuery(p.serverId), p);
+                postRepository.insertOrUpdate(new PostByIdQuery(p.getServerId()), p);
             }
         });
     }
 
     private void addIfNew(List<TagPost> list, Post item) {
         for (TagPost s : list)
-            if (s.postId == item.id) return;
-        list.add(new TagPost(tag.id, item.id));
+            if (s.postId == item.getId()) return;
+        list.add(new TagPost(tag.id, item.getId()));
     }
 
     private void remove(List<TagPost> list, Post item) {
         for (Iterator<TagPost> iterator = list.iterator(); iterator.hasNext(); )
-            if (iterator.next().postId == item.id) iterator.remove();
+            if (iterator.next().postId == item.getId()) iterator.remove();
     }
 
     private List<TagPost> union(List<TagPost> left, List<TagPost> right) {

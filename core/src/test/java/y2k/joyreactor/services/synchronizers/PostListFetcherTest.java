@@ -122,7 +122,7 @@ public class PostListFetcherTest {
             List<Post> actual = (List<Post>) argument;
             if (expected.size() != actual.size()) return false;
             for (int i = 0; i < actual.size(); i++)
-                if (!Objects.equals(expected.get(i).serverId, actual.get(i).serverId)) return false;
+                if (!Objects.equals(expected.get(i).getServerId(), actual.get(i).getServerId())) return false;
             return true;
         }
     }

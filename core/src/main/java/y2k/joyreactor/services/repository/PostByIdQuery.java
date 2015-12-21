@@ -15,6 +15,6 @@ public class PostByIdQuery extends Repository.Query<Post> {
 
     @Override
     public boolean compare(Post post) {
-        return postId.equals(post.serverId);
+        return postId.equals(post.getServerId());
     }
 }

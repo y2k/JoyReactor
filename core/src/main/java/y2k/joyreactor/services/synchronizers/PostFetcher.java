@@ -35,11 +35,11 @@ public class PostFetcher {
             postRequest.request(postId);
 
             Post post = postRequest.getPost();
-            postRepository.insertOrUpdate(new PostByIdQuery(post.serverId), post);
+            postRepository.insertOrUpdate(new PostByIdQuery(post.getServerId()), post);
 
             saveComments(post);
             saveSimilarPosts(post);
-            saveAttachments(post.id);
+            saveAttachments(post.getId());
         });
     }
 
@@ -55,18 +55,18 @@ public class PostFetcher {
     private void saveComments(Post post) {
         List<Comment> comments = postRequest.getComments();
         for (Comment c : comments)
-            c.postId = post.id;
+            c.postId = post.getId();
 
-        commentRepository.deleteWhere(new CommentsForPostQuery(post.id));
+        commentRepository.deleteWhere(new CommentsForPostQuery(post.getId()));
         commentRepository.insertAll(comments);
     }
 
     private void saveSimilarPosts(Post post) {
         List<SimilarPost> posts = postRequest.getSimilarPosts();
         for (SimilarPost s : posts)
-            s.parentPostId = post.id;
+            s.parentPostId = post.getId();
 
-        similarPostRepository.deleteWhere(new SimilarPostQuery(post.id));
+        similarPostRepository.deleteWhere(new SimilarPostQuery(post.getId()));
         similarPostRepository.insertAll(posts);
     }
 }

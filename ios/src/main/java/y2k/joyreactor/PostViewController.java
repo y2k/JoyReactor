@@ -139,12 +139,12 @@ public class PostViewController extends UIViewController implements PostPresente
             if (post != null) {
                 UIImageView iv = (UIImageView) cell.getViewWithTag(1);
 
-                Image image = post.image;
+                Image image = post.getImage();
                 if (image == null) {
                     // TODO:
                 } else {
                     new ImageRequest()
-                            .setUrl(post.image)
+                            .setUrl(post.getImage())
                             .setSize(300, (int) (300 / image.getAspect()))
                             .to(iv, iv::setImage);
                 }

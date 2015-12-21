@@ -28,7 +28,7 @@ class PostPresenter(
             service.getSimilarPosts(post.id)
                     .subscribe({ view.updateSimilarPosts(it) }, { it.printStackTrace() })
 
-            service.mainImagePartial(post.serverId).subscribe({ partial ->
+            service.mainImagePartial(post.serverId!!).subscribe({ partial ->
                 if (partial.result == null) {
                     view.updateImageDownloadProgress(partial.progress, partial.max)
                 } else {
@@ -51,7 +51,7 @@ class PostPresenter(
     fun saveImageToGallery() {
         view.setIsBusy(true)
         service.getFromCache(argumentPostId)
-                .flatMap { post -> service.mainImage(post.serverId) }
+                .flatMap { post -> service.mainImage(post.serverId!!) }
                 .flatMap { imageFile -> Platform.Instance.saveToGallery(imageFile) }
                 .subscribe({
                     view.showImageSuccessSavedToGallery()

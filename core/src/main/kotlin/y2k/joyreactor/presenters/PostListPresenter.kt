@@ -66,7 +66,7 @@ class PostListPresenter(
     }
 
     fun playClicked(post: Post) {
-        if (post.image.isAnimated)
+        if (post.image!!.isAnimated)
             Navigation.getInstance().openVideo(post.serverId)
         else
             Navigation.getInstance().openImageView(post)

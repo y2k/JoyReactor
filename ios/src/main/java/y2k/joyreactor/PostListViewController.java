@@ -105,14 +105,14 @@ public class PostListViewController extends UIViewController implements PostList
                 Post post = posts.get(indexPath.getRow());
                 cell.update(presenter, post);
 
-                ((UILabel) cell.getViewWithTag(3)).setText(post.userName);
-                ((UILabel) cell.getViewWithTag(4)).setText(new PrettyTime().format(post.created));
+                ((UILabel) cell.getViewWithTag(3)).setText(post.getUserName());
+                ((UILabel) cell.getViewWithTag(4)).setText(new PrettyTime().format(post.getCreated()));
 
-                Image image = post.image;
+                Image image = post.getImage();
                 if (image == null) {
                     // TODO
                 } else {
-                    loadImage(post.image, 300,
+                    loadImage(post.getImage(), 300,
                             (int) (300 / image.getAspect()),
                             (UIImageView) cell.getViewWithTag(1));
                 }
@@ -148,7 +148,7 @@ public class PostListViewController extends UIViewController implements PostList
         public double getHeightForRow(UITableView tableView, NSIndexPath indexPath) {
             if (indexPath.getRow() == posts.size()) return -1;
             Post post = posts.get(indexPath.getRow());
-            Image image = post.image;
+            Image image = post.getImage();
             double imageHeight = image == null ? 0 : (tableView.getFrame().getWidth() - 16) / image.getAspect();
             return imageHeight + 66 + 16;
         }

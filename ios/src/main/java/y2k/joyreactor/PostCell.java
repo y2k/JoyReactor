@@ -55,15 +55,15 @@ public class PostCell extends UITableViewCell {
         this.presenter = presenter;
         this.post = post;
 
-        replyCountView.setText("" + post.commentCount);
-        ratingView.setText("" + post.rating);
+        replyCountView.setText("" + post.getCommentCount());
+        ratingView.setText("" + post.getRating());
 
-        playButton.setHidden(post.image == null);
+        playButton.setHidden(post.getImage() == null);
         playButton.setTitle(getPlayButtonTitle(), UIControlState.Normal);
     }
 
     private String getPlayButtonTitle() {
-        return post.image != null && post.image.isAnimated()
+        return post.getImage() != null && post.getImage().isAnimated()
                 ? Translator.get("Play") : Translator.get("View");
     }
 }

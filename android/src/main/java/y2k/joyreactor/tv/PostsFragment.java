@@ -72,10 +72,10 @@ public class PostsFragment extends VerticalGridFragment {
         public void onBindViewHolder(ViewHolder viewHolder, Object item) {
             ImageCardView v = (ImageCardView) viewHolder.view;
             Post p = (Post) item;
-            v.setTitleText(p.title);
+            v.setTitleText(p.getTitle());
             new ImageRequest()
                     .setSize(200, 200)
-                    .setUrl(p.image)
+                    .setUrl(p.getImage())
                     .to(v, bitmap -> v.setMainImage(new RenderDrawable(bitmap, 200, 200)));
         }
 

@@ -47,20 +47,20 @@ public class PostsForTagRequest {
 
     static Post newPost(Element element) {
         Post result = new Post();
-        result.title = element.select("div.post_content").text();
+        result.setTitle(element.select("div.post_content").text());
 
         new ThumbnailParser(element).load(result);
-        if (result.image == null) new YoutubeThumbnailParser(element).load(result);
-        if (result.image == null) new VideoThumbnailParser(element).load(result);
+        if (result.getImage() == null) new YoutubeThumbnailParser(element).load(result);
+        if (result.getImage() == null) new VideoThumbnailParser(element).load(result);
 
-        result.userName = element.select("div.uhead_nick > a").text();
-        result.userImage = element.select("div.uhead_nick > img").attr("src");
-        result.serverId = extractNumberFromEnd(element.id());
+        result.setUserName(element.select("div.uhead_nick > a").text());
+        result.setUserImage(element.select("div.uhead_nick > img").attr("src"));
+        result.setServerId(extractNumberFromEnd(element.id()));
 
         PostParser parser = new PostParser(element);
-        result.created = parser.getCreated();
-        result.commentCount = parser.getCommentCount();
-        result.rating = parser.getRating();
+        result.setCreated(parser.getCreated());
+        result.setCommentCount(parser.getCommentCount());
+        result.setRating(parser.getRating());
 
         return result;
     }
@@ -119,12 +119,12 @@ public class PostsForTagRequest {
         public void load(Post post) {
             Element img = element.select("div.post_content img").first();
             if (img != null && img.hasAttr("width")) {
-                post.image = new Image(
+                post.setImage(new Image(
                         hasFull(img)
                                 ? img.parent().attr("href").replaceAll("(/full/).+(-\\d+\\.)", "$1$2")
                                 : img.attr("src").replaceAll("(/post/).+(-\\d+\\.)", "$1$2"),
                         Integer.parseInt(img.attr("width")),
-                        Integer.parseInt(img.attr("height")));
+                        Integer.parseInt(img.attr("height"))));
             }
         }
 
@@ -149,10 +149,10 @@ public class PostsForTagRequest {
 
             Matcher m = SRC_PATTERN.matcher(iframe.attr("src"));
             if (!m.find()) throw new IllegalStateException(iframe.attr("src"));
-            post.image = new Image(
+            post.setImage(new Image(
                     "http://img.youtube.com/vi/" + m.group(1) + "/0.jpg",
                     Integer.parseInt(iframe.attr("width")),
-                    Integer.parseInt(iframe.attr("height")));
+                    Integer.parseInt(iframe.attr("height"))));
         }
     }
 
@@ -169,11 +169,11 @@ public class PostsForTagRequest {
             if (video == null) return;
 
             try {
-                post.image = new Image(
+                post.setImage(new Image(
                         element.select("span.video_gif_holder > a").first().attr("href")
                                 .replaceAll("(/post/).+(-)", "$1$2"),
                         Integer.parseInt(video.attr("width")),
-                        Integer.parseInt(video.attr("height")));
+                        Integer.parseInt(video.attr("height"))));
             } catch (Exception e) {
                 System.out.println("ELEMENT | " + video);
                 throw e;

@@ -133,17 +133,18 @@ class PostListFragment : Fragment() {
                     imagePanel.visibility = View.GONE
                 } else {
                     imagePanel.visibility = View.VISIBLE
-                    imagePanel.setAspect(i.image.getAspect(0.5f))
+                    imagePanel.setAspect(i.image!!.getAspect(0.5f))
 
+                    val height = (200 / i.image!!.getAspect(0.5f)).toInt()
                     ImageRequest()
                             .setUrl(i.image)
-                            .setSize(200, (200 / i.image.getAspect(0.5f)).toInt())
+                            .setSize(200, height)
                             .to(i.image, { image.setImageBitmap(it) })
                 }
 
                 userImage.setImage(i.getUserImage().toImage())
                 userName.text = i.userName
-                videoMark.visibility = if (i.image != null && i.image.isAnimated) View.VISIBLE else View.GONE
+                videoMark.visibility = if (i.image?.isAnimated ?: false) View.VISIBLE else View.GONE
 
                 commentCount.text = "" + i.commentCount
                 time.text = prettyTime.format(i.created)
