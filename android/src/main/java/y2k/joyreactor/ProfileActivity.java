@@ -28,10 +28,10 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePresent
 
     @Override
     public void setProfile(Profile profile) {
-        ((WebImageView) findViewById(R.id.avatar)).setImage(profile.userImage);
-        ((TextView) findViewById(R.id.rating)).setText("" + profile.rating);
-        ((RatingBar) findViewById(R.id.stars)).setRating(profile.stars);
-        ((ProgressBar) findViewById(R.id.nextStarProgress)).setProgress((int) profile.progressToNewStar);
+        ((WebImageView) findViewById(R.id.avatar)).setImage(profile.getUserImage());
+        ((TextView) findViewById(R.id.rating)).setText("" + profile.getRating());
+        ((RatingBar) findViewById(R.id.stars)).setRating(profile.getStars());
+        ((ProgressBar) findViewById(R.id.nextStarProgress)).setProgress((int) profile.getProgressToNewStar());
     }
 
     @Override

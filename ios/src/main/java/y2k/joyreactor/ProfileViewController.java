@@ -36,14 +36,14 @@ public class ProfileViewController extends UIViewController implements ProfilePr
 
     @Override
     public void setProfile(Profile profile) {
-        userName.setText(profile.userName);
+        userName.setText(profile.getUserName());
         new ImageRequest()
-                .setUrl(profile.userImage)
+                .setUrl(profile.getUserImage())
                 .setSize((int) userImage.getFrame().getWidth(), (int) userImage.getFrame().getHeight())
                 .to(userImage, userImage::setImage);
-        rating.setText(Translator.get("Rating: ") + profile.rating);
-        stars.setStars(profile.stars);
-        progressToNewStar.setValue(profile.progressToNewStar);
+        rating.setText(Translator.get("Rating: ") + profile.getRating());
+        stars.setStars(profile.getStars());
+        progressToNewStar.setValue(profile.getProgressToNewStar());
     }
 
     @Override

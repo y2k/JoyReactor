@@ -42,9 +42,9 @@ public class CreateCommentActivity extends AppCompatActivity {
 
                     @Override
                     public void setUser(Profile profile) {
-                        ((WebImageView) findViewById(R.id.userImage)).setImage(profile.userImage);
+                        ((WebImageView) findViewById(R.id.userImage)).setImage(profile.getUserImage());
 
-                        nameView.setText(profile.userName);
+                        nameView.setText(profile.getUserName());
                         nameView.setAlpha(0);
                         nameView.animate().alpha(1);
                     }
