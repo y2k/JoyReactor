@@ -64,7 +64,7 @@ public class PostFetcher {
     private void saveSimilarPosts(Post post) {
         List<SimilarPost> posts = postRequest.getSimilarPosts();
         for (SimilarPost s : posts)
-            s.parentPostId = post.getId();
+            s.setParentPostId(post.getId());
 
         similarPostRepository.deleteWhere(new SimilarPostQuery(post.getId()));
         similarPostRepository.insertAll(posts);

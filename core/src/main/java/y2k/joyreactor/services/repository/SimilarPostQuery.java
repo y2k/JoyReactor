@@ -16,6 +16,6 @@ public class SimilarPostQuery extends Repository.Query<SimilarPost> {
 
     @Override
     public boolean compare(SimilarPost row) {
-        return row.parentPostId == postId;
+        return row.getParentPostId() == postId;
     }
 }

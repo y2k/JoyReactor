@@ -205,7 +205,7 @@ public class PostActivity extends AppCompatActivity {
             private List<Image> toImages() {
                 List<Image> result = new ArrayList<>();
                 for (SimilarPost s : similarPosts)
-                    result.add(s.image);
+                    result.add(s.getImage());
                 return result;
             }
         }

@@ -46,9 +46,8 @@ public class PostRequest {
         commentsRequest.request(page);
 
         for (Element e : page.select(".similar_post img")) {
-            SimilarPost similarPost = new SimilarPost();
-            similarPost.image = new Image(e.absUrl("src"), 0, 0);
-            similarPost.postId = getPostId(e.parent().attr("href"));
+            SimilarPost similarPost = new SimilarPost(getPostId(e.parent().attr("href")));
+            similarPost.setImage(new Image(e.absUrl("src"), 0, 0));
             similarPosts.add(similarPost);
         }
 
