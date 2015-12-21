@@ -31,7 +31,7 @@ public class MyTagFetcher {
                 .flatMap(tags -> repository.replaceAllAsync(tags));
     }
 
-    private Observable<List<Tag>> merge(List<Tag> oldTags, List<Tag> newTags) {
+    private Observable<List<Tag>> merge(List<Tag> oldTags, List<? extends Tag> newTags) {
         List<Tag> result = new ArrayList<>();
 
         for (Tag s : oldTags) s.isMine = false;
@@ -43,9 +43,9 @@ public class MyTagFetcher {
         return Observable.just(result);
     }
 
-    private void addOrReplaceAll(List<Tag> left, List<Tag> right) {
+    private void addOrReplaceAll(List<Tag> left, List<? extends Tag> right) {
         for (Tag tag : right) {
-            Tag old = searchForServerid(left, tag.getServerId());
+            Tag old = searchForServerId(left, tag.getServerId());
             if (old == null) {
                 left.add(tag);
             } else {
@@ -55,7 +55,7 @@ public class MyTagFetcher {
         }
     }
 
-    private Tag searchForServerid(List<Tag> tags, String serverId) {
+    private Tag searchForServerId(List<Tag> tags, String serverId) {
         for (Tag tag : tags)
             if (serverId.equals(tag.getServerId())) return tag;
         return null;
