@@ -22,7 +22,7 @@ class Post : Serializable, Comparable<Post> {
         return UserImage.fromUrl(userImage)
     }
 
-    override fun compareTo(post: Post): Int {
-        return id - post.id
+    override fun compareTo(other: Post): Int {
+        return id - other.id
     }
 }
