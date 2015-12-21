@@ -121,7 +121,11 @@ public class DependencyInjection {
     }
 
     private PostFetcher providePostSynchronizer() {
-        return new PostFetcher(provideRepository(SimilarPost.class), provideRepository(Attachment.class));
+        return new PostFetcher(
+                provideRepository(SimilarPost.class),
+                provideRepository(Attachment.class),
+                provideRepository(Post.class),
+                provideRepository(Comment.class));
     }
 
     private MyTagFetcher provideMyTagSynchronizer() {
