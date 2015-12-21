@@ -16,6 +16,6 @@ public class TagPostsForTagQuery extends Repository.Query<TagPost> {
 
     @Override
     public boolean compare(TagPost row) {
-        return row.tagId == tag.id;
+        return row.getTagId() == tag.id;
     }
 }

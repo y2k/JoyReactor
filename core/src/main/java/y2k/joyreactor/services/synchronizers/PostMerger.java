@@ -59,7 +59,7 @@ class PostMerger {
 
     private boolean contains(List<TagPost> list, TagPost tagPost) {
         for (TagPost s : list)
-            if (s.postId == tagPost.postId) return true;
+            if (s.getPostId() == tagPost.getPostId()) return true;
         return false;
     }
 
@@ -108,13 +108,13 @@ class PostMerger {
 
     private void addIfNew(List<TagPost> list, Post item) {
         for (TagPost s : list)
-            if (s.postId == item.getId()) return;
+            if (s.getPostId() == item.getId()) return;
         list.add(new TagPost(tag.id, item.getId()));
     }
 
     private void remove(List<TagPost> list, Post item) {
         for (Iterator<TagPost> iterator = list.iterator(); iterator.hasNext(); )
-            if (iterator.next().postId == item.getId()) iterator.remove();
+            if (iterator.next().getPostId() == item.getId()) iterator.remove();
     }
 
     private List<TagPost> union(List<TagPost> left, List<TagPost> right) {
