@@ -3,13 +3,14 @@ package y2k.joyreactor.services
 import rx.Observable
 import rx.functions.Func1
 import y2k.joyreactor.*
+import y2k.joyreactor.common.ObservableUtils
 import y2k.joyreactor.common.PartialResult
 import y2k.joyreactor.services.repository.*
 import y2k.joyreactor.services.requests.OriginalImageRequestFactory
 import y2k.joyreactor.services.synchronizers.PostFetcher
 
 import java.io.File
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Created by y2k on 11/24/15.
@@ -19,7 +20,8 @@ class PostService(private val synchronizer: PostFetcher,
                   private val commentRepository: Repository<Comment>,
                   private val similarPostRepository: Repository<SimilarPost>,
                   private val attachmentRepository: Repository<Attachment>,
-                  private val imageRequestFactory: OriginalImageRequestFactory) {
+                  private val imageRequestFactory: OriginalImageRequestFactory,
+                  private val dataContextFactory: DataContext.Factory) {
 
     fun synchronizePostAsync(postId: String): Observable<Post> {
         return synchronizer
@@ -40,13 +42,55 @@ class PostService(private val synchronizer: PostFetcher,
     }
 
     private fun getCommentForPost(postId: Int): Observable<CommentGroup> {
-        return commentRepository
-                .queryAsync(TwoLeverCommentQuery(postId))
-                .map<CommentGroup>(Func1<List<Comment>, CommentGroup> { CommentGroup.TwoLevel(it) })
+        return dataContextFactory.makeAsync { entities ->
+            val firstLevelComments = HashSet<Int>()
+            val items = entities.Comments
+                    .filter { s -> s.postId == postId }
+                    .filter { s ->
+                        if (s.parentId == 0) {
+                            firstLevelComments.add(s.id)
+                            true
+                        } else {
+                            firstLevelComments.contains(s.parentId)
+                        }
+                    }
+                    .toList()
+            CommentGroup.TwoLevel(items)
+        }
+
+        //        return ObservableUtils.func {
+        //            val firstLevelComments = HashSet<Int>()
+        //            val items = dataContextFactory.make()
+        //                    .Comments
+        //                    .filter { s -> s.postId == postId }
+        //                    .filter { s ->
+        //                        if (s.parentId == 0) {
+        //                            firstLevelComments.add(s.id)
+        //                            true
+        //                        } else {
+        //                            firstLevelComments.contains(s.parentId)
+        //                        }
+        //                    }
+        //                    .toList()
+        //            CommentGroup.TwoLevel(items)
+        //        }
+
+        //        return commentRepository
+        //                .queryAsync(TwoLeverCommentQuery(postId))
+        //                .map<CommentGroup>(Func1<List<Comment>, CommentGroup> { CommentGroup.TwoLevel(it) })
     }
 
     fun getFromCache(postId: String): Observable<Post> {
-        return repository.queryFirstAsync(PostByIdQuery(postId))
+        //        return repository.queryFirstAsync(PostByIdQuery(postId))
+
+        return dataContextFactory.makeAsync { entities ->
+            entities.Posts.first { s -> s.serverId == postId }
+        }
+
+        //        return ObservableUtils.func {
+        //            dataContextFactory.make()
+        //                    .Posts.first { s -> s.serverId == postId }
+        //        }
     }
 
     fun getPostImages(postId: Int): Observable<List<Image>> {

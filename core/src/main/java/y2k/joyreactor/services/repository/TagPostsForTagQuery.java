@@ -6,6 +6,7 @@ import y2k.joyreactor.TagPost;
 /**
  * Created by y2k on 11/9/15.
  */
+@Deprecated
 public class TagPostsForTagQuery extends Repository.Query<TagPost> {
 
     private Tag tag;

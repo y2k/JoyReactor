@@ -7,6 +7,7 @@ import java.util.Date;
 /**
  * Created by y2k on 11/19/15.
  */
+@Deprecated
 public class MessageForDateQuery extends Repository.Query<Message> {
 
     private Date date;

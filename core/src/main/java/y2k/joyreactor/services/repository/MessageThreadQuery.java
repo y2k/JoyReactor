@@ -8,6 +8,7 @@ import java.util.Set;
 /**
  * Created by y2k on 11/20/15.
  */
+@Deprecated
 public class MessageThreadQuery extends Repository.Query<Message> {
 
     private Set<String> usersAlreadyAdded = new HashSet<>();

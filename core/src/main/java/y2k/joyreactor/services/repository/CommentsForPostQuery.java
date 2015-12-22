@@ -5,6 +5,7 @@ import y2k.joyreactor.Comment;
 /**
  * Created by y2k on 11/22/15.
  */
+@Deprecated
 public class CommentsForPostQuery extends Repository.Query<Comment> {
 
     private int postId;

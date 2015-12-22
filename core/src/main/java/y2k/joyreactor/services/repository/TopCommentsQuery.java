@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * Created by y2k on 30/11/15.
  */
+@Deprecated
 public class TopCommentsQuery extends Repository.Query<Comment> {
 
     private int postId;

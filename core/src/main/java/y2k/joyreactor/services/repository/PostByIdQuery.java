@@ -5,6 +5,7 @@ import y2k.joyreactor.Post;
 /**
  * Created by y2k on 11/21/15.
  */
+@Deprecated
 public class PostByIdQuery extends Repository.Query<Post> {
 
     private String postId;

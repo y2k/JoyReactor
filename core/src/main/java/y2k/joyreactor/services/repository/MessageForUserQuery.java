@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * Created by y2k on 11/20/15.
  */
+@Deprecated
 public class MessageForUserQuery extends Repository.Query<Message> {
 
     private String name;

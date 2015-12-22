@@ -6,6 +6,7 @@ import y2k.joyreactor.SimilarPost;
 /**
  * Created by y2k on 01/12/15.
  */
+@Deprecated
 public class SimilarPostQuery extends Repository.Query<SimilarPost> {
 
     private int postId;

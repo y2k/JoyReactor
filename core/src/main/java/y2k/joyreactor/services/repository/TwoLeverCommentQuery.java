@@ -8,6 +8,7 @@ import java.util.Set;
 /**
  * Created by y2k on 07/12/15.
  */
+@Deprecated
 public class TwoLeverCommentQuery extends Repository.Query<Comment> {
 
     private Set<Integer> firstLevelComments = new HashSet<>();

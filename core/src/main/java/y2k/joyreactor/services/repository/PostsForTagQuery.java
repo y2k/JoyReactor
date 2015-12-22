@@ -10,6 +10,7 @@ import java.util.List;
 /**
  * Created by y2k on 11/9/15.
  */
+@Deprecated
 public class PostsForTagQuery extends Repository.Query<Post> {
 
     private Tag tag;

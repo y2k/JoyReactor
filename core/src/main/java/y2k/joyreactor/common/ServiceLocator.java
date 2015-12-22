@@ -3,6 +3,7 @@ package y2k.joyreactor.common;
 import y2k.joyreactor.*;
 import y2k.joyreactor.presenters.*;
 import y2k.joyreactor.services.*;
+import y2k.joyreactor.services.repository.DataContext;
 import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.requests.*;
 import y2k.joyreactor.services.synchronizers.MyTagFetcher;
@@ -84,7 +85,8 @@ public class ServiceLocator {
                 provideRepository(Comment.class),
                 provideRepository(SimilarPost.class),
                 provideRepository(Attachment.class),
-                provideImageRequestFactory());
+                provideImageRequestFactory(),
+                makeDataContextFactory());
     }
 
     private TagsService provideTagsService() {
@@ -159,5 +161,9 @@ public class ServiceLocator {
 
     private MessageListRequest provideMessageListRequest() {
         return new MessageListRequest();
+    }
+
+    private DataContext.Factory makeDataContextFactory() {
+        return new DataContext.Factory();
     }
 }

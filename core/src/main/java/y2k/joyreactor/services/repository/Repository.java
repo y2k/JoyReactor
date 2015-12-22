@@ -16,6 +16,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by y2k on 10/29/15.
  */
+@Deprecated
 public class Repository<T> {
 
     private static final ExecutorService sSingleAccessExecutor = Executors.newSingleThreadExecutor();
@@ -235,6 +236,7 @@ public class Repository<T> {
         }
     }
 
+    @Deprecated
     public static abstract class Query<TRow> {
 
         public abstract boolean compare(TRow row);

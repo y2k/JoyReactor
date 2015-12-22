@@ -5,6 +5,7 @@ import y2k.joyreactor.Message;
 /**
  * Created by y2k on 11/19/15.
  */
+@Deprecated
 public class NewestMessageQuery extends Repository.Query<Message> {
 
     private boolean isMine;
