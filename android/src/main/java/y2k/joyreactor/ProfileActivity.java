@@ -3,13 +3,11 @@ package y2k.joyreactor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import y2k.joyreactor.common.DependencyInjection;
+import y2k.joyreactor.common.ServiceLocator;
 import y2k.joyreactor.presenters.ProfilePresenter;
 
 public class ProfileActivity extends AppCompatActivity implements ProfilePresenter.View {
@@ -22,7 +20,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePresent
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ProfilePresenter presenter = DependencyInjection.getInstance().provideProfilePresenter(this);
+        ProfilePresenter presenter = ServiceLocator.getInstance().provideProfilePresenter(this);
         findViewById(R.id.logout).setOnClickListener(v -> presenter.logout());
     }
 

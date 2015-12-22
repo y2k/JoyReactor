@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import y2k.joyreactor.common.DependencyInjection;
+import y2k.joyreactor.common.ServiceLocator;
 import y2k.joyreactor.presenters.MessageThreadsPresenter;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public class ThreadsFragment extends Fragment {
 
         View progress = view.findViewById(R.id.progress);
 
-        presenter = DependencyInjection.getInstance().provideMessageThreadsPresenter(
+        presenter = ServiceLocator.getInstance().provideMessageThreadsPresenter(
                 new MessageThreadsPresenter.View() {
 
                     @Override

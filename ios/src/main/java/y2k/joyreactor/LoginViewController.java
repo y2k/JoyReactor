@@ -4,7 +4,7 @@ import org.robovm.apple.foundation.NSURL;
 import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
-import y2k.joyreactor.common.DependencyInjection;
+import y2k.joyreactor.common.ServiceLocator;
 import y2k.joyreactor.presenters.LoginPresenter;
 
 /**
@@ -21,7 +21,7 @@ public class LoginViewController extends UIViewController implements LoginPresen
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
-        LoginPresenter presenter = DependencyInjection.getInstance().provideLoginPresenter(this);
+        LoginPresenter presenter = ServiceLocator.getInstance().provideLoginPresenter(this);
 
         loginButton.addOnTouchUpInsideListener((sender, e) -> presenter.login(
                 username.getText(), password.getText()));

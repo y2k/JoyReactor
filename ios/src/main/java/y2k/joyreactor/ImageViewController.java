@@ -7,7 +7,7 @@ import org.robovm.apple.uikit.UIViewAutoresizing;
 import org.robovm.apple.uikit.UIViewController;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
-import y2k.joyreactor.common.DependencyInjection;
+import y2k.joyreactor.common.ServiceLocator;
 import y2k.joyreactor.presenters.ImagePresenter;
 
 import java.io.File;
@@ -24,7 +24,7 @@ public class ImageViewController extends UIViewController implements ImagePresen
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
-        DependencyInjection.getInstance().provideImagePresenter(this);
+        ServiceLocator.getInstance().provideImagePresenter(this);
     }
 
     @Override

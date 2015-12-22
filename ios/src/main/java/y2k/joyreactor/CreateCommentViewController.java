@@ -5,7 +5,7 @@ import org.robovm.apple.uikit.UITextView;
 import org.robovm.apple.uikit.UIViewController;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
-import y2k.joyreactor.common.DependencyInjection;
+import y2k.joyreactor.common.ServiceLocator;
 import y2k.joyreactor.presenters.CreateCommentPresenter;
 
 /**
@@ -22,7 +22,7 @@ public class CreateCommentViewController extends UIViewController implements Cre
     public void viewDidLoad() {
         super.viewDidLoad();
 
-        CreateCommentPresenter presenter = DependencyInjection.getInstance().provideCreateCommentPresenter(this);
+        CreateCommentPresenter presenter = ServiceLocator.getInstance().provideCreateCommentPresenter(this);
         cancelButton.addOnTouchUpInsideListener(
                 (sender, e) -> getNavigationController().popViewController(true));
         sendButton.addOnTouchUpInsideListener(

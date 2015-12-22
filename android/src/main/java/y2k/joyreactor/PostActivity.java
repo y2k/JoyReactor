@@ -12,8 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import y2k.joyreactor.common.ComplexViewHolder;
-import y2k.joyreactor.common.DependencyInjection;
-import y2k.joyreactor.platform.ImageRequest;
+import y2k.joyreactor.common.ServiceLocator;
 import y2k.joyreactor.presenters.PostPresenter;
 
 import java.io.File;
@@ -43,7 +42,7 @@ public class PostActivity extends AppCompatActivity {
 
         findViewById(R.id.createComment).setOnClickListener(v -> presenter.replyToPost());
 
-        presenter = DependencyInjection.getInstance().providePostPresenter(
+        presenter = ServiceLocator.getInstance().providePostPresenter(
                 new PostPresenter.View() {
 
                     @Override

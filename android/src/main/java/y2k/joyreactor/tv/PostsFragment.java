@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import y2k.joyreactor.App;
 import y2k.joyreactor.Post;
-import y2k.joyreactor.common.DependencyInjection;
+import y2k.joyreactor.common.ServiceLocator;
 import y2k.joyreactor.platform.ImageRequest;
 import y2k.joyreactor.presenters.PostListPresenter;
 
@@ -37,7 +37,7 @@ public class PostsFragment extends VerticalGridFragment {
         ArrayObjectAdapter adapter = new ArrayObjectAdapter(new CardPresenter());
         setAdapter(adapter);
 
-        DependencyInjection.getInstance().providePostListPresenter(
+        ServiceLocator.getInstance().providePostListPresenter(
                 new PostListPresenter.View() {
 
                     @Override

@@ -5,7 +5,7 @@ import org.robovm.apple.foundation.NSIndexPath;
 import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
-import y2k.joyreactor.common.DependencyInjection;
+import y2k.joyreactor.common.ServiceLocator;
 import y2k.joyreactor.platform.ImageRequest;
 import y2k.joyreactor.presenters.PostListPresenter;
 
@@ -50,7 +50,7 @@ public class PostListViewController extends UIViewController implements PostList
 
         applyButton.addOnTouchUpInsideListener((sender, e) -> presenter.applyNew());
 
-        DependencyInjection.getInstance().providePostListPresenter(this);
+        ServiceLocator.getInstance().providePostListPresenter(this);
     }
 
     @Override

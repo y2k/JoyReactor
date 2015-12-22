@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import org.ocpsoft.prettytime.PrettyTime
 import y2k.joyreactor.common.ComplexViewHolder
-import y2k.joyreactor.common.DependencyInjection
+import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.common.ItemDividerDecoration
 import y2k.joyreactor.common.Optional
 import y2k.joyreactor.platform.ImageRequest
@@ -35,7 +35,7 @@ class PostListFragment : Fragment() {
         list.adapter = adapter
         list.addItemDecoration(ItemDividerDecoration(list))
 
-        presenter = DependencyInjection.getInstance().providePostListPresenter(
+        presenter = ServiceLocator.getInstance().providePostListPresenter(
                 object : PostListPresenter.View {
 
                     override fun setBusy(isBusy: Boolean) {

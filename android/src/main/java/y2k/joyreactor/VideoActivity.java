@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.VideoView;
-import y2k.joyreactor.common.DependencyInjection;
+import y2k.joyreactor.common.ServiceLocator;
 import y2k.joyreactor.presenters.VideoPresenter;
 
 import java.io.File;
@@ -19,7 +19,7 @@ public class VideoActivity extends AppCompatActivity {
         VideoView videoView = (VideoView) findViewById(R.id.video);
         videoView.setOnPreparedListener(mp -> mp.setLooping(true));
 
-        DependencyInjection.getInstance().provideVideoPresenter(
+        ServiceLocator.getInstance().provideVideoPresenter(
                 new VideoPresenter.View() {
 
                     @Override

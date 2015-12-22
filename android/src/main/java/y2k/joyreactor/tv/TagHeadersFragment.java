@@ -6,7 +6,7 @@ import android.support.v17.leanback.app.OnHeaderViewSelectedListenerImpl;
 import android.support.v17.leanback.widget.*;
 import y2k.joyreactor.R;
 import y2k.joyreactor.Tag;
-import y2k.joyreactor.common.DependencyInjection;
+import y2k.joyreactor.common.ServiceLocator;
 import y2k.joyreactor.presenters.TagListPresenter;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class TagHeadersFragment extends HeadersFragment {
             }
         });
 
-        presenter = DependencyInjection.getInstance().provideTagListPresenter(
+        presenter = ServiceLocator.getInstance().provideTagListPresenter(
                 new TagListPresenter.View() {
 
                     @Override

@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import y2k.joyreactor.common.DependencyInjection;
+import y2k.joyreactor.common.ServiceLocator;
 import y2k.joyreactor.presenters.TagListPresenter;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public class MenuFragment extends Fragment implements TagListPresenter.View {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        presenter = DependencyInjection.getInstance().provideTagListPresenter(this);
+        presenter = ServiceLocator.getInstance().provideTagListPresenter(this);
     }
 
     @Override

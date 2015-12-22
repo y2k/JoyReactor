@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import y2k.joyreactor.common.DependencyInjection;
+import y2k.joyreactor.common.ServiceLocator;
 import y2k.joyreactor.presenters.AddTagPresenter;
 
 /**
@@ -28,7 +28,7 @@ public class AddTagDialogFragment extends AppCompatDialogFragment {
         View okButton = view.findViewById(R.id.ok);
         TextView tagView = (TextView) view.findViewById(R.id.tag);
 
-        AddTagPresenter presenter = DependencyInjection.getInstance().provideAddTagPresenter(
+        AddTagPresenter presenter = ServiceLocator.getInstance().provideAddTagPresenter(
                 new AddTagPresenter.View() {
 
                     @Override

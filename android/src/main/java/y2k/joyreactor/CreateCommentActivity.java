@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import y2k.joyreactor.common.DependencyInjection;
+import y2k.joyreactor.common.ServiceLocator;
 import y2k.joyreactor.presenters.CreateCommentPresenter;
 
 public class CreateCommentActivity extends AppCompatActivity {
@@ -19,7 +19,7 @@ public class CreateCommentActivity extends AppCompatActivity {
         View sendButton = findViewById(R.id.send);
         View progress = findViewById(R.id.progress);
 
-        CreateCommentPresenter presenter = DependencyInjection.getInstance().provideCreateCommentPresenter(
+        CreateCommentPresenter presenter = ServiceLocator.getInstance().provideCreateCommentPresenter(
                 new CreateCommentPresenter.View() {
 
                     @Override
