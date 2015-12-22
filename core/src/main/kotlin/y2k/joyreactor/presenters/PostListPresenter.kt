@@ -1,6 +1,7 @@
 package y2k.joyreactor.presenters
 
 import rx.Observable
+import rx.functions.Action1
 import y2k.joyreactor.*
 import y2k.joyreactor.common.Messages
 import y2k.joyreactor.platform.Navigation
@@ -14,7 +15,9 @@ class PostListPresenter(
         private val service: TagService) : Presenter() {
 
     init {
-        getMessages().add({ this.currentTagChanged(it) }, Messages.TagSelected::class.java)
+        messages.add(
+                Action1<Messages.TagSelected> { this.currentTagChanged(it) },
+                Messages.TagSelected::class.java)
         currentTagChanged(Messages.TagSelected(Tag.makeFeatured()))
     }
 

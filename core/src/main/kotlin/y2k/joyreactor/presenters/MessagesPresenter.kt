@@ -1,5 +1,6 @@
 package y2k.joyreactor.presenters
 
+import rx.functions.Action1
 import y2k.joyreactor.Message
 import y2k.joyreactor.services.MessageService
 import y2k.joyreactor.services.requests.SendMessageRequest
@@ -15,8 +16,8 @@ class MessagesPresenter(
         // FIXME:
         reloadMessages(getUsername())
 
-        getMessages().add(
-                { m -> reloadMessages(m.thread.userName) },
+        messages.add(
+                Action1<MessageThreadsPresenter.ThreadSelectedMessage> { reloadMessages(it.thread.userName) },
                 MessageThreadsPresenter.ThreadSelectedMessage::class.java)
     }
 
