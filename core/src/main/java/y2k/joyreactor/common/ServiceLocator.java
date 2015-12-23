@@ -84,8 +84,8 @@ public class ServiceLocator {
                 resolveMemoryBuffer());
     }
 
-    private TagsService provideTagsService() {
-        return new TagsService(
+    private TagListService provideTagsService() {
+        return new TagListService(
                 resolveDataContextFactory(),
                 provideMyTagSynchronizer());
     }

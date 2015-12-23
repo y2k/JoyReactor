@@ -10,7 +10,7 @@ import y2k.joyreactor.services.synchronizers.MyTagFetcher
 /**
  * Created by y2k on 11/24/15.
  */
-class TagsService(
+class TagListService(
         private val dataContext: DataContext.Factory,
         private val synchronizer: MyTagFetcher) {
 

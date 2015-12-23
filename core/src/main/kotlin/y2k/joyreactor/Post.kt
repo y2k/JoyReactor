@@ -1,13 +1,14 @@
 package y2k.joyreactor
 
 import y2k.joyreactor.services.repository.DataContext
+import y2k.joyreactor.services.repository.DataSet
 import java.io.Serializable
 import java.util.Date
 
 /**
  * Created by y2k on 9/27/15.
  */
-class Post : Serializable, Comparable<Post>, DataContext.Dto {
+class Post : Serializable, Comparable<Post>, DataSet.Dto {
 
     override var id: Long = 0
 
