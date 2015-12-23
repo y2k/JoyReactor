@@ -13,10 +13,10 @@ import java.util.concurrent.Executor;
 public class ObservableUtils {
 
     public static Observable<Void> action(UnsafeAction0 action0) {
-        return action(action0, null);
+        return action(null, action0);
     }
 
-    public static Observable<Void> action(UnsafeAction0 action0, Executor executor) {
+    public static Observable<Void> action(Executor executor, UnsafeAction0 action0) {
         Scheduler scheduler = executor == null ? Schedulers.io() : Schedulers.from(executor);
         return Observable
                 .<Void>create(subscriber -> {
@@ -33,10 +33,10 @@ public class ObservableUtils {
     }
 
     public static <T> Observable<T> func(Callable<T> action) {
-        return func(action, null);
+        return func(null, action);
     }
 
-    public static <T> Observable<T> func(Callable<T> action, Executor executor) {
+    public static <T> Observable<T> func(Executor executor, Callable<T> action) {
         Scheduler scheduler = executor == null ? Schedulers.io() : Schedulers.from(executor);
         return Observable
                 .<T>create(subscriber -> {

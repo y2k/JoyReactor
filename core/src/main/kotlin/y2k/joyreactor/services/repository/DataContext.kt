@@ -4,6 +4,8 @@ import rx.Observable
 import y2k.joyreactor.*
 import y2k.joyreactor.common.ObservableUtils
 import java.util.*
+import java.util.concurrent.Callable
+import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
 /**
@@ -24,19 +26,24 @@ class DataContext {
     class Factory {
 
         fun <T> using(callback: (DataContext) -> T): Observable<T> {
-            return ObservableUtils.func {
+            return ObservableUtils.func(executor, Callable {
                 callback(innerMakeDataContext())
-            }
+            })
         }
 
-        fun <T> usingAction(callback: (DataContext) -> T): Observable<Void> {
-            return ObservableUtils.action {
+        fun usingAction(callback: (DataContext) -> Unit): Observable<Void> {
+            return ObservableUtils.action(executor, ObservableUtils.UnsafeAction0 {
                 callback(innerMakeDataContext())
-            }
+            })
         }
 
         private fun innerMakeDataContext(): DataContext {
-            throw  RuntimeException("not implemented") // TODO:
+            throw RuntimeException("not implemented") // TODO:
+        }
+
+        companion object {
+
+            val executor = Executors.newSingleThreadExecutor()
         }
     }
 
@@ -58,11 +65,6 @@ class DataContext {
 
         fun add(element: T) {
             items.add(element)
-        }
-
-        companion object {
-
-            val executor = Executors.newSingleThreadExecutor()
         }
     }
 }
