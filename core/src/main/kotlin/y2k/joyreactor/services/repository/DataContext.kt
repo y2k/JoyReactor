@@ -5,6 +5,7 @@ import y2k.joyreactor.Post
 import y2k.joyreactor.Tag
 import y2k.joyreactor.TagPost
 import y2k.joyreactor.common.ObservableUtils
+import y2k.joyreactor.platform.Platform
 import java.io.EOFException
 import java.io.File
 import java.io.ObjectInputStream
@@ -18,11 +19,11 @@ import java.util.concurrent.Executors
  */
 class DataContext {
 
-    val Posts: Repository<Post> = Repository()
+    val Posts: DataSet<Post> = DataSet()
 
-    val Tags: Repository<Tag> = Repository()
+    val Tags: DataSet<Tag> = DataSet()
 
-    val TagPosts: Repository<TagPost> = Repository()
+    val TagPosts: DataSet<TagPost> = DataSet()
 
     fun saveChanges() {
         Posts.saveToDisk()
@@ -52,8 +53,8 @@ class DataContext {
             return entities
         }
 
-        private fun <T : Dto> Repository<T>.loadFromDisk() {
-            File(javaClass.simpleName)
+        private fun <T : Dto> DataSet<T>.loadFromDisk() {
+            File(Platform.Instance.currentDirectory, javaClass.simpleName)
                     .let { file ->
                         if (!file.exists()) emptyList()
                         else file.inputStream()
@@ -79,14 +80,14 @@ class DataContext {
         }
     }
 
-    private fun <T : Dto> Repository<T>.saveToDisk() {
-        File(javaClass.simpleName)
+    private fun <T : Dto> DataSet<T>.saveToDisk() {
+        File(Platform.Instance.currentDirectory, javaClass.simpleName)
                 .outputStream()
                 .let { ObjectOutputStream(it) }
                 .use { stream -> forEach { stream.writeObject(it) } }
     }
 
-    class Repository<T : Dto> : Iterable<T> {
+    class DataSet<T : Dto> : Iterable<T> {
 
         val items = ArrayList<T>()
 
