@@ -80,13 +80,9 @@ public class ServiceLocator {
 
     private PostService providePostService() {
         return new PostService(
-                providePostSynchronizer(),
-                provideRepository(Post.class),
-                provideRepository(Comment.class),
-                provideRepository(SimilarPost.class),
-                provideRepository(Attachment.class),
                 provideImageRequestFactory(),
-                makeDataContextFactory());
+                resolvePostRequest(),
+                resolvePostDataBuffer());
     }
 
     private TagsService provideTagsService() {
@@ -94,7 +90,10 @@ public class ServiceLocator {
     }
 
     private CommentService provideCommentService() {
-        return new CommentService(provideCreateCommentRequestFactory(), providePostSynchronizer());
+        return new CommentService(
+                provideCreateCommentRequestFactory(),
+                resolvePostRequest(),
+                resolvePostDataBuffer());
     }
 
     private ProfileService provideProfileService() {
@@ -109,6 +108,14 @@ public class ServiceLocator {
     // Models
     // ==========================================
 
+    private PostRequest resolvePostRequest() {
+        return new PostRequest();
+    }
+
+    private PostDataBuffer resolvePostDataBuffer() {
+        return PostDataBuffer.INSTANCE;
+    }
+
     private OriginalImageRequestFactory provideImageRequestFactory() {
         return new OriginalImageRequestFactory();
     }
@@ -121,13 +128,13 @@ public class ServiceLocator {
         return new Repository<>(TagPost.class);
     }
 
-    private PostFetcher providePostSynchronizer() {
-        return new PostFetcher(
-                provideRepository(SimilarPost.class),
-                provideRepository(Attachment.class),
-                provideRepository(Post.class),
-                provideRepository(Comment.class));
-    }
+//    private PostFetcher providePostSynchronizer() {
+//        return new PostFetcher(
+//                provideRepository(SimilarPost.class),
+//                provideRepository(Attachment.class),
+//                provideRepository(Post.class),
+//                provideRepository(Comment.class));
+//    }
 
     private MyTagFetcher provideMyTagSynchronizer() {
         return new MyTagFetcher(provideRepository(Tag.class));

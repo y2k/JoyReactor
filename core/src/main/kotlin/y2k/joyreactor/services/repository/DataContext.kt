@@ -1,10 +1,7 @@
 package y2k.joyreactor.services.repository
 
 import rx.Observable
-import y2k.joyreactor.Attachment
-import y2k.joyreactor.Comment
-import y2k.joyreactor.Post
-import y2k.joyreactor.Tag
+import y2k.joyreactor.*
 import y2k.joyreactor.common.ObservableUtils
 import java.util.*
 
@@ -17,12 +14,12 @@ class DataContext {
 
     val Tags: Iterable<Tag> = Repository()
 
-    val Comments: Iterable<Comment> = Repository()
+    val TagPosts: Iterable<TagPost> = Repository()
 
-    var Attachments: Iterable<Attachment> = Repository()
+    //    val Comments: Iterable<Comment> = Repository()
 
     fun saveChanges() {
-        // TODO:
+        throw  RuntimeException("not implemented") // TODO:
     }
 
     class Factory {

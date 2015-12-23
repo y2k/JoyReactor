@@ -1,142 +1,84 @@
 package y2k.joyreactor.services
 
 import rx.Observable
-import rx.functions.Func1
-import y2k.joyreactor.*
+import y2k.joyreactor.CommentGroup
+import y2k.joyreactor.Image
+import y2k.joyreactor.Post
+import y2k.joyreactor.SimilarPost
 import y2k.joyreactor.common.ObservableUtils
 import y2k.joyreactor.common.PartialResult
-import y2k.joyreactor.services.repository.*
 import y2k.joyreactor.services.requests.OriginalImageRequestFactory
-import y2k.joyreactor.services.synchronizers.PostFetcher
-
+import y2k.joyreactor.services.requests.PostRequest
 import java.io.File
 import java.util.*
 
 /**
  * Created by y2k on 11/24/15.
  */
-class PostService(private val synchronizer: PostFetcher,
-                  private val repository: Repository<Post>,
-                  private val commentRepository: Repository<Comment>,
-                  private val similarPostRepository: Repository<SimilarPost>,
-                  private val attachmentRepository: Repository<Attachment>,
-                  private val imageRequestFactory: OriginalImageRequestFactory,
-                  private val dataContextFactory: DataContext.Factory) {
+class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
+                  private val postRequest: PostRequest,
+                  private val buffer: PostDataBuffer) {
 
     fun synchronizePostAsync(postId: String): Observable<Post> {
-        return synchronizer
-                .synchronizeWithWeb(postId)
-                .flatMap({ repository.queryFirstAsync(PostByIdQuery(postId)) })
+        return ObservableUtils.func {
+            postRequest.request(postId);
+            buffer.updatePost(postRequest)
+            buffer.post
+        }
     }
 
     fun getCommentsAsync(postId: Int, parentCommentId: Int): Observable<CommentGroup> {
         if (parentCommentId == 0)
             return getCommentForPost(postId)
-        return commentRepository
-                .queryFirstByIdAsync(parentCommentId)
-                .flatMap({ parent ->
-                    commentRepository
-                            .queryAsync(CommentsForPostQuery(postId, parentCommentId))
-                            .map({ children -> CommentGroup.OneLevel(parent, children) })
-                })
+
+        val parent = buffer.comments.first { it.id == parentCommentId }
+        val children = buffer.comments
+                .filter { it.parentId == parentCommentId }
+                .toList()
+        return Observable.just(CommentGroup.OneLevel(parent, children))
     }
 
     private fun getCommentForPost(postId: Int): Observable<CommentGroup> {
-        return dataContextFactory.makeAsync { entities ->
-            val firstLevelComments = HashSet<Int>()
-            val items = entities.Comments
-                    .filter { s -> s.postId == postId }
-                    .filter { s ->
-                        if (s.parentId == 0) {
-                            firstLevelComments.add(s.id)
-                            true
-                        } else {
-                            firstLevelComments.contains(s.parentId)
-                        }
+        val firstLevelComments = HashSet<Int>()
+        val items = buffer.comments
+                .filter { s -> s.postId == postId }
+                .filter { s ->
+                    if (s.parentId == 0) {
+                        firstLevelComments.add(s.id)
+                        true
+                    } else {
+                        firstLevelComments.contains(s.parentId)
                     }
-                    .toList()
-            CommentGroup.TwoLevel(items)
-        }
-
-        //        return ObservableUtils.func {
-        //            val firstLevelComments = HashSet<Int>()
-        //            val items = dataContextFactory.make()
-        //                    .Comments
-        //                    .filter { s -> s.postId == postId }
-        //                    .filter { s ->
-        //                        if (s.parentId == 0) {
-        //                            firstLevelComments.add(s.id)
-        //                            true
-        //                        } else {
-        //                            firstLevelComments.contains(s.parentId)
-        //                        }
-        //                    }
-        //                    .toList()
-        //            CommentGroup.TwoLevel(items)
-        //        }
-
-        //        return commentRepository
-        //                .queryAsync(TwoLeverCommentQuery(postId))
-        //                .map<CommentGroup>(Func1<List<Comment>, CommentGroup> { CommentGroup.TwoLevel(it) })
+                }
+                .toList()
+        return Observable.just(CommentGroup.TwoLevel(items))
     }
 
     fun getFromCache(postId: String): Observable<Post> {
-        //        return repository.queryFirstAsync(PostByIdQuery(postId))
-
-        return dataContextFactory.makeAsync { entities ->
-            entities.Posts.first { s -> s.serverId == postId }
-        }
-
-        //        return ObservableUtils.func {
-        //            dataContextFactory.make()
-        //                    .Posts.first { s -> s.serverId == postId }
-        //        }
+        return Observable.just(buffer.post)
     }
 
     fun getPostImages(postId: Int): Observable<List<Image>> {
-        val postAttachments = attachmentRepository
-                .queryAsync(AttachmentsQuery(postId))
-                .flatMap({ attachments -> Observable.from(attachments).map({ s -> s.image }).toList() })
-
-        val commentAttachments = commentRepository
-                .queryAsync(CommentsWithImagesQuery(postId, 10))
-                .flatMap({ comments ->
-                    Observable
-                            .from<Comment>(comments)
-                            .map({ it.attachment })
-                            .toList()
-                })
-
-        return postAttachments.flatMap({ s -> commentAttachments.map({ s2 -> union(s, s2) }) })
-    }
-
-    private fun union(s: List<Image>, s2: List<Image>): List<Image> {
-        val result = ArrayList(s)
-        result.addAll(s2)
-        return result
-    }
-
-    fun getTopComments(postId: Int, maxCount: Int): Observable<CommentGroup> {
-        return commentRepository
-                .queryAsync(TopCommentsQuery(postId, maxCount))
-                .map<CommentGroup>(Func1<List<Comment>, CommentGroup> { CommentGroup.OneLevel(it) })
+        val postAttachments = buffer.attachments.map { it.image }
+        val commentAttachments = buffer.comments
+                .filter { it.attachment != null }
+                .map { it.attachment }
+        return Observable.just(postAttachments.union(commentAttachments).toList())
     }
 
     fun getSimilarPosts(postId: Int): Observable<List<SimilarPost>> {
-        return similarPostRepository.queryAsync(SimilarPostQuery(postId))
+        return Observable.just(buffer.similarPosts)
     }
 
     fun mainImage(serverPostId: String): Observable<File> {
-        return repository
-                .queryFirstAsync(PostByIdQuery(serverPostId))
-                .map({ post -> post.image!!.fullUrl(null) })
+        return Observable
+                .just(buffer.post.image!!.fullUrl(null))
                 .flatMap({ url -> imageRequestFactory.request(url) })
     }
 
     fun mainImagePartial(serverPostId: String): Observable<PartialResult<File>> {
-        return repository
-                .queryFirstAsync(PostByIdQuery(serverPostId))
-                .map({ post -> post.image!!.fullUrl(null) })
+        return Observable
+                .just(buffer.post.image!!.fullUrl(null))
                 .flatMap({ url -> imageRequestFactory.requestPartial(url) })
     }
 }
