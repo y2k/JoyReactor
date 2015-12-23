@@ -4,7 +4,6 @@ import rx.Observable
 import y2k.joyreactor.Post
 import y2k.joyreactor.Tag
 import y2k.joyreactor.TagPost
-import y2k.joyreactor.common.ObjectUtils
 import y2k.joyreactor.services.repository.DataContext
 import java.util.*
 
@@ -50,12 +49,12 @@ internal class PostMerger(
     fun isUnsafeUpdate(newPosts: List<Post>): Observable<Boolean> {
         return dataContext.use { entities ->
             val oldPosts = entities.getPostsForTag()
-            if (oldPosts.size == 0) false
-            if (newPosts.size > oldPosts.size) true
+            if (oldPosts.size == 0) return@use false
+            if (newPosts.size > oldPosts.size) return@use true
             for (i in newPosts.indices) {
-                val oldId = oldPosts.get(i).serverId
+                val oldId = oldPosts[i].serverId
                 val newId = newPosts[i].serverId
-                if (!ObjectUtils.equals(oldId, newId)) true
+                if (oldId != newId) return@use true
             }
             false
         }
