@@ -54,17 +54,23 @@ class DataContext {
 
         private fun <T : Dto> Repository<T>.loadFromDisk() {
             File(javaClass.simpleName)
-                    .inputStream()
-                    .let { ObjectInputStream(it) }
-                    .use { stream ->
-                        while (true) {
-                            try {
-                                add(stream.readObject() as T)
-                            } catch(e: EOFException) {
-                                return
-                            }
-                        }
+                    .let { file ->
+                        if (!file.exists()) emptyList()
+                        else file.inputStream()
+                                .let { ObjectInputStream(it) }
+                                .let { stream ->
+                                    val result = ArrayList<T>()
+                                    while (true) {
+                                        try {
+                                            result.add(stream.readObject() as T)
+                                        } catch(e: EOFException) {
+                                            break
+                                        }
+                                    }
+                                    result.toList()
+                                }
                     }
+                    .forEach { add(it) }
         }
 
         companion object {
@@ -97,13 +103,8 @@ class DataContext {
         }
 
         fun add(element: T) {
-            if (element.id == 0L) element.id = idGenerator.nextLong()
+            if (element.id == 0L) element.id = (Math.random() * Long.MAX_VALUE).toLong()
             items.add(element)
-        }
-
-        companion object {
-
-            val idGenerator = Random()
         }
     }
 
