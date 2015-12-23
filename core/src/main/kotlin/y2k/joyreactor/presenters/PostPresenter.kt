@@ -38,7 +38,7 @@ class PostPresenter(
         }, { it.printStackTrace() })
     }
 
-    fun selectComment(commentId: Int) {
+    fun selectComment(commentId: Long) {
         service.getFromCache(argumentPostId)
                 .flatMap { post -> service.getCommentsAsync(post.id, commentId) }
                 .subscribe({ view.updateComments(it) }) { it.printStackTrace() }

@@ -13,7 +13,7 @@ public interface CommentGroup {
 
     boolean isChild(int position);
 
-    int getId(int position);
+    long getId(int position);
 
     /**
      * Created by y2k on 11/28/15.
@@ -50,7 +50,7 @@ public interface CommentGroup {
         }
 
         @Override
-        public int getId(int position) {
+        public long getId(int position) {
             if (parent == null) return children.get(position).id;
             if (position == 0) return parent.parentId;
             return children.get(position - 1).id;
@@ -81,7 +81,7 @@ public interface CommentGroup {
         }
 
         @Override
-        public int getId(int position) {
+        public long getId(int position) {
             return comments.get(position).id;
         }
     }

@@ -23,7 +23,7 @@ class PostCommentsRequest {
             val comment = Comment()
             comment.text = node.select("div.txt > div").first().text()
             comment.userImage = node.select("img.avatar").attr("src")
-            comment.id = Integer.parseInt(node.select("span.comment_rating").attr("comment_id"))
+            comment.id = (node.select("span.comment_rating").attr("comment_id")).toLong()
             comment.rating = java.lang.Float.parseFloat(node.select("span.comment_rating").text().trim { it <= ' ' })
 
             val parent = node.parent()
@@ -52,9 +52,9 @@ class PostCommentsRequest {
 
         internal val NUMBER = Pattern.compile("\\d+")
 
-        internal operator fun get(text: String): Int {
+        internal operator fun get(text: String): Long {
             val m = NUMBER.matcher(text)
-            return if (m.find()) Integer.parseInt(m.group()) else 0
+            return if (m.find()) m.group().toLong() else 0L
         }
     }
 

@@ -1,13 +1,14 @@
 package y2k.joyreactor
 
+import y2k.joyreactor.services.repository.DataContext
 import java.io.Serializable
 
 /**
  * Created by y2k on 9/26/15.
  */
-open class Tag : Serializable {
+open class Tag : Serializable, DataContext.Dto {
 
-    var id: Int = 0
+    override var id: Long = 0
 
     var isMine: Boolean = false
 

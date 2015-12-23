@@ -27,8 +27,8 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
         }
     }
 
-    fun getCommentsAsync(postId: Int, parentCommentId: Int): Observable<CommentGroup> {
-        if (parentCommentId == 0)
+    fun getCommentsAsync(postId: Long, parentCommentId: Long): Observable<CommentGroup> {
+        if (parentCommentId == 0L)
             return getCommentForPost(postId)
 
         val parent = buffer.comments.first { it.id == parentCommentId }
@@ -38,12 +38,12 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
         return Observable.just(CommentGroup.OneLevel(parent, children))
     }
 
-    private fun getCommentForPost(postId: Int): Observable<CommentGroup> {
-        val firstLevelComments = HashSet<Int>()
+    private fun getCommentForPost(postId: Long): Observable<CommentGroup> {
+        val firstLevelComments = HashSet<Long>()
         val items = buffer.comments
                 .filter { s -> s.postId == postId }
                 .filter { s ->
-                    if (s.parentId == 0) {
+                    if (s.parentId == 0L) {
                         firstLevelComments.add(s.id)
                         true
                     } else {
@@ -58,7 +58,7 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
         return Observable.just(buffer.post)
     }
 
-    fun getPostImages(postId: Int): Observable<List<Image>> {
+    fun getPostImages(postId: Long): Observable<List<Image>> {
         val postAttachments = buffer.attachments.map { it.image }
         val commentAttachments = buffer.comments
                 .filter { it.attachment != null }
@@ -66,7 +66,7 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
         return Observable.just(postAttachments.union(commentAttachments).toList())
     }
 
-    fun getSimilarPosts(postId: Int): Observable<List<SimilarPost>> {
+    fun getSimilarPosts(postId: Long): Observable<List<SimilarPost>> {
         return Observable.just(buffer.similarPosts)
     }
 

@@ -1,14 +1,16 @@
 package y2k.joyreactor
 
+import y2k.joyreactor.services.repository.DataContext
 import java.io.Serializable
 import java.util.Date
 
 /**
  * Created by y2k on 9/27/15.
  */
-class Post : Serializable, Comparable<Post> {
+class Post : Serializable, Comparable<Post>, DataContext.Dto {
 
-    var id: Int = 0
+    override var id: Long = 0
+
     var title: String? = null
     var image: Image? = null
     var userImage: String? = null
@@ -23,6 +25,6 @@ class Post : Serializable, Comparable<Post> {
     }
 
     override fun compareTo(other: Post): Int {
-        return id - other.id
+        return (id - other.id).toInt()
     }
 }

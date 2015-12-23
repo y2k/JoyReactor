@@ -1,13 +1,16 @@
 package y2k.joyreactor.services.repository
 
 import rx.Observable
-import y2k.joyreactor.*
-import y2k.joyreactor.common.IoUtils
+import y2k.joyreactor.Post
+import y2k.joyreactor.Tag
+import y2k.joyreactor.TagPost
 import y2k.joyreactor.common.ObservableUtils
-import java.io.*
+import java.io.EOFException
+import java.io.File
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 import java.util.*
 import java.util.concurrent.Callable
-import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
 /**
@@ -49,7 +52,7 @@ class DataContext {
             return entities
         }
 
-        private fun <T> Repository<T>.loadFromDisk() {
+        private fun <T : Dto> Repository<T>.loadFromDisk() {
             File(javaClass.simpleName)
                     .inputStream()
                     .let { ObjectInputStream(it) }
@@ -70,14 +73,14 @@ class DataContext {
         }
     }
 
-    private fun <T> Repository<T>.saveToDisk() {
+    private fun <T : Dto> Repository<T>.saveToDisk() {
         File(javaClass.simpleName)
                 .outputStream()
                 .let { ObjectOutputStream(it) }
                 .use { stream -> forEach { stream.writeObject(it) } }
     }
 
-    class Repository<T> : Iterable<T> {
+    class Repository<T : Dto> : Iterable<T> {
 
         val items = ArrayList<T>()
 
@@ -94,12 +97,18 @@ class DataContext {
         }
 
         fun add(element: T) {
+            if (element.id == 0L) element.id = idGenerator.nextLong()
             items.add(element)
         }
 
         companion object {
-            
+
             val idGenerator = Random()
         }
+    }
+
+    interface Dto {
+
+        var id: Long
     }
 }

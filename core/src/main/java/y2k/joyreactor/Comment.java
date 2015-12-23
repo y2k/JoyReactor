@@ -7,13 +7,13 @@ import java.io.Serializable;
  */
 public class Comment implements Serializable {
 
-    public int postId;
+    public long postId;
 
     public String text;
     public String userImage;
 
-    public int id;
-    public int parentId;
+    public long id;
+    public long parentId;
 
     public int replies;
     public float rating;
