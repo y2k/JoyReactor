@@ -4,6 +4,7 @@ import rx.Observable
 import y2k.joyreactor.*
 import y2k.joyreactor.common.ObservableUtils
 import java.util.*
+import java.util.concurrent.Executors
 
 /**
  * Created by y2k on 12/22/15.
@@ -22,10 +23,6 @@ class DataContext {
 
     class Factory {
 
-        fun make(): DataContext {
-            return innerMakeDataContext()
-        }
-
         fun <T> using(callback: (DataContext) -> T): Observable<T> {
             return ObservableUtils.func {
                 callback(innerMakeDataContext())
@@ -39,8 +36,7 @@ class DataContext {
         }
 
         private fun innerMakeDataContext(): DataContext {
-            // TODO:
-            return DataContext()
+            throw  RuntimeException("not implemented") // TODO:
         }
     }
 
@@ -62,6 +58,11 @@ class DataContext {
 
         fun add(element: T) {
             items.add(element)
+        }
+
+        companion object {
+
+            val executor = Executors.newSingleThreadExecutor()
         }
     }
 }
