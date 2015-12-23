@@ -100,7 +100,7 @@ public class ServiceLocator {
     }
 
     private MessageService provideMessageService() {
-        return new MessageService(providePrivateMessageSynchronizer(), provideRepositoryMessage());
+        return new MessageService(providePrivateMessageSynchronizer(), provideRepository(Message.class));
     }
 
     // ==========================================
@@ -120,20 +120,8 @@ public class ServiceLocator {
     }
 
     private PostListFetcher.Factory providePostListSynchronizerFactory() {
-        return new PostListFetcher.Factory(provideRepository(Post.class), provideRepositoryTagPost());
+        return new PostListFetcher.Factory(provideRepository(Post.class), provideRepository(TagPost.class));
     }
-
-    private Repository<TagPost> provideRepositoryTagPost() {
-        return new Repository<>(TagPost.class);
-    }
-
-//    private PostFetcher providePostSynchronizer() {
-//        return new PostFetcher(
-//                provideRepository(SimilarPost.class),
-//                provideRepository(Attachment.class),
-//                provideRepository(Post.class),
-//                provideRepository(Comment.class));
-//    }
 
     private MyTagFetcher provideMyTagSynchronizer() {
         return new MyTagFetcher(provideRepository(Tag.class));
@@ -149,10 +137,6 @@ public class ServiceLocator {
 
     private CreateCommentRequestFactory provideCreateCommentRequestFactory() {
         return new CreateCommentRequestFactory();
-    }
-
-    private Repository<Message> provideRepositoryMessage() {
-        return new Repository<>(Message.class);
     }
 
     private PrivateMessageFetcher providePrivateMessageSynchronizer() {
