@@ -28,7 +28,7 @@ class MyTagFetcher(private val dataContext: DataContext.Factory) {
                                 val tags = merge(entities.Tags.toList(), newTags)
 
                                 entities.Tags.clear()
-                                entities.Tags.addAll(tags)
+                                tags.forEach { entities.Tags.add(it) }
 
                                 entities.saveChanges()
                             }

@@ -56,17 +56,12 @@ class DataContext {
             items.clear()
         }
 
-        @Deprecated("unused method", ReplaceWith("add"))
-        fun addAll(items: List<T>) {
-            this.items.addAll(items)
+        fun remove(element: T) {
+            items.remove(element)
         }
 
-        fun remove(elemenent: T) {
-            items.remove(elemenent)
-        }
-
-        fun add(elemenent: T) {
-            items.add(elemenent)
+        fun add(element: T) {
+            items.add(element)
         }
     }
 }
