@@ -10,13 +10,11 @@ import java.util.*
  */
 class DataContext {
 
-    val Posts: Iterable<Post> = Repository()
+    val Posts: Repository<Post> = Repository()
 
-    val Tags: Iterable<Tag> = Repository()
+    val Tags: Repository<Tag> = Repository()
 
-    val TagPosts: Iterable<TagPost> = Repository()
-
-    //    val Comments: Iterable<Comment> = Repository()
+    val TagPosts: Repository<TagPost> = Repository()
 
     fun saveChanges() {
         throw  RuntimeException("not implemented") // TODO:
@@ -34,13 +32,32 @@ class DataContext {
             }
         }
 
+        fun <T> usingAction(callback: (DataContext) -> T): Observable<Void> {
+            return ObservableUtils.action {
+                callback(innerMakeDataContext())
+            }
+        }
+
         private fun innerMakeDataContext(): DataContext {
             // TODO:
             return DataContext()
         }
     }
 
-    private class Repository<T> : ArrayList<T>() {
-        // TODO:
+    class Repository<T> : Iterable<T> {
+
+        val items = ArrayList<T>()
+
+        override fun iterator(): Iterator<T> {
+            return items.iterator()
+        }
+
+        fun clear() {
+            items.clear()
+        }
+
+        fun addAll(items: List<T>) {
+            this.items.addAll(items)
+        }
     }
 }

@@ -3,6 +3,7 @@ package y2k.joyreactor.services.synchronizers
 import rx.Observable
 import y2k.joyreactor.Image
 import y2k.joyreactor.Tag
+import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.repository.Repository
 import y2k.joyreactor.services.requests.TagsForUserRequest
 import y2k.joyreactor.services.requests.UserNameRequest
@@ -12,7 +13,7 @@ import java.util.ArrayList
 /**
  * Created by y2k on 11/25/15.
  */
-class MyTagFetcher(private val repository: Repository<Tag>) {
+class MyTagFetcher(private val dataContext: DataContext.Factory) {
 
     fun synchronize(): Observable<Void> {
         return UserNameRequest()
@@ -23,11 +24,20 @@ class MyTagFetcher(private val repository: Repository<Tag>) {
                     else
                         TagsForUserRequest(username).request()
                 })
-                .flatMap({ newTags -> repository.queryAsync().flatMap({ tags -> merge(tags, newTags) }) })
-                .flatMap({ tags -> repository.replaceAllAsync(tags) })
+                .flatMap { newTags ->
+                    dataContext
+                            .usingAction { entities ->
+                                val tags = merge(entities.Tags.toList(), newTags)
+
+                                entities.Tags.clear()
+                                entities.Tags.addAll(tags)
+
+                                entities.saveChanges()
+                            }
+                }
     }
 
-    private fun merge(oldTags: List<Tag>, newTags: List<Tag>): Observable<List<Tag>> {
+    private fun merge(oldTags: List<Tag>, newTags: List<Tag>): List<Tag> {
         val result = ArrayList<Tag>()
 
         for (s in oldTags) s.isMine = false
@@ -36,7 +46,7 @@ class MyTagFetcher(private val repository: Repository<Tag>) {
         result.addAll(oldTags)
         addOrReplaceAll(result, newTags)
 
-        return Observable.just<List<Tag>>(result)
+        return result
     }
 
     private fun addOrReplaceAll(left: MutableList<Tag>, right: List<Tag>) {

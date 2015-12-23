@@ -125,7 +125,9 @@ public class ServiceLocator {
     }
 
     private PostListFetcher.Factory providePostListSynchronizerFactory() {
-        return new PostListFetcher.Factory(provideRepository(Post.class), provideRepository(TagPost.class));
+        return new PostListFetcher.Factory(
+                provideRepository(Post.class),
+                provideRepository(TagPost.class));
     }
 
     private MyTagFetcher provideMyTagSynchronizer() {
