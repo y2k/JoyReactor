@@ -57,23 +57,20 @@ class DataContext {
 
         fun <T : DataSet.Dto> loadFromDisk(dataSet: DataSet<T>) {
             getFile(dataSet)
-                    .let { file ->
-                        if (!file.exists()) emptyList()
-                        else file.inputStream()
+                    .let { if (it.exists()) it else null }
+                    ?.let { file ->
+                        file.inputStream()
                                 .let { ObjectInputStream(it) }
                                 .use { stream ->
-                                    val result = ArrayList<T>()
                                     while (true) {
                                         try {
-                                            result.add(stream.readObject() as T)
+                                            dataSet.add(stream.readObject() as T)
                                         } catch(e: EOFException) {
                                             break
                                         }
                                     }
-                                    result.toList()
                                 }
                     }
-                    .forEach { dataSet.add(it) }
         }
 
         fun saveToDisk(dataSet: DataSet<*>) {
