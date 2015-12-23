@@ -131,7 +131,7 @@ public class ServiceLocator {
     }
 
     private MyTagFetcher provideMyTagSynchronizer() {
-        return new MyTagFetcher(provideRepository(Tag.class));
+        return new MyTagFetcher(resolveDataContextFactory());
     }
 
     private LoginRequestFactory provideLoginRequestFactory() {
