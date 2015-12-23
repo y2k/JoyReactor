@@ -1,17 +1,16 @@
 package y2k.joyreactor.services
 
-import y2k.joyreactor.Attachment
-import y2k.joyreactor.Comment
-import y2k.joyreactor.Post
-import y2k.joyreactor.SimilarPost
+import y2k.joyreactor.*
 import y2k.joyreactor.services.requests.PostRequest
 
 /**
  * Created by y2k on 12/23/15.
  */
-object PostDataBuffer {
+object MemoryBuffer {
 
     private var request: PostRequest? = null
+
+    var messages: List<Message> = emptyList()
 
     val post: Post get() {
         return request!!.post!!

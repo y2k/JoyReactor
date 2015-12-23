@@ -11,7 +11,7 @@ import y2k.joyreactor.services.requests.PostRequest
 class CommentService(
         private val requestFactory: CreateCommentRequestFactory,
         private val postRequest: PostRequest,
-        private val postBuffer: PostDataBuffer) {
+        private val postBuffer: MemoryBuffer) {
 
     fun createComment(postId: String, commentText: String): Observable<Void> {
         return requestFactory

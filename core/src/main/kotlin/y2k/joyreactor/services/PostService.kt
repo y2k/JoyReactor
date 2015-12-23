@@ -17,7 +17,7 @@ import java.util.*
  */
 class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
                   private val postRequest: PostRequest,
-                  private val buffer: PostDataBuffer) {
+                  private val buffer: MemoryBuffer) {
 
     fun synchronizePostAsync(postId: String): Observable<Post> {
         return ObservableUtils.func {

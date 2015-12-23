@@ -4,7 +4,6 @@ import y2k.joyreactor.*;
 import y2k.joyreactor.presenters.*;
 import y2k.joyreactor.services.*;
 import y2k.joyreactor.services.repository.DataContext;
-import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.requests.*;
 import y2k.joyreactor.services.synchronizers.MyTagFetcher;
 import y2k.joyreactor.services.synchronizers.PostListFetcher;
@@ -74,25 +73,29 @@ public class ServiceLocator {
     // ==========================================
 
     private TagService provideTagService() {
-        return new TagService(provideRepository(Post.class), providePostListSynchronizerFactory());
+        return new TagService(
+                resolveDataContextFactory(),
+                providePostListSynchronizerFactory());
     }
 
     private PostService providePostService() {
         return new PostService(
                 provideImageRequestFactory(),
                 resolvePostRequest(),
-                resolvePostDataBuffer());
+                resolveMemoryBuffer());
     }
 
     private TagsService provideTagsService() {
-        return new TagsService(provideRepository(Tag.class), provideMyTagSynchronizer());
+        return new TagsService(
+                resolveDataContextFactory(),
+                provideMyTagSynchronizer());
     }
 
     private CommentService provideCommentService() {
         return new CommentService(
                 provideCreateCommentRequestFactory(),
                 resolvePostRequest(),
-                resolvePostDataBuffer());
+                resolveMemoryBuffer());
     }
 
     private ProfileService provideProfileService() {
@@ -100,7 +103,9 @@ public class ServiceLocator {
     }
 
     private MessageService provideMessageService() {
-        return new MessageService(providePrivateMessageSynchronizer(), provideRepository(Message.class));
+        return new MessageService(
+                providePrivateMessageSynchronizer(),
+                resolveMemoryBuffer());
     }
 
     // ==========================================
@@ -111,8 +116,8 @@ public class ServiceLocator {
         return new PostRequest();
     }
 
-    private PostDataBuffer resolvePostDataBuffer() {
-        return PostDataBuffer.INSTANCE;
+    private MemoryBuffer resolveMemoryBuffer() {
+        return MemoryBuffer.INSTANCE;
     }
 
     private OriginalImageRequestFactory provideImageRequestFactory() {
@@ -145,15 +150,11 @@ public class ServiceLocator {
                 provideRepository(Message.class));
     }
 
-    private <T> Repository<T> provideRepository(Class<T> aClass) {
-        return new Repository<>(aClass);
-    }
-
     private MessageListRequest provideMessageListRequest() {
         return new MessageListRequest();
     }
 
-    private DataContext.Factory makeDataContextFactory() {
+    private DataContext.Factory resolveDataContextFactory() {
         return new DataContext.Factory();
     }
 }

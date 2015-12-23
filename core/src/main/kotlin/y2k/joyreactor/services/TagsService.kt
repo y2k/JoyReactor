@@ -3,6 +3,7 @@ package y2k.joyreactor.services
 import rx.Observable
 import rx.functions.Func1
 import y2k.joyreactor.Tag
+import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.repository.MyTagQuery
 import y2k.joyreactor.services.repository.Repository
 import y2k.joyreactor.services.requests.AddTagRequest
@@ -13,7 +14,7 @@ import y2k.joyreactor.services.synchronizers.MyTagFetcher
  * Created by y2k on 11/24/15.
  */
 class TagsService(
-        private val repository: Repository<Tag>,
+        private val dataContext: DataContext.Factory,
         private val synchronizer: MyTagFetcher) {
 
     fun getMyTags(): Observable<List<Tag>> {
@@ -22,7 +23,7 @@ class TagsService(
     }
 
     private fun getFromRepo(): Observable<List<Tag>> {
-        return repository.queryAsync(MyTagQuery())
+        return dataContext.using { entities -> entities.Tags.filter { it.isMine } }
     }
 
     fun addTag(tag: String): Observable<Void> {

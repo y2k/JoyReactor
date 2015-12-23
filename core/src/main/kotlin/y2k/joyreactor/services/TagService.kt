@@ -3,14 +3,13 @@ package y2k.joyreactor.services
 import rx.Observable
 import y2k.joyreactor.Post
 import y2k.joyreactor.Tag
-import y2k.joyreactor.services.repository.PostsForTagQuery
-import y2k.joyreactor.services.repository.Repository
+import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.synchronizers.PostListFetcher
 
 /**
  * Created by y2k on 11/24/15.
  */
-class TagService(private val repository: Repository<Post>,
+class TagService(private val dataContext: DataContext.Factory,
                  private val synchronizerFactory: PostListFetcher.Factory) {
 
     private var synchronizer: PostListFetcher? = null
@@ -51,6 +50,9 @@ class TagService(private val repository: Repository<Post>,
     }
 
     private fun getFromRepository(): Observable<List<Post>> {
-        return repository.queryAsync(PostsForTagQuery(tag))
+        return dataContext.using { entities ->
+            val tagPosts = entities.TagPosts.filter { it.tagId == tag!!.id }
+            entities.Posts.filter { post -> tagPosts.any { it.postId == post.id } }
+        }
     }
 }

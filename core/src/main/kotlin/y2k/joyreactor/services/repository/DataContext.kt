@@ -28,7 +28,7 @@ class DataContext {
             return innerMakeDataContext()
         }
 
-        fun <T> makeAsync(callback: (DataContext) -> T): Observable<T> {
+        fun <T> using(callback: (DataContext) -> T): Observable<T> {
             return ObservableUtils.func {
                 callback(innerMakeDataContext())
             }
