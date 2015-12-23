@@ -2,9 +2,6 @@ package y2k.joyreactor.services
 
 import rx.Observable
 import y2k.joyreactor.Message
-import y2k.joyreactor.services.repository.MessageForUserQuery
-import y2k.joyreactor.services.repository.MessageThreadQuery
-import y2k.joyreactor.services.repository.Repository
 import y2k.joyreactor.services.synchronizers.PrivateMessageFetcher
 import java.util.*
 

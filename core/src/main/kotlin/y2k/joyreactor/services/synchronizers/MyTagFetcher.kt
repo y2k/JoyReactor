@@ -4,11 +4,9 @@ import rx.Observable
 import y2k.joyreactor.Image
 import y2k.joyreactor.Tag
 import y2k.joyreactor.services.repository.DataContext
-import y2k.joyreactor.services.repository.Repository
 import y2k.joyreactor.services.requests.TagsForUserRequest
 import y2k.joyreactor.services.requests.UserNameRequest
-
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Created by y2k on 11/25/15.

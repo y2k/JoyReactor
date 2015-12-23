@@ -1,11 +1,8 @@
 package y2k.joyreactor.services
 
 import rx.Observable
-import rx.functions.Func1
 import y2k.joyreactor.Tag
 import y2k.joyreactor.services.repository.DataContext
-import y2k.joyreactor.services.repository.MyTagQuery
-import y2k.joyreactor.services.repository.Repository
 import y2k.joyreactor.services.requests.AddTagRequest
 import y2k.joyreactor.services.requests.UserNameRequest
 import y2k.joyreactor.services.synchronizers.MyTagFetcher
