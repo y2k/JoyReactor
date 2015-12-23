@@ -3,19 +3,16 @@ package y2k.joyreactor.services.synchronizers
 import rx.Observable
 import y2k.joyreactor.Message
 import y2k.joyreactor.common.ObservableUtils
-import y2k.joyreactor.services.repository.MessageForDateQuery
-import y2k.joyreactor.services.repository.Repository
+import y2k.joyreactor.services.MemoryBuffer
 import y2k.joyreactor.services.requests.MessageListRequest
-
-import java.util.ArrayList
-import java.util.Date
+import java.util.*
 
 /**
  * Created by y2k on 11/17/15.
  */
 class PrivateMessageFetcher(
         private val request: MessageListRequest,
-        private val repository: Repository<Message>) {
+        private val buffer: MemoryBuffer) {
 
     private var mineOldest: Date? = null
     private var theirOldest: Date? = null
@@ -52,11 +49,11 @@ class PrivateMessageFetcher(
     private val isNeedLoadNext: Boolean
         get() {
             if (mineOldest != null) {
-                if (repository.queryFirst(MessageForDateQuery(mineOldest, true)) == null)
+                if (buffer.messages.none { it.isMine == true && it.date == mineOldest })
                     return true
             }
             if (theirOldest != null) {
-                if (repository.queryFirst(MessageForDateQuery(theirOldest, false)) == null)
+                if (buffer.messages.none { it.isMine == false && it.date == theirOldest })
                     return true
             }
             return false
@@ -71,11 +68,11 @@ class PrivateMessageFetcher(
                     newMessages.add(m)
 
             if (!newMessages.isEmpty())
-                repository.insertAll(newMessages)
+                buffer.messages = newMessages
         }
 
         private fun isNotInRepository(m: Message): Boolean {
-            return repository.queryFirst(MessageForDateQuery(m.date, m.isMine)) == null
+            return buffer.messages.none { it.isMine == m.isMine && it.date == m.date }
         }
     }
 }

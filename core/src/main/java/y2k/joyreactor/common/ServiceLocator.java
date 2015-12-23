@@ -1,6 +1,5 @@
 package y2k.joyreactor.common;
 
-import y2k.joyreactor.*;
 import y2k.joyreactor.presenters.*;
 import y2k.joyreactor.services.*;
 import y2k.joyreactor.services.repository.DataContext;
@@ -149,7 +148,7 @@ public class ServiceLocator {
     private PrivateMessageFetcher providePrivateMessageSynchronizer() {
         return new PrivateMessageFetcher(
                 provideMessageListRequest(),
-                provideRepository(Message.class));
+                resolveMemoryBuffer());
     }
 
     private MessageListRequest provideMessageListRequest() {
