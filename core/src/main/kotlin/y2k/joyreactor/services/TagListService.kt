@@ -20,7 +20,7 @@ class TagListService(
     }
 
     private fun getFromRepo(): Observable<List<Tag>> {
-        return dataContext.using { entities -> entities.Tags.filter { it.isMine } }
+        return dataContext.use { entities -> entities.Tags.filter { it.isMine } }
     }
 
     fun addTag(tag: String): Observable<Void> {

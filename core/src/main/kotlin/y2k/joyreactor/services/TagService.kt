@@ -50,7 +50,7 @@ class TagService(private val dataContext: DataContext.Factory,
     }
 
     private fun getFromRepository(): Observable<List<Post>> {
-        return dataContext.using { entities ->
+        return dataContext.use { entities ->
             val tagPosts = entities.TagPosts.filter { it.tagId == tag!!.id }
             entities.Posts.filter { post -> tagPosts.any { it.postId == post.id } }
         }

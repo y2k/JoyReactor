@@ -21,24 +21,24 @@ class PostListFetcher(private val tag: Tag,
                 .flatMap { s -> merger.isUnsafeUpdate(request!!.getPosts()) }
     }
 
-    fun applyNew(): Observable<Void> {
+    fun applyNew(): Observable<Unit> {
         return merger.mergeFirstPage(request!!.getPosts())
     }
 
     val divider: Int?
         get() = merger.divider
 
-    fun loadNextPage(): Observable<Void> {
+    fun loadNextPage(): Observable<Unit> {
         request = getPostsForTagRequest(request!!.nextPageId)
         return request!!.requestAsync()
                 .flatMap { s -> merger.mergeNextPage(request!!.getPosts()) }
     }
 
-    fun reloadFirstPage(): Observable<Void> {
+    fun reloadFirstPage(): Observable<Unit> {
         request = getPostsForTagRequest(null)
         return request!!.requestAsync()
                 .flatMap {
-                    dataContext.usingAction { entities ->
+                    dataContext.use { entities ->
                         entities.TagPosts
                                 .filter { it.tagId == tag.id }
                                 .forEach { entities.TagPosts.remove(it) }

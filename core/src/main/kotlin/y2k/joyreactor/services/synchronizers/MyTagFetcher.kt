@@ -13,7 +13,7 @@ import java.util.*
  */
 class MyTagFetcher(private val dataContext: DataContext.Factory) {
 
-    fun synchronize(): Observable<Void> {
+    fun synchronize(): Observable<Unit> {
         return UserNameRequest()
                 .request()
                 .flatMap({ username ->
@@ -23,15 +23,14 @@ class MyTagFetcher(private val dataContext: DataContext.Factory) {
                         TagsForUserRequest(username).request()
                 })
                 .flatMap { newTags ->
-                    dataContext
-                            .usingAction { entities ->
-                                val tags = merge(entities.Tags.toList(), newTags)
+                    dataContext.use { entities ->
+                        val tags = merge(entities.Tags.toList(), newTags)
 
-                                entities.Tags.clear()
-                                tags.forEach { entities.Tags.add(it) }
+                        entities.Tags.clear()
+                        tags.forEach { entities.Tags.add(it) }
 
-                                entities.saveChanges()
-                            }
+                        entities.saveChanges()
+                    }
                 }
     }
 

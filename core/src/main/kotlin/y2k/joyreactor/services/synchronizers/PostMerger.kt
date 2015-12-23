@@ -18,10 +18,10 @@ internal class PostMerger(
     var divider: Int? = null
         private set
 
-    fun mergeFirstPage(newPosts: List<Post>): Observable<Void> {
+    fun mergeFirstPage(newPosts: List<Post>): Observable<Unit> {
         return updatePostsAsync(newPosts)
                 .flatMap({
-                    dataContext.usingAction { entities ->
+                    dataContext.use { entities ->
                         val links = entities.TagPosts.filter { it.tagId == tag.id }
                         val result = ArrayList<TagPost>()
 
@@ -48,7 +48,7 @@ internal class PostMerger(
     }
 
     fun isUnsafeUpdate(newPosts: List<Post>): Observable<Boolean> {
-        return dataContext.using { entities ->
+        return dataContext.use { entities ->
             val oldPosts = entities.getPostsForTag()
             if (oldPosts.size == 0) false
             if (newPosts.size > oldPosts.size) true
@@ -66,10 +66,10 @@ internal class PostMerger(
         return Posts.filter { post -> tagPosts.any { it.postId == post.id } }
     }
 
-    fun mergeNextPage(newPosts: List<Post>): Observable<Void> {
+    fun mergeNextPage(newPosts: List<Post>): Observable<Unit> {
         return updatePostsAsync(newPosts)
                 .flatMap {
-                    dataContext.usingAction { entities ->
+                    dataContext.use { entities ->
                         var links = entities.TagPosts.filter { it.tagId == tag.id }
                         val actualPosts = ArrayList(links.subList(0, divider!!))
                         val expiredPosts = ArrayList<TagPost>(links.subList(divider!!, links.size))
@@ -89,8 +89,8 @@ internal class PostMerger(
                 }
     }
 
-    private fun updatePostsAsync(newPosts: List<Post>): Observable<Void> {
-        return dataContext.usingAction { entities ->
+    private fun updatePostsAsync(newPosts: List<Post>): Observable<Unit> {
+        return dataContext.use { entities ->
             for (p in newPosts) {
                 val old = entities.Posts.firstOrNull { it.serverId == p.serverId }
                 if (old == null) entities.Posts.add(p)
