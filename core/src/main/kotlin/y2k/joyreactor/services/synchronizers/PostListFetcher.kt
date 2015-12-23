@@ -1,11 +1,8 @@
 package y2k.joyreactor.services.synchronizers
 
 import rx.Observable
-import y2k.joyreactor.Post
 import y2k.joyreactor.Tag
-import y2k.joyreactor.TagPost
-import y2k.joyreactor.services.repository.Repository
-import y2k.joyreactor.services.repository.TagPostsForTagQuery
+import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.PostsForTagRequest
 
 /**
@@ -13,10 +10,9 @@ import y2k.joyreactor.services.requests.PostsForTagRequest
  */
 class PostListFetcher(private val tag: Tag,
                       private val requestFactory: PostsForTagRequest.Factory,
-                      private val postRepository: Repository<Post>,
-                      private val tagPostRepository: Repository<TagPost>) {
+                      private val dataContext: DataContext.Factory) {
 
-    private val merger = PostMerger(tag, postRepository, tagPostRepository)
+    private val merger = PostMerger(tag, dataContext)
     private var request: PostsForTagRequest? = null
 
     fun preloadNewPosts(): Observable<Boolean> {
@@ -41,22 +37,27 @@ class PostListFetcher(private val tag: Tag,
     fun reloadFirstPage(): Observable<Void> {
         request = getPostsForTagRequest(null)
         return request!!.requestAsync()
-                .flatMap { tagPostRepository.deleteWhereAsync(TagPostsForTagQuery(tag)) }
-                .flatMap { _void -> merger.mergeFirstPage(request!!.getPosts()) }
+                .flatMap {
+                    dataContext.usingAction { entities ->
+                        entities.TagPosts
+                                .filter { it.tagId == tag.id }
+                                .forEach { entities.TagPosts.remove(it) }
+                        entities.saveChanges()
+                    }
+                }
+                .flatMap { merger.mergeFirstPage(request!!.getPosts()) }
     }
 
     private fun getPostsForTagRequest(pageId: String?): PostsForTagRequest {
         return requestFactory.make(tag, pageId)
     }
 
-    class Factory(
-            private val postRepository: Repository<Post>,
-            private val tagPostRepository: Repository<TagPost>) {
+    class Factory(private val dataContext: DataContext.Factory) {
 
         private val requestFactory = PostsForTagRequest.Factory()
 
         fun make(tag: Tag): PostListFetcher {
-            return PostListFetcher(tag, requestFactory, postRepository, tagPostRepository)
+            return PostListFetcher(tag, requestFactory, dataContext)
         }
     }
 }

@@ -6,10 +6,7 @@ import y2k.joyreactor.Tag
 import y2k.joyreactor.TagPost
 import y2k.joyreactor.common.ObjectUtils
 import y2k.joyreactor.common.ObservableUtils
-import y2k.joyreactor.services.repository.PostByIdQuery
-import y2k.joyreactor.services.repository.PostsForTagQuery
-import y2k.joyreactor.services.repository.Repository
-import y2k.joyreactor.services.repository.TagPostsForTagQuery
+import y2k.joyreactor.services.repository.*
 
 import java.util.ArrayList
 
@@ -18,8 +15,7 @@ import java.util.ArrayList
  */
 internal class PostMerger(
         private val tag: Tag,
-        private val postRepository: Repository<Post>,
-        private val tagPostRepository: Repository<TagPost>) {
+        private val dataContext: DataContext.Factory) {
 
     var divider: Int? = null
         private set

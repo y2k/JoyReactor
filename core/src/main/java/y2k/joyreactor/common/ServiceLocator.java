@@ -99,7 +99,9 @@ public class ServiceLocator {
     }
 
     private ProfileService provideProfileService() {
-        return new ProfileService(provideProfileRequestFactory(), provideLoginRequestFactory());
+        return new ProfileService(
+                provideProfileRequestFactory(),
+                provideLoginRequestFactory());
     }
 
     private MessageService provideMessageService() {
@@ -125,9 +127,7 @@ public class ServiceLocator {
     }
 
     private PostListFetcher.Factory providePostListSynchronizerFactory() {
-        return new PostListFetcher.Factory(
-                provideRepository(Post.class),
-                provideRepository(TagPost.class));
+        return new PostListFetcher.Factory(resolveDataContextFactory());
     }
 
     private MyTagFetcher provideMyTagSynchronizer() {

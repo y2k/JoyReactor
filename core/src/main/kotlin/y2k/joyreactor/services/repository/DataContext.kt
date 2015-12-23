@@ -59,5 +59,9 @@ class DataContext {
         fun addAll(items: List<T>) {
             this.items.addAll(items)
         }
+
+        fun remove(item: T) {
+            items.remove(item)
+        }
     }
 }
