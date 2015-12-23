@@ -5,7 +5,7 @@ import java.util.*
 /**
  * Created by y2k on 12/23/15.
  */
-class DataSet<T : DataSet.Dto> : Iterable<T> {
+class DataSet<T : DataSet.Dto>(val name: String) : Iterable<T> {
 
     private val items = ArrayList<T>()
 

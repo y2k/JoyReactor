@@ -19,11 +19,11 @@ import java.util.concurrent.Executors
  */
 class DataContext {
 
-    val Posts: DataSet<Post> = DataSet()
+    val Posts: DataSet<Post> = DataSet("posts")
 
-    val Tags: DataSet<Tag> = DataSet()
+    val Tags: DataSet<Tag> = DataSet("tags")
 
-    val TagPosts: DataSet<TagPost> = DataSet()
+    val TagPosts: DataSet<TagPost> = DataSet("tag_posts")
 
     fun saveChanges() {
         Serializer.saveToDisk(Posts)
@@ -62,12 +62,12 @@ class DataContext {
     private object Serializer {
 
         fun <T : DataSet.Dto> loadFromDisk(dataSet: DataSet<T>) {
-            File(Platform.Instance.currentDirectory, javaClass.simpleName)
+            getFile(dataSet)
                     .let { file ->
                         if (!file.exists()) emptyList()
                         else file.inputStream()
                                 .let { ObjectInputStream(it) }
-                                .let { stream ->
+                                .use { stream ->
                                     val result = ArrayList<T>()
                                     while (true) {
                                         try {
@@ -82,11 +82,15 @@ class DataContext {
                     .forEach { dataSet.add(it) }
         }
 
-        fun <T : DataSet.Dto> saveToDisk(dataSet: DataSet<T>) {
-            File(Platform.Instance.currentDirectory, javaClass.simpleName)
+        fun saveToDisk(dataSet: DataSet<*>) {
+            getFile(dataSet)
                     .outputStream()
                     .let { ObjectOutputStream(it) }
                     .use { stream -> dataSet.forEach { stream.writeObject(it) } }
+        }
+
+        private fun getFile(datasSet: DataSet<*>): File {
+            return File(Platform.Instance.currentDirectory, "${datasSet.name}.db")
         }
     }
 }
