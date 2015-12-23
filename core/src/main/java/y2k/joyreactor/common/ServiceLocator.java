@@ -8,7 +8,6 @@ import y2k.joyreactor.services.repository.Repository;
 import y2k.joyreactor.services.requests.*;
 import y2k.joyreactor.services.synchronizers.MyTagFetcher;
 import y2k.joyreactor.services.synchronizers.PostListFetcher;
-import y2k.joyreactor.services.synchronizers.PostFetcher;
 import y2k.joyreactor.services.synchronizers.PrivateMessageFetcher;
 
 /**
