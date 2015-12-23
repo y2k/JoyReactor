@@ -28,6 +28,7 @@ import java.util.function.Supplier;
  * ({@code ==}), identity hash code, or synchronization) on instances of
  * {@code Optional} may have unpredictable results and should be avoided.
  */
+@Deprecated
 public final class Optional<T> {
     /**
      * Common instance for {@code empty()}.

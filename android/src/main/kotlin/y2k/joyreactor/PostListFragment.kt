@@ -43,7 +43,7 @@ class PostListFragment : Fragment() {
                     }
 
                     override fun reloadPosts(posts: List<Post>, divider: Int?) {
-                        adapter.reloadData(posts, Optional.ofNullable<Int>(divider))
+                        adapter.reloadData(posts, divider)
                     }
 
                     override fun setHasNewPosts(hasNewPosts: Boolean) {
@@ -94,10 +94,10 @@ class PostListFragment : Fragment() {
             return posts.size
         }
 
-        fun reloadData(posts: List<Post>, divider: Optional<Int>) {
+        fun reloadData(posts: List<Post>, divider: Int?) {
             this.posts.clear()
             this.posts.addAll(posts)
-            if (divider.isPresent) this.posts.add(divider.get(), DIVIDER)
+            divider?.let { this.posts.add(it, DIVIDER) }
             notifyDataSetChanged()
         }
 
