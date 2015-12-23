@@ -2,7 +2,9 @@ package y2k.joyreactor.services.repository
 
 import rx.Observable
 import y2k.joyreactor.*
+import y2k.joyreactor.common.IoUtils
 import y2k.joyreactor.common.ObservableUtils
+import java.io.*
 import java.util.*
 import java.util.concurrent.Callable
 import java.util.concurrent.Executor
@@ -20,7 +22,9 @@ class DataContext {
     val TagPosts: Repository<TagPost> = Repository()
 
     fun saveChanges() {
-        throw  RuntimeException("not implemented") // TODO:
+        Posts.saveToDisk()
+        Tags.saveToDisk()
+        TagPosts.saveToDisk()
     }
 
     class Factory {
@@ -38,13 +42,39 @@ class DataContext {
         }
 
         private fun innerMakeDataContext(): DataContext {
-            throw RuntimeException("not implemented") // TODO:
+            val entities = DataContext()
+            entities.Posts.loadFromDisk()
+            entities.Tags.loadFromDisk()
+            entities.TagPosts.loadFromDisk()
+            return entities
+        }
+
+        private fun <T> Repository<T>.loadFromDisk() {
+            File(javaClass.simpleName)
+                    .inputStream()
+                    .let { ObjectInputStream(it) }
+                    .use { stream ->
+                        while (true) {
+                            try {
+                                add(stream.readObject() as T)
+                            } catch(e: EOFException) {
+                                return
+                            }
+                        }
+                    }
         }
 
         companion object {
 
-            val executor = Executors.newSingleThreadExecutor()
+            private val executor = Executors.newSingleThreadExecutor()
         }
+    }
+
+    private fun <T> Repository<T>.saveToDisk() {
+        File(javaClass.simpleName)
+                .outputStream()
+                .let { ObjectOutputStream(it) }
+                .use { stream -> forEach { stream.writeObject(it) } }
     }
 
     class Repository<T> : Iterable<T> {
@@ -65,6 +95,11 @@ class DataContext {
 
         fun add(element: T) {
             items.add(element)
+        }
+
+        companion object {
+            
+            val idGenerator = Random()
         }
     }
 }
