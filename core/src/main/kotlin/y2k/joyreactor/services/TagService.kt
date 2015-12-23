@@ -4,44 +4,62 @@ import rx.Observable
 import y2k.joyreactor.Post
 import y2k.joyreactor.Tag
 import y2k.joyreactor.services.repository.DataContext
-import y2k.joyreactor.services.synchronizers.PostListFetcher
+import y2k.joyreactor.services.requests.PostsForTagRequest
+import y2k.joyreactor.services.synchronizers.PostMerger
 
 /**
  * Created by y2k on 11/24/15.
  */
 class TagService(private val dataContext: DataContext.Factory,
-                 private val synchronizerFactory: PostListFetcher.Factory) {
+                 private val requestFactory: PostsForTagRequest.Factory) {
 
-    private var synchronizer: PostListFetcher? = null
     private var tag: Tag? = null
+    private var merger: PostMerger? = null
+    private var request: PostsForTagRequest? = null
 
     fun setTag(tag: Tag) {
         this.tag = tag
-        this.synchronizer = synchronizerFactory.make(tag)
+        merger = PostMerger(tag, dataContext)
     }
 
     fun preloadNewPosts(): Observable<Boolean> {
-        return synchronizer!!.preloadNewPosts()
+        request = getPostsForTagRequest(null)
+        return request!!.requestAsync()
+                .flatMap { s -> merger!!.isUnsafeUpdate(request!!.getPosts()) }
+    }
+
+    private fun getPostsForTagRequest(pageId: String?): PostsForTagRequest {
+        return requestFactory.make(tag!!, pageId)
     }
 
     fun applyNew(): Observable<List<Post>> {
-        return synchronizer!!
-                .applyNew()
+        return merger!!
+                .mergeFirstPage(request!!.getPosts())
                 .flatMap({ s -> getFromRepository() })
     }
 
     val divider: Int?
-        get() = synchronizer!!.divider
+        get() = merger?.divider
 
     fun loadNextPage(): Observable<List<Post>> {
-        return synchronizer!!
-                .loadNextPage()
+        request = getPostsForTagRequest(request!!.nextPageId)
+        return request!!.requestAsync()
+                .flatMap { s -> merger!!.mergeNextPage(request!!.getPosts()) }
                 .flatMap({ s -> getFromRepository() })
     }
 
     fun reloadFirstPage(): Observable<List<Post>> {
-        return synchronizer!!
-                .reloadFirstPage()
+        request = getPostsForTagRequest(null)
+        return request!!.requestAsync()
+                .flatMap {
+                    dataContext.use { entities ->
+                        entities.TagPosts
+                                .filter { it.tagId == tag!!.id }
+                                .forEach { entities.TagPosts.remove(it) }
+                        entities.saveChanges()
+                    }
+                }
+                .flatMap { merger!!.mergeFirstPage(request!!.getPosts()) }
                 .flatMap({ s -> getFromRepository() })
     }
 

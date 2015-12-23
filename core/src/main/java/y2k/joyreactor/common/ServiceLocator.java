@@ -5,7 +5,6 @@ import y2k.joyreactor.services.*;
 import y2k.joyreactor.services.repository.DataContext;
 import y2k.joyreactor.services.requests.*;
 import y2k.joyreactor.services.synchronizers.MyTagFetcher;
-import y2k.joyreactor.services.synchronizers.PostListFetcher;
 import y2k.joyreactor.services.synchronizers.PrivateMessageFetcher;
 
 /**
@@ -74,7 +73,7 @@ public class ServiceLocator {
     private TagService provideTagService() {
         return new TagService(
                 resolveDataContextFactory(),
-                providePostListSynchronizerFactory());
+                resolvePostsForTagRequestFactory());
     }
 
     private PostService providePostService() {
@@ -113,6 +112,10 @@ public class ServiceLocator {
     // Models
     // ==========================================
 
+    private PostsForTagRequest.Factory resolvePostsForTagRequestFactory() {
+        return new PostsForTagRequest.Factory();
+    }
+
     private PostRequest resolvePostRequest() {
         return new PostRequest();
     }
@@ -123,10 +126,6 @@ public class ServiceLocator {
 
     private OriginalImageRequestFactory provideImageRequestFactory() {
         return new OriginalImageRequestFactory();
-    }
-
-    private PostListFetcher.Factory providePostListSynchronizerFactory() {
-        return new PostListFetcher.Factory(resolveDataContextFactory());
     }
 
     private MyTagFetcher provideMyTagSynchronizer() {
