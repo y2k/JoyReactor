@@ -29,7 +29,7 @@ class PostListPresenter(
 
         service.preloadNewPosts().subscribe(
                 { unsafeUpdate ->
-                    view.setHasNewPosts(unsafeUpdate!!)
+                    view.setHasNewPosts(unsafeUpdate)
                     view.setBusy(false)
                     if ((!unsafeUpdate)) applyNew()
                 }, { it.printStackTrace() })
