@@ -32,7 +32,9 @@ internal class PostMerger(
 
                         divider = newPosts.size
 
-                        entities.TagPosts.clear()
+                        entities.TagPosts
+                                .filter { it.tagId == tag.id }
+                                .forEach { entities.TagPosts.remove(it) }
                         result.forEach { entities.TagPosts.add(it) }
 
                         entities.saveChanges()
