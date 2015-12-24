@@ -17,7 +17,7 @@ import java.util.List;
 public class MenuViewController extends UIViewController implements TagListPresenter.View {
 
     UITableView list;
-    List<Tag> tags;
+    List<? extends Tag> tags;
     private TagListPresenter presenter;
 
     @Override
@@ -36,7 +36,7 @@ public class MenuViewController extends UIViewController implements TagListPrese
     }
 
     @Override
-    public void reloadData(List<Tag> tags) {
+    public void reloadData(List<? extends Tag> tags) {
         this.tags = tags;
         list.reloadData();
     }

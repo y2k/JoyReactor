@@ -4,10 +4,19 @@ import org.robovm.apple.foundation.NSAutoreleasePool
 import org.robovm.apple.uikit.UIApplication
 import org.robovm.apple.uikit.UIApplicationDelegateAdapter
 import org.robovm.apple.uikit.UIApplicationLaunchOptions
+import y2k.joyreactor.common.ForegroundScheduler
+import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.platform.DispatchQueueSchedulerFactory
+import y2k.joyreactor.platform.NetworkActivityIndicatorHttpClient
+import y2k.joyreactor.platform.Platform
+import y2k.joyreactor.platform.PlatformImpl
 
 class Main : UIApplicationDelegateAdapter() {
 
     override fun didFinishLaunching(application: UIApplication?, launchOptions: UIApplicationLaunchOptions?): Boolean {
+        Platform.Instance = PlatformImpl()
+        ForegroundScheduler.setInstance(DispatchQueueSchedulerFactory().make())
+        HttpClient.setInstance(NetworkActivityIndicatorHttpClient())
         return true
     }
 

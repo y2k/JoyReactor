@@ -26,7 +26,7 @@ public class PostListViewController extends UIViewController implements PostList
     UIRefreshControl refresher;
 
     PostListPresenter presenter;
-    List<Post> posts;
+    List<? extends Post> posts;
 
     @Override
     public void viewDidLoad() {
@@ -50,7 +50,7 @@ public class PostListViewController extends UIViewController implements PostList
 
         applyButton.addOnTouchUpInsideListener((sender, e) -> presenter.applyNew());
 
-        ServiceLocator.getInstance().providePostListPresenter(this);
+        presenter = ServiceLocator.getInstance().providePostListPresenter(this);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class PostListViewController extends UIViewController implements PostList
     }
 
     @Override
-    public void reloadPosts(List<Post> posts, Integer divider) {
+    public void reloadPosts(List<? extends Post> posts, Integer divider) {
         this.posts = posts;
         list.reloadData();
     }
@@ -118,7 +118,7 @@ public class PostListViewController extends UIViewController implements PostList
                 }
 
                 UIImageView userImageView = (UIImageView) cell.getViewWithTag(2);
-                loadImage(post.getUserImage().toImage(), 50, 50, userImageView);
+                loadImage(post.getUserImage2().toImage(), 50, 50, userImageView);
                 userImageView.getLayer().setCornerRadius(userImageView.getFrame().getWidth() / 2);
 
                 UIView root = cell.getViewWithTag(10);

@@ -100,12 +100,12 @@ public class PostViewController extends UIViewController implements PostPresente
     }
 
     @Override
-    public void updatePostImages(List<Image> images) {
+    public void updatePostImages(List<? extends Image> images) {
         // TODO
     }
 
     @Override
-    public void updateSimilarPosts(List<SimilarPost> similarPosts) {
+    public void updateSimilarPosts(List<? extends SimilarPost> similarPosts) {
         // TODO
     }
 

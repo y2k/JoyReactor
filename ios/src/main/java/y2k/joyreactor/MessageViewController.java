@@ -16,7 +16,7 @@ import java.util.List;
 public class MessageViewController extends UIViewController implements MessagesPresenter.View {
 
     UITableView list;
-    List<Message> messages;
+    List<? extends Message> messages;
     UITextView newMessage;
     UIButton sendButton;
 
@@ -55,7 +55,7 @@ public class MessageViewController extends UIViewController implements MessagesP
     }
 
     @Override
-    public void updateMessages(List<Message> messages) {
+    public void updateMessages(List<? extends Message> messages) {
         System.out.println("updateMessages | " + messages);
         this.messages = messages;
         list.reloadData();

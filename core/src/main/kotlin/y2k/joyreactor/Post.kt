@@ -20,7 +20,8 @@ class Post : Serializable, Comparable<Post>, DataSet.Dto {
     var commentCount: Int = 0
     var rating: Float = 0.toFloat()
 
-    fun getUserImage(): UserImage {
+    // TODO:
+    fun getUserImage2(): UserImage {
         return UserImage.fromUrl(userImage)
     }
 

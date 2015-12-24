@@ -141,7 +141,7 @@ class PostListFragment : Fragment() {
                             .to(i.image, { image.setImageBitmap(it) })
                 }
 
-                userImage.setImage(i.getUserImage().toImage())
+                userImage.setImage(i.getUserImage2().toImage())
                 userName.text = i.userName
                 videoMark.visibility = if (i.image?.isAnimated ?: false) View.VISIBLE else View.GONE
 

@@ -16,7 +16,7 @@ import java.util.List;
 public class MessageThreadViewController extends UIViewController implements MessageThreadsPresenter.View {
 
     UITableView list;
-    List<Message> threads;
+    List<? extends Message> threads;
 
     @Override
     public void viewDidLoad() {
@@ -54,7 +54,7 @@ public class MessageThreadViewController extends UIViewController implements Mes
     }
 
     @Override
-    public void reloadData(List<Message> threads) {
+    public void reloadData(List<? extends Message> threads) {
         this.threads = threads;
         list.reloadData();
     }
