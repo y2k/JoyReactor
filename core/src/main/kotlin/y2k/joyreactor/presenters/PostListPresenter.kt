@@ -26,7 +26,7 @@ class PostListPresenter(
         service.setTag(m.tag)
 
         view.setBusy(true)
-        fromRepository.subscribe { posts -> view.reloadPosts(posts, null) }
+        getFromRepository().subscribe { posts -> view.reloadPosts(posts, null) }
 
         service.preloadNewPosts().subscribe(
                 { unsafeUpdate ->
@@ -62,8 +62,9 @@ class PostListPresenter(
                 }, { it.printStackTrace() })
     }
 
-    private val fromRepository: Observable<List<Post>>
-        get() = service.queryAsync()
+    private fun getFromRepository(): Observable<List<Post>> {
+        return service.queryAsync()
+    }
 
     fun postClicked(post: Post) {
         Navigation.getInstance().openPost(post.serverId)
