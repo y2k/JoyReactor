@@ -3,9 +3,6 @@ package y2k.joyreactor.services.requests
 import rx.Observable
 import y2k.joyreactor.common.ObservableUtils
 import y2k.joyreactor.http.HttpClient
-
-import java.io.IOException
-import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 /**

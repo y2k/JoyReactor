@@ -2,7 +2,8 @@ package y2k.joyreactor.presenters
 
 import rx.Observable
 import rx.functions.Action1
-import y2k.joyreactor.*
+import y2k.joyreactor.Post
+import y2k.joyreactor.Tag
 import y2k.joyreactor.common.Messages
 import y2k.joyreactor.platform.Navigation
 import y2k.joyreactor.services.TagService

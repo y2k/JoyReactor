@@ -3,8 +3,7 @@ package y2k.joyreactor.presenters
 import rx.functions.Action0
 import rx.functions.Action1
 import y2k.joyreactor.common.Messenger
-
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Created by y2k on 9/27/15.

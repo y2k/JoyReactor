@@ -6,8 +6,6 @@ import y2k.joyreactor.Image
 import y2k.joyreactor.Profile
 import y2k.joyreactor.common.ObservableUtils
 import y2k.joyreactor.http.HttpClient
-
-import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 /**

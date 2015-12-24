@@ -1,7 +1,7 @@
 package y2k.joyreactor.presenters
 
-import y2k.joyreactor.services.ProfileService
 import y2k.joyreactor.platform.Navigation
+import y2k.joyreactor.services.ProfileService
 
 /**
  * Created by y2k on 9/29/15.

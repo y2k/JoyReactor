@@ -23,12 +23,13 @@ class TagService(private val dataContext: DataContext.Factory,
     }
 
     fun preloadNewPosts(): Observable<Boolean> {
-        request = getPostsForTagRequest(null)
-        return request!!.requestAsync()
-                .flatMap { s -> merger!!.isUnsafeUpdate(request!!.getPosts()) }
+        request = getPostsForTagRequest()
+        return request!!
+                .requestAsync()
+                .flatMap { merger!!.isUnsafeUpdate(request!!.getPosts()) }
     }
 
-    private fun getPostsForTagRequest(pageId: String?): PostsForTagRequest {
+    private fun getPostsForTagRequest(pageId: String? = null): PostsForTagRequest {
         return requestFactory.make(tag!!, pageId)
     }
 

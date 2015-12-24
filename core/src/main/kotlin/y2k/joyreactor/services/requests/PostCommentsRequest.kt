@@ -1,12 +1,8 @@
 package y2k.joyreactor.services.requests
 
 import org.jsoup.nodes.Document
-import org.jsoup.nodes.Element
 import y2k.joyreactor.Comment
-
-import java.io.IOException
-import java.util.ArrayList
-import java.util.regex.Matcher
+import java.util.*
 import java.util.regex.Pattern
 
 /**
