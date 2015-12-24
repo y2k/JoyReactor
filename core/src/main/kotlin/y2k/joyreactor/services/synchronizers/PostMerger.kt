@@ -94,6 +94,7 @@ internal class PostMerger(
                     entities.Posts.add(p)
                 }
             }
+            entities.saveChanges()
         }
     }
 
