@@ -27,7 +27,7 @@ internal class PostMerger(
                         for (s in newPosts)
                             result.add(TagPost(tag.id, s.id))
                         for (s in links)
-                            if (!contains(result, s))
+                            if (result.all { it.postId != s.postId })
                                 result.add(s)
 
                         divider = newPosts.size
@@ -38,12 +38,6 @@ internal class PostMerger(
                         entities.saveChanges()
                     }
                 })
-    }
-
-    private fun contains(list: List<TagPost>, tagPost: TagPost): Boolean {
-        for (s in list)
-            if (s.postId == tagPost.postId) return true
-        return false
     }
 
     fun isUnsafeUpdate(newPosts: List<Post>): Observable<Boolean> {
@@ -61,8 +55,9 @@ internal class PostMerger(
     }
 
     private fun DataContext.getPostsForTag(): List<Post> {
-        val tagPosts = TagPosts.filter { it.tagId == tag.id }
-        return Posts.filter { post -> tagPosts.any { it.postId == post.id } }
+        return TagPosts
+                .filter { it.tagId == tag.id }
+                .map { tp -> Posts.first { it.id == tp.postId } }
     }
 
     fun mergeNextPage(newPosts: List<Post>): Observable<Unit> {

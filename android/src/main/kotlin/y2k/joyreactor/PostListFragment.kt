@@ -113,7 +113,6 @@ class PostListFragment : Fragment() {
             val userName: TextView
 
             init {
-
                 image = itemView.findViewById(R.id.image) as WebImageView
                 imagePanel = itemView.findViewById(R.id.imagePanel) as FixedAspectPanel
                 userImage = itemView.findViewById(R.id.userImage) as WebImageView
