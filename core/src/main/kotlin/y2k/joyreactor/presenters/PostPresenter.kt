@@ -4,6 +4,7 @@ import y2k.joyreactor.*
 import y2k.joyreactor.platform.Navigation
 import y2k.joyreactor.platform.Platform
 import y2k.joyreactor.services.PostService
+import y2k.joyreactor.services.ProfileService
 import java.io.File
 
 /**
@@ -11,7 +12,8 @@ import java.io.File
  */
 class PostPresenter(
         private val view: PostPresenter.View,
-        private val service: PostService) {
+        private val service: PostService,
+        private val userService: ProfileService) {
 
     init {
         view.setIsBusy(true)
@@ -35,6 +37,9 @@ class PostPresenter(
                     view.updatePostImage(partial.result)
                 }
             }, { it.printStackTrace() })
+
+            userService.isAuthorized()
+                    .subscribe({ if (it) view.setEnableCreateComments() }, { it.printStackTrace() })
         }, { it.printStackTrace() })
     }
 
@@ -89,5 +94,7 @@ class PostPresenter(
         fun updatePostImage(image: File)
 
         fun updateImageDownloadProgress(progress: Int, maxProgress: Int)
+
+        fun setEnableCreateComments()
     }
 }

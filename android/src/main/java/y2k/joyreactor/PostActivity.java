@@ -6,8 +6,12 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.*;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.*;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,10 +44,19 @@ public class PostActivity extends AppCompatActivity {
 
         ProgressBar imageProgress = (ProgressBar) findViewById(R.id.imageProgress);
 
-        findViewById(R.id.createComment).setOnClickListener(v -> presenter.replyToPost());
+        View createComment = findViewById(R.id.createComment);
+        createComment.setOnClickListener(v -> presenter.replyToPost());
+
+        createComment.setScaleX(0);
+        createComment.setScaleY(0);
 
         presenter = ServiceLocator.getInstance().providePostPresenter(
                 new PostPresenter.View() {
+
+                    @Override
+                    public void setEnableCreateComments() {
+                        createComment.animate().scaleX(1).scaleY(1).setInterpolator(new AccelerateInterpolator());
+                    }
 
                     @Override
                     public void updateComments(CommentGroup comments) {

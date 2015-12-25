@@ -27,7 +27,7 @@ public class ServiceLocator {
     }
 
     public PostPresenter providePostPresenter(PostPresenter.View view) {
-        return new PostPresenter(view, providePostService());
+        return new PostPresenter(view, providePostService(), provideProfileService());
     }
 
     public TagListPresenter provideTagListPresenter(TagListPresenter.View view) {

@@ -25,4 +25,8 @@ class ProfileService(
     fun logout(): Observable<Void> {
         return ObservableUtils.create { HttpClient.getInstance().clearCookies() }
     }
+
+    fun isAuthorized(): Observable<Boolean> {
+        return profileRequestFactory.request().map { true }
+    }
 }

@@ -119,6 +119,11 @@ public class PostViewController extends UIViewController implements PostPresente
         // TODO:
     }
 
+    @Override
+    public void setEnableCreateComments() {
+        // TODO:
+    }
+
     private class CommentDataSource extends UITableViewDataSourceAdapter {
 
         @Override
