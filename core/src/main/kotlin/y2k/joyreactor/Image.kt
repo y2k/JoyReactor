@@ -1,7 +1,5 @@
 package y2k.joyreactor
 
-import y2k.joyreactor.common.ObjectUtils
-
 import java.io.Serializable
 import java.net.MalformedURLException
 import java.net.URL
@@ -57,7 +55,7 @@ class Image(
     }
 
     override fun equals(obj: Any?): Boolean {
-        return (obj is Image) && ObjectUtils.equals(obj.url, url)
+        return (obj is Image) && obj.url == url;
     }
 
     companion object {

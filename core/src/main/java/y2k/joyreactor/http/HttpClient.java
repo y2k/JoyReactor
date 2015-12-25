@@ -5,7 +5,6 @@ import org.jsoup.nodes.Document;
 import rx.Observable;
 import rx.functions.Action2;
 import y2k.joyreactor.common.IoUtils;
-import y2k.joyreactor.common.ObjectUtils;
 import y2k.joyreactor.common.ObservableUtils;
 
 import java.io.*;
