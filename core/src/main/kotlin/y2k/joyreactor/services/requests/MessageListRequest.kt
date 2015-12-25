@@ -20,7 +20,7 @@ class MessageListRequest {
 
     fun execute(page: String?) {
         val url = page ?: "http://joyreactor.cc/private/list"
-        val document = HttpClient.getInstance().getDocument(url)
+        val document = HttpClient.instance.getDocument(url)
 
         for (s in document.select("div.messages_wr > div.article")) {
             val m = Message()

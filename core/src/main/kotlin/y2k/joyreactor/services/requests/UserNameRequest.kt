@@ -11,7 +11,7 @@ class UserNameRequest {
 
     fun request(): Observable<String> {
         return ObservableUtils.func<String> {
-            val document = HttpClient.getInstance().getDocument("http://joyreactor.cc/donate")
+            val document = HttpClient.instance.getDocument("http://joyreactor.cc/donate")
             val node = document.select("a#settings").first()
             node?.text()
         }

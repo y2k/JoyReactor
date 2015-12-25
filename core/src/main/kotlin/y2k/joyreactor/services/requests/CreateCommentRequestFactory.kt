@@ -14,7 +14,7 @@ class CreateCommentRequestFactory {
 
     fun create(postId: String, commentText: String): Observable<Void> {
         return ObservableUtils.action {
-            HttpClient.getInstance()
+            HttpClient.instance
                     .beginForm()
                     .put("parent_id", commentId ?: "0")
                     .put("post_id", postId)
@@ -27,7 +27,7 @@ class CreateCommentRequestFactory {
     }
 
     private fun getToken(): String {
-        val document = HttpClient.getInstance().getText("http://joyreactor.cc/donate")
+        val document = HttpClient.instance.getText("http://joyreactor.cc/donate")
         val m = TOKEN_REGEX.matcher(document)
         if (!m.find()) throw IllegalStateException()
         return m.group(1)

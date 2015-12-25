@@ -18,7 +18,7 @@ class ProfileRequestFactory {
                 .request()
                 .flatMap({ username ->
                     ObservableUtils.create<Profile> {
-                        val page = HttpClient.getInstance().getDocument(getUrl(username))
+                        val page = HttpClient.instance.getDocument(getUrl(username))
                         ProfileParser(page).parse()
                     }
                 })

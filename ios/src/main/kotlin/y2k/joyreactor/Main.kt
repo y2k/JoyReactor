@@ -16,7 +16,7 @@ class Main : UIApplicationDelegateAdapter() {
     override fun didFinishLaunching(application: UIApplication?, launchOptions: UIApplicationLaunchOptions?): Boolean {
         Platform.Instance = PlatformImpl()
         ForegroundScheduler.setInstance(DispatchQueueSchedulerFactory().make())
-        HttpClient.setInstance(NetworkActivityIndicatorHttpClient())
+        HttpClient.instance = NetworkActivityIndicatorHttpClient()
         return true
     }
 

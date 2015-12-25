@@ -23,7 +23,7 @@ class ProfileService(
     }
 
     fun logout(): Observable<Void> {
-        return ObservableUtils.create { HttpClient.getInstance().clearCookies() }
+        return ObservableUtils.create { HttpClient.instance.clearCookies() }
     }
 
     fun isAuthorized(): Observable<Boolean> {

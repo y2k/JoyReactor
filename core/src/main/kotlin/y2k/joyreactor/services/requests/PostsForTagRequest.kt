@@ -29,7 +29,7 @@ class PostsForTagRequest private constructor(tagId: Tag, pageId: String?) {
     }
 
     fun request() {
-        val doc = HttpClient.getInstance().getDocument(url)
+        val doc = HttpClient.instance.getDocument(url)
 
         posts = ArrayList<Post>()
         for (e in doc.select("div.postContainer"))

@@ -33,7 +33,7 @@ class TagImageRequest {
     }
 
     private fun getFromWeb(tag: String): String {
-        val doc = HttpClient.getInstance().getDocument("http://joyreactor.cc/tag/" + URLEncoder.encode(tag))
+        val doc = HttpClient.instance.getDocument("http://joyreactor.cc/tag/" + URLEncoder.encode(tag))
         val result = doc.select("img.blog_avatar").first().attr("src")
         println("Not found in cache | $tag | $result")
         return result

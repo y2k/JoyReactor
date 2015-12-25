@@ -13,9 +13,9 @@ class AddTagRequest(private val tagName: String) {
     fun request(): Observable<Void> {
         return ObservableUtils.action {
             val tagUrl = "http://joyreactor.cc/tag/" + URLEncoder.encode(tagName)
-            val tagPage = HttpClient.getInstance().getDocument(tagUrl)
+            val tagPage = HttpClient.instance.getDocument(tagUrl)
             val addTagLink = tagPage.select("a.change_favorite_link").first().absUrl("href")
-            HttpClient.getInstance().getText(addTagLink)
+            HttpClient.instance.getText(addTagLink)
         }
     }
 }

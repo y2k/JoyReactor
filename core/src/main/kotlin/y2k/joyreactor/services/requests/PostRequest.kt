@@ -24,7 +24,7 @@ class PostRequest {
         get() = commentsRequest.comments
 
     fun request(postId: String) {
-        val page = HttpClient.getInstance().getDocument(getPostUrl(postId))
+        val page = HttpClient.instance.getDocument(getPostUrl(postId))
 
         val postNode = page.select("div.postContainer").first()
         post = PostsForTagRequest.newPost(postNode) // TODO:

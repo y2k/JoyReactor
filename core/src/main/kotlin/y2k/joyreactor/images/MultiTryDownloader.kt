@@ -39,7 +39,7 @@ internal class MultiTryDownloader(private val dir: File, private val url: String
         var result: File? = null
         try {
             result = File.createTempFile("download_", null, dir)
-            HttpClient.getInstance().downloadToFile(url, result, null)
+            HttpClient.instance.downloadToFile(url, result, null)
             return result
         } catch (e: IOException) {
             if (result != null) result.delete()

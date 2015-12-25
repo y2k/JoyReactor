@@ -11,7 +11,7 @@ class LoginRequestFactory {
 
     fun request(username: String, password: String): Observable<Void> {
         return ObservableUtils.action {
-            val doc = HttpClient.getInstance()
+            val doc = HttpClient.instance
                     .beginForm()
                     .put("signin[username]", username)
                     .put("signin[password]", password)
@@ -28,7 +28,7 @@ class LoginRequestFactory {
     }
 
     private fun getCsrf(): String {
-        val document = HttpClient.getInstance().getDocument("http://joyreactor.cc/login")
+        val document = HttpClient.instance.getDocument("http://joyreactor.cc/login")
         return document.getElementById("signin__csrf_token").attr("value")
     }
 }

@@ -11,7 +11,7 @@ class SendMessageRequest(private val username: String) {
 
     fun request(message: String): Observable<Void> {
         return ObservableUtils.action {
-            HttpClient.getInstance()
+            HttpClient.instance
                     .beginForm()
                     .put("username", username)
                     .put("text", message)

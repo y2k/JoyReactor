@@ -16,7 +16,7 @@ class TagsForUserRequest(private val username: String) {
 
     fun request(): Observable<List<Tag>> {
         return ObservableUtils.func <List<Tag>> {
-            val document = HttpClient.getInstance()
+            val document = HttpClient.instance
                     .getDocument("http://joyreactor.cc/user/" + username)
             val tags = ArrayList<Tag>()
             for (h in document.select(".sideheader")) {

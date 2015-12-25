@@ -20,7 +20,7 @@ class OriginalImageRequestFactory {
             val file = File(Platform.Instance.currentDirectory, "" + imageUrl.hashCode() + "." + getExtension(imageUrl))
             if (!file.exists()) {
                 try {
-                    HttpClient.getInstance().downloadToFile(imageUrl, file, null)
+                    HttpClient.instance.downloadToFile(imageUrl, file, null)
                 } catch (e: Exception) {
                     file.delete()
                     throw e
@@ -37,9 +37,9 @@ class OriginalImageRequestFactory {
             if (file.exists()) subscriber.onNext(PartialResult.complete(file))
 
             try {
-                HttpClient.getInstance().downloadToFile(imageUrl, file) {
+                HttpClient.instance.downloadToFile(imageUrl, file) {
                     progress, max ->
-                    subscriber.onNext(PartialResult.inProgress<File>(progress!!, max!!))
+                    subscriber.onNext(PartialResult.inProgress<File>(progress, max))
                 }
                 subscriber.onNext(PartialResult.complete(file))
             } catch (e: Exception) {
