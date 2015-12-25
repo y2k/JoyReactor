@@ -4,9 +4,8 @@ import rx.Observable
 import rx.Subscriber
 import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.http.HttpClient
-
-import java.io.*
-import java.util.concurrent.Executor
+import java.io.File
+import java.io.IOException
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 

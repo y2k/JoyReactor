@@ -2,11 +2,8 @@ package y2k.joyreactor.images
 
 import rx.Observable
 import rx.schedulers.Schedulers
-import y2k.joyreactor.common.Optional
 import y2k.joyreactor.platform.Platform
-
 import java.io.File
-import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
 /**
@@ -18,10 +15,10 @@ internal class DiskCache {
         cacheDirectory.mkdirs()
     }
 
-    operator fun get(url: String): Observable<Optional<File>> {
-        return Observable.create<Optional<File>> { subscriber ->
+    operator fun get(url: String): Observable<File?> {
+        return Observable.create<File?> { subscriber ->
             val file = urlToFile(url)
-            subscriber.onNext(if (file.exists()) Optional.of(file) else Optional.empty<File>())
+            subscriber.onNext(if (file.exists()) file else null)
             subscriber.onCompleted()
         }.subscribeOn(Schedulers.from(DISK_EXECUTOR))
     }

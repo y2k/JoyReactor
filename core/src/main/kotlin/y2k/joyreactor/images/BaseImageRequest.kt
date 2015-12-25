@@ -2,10 +2,8 @@ package y2k.joyreactor.images
 
 import rx.Observable
 import rx.Subscription
-import rx.functions.Func1
 import y2k.joyreactor.Image
 import y2k.joyreactor.common.ForegroundScheduler
-import y2k.joyreactor.common.Optional
 import java.io.File
 import java.util.*
 
@@ -40,12 +38,10 @@ abstract class BaseImageRequest<T> {
 
         subscription = fromCache
                 .flatMap({ image ->
-                    if (image.isPresent())
-                        Observable.just<T>(image.get())
-                    else
-                        putToCache()
-                                .flatMap({ s -> fromCache })
-                                .map<T>(Func1<Optional<T>, T> { it.get() })
+                    if (image != null) Observable.just<T>(image)
+                    else putToCache()
+                            .flatMap { s -> fromCache }
+                            .map { it!! }
                 })
                 .observeOn(ForegroundScheduler.getInstance())
                 .filter { s -> sLinks[target] === subscription }
@@ -58,9 +54,8 @@ abstract class BaseImageRequest<T> {
         sLinks.put(target, subscription!!)
     }
 
-    private val fromCache: Observable<Optional<T>>
-        get() = sDiskCache[toURLString()]
-                .map({ optionalFile -> optionalFile.map({ this.decode(it) }) })
+    private val fromCache: Observable<T?>
+        get() = sDiskCache[toURLString()].map({ it?.let { decode(it) } })
 
     private fun putToCache(): Observable<Any> {
         val dir = sDiskCache.cacheDirectory
