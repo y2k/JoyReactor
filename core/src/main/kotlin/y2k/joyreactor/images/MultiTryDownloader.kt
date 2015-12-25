@@ -6,6 +6,8 @@ import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.http.HttpClient
 
 import java.io.*
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 /**
@@ -49,7 +51,7 @@ internal class MultiTryDownloader(private val dir: File, private val url: String
 
     companion object {
 
-        private val DOWNLOAD_EXECUTOR = TaskExecutor(3)
+        private val DOWNLOAD_EXECUTOR = Executors.newFixedThreadPool(3)
         private val MAX_TRY = 5
     }
 }
