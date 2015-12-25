@@ -3,6 +3,7 @@ package y2k.joyreactor.common;
 /**
  * Created by y2k on 11/11/15.
  */
+@Deprecated
 public class ObjectUtils {
 
     @Deprecated
