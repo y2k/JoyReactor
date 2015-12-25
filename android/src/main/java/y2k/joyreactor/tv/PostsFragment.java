@@ -11,6 +11,7 @@ import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.VerticalGridPresenter;
 import android.view.ViewGroup;
+import kotlin.Unit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import y2k.joyreactor.App;
@@ -76,7 +77,10 @@ public class PostsFragment extends VerticalGridFragment {
             new ImageRequest()
                     .setSize(200, 200)
                     .setUrl(p.getImage())
-                    .to(v, bitmap -> v.setMainImage(new RenderDrawable(bitmap, 200, 200)));
+                    .to(v, bitmap -> {
+                        v.setMainImage(new RenderDrawable(bitmap, 200, 200));
+                        return Unit.INSTANCE;
+                    });
         }
 
         @Override

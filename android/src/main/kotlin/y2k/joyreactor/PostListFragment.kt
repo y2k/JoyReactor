@@ -136,9 +136,9 @@ class PostListFragment : Fragment() {
 
                     val height = (200 / i.image!!.getAspect(0.5f)).toInt()
                     ImageRequest()
-                            .setUrl(i.image)
+                            .setUrl(i.image!!)
                             .setSize(200, height)
-                            .to(i.image, { image.setImageBitmap(it) })
+                            .to(i.image!!, { image.setImageBitmap(it) })
                 }
 
                 userImage.setImage(i.getUserImage2().toImage())

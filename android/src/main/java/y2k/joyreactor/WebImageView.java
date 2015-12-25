@@ -3,6 +3,7 @@ package y2k.joyreactor;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+import kotlin.Unit;
 import y2k.joyreactor.common.ObjectUtils;
 import y2k.joyreactor.platform.ImageRequest;
 
@@ -24,7 +25,11 @@ public class WebImageView extends ImageView {
         new ImageRequest()
                 .setSize(getSize(), getSize())
                 .setUrl(image)
-                .to(this, this::setImageBitmap);
+                .to(this, bitmap -> {
+                    setImageBitmap(bitmap);
+                    return Unit.INSTANCE;
+                });
+
     }
 
     private int getSize() {
