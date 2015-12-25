@@ -24,7 +24,7 @@ abstract class BaseImageRequest<T> {
         return this
     }
 
-    fun setUrl(image: Image): BaseImageRequest<T> {
+    fun setUrl(image: Image?): BaseImageRequest<T> {
         this.image = image
         return this
     }

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import kotlin.Unit;
-import y2k.joyreactor.common.ObjectUtils;
 import y2k.joyreactor.platform.ImageRequest;
 
 /**
@@ -19,7 +18,8 @@ public class WebImageView extends ImageView {
     }
 
     public void setImage(Image image) {
-        if (ObjectUtils.equals(this.image, image)) return;
+        if (this.image == image || (image != null && image.equals(this.image))) return;
+
         this.image = image;
 
         new ImageRequest()
