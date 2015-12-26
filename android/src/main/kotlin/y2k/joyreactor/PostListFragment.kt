@@ -21,7 +21,7 @@ import java.util.*
  */
 class PostListFragment : Fragment() {
 
-    private var presenter: PostListPresenter? = null
+    private var presenter: PostListPresenter = ServiceLocator.getInstance().providePostListPresenter(ViewImpl())
     private val adapter = PostAdapter()
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -34,34 +34,33 @@ class PostListFragment : Fragment() {
         list.adapter = adapter
         list.addItemDecoration(ItemDividerDecoration(list))
 
-        presenter = ServiceLocator.getInstance().providePostListPresenter(
-                object : PostListPresenter.View {
-
-                    override fun setBusy(isBusy: Boolean) {
-                        // TODO:
-                    }
-
-                    override fun reloadPosts(posts: List<Post>, divider: Int?) {
-                        adapter.reloadData(posts, divider)
-                    }
-
-                    override fun setHasNewPosts(hasNewPosts: Boolean) {
-                        (getView()!!.findViewById(R.id.apply) as ReloadButton).setVisibility(hasNewPosts)
-                    }
-                })
-
-        view.findViewById(R.id.apply).setOnClickListener { v -> presenter?.applyNew() }
+        view.findViewById(R.id.apply).setOnClickListener { v -> presenter.applyNew() }
         return view
     }
 
     override fun onResume() {
         super.onResume()
-        presenter?.activate()
+        presenter.activate()
     }
 
     override fun onPause() {
         super.onPause()
-        presenter?.deactivate()
+        presenter.deactivate()
+    }
+
+    inner class ViewImpl : PostListPresenter.View {
+
+        override fun setBusy(isBusy: Boolean) {
+            // TODO:
+        }
+
+        override fun reloadPosts(posts: List<Post>, divider: Int?) {
+            adapter.reloadData(posts, divider)
+        }
+
+        override fun setHasNewPosts(hasNewPosts: Boolean) {
+            (view!!.findViewById(R.id.apply) as ReloadButton).setVisibility(hasNewPosts)
+        }
     }
 
     internal inner class PostAdapter : RecyclerView.Adapter<ComplexViewHolder>() {
