@@ -11,28 +11,88 @@ import y2k.joyreactor.platform.ImageRequest;
  */
 public class WebImageView extends ImageView {
 
-    private Image image;
+    private static Image EMPTY = new Image("", 0, 0);
+
+    private Invalidator invalidator = new Invalidator();
 
     public WebImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
+//    @Override
+//    public void setImageBitmap(Bitmap bm) {
+//        if (bm != null) Log.i("WebImageView", "Bitmap = " + bm.getWidth() + " x " + bm.getHeight());
+//        super.setImageBitmap(bm);
+//    }
+
     public void setImage(Image image) {
-        if (this.image == image || (image != null && image.equals(this.image))) return;
-
-        this.image = image;
-
-        new ImageRequest()
-                .setSize(getSize(), getSize())
-                .setUrl(image)
-                .to(this, bitmap -> {
-                    setImageBitmap(bitmap);
-                    return Unit.INSTANCE;
-                });
-
+        invalidator.invalidateStateChanges(image == null ? EMPTY : image);
     }
 
-    private int getSize() {
-        return (int) (getLayoutParams().width * getResources().getDisplayMetrics().density);
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        invalidator.invalidateStateChanges(null);
+    }
+
+    private class Invalidator {
+
+        private Image image;
+        private int lastWidth;
+        private int lastHeight;
+
+        public void invalidateStateChanges(Image newImage) {
+            if (newImage == EMPTY) {
+                invalidateToEmpty();
+            } else {
+                if (newImage == null) invalidateOnChangeSize();
+                else invalidateOnImageChanged(newImage);
+            }
+        }
+
+        private void invalidateToEmpty() {
+            if (this.image == EMPTY) return;
+            setImageDrawable(null);
+            new ImageRequest()
+                    .setUrl(null)
+                    .to(this, bitmap -> Unit.INSTANCE);
+        }
+
+        private void invalidateOnChangeSize() {
+            if (image == null) return;
+            if (lastWidth == getWidth() && lastHeight == getHeight()) return;
+
+            lastWidth = getWidth();
+            lastHeight = getHeight();
+
+            setImageDrawable(null);
+            new ImageRequest()
+                    .setUrl(image)
+                    .setSize(lastWidth, lastHeight)
+                    .to(this, bitmap -> {
+                        setImageBitmap(bitmap);
+                        return Unit.INSTANCE;
+                    });
+        }
+
+        private void invalidateOnImageChanged(Image newImage) {
+            if (image != null && image.equals(newImage)) return;
+
+            image = newImage;
+
+            if (lastWidth == 0 || lastHeight == 0) return;
+
+            lastWidth = getWidth();
+            lastHeight = getHeight();
+
+            setImageDrawable(null);
+            new ImageRequest()
+                    .setUrl(image)
+                    .setSize(lastWidth, lastHeight)
+                    .to(this, bitmap -> {
+                        setImageBitmap(bitmap);
+                        return Unit.INSTANCE;
+                    });
+        }
     }
 }

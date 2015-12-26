@@ -10,9 +10,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import org.ocpsoft.prettytime.PrettyTime
 import y2k.joyreactor.common.ComplexViewHolder
-import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.common.ItemDividerDecoration
-import y2k.joyreactor.platform.ImageRequest
+import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.presenters.PostListPresenter
 import java.util.*
 
@@ -119,8 +118,8 @@ class PostListFragment : Fragment() {
                 time = itemView.findViewById(R.id.time) as TextView
                 userName = itemView.findViewById(R.id.userName) as TextView
 
-                itemView.findViewById(R.id.card).setOnClickListener { v -> presenter?.postClicked(posts[adapterPosition]) }
-                itemView.findViewById(R.id.videoMark).setOnClickListener { v -> presenter?.playClicked(posts[adapterPosition]) }
+                itemView.findViewById(R.id.card).setOnClickListener { v -> presenter.postClicked(posts[adapterPosition]) }
+                itemView.findViewById(R.id.videoMark).setOnClickListener { v -> presenter.playClicked(posts[adapterPosition]) }
             }
 
             override fun bind() {
@@ -131,12 +130,7 @@ class PostListFragment : Fragment() {
                 } else {
                     imagePanel.visibility = View.VISIBLE
                     imagePanel.setAspect(i.image!!.getAspect(0.5f))
-
-                    val height = (200 / i.image!!.getAspect(0.5f)).toInt()
-                    ImageRequest()
-                            .setUrl(i.image!!)
-                            .setSize(200, height)
-                            .to(i.image!!, { image.setImageBitmap(it) })
+                    image.setImage(i.image)
                 }
 
                 userImage.setImage(i.getUserImage2().toImage())
