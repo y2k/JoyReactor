@@ -36,7 +36,7 @@ class Image(
 
         return URL(
                 "http", "api-i-twister.net", 8010,
-                "/cache/fit?bgColor=ffffff&width=$width&height=$height&url=$url")
+                "/cache/fit?quality=30&bgColor=ffffff&width=$width&height=$height&url=$url")
     }
 
     private fun getFormatPart(format: String?): String {

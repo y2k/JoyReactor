@@ -34,7 +34,6 @@ internal class MultiTryDownloader(private val dir: File, private val url: String
         }, (250 shl tryNumber).toLong(), TimeUnit.MILLISECONDS)
     }
 
-    @Throws(IOException::class)
     private fun downloadToTempFile(): File {
         var result: File? = null
         try {
@@ -45,7 +44,6 @@ internal class MultiTryDownloader(private val dir: File, private val url: String
             if (result != null) result.delete()
             throw e
         }
-
     }
 
     companion object {

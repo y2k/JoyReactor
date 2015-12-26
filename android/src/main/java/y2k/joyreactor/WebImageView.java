@@ -19,12 +19,6 @@ public class WebImageView extends ImageView {
         super(context, attrs);
     }
 
-//    @Override
-//    public void setImageBitmap(Bitmap bm) {
-//        if (bm != null) Log.i("WebImageView", "Bitmap = " + bm.getWidth() + " x " + bm.getHeight());
-//        super.setImageBitmap(bm);
-//    }
-
     public void setImage(Image image) {
         invalidator.invalidateStateChanges(image == null ? EMPTY : image);
     }
