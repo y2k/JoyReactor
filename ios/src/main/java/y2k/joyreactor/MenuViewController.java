@@ -1,5 +1,6 @@
 package y2k.joyreactor;
 
+import kotlin.Unit;
 import org.robovm.apple.foundation.NSIndexPath;
 import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
@@ -68,7 +69,10 @@ public class MenuViewController extends UIViewController implements TagListPrese
                 new ImageRequest()
                         .setUrl(i.getImage())
                         .setSize(40, 40)
-                        .to(iv, iv::setImage);
+                        .to(iv, uiImage -> {
+                            iv.setImage(uiImage);
+                            return Unit.INSTANCE;
+                        });
                 ((UILabel) cell.getViewWithTag(2)).setText(i.getTitle());
                 return cell;
             }

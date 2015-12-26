@@ -1,12 +1,14 @@
 package y2k.joyreactor.platform;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function2;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jsoup.nodes.Document;
-import rx.functions.Action2;
 import y2k.joyreactor.NetworkIndicator;
 import y2k.joyreactor.http.HttpClient;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by y2k on 10/13/15.
@@ -16,7 +18,7 @@ public class NetworkActivityIndicatorHttpClient extends HttpClient {
     private NetworkIndicator indicator = new NetworkIndicator();
 
     @Override
-    public Document getDocument(String url) throws IOException {
+    public Document getDocument(String url) {
         try {
             indicator.setEnabled(true);
             return super.getDocument(url);
@@ -26,7 +28,7 @@ public class NetworkActivityIndicatorHttpClient extends HttpClient {
     }
 
     @Override
-    public String getText(String url) throws IOException {
+    public String getText(String url) {
         try {
             indicator.setEnabled(true);
             return super.getText(url);
@@ -36,7 +38,7 @@ public class NetworkActivityIndicatorHttpClient extends HttpClient {
     }
 
     @Override
-    public void downloadToFile(String url, File file, Action2<Integer, Integer> callback) throws IOException {
+    public void downloadToFile(@NotNull String url, @NotNull File file, @Nullable Function2<? super Integer, ? super Integer, ? extends Unit> callback) {
         try {
             indicator.setEnabled(true);
             super.downloadToFile(url, file, callback);

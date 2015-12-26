@@ -1,5 +1,6 @@
 package y2k.joyreactor;
 
+import kotlin.Unit;
 import org.robovm.apple.uikit.UIButton;
 import org.robovm.apple.uikit.UIImageView;
 import org.robovm.apple.uikit.UILabel;
@@ -40,7 +41,10 @@ public class ProfileViewController extends UIViewController implements ProfilePr
         new ImageRequest()
                 .setUrl(profile.getUserImage())
                 .setSize((int) userImage.getFrame().getWidth(), (int) userImage.getFrame().getHeight())
-                .to(userImage, userImage::setImage);
+                .to(userImage, uiImage -> {
+                    userImage.setImage(uiImage);
+                    return Unit.INSTANCE;
+                });
         rating.setText(Translator.get("Rating: ") + profile.getRating());
         stars.setStars(profile.getStars());
         progressToNewStar.setValue(profile.getProgressToNewStar());

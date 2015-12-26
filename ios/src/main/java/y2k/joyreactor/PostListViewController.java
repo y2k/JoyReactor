@@ -1,5 +1,6 @@
 package y2k.joyreactor;
 
+import kotlin.Unit;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.robovm.apple.foundation.NSIndexPath;
 import org.robovm.apple.uikit.*;
@@ -138,6 +139,7 @@ public class PostListViewController extends UIViewController implements PostList
                     .to(iv, data -> {
                         iv.setImage(data);
                         UIView.animate(0.3, () -> iv.setAlpha(1));
+                        return Unit.INSTANCE;
                     });
         }
     }

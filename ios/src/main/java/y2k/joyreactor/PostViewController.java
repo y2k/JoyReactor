@@ -1,5 +1,6 @@
 package y2k.joyreactor;
 
+import kotlin.Unit;
 import org.robovm.apple.foundation.NSIndexPath;
 import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
@@ -151,7 +152,10 @@ public class PostViewController extends UIViewController implements PostPresente
                     new ImageRequest()
                             .setUrl(post.getImage())
                             .setSize(300, (int) (300 / image.getAspect()))
-                            .to(iv, iv::setImage);
+                            .to(iv, uiImage -> {
+                                iv.setImage(uiImage);
+                                return Unit.INSTANCE;
+                            });
                 }
             }
             return cell;
@@ -168,7 +172,10 @@ public class PostViewController extends UIViewController implements PostPresente
             new ImageRequest()
                     .setUrl(item.getUserImage().toImage())
                     .setSize((int) iv.getFrame().getWidth(), (int) iv.getFrame().getHeight())
-                    .to(iv, iv::setImage);
+                    .to(iv, uiImage -> {
+                        iv.setImage(uiImage);
+                        return Unit.INSTANCE;
+                    });
 
             ((UILabel) cell.getViewWithTag(3)).setText("" + item.replies);
             ((UILabel) cell.getViewWithTag(4)).setText("" + item.rating);
