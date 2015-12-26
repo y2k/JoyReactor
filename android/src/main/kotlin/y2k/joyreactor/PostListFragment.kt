@@ -12,7 +12,6 @@ import org.ocpsoft.prettytime.PrettyTime
 import y2k.joyreactor.common.ComplexViewHolder
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.common.ItemDividerDecoration
-import y2k.joyreactor.common.Optional
 import y2k.joyreactor.platform.ImageRequest
 import y2k.joyreactor.presenters.PostListPresenter
 import java.util.*
