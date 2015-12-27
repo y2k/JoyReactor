@@ -27,6 +27,7 @@ class ProfileService(
     }
 
     fun isAuthorized(): Observable<Boolean> {
-        return profileRequestFactory.request().map { true }
+        return profileRequestFactory.request()
+                .map { true }.onErrorReturn { false }
     }
 }
