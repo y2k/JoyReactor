@@ -32,6 +32,12 @@ class DataContext {
 
     class Factory {
 
+        fun <T> apply(callback: DataContext.() -> T): Observable<T> {
+            return ObservableUtils.func(executor, Callable {
+                innerMakeDataContext().callback();
+            })
+        }
+
         fun <T> use(callback: (DataContext) -> T): Observable<T> {
             return ObservableUtils.func(executor, Callable {
                 callback(innerMakeDataContext())

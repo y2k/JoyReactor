@@ -7,6 +7,7 @@ import y2k.joyreactor.Post
 import y2k.joyreactor.SimilarPost
 import y2k.joyreactor.common.ObservableUtils
 import y2k.joyreactor.common.PartialResult
+import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.OriginalImageRequestFactory
 import y2k.joyreactor.services.requests.PostRequest
 import java.io.File
@@ -17,7 +18,8 @@ import java.util.*
  */
 class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
                   private val postRequest: PostRequest,
-                  private val buffer: MemoryBuffer) {
+                  private val buffer: MemoryBuffer,
+                  private val dataContext: DataContext.Factory) {
 
     fun synchronizePostAsync(postId: String): Observable<Post> {
         return ObservableUtils.func {
@@ -55,7 +57,7 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
     }
 
     fun getFromCache(postId: String): Observable<Post> {
-        return Observable.just(buffer.post)
+        return dataContext.apply { Posts.first { it.serverId == postId } }
     }
 
     fun getPostImages(postId: Long): Observable<List<Image>> {

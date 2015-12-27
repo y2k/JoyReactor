@@ -80,7 +80,8 @@ public class ServiceLocator {
         return new PostService(
                 provideImageRequestFactory(),
                 resolvePostRequest(),
-                resolveMemoryBuffer());
+                resolveMemoryBuffer(),
+                resolveDataContextFactory());
     }
 
     private TagListService provideTagsService() {
