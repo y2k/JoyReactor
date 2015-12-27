@@ -32,10 +32,10 @@ class Image(
 
     private fun toURL(width: Int, height: Int, format: String?): URL {
         if (width == 0 || height == 0)
-            return URL("http", "api-i-twister.net", 8010, "/cache/original?url=" + url + getFormatPart(format))
+                return URL("https", "api-i-twister.net", 8011, "/cache/original?url=" + url + getFormatPart(format))
 
         return URL(
-                "http", "api-i-twister.net", 8010,
+                "https", "api-i-twister.net", 8011,
                 "/cache/fit?quality=30&bgColor=ffffff&width=$width&height=$height&url=$url")
     }
 
