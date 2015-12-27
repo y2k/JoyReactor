@@ -25,8 +25,8 @@ import java.util.Collections
 
 class PostActivity : AppCompatActivity() {
 
-    val presenter: PostPresenter = ServiceLocator.getInstance().providePostPresenter(ViewImpl())
-    val adapter: Adapter = Adapter()
+    val presenter = ServiceLocator.getInstance().providePostPresenter(ViewImpl())
+    val adapter = Adapter()
 
     var imagePath: File? = null
 
@@ -38,6 +38,7 @@ class PostActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         val list = findViewById(R.id.list) as RecyclerView
+        list.adapter = adapter
         list.layoutManager = LinearLayoutManager(this)
 
         val createComment = findViewById(R.id.createComment)
