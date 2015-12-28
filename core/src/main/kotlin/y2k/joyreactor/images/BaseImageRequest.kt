@@ -73,6 +73,8 @@ abstract class BaseImageRequest<T> {
     companion object {
 
         private val sDiskCache = DiskCache()
+
+        // FIXME: утечка активити в этом поле
         private val sLinks = HashMap<Any, Subscription>()
     }
 }
