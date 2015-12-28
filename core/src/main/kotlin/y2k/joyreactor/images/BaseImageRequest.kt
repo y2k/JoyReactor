@@ -14,7 +14,7 @@ abstract class BaseImageRequest<T> {
 
     private var subscription: Subscription? = null
 
-    private var image: Image?
+    private var image: Image? = null
     private var width: Int? = null
     private var height: Int? = null
 
