@@ -31,7 +31,7 @@ internal class MultiTryDownloader(private val dir: File, private val url: String
                         downloadAsync(tryNumber + 1, subscriber)
                 }
             }
-        }, (250 shl tryNumber).toLong(), TimeUnit.MILLISECONDS)
+        }, 250L shl tryNumber, TimeUnit.MILLISECONDS)
     }
 
     private fun downloadToTempFile(): File {

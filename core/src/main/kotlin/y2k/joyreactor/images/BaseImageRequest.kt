@@ -36,12 +36,10 @@ abstract class BaseImageRequest<T> {
             return
         }
 
-        subscription = fromCache
+        subscription = getFromCache()
                 .flatMap({ image ->
                     if (image != null) Observable.just<T>(image)
-                    else putToCache()
-                            .flatMap { s -> fromCache }
-                            .map { it!! }
+                    else putToCache().flatMap { getFromCache() }
                 })
                 .observeOn(ForegroundScheduler.getInstance())
                 .filter { s -> sLinks[target] === subscription }
@@ -54,8 +52,9 @@ abstract class BaseImageRequest<T> {
         sLinks.put(target, subscription!!)
     }
 
-    private val fromCache: Observable<T?>
-        get() = sDiskCache[toURLString()].map({ it?.let { decode(it) } })
+    private fun getFromCache(): Observable<T?> {
+        return sDiskCache[toURLString()].map({ it?.let { decode(it) } })
+    }
 
     private fun putToCache(): Observable<Any> {
         val dir = sDiskCache.cacheDirectory
