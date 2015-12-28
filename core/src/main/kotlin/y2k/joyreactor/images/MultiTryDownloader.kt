@@ -25,7 +25,7 @@ internal class MultiTryDownloader(private val dir: File, private val url: String
                     subscriber.onNext(downloadToTempFile())
                     subscriber.onCompleted()
                 } catch (e: Exception) {
-                    if (tryNumber > MAX_TRY)
+                    if (tryNumber >= MAX_RETRY)
                         subscriber.onError(e)
                     else
                         downloadAsync(tryNumber + 1, subscriber)
@@ -49,6 +49,6 @@ internal class MultiTryDownloader(private val dir: File, private val url: String
     companion object {
 
         private val DOWNLOAD_EXECUTOR = Executors.newFixedThreadPool(3)
-        private val MAX_TRY = 5
+        private val MAX_RETRY = 5
     }
 }
