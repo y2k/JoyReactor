@@ -42,7 +42,7 @@ abstract class BaseImageRequest<T> {
                     else putToCache().flatMap { getFromCache() }
                 })
                 .observeOn(ForegroundScheduler.getInstance())
-                .filter { s -> sLinks[target] === subscription }
+                .filter { sLinks[target] === subscription }
                 .subscribe(
                         { callback(it) },
                         { it.printStackTrace() },
