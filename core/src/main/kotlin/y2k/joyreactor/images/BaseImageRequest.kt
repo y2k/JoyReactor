@@ -43,10 +43,13 @@ abstract class BaseImageRequest<T> {
                 })
                 .observeOn(ForegroundScheduler.getInstance())
                 .filter { sLinks[target] === subscription }
-                .subscribe(
-                        { callback(it) },
-                        { it.printStackTrace() },
-                        { sLinks.remove(target) })
+                .subscribe({
+                    callback(it);
+                    sLinks.remove(target)
+                }, {
+                    it.printStackTrace();
+                    sLinks.remove(target)
+                })
 
         callback(null)
         sLinks.put(target, subscription!!)
