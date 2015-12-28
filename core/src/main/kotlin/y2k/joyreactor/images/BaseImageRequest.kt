@@ -14,9 +14,9 @@ abstract class BaseImageRequest<T> {
 
     private var subscription: Subscription? = null
 
-    private var image: Image? = null
-    private var width: Int = 0
-    private var height: Int = 0
+    private var image: Image?
+    private var width: Int? = null
+    private var height: Int? = null
 
     open fun setSize(width: Int, height: Int): BaseImageRequest<T> {
         this.width = width

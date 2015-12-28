@@ -16,13 +16,13 @@ class Image(
 
     fun fullUrl(format: String?): String {
         try {
-            return toURL(0, 0, format).toString()
+            return toURL(null, null, format).toString()
         } catch (e: MalformedURLException) {
             throw RuntimeException(e)
         }
     }
 
-    fun thumbnailUrl(width: Int, height: Int): String {
+    fun thumbnailUrl(width: Int?, height: Int?): String {
         try {
             return toURL(width, height, null).toString()
         } catch (e: MalformedURLException) {
@@ -30,9 +30,9 @@ class Image(
         }
     }
 
-    private fun toURL(width: Int, height: Int, format: String?): URL {
-        if (width == 0 || height == 0)
-                return URL("https", "api-i-twister.net", 8011, "/cache/original?url=" + url + getFormatPart(format))
+    private fun toURL(width: Int?, height: Int?, format: String?): URL {
+        if (width == null || height == null)
+            return URL("https", "api-i-twister.net", 8011, "/cache/original?url=" + url + getFormatPart(format))
 
         return URL(
                 "https", "api-i-twister.net", 8011,
