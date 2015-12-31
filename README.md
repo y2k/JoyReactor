@@ -29,3 +29,5 @@ JoyReactor
 * Галерея картинок поста
 
 [1] В связи с отказом Microsoft поддерживать Android приложения, версия для Windows Phone 10 пока в подвешенном состояние.
+
+<img src="/_web/powered_by.png" alt="Powered by" />
