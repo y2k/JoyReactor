@@ -3,6 +3,7 @@ package y2k.joyreactor.services
 import rx.Observable
 import y2k.joyreactor.Post
 import y2k.joyreactor.Tag
+import y2k.joyreactor.common.peek
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.PostsForTagRequest
 import y2k.joyreactor.services.synchronizers.PostMerger
@@ -11,11 +12,15 @@ import y2k.joyreactor.services.synchronizers.PostMerger
  * Created by y2k on 11/24/15.
  */
 class TagService(private val dataContext: DataContext.Factory,
-                 private val requestFactory: PostsForTagRequest.Factory) {
+                 private val postsRequest: PostsForTagRequest) {
 
-    private var tag: Tag? = null
+    private lateinit var tag: Tag
     private var merger: PostMerger? = null
-    private var request: PostsForTagRequest? = null
+
+    private @Volatile lateinit var lastPage: PostsForTagRequest.Data
+
+    val divider: Int?
+        get() = merger?.divider
 
     fun setTag(tag: Tag) {
         this.tag = tag
@@ -23,45 +28,41 @@ class TagService(private val dataContext: DataContext.Factory,
     }
 
     fun preloadNewPosts(): Observable<Boolean> {
-        request = getPostsForTagRequest()
-        return request!!
-                .requestAsync()
-                .flatMap { merger!!.isUnsafeUpdate(request!!.getPosts()) }
-    }
-
-    private fun getPostsForTagRequest(pageId: String? = null): PostsForTagRequest {
-        return requestFactory.make(tag!!, pageId)
+        return requestAsync().flatMap { merger!!.isUnsafeUpdate(it.posts) }
     }
 
     fun applyNew(): Observable<List<Post>> {
         return merger!!
-                .mergeFirstPage(request!!.getPosts())
-                .flatMap({ s -> getFromRepository() })
+            .mergeFirstPage(lastPage.posts)
+            .flatMap { getFromRepository() }
     }
 
-    val divider: Int?
-        get() = merger?.divider
-
     fun loadNextPage(): Observable<List<Post>> {
-        request = getPostsForTagRequest(request!!.nextPageId)
-        return request!!.requestAsync()
-                .flatMap { s -> merger!!.mergeNextPage(request!!.getPosts()) }
-                .flatMap({ s -> getFromRepository() })
+        return requestAsync(lastPage.nextPage)
+            .flatMap { merger!!.mergeNextPage(it.posts) }
+            .flatMap { getFromRepository() }
     }
 
     fun reloadFirstPage(): Observable<List<Post>> {
-        request = getPostsForTagRequest(null)
-        return request!!.requestAsync()
-                .flatMap {
-                    dataContext.use { entities ->
+        return requestAsync()
+            .flatMap { data ->
+                dataContext
+                    .use { entities ->
                         entities.TagPosts
-                                .filter { it.tagId == tag!!.id }
-                                .forEach { entities.TagPosts.remove(it) }
+                            .filter { it.tagId == tag.id }
+                            .forEach { entities.TagPosts.remove(it) }
                         entities.saveChanges()
                     }
-                }
-                .flatMap { merger!!.mergeFirstPage(request!!.getPosts()) }
-                .flatMap({ s -> getFromRepository() })
+                    .map { data }
+            }
+            .flatMap { merger!!.mergeFirstPage(it.posts) }
+            .flatMap { getFromRepository() }
+    }
+
+    fun requestAsync(page: String? = null): Observable<PostsForTagRequest.Data> {
+        return postsRequest
+            .requestAsync(tag, page)
+            .peek { lastPage = it }
     }
 
     fun queryAsync(): Observable<List<Post>> {
@@ -71,8 +72,8 @@ class TagService(private val dataContext: DataContext.Factory,
     private fun getFromRepository(): Observable<List<Post>> {
         return dataContext.use { entities ->
             entities.TagPosts
-                    .filter { it.tagId == tag!!.id }
-                    .map { link -> entities.Posts.first { it.id == link.postId } }
+                .filter { it.tagId == tag!!.id }
+                .map { link -> entities.Posts.first { it.id == link.postId } }
         }
     }
 }

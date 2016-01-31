@@ -2,10 +2,10 @@ package y2k.joyreactor.services.requests
 
 import org.jsoup.nodes.Element
 import rx.Observable
+import rx.schedulers.Schedulers
 import y2k.joyreactor.Image
 import y2k.joyreactor.Post
 import y2k.joyreactor.Tag
-import y2k.joyreactor.common.ObservableUtils
 import y2k.joyreactor.http.HttpClient
 import java.util.*
 import java.util.regex.Pattern
@@ -13,34 +13,22 @@ import java.util.regex.Pattern
 /**
  * Created by y2k on 9/26/15.
  */
-class PostsForTagRequest private constructor(tagId: Tag, pageId: String?) {
+class PostsForTagRequest {
 
-    var nextPageId: String? = null
-        private set
-    private var posts: ArrayList<Post> = ArrayList()
-    private val url: String
+    fun requestAsync(tagId: Tag, pageId: String? = null): Observable<Data> {
+        return Observable
+            .fromCallable {
+                val url = UrlBuilder().build(tagId, pageId)
+                val doc = HttpClient.instance.getDocument(url)
 
-    init {
-        url = UrlBuilder().build(tagId, pageId)
-    }
+                val posts = ArrayList<Post>()
+                for (e in doc.select("div.postContainer"))
+                    posts.add(newPost(e))
 
-    fun requestAsync(): Observable<Void> {
-        return ObservableUtils.action { this.request() }
-    }
-
-    fun request() {
-        val doc = HttpClient.instance.getDocument(url)
-
-        posts = ArrayList<Post>()
-        for (e in doc.select("div.postContainer"))
-            posts.add(newPost(e))
-
-        val next = doc.select("a.next").first()
-        if (next != null) nextPageId = extractNumberFromEnd(next.attr("href"))
-    }
-
-    fun getPosts(): List<Post> {
-        return posts
+                val next = doc.select("a.next").first()
+                Data(posts, next?.let { extractNumberFromEnd(next.attr("href")) })
+            }
+            .subscribeOn(Schedulers.io())
     }
 
     internal class PostParser(private val element: Element) {
@@ -79,12 +67,12 @@ class PostsForTagRequest private constructor(tagId: Tag, pageId: String?) {
             val img = element.select("div.post_content img").first()
             if (img != null && img.hasAttr("width")) {
                 post.image = Image(
-                        if (hasFull(img))
-                            img.parent().attr("href").replace("(/full/).+(-\\d+\\.)".toRegex(), "$1$2")
-                        else
-                            img.attr("src").replace("(/post/).+(-\\d+\\.)".toRegex(), "$1$2"),
-                        Integer.parseInt(img.attr("width")),
-                        Integer.parseInt(img.attr("height")))
+                    if (hasFull(img))
+                        img.parent().attr("href").replace("(/full/).+(-\\d+\\.)".toRegex(), "$1$2")
+                    else
+                        img.attr("src").replace("(/post/).+(-\\d+\\.)".toRegex(), "$1$2"),
+                    Integer.parseInt(img.attr("width")),
+                    Integer.parseInt(img.attr("height")))
             }
         }
 
@@ -102,9 +90,9 @@ class PostsForTagRequest private constructor(tagId: Tag, pageId: String?) {
             val m = SRC_PATTERN.matcher(iframe.attr("src"))
             if (!m.find()) throw IllegalStateException(iframe.attr("src"))
             post.image = Image(
-                    "http://img.youtube.com/vi/" + m.group(1) + "/0.jpg",
-                    Integer.parseInt(iframe.attr("width")),
-                    Integer.parseInt(iframe.attr("height")))
+                "http://img.youtube.com/vi/" + m.group(1) + "/0.jpg",
+                Integer.parseInt(iframe.attr("width")),
+                Integer.parseInt(iframe.attr("height")))
         }
 
         companion object {
@@ -120,9 +108,9 @@ class PostsForTagRequest private constructor(tagId: Tag, pageId: String?) {
 
             try {
                 post.image = Image(
-                        element.select("span.video_gif_holder > a").first().attr("href").replace("(/post/).+(-)".toRegex(), "$1$2"),
-                        Integer.parseInt(video.attr("width")),
-                        Integer.parseInt(video.attr("height")))
+                    element.select("span.video_gif_holder > a").first().attr("href").replace("(/post/).+(-)".toRegex(), "$1$2"),
+                    Integer.parseInt(video.attr("width")),
+                    Integer.parseInt(video.attr("height")))
             } catch (e: Exception) {
                 println("ELEMENT | " + video)
                 throw e
@@ -131,12 +119,7 @@ class PostsForTagRequest private constructor(tagId: Tag, pageId: String?) {
         }
     }
 
-    class Factory {
-
-        fun make(tagId: Tag, pageId: String?): PostsForTagRequest {
-            return PostsForTagRequest(tagId, pageId)
-        }
-    }
+    class Data(val posts: List<Post>, val nextPage: String?)
 
     companion object {
 

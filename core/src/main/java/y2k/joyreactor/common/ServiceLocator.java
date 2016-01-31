@@ -72,50 +72,46 @@ public class ServiceLocator {
 
     private TagService provideTagService() {
         return new TagService(
-                resolveDataContextFactory(),
-                resolvePostsForTagRequestFactory());
+            resolveDataContextFactory(),
+            new PostsForTagRequest());
     }
 
     private PostService providePostService() {
         return new PostService(
-                provideImageRequestFactory(),
-                resolvePostRequest(),
-                resolveMemoryBuffer(),
-                resolveDataContextFactory());
+            provideImageRequestFactory(),
+            resolvePostRequest(),
+            resolveMemoryBuffer(),
+            resolveDataContextFactory());
     }
 
     private TagListService provideTagsService() {
         return new TagListService(
-                resolveDataContextFactory(),
-                provideMyTagSynchronizer());
+            resolveDataContextFactory(),
+            provideMyTagSynchronizer());
     }
 
     private CommentService provideCommentService() {
         return new CommentService(
-                provideCreateCommentRequestFactory(),
-                resolvePostRequest(),
-                resolveMemoryBuffer());
+            provideCreateCommentRequestFactory(),
+            resolvePostRequest(),
+            resolveMemoryBuffer());
     }
 
     private ProfileService provideProfileService() {
         return new ProfileService(
-                provideProfileRequestFactory(),
-                provideLoginRequestFactory());
+            provideProfileRequestFactory(),
+            provideLoginRequestFactory());
     }
 
     private MessageService provideMessageService() {
         return new MessageService(
-                providePrivateMessageSynchronizer(),
-                resolveMemoryBuffer());
+            providePrivateMessageSynchronizer(),
+            resolveMemoryBuffer());
     }
 
     // ==========================================
     // Models
     // ==========================================
-
-    private PostsForTagRequest.Factory resolvePostsForTagRequestFactory() {
-        return new PostsForTagRequest.Factory();
-    }
 
     private PostRequest resolvePostRequest() {
         return new PostRequest();
@@ -147,8 +143,8 @@ public class ServiceLocator {
 
     private PrivateMessageFetcher providePrivateMessageSynchronizer() {
         return new PrivateMessageFetcher(
-                provideMessageListRequest(),
-                resolveMemoryBuffer());
+            provideMessageListRequest(),
+            resolveMemoryBuffer());
     }
 
     private MessageListRequest provideMessageListRequest() {
