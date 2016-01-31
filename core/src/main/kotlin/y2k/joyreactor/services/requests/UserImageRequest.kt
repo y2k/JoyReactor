@@ -3,9 +3,9 @@ package y2k.joyreactor.services.requests
 /**
  * Created by y2k on 01/10/15.
  */
-class UserImageRequest(private val name: String) {
+class UserImageRequest {
 
-    fun execute(): String? {
+    fun execute(name: String): String? {
         sStorage = IconStorage.get(sStorage, "user.names", "user.icons")
 
         val id = sStorage!!.getImageId(name)

@@ -32,18 +32,18 @@ public class ThreadsFragment extends Fragment {
         View progress = view.findViewById(R.id.progress);
 
         presenter = ServiceLocator.getInstance().provideMessageThreadsPresenter(
-                new MessageThreadsPresenter.View() {
+            new MessageThreadsPresenter.View() {
 
-                    @Override
-                    public void setIsBusy(boolean isBusy) {
-                        progress.setVisibility(isBusy ? View.VISIBLE : View.GONE);
-                    }
+                @Override
+                public void setIsBusy(boolean isBusy) {
+                    progress.setVisibility(isBusy ? View.VISIBLE : View.GONE);
+                }
 
-                    @Override
-                    public void reloadData(List<? extends Message> threads) {
-                        adapter.updateData(threads);
-                    }
-                });
+                @Override
+                public void reloadData(List<Message> threads) {
+                    adapter.updateData(threads);
+                }
+            });
 
         return view;
     }
@@ -60,17 +60,17 @@ public class ThreadsFragment extends Fragment {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             return new ViewHolder(
-                    LayoutInflater.from(parent.getContext())
-                            .inflate(R.layout.item_message_thread, parent, false));
+                LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_message_thread, parent, false));
         }
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             Message t = threads.get(position);
-            holder.userImage.setImage(t.getUserImage().toImage());
-            holder.userName.setText(t.userName);
-            holder.lastMessage.setText(t.text);
-            holder.time.setText("" + t.date);
+            holder.userImage.setImage(t.getUserImageObject().toImage());
+            holder.userName.setText(t.getUserName());
+            holder.lastMessage.setText(t.getText());
+            holder.time.setText("" + t.getDate());
         }
 
         @Override
@@ -94,7 +94,7 @@ public class ThreadsFragment extends Fragment {
                 time = (TextView) view.findViewById(R.id.time);
 
                 view.findViewById(R.id.button).setOnClickListener(
-                        v -> presenter.selectThread(getAdapterPosition()));
+                    v -> presenter.selectThread(getAdapterPosition()));
             }
         }
     }

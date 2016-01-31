@@ -33,7 +33,7 @@ public class MessageFragment extends Fragment implements MessagesPresenter.View 
 
         EditText newMessage = (EditText) view.findViewById(R.id.newMessage);
         view.findViewById(R.id.createMessage)
-                .setOnClickListener(v -> presenter.reply("" + newMessage.getText()));
+            .setOnClickListener(v -> presenter.reply("" + newMessage.getText()));
 
         presenter = ServiceLocator.getInstance().provideMessagesPresenter(this);
         return view;
@@ -52,7 +52,7 @@ public class MessageFragment extends Fragment implements MessagesPresenter.View 
     }
 
     @Override
-    public void updateMessages(List<? extends Message> messages) {
+    public void updateMessages(List<Message> messages) {
         adapter.update(messages);
     }
 
@@ -73,30 +73,30 @@ public class MessageFragment extends Fragment implements MessagesPresenter.View 
         @Override
         public ViewHolderImpl onCreateViewHolder(ViewGroup parent, int viewType) {
             return new ViewHolderImpl(LayoutInflater.from(
-                    parent.getContext()).inflate(viewType, parent, false));
+                parent.getContext()).inflate(viewType, parent, false));
         }
 
         @Override
         public void onBindViewHolder(ViewHolderImpl holder, int position) {
             Message i = items.get(position);
-            holder.message.setText(i.text);
-            holder.created.setText(new PrettyTime().format(i.date));
+            holder.message.setText(i.getText());
+            holder.created.setText(new PrettyTime().format(i.getDate()));
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (items.get(position).isMine)
+            if (items.get(position).isMine())
                 return isFirst(position)
-                        ? R.layout.item_message_outbox_first
-                        : R.layout.item_message_outbox;
+                    ? R.layout.item_message_outbox_first
+                    : R.layout.item_message_outbox;
             return isFirst(position)
-                    ? R.layout.item_message_inbox_first
-                    : R.layout.item_message_inbox;
+                ? R.layout.item_message_inbox_first
+                : R.layout.item_message_inbox;
         }
 
         private boolean isFirst(int position) {
             return position == items.size() - 1
-                    || items.get(position).isMine != items.get(position + 1).isMine;
+                || items.get(position).isMine() != items.get(position + 1).isMine();
         }
 
         @Override

@@ -7,7 +7,8 @@ import java.util.*
 /**
  * Created by y2k on 11/17/15.
  */
-class MessageListRequest {
+class MessageListRequest(
+    private val imageRequest: UserImageRequest) {
 
     fun getMessages(): List<Message> {
         return messages
@@ -23,23 +24,17 @@ class MessageListRequest {
         val document = HttpClient.instance.getDocument(url)
 
         for (s in document.select("div.messages_wr > div.article")) {
-            val m = Message()
-            m.userName = s.select("div.mess_from > a").text()
-            m.userImage = UserImageRequest(m.userName).execute()
-            m.text = s.select("div.mess_text").text()
-            m.date = Date(1000 * java.lang.Long.parseLong(s.select("span[data-time]").attr("data-time")))
-            m.isMine = s.select("div.mess_reply").isEmpty()
-            messages.add(m)
+            val username = s.select("div.mess_from > a").text()
+            messages.add(
+                Message(
+                    s.select("div.mess_text").text(),
+                    Date(1000 * java.lang.Long.parseLong(s.select("span[data-time]").attr("data-time"))),
+                    s.select("div.mess_reply").isEmpty(),
+                    username,
+                    imageRequest.execute(username)))
         }
 
         val nextNode = document.select("a.next").first()
         nextPage = nextNode?.absUrl("href")
-
-        loadUserImages()
-    }
-
-    private fun loadUserImages() {
-        for (m in messages)
-            m.userImage = UserImageRequest(m.userName).execute()
     }
 }

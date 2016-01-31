@@ -32,7 +32,7 @@ public class MessageThreadViewController extends UIViewController implements Mes
             public UITableViewCell getCellForRow(UITableView tableView, NSIndexPath indexPath) {
                 UITableViewCell cell = tableView.dequeueReusableCell("Thread");
                 Message thread = threads.get(indexPath.getRow());
-                cell.getTextLabel().setText(thread.text);
+                cell.getTextLabel().setText(thread.getText());
                 return cell;
             }
         });

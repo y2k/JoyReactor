@@ -150,7 +150,7 @@ public class ServiceLocator {
     }
 
     private MessageListRequest provideMessageListRequest() {
-        return new MessageListRequest();
+        return new MessageListRequest(new UserImageRequest());
     }
 
     private DataContext.Factory resolveDataContextFactory() {

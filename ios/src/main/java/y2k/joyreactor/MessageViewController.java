@@ -36,7 +36,7 @@ public class MessageViewController extends UIViewController implements MessagesP
             public UITableViewCell getCellForRow(UITableView tableView, NSIndexPath indexPath) {
                 UITableViewCell cell = tableView.dequeueReusableCell("Message");
                 Message thread = messages.get(indexPath.getRow());
-                cell.getTextLabel().setText(thread.text);
+                cell.getTextLabel().setText(thread.getText());
                 return cell;
             }
         });
