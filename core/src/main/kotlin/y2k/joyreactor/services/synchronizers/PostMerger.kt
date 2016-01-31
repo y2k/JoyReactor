@@ -4,6 +4,7 @@ import rx.Observable
 import y2k.joyreactor.Post
 import y2k.joyreactor.Tag
 import y2k.joyreactor.TagPost
+import y2k.joyreactor.common.unionOrdered
 import y2k.joyreactor.services.repository.DataContext
 import java.util.*
 
@@ -66,18 +67,19 @@ class PostMerger(
             .flatMap {
                 dataContext.use { entities ->
                     var links = entities.TagPosts.filter { it.tagId == tag.id }
-                    val actualPosts = ArrayList(links.subList(0, divider!!))
-                    val expiredPosts = ArrayList<TagPost>(links.subList(divider!!, links.size))
+                    val actualPosts = links.subList(0, divider!!).toArrayList()
+                    val expiredPosts = links.subList(divider!!, links.size).toArrayList()
 
                     for (p in newPosts) {
                         addIfNew(tag, actualPosts, p)
                         remove(expiredPosts, p)
                     }
                     divider = actualPosts.size
-                    val result = union(actualPosts, expiredPosts)
 
                     links.forEach { entities.TagPosts.remove(it) }
-                    result.forEach { entities.TagPosts.add(it) }
+                    actualPosts
+                        .unionOrdered(expiredPosts)
+                        .forEach { entities.TagPosts.add(it) }
 
                     entities.saveChanges()
                 }
@@ -105,14 +107,9 @@ class PostMerger(
         list.add(TagPost(tag.id, item.id))
     }
 
-    private fun remove(list: ArrayList<TagPost>, item: Post) {
+    private fun remove(list: MutableList<TagPost>, item: Post) {
         val iterator = list.iterator()
         while (iterator.hasNext())
             if (iterator.next().postId == item.id) iterator.remove()
-    }
-
-    private fun union(left: MutableList<TagPost>, right: List<TagPost>): List<TagPost> {
-        left.addAll(right)
-        return left
     }
 }
