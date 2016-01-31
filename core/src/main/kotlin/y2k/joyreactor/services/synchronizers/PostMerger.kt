@@ -10,41 +10,40 @@ import java.util.*
 /**
  * Created by y2k on 10/31/15.
  */
-internal class PostMerger(
-        private val tag: Tag,
-        private val dataContext: DataContext.Factory) {
+class PostMerger(
+    private val dataContext: DataContext.Factory) {
 
     var divider: Int? = null
         private set
 
-    fun mergeFirstPage(newPosts: List<Post>): Observable<Unit> {
+    fun mergeFirstPage(tag: Tag, newPosts: List<Post>): Observable<Unit> {
         return updatePostsAsync(newPosts)
-                .flatMap({
-                    dataContext.use { entities ->
-                        val links = entities.TagPosts.filter { it.tagId == tag.id }
-                        val result = ArrayList<TagPost>()
+            .flatMap {
+                dataContext.use { entities ->
+                    val links = entities.TagPosts.filter { it.tagId == tag.id }
+                    val result = ArrayList<TagPost>()
 
-                        for (s in newPosts)
-                            result.add(TagPost(tag.id, s.id))
-                        for (s in links)
-                            if (result.all { it.postId != s.postId })
-                                result.add(s)
+                    for (s in newPosts)
+                        result.add(TagPost(tag.id, s.id))
+                    for (s in links)
+                        if (result.all { it.postId != s.postId })
+                            result.add(s)
 
-                        divider = newPosts.size
+                    divider = newPosts.size
 
-                        entities.TagPosts
-                                .filter { it.tagId == tag.id }
-                                .forEach { entities.TagPosts.remove(it) }
-                        result.forEach { entities.TagPosts.add(it) }
+                    entities.TagPosts
+                        .filter { it.tagId == tag.id }
+                        .forEach { entities.TagPosts.remove(it) }
+                    result.forEach { entities.TagPosts.add(it) }
 
-                        entities.saveChanges()
-                    }
-                })
+                    entities.saveChanges()
+                }
+            }
     }
 
-    fun isUnsafeUpdate(newPosts: List<Post>): Observable<Boolean> {
+    fun isUnsafeUpdate(tag: Tag, newPosts: List<Post>): Observable<Boolean> {
         return dataContext.use { entities ->
-            val oldPosts = entities.getPostsForTag()
+            val oldPosts = entities.getPostsForTag(tag)
             if (oldPosts.size == 0) return@use false
             if (newPosts.size > oldPosts.size) return@use true
             for (i in newPosts.indices) {
@@ -56,33 +55,33 @@ internal class PostMerger(
         }
     }
 
-    private fun DataContext.getPostsForTag(): List<Post> {
+    private fun DataContext.getPostsForTag(tag: Tag): List<Post> {
         return TagPosts
-                .filter { it.tagId == tag.id }
-                .map { tp -> Posts.first { it.id == tp.postId } }
+            .filter { it.tagId == tag.id }
+            .map { tp -> Posts.first { it.id == tp.postId } }
     }
 
-    fun mergeNextPage(newPosts: List<Post>): Observable<Unit> {
+    fun mergeNextPage(tag: Tag, newPosts: List<Post>): Observable<Unit> {
         return updatePostsAsync(newPosts)
-                .flatMap {
-                    dataContext.use { entities ->
-                        var links = entities.TagPosts.filter { it.tagId == tag.id }
-                        val actualPosts = ArrayList(links.subList(0, divider!!))
-                        val expiredPosts = ArrayList<TagPost>(links.subList(divider!!, links.size))
+            .flatMap {
+                dataContext.use { entities ->
+                    var links = entities.TagPosts.filter { it.tagId == tag.id }
+                    val actualPosts = ArrayList(links.subList(0, divider!!))
+                    val expiredPosts = ArrayList<TagPost>(links.subList(divider!!, links.size))
 
-                        for (p in newPosts) {
-                            addIfNew(actualPosts, p)
-                            remove(expiredPosts, p)
-                        }
-                        divider = actualPosts.size
-                        val result = union(actualPosts, expiredPosts)
-
-                        links.forEach { entities.TagPosts.remove(it) }
-                        result.forEach { entities.TagPosts.add(it) }
-
-                        entities.saveChanges()
+                    for (p in newPosts) {
+                        addIfNew(tag, actualPosts, p)
+                        remove(expiredPosts, p)
                     }
+                    divider = actualPosts.size
+                    val result = union(actualPosts, expiredPosts)
+
+                    links.forEach { entities.TagPosts.remove(it) }
+                    result.forEach { entities.TagPosts.add(it) }
+
+                    entities.saveChanges()
                 }
+            }
     }
 
     private fun updatePostsAsync(newPosts: List<Post>): Observable<Unit> {
@@ -100,7 +99,7 @@ internal class PostMerger(
         }
     }
 
-    private fun addIfNew(list: MutableList<TagPost>, item: Post) {
+    private fun addIfNew(tag: Tag, list: MutableList<TagPost>, item: Post) {
         for (s in list)
             if (s.postId == item.id) return
         list.add(TagPost(tag.id, item.id))

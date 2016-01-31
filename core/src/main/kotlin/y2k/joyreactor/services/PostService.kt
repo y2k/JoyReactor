@@ -57,7 +57,7 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
     }
 
     fun getFromCache(postId: String): Observable<Post> {
-        return dataContext.apply { Posts.first { it.serverId == postId } }
+        return dataContext.applyUse { Posts.first { it.serverId == postId } }
     }
 
     fun getPostImages(postId: Long): Observable<List<Image>> {

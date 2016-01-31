@@ -5,6 +5,7 @@ import y2k.joyreactor.services.*;
 import y2k.joyreactor.services.repository.DataContext;
 import y2k.joyreactor.services.requests.*;
 import y2k.joyreactor.services.synchronizers.MyTagFetcher;
+import y2k.joyreactor.services.synchronizers.PostMerger;
 import y2k.joyreactor.services.synchronizers.PrivateMessageFetcher;
 
 /**
@@ -73,7 +74,8 @@ public class ServiceLocator {
     private TagService provideTagService() {
         return new TagService(
             resolveDataContextFactory(),
-            new PostsForTagRequest());
+            new PostsForTagRequest(),
+            new PostMerger(resolveDataContextFactory()));
     }
 
     private PostService providePostService() {

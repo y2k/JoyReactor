@@ -12,34 +12,32 @@ import y2k.joyreactor.services.synchronizers.PostMerger
  * Created by y2k on 11/24/15.
  */
 class TagService(private val dataContext: DataContext.Factory,
-                 private val postsRequest: PostsForTagRequest) {
+                 private val postsRequest: PostsForTagRequest,
+                 private val merger: PostMerger) {
 
     private lateinit var tag: Tag
-    private var merger: PostMerger? = null
-
     private @Volatile lateinit var lastPage: PostsForTagRequest.Data
 
     val divider: Int?
-        get() = merger?.divider
+        get() = merger.divider
 
     fun setTag(tag: Tag) {
         this.tag = tag
-        merger = PostMerger(tag, dataContext)
     }
 
     fun preloadNewPosts(): Observable<Boolean> {
-        return requestAsync().flatMap { merger!!.isUnsafeUpdate(it.posts) }
+        return requestAsync().flatMap { merger.isUnsafeUpdate(tag, it.posts) }
     }
 
     fun applyNew(): Observable<List<Post>> {
-        return merger!!
-            .mergeFirstPage(lastPage.posts)
+        return merger
+            .mergeFirstPage(tag, lastPage.posts)
             .flatMap { getFromRepository() }
     }
 
     fun loadNextPage(): Observable<List<Post>> {
         return requestAsync(lastPage.nextPage)
-            .flatMap { merger!!.mergeNextPage(it.posts) }
+            .flatMap { merger.mergeNextPage(tag, it.posts) }
             .flatMap { getFromRepository() }
     }
 
@@ -55,7 +53,7 @@ class TagService(private val dataContext: DataContext.Factory,
                     }
                     .map { data }
             }
-            .flatMap { merger!!.mergeFirstPage(it.posts) }
+            .flatMap { merger.mergeFirstPage(tag, it.posts) }
             .flatMap { getFromRepository() }
     }
 
@@ -72,7 +70,7 @@ class TagService(private val dataContext: DataContext.Factory,
     private fun getFromRepository(): Observable<List<Post>> {
         return dataContext.use { entities ->
             entities.TagPosts
-                .filter { it.tagId == tag!!.id }
+                .filter { it.tagId == tag.id }
                 .map { link -> entities.Posts.first { it.id == link.postId } }
         }
     }

@@ -32,7 +32,7 @@ class DataContext {
 
     class Factory {
 
-        fun <T> apply(callback: DataContext.() -> T): Observable<T> {
+        fun <T> applyUse(callback: DataContext.() -> T): Observable<T> {
             return Observable
                 .fromCallable { innerMakeDataContext().callback(); }
                 .subscribeOn(Schedulers.from(executor))
