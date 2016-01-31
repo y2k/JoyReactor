@@ -88,7 +88,7 @@ class DataContext {
         }
 
         private fun getFile(datasSet: DataSet<*>): File {
-            return File(Platform.Instance.currentDirectory, "${datasSet.name}.db")
+            return File(Platform.instance.currentDirectory, "${datasSet.name}.db")
         }
     }
 }

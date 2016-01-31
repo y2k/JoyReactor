@@ -57,7 +57,7 @@ class PostPresenter(
         view.setIsBusy(true)
         service.getFromCache(argumentPostId)
                 .flatMap { post -> service.mainImage(post.serverId!!) }
-                .flatMap { imageFile -> Platform.Instance.saveToGallery(imageFile) }
+                .flatMap { imageFile -> Platform.instance.saveToGallery(imageFile) }
                 .subscribe({
                     view.showImageSuccessSavedToGallery()
                     view.setIsBusy(false)

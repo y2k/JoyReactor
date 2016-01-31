@@ -36,7 +36,7 @@ internal class DiskCache {
     }
 
     val cacheDirectory: File
-        get() = File(Platform.Instance.currentDirectory, "images")
+        get() = File(Platform.instance.currentDirectory, "images")
 
     companion object {
 

@@ -32,7 +32,7 @@ public class App extends Application {
         sInstance = this;
 
         ForegroundScheduler.setInstance(new HandlerSchedulerFactory().make());
-        Platform.Instance = new Platform() {
+        Platform.Companion.setInstance(new Platform() {
 
             AndroidNavigation navigation = new AndroidNavigation(App.this);
 
@@ -71,6 +71,6 @@ public class App extends Application {
                 return ObservableUtils.create(() ->
                     MediaStore.Images.Media.insertImage(getContentResolver(), imageFile.getAbsolutePath(), null, null));
             }
-        };
+        });
     }
 }

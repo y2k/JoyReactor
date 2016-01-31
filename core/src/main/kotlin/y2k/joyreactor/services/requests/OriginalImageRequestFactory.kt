@@ -17,7 +17,7 @@ class OriginalImageRequestFactory {
 
     fun request(imageUrl: String): Observable<File> {
         return ObservableUtils.func {
-            val file = File(Platform.Instance.currentDirectory, "" + imageUrl.hashCode() + "." + getExtension(imageUrl))
+            val file = File(Platform.instance.currentDirectory, "" + imageUrl.hashCode() + "." + getExtension(imageUrl))
             if (!file.exists()) {
                 try {
                     HttpClient.instance.downloadToFile(imageUrl, file, null)
@@ -33,7 +33,7 @@ class OriginalImageRequestFactory {
     fun requestPartial(imageUrl: String): Observable<PartialResult<File>> {
         return Observable.create<PartialResult<File>> { subscriber ->
             // TODO
-            val file = File(Platform.Instance.currentDirectory, "" + imageUrl.hashCode() + "." + getExtension(imageUrl))
+            val file = File(Platform.instance.currentDirectory, "" + imageUrl.hashCode() + "." + getExtension(imageUrl))
             if (file.exists()) subscriber.onNext(PartialResult.complete(file))
 
             try {

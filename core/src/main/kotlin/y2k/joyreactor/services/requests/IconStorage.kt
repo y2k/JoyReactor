@@ -19,7 +19,7 @@ internal class IconStorage private constructor(names: String, icons: String) {
     }
 
     private fun loadIndexes(name: String): IntArray {
-        val tmp = Platform.Instance.loadFromBundle(name, "dat")
+        val tmp = Platform.instance.loadFromBundle(name, "dat")
         val intBuffer = ByteBuffer.wrap(tmp).order(ByteOrder.LITTLE_ENDIAN).asIntBuffer()
 
         val intArray = IntArray(intBuffer.remaining())

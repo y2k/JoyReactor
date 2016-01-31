@@ -30,6 +30,6 @@ interface Navigation {
     companion object {
 
         val instance: Navigation
-            get() = Platform.Instance.navigator
+            get() = Platform.instance.navigator
     }
 }
