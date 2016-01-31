@@ -41,7 +41,7 @@ abstract class BaseImageRequest<T> {
                     if (image != null) Observable.just<T>(image)
                     else putToCache().flatMap { getFromCache() }
                 })
-                .observeOn(ForegroundScheduler.getInstance())
+                .observeOn(ForegroundScheduler.instance)
                 .filter { sLinks[target] === subscription }
                 .subscribe({
                     callback(it);

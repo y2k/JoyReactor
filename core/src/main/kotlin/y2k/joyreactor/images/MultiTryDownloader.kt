@@ -19,7 +19,7 @@ internal class MultiTryDownloader(private val dir: File, private val url: String
     }
 
     private fun downloadAsync(tryNumber: Int, subscriber: Subscriber<in File>) {
-        ForegroundScheduler.getInstance().createWorker().schedule({
+        ForegroundScheduler.instance.createWorker().schedule({
             DOWNLOAD_EXECUTOR.execute {
                 try {
                     subscriber.onNext(downloadToTempFile())

@@ -36,14 +36,14 @@ class DataContext {
             return Observable
                 .fromCallable { innerMakeDataContext().callback(); }
                 .subscribeOn(Schedulers.from(executor))
-                .observeOn(ForegroundScheduler.getInstance());
+                .observeOn(ForegroundScheduler.instance);
         }
 
         fun <T> use(callback: (DataContext) -> T): Observable<T> {
             return Observable
                 .fromCallable { callback(innerMakeDataContext()) }
                 .subscribeOn(Schedulers.from(executor))
-                .observeOn(ForegroundScheduler.getInstance());
+                .observeOn(ForegroundScheduler.instance);
         }
 
         private fun innerMakeDataContext(): DataContext {

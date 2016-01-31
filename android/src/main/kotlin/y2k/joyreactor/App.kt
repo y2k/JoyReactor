@@ -21,7 +21,7 @@ class App : Application() {
 
         instance = this
 
-        ForegroundScheduler.setInstance(HandlerSchedulerFactory().make())
+        ForegroundScheduler.instance = HandlerSchedulerFactory().make()
         Platform.instance = object : Platform() {
 
             override val currentDirectory: File = filesDir

@@ -46,7 +46,7 @@ class OriginalImageRequestFactory {
                 file.delete()
                 subscriber.onError(e)
             }
-        }.subscribeOn(Schedulers.io()).observeOn(ForegroundScheduler.getInstance())
+        }.subscribeOn(Schedulers.io()).observeOn(ForegroundScheduler.instance)
     }
 
     private fun getExtension(imageUrl: String): String {
