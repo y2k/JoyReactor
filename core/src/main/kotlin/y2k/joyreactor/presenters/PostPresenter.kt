@@ -50,7 +50,7 @@ class PostPresenter(
     }
 
     fun openPostInBrowser() {
-        Navigation.getInstance().openBrowser("http://joyreactor.cc/post/" + argumentPostId)
+        Navigation.instance.openBrowser("http://joyreactor.cc/post/" + argumentPostId)
     }
 
     fun saveImageToGallery() {
@@ -65,7 +65,7 @@ class PostPresenter(
     }
 
     private val argumentPostId: String
-        get() = Navigation.getInstance().argumentPostId
+        get() = Navigation.instance.argumentPostId
 
     fun replyToComment(comment: Comment) {
         // TODO:
@@ -73,7 +73,7 @@ class PostPresenter(
 
     fun replyToPost() {
         // TODO:
-        Navigation.getInstance().openCreateComment()
+        Navigation.instance.openCreateComment()
     }
 
     interface View {

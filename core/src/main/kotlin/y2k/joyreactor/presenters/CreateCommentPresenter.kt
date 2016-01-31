@@ -23,7 +23,7 @@ class CreateCommentPresenter(
         view.setIsBusy(true)
         service.createComment("2219757", commentText)
                 .subscribe({
-                    Navigation.getInstance().closeCreateComment()
+                    Navigation.instance.closeCreateComment()
                     view.setIsBusy(false)
                 }, { it.printStackTrace() })
     }

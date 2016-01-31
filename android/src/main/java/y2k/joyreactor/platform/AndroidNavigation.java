@@ -11,7 +11,7 @@ import y2k.joyreactor.*;
 /**
  * Created by y2k on 10/19/15.
  */
-public class AndroidNavigation extends Navigation {
+public class AndroidNavigation implements Navigation {
 
     static Post sPostArgument; // FIXME:
     static String sPostIdArgument = "2294127"; // FIXME:
@@ -41,11 +41,6 @@ public class AndroidNavigation extends Navigation {
     @Override
     public void closeAddTag() {
         AddTagDialogFragment.dismiss((AppCompatActivity) currentActivity);
-    }
-
-    @Override
-    public Post getArgumentPost() {
-        return sPostArgument;
     }
 
     @Override

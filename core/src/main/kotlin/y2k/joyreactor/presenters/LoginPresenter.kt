@@ -15,7 +15,7 @@ class LoginPresenter(
         service.login(username, password)
                 .subscribe({
                     view.setBusy(false)
-                    Navigation.getInstance().switchLoginToProfile()
+                    Navigation.instance.switchLoginToProfile()
                 }, { error ->
                     error.printStackTrace()
                     view.setBusy(false)

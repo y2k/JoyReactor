@@ -19,12 +19,12 @@ class ProfilePresenter(
                     view.setBusy(false)
                 }) { e ->
                     e.printStackTrace()
-                    Navigation.getInstance().switchProfileToLogin()
+                    Navigation.instance.switchProfileToLogin()
                 }
     }
 
     fun logout() {
-        service.logout().subscribe({ Navigation.getInstance().switchProfileToLogin() })
+        service.logout().subscribe({ Navigation.instance.switchProfileToLogin() })
     }
 
     interface View {

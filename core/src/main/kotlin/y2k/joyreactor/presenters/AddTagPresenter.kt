@@ -15,7 +15,7 @@ class AddTagPresenter(
 
         service.addTag(tag).subscribe({
             view.setIsBusy(false)
-            Navigation.getInstance().closeAddTag()
+            Navigation.instance.closeAddTag()
         }, { e ->
             e.printStackTrace()
             view.setIsBusy(false)

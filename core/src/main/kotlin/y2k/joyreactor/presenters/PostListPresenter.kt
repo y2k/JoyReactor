@@ -64,14 +64,14 @@ class PostListPresenter(
     }
 
     fun postClicked(post: Post) {
-        Navigation.getInstance().openPost(post.serverId)
+        Navigation.instance.openPost(post.serverId!!)
     }
 
     fun playClicked(post: Post) {
         if (post.image!!.isAnimated)
-            Navigation.getInstance().openVideo(post.serverId)
+            Navigation.instance.openVideo(post.serverId!!)
         else
-            Navigation.getInstance().openImageView(post)
+            Navigation.instance.openImageView(post)
     }
 
     interface View {
