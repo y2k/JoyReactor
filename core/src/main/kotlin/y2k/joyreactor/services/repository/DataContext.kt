@@ -1,16 +1,16 @@
 package y2k.joyreactor.services.repository
 
 import rx.Observable
+import rx.schedulers.Schedulers
 import y2k.joyreactor.Post
 import y2k.joyreactor.Tag
 import y2k.joyreactor.TagPost
-import y2k.joyreactor.common.ObservableUtils
+import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.platform.Platform
 import java.io.EOFException
 import java.io.File
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
-import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 
 /**
@@ -33,15 +33,17 @@ class DataContext {
     class Factory {
 
         fun <T> apply(callback: DataContext.() -> T): Observable<T> {
-            return ObservableUtils.func(executor, Callable {
-                innerMakeDataContext().callback();
-            })
+            return Observable
+                .fromCallable { innerMakeDataContext().callback(); }
+                .subscribeOn(Schedulers.from(executor))
+                .observeOn(ForegroundScheduler.getInstance());
         }
 
         fun <T> use(callback: (DataContext) -> T): Observable<T> {
-            return ObservableUtils.func(executor, Callable {
-                callback(innerMakeDataContext())
-            })
+            return Observable
+                .fromCallable { callback(innerMakeDataContext()) }
+                .subscribeOn(Schedulers.from(executor))
+                .observeOn(ForegroundScheduler.getInstance());
         }
 
         private fun innerMakeDataContext(): DataContext {
@@ -62,27 +64,27 @@ class DataContext {
 
         fun <T : DataSet.Dto> loadFromDisk(dataSet: DataSet<T>) {
             getFile(dataSet)
-                    .let { if (it.exists()) it else null }
-                    ?.let { file ->
-                        file.inputStream()
-                                .let { ObjectInputStream(it) }
-                                .use { stream ->
-                                    while (true) {
-                                        try {
-                                            dataSet.add(stream.readObject() as T)
-                                        } catch(e: EOFException) {
-                                            break
-                                        }
-                                    }
+                .let { if (it.exists()) it else null }
+                ?.let { file ->
+                    file.inputStream()
+                        .let { ObjectInputStream(it) }
+                        .use { stream ->
+                            while (true) {
+                                try {
+                                    dataSet.add(stream.readObject() as T)
+                                } catch(e: EOFException) {
+                                    break
                                 }
-                    }
+                            }
+                        }
+                }
         }
 
         fun saveToDisk(dataSet: DataSet<*>) {
             getFile(dataSet)
-                    .outputStream()
-                    .let { ObjectOutputStream(it) }
-                    .use { stream -> dataSet.forEach { stream.writeObject(it) } }
+                .outputStream()
+                .let { ObjectOutputStream(it) }
+                .use { stream -> dataSet.forEach { stream.writeObject(it) } }
         }
 
         private fun getFile(datasSet: DataSet<*>): File {
