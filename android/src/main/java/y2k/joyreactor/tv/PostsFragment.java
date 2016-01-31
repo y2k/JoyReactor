@@ -38,7 +38,7 @@ public class PostsFragment extends VerticalGridFragment {
         ArrayObjectAdapter adapter = new ArrayObjectAdapter(new CardPresenter());
         setAdapter(adapter);
 
-        ServiceLocator.getInstance().providePostListPresenter(
+        ServiceLocator.INSTANCE.providePostListPresenter(
                 new PostListPresenter.View() {
 
                     @Override

@@ -22,7 +22,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        LoginPresenter presenter = ServiceLocator.getInstance().provideLoginPresenter(this);
+        LoginPresenter presenter = ServiceLocator.INSTANCE.provideLoginPresenter(this);
 
         findViewById(R.id.login).setOnClickListener(v -> presenter.login(
                 "" + ((TextView) findViewById(R.id.username)).getText(),

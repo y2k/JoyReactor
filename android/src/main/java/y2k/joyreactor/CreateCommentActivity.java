@@ -19,7 +19,7 @@ public class CreateCommentActivity extends AppCompatActivity {
         View sendButton = findViewById(R.id.send);
         View progress = findViewById(R.id.progress);
 
-        CreateCommentPresenter presenter = ServiceLocator.getInstance().provideCreateCommentPresenter(
+        CreateCommentPresenter presenter = ServiceLocator.INSTANCE.provideCreateCommentPresenter(
                 new CreateCommentPresenter.View() {
 
                     @Override

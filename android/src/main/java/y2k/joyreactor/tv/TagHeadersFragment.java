@@ -33,7 +33,7 @@ public class TagHeadersFragment extends HeadersFragment {
             }
         });
 
-        presenter = ServiceLocator.getInstance().provideTagListPresenter(
+        presenter = ServiceLocator.INSTANCE.provideTagListPresenter(
                 new TagListPresenter.View() {
 
                     @Override

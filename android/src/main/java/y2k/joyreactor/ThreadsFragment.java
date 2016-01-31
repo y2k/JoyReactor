@@ -31,7 +31,7 @@ public class ThreadsFragment extends Fragment {
 
         View progress = view.findViewById(R.id.progress);
 
-        presenter = ServiceLocator.getInstance().provideMessageThreadsPresenter(
+        presenter = ServiceLocator.INSTANCE.provideMessageThreadsPresenter(
             new MessageThreadsPresenter.View() {
 
                 @Override

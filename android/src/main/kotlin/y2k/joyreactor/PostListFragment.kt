@@ -20,7 +20,7 @@ import java.util.*
  */
 class PostListFragment : Fragment() {
 
-    private var presenter: PostListPresenter = ServiceLocator.getInstance().providePostListPresenter(ViewImpl())
+    private var presenter: PostListPresenter = ServiceLocator.providePostListPresenter(ViewImpl())
     private val adapter = PostAdapter(presenter)
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {

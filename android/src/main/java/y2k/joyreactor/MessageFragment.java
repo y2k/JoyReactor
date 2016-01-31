@@ -35,7 +35,7 @@ public class MessageFragment extends Fragment implements MessagesPresenter.View 
         view.findViewById(R.id.createMessage)
             .setOnClickListener(v -> presenter.reply("" + newMessage.getText()));
 
-        presenter = ServiceLocator.getInstance().provideMessagesPresenter(this);
+        presenter = ServiceLocator.INSTANCE.provideMessagesPresenter(this);
         return view;
     }
 

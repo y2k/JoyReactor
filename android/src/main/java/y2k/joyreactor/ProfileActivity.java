@@ -20,7 +20,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePresent
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ProfilePresenter presenter = ServiceLocator.getInstance().provideProfilePresenter(this);
+        ProfilePresenter presenter = ServiceLocator.INSTANCE.provideProfilePresenter(this);
         findViewById(R.id.logout).setOnClickListener(v -> presenter.logout());
     }
 

@@ -23,7 +23,7 @@ import java.util.*
 
 class PostActivity : AppCompatActivity() {
 
-    val presenter = ServiceLocator.getInstance().providePostPresenter(ViewImpl())
+    val presenter = ServiceLocator.providePostPresenter(ViewImpl())
     val adapter = Adapter()
 
     var imagePath: File? = null

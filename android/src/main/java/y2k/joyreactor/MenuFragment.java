@@ -34,7 +34,7 @@ public class MenuFragment extends Fragment implements TagListPresenter.View {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        presenter = ServiceLocator.getInstance().provideTagListPresenter(this);
+        presenter = ServiceLocator.INSTANCE.provideTagListPresenter(this);
     }
 
     @Override

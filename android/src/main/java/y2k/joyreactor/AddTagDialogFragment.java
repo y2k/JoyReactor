@@ -28,7 +28,7 @@ public class AddTagDialogFragment extends AppCompatDialogFragment {
         View okButton = view.findViewById(R.id.ok);
         TextView tagView = (TextView) view.findViewById(R.id.tag);
 
-        AddTagPresenter presenter = ServiceLocator.getInstance().provideAddTagPresenter(
+        AddTagPresenter presenter = ServiceLocator.INSTANCE.provideAddTagPresenter(
                 new AddTagPresenter.View() {
 
                     @Override

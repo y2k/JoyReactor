@@ -19,7 +19,7 @@ public class VideoActivity extends AppCompatActivity {
         VideoView videoView = (VideoView) findViewById(R.id.video);
         videoView.setOnPreparedListener(mp -> mp.setLooping(true));
 
-        ServiceLocator.getInstance().provideVideoPresenter(
+        ServiceLocator.INSTANCE.provideVideoPresenter(
                 new VideoPresenter.View() {
 
                     @Override
