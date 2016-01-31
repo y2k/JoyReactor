@@ -3,9 +3,11 @@ package y2k.joyreactor.http
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import rx.Observable
-import y2k.joyreactor.common.IoUtils
 import y2k.joyreactor.common.ObservableUtils
-import java.io.*
+import java.io.BufferedReader
+import java.io.File
+import java.io.InputStream
+import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
@@ -18,34 +20,29 @@ import java.util.zip.GZIPInputStream
 open class HttpClient protected constructor() {
 
     open fun downloadToFile(url: String, file: File, callback: ((Int, Int) -> Unit)?) {
-        var inStream: InputStream? = null
-        var outStream: OutputStream? = null
-        try {
-            val connection = URL(url).openConnection()
-            inStream = connection.inputStream
-            outStream = FileOutputStream(file)
+        val connection = URL(url).openConnection()
+        connection.inputStream.use { inStream ->
+            file.outputStream().use { outStream ->
+                val buf = ByteArray(4 * 1024)
+                var count: Int
+                var transfer = 0
+                var lastCallTime: Long = 0
 
-            val buf = ByteArray(4 * 1024)
-            var count: Int
-            var transfer = 0
-            var lastCallTime: Long = 0
+                while (true) {
+                    count = inStream!!.read(buf)
+                    if (count == -1) break;
 
-            while (true) {
-                count = inStream!!.read(buf)
-                if (count == -1) break;
+                    outStream.write(buf, 0, count)
 
-                outStream.write(buf, 0, count)
-
-                if (callback != null) {
-                    transfer += count
-                    if (System.currentTimeMillis() - lastCallTime > 1000 / 60) {
-                        callback(transfer, connection.contentLength)
-                        lastCallTime = System.currentTimeMillis()
+                    if (callback != null) {
+                        transfer += count
+                        if (System.currentTimeMillis() - lastCallTime > 1000 / 60) {
+                            callback(transfer, connection.contentLength)
+                            lastCallTime = System.currentTimeMillis()
+                        }
                     }
                 }
             }
-        } finally {
-            IoUtils.close(inStream, outStream)
         }
     }
 
