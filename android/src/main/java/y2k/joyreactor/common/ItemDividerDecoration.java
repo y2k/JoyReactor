@@ -10,7 +10,7 @@ import y2k.joyreactor.App;
  */
 public class ItemDividerDecoration extends RecyclerView.ItemDecoration {
 
-    private int divider = (int) (4 * App.getInstance().getResources().getDisplayMetrics().density);
+    private int divider = (int) (4 * App.Companion.getInstance().getResources().getDisplayMetrics().density);
 
     public ItemDividerDecoration(RecyclerView list) {
         list.setPadding(divider, divider, divider, divider);

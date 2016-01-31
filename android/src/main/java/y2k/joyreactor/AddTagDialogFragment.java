@@ -41,7 +41,7 @@ public class AddTagDialogFragment extends AppCompatDialogFragment {
 
                     @Override
                     public void showErrorMessage() {
-                        Toast.makeText(App.getInstance(), R.string.unknown_error_occurred, Toast.LENGTH_LONG).show();
+                        Toast.makeText(App.Companion.getInstance(), R.string.unknown_error_occurred, Toast.LENGTH_LONG).show();
                     }
                 });
 

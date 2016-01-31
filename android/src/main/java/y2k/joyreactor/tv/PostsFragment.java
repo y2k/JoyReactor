@@ -95,8 +95,8 @@ public class PostsFragment extends VerticalGridFragment {
 
             public RenderDrawable(Bitmap bitmap, int width, int height) {
                 this.bitmap = bitmap;
-                this.width = width * App.getInstance().getResources().getDisplayMetrics().density;
-                this.height = height * App.getInstance().getResources().getDisplayMetrics().density;
+                this.width = width * App.Companion.getInstance().getResources().getDisplayMetrics().density;
+                this.height = height * App.Companion.getInstance().getResources().getDisplayMetrics().density;
             }
 
             @Override
