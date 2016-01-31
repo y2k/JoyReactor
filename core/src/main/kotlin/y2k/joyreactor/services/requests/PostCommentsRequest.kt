@@ -16,22 +16,23 @@ class PostCommentsRequest {
     fun request(doc: Document) {
         val result = ArrayList<Comment>()
         for (node in doc.select("div.comment")) {
-            val comment = Comment()
-            comment.text = node.select("div.txt > div").first().text()
-            comment.userImage = node.select("img.avatar").attr("src")
-            comment.id = (node.select("span.comment_rating").attr("comment_id")).toLong()
-            comment.rating = java.lang.Float.parseFloat(node.select("span.comment_rating").text().trim { it <= ' ' })
-
             val parent = node.parent()
-            if ("comment_list" == parent.className())
-                comment.parentId = NumberExtractor[parent.id()]
+            val parentId = if ("comment_list" == parent.className()) NumberExtractor[parent.id()] else 0
+
+            val comment = Comment(
+                node.select("div.txt > div").first().text(),
+                node.select("img.avatar").attr("src"),
+                (node.select("span.comment_rating").attr("comment_id")).toLong(),
+                parentId,
+                java.lang.Float.parseFloat(node.select("span.comment_rating").text().trim { it <= ' ' })
+            )
 
             val imgElement = node.select("div.image > img").first()
             if (imgElement != null)
-                comment.setAttachment(
-                        clearImageUrl(imgElement.absUrl("src")),
-                        Integer.parseInt(imgElement.attr("width")),
-                        Integer.parseInt(imgElement.attr("height")))
+                comment.setAttachmentObject(
+                    clearImageUrl(imgElement.absUrl("src")),
+                    Integer.parseInt(imgElement.attr("width")),
+                    Integer.parseInt(imgElement.attr("height")))
 
             result.add(comment)
         }

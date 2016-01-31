@@ -165,20 +165,20 @@ public class PostViewController extends UIViewController implements PostPresente
             UITableViewCell cell;
             cell = tableView.dequeueReusableCell("Comment");
             Comment item = comments.get(indexPath.getRow() - 1);
-            ((UILabel) cell.getViewWithTag(1)).setText(item.text);
+            ((UILabel) cell.getViewWithTag(1)).setText(item.getText());
 
             UIImageView iv = (UIImageView) cell.getViewWithTag(2);
             iv.getLayer().setCornerRadius(iv.getFrame().getWidth() / 2);
             new ImageRequest()
-                    .setUrl(item.getUserImage().toImage())
+                    .setUrl(item.getUserImageObject().toImage())
                     .setSize((int) iv.getFrame().getWidth(), (int) iv.getFrame().getHeight())
                     .to(iv, uiImage -> {
                         iv.setImage(uiImage);
                         return Unit.INSTANCE;
                     });
 
-            ((UILabel) cell.getViewWithTag(3)).setText("" + item.replies);
-            ((UILabel) cell.getViewWithTag(4)).setText("" + item.rating);
+            ((UILabel) cell.getViewWithTag(3)).setText("" + item.getReplies());
+            ((UILabel) cell.getViewWithTag(4)).setText("" + item.getRating());
 
             return cell;
         }
@@ -188,7 +188,7 @@ public class PostViewController extends UIViewController implements PostPresente
 
         @Override
         public void didSelectRow(UITableView tableView, NSIndexPath indexPath) {
-            presenter.selectComment(comments.get(indexPath.getRow() - 1).id);
+            presenter.selectComment(comments.get(indexPath.getRow() - 1).getId());
             tableView.deselectRow(indexPath, true);
         }
     }

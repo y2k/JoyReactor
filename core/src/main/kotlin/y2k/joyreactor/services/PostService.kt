@@ -35,24 +35,24 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
 
         val parent = buffer.comments.first { it.id == parentCommentId }
         val children = buffer.comments
-                .filter { it.parentId == parentCommentId }
-                .toList()
+            .filter { it.parentId == parentCommentId }
+            .toList()
         return Observable.just(CommentGroup.OneLevel(parent, children))
     }
 
     private fun getCommentForPost(postId: Long): Observable<CommentGroup> {
         val firstLevelComments = HashSet<Long>()
         val items = buffer.comments
-                .filter { s -> s.postId == postId }
-                .filter { s ->
-                    if (s.parentId == 0L) {
-                        firstLevelComments.add(s.id)
-                        true
-                    } else {
-                        firstLevelComments.contains(s.parentId)
-                    }
+            .filter { s -> s.postId == postId }
+            .filter { s ->
+                if (s.parentId == 0L) {
+                    firstLevelComments.add(s.id)
+                    true
+                } else {
+                    firstLevelComments.contains(s.parentId)
                 }
-                .toList()
+            }
+            .toList()
         return Observable.just(CommentGroup.TwoLevel(items))
     }
 
@@ -63,8 +63,8 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
     fun getPostImages(postId: Long): Observable<List<Image>> {
         val postAttachments = buffer.attachments.map { it.image }
         val commentAttachments = buffer.comments
-                .filter { it.attachment != null }
-                .map { it.attachment }
+            .filter { it.attachmentObject != null }
+            .map { it.attachmentObject!! }
         return Observable.just(postAttachments.union(commentAttachments).toList())
     }
 
@@ -74,13 +74,13 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
 
     fun mainImage(serverPostId: String): Observable<File> {
         return Observable
-                .just(buffer.post.image!!.fullUrl(null))
-                .flatMap({ url -> imageRequestFactory.request(url) })
+            .just(buffer.post.image!!.fullUrl(null))
+            .flatMap({ url -> imageRequestFactory.request(url) })
     }
 
     fun mainImagePartial(serverPostId: String): Observable<PartialResult<File>> {
         return Observable
-                .just(buffer.post.image!!.fullUrl(null))
-                .flatMap({ url -> imageRequestFactory.requestPartial(url) })
+            .just(buffer.post.image!!.fullUrl(null))
+            .flatMap({ url -> imageRequestFactory.requestPartial(url) })
     }
 }

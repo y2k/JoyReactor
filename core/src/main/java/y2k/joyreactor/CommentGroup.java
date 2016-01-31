@@ -51,9 +51,9 @@ public interface CommentGroup {
 
         @Override
         public long getId(int position) {
-            if (parent == null) return children.get(position).id;
-            if (position == 0) return parent.parentId;
-            return children.get(position - 1).id;
+            if (parent == null) return children.get(position).getId();
+            if (position == 0) return parent.getParentId();
+            return children.get(position - 1).getId();
         }
     }
 
@@ -67,7 +67,7 @@ public interface CommentGroup {
 
         @Override
         public boolean isChild(int position) {
-            return comments.get(position).parentId != 0;
+            return comments.get(position).getParentId() != 0;
         }
 
         @Override
@@ -82,7 +82,7 @@ public interface CommentGroup {
 
         @Override
         public long getId(int position) {
-            return comments.get(position).id;
+            return comments.get(position).getId();
         }
     }
 }

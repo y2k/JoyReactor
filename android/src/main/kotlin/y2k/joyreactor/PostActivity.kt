@@ -238,12 +238,12 @@ class PostActivity : AppCompatActivity() {
 
                 val c = comments!!.get(realPosition)
                 text.text = c.text
-                avatar.setImage(c.getUserImage().toImage())
+                avatar.setImage(c.userImageObject.toImage())
                 rating.text = "" + c.rating
                 replies.text = "" + c.replies
 
-                attachment.visibility = if (c.attachment == null) View.GONE else View.VISIBLE
-                attachment.setImage(c.attachment)
+                attachment.visibility = if (c.attachmentObject == null) View.GONE else View.VISIBLE
+                attachment.setImage(c.attachmentObject)
             }
 
             private val realPosition: Int
