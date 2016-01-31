@@ -10,7 +10,7 @@ import java.util.*
  */
 abstract class Presenter {
 
-    protected var messages = ActivateMessageHolder()
+    internal var messages = ActivateMessageHolder()
         internal set
 
     open fun activate() {

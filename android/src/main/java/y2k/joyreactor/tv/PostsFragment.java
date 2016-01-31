@@ -42,14 +42,14 @@ public class PostsFragment extends VerticalGridFragment {
                 new PostListPresenter.View() {
 
                     @Override
-                    public void setBusy(boolean isBusy) {
-                        // TODO:
+                    public void reloadPosts(@NotNull List<Post> posts, @Nullable Integer divider) {
+                        adapter.clear();
+                        adapter.addAll(0, posts);
                     }
 
                     @Override
-                    public void reloadPosts(@NotNull List<? extends Post> posts, @Nullable Integer divider) {
-                        adapter.clear();
-                        adapter.addAll(0, posts);
+                    public void setBusy(boolean isBusy) {
+                        // TODO:
                     }
 
                     @Override

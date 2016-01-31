@@ -18,10 +18,8 @@ import android.widget.Toast
 import y2k.joyreactor.common.ComplexViewHolder
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.presenters.PostPresenter
-
 import java.io.File
-import java.util.ArrayList
-import java.util.Collections
+import java.util.*
 
 class PostActivity : AppCompatActivity() {
 
@@ -172,7 +170,7 @@ class PostActivity : AppCompatActivity() {
         }
 
         internal inner class HeaderViewHolder(parent: ViewGroup) :
-                ComplexViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.layout_post, parent, false)) {
+            ComplexViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.layout_post, parent, false)) {
 
             var image: LargeImageView
             var imagePanel: ImagePanel
@@ -190,8 +188,7 @@ class PostActivity : AppCompatActivity() {
                 // TODO
                 if (post != null)
                     posterPanel.setAspect(post!!.image!!.aspect)
-                if (imagePath != null)
-                    image.setImage(imagePath)
+                imagePath?.let { image.setImage(it) }
 
                 imagePanel.setImages(images)
                 similar.setImages(toImages())
@@ -206,7 +203,7 @@ class PostActivity : AppCompatActivity() {
         }
 
         internal inner class CommentViewHolder(parent: ViewGroup) :
-                ComplexViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_comment, parent, false)) {
+            ComplexViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_comment, parent, false)) {
 
             var rating: TextView
             var text: TextView
