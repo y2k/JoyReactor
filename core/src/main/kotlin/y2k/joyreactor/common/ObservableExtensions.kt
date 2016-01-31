@@ -14,6 +14,10 @@ fun <T> Observable<T>.peek(func: (T) -> Unit): Observable<T> {
     }
 }
 
+fun ioUnitObservable(func: () -> Unit): Observable<Unit> {
+    return ioObservable(func)
+}
+
 fun <T> ioObservable(func: () -> T): Observable<T> {
     return Observable.create {
         Schedulers.io().createWorker().schedule {

@@ -3,7 +3,7 @@ package y2k.joyreactor.http
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import rx.Observable
-import y2k.joyreactor.common.ObservableUtils
+import y2k.joyreactor.common.ioObservable
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
@@ -69,7 +69,7 @@ open class HttpClient protected constructor() {
     }
 
     fun getDocumentAsync(url: String): Observable<Document> {
-        return ObservableUtils.create<Document> { getDocument(url) }
+        return ioObservable { getDocument(url) }
     }
 
     open fun getDocument(url: String): Document {

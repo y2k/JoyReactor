@@ -2,7 +2,7 @@ package y2k.joyreactor.services.synchronizers
 
 import rx.Observable
 import y2k.joyreactor.Message
-import y2k.joyreactor.common.ObservableUtils
+import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.services.MemoryBuffer
 import y2k.joyreactor.services.requests.MessageListRequest
 import java.util.*
@@ -11,14 +11,14 @@ import java.util.*
  * Created by y2k on 11/17/15.
  */
 class PrivateMessageFetcher(
-        private val request: MessageListRequest,
-        private val buffer: MemoryBuffer) {
+    private val request: MessageListRequest,
+    private val buffer: MemoryBuffer) {
 
     private var mineOldest: Date? = null
     private var theirOldest: Date? = null
 
-    fun execute(): Observable<Void> {
-        return ObservableUtils.action {
+    fun execute(): Observable<Unit> {
+        return ioObservable {
             while (true) {
                 request.execute(request.nextPage)
 

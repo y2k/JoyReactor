@@ -4,7 +4,7 @@ import org.jsoup.nodes.Document
 import rx.Observable
 import y2k.joyreactor.Image
 import y2k.joyreactor.Profile
-import y2k.joyreactor.common.ObservableUtils
+import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.http.HttpClient
 import java.util.regex.Pattern
 
@@ -15,13 +15,13 @@ class ProfileRequestFactory {
 
     fun request(): Observable<Profile> {
         return UserNameRequest()
-                .request()
-                .flatMap({ username ->
-                    ObservableUtils.create<Profile> {
-                        val page = HttpClient.instance.getDocument(getUrl(username))
-                        ProfileParser(page).parse()
-                    }
-                })
+            .request()
+            .flatMap { username ->
+                ioObservable {
+                    val page = HttpClient.instance.getDocument(getUrl(username))
+                    ProfileParser(page).parse()
+                }
+            }
     }
 
     private fun getUrl(username: String?): String {

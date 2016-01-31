@@ -1,7 +1,7 @@
 package y2k.joyreactor.services.requests
 
 import rx.Observable
-import y2k.joyreactor.common.ObservableUtils
+import y2k.joyreactor.common.ioUnitObservable
 import y2k.joyreactor.http.HttpClient
 
 /**
@@ -9,15 +9,15 @@ import y2k.joyreactor.http.HttpClient
  */
 class SendMessageRequest(private val username: String) {
 
-    fun request(message: String): Observable<Void> {
-        return ObservableUtils.action {
+    fun request(message: String): Observable<Unit> {
+        return ioUnitObservable {
             HttpClient.instance
-                    .beginForm()
-                    .put("username", username)
-                    .put("text", message)
-                    .putHeader("X-Requested-With", "XMLHttpRequest")
-                    .putHeader("Referer", "http://joyreactor.cc/private/list")
-                    .send("http://joyreactor.cc/private/create")
+                .beginForm()
+                .put("username", username)
+                .put("text", message)
+                .putHeader("X-Requested-With", "XMLHttpRequest")
+                .putHeader("Referer", "http://joyreactor.cc/private/list")
+                .send("http://joyreactor.cc/private/create")
         }
     }
 }

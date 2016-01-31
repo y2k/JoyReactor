@@ -1,7 +1,7 @@
 package y2k.joyreactor.services.requests
 
 import rx.Observable
-import y2k.joyreactor.common.ObservableUtils
+import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.http.HttpClient
 
 /**
@@ -10,10 +10,10 @@ import y2k.joyreactor.http.HttpClient
 class UserNameRequest {
 
     fun request(): Observable<String> {
-        return ObservableUtils.func<String> {
+        return ioObservable {
             val document = HttpClient.instance.getDocument("http://joyreactor.cc/donate")
             val node = document.select("a#settings").first()
-            node?.text()
+            node?.text()!!
         }
     }
 }

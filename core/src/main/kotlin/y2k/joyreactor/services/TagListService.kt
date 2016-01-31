@@ -11,19 +11,19 @@ import y2k.joyreactor.services.synchronizers.MyTagFetcher
  * Created by y2k on 11/24/15.
  */
 class TagListService(
-        private val dataContext: DataContext.Factory,
-        private val synchronizer: MyTagFetcher) {
+    private val dataContext: DataContext.Factory,
+    private val synchronizer: MyTagFetcher) {
 
     fun getMyTags(): Observable<List<Tag>> {
         return getFromRepo().mergeWith(
-                synchronizer.synchronize().flatMap { getFromRepo() })
+            synchronizer.synchronize().flatMap { getFromRepo() })
     }
 
     private fun getFromRepo(): Observable<List<Tag>> {
         return dataContext.use { entities -> entities.Tags.filter { it.isMine } }
     }
 
-    fun addTag(tag: String): Observable<Void> {
+    fun addTag(tag: String): Observable<Unit> {
         return AddTagRequest(tag).request()
     }
 

@@ -5,8 +5,8 @@ import y2k.joyreactor.CommentGroup
 import y2k.joyreactor.Image
 import y2k.joyreactor.Post
 import y2k.joyreactor.SimilarPost
-import y2k.joyreactor.common.ObservableUtils
 import y2k.joyreactor.common.PartialResult
+import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.OriginalImageRequestFactory
 import y2k.joyreactor.services.requests.PostRequest
@@ -22,7 +22,7 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
                   private val dataContext: DataContext.Factory) {
 
     fun synchronizePostAsync(postId: String): Observable<Post> {
-        return ObservableUtils.func {
+        return ioObservable {
             postRequest.request(postId);
             buffer.updatePost(postRequest)
             buffer.post

@@ -1,7 +1,7 @@
 package y2k.joyreactor.services.requests
 
 import rx.Observable
-import y2k.joyreactor.common.ObservableUtils
+import y2k.joyreactor.common.ioUnitObservable
 import y2k.joyreactor.http.HttpClient
 import java.util.regex.Pattern
 
@@ -12,17 +12,17 @@ class CreateCommentRequestFactory {
 
     private val commentId: String? = null
 
-    fun create(postId: String, commentText: String): Observable<Void> {
-        return ObservableUtils.action {
+    fun create(postId: String, commentText: String): Observable<Unit> {
+        return ioUnitObservable {
             HttpClient.instance
-                    .beginForm()
-                    .put("parent_id", commentId ?: "0")
-                    .put("post_id", postId)
-                    .put("token", getToken())
-                    .put("comment_text", commentText)
-                    .putHeader("X-Requested-With", "XMLHttpRequest")
-                    .putHeader("Referer", "http://joyreactor.cc/post/" + postId)
-                    .send("http://joyreactor.cc/post_comment/create")
+                .beginForm()
+                .put("parent_id", commentId ?: "0")
+                .put("post_id", postId)
+                .put("token", getToken())
+                .put("comment_text", commentText)
+                .putHeader("X-Requested-With", "XMLHttpRequest")
+                .putHeader("Referer", "http://joyreactor.cc/post/" + postId)
+                .send("http://joyreactor.cc/post_comment/create")
         }
     }
 

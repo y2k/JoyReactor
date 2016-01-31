@@ -3,7 +3,7 @@ package y2k.joyreactor.services.requests
 import rx.Observable
 import y2k.joyreactor.Image
 import y2k.joyreactor.Tag
-import y2k.joyreactor.common.ObservableUtils
+import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.http.HttpClient
 import java.util.*
 
@@ -15,9 +15,8 @@ class TagsForUserRequest(private val username: String) {
     private val imageRequest = TagImageRequest()
 
     fun request(): Observable<List<Tag>> {
-        return ObservableUtils.func <List<Tag>> {
-            val document = HttpClient.instance
-                    .getDocument("http://joyreactor.cc/user/" + username)
+        return ioObservable {
+            val document = HttpClient.instance.getDocument("http://joyreactor.cc/user/" + username)
             val tags = ArrayList<Tag>()
             for (h in document.select(".sideheader")) {
                 if ("Читает" == h.text()) {

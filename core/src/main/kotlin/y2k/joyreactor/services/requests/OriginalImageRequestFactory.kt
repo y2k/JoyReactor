@@ -3,8 +3,8 @@ package y2k.joyreactor.services.requests
 import rx.Observable
 import rx.schedulers.Schedulers
 import y2k.joyreactor.common.ForegroundScheduler
-import y2k.joyreactor.common.ObservableUtils
 import y2k.joyreactor.common.PartialResult
+import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.http.HttpClient
 import y2k.joyreactor.platform.Platform
 import java.io.File
@@ -16,7 +16,7 @@ import java.util.regex.Pattern
 class OriginalImageRequestFactory {
 
     fun request(imageUrl: String): Observable<File> {
-        return ObservableUtils.func {
+        return ioObservable {
             val file = File(Platform.instance.currentDirectory, "" + imageUrl.hashCode() + "." + getExtension(imageUrl))
             if (!file.exists()) {
                 try {
