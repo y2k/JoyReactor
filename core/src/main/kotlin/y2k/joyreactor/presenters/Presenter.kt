@@ -1,7 +1,6 @@
 package y2k.joyreactor.presenters
 
 import rx.functions.Action0
-import rx.functions.Action1
 import y2k.joyreactor.common.Messenger
 import java.util.*
 
@@ -25,8 +24,8 @@ abstract class Presenter {
 
         private val actions = ArrayList<Action0>()
 
-        fun <T> add(callback: Action1<T>, type: Class<T>) {
-            actions.add (Action0 { Messenger.getInstance().register(this@Presenter, callback, type) })
+        fun <T> add(type: Class<T>, callback: (T) -> Unit) {
+            actions.add (Action0 { Messenger.register(this@Presenter, callback, type) })
         }
 
         fun activate() {
@@ -35,7 +34,7 @@ abstract class Presenter {
         }
 
         fun deactivate() {
-            Messenger.getInstance().unregister(this@Presenter)
+            Messenger.unregister(this@Presenter)
         }
     }
 }

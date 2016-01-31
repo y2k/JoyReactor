@@ -10,7 +10,7 @@ class Messages {
     class TagSelected(var tag: Tag) {
 
         fun broadcast() {
-            Messenger.getInstance().send(this)
+            Messenger.send(this)
         }
     }
 }
