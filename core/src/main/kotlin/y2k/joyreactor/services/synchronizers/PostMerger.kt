@@ -21,21 +21,23 @@ class PostMerger(
         return updatePostsAsync(newPosts)
             .flatMap {
                 dataContext.use { entities ->
-                    val links = entities.TagPosts.filter { it.tagId == tag.id }
-                    val result = ArrayList<TagPost>()
+                    divider = newPosts.size
 
+                    val result = ArrayList<TagPost>()
                     for (s in newPosts)
                         result.add(TagPost(tag.id, s.id))
-                    for (s in links)
-                        if (result.all { it.postId != s.postId })
-                            result.add(s)
-
-                    divider = newPosts.size
+                    entities.TagPosts
+                        .filter { it.tagId == tag.id }
+                        .filterNot { s -> newPosts.any { it.id == s.postId } }
+                        .forEach { result.add(it) }
 
                     entities.TagPosts
                         .filter { it.tagId == tag.id }
                         .forEach { entities.TagPosts.remove(it) }
-                    result.forEach { entities.TagPosts.add(it) }
+
+                    // TODO: Понять почему здесь падает
+                    //                    result.forEach { entities.TagPosts.add(it) }
+                    for (s in result) entities.TagPosts.add(s)
 
                     entities.saveChanges()
                 }
