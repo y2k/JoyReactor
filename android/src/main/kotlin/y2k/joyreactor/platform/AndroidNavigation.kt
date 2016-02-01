@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import y2k.joyreactor.*
+import y2k.joyreactor.common.ActivityLifecycleCallbacksAdapter
 
 /**
  * Created by y2k on 10/19/15.
@@ -63,29 +64,18 @@ class AndroidNavigation(app: Application) : Navigation {
         currentActivity!!.startActivity(Intent(currentActivity, CreateCommentActivity::class.java))
     }
 
-    private inner class MyActivityLifecycleCallbacks : Application.ActivityLifecycleCallbacks {
+    private inner class MyActivityLifecycleCallbacks : ActivityLifecycleCallbacksAdapter() {
 
-        override fun onActivityResumed(activity: Activity) {
+        override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
             currentActivity = activity
         }
 
-        override fun onActivityPaused(activity: Activity) {
-            currentActivity = null
+        override fun onActivityResumed(activity: Activity?) {
+            currentActivity = activity
         }
 
-        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle) {
-        }
-
-        override fun onActivityStarted(activity: Activity) {
-        }
-
-        override fun onActivityStopped(activity: Activity) {
-        }
-
-        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
-        }
-
-        override fun onActivityDestroyed(activity: Activity) {
+        override fun onActivityPaused(activity: Activity?) {
+            if (currentActivity == activity) currentActivity = null
         }
     }
 
