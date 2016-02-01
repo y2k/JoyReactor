@@ -1,5 +1,6 @@
 package y2k.joyreactor.common
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import y2k.joyreactor.App
@@ -20,3 +21,13 @@ fun ViewGroup.forEachChild(func: (View) -> Unit) {
     for (i in 0..childCount - 1)
         func(getChildAt(i))
 }
+
+fun ViewGroup.inflateToSelf(layoutId: Int) {
+    LayoutInflater.from(context).inflate(layoutId, this)
+}
+
+var View.isVisible: Boolean
+    get() = visibility == View.VISIBLE
+    set(value) {
+        visibility = if (value) View.VISIBLE else View.GONE
+    }
