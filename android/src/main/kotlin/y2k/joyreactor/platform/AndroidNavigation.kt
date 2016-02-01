@@ -34,7 +34,7 @@ class AndroidNavigation(app: Application) : Navigation {
     }
 
     override fun closeAddTag() {
-        AddTagDialogFragment.dismiss(currentActivity as AppCompatActivity?)
+        AddTagDialogFragment.dismiss(currentActivity as AppCompatActivity)
     }
 
     override fun openPost(postId: String) {
