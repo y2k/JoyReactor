@@ -32,7 +32,7 @@ object ServiceLocator {
         add(MemoryBuffer::class) { MemoryBuffer }
         add(MyTagFetcher::class) { MyTagFetcher(resolve(DataContext.Factory::class)) }
         add(PrivateMessageFetcher::class) {
-            PrivateMessageFetcher(resolve(MessageListRequest::class), resolve(MemoryBuffer::class))
+            PrivateMessageFetcher(resolve(MessageListRequest::class), resolve(DataContext.Factory::class))
         }
 
         add(PostService::class) {

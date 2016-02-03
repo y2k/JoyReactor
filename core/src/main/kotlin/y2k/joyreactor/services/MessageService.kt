@@ -11,10 +11,10 @@ import y2k.joyreactor.services.synchronizers.PrivateMessageFetcher
  */
 class MessageService(
     private val fetcher: PrivateMessageFetcher,
-    private val database: DataContext.Factory) {
+    private val entities: DataContext.Factory) {
 
     fun getThreads(): Observable<List<Message>> {
-        return database
+        return entities
             .applyUse {
                 Messages
                     .groupBy { it.userName }
@@ -24,7 +24,7 @@ class MessageService(
     }
 
     fun getMessages(username: String): Observable<List<Message>> {
-        return database.applyUse {
+        return entities.applyUse {
             Messages
                 .filter { it.userName == username }
                 .sortedBy { it.date }

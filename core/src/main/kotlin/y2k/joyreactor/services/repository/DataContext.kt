@@ -20,22 +20,23 @@ import java.util.concurrent.Executors
  */
 class DataContext {
 
-    val Posts: DataSet<Post> = register("posts")
+    private val tables = ArrayList<DataSet<*>>()
 
-    val Tags: DataSet<Tag> = register("tags")
+    val Posts = register<Post>("posts")
 
-    val TagPosts: DataSet<TagPost> = register("tag_posts")
+    val Tags = register<Tag>("tags")
+
+    val TagPosts = register<TagPost>("tag_posts")
 
     val Messages = register<Message>("messages")
-
-    private val tables = ArrayList<DataSet<*>>()
 
     private fun <T : DataSet.Dto> register(name: String): DataSet<T> {
         return DataSet<T>(name).apply { tables.add(this) }
     }
 
     fun saveChanges() {
-        tables.forEach { Serializer.saveToDisk(it) }
+        // TODO: при forEach падает
+        for (it in tables) Serializer.saveToDisk(it)
     }
 
     class Factory {
@@ -56,7 +57,8 @@ class DataContext {
 
         private fun innerMakeDataContext(): DataContext {
             val entities = DataContext()
-            entities.tables.forEach { Serializer.loadFromDisk(it) }
+            // TODO: при forEach падает
+            for (it in entities.tables) Serializer.loadFromDisk(it)
             return entities
         }
 
