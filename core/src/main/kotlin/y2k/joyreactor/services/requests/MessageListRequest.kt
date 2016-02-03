@@ -10,16 +10,9 @@ import java.util.*
 class MessageListRequest(
     private val imageRequest: UserImageRequest) {
 
-    fun getMessages(): List<Message> {
-        return messages
-    }
+    fun getMessages(page: String?): Pair<List<Message>, String?> {
+        val messages = ArrayList<Message>()
 
-    private val messages = ArrayList<Message>()
-
-    var nextPage: String? = null
-        private set
-
-    fun execute(page: String?) {
         val url = page ?: "http://joyreactor.cc/private/list"
         val document = HttpClient.instance.getDocument(url)
 
@@ -35,6 +28,8 @@ class MessageListRequest(
         }
 
         val nextNode = document.select("a.next").first()
-        nextPage = nextNode?.absUrl("href")
+        val nextPage = nextNode?.absUrl("href")
+
+        return messages to nextPage
     }
 }

@@ -18,29 +18,32 @@ class PrivateMessageFetcher(
 
     fun execute(): Observable<Unit> {
         return entities.applyUse {
+            var nextPage: String? = null
             for (page in 1..MaxPages) {
-                request.execute(request.nextPage)
+                val (messages, next) = request.getMessages(nextPage)
 
-                updateLastMessageDates()
+                updateLastMessageDates(messages)
                 val needLoadNext = isNeedLoadNext(Messages)
 
-                request
-                    .getMessages()
+                messages
                     .filter { s -> Messages.none { it.isMine == s.isMine && it.date == s.date } }
                     .forEach { Messages.add(it) }
 
-                if (request.nextPage == null)
+                if (next == null)
                     break
                 if (!needLoadNext)
                     break
+                nextPage = next
             }
+
+            saveChanges()
         }
     }
 
-    private fun updateLastMessageDates() {
+    private fun updateLastMessageDates(messages: List<Message>) {
         mineOldest = null
         theirOldest = null
-        for (m in request.getMessages()) {
+        for (m in messages) {
             if (m.isMine)
                 mineOldest = m.date
             else
