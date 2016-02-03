@@ -19,7 +19,8 @@ class LifeCycleService {
     }
 
     fun activate() {
-        actions.forEach { it() }
+        // TODO: Понять почему forEach вызывает падение
+        for (action in actions) action()
     }
 
     fun deactivate() {
