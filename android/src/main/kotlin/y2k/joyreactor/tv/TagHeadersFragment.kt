@@ -33,7 +33,7 @@ class TagHeadersFragment : HeadersFragment() {
         }
 
         presenter = ServiceLocator.resolve(
-            object : TagListPresenter.View {
+            lifeCycleService, object : TagListPresenter.View {
 
                 override fun reloadData(tags: List<Tag>) {
                     this@TagHeadersFragment.tags = tags
@@ -50,7 +50,7 @@ class TagHeadersFragment : HeadersFragment() {
                 private fun addRow(adapter: ArrayObjectAdapter, title: String?) {
                     adapter.add(Row(adapter.size().toLong(), HeaderItem(title)))
                 }
-            }, lifeCycleService)
+            })
     }
 
     override fun onResume() {

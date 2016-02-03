@@ -77,7 +77,7 @@ object ServiceLocator {
         return PostPresenter(view, resolve(PostService::class), resolve(ProfileService::class))
     }
 
-    fun resolve(view: TagListPresenter.View, lifeCycleService: LifeCycleService): TagListPresenter {
+    fun resolve(lifeCycleService: LifeCycleService, view: TagListPresenter.View): TagListPresenter {
         return TagListPresenter(view, resolve(TagListService::class), lifeCycleService)
     }
 

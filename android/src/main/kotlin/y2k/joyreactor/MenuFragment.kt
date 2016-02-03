@@ -14,27 +14,26 @@ import y2k.joyreactor.presenters.TagListPresenter
 /**
  * Created by y2k on 11/12/15.
  */
-class MenuFragment : BaseFragment(), TagListPresenter.View {
+class MenuFragment : BaseFragment() {
 
-    lateinit var adapter: TagsAdapter
     lateinit var presenter: TagListPresenter
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_menu, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_menu, container, false)
         val list = view.findViewById(R.id.list) as RecyclerView
         list.layoutManager = LinearLayoutManager(context)
-        list.adapter = TagsAdapter()
+
+        val adapter = TagsAdapter()
+        list.adapter = adapter
+
+        presenter = ServiceLocator.resolve(lifeCycleService, object : TagListPresenter.View {
+
+            override fun reloadData(tags: List<Tag>) {
+                adapter.updateData(tags)
+            }
+        })
+
         return view
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        presenter = ServiceLocator.resolve(this, lifeCycleService)
-    }
-
-    override fun reloadData(tags: List<Tag>) {
-        adapter.updateData(tags)
     }
 
     inner class TagsAdapter : RecyclerView.Adapter<TagsAdapter.ViewHolder>() {
@@ -78,7 +77,7 @@ class MenuFragment : BaseFragment(), TagListPresenter.View {
                     view.findViewById(R.id.selectFeatured).setOnClickListener { v -> presenter.selectedFeatured() }
                     view.findViewById(R.id.selectFavorite).setOnClickListener { v -> presenter.selectedFavorite() }
                 } else {
-                    action.setOnClickListener { v -> presenter.selectTag(tags!![adapterPosition - 1]) }
+                    action.setOnClickListener { presenter.selectTag(tags!![adapterPosition - 1]) }
                 }
             }
         }
