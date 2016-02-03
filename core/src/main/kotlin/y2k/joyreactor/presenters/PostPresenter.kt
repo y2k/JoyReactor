@@ -1,6 +1,7 @@
 package y2k.joyreactor.presenters
 
 import y2k.joyreactor.*
+import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.platform.Navigation
 import y2k.joyreactor.platform.Platform
 import y2k.joyreactor.services.PostService
@@ -19,36 +20,43 @@ class PostPresenter(
         view.setIsBusy(true)
         service
             .synchronizePostAsync(argumentPostId)
-            .subscribe({ post ->
+            .subscribeOnMain { post ->
                 view.setIsBusy(false)
                 view.updatePostInformation(post)
 
-                service.getPostImages(post.id)
-                    .subscribe({ view.updatePostImages(it) }, { it.printStackTrace() })
+                service
+                    .getPostImages(post.id)
+                    .subscribeOnMain { view.updatePostImages(it) }
 
-                service.getCommentsAsync(post.id, 0)
-                    .subscribe({ view.updateComments(it) }, { it.printStackTrace() })
+                service
+                    .getCommentsAsync(post.id, 0)
+                    .subscribeOnMain { view.updateComments(it) }
 
-                service.getSimilarPosts(post.id)
-                    .subscribe({ view.updateSimilarPosts(it) }, { it.printStackTrace() })
+                service
+                    .getSimilarPosts(post.id)
+                    .subscribeOnMain { view.updateSimilarPosts(it) }
 
-                service.mainImagePartial(post.serverId!!).subscribe({ partial ->
-                    if (partial.result == null) {
-                        view.updateImageDownloadProgress(partial.progress, partial.max)
-                    } else {
-                        view.updatePostImage(partial.result)
+                service
+                    .mainImagePartial(post.serverId!!)
+                    .subscribeOnMain { partial ->
+                        if (partial.result == null) {
+                            view.updateImageDownloadProgress(partial.progress, partial.max)
+                        } else {
+                            view.updatePostImage(partial.result)
+                        }
                     }
-                }, { it.printStackTrace() })
 
-                userService.isAuthorized()
-                    .subscribe({ if (it) view.setEnableCreateComments() }, { it.printStackTrace() })
-            }, { it.printStackTrace() })
+                userService
+                    .isAuthorized()
+                    .subscribeOnMain { if (it) view.setEnableCreateComments() }
+            }
     }
 
     fun selectComment(commentId: Long) {
-        service.getFromCache(argumentPostId)
+        service
+            .getFromCache(argumentPostId)
             .flatMap { post -> service.getCommentsAsync(post.id, commentId) }
-            .subscribe({ view.updateComments(it) }) { it.printStackTrace() }
+            .subscribeOnMain { view.updateComments(it) }
     }
 
     fun openPostInBrowser() {
@@ -60,10 +68,10 @@ class PostPresenter(
         service.getFromCache(argumentPostId)
             .flatMap { post -> service.mainImage(post.serverId!!) }
             .flatMap { imageFile -> Platform.instance.saveToGallery(imageFile) }
-            .subscribe({
+            .subscribeOnMain {
                 view.showImageSuccessSavedToGallery()
                 view.setIsBusy(false)
-            }) { it.printStackTrace() }
+            }
     }
 
     private val argumentPostId: String

@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.util.AttributeSet
 import android.widget.ImageView
 import y2k.joyreactor.common.ioObservable
+import y2k.joyreactor.common.subscribeOnMain
 import java.io.File
 
 /**
@@ -30,6 +31,8 @@ class LargeImageView(context: Context, attrs: AttributeSet) : ImageView(context,
                 op.outHeight / met.heightPixels)
 
             BitmapFactory.decodeFile(path.absolutePath, op)
-        }.subscribe { setImageBitmap(it) }
+        }.subscribeOnMain {
+            setImageBitmap(it)
+        }
     }
 }
