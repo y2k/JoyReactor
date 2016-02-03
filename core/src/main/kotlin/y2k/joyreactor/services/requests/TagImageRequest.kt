@@ -20,10 +20,8 @@ class TagImageRequest {
         if (imageId == null) imageId = cache.get(clearTag)
         if (imageId == null) {
             imageId = getFromWeb(clearTag)
-            if (imageId != null) cache.put(clearTag, imageId).flush()
+            cache.put(clearTag, imageId).flush()
         }
-
-        if (imageId == null) throw IllegalStateException()
         return imageId
     }
 

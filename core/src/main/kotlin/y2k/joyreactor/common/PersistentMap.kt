@@ -41,8 +41,8 @@ class PersistentMap(name: String) {
         return this
     }
 
-    operator fun get(key: String): String {
-        return map[key]!!
+    operator fun get(key: String): String? {
+        return map[key]
     }
 
     fun keySet(): Set<String> {

@@ -12,14 +12,13 @@ import org.ocpsoft.prettytime.PrettyTime
 import y2k.joyreactor.common.BaseFragment
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.presenters.MessagesPresenter
-import y2k.joyreactor.services.LifeCycleService
 
 /**
  * Created by y2k on 11/20/15.
  */
 class MessageFragment : BaseFragment(), MessagesPresenter.View {
 
-    private var adapter: MessageAdapter? = null
+    private val adapter = MessageAdapter()
     private var presenter: MessagesPresenter? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -37,7 +36,7 @@ class MessageFragment : BaseFragment(), MessagesPresenter.View {
     }
 
     override fun updateMessages(messages: List<Message>) {
-        adapter!!.update(messages)
+        adapter.update(messages)
     }
 
     override fun setIsBusy(isBusy: Boolean) {
