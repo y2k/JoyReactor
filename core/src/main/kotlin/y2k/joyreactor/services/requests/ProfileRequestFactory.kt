@@ -32,21 +32,19 @@ class ProfileRequestFactory {
     private class ProfileParser(private val document: Document) {
 
         fun parse(): Profile {
-            val profile = Profile()
-            profile.userName = document.select("div.sidebarContent > div.user > span").text()
-            profile.userImage = Image(document.select("div.sidebarContent > div.user > img").attr("src"), 0, 0)
-            profile.progressToNewStar = progressToNewStar
-            profile.rating = java.lang.Float.parseFloat(document.select("#rating-text > b").text())
-            profile.stars = document.select(".star-row-0 > .star-0").size
-            return profile
+            return Profile(
+                document.select("div.sidebarContent > div.user > span").text(),
+                Image(document.select("div.sidebarContent > div.user > img").attr("src"), 0, 0),
+                document.select("#rating-text > b").text().toFloat(),
+                document.select(".star-row-0 > .star-0").size,
+                getProgressToNewStar())
         }
 
-        private val progressToNewStar: Float
-            get() {
-                val style = document.select("div.stars div.poll_res_bg_active").first().attr("style")
-                val m = Pattern.compile("width:(\\d+)%;").matcher(style)
-                if (!m.find()) throw IllegalStateException()
-                return java.lang.Float.parseFloat(m.group(1))
-            }
+        private fun getProgressToNewStar(): Float {
+            val style = document.select("div.stars div.poll_res_bg_active").first().attr("style")
+            val m = Pattern.compile("width:(\\d+)%;").matcher(style)
+            if (!m.find()) throw IllegalStateException()
+            return java.lang.Float.parseFloat(m.group(1))
+        }
     }
 }
