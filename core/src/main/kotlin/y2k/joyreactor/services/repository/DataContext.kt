@@ -2,6 +2,7 @@ package y2k.joyreactor.services.repository
 
 import rx.Observable
 import rx.schedulers.Schedulers
+import y2k.joyreactor.Message
 import y2k.joyreactor.Post
 import y2k.joyreactor.Tag
 import y2k.joyreactor.TagPost
@@ -25,7 +26,7 @@ class DataContext {
 
     val TagPosts: DataSet<TagPost> = register("tag_posts")
 
-    val Messages: DataSet<TagPost> = register("tag_posts")
+    val Messages = register<Message>("messages")
 
     private val tables = ArrayList<DataSet<*>>()
 

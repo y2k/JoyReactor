@@ -55,7 +55,7 @@ object ServiceLocator {
             ProfileService(resolve(ProfileRequestFactory::class), resolve(LoginRequestFactory::class))
         }
         add(MessageService::class) {
-            MessageService(resolve(PrivateMessageFetcher::class), resolve(MemoryBuffer::class))
+            MessageService(resolve(PrivateMessageFetcher::class), resolve(DataContext.Factory::class))
         }
         add(CommentService::class) {
             CommentService(
@@ -114,7 +114,7 @@ object ServiceLocator {
     }
 
     // ==========================================
-    // Services
+    // Private methods
     // ==========================================
 
     @Suppress("UNCHECKED_CAST")

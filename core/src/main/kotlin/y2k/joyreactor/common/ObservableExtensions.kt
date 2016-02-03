@@ -30,3 +30,7 @@ fun <T> ioObservable(func: () -> T): Observable<T> {
         }
     }
 }
+
+fun <T, R> Observable<T>.concatAndRepeat(other: Observable<R>): Observable<T> {
+    return concatWith(other.flatMap { this })
+}
