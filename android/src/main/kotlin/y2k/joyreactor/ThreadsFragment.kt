@@ -45,7 +45,7 @@ class ThreadsFragment : Fragment() {
 
     internal inner class ThreadAdapter : RecyclerView.Adapter<ThreadAdapter.ViewHolder>() {
 
-        private var threads: List<Message>? = null
+        private var threads: List<Message> = emptyList()
 
         fun updateData(threads: List<Message>) {
             this.threads = threads
@@ -58,7 +58,7 @@ class ThreadsFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val t = threads!![position]
+            val t = threads[position]
             holder.userImage.setImage(t.getUserImageObject().toImage())
             holder.userName.text = t.userName
             holder.lastMessage.text = t.text
@@ -66,7 +66,7 @@ class ThreadsFragment : Fragment() {
         }
 
         override fun getItemCount(): Int {
-            return if (threads == null) 0 else threads!!.size
+            return threads.size
         }
 
         internal inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -77,13 +77,14 @@ class ThreadsFragment : Fragment() {
             var time: TextView
 
             init {
-
                 userImage = view.findViewById(R.id.userImage) as WebImageView
                 userName = view.findViewById(R.id.userName) as TextView
                 lastMessage = view.findViewById(R.id.lastMessage) as TextView
                 time = view.findViewById(R.id.time) as TextView
 
-                view.findViewById(R.id.button).setOnClickListener { v -> presenter!!.selectThread(adapterPosition) }
+                view.findViewById(R.id.button).setOnClickListener {
+                    presenter!!.selectThread(threads[adapterPosition])
+                }
             }
         }
     }

@@ -1,7 +1,7 @@
 package y2k.joyreactor.presenters
 
 import y2k.joyreactor.Tag
-import y2k.joyreactor.common.Messages
+import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.TagListService
 
@@ -11,22 +11,29 @@ import y2k.joyreactor.services.TagListService
 class TagListPresenter(
     private val view: TagListPresenter.View,
     private val service: TagListService,
+    private val broadcastService: BroadcastService,
     private val lifeCycleService: LifeCycleService) {
 
     init {
-        lifeCycleService.add { service.getMyTags().subscribe({ view.reloadData(it) }, { it.printStackTrace() }) }
+        lifeCycleService.add {
+            service
+                .getMyTags()
+                .subscribe({ view.reloadData(it) }, { it.printStackTrace() })
+        }
     }
 
     fun selectTag(tag: Tag) {
-        Messages.TagSelected(tag).broadcast()
+        broadcastService.broadcast(BroadcastService.TagSelected(tag))
     }
 
     fun selectedFeatured() {
-        Messages.TagSelected(Tag.makeFeatured()).broadcast()
+        broadcastService.broadcast(BroadcastService.TagSelected(Tag.makeFeatured()))
     }
 
     fun selectedFavorite() {
-        service.getTagForFavorite().subscribe { tag -> Messages.TagSelected(tag).broadcast() }
+        service
+            .getTagForFavorite()
+            .subscribe { broadcastService.broadcast(BroadcastService.TagSelected(it)) }
     }
 
     interface View {

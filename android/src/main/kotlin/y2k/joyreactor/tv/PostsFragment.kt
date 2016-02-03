@@ -16,6 +16,7 @@ import y2k.joyreactor.Post
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.platform.ImageRequest
 import y2k.joyreactor.presenters.PostListPresenter
+import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
 
 /**
@@ -23,7 +24,7 @@ import y2k.joyreactor.services.LifeCycleService
  */
 class PostsFragment : VerticalGridFragment() {
 
-    val lifeCycleService = LifeCycleService()
+    val lifeCycleService = LifeCycleService(ServiceLocator.resolve(BroadcastService::class))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -9,7 +9,7 @@ import y2k.joyreactor.services.synchronizers.PrivateMessageFetcher
 /**
  * Created by y2k on 12/8/15.
  */
-class MessageService(
+class UserMessagesService(
     private val fetcher: PrivateMessageFetcher,
     private val entities: DataContext.Factory) {
 

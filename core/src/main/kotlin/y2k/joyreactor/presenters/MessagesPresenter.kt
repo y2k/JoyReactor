@@ -1,8 +1,9 @@
 package y2k.joyreactor.presenters
 
 import y2k.joyreactor.Message
+import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
-import y2k.joyreactor.services.MessageService
+import y2k.joyreactor.services.UserMessagesService
 import y2k.joyreactor.services.requests.SendMessageRequest
 
 /**
@@ -10,13 +11,12 @@ import y2k.joyreactor.services.requests.SendMessageRequest
  */
 class MessagesPresenter(
     private val view: MessagesPresenter.View,
-    private val service: MessageService,
+    private val service: UserMessagesService,
     private val lifeCycleService: LifeCycleService) {
 
     init {
-        // FIXME:
         reloadMessages(getUsername())
-        lifeCycleService.add(MessageThreadsPresenter.ThreadSelectedMessage::class) { reloadMessages(it.thread.userName) }
+        lifeCycleService.add(BroadcastService.ThreadSelectedMessage::class) { reloadMessages(it.thread.userName) }
     }
 
     fun reply(message: String) {
@@ -35,7 +35,7 @@ class MessagesPresenter(
             }, { it.printStackTrace() })
     }
 
-    // TODO:
+    // FIXME:
     private fun getUsername(): String = "user500"
 
     interface View {

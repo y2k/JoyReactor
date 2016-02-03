@@ -3,8 +3,8 @@ package y2k.joyreactor.presenters
 import rx.Observable
 import y2k.joyreactor.Post
 import y2k.joyreactor.Tag
-import y2k.joyreactor.common.Messages
 import y2k.joyreactor.platform.Navigation
+import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.TagService
 
@@ -17,12 +17,12 @@ class PostListPresenter(
     private val lifeCycleService: LifeCycleService) {
 
     init {
-        lifeCycleService.add(Messages.TagSelected::class) { currentTagChanged(it) }
-        currentTagChanged(Messages.TagSelected(Tag.makeFeatured()))
+        lifeCycleService.add(BroadcastService.TagSelected::class) { currentTagChanged(it.tag) }
+        currentTagChanged(Tag.makeFeatured())
     }
 
-    private fun currentTagChanged(m: Messages.TagSelected) {
-        service.setTag(m.tag)
+    private fun currentTagChanged(newTag: Tag) {
+        service.setTag(newTag)
 
         view.setBusy(true)
         getFromRepository().subscribe { posts -> view.reloadPosts(posts, null) }
@@ -70,10 +70,8 @@ class PostListPresenter(
     }
 
     fun playClicked(post: Post) {
-        if (post.image!!.isAnimated)
-            Navigation.instance.openVideo(post.serverId!!)
-        else
-            Navigation.instance.openImageView(post)
+        if (post.image!!.isAnimated) Navigation.instance.openVideo(post.serverId!!)
+        else Navigation.instance.openImageView(post)
     }
 
     interface View {

@@ -18,6 +18,7 @@ object ServiceLocator {
     private val map = HashMap <KClass<*>, () -> Any>()
 
     init {
+        add(BroadcastService::class) { BroadcastService() }
         add(OriginalImageRequestFactory::class) { OriginalImageRequestFactory() }
         add(PostRequest::class) { PostRequest() }
         add(PostsForTagRequest::class) { PostsForTagRequest() }
@@ -54,8 +55,8 @@ object ServiceLocator {
         add(ProfileService::class) {
             ProfileService(resolve(ProfileRequestFactory::class), resolve(LoginRequestFactory::class))
         }
-        add(MessageService::class) {
-            MessageService(resolve(PrivateMessageFetcher::class), resolve(DataContext.Factory::class))
+        add(UserMessagesService::class) {
+            UserMessagesService(resolve(PrivateMessageFetcher::class), resolve(DataContext.Factory::class))
         }
         add(CommentService::class) {
             CommentService(
@@ -78,7 +79,10 @@ object ServiceLocator {
     }
 
     fun resolve(lifeCycleService: LifeCycleService, view: TagListPresenter.View): TagListPresenter {
-        return TagListPresenter(view, resolve(TagListService::class), lifeCycleService)
+        return TagListPresenter(view,
+            resolve(TagListService::class),
+            resolve(BroadcastService::class),
+            lifeCycleService)
     }
 
     fun resolve(view: ProfilePresenter.View): ProfilePresenter {
@@ -98,11 +102,11 @@ object ServiceLocator {
     }
 
     fun resolve(view: MessagesPresenter.View, lifeCycleService: LifeCycleService): MessagesPresenter {
-        return MessagesPresenter(view, resolve(MessageService::class), lifeCycleService)
+        return MessagesPresenter(view, resolve(UserMessagesService::class), lifeCycleService)
     }
 
     fun resolve(view: MessageThreadsPresenter.View): MessageThreadsPresenter {
-        return MessageThreadsPresenter(view, resolve(MessageService::class))
+        return MessageThreadsPresenter(view, resolve(BroadcastService::class), resolve(UserMessagesService::class))
     }
 
     fun resolve(view: ImagePresenter.View): ImagePresenter {
@@ -118,7 +122,7 @@ object ServiceLocator {
     // ==========================================
 
     @Suppress("UNCHECKED_CAST")
-    private fun <T : Any> resolve(type: KClass<T>): T {
+    public fun <T : Any> resolve(type: KClass<T>): T {
         return map[type]!!() as T
     }
 

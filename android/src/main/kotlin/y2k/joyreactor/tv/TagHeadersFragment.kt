@@ -10,6 +10,7 @@ import y2k.joyreactor.R
 import y2k.joyreactor.Tag
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.presenters.TagListPresenter
+import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
 
 /**
@@ -19,7 +20,7 @@ class TagHeadersFragment : HeadersFragment() {
 
     lateinit var presenter: TagListPresenter
     lateinit var tags: List<Tag>
-    val lifeCycleService = LifeCycleService()
+    val lifeCycleService = LifeCycleService(ServiceLocator.resolve(BroadcastService::class))
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

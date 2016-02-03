@@ -43,9 +43,9 @@ class MessageFragment : BaseFragment(), MessagesPresenter.View {
         // TODO:
     }
 
-    internal class MessageAdapter : RecyclerView.Adapter<ViewHolderImpl>() {
+    class MessageAdapter : RecyclerView.Adapter<ViewHolderImpl>() {
 
-        private var items: List<Message>? = null
+        private var items: List<Message> = emptyList()
 
         fun update(items: List<Message>) {
             this.items = items
@@ -58,13 +58,13 @@ class MessageFragment : BaseFragment(), MessagesPresenter.View {
         }
 
         override fun onBindViewHolder(holder: ViewHolderImpl, position: Int) {
-            val i = items!![position]
+            val i = items[position]
             holder.message.text = i.text
             holder.created.text = PrettyTime().format(i.date)
         }
 
         override fun getItemViewType(position: Int): Int {
-            if (items!![position].isMine)
+            if (items[position].isMine)
                 return if (isFirst(position))
                     R.layout.item_message_outbox_first
                 else
@@ -76,15 +76,15 @@ class MessageFragment : BaseFragment(), MessagesPresenter.View {
         }
 
         private fun isFirst(position: Int): Boolean {
-            return position == items!!.size - 1 || items!![position].isMine != items!![position + 1].isMine
+            return position == items.size - 1 || items[position].isMine != items[position + 1].isMine
         }
 
         override fun getItemCount(): Int {
-            return if (items == null) 0 else items!!.size
+            return items.size
         }
     }
 
-    internal class ViewHolderImpl(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolderImpl(view: View) : RecyclerView.ViewHolder(view) {
 
         var message: TextView
         var created: TextView
