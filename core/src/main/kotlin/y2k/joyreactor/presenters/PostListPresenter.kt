@@ -5,6 +5,7 @@ import y2k.joyreactor.Post
 import y2k.joyreactor.Tag
 import y2k.joyreactor.common.Messages
 import y2k.joyreactor.platform.Navigation
+import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.TagService
 
 /**
@@ -12,10 +13,11 @@ import y2k.joyreactor.services.TagService
  */
 class PostListPresenter(
     private val view: PostListPresenter.View,
-    private val service: TagService) : Presenter() {
+    private val service: TagService,
+    private val lifeCycleService: LifeCycleService) {
 
     init {
-        messages.add(Messages.TagSelected::class.java) { this.currentTagChanged(it) }
+        lifeCycleService.add(Messages.TagSelected::class) { currentTagChanged(it) }
         currentTagChanged(Messages.TagSelected(Tag.makeFeatured()))
     }
 

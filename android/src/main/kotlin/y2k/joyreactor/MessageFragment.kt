@@ -1,7 +1,6 @@
 package y2k.joyreactor
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -10,13 +9,15 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import org.ocpsoft.prettytime.PrettyTime
+import y2k.joyreactor.common.BaseFragment
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.presenters.MessagesPresenter
+import y2k.joyreactor.services.LifeCycleService
 
 /**
  * Created by y2k on 11/20/15.
  */
-class MessageFragment : Fragment(), MessagesPresenter.View {
+class MessageFragment : BaseFragment(), MessagesPresenter.View {
 
     private var adapter: MessageAdapter? = null
     private var presenter: MessagesPresenter? = null
@@ -31,18 +32,8 @@ class MessageFragment : Fragment(), MessagesPresenter.View {
         val newMessage = view.findViewById(R.id.newMessage) as EditText
         view.findViewById(R.id.createMessage).setOnClickListener { v -> presenter!!.reply("" + newMessage.text) }
 
-        presenter = ServiceLocator.provideMessagesPresenter(this)
+        presenter = ServiceLocator.provideMessagesPresenter(this, lifeCycleService)
         return view
-    }
-
-    override fun onResume() {
-        super.onResume()
-        presenter!!.activate()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        presenter!!.deactivate()
     }
 
     override fun updateMessages(messages: List<Message>) {

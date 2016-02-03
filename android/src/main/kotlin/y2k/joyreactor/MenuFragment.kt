@@ -1,20 +1,20 @@
 package y2k.joyreactor
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import y2k.joyreactor.common.BaseFragment
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.presenters.TagListPresenter
 
 /**
  * Created by y2k on 11/12/15.
  */
-class MenuFragment : Fragment(), TagListPresenter.View {
+class MenuFragment : BaseFragment(), TagListPresenter.View {
 
     lateinit var adapter: TagsAdapter
     lateinit var presenter: TagListPresenter
@@ -30,12 +30,7 @@ class MenuFragment : Fragment(), TagListPresenter.View {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        presenter = ServiceLocator.provideTagListPresenter(this)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        presenter.activate()
+        presenter = ServiceLocator.provideTagListPresenter(this, lifeCycleService)
     }
 
     override fun reloadData(tags: List<Tag>) {

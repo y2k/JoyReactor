@@ -16,11 +16,14 @@ import y2k.joyreactor.Post
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.platform.ImageRequest
 import y2k.joyreactor.presenters.PostListPresenter
+import y2k.joyreactor.services.LifeCycleService
 
 /**
  * Created by y2k on 11/25/15.
  */
 class PostsFragment : VerticalGridFragment() {
+
+    val lifeCycleService = LifeCycleService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +35,7 @@ class PostsFragment : VerticalGridFragment() {
         val adapter = ArrayObjectAdapter(CardPresenter())
         setAdapter(adapter)
 
-        ServiceLocator.providePostListPresenter(
+        ServiceLocator.resolve(
             object : PostListPresenter.View {
 
                 override fun reloadPosts(posts: List<Post>, divider: Int?) {
@@ -47,7 +50,17 @@ class PostsFragment : VerticalGridFragment() {
                 override fun setHasNewPosts(hasNewPosts: Boolean) {
                     // TODO:
                 }
-            })
+            }, lifeCycleService)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        lifeCycleService.activate()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        lifeCycleService.deactivate()
     }
 
     class CardPresenter : Presenter() {

@@ -1,16 +1,21 @@
-package y2k.joyreactor.common
+package y2k.joyreactor.services
 
 import java.util.*
+import kotlin.reflect.KClass
 
 /**
  * Created by y2k on 2/3/16.
  */
-class Messenger() {
+class LifeCycleService {
 
     private val actions = ArrayList<() -> Unit>()
 
-    fun <T> add(type: Class<T>, callback: (T) -> Unit) {
-        actions.add ({ DefaultMessenger.register(this, callback, type) })
+    fun add(func: () -> Unit) {
+        actions.add(func)
+    }
+
+    fun <T : Any> add(type: KClass<T>, func: (T) -> Unit) {
+        actions.add { DefaultMessenger.register(this, func, type.java) }
     }
 
     fun activate() {

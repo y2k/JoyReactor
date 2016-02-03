@@ -10,6 +10,7 @@ import y2k.joyreactor.R
 import y2k.joyreactor.Tag
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.presenters.TagListPresenter
+import y2k.joyreactor.services.LifeCycleService
 
 /**
  * Created by y2k on 11/25/15.
@@ -18,6 +19,7 @@ class TagHeadersFragment : HeadersFragment() {
 
     lateinit var presenter: TagListPresenter
     lateinit var tags: List<Tag>
+    val lifeCycleService = LifeCycleService()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -48,16 +50,16 @@ class TagHeadersFragment : HeadersFragment() {
                 private fun addRow(adapter: ArrayObjectAdapter, title: String?) {
                     adapter.add(Row(adapter.size().toLong(), HeaderItem(title)))
                 }
-            })
+            }, lifeCycleService)
     }
 
     override fun onResume() {
         super.onResume()
-        presenter.activate()
+        lifeCycleService.activate()
     }
 
     override fun onPause() {
         super.onPause()
-        presenter.deactivate()
+        lifeCycleService.deactivate()
     }
 }

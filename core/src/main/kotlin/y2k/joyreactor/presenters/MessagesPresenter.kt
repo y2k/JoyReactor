@@ -1,6 +1,7 @@
 package y2k.joyreactor.presenters
 
 import y2k.joyreactor.Message
+import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.MessageService
 import y2k.joyreactor.services.requests.SendMessageRequest
 
@@ -9,15 +10,13 @@ import y2k.joyreactor.services.requests.SendMessageRequest
  */
 class MessagesPresenter(
     private val view: MessagesPresenter.View,
-    private val service: MessageService) : Presenter() {
+    private val service: MessageService,
+    private val lifeCycleService: LifeCycleService) {
 
     init {
         // FIXME:
         reloadMessages(getUsername())
-
-        messages.add(MessageThreadsPresenter.ThreadSelectedMessage::class.java) {
-            reloadMessages(it.thread.userName)
-        }
+        lifeCycleService.add(MessageThreadsPresenter.ThreadSelectedMessage::class) { reloadMessages(it.thread.userName) }
     }
 
     fun reply(message: String) {

@@ -69,16 +69,16 @@ object ServiceLocator {
     // Presenters
     // ==========================================
 
-    fun providePostListPresenter(view: PostListPresenter.View): PostListPresenter {
-        return PostListPresenter(view, resolve(TagService::class))
+    fun resolve(view: PostListPresenter.View, lifeCycleService: LifeCycleService): PostListPresenter {
+        return PostListPresenter(view, resolve(TagService::class), lifeCycleService)
     }
 
     fun providePostPresenter(view: PostPresenter.View): PostPresenter {
         return PostPresenter(view, resolve(PostService::class), resolve(ProfileService::class))
     }
 
-    fun provideTagListPresenter(view: TagListPresenter.View): TagListPresenter {
-        return TagListPresenter(view, resolve(TagListService::class))
+    fun provideTagListPresenter(view: TagListPresenter.View, lifeCycleService: LifeCycleService): TagListPresenter {
+        return TagListPresenter(view, resolve(TagListService::class), lifeCycleService)
     }
 
     fun provideProfilePresenter(view: ProfilePresenter.View): ProfilePresenter {
@@ -97,8 +97,8 @@ object ServiceLocator {
         return AddTagPresenter(view, resolve(TagListService::class))
     }
 
-    fun provideMessagesPresenter(view: MessagesPresenter.View): MessagesPresenter {
-        return MessagesPresenter(view, resolve(MessageService::class))
+    fun provideMessagesPresenter(view: MessagesPresenter.View, lifeCycleService: LifeCycleService): MessagesPresenter {
+        return MessagesPresenter(view, resolve(MessageService::class), lifeCycleService)
     }
 
     fun provideMessageThreadsPresenter(view: MessageThreadsPresenter.View): MessageThreadsPresenter {
