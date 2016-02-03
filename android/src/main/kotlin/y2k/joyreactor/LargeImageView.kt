@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.util.AttributeSet
 import android.widget.ImageView
-import y2k.joyreactor.common.ObservableUtils
+import y2k.joyreactor.common.ioObservable
 import java.io.File
 
 /**
@@ -18,7 +18,7 @@ class LargeImageView(context: Context, attrs: AttributeSet) : ImageView(context,
         if (this.path == path) return
         this.path = path
 
-        ObservableUtils.func {
+        ioObservable {
             val op = BitmapFactory.Options()
             op.inJustDecodeBounds = true
             BitmapFactory.decodeFile(path.absolutePath, op)
@@ -30,8 +30,6 @@ class LargeImageView(context: Context, attrs: AttributeSet) : ImageView(context,
                 op.outHeight / met.heightPixels)
 
             BitmapFactory.decodeFile(path.absolutePath, op)
-        }.subscribe {
-            this.setImageBitmap(it)
-        }
+        }.subscribe { setImageBitmap(it) }
     }
 }
