@@ -43,7 +43,7 @@ class ProfileRequestFactory {
 
         private val progressToNewStar: Float
             get() {
-                val style = document.select("div.poll_res_bg_active").first().attr("style")
+                val style = document.select("div.stars div.poll_res_bg_active").first().attr("style")
                 val m = Pattern.compile("width:(\\d+)%;").matcher(style)
                 if (!m.find()) throw IllegalStateException()
                 return java.lang.Float.parseFloat(m.group(1))
