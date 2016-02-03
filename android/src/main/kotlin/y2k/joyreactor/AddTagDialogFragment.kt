@@ -25,7 +25,7 @@ class AddTagDialogFragment : AppCompatDialogFragment() {
         val okButton = view.findViewById(R.id.ok)
         val tagView = view.findViewById(R.id.tag) as TextView
 
-        val presenter = ServiceLocator.provideAddTagPresenter(
+        val presenter = ServiceLocator.resolve(
             object : AddTagPresenter.View {
 
                 override fun setIsBusy(isBusy: Boolean) {

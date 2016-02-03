@@ -31,7 +31,7 @@ class ProfileViewController : UIViewController(), ProfilePresenter.View {
 
     override fun viewDidLoad() {
         super.viewDidLoad()
-        val presenter = ServiceLocator.provideProfilePresenter(this)
+        val presenter = ServiceLocator.resolve(this)
         logoutButton.addOnTouchUpInsideListener { sender, e -> presenter.logout() }
     }
 

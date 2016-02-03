@@ -28,7 +28,7 @@ class ThreadsFragment : Fragment() {
 
         val progress = view.findViewById(R.id.progress)
 
-        presenter = ServiceLocator.provideMessageThreadsPresenter(
+        presenter = ServiceLocator.resolve(
             object : MessageThreadsPresenter.View {
 
                 override fun setIsBusy(isBusy: Boolean) {

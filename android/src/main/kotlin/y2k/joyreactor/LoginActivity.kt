@@ -20,7 +20,7 @@ class LoginActivity : AppCompatActivity(), LoginPresenter.View {
         setSupportActionBar(findViewById(R.id.toolbar) as Toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        val presenter = ServiceLocator.provideLoginPresenter(this)
+        val presenter = ServiceLocator.resolve(this)
 
         findViewById(R.id.login).setOnClickListener {
             presenter.login(

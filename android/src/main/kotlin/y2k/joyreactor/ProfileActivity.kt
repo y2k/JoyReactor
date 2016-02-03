@@ -19,7 +19,7 @@ class ProfileActivity : AppCompatActivity(), ProfilePresenter.View {
         setSupportActionBar(findViewById(R.id.toolbar) as Toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        val presenter = ServiceLocator.provideProfilePresenter(this)
+        val presenter = ServiceLocator.resolve(this)
         findViewById(R.id.logout).setOnClickListener { v -> presenter.logout() }
     }
 

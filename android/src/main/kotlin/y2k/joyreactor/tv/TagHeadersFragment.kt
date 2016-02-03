@@ -32,7 +32,7 @@ class TagHeadersFragment : HeadersFragment() {
             }
         }
 
-        presenter = ServiceLocator.provideTagListPresenter(
+        presenter = ServiceLocator.resolve(
             object : TagListPresenter.View {
 
                 override fun reloadData(tags: List<Tag>) {

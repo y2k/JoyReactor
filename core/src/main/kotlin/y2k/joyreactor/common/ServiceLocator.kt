@@ -73,43 +73,43 @@ object ServiceLocator {
         return PostListPresenter(view, resolve(TagService::class), lifeCycleService)
     }
 
-    fun providePostPresenter(view: PostPresenter.View): PostPresenter {
+    fun resolve(view: PostPresenter.View): PostPresenter {
         return PostPresenter(view, resolve(PostService::class), resolve(ProfileService::class))
     }
 
-    fun provideTagListPresenter(view: TagListPresenter.View, lifeCycleService: LifeCycleService): TagListPresenter {
+    fun resolve(view: TagListPresenter.View, lifeCycleService: LifeCycleService): TagListPresenter {
         return TagListPresenter(view, resolve(TagListService::class), lifeCycleService)
     }
 
-    fun provideProfilePresenter(view: ProfilePresenter.View): ProfilePresenter {
+    fun resolve(view: ProfilePresenter.View): ProfilePresenter {
         return ProfilePresenter(view, resolve(ProfileService::class))
     }
 
-    fun provideCreateCommentPresenter(view: CreateCommentPresenter.View): CreateCommentPresenter {
+    fun resolve(view: CreateCommentPresenter.View): CreateCommentPresenter {
         return CreateCommentPresenter(view, resolve(ProfileService::class), resolve(CommentService::class))
     }
 
-    fun provideLoginPresenter(view: LoginPresenter.View): LoginPresenter {
+    fun resolve(view: LoginPresenter.View): LoginPresenter {
         return LoginPresenter(view, resolve(ProfileService::class))
     }
 
-    fun provideAddTagPresenter(view: AddTagPresenter.View): AddTagPresenter {
+    fun resolve(view: AddTagPresenter.View): AddTagPresenter {
         return AddTagPresenter(view, resolve(TagListService::class))
     }
 
-    fun provideMessagesPresenter(view: MessagesPresenter.View, lifeCycleService: LifeCycleService): MessagesPresenter {
+    fun resolve(view: MessagesPresenter.View, lifeCycleService: LifeCycleService): MessagesPresenter {
         return MessagesPresenter(view, resolve(MessageService::class), lifeCycleService)
     }
 
-    fun provideMessageThreadsPresenter(view: MessageThreadsPresenter.View): MessageThreadsPresenter {
+    fun resolve(view: MessageThreadsPresenter.View): MessageThreadsPresenter {
         return MessageThreadsPresenter(view, resolve(MessageService::class))
     }
 
-    fun provideImagePresenter(view: ImagePresenter.View): ImagePresenter {
+    fun resolve(view: ImagePresenter.View): ImagePresenter {
         return ImagePresenter(view, resolve(PostService::class))
     }
 
-    fun provideVideoPresenter(view: VideoPresenter.View): VideoPresenter {
+    fun resolve(view: VideoPresenter.View): VideoPresenter {
         return VideoPresenter(view, resolve(PostService::class))
     }
 

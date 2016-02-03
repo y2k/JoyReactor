@@ -30,7 +30,7 @@ class MenuFragment : BaseFragment(), TagListPresenter.View {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        presenter = ServiceLocator.provideTagListPresenter(this, lifeCycleService)
+        presenter = ServiceLocator.resolve(this, lifeCycleService)
     }
 
     override fun reloadData(tags: List<Tag>) {

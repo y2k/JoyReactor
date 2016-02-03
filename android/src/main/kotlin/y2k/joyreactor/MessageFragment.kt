@@ -32,7 +32,7 @@ class MessageFragment : BaseFragment(), MessagesPresenter.View {
         val newMessage = view.findViewById(R.id.newMessage) as EditText
         view.findViewById(R.id.createMessage).setOnClickListener { v -> presenter!!.reply("" + newMessage.text) }
 
-        presenter = ServiceLocator.provideMessagesPresenter(this, lifeCycleService)
+        presenter = ServiceLocator.resolve(this, lifeCycleService)
         return view
     }
 

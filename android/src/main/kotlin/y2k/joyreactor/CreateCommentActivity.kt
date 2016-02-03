@@ -18,7 +18,7 @@ class CreateCommentActivity : AppCompatActivity() {
         val sendButton = findViewById(R.id.send)
         val progress = findViewById(R.id.progress)
 
-        val presenter = ServiceLocator.provideCreateCommentPresenter(
+        val presenter = ServiceLocator.resolve(
             object : CreateCommentPresenter.View {
 
                 override fun setIsBusy(isBusy: Boolean) {

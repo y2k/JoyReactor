@@ -28,7 +28,7 @@ class VideoViewController : UIViewController(), VideoPresenter.View {
 
     override fun viewDidLoad() {
         super.viewDidLoad()
-        ServiceLocator.provideVideoPresenter(this)
+        ServiceLocator.resolve(this)
         navigationController.setNavigationBarHidden(true, true)
     }
 
