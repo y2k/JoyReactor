@@ -6,7 +6,7 @@ import java.io.Serializable
 /**
  * Created by y2k on 9/26/15.
  */
-open class Tag : Serializable, DataSet.Dto {
+class Tag : Serializable, DataSet.Dto {
 
     override var id: Long = 0
 
@@ -29,11 +29,7 @@ open class Tag : Serializable, DataSet.Dto {
         private val MARK_USERNAME = "username:"
 
         fun makeFavorite(username: String): Tag {
-            return object : Tag() {
-                init {
-                    title = MARK_USERNAME + username
-                }
-            }
+            return Tag().apply { this.title = MARK_USERNAME + username }
         }
 
         fun makeFeatured(): Tag {
