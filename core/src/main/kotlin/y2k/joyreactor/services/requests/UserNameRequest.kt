@@ -9,11 +9,10 @@ import y2k.joyreactor.http.HttpClient
  */
 class UserNameRequest {
 
-    fun request(): Observable<String> {
+    fun request(): Observable<String?> {
         return ioObservable {
             val document = HttpClient.instance.getDocument("http://joyreactor.cc/donate")
-            val node = document.select("a#settings").first()
-            node?.text()!!
+            document.select("a#settings").first()?.text()
         }
     }
 }

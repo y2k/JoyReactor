@@ -18,6 +18,7 @@ object ServiceLocator {
     private val map = HashMap <KClass<*>, () -> Any>()
 
     init {
+        add(UserNameRequest::class) { UserNameRequest() }
         add(BroadcastService::class) { BroadcastService() }
         add(OriginalImageRequestFactory::class) { OriginalImageRequestFactory() }
         add(PostRequest::class) { PostRequest() }
@@ -50,7 +51,10 @@ object ServiceLocator {
                 resolve(PostMerger::class))
         }
         add(TagListService::class) {
-            TagListService(resolve(DataContext.Factory::class), resolve(MyTagFetcher::class))
+            TagListService(
+                resolve(DataContext.Factory::class),
+                resolve(UserNameRequest::class),
+                resolve(MyTagFetcher::class))
         }
         add(ProfileService::class) {
             ProfileService(resolve(ProfileRequestFactory::class), resolve(LoginRequestFactory::class))

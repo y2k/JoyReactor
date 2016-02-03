@@ -15,23 +15,21 @@ class MyTagFetcher(private val dataContext: DataContext.Factory) {
 
     fun synchronize(): Observable<Unit> {
         return UserNameRequest()
-                .request()
-                .flatMap({ username ->
-                    if (username == null)
-                        DefaultTagRequest().request()
-                    else
-                        TagsForUserRequest(username).request()
-                })
-                .flatMap { newTags ->
-                    dataContext.use { entities ->
-                        val tags = merge(entities.Tags.toList(), newTags)
+            .request()
+            .flatMap {
+                if (it == null) DefaultTagRequest().request()
+                else TagsForUserRequest(it).request()
+            }
+            .flatMap { newTags ->
+                dataContext.use { entities ->
+                    val tags = merge(entities.Tags.toList(), newTags)
 
-                        entities.Tags.clear()
-                        tags.forEach { entities.Tags.add(it) }
+                    entities.Tags.clear()
+                    tags.forEach { entities.Tags.add(it) }
 
-                        entities.saveChanges()
-                    }
+                    entities.saveChanges()
                 }
+            }
     }
 
     private fun merge(oldTags: List<Tag>, newTags: List<Tag>): List<Tag> {

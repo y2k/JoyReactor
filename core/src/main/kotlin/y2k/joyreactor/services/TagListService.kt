@@ -2,6 +2,7 @@ package y2k.joyreactor.services
 
 import rx.Observable
 import y2k.joyreactor.Tag
+import y2k.joyreactor.common.concatAndRepeat
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.AddTagRequest
 import y2k.joyreactor.services.requests.UserNameRequest
@@ -12,15 +13,13 @@ import y2k.joyreactor.services.synchronizers.MyTagFetcher
  */
 class TagListService(
     private val dataContext: DataContext.Factory,
+    private val userNameRequest: UserNameRequest,
     private val synchronizer: MyTagFetcher) {
 
     fun getMyTags(): Observable<List<Tag>> {
-        return getFromRepo().mergeWith(
-            synchronizer.synchronize().flatMap { getFromRepo() })
-    }
-
-    private fun getFromRepo(): Observable<List<Tag>> {
-        return dataContext.use { entities -> entities.Tags.filter { it.isMine } }
+        return dataContext
+            .applyUse { Tags.filter { it.isMine } }
+            .concatAndRepeat(synchronizer.synchronize())
     }
 
     fun addTag(tag: String): Observable<Unit> {
@@ -28,6 +27,8 @@ class TagListService(
     }
 
     fun getTagForFavorite(): Observable<Tag> {
-        return UserNameRequest().request().map { Tag.makeFavorite(it) }
+        return userNameRequest
+            .request()
+            .map { Tag.makeFavorite(it!!) }
     }
 }
