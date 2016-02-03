@@ -14,7 +14,7 @@ class CreateCommentPresenter(
         private val service: CommentService) {
 
     init {
-        profileService.get().subscribe(
+        profileService.getProfile().subscribe(
                 { view.setUser(it) },
                 { it.printStackTrace() })
     }

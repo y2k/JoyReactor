@@ -18,18 +18,7 @@ object ServiceLocator {
     private val map = HashMap <KClass<*>, () -> Any>()
 
     init {
-        add(UserNameRequest::class) { UserNameRequest() }
-        add(BroadcastService::class) { BroadcastService() }
-        add(OriginalImageRequestFactory::class) { OriginalImageRequestFactory() }
-        add(PostRequest::class) { PostRequest() }
-        add(PostsForTagRequest::class) { PostsForTagRequest() }
-        add(ProfileRequestFactory::class) { ProfileRequestFactory() }
-        add(LoginRequestFactory::class) { LoginRequestFactory() }
-        add(UserImageRequest::class) { UserImageRequest() }
         add(MessageListRequest::class) { MessageListRequest(resolve(UserImageRequest::class)) }
-        add(CreateCommentRequestFactory::class) { CreateCommentRequestFactory() }
-
-        add(DataContext.Factory::class) { DataContext.Factory() }
         add(PostMerger::class) { PostMerger(resolve(DataContext.Factory::class)) }
         add(MemoryBuffer::class) { MemoryBuffer }
         add(MyTagFetcher::class) { MyTagFetcher(resolve(DataContext.Factory::class)) }
@@ -127,7 +116,7 @@ object ServiceLocator {
 
     @Suppress("UNCHECKED_CAST")
     public fun <T : Any> resolve(type: KClass<T>): T {
-        return map[type]!!() as T
+        return map[type]?.let { it() as T } ?: type.java.newInstance()
     }
 
     private fun <T : Any> add(type: KClass<T>, factory: () -> T) {

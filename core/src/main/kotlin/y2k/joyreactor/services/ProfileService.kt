@@ -18,7 +18,7 @@ class ProfileService(
         return loginRequestFactory.request(username, password)
     }
 
-    fun get(): Observable<Profile> {
+    fun getProfile(): Observable<Profile> {
         return profileRequestFactory.request()
     }
 
@@ -27,7 +27,8 @@ class ProfileService(
     }
 
     fun isAuthorized(): Observable<Boolean> {
-        return profileRequestFactory.request()
+        return profileRequestFactory
+            .request()
             .map { true }.onErrorReturn { false }
     }
 }
