@@ -2,6 +2,7 @@ package y2k.joyreactor.services
 
 import rx.Observable
 import y2k.joyreactor.Message
+import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.synchronizers.PrivateMessageFetcher
 import java.util.*
 
@@ -9,8 +10,8 @@ import java.util.*
  * Created by y2k on 12/8/15.
  */
 class MessageService(
-        private val fetcher: PrivateMessageFetcher,
-        private val buffer: MemoryBuffer) {
+    private val fetcher: PrivateMessageFetcher,
+    private val buffer: MemoryBuffer) {
 
     fun getThreads(): Observable<List<Message>> {
         return getFromRepo().mergeWith(fetcher.execute().flatMap { getFromRepo() })

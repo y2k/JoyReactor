@@ -11,6 +11,7 @@ import java.io.EOFException
 import java.io.File
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
+import java.util.*
 import java.util.concurrent.Executors
 
 /**
@@ -18,16 +19,22 @@ import java.util.concurrent.Executors
  */
 class DataContext {
 
-    val Posts: DataSet<Post> = DataSet("posts")
+    val Posts: DataSet<Post> = register("posts")
 
-    val Tags: DataSet<Tag> = DataSet("tags")
+    val Tags: DataSet<Tag> = register("tags")
 
-    val TagPosts: DataSet<TagPost> = DataSet("tag_posts")
+    val TagPosts: DataSet<TagPost> = register("tag_posts")
+
+    val Messages: DataSet<TagPost> = register("tag_posts")
+
+    private val tables = ArrayList<DataSet<*>>()
+
+    private fun <T : DataSet.Dto> register(name: String): DataSet<T> {
+        return DataSet<T>(name).apply { tables.add(this) }
+    }
 
     fun saveChanges() {
-        Serializer.saveToDisk(Posts)
-        Serializer.saveToDisk(Tags)
-        Serializer.saveToDisk(TagPosts)
+        tables.forEach { Serializer.saveToDisk(it) }
     }
 
     class Factory {
@@ -48,9 +55,7 @@ class DataContext {
 
         private fun innerMakeDataContext(): DataContext {
             val entities = DataContext()
-            Serializer.loadFromDisk(entities.Posts)
-            Serializer.loadFromDisk(entities.Tags)
-            Serializer.loadFromDisk(entities.TagPosts)
+            entities.tables.forEach { Serializer.loadFromDisk(it) }
             return entities
         }
 
@@ -71,6 +76,7 @@ class DataContext {
                         .use { stream ->
                             while (true) {
                                 try {
+                                    @Suppress("UNCHECKED_CAST")
                                     dataSet.add(stream.readObject() as T)
                                 } catch(e: EOFException) {
                                     break
