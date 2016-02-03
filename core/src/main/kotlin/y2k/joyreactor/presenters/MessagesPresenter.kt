@@ -20,18 +20,18 @@ class MessagesPresenter(
     }
 
     fun reply(message: String) {
-        view.setIsBusy(true)
+        view.setBusy(true)
         SendMessageRequest(getUsername())
             .request(message)
             .subscribe({ reloadMessages(getUsername()) }, { it.printStackTrace() })
     }
 
     private fun reloadMessages(username: String) {
-        view.setIsBusy(true)
+        view.setBusy(true)
         service.getMessages(username)
             .subscribe({ messages ->
                 view.updateMessages(messages)
-                view.setIsBusy(false)
+                view.setBusy(false)
             }, { it.printStackTrace() })
     }
 
@@ -42,6 +42,6 @@ class MessagesPresenter(
 
         fun updateMessages(messages: List<Message>)
 
-        fun setIsBusy(isBusy: Boolean)
+        fun setBusy(isBusy: Boolean)
     }
 }

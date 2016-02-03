@@ -101,7 +101,7 @@ object ServiceLocator {
         return AddTagPresenter(view, resolve(TagListService::class))
     }
 
-    fun resolve(view: MessagesPresenter.View, lifeCycleService: LifeCycleService): MessagesPresenter {
+    fun resolve(lifeCycleService: LifeCycleService, view: MessagesPresenter.View): MessagesPresenter {
         return MessagesPresenter(view, resolve(UserMessagesService::class), lifeCycleService)
     }
 

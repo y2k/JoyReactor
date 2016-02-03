@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import org.ocpsoft.prettytime.PrettyTime
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.presenters.MessageThreadsPresenter
 
@@ -46,6 +47,7 @@ class ThreadsFragment : Fragment() {
     internal inner class ThreadAdapter : RecyclerView.Adapter<ThreadAdapter.ViewHolder>() {
 
         private var threads: List<Message> = emptyList()
+        private val prettyTime = PrettyTime()
 
         fun updateData(threads: List<Message>) {
             this.threads = threads
@@ -62,7 +64,7 @@ class ThreadsFragment : Fragment() {
             holder.userImage.setImage(t.getUserImageObject().toImage())
             holder.userName.text = t.userName
             holder.lastMessage.text = t.text
-            holder.time.text = "" + t.date
+            holder.time.text = prettyTime.format(t.date)
         }
 
         override fun getItemCount(): Int {

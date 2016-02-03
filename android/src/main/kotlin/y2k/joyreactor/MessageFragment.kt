@@ -16,51 +16,51 @@ import y2k.joyreactor.presenters.MessagesPresenter
 /**
  * Created by y2k on 11/20/15.
  */
-class MessageFragment : BaseFragment(), MessagesPresenter.View {
+class MessageFragment : BaseFragment() {
 
-    private val adapter = MessageAdapter()
-    private var presenter: MessagesPresenter? = null
-
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_messages, container, false)
-
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_messages, container, false)
+        val newMessage = view.findViewById(R.id.newMessage) as EditText
         val list = view.findViewById(R.id.list) as RecyclerView
         list.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
         list.adapter = MessageAdapter()
 
-        val newMessage = view.findViewById(R.id.newMessage) as EditText
-        view.findViewById(R.id.createMessage).setOnClickListener { v -> presenter!!.reply("" + newMessage.text) }
+        val presenter = ServiceLocator.resolve(lifeCycleService, object : MessagesPresenter.View {
 
-        presenter = ServiceLocator.resolve(this, lifeCycleService)
+            override fun updateMessages(messages: List<Message>) {
+                (list.adapter as MessageAdapter).update(messages)
+            }
+
+            override fun setBusy(isBusy: Boolean) {
+                // TODO:
+            }
+        })
+
+        view.findViewById(R.id.createMessage).setOnClickListener {
+            presenter.reply("" + newMessage.text)
+        }
         return view
     }
 
-    override fun updateMessages(messages: List<Message>) {
-        adapter.update(messages)
-    }
-
-    override fun setIsBusy(isBusy: Boolean) {
-        // TODO:
-    }
-
-    class MessageAdapter : RecyclerView.Adapter<ViewHolderImpl>() {
+    class MessageAdapter : RecyclerView.Adapter<MessageHolder>() {
 
         private var items: List<Message> = emptyList()
+        private val prettyTime = PrettyTime()
 
         fun update(items: List<Message>) {
             this.items = items
             notifyDataSetChanged()
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderImpl {
-            return ViewHolderImpl(LayoutInflater.from(
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageHolder {
+            return MessageHolder(LayoutInflater.from(
                 parent.context).inflate(viewType, parent, false))
         }
 
-        override fun onBindViewHolder(holder: ViewHolderImpl, position: Int) {
+        override fun onBindViewHolder(holder: MessageHolder, position: Int) {
             val i = items[position]
             holder.message.text = i.text
-            holder.created.text = PrettyTime().format(i.date)
+            holder.created.text = prettyTime.format(i.date)
         }
 
         override fun getItemViewType(position: Int): Int {
@@ -84,7 +84,7 @@ class MessageFragment : BaseFragment(), MessagesPresenter.View {
         }
     }
 
-    class ViewHolderImpl(view: View) : RecyclerView.ViewHolder(view) {
+    class MessageHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         var message: TextView
         var created: TextView

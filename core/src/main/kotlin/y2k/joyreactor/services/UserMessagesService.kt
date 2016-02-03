@@ -19,6 +19,7 @@ class UserMessagesService(
                 Messages
                     .groupBy { it.userName }
                     .map { it.value.maxBy { it.date }!! }
+                    .sortedByDescending { it.date }
             }
             .concatAndRepeat(fetcher.execute())
     }
@@ -27,7 +28,7 @@ class UserMessagesService(
         return entities.applyUse {
             Messages
                 .filter { it.userName == username }
-                .sortedBy { it.date }
+                .sortedByDescending { it.date }
         }
     }
 }
