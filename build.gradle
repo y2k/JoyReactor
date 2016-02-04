@@ -1,7 +1,7 @@
 ext.kotlin_version = '1.0.0-beta-4584'
 
 def computeAppVersionName() {
-    return "0.9.20"
+    return "0.9.20." + System.getenv("SING_BUILD") 
 }
 
 def computeAppVersionCode() {
