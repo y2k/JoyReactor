@@ -37,7 +37,7 @@ class PostsFragment : VerticalGridFragment() {
         setAdapter(adapter)
 
         ServiceLocator.resolve(
-            object : PostListPresenter.View {
+            lifeCycleService, object : PostListPresenter.View {
 
                 override fun reloadPosts(posts: List<Post>, divider: Int?) {
                     adapter.clear()
@@ -51,7 +51,7 @@ class PostsFragment : VerticalGridFragment() {
                 override fun setHasNewPosts(hasNewPosts: Boolean) {
                     // TODO:
                 }
-            }, lifeCycleService)
+            })
     }
 
     override fun onResume() {
