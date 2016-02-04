@@ -41,8 +41,18 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    signingConfigs {
+        release {
+            storeFile file("" + System.getenv("SIGN_KEYSTORE"))
+            keyAlias "default"
+            storePassword System.getenv("SIGN_PASSWORD")
+            keyPassword System.getenv("SIGN_PASSWORD")
+        }
+    }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
