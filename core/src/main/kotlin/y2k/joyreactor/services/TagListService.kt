@@ -18,7 +18,9 @@ class TagListService(
 
     fun getMyTags(): Observable<List<Tag>> {
         return dataContext
-            .applyUse { Tags.filter { it.isMine } }
+            .applyUse {
+                Tags.filter { it.isVisible }.sortedBy { it.title.toLowerCase() }
+            }
             .concatAndRepeat(synchronizer.synchronize())
     }
 

@@ -35,8 +35,8 @@ class MyTagFetcher(private val dataContext: DataContext.Factory) {
     private fun merge(oldTags: List<Tag>, newTags: List<Tag>): List<Tag> {
         val result = ArrayList<Tag>()
 
-        for (s in oldTags) s.isMine = false
-        for (s in newTags) s.isMine = true
+        for (s in oldTags) s.isVisible = false
+        for (s in newTags) s.isVisible = true
 
         result.addAll(oldTags)
         addOrReplaceAll(result, newTags)
@@ -51,7 +51,7 @@ class MyTagFetcher(private val dataContext: DataContext.Factory) {
                 left.add(tag)
             } else {
                 tag.id = old.id
-                left.set(left.indexOf(old), tag)
+                left[left.indexOf(old)] = tag
             }
         }
     }
@@ -62,36 +62,30 @@ class MyTagFetcher(private val dataContext: DataContext.Factory) {
         return null
     }
 
-    private class DefaultTagRequest internal constructor() {
+    private class DefaultTagRequest() {
 
-        private val tags = ArrayList<Tag>()
+        private val tags = listOf(
+            makeTag("Anime", "2851"),
+            makeTag("Красивые картинки", "31505"),
+            makeTag("Игры", "753"),
 
-        init {
-            addTag("Anime", "2851")
-            addTag("Красивые картинки", "31505")
-            addTag("Игры", "753")
+            makeTag("Длинные картинки", "2851"),
+            makeTag("hi-res", "2851"),
 
-            addTag("Длинные картинки", "2851")
-            addTag("hi-res", "2851")
+            makeTag("Комиксы", "27"),
+            makeTag("Гифки", "116"),
+            makeTag("Песочница", "10891"),
+            makeTag("Geek", "7"),
+            makeTag("Котэ", "1481"),
+            makeTag("Видео", "1243"),
+            makeTag("Story", "227"))
 
-            addTag("Комиксы", "27")
-            addTag("Гифки", "116")
-            addTag("Песочница", "10891")
-            addTag("Geek", "7")
-            addTag("Котэ", "1481")
-            addTag("Видео", "1243")
-            addTag("Story", "227")
-        }
-
-        private fun addTag(title: String, tagId: String) {
-            val tag = Tag()
-            tag.title = title
-            tag.image = Image("http://img0.joyreactor.cc/pics/avatar/tag/" + tagId, 0, 0)
-            tags.add(tag)
+        private fun makeTag(title: String, tagId: String): Tag {
+            return Tag(title, title, false, Image("http://img0.joyreactor.cc/pics/avatar/tag/" + tagId))
         }
 
         fun request(): Observable<List<Tag>> {
-            return Observable.just<List<Tag>>(tags)
+            return Observable.just(tags)
         }
     }
 }

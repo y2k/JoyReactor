@@ -20,20 +20,14 @@ class TagsForUserRequest(private val username: String) {
             val tags = ArrayList<Tag>()
             for (h in document.select(".sideheader")) {
                 if ("Читает" == h.text()) {
-                    for (a in h.parent().select("a"))
-                        tags.add(createTag(a.text()))
+                    for (a in h.parent().select("a")) {
+                        val name = a.text()
+                        tags.add(Tag(name, name, false, Image(imageRequest.request(name))))
+                    }
                     break
                 }
             }
-            Collections.sort(tags) { l, r -> l.title!!.compareTo(r.title!!, ignoreCase = true) }
             tags
         }
-    }
-
-    private fun createTag(title: String): Tag {
-        val tag = Tag()
-        tag.title = title
-        tag.image = Image(imageRequest.request(title), 0, 0)
-        return tag
     }
 }

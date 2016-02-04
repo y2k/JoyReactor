@@ -5,13 +5,11 @@ package y2k.joyreactor
  */
 class UserImage(url: String? = null) {
 
-    private var userImage: String? = null
+    private val userImage: String
 
     init {
-        if (url == null)
-            userImage = APP_DEFAULT_USER_IMAGE
-        else
-            this.userImage = if (SITE_DEFAULT_USER_IMAGE == url) APP_DEFAULT_USER_IMAGE else url
+        if (url == null) userImage = APP_DEFAULT_USER_IMAGE
+        else userImage = if (SITE_DEFAULT_USER_IMAGE == url) APP_DEFAULT_USER_IMAGE else url
     }
 
     fun toImage(): Image {
