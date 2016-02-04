@@ -5,7 +5,7 @@ import java.io.Serializable
 /**
  * Created by y2k on 07/12/15.
  */
-class Attachment(var image: Image) : Serializable {
+class Attachment(val image: Image) : Serializable {
 
     var postId: Int = 0
 }

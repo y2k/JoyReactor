@@ -77,8 +77,8 @@ class PostActivity : AppCompatActivity() {
             adapter.updateSimilarPosts(similarPosts)
         }
 
-        override fun updatePostImage(imagePath: File) {
-            this@PostActivity.imagePath = imagePath
+        override fun updatePostImage(image: File) {
+            this@PostActivity.imagePath = image
             adapter.notifyItemChanged(0)
             val imageProgress = findViewById(R.id.imageProgress) as ProgressBar
             imageProgress.visibility = View.GONE

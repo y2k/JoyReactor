@@ -63,10 +63,10 @@ class PostsForTagRequest {
 
     internal class ThumbnailParser(private val element: Element) {
 
-        fun load(post: Post) {
+        fun load(): Image? {
             val img = element.select("div.post_content img").first()
             if (img != null && img.hasAttr("width")) {
-                post.image = Image(
+                return Image(
                     if (hasFull(img))
                         img.parent().attr("href").replace("(/full/).+(-\\d+\\.)".toRegex(), "$1$2")
                     else
@@ -74,6 +74,7 @@ class PostsForTagRequest {
                     Integer.parseInt(img.attr("width")),
                     Integer.parseInt(img.attr("height")))
             }
+            return null
         }
 
         private fun hasFull(img: Element): Boolean {
@@ -83,13 +84,11 @@ class PostsForTagRequest {
 
     internal class YoutubeThumbnailParser(private val element: Element) {
 
-        fun load(post: Post) {
-            val iframe = element.select("iframe.youtube-player").first() ?: return
-
-
+        fun load(): Image? {
+            val iframe = element.select("iframe.youtube-player").first() ?: return null
             val m = SRC_PATTERN.matcher(iframe.attr("src"))
             if (!m.find()) throw IllegalStateException(iframe.attr("src"))
-            post.image = Image(
+            return Image(
                 "http://img.youtube.com/vi/" + m.group(1) + "/0.jpg",
                 Integer.parseInt(iframe.attr("width")),
                 Integer.parseInt(iframe.attr("height")))
@@ -103,11 +102,10 @@ class PostsForTagRequest {
 
     internal class VideoThumbnailParser(private val element: Element) {
 
-        fun load(post: Post) {
-            val video = element.select("video[poster]").first() ?: return
-
+        fun load(): Image? {
+            val video = element.select("video[poster]").first() ?: return null
             try {
-                post.image = Image(
+                return Image(
                     element.select("span.video_gif_holder > a").first().attr("href").replace("(/post/).+(-)".toRegex(), "$1$2"),
                     Integer.parseInt(video.attr("width")),
                     Integer.parseInt(video.attr("height")))
@@ -115,7 +113,6 @@ class PostsForTagRequest {
                 println("ELEMENT | " + video)
                 throw e
             }
-
         }
     }
 
@@ -124,23 +121,21 @@ class PostsForTagRequest {
     companion object {
 
         internal fun newPost(element: Element): Post {
-            val result = Post()
-            result.title = element.select("div.post_content").text()
-
-            ThumbnailParser(element).load(result)
-            if (result.image == null) YoutubeThumbnailParser(element).load(result)
-            if (result.image == null) VideoThumbnailParser(element).load(result)
-
-            result.userName = element.select("div.uhead_nick > a").text()
-            result.userImage = element.select("div.uhead_nick > img").attr("src")
-            result.serverId = extractNumberFromEnd(element.id())
+            var image = ThumbnailParser(element).load()
+            if (image == null) image = YoutubeThumbnailParser(element).load()
+            if (image == null) image = VideoThumbnailParser(element).load()
 
             val parser = PostParser(element)
-            result.created = parser.created
-            result.commentCount = parser.commentCount
-            result.rating = parser.rating
 
-            return result
+            return Post(
+                element.select("div.post_content").text(),
+                image,
+                element.select("div.uhead_nick > img").attr("src"),
+                element.select("div.uhead_nick > a").text(),
+                parser.created,
+                extractNumberFromEnd(element.id()),
+                parser.commentCount,
+                parser.rating)
         }
 
         private fun extractNumberFromEnd(text: String): String {

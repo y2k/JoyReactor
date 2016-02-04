@@ -17,18 +17,18 @@ import java.util.*
 class PostAdapter(private val presenter: PostListPresenter) : RecyclerView.Adapter<ComplexViewHolder>() {
 
     private val prettyTime = PrettyTime()
-    private var posts: ArrayList<Post> = ArrayList()
+    private val posts = ArrayList<Post?>()
 
     init {
         setHasStableIds(true)
     }
 
     override fun getItemId(position: Int): Long {
-        return posts[position].id.toLong()
+        return (posts[position]?.id ?: 0).toLong()
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (posts[position] === DIVIDER) 1 else 0
+        return if (posts[position] == null) 1 else 0
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, itemType: Int): ComplexViewHolder {
@@ -46,7 +46,7 @@ class PostAdapter(private val presenter: PostListPresenter) : RecyclerView.Adapt
     fun reloadData(posts: List<Post>, divider: Int?) {
         this.posts.clear()
         this.posts.addAll(posts)
-        divider?.let { this.posts.add(it, DIVIDER) }
+        divider?.let { this.posts.add(it, null) }
         notifyDataSetChanged()
     }
 
@@ -70,12 +70,12 @@ class PostAdapter(private val presenter: PostListPresenter) : RecyclerView.Adapt
             time = itemView.findViewById(R.id.time) as TextView
             userName = itemView.findViewById(R.id.userName) as TextView
 
-            itemView.findViewById(R.id.card).setOnClickListener { v -> presenter.postClicked(posts[adapterPosition]) }
-            itemView.findViewById(R.id.videoMark).setOnClickListener { v -> presenter.playClicked(posts[adapterPosition]) }
+            itemView.findViewById(R.id.card).setOnClickListener { presenter.postClicked(posts[adapterPosition]!!) }
+            itemView.findViewById(R.id.videoMark).setOnClickListener { presenter.playClicked(posts[adapterPosition]!!) }
         }
 
         override fun bind() {
-            val i = posts[adapterPosition]
+            val i = posts[adapterPosition]!!
 
             if (i.image == null) {
                 imagePanel.visibility = View.GONE
@@ -99,12 +99,7 @@ class PostAdapter(private val presenter: PostListPresenter) : RecyclerView.Adapt
 
         init {
             (itemView.layoutParams as StaggeredGridLayoutManager.LayoutParams).isFullSpan = true
-            itemView.findViewById(R.id.dividerButton).setOnClickListener { v -> presenter!!.loadMore() }
+            itemView.findViewById(R.id.dividerButton).setOnClickListener { presenter.loadMore() }
         }
-    }
-
-    companion object {
-
-        private val DIVIDER = Post()
     }
 }

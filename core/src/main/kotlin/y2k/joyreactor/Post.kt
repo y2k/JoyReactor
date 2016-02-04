@@ -7,18 +7,17 @@ import java.util.*
 /**
  * Created by y2k on 9/27/15.
  */
-class Post : Serializable, Comparable<Post>, DataSet.Dto {
+class Post(
+    val title: String,
+    val image: Image?,
+    val userImage: String,
+    val userName: String,
+    val created: Date,
+    val serverId: String,
+    val commentCount: Int,
+    val rating: Float) : Serializable, Comparable<Post>, DataSet.Dto {
 
     override var id: Long = 0
-
-    var title: String? = null
-    var image: Image? = null
-    var userImage: String? = null
-    var userName: String? = null
-    var created: Date? = null
-    var serverId: String? = null
-    var commentCount: Int = 0
-    var rating: Float = 0.toFloat()
 
     // TODO:
     fun getUserImage2(): UserImage {
