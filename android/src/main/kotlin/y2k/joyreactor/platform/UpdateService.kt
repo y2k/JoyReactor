@@ -1,5 +1,6 @@
 package y2k.joyreactor.platform
 
+import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -16,10 +17,21 @@ import java.net.URL
  */
 class UpdateService(private val context: Context) {
 
+    private val prefs = context.getSharedPreferences("update-service", 0)
+
     fun checkHasUpdates(): Observable<Boolean> {
         return ioObservable {
-            BuildConfig.VERSION_NAME != getLatestRelease().getString("tag_name")
+            synchronizeWithServer()
+            BuildConfig.VERSION_NAME != prefs.getString("server-version", "")
         }
+    }
+
+    private fun synchronizeWithServer() {
+        if (System.currentTimeMillis() - prefs.getLong("last-check", 0) < AlarmManager.INTERVAL_HOUR) return
+        prefs.edit()
+            .putLong("last-check", System.currentTimeMillis())
+            .putString("server-version", getLatestRelease().getString("tag_name"))
+            .apply()
     }
 
     fun update(): Observable<Unit> {
