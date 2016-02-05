@@ -27,11 +27,11 @@ class UpdateFragment : BaseFragment() {
             this.isVisible = false
 
             setOnClickListener {
-                isEnabled = false
+                isEnabled = false; animate().alpha(0.5f)
                 service
                     .update()
                     .subscribeOnMain {
-                        isEnabled = true
+                        isEnabled = true; animate().alpha(1f)
                     }
             }
         }

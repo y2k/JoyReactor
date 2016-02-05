@@ -20,6 +20,8 @@ class UpdateService() {
     }
 
     fun update(): Observable<Unit> {
-        throw UnsupportedOperationException("not implemented") // FIXME:
+        return ioObservable {
+            Thread.sleep(3000)
+        }
     }
 }
