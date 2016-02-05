@@ -10,7 +10,7 @@ import y2k.joyreactor.common.BaseFragment
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.common.isVisible
 import y2k.joyreactor.common.subscribeOnMain
-import y2k.joyreactor.services.UpdateService
+import y2k.joyreactor.platform.UpdateService
 
 /**
  * Created by y2k on 05/02/16.
@@ -23,6 +23,7 @@ class UpdateFragment : BaseFragment() {
         return Button(activity).apply {
             setText(R.string.updates_available)
             setBackgroundColor(Color.RED)
+            setTextColor(Color.WHITE)
             this.isVisible = false
 
             setOnClickListener {
