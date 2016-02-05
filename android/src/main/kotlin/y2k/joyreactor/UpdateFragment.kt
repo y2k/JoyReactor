@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import y2k.joyreactor.common.BaseFragment
-import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.common.isVisible
 import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.platform.UpdateService
@@ -17,28 +17,36 @@ import y2k.joyreactor.platform.UpdateService
  */
 class UpdateFragment : BaseFragment() {
 
-    val service = ServiceLocator.resolve(UpdateService::class)
+    lateinit var service: UpdateService
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        service = UpdateService(activity.applicationContext)
         return Button(activity).apply {
             setText(R.string.updates_available)
             setBackgroundColor(Color.RED)
             setTextColor(Color.WHITE)
-            this.isVisible = false
 
             setOnClickListener {
-                isEnabled = false; animate().alpha(0.5f)
+                setBlocked(true)
                 service
                     .update()
-                    .subscribeOnMain {
-                        isEnabled = true; animate().alpha(1f)
-                    }
+                    .subscribeOnMain({
+                        setBlocked(false)
+                    }, {
+                        setBlocked(false)
+                        Toast.makeText(activity, R.string.unknow_error, Toast.LENGTH_LONG).show()
+                    })
             }
         }
     }
 
+    private fun Button.setBlocked(blocked: Boolean) {
+        isEnabled = !blocked; animate().alpha(if (blocked) 0.5f else 1f)
+    }
+
     override fun onResume() {
         super.onResume()
+        view.isVisible = false
         service.checkHasUpdates().subscribeOnMain { view.isVisible = it }
     }
 }
