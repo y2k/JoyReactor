@@ -1,10 +1,11 @@
 package y2k.joyreactor
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.TextView
 import y2k.joyreactor.common.ServiceLocator
+import y2k.joyreactor.common.compatAnimate
 import y2k.joyreactor.presenters.CreateCommentPresenter
 
 class CreateCommentActivity : AppCompatActivity() {
@@ -26,15 +27,15 @@ class CreateCommentActivity : AppCompatActivity() {
                     if (isBusy) {
                         progress.visibility = View.VISIBLE
                         progress.alpha = 0f
-                        progress.animate().alpha(1f)
+                        progress.compatAnimate().alpha(1f)
 
-                        sendButton.animate().alpha(0f).withEndAction { sendButton.visibility = View.INVISIBLE }
+                        sendButton.compatAnimate().alpha(0f).withEndAction { sendButton.visibility = View.INVISIBLE }
                     } else {
                         sendButton.visibility = View.VISIBLE
                         sendButton.alpha = 0f
-                        sendButton.animate().alpha(1f)
+                        sendButton.compatAnimate().alpha(1f)
 
-                        progress.animate().alpha(0f).withEndAction { progress.visibility = View.GONE }
+                        progress.compatAnimate().alpha(0f).withEndAction { progress.visibility = View.GONE }
                     }
                 }
 
@@ -43,7 +44,7 @@ class CreateCommentActivity : AppCompatActivity() {
 
                     nameView.text = profile.userName
                     nameView.alpha = 0f
-                    nameView.animate().alpha(1f)
+                    nameView.compatAnimate().alpha(1f)
                 }
             })
 

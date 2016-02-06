@@ -17,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import y2k.joyreactor.common.ComplexViewHolder
 import y2k.joyreactor.common.ServiceLocator
+import y2k.joyreactor.common.compatAnimate
 import y2k.joyreactor.common.isVisible
 import y2k.joyreactor.presenters.PostPresenter
 import java.io.File
@@ -51,7 +52,7 @@ class PostActivity : AppCompatActivity() {
 
         override fun setEnableCreateComments() {
             val createComment = findViewById(R.id.createComment)
-            createComment.animate().scaleX(1f).scaleY(1f).setInterpolator(AccelerateInterpolator())
+            createComment.compatAnimate().scaleX(1f).scaleY(1f).setInterpolator(AccelerateInterpolator())
         }
 
         override fun updateComments(comments: CommentGroup) {
