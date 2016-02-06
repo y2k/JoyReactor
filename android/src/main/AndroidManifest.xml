@@ -70,23 +70,5 @@
             android:theme="@style/AppTheme.CreateComment"
             android:label="@string/title_activity_create_comment" >
         </activity>
-
-        <!-- TV -->
-        <activity
-            android:name=".tv.MainActivity"
-            android:banner="@drawable/app_icon_your_company"
-            android:icon="@drawable/app_icon_your_company"
-            android:label="@string/app_name"
-            android:logo="@drawable/app_icon_your_company"
-            android:screenOrientation="landscape"
-            android:theme="@style/Theme.Leanback.Browse"
-            tools:ignore="UnusedAttribute" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
-
 </manifest>
