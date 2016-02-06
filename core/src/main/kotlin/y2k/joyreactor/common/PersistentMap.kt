@@ -22,7 +22,7 @@ class PersistentMap(name: String) {
         if (map.isEmpty()) return
 
         val cookie = StringBuilder()
-        for (key in map.keys)
+        for (key in map.keys())
             cookie.append(key).append("\n").append(map[key]).append("\n")
 
         cookieFile.writeText(cookie.toString())
