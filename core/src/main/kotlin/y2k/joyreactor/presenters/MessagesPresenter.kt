@@ -1,6 +1,7 @@
 package y2k.joyreactor.presenters
 
 import y2k.joyreactor.Message
+import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.UserMessagesService
@@ -14,34 +15,47 @@ class MessagesPresenter(
     private val service: UserMessagesService,
     private val lifeCycleService: LifeCycleService) {
 
+    private var currentUsername: String? = null
+
     init {
-        reloadMessages(getUsername())
-        lifeCycleService.add(BroadcastService.ThreadSelectedMessage::class) { reloadMessages(it.thread.userName) }
+        lifeCycleService.add(BroadcastService.ThreadSelectedMessage::class) {
+            currentUsername = it.thread.userName
+            reloadMessages()
+        }
     }
 
     fun reply(message: String) {
         view.setBusy(true)
-        SendMessageRequest(getUsername())
-            .request(message)
-            .subscribe({ reloadMessages(getUsername()) }, { it.printStackTrace() })
+        view.clearMessage()
+        currentUsername?.let {
+            SendMessageRequest(it)
+                .request(message)
+                .subscribeOnMain(
+                    { reloadMessages() },
+                    { view.setBusy(false) })
+        }
     }
 
-    private fun reloadMessages(username: String) {
-        view.setBusy(true)
-        service.getMessages(username)
-            .subscribe({ messages ->
-                view.updateMessages(messages)
-                view.setBusy(false)
-            }, { it.printStackTrace() })
+    private fun reloadMessages() {
+        currentUsername?.let {
+            view.setBusy(true)
+            service
+                .getMessages(it)
+                .subscribeOnMain({
+                    view.updateMessages(it)
+                    view.setBusy(false)
+                }, {
+                    view.setBusy(false)
+                })
+        }
     }
-
-    // FIXME:
-    private fun getUsername(): String = "user500"
 
     interface View {
 
         fun updateMessages(messages: List<Message>)
 
         fun setBusy(isBusy: Boolean)
+
+        fun clearMessage()
     }
 }

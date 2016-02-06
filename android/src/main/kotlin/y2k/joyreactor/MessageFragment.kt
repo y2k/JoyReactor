@@ -11,6 +11,7 @@ import android.widget.TextView
 import org.ocpsoft.prettytime.PrettyTime
 import y2k.joyreactor.common.BaseFragment
 import y2k.joyreactor.common.ServiceLocator
+import y2k.joyreactor.common.isVisible
 import y2k.joyreactor.presenters.MessagesPresenter
 
 /**
@@ -21,20 +22,26 @@ class MessageFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_messages, container, false)
         val newMessage = view.findViewById(R.id.newMessage) as EditText
+        val progress = view.findViewById(R.id.progress)
         val list = view.findViewById(R.id.list) as RecyclerView
         list.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
         list.adapter = MessageAdapter()
 
-        val presenter = ServiceLocator.resolve(lifeCycleService, object : MessagesPresenter.View {
+        val presenter = ServiceLocator.resolve(lifeCycleService,
+            object : MessagesPresenter.View {
 
-            override fun updateMessages(messages: List<Message>) {
-                (list.adapter as MessageAdapter).update(messages)
-            }
+                override fun clearMessage() {
+                    newMessage.text = null
+                }
 
-            override fun setBusy(isBusy: Boolean) {
-                // TODO:
-            }
-        })
+                override fun updateMessages(messages: List<Message>) {
+                    (list.adapter as MessageAdapter).update(messages)
+                }
+
+                override fun setBusy(isBusy: Boolean) {
+                    progress.isVisible = isBusy
+                }
+            })
 
         view.findViewById(R.id.createMessage).setOnClickListener {
             presenter.reply("" + newMessage.text)
