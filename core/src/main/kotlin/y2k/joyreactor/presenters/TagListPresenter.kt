@@ -34,7 +34,7 @@ class TagListPresenter(
     fun selectedFavorite() {
         service
             .getTagForFavorite()
-            .subscribe { broadcastService.broadcast(BroadcastService.TagSelected(it)) }
+            .subscribeOnMain { broadcastService.broadcast(BroadcastService.TagSelected(it)) }
     }
 
     interface View {
