@@ -2,6 +2,7 @@ package y2k.joyreactor
 
 import android.app.Application
 import android.provider.MediaStore
+import com.splunk.mint.Mint
 import rx.Observable
 import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.common.ioObservable
@@ -18,8 +19,9 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
         instance = this
+
+        if (!BuildConfig.DEBUG) Mint.initAndStartSession(this, "66d8751e");
 
         ForegroundScheduler.instance = HandlerSchedulerFactory().make()
         Platform.instance = object : Platform() {

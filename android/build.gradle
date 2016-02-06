@@ -19,6 +19,7 @@ apply plugin: 'kotlin-android'
 repositories {
     jcenter()
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url "https://mint.splunk.com/gradle/" }
 }
 
 android {
@@ -71,6 +72,9 @@ dependencies {
     compile "com.android.support:leanback-v17:${supportLibVersion}"
     compile "com.android.support:gridlayout-v7:${supportLibVersion}"
     compile "com.android.support:design:${supportLibVersion}"
+
+    compile "com.splunk.mint:mint:4.4.0"
+
     compile 'org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version'
     compile project(':core')
 }
