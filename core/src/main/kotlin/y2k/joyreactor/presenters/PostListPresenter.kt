@@ -3,6 +3,7 @@ package y2k.joyreactor.presenters
 import rx.Observable
 import y2k.joyreactor.Post
 import y2k.joyreactor.Tag
+import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.platform.Navigation
 import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
@@ -25,40 +26,44 @@ class PostListPresenter(
         service.setTag(newTag)
 
         view.setBusy(true)
-        getFromRepository().subscribe { posts -> view.reloadPosts(posts, null) }
+        getFromRepository().subscribeOnMain { view.reloadPosts(it, null) }
 
-        service.preloadNewPosts().subscribe(
-            { unsafeUpdate ->
+        service
+            .preloadNewPosts()
+            .subscribeOnMain { unsafeUpdate ->
                 view.setHasNewPosts(unsafeUpdate)
                 view.setBusy(false)
                 if ((!unsafeUpdate)) applyNew()
-            }, { it.printStackTrace() })
+            }
     }
 
     fun applyNew() {
-        service.applyNew().subscribe(
-            { posts ->
+        service.
+            applyNew()
+            .subscribeOnMain { posts ->
                 view.setHasNewPosts(false)
                 view.reloadPosts(posts, service.divider)
-            }, { it.printStackTrace() })
+            }
     }
 
     fun loadMore() {
         view.setBusy(true)
-        service.loadNextPage().subscribe(
-            { posts ->
+        service
+            .loadNextPage()
+            .subscribeOnMain { posts ->
                 view.reloadPosts(posts, service.divider)
                 view.setBusy(false)
-            }, { it.printStackTrace() })
+            }
     }
 
     fun reloadFirstPage() {
         view.setBusy(true)
-        service.reloadFirstPage().subscribe(
-            { posts ->
+        service
+            .reloadFirstPage()
+            .subscribeOnMain { posts ->
                 view.reloadPosts(posts, posts.size)
                 view.setBusy(false)
-            }, { it.printStackTrace() })
+            }
     }
 
     private fun getFromRepository(): Observable<List<Post>> {
