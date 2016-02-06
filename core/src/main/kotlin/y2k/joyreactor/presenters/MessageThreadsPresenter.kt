@@ -1,6 +1,7 @@
 package y2k.joyreactor.presenters
 
 import y2k.joyreactor.Message
+import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.UserMessagesService
 
@@ -8,17 +9,17 @@ import y2k.joyreactor.services.UserMessagesService
  * Created by y2k on 01/10/15.
  */
 class MessageThreadsPresenter(
-    view: MessageThreadsPresenter.View,
-    val broadcastService: BroadcastService,
-    service: UserMessagesService) {
+    private val view: MessageThreadsPresenter.View,
+    private val broadcastService: BroadcastService,
+    private val service: UserMessagesService) {
 
     init {
         view.setIsBusy(true)
         service.getThreads()
-            .subscribe({ threads ->
+            .subscribeOnMain {
                 view.setIsBusy(false)
-                view.reloadData(threads)
-            }, { it.printStackTrace() })
+                view.reloadData(it)
+            }
     }
 
     fun selectThread(thread: Message) {

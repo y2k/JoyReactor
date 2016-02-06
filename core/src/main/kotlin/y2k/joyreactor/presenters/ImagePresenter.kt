@@ -1,5 +1,6 @@
 package y2k.joyreactor.presenters
 
+import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.platform.Navigation
 import y2k.joyreactor.services.PostService
 
@@ -12,14 +13,15 @@ class ImagePresenter(view: ImagePresenter.View, service: PostService) {
 
     init {
         view.setBusy(true)
-        service.mainImage(Navigation.instance.argumentPostId)
-                .subscribe({ imageFile ->
-                    view.showImage(imageFile)
-                    view.setBusy(false)
-                }) { e ->
-                    e.printStackTrace()
-                    view.setBusy(false)
-                }
+        service
+            .mainImage(Navigation.instance.argumentPostId)
+            .subscribeOnMain({
+                view.showImage(it)
+                view.setBusy(false)
+            }) {
+                it.printStackTrace()
+                view.setBusy(false)
+            }
     }
 
     interface View {

@@ -26,7 +26,7 @@ class ProfilePresenter(
     }
 
     fun logout() {
-        service.logout().subscribe { Navigation.instance.switchProfileToLogin() }
+        service.logout().subscribeOnMain { Navigation.instance.switchProfileToLogin() }
     }
 
     interface View {
