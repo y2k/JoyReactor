@@ -17,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import y2k.joyreactor.common.ComplexViewHolder
 import y2k.joyreactor.common.ServiceLocator
+import y2k.joyreactor.common.isVisible
 import y2k.joyreactor.presenters.PostPresenter
 import java.io.File
 import java.util.*
@@ -185,9 +186,12 @@ class PostActivity : AppCompatActivity() {
             }
 
             override fun bind() {
-                // TODO
-                if (post != null)
-                    posterPanel.setAspect(post!!.image!!.aspect)
+                if (post != null) {
+                    val aspect = post?.image?.aspect
+                    posterPanel.isVisible = aspect != null
+                    aspect?.let { posterPanel.setAspect(it) }
+                }
+
                 imagePath?.let { image.setImage(it) }
 
                 imagePanel.setImages(images)
