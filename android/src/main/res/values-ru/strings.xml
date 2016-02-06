@@ -63,4 +63,5 @@
     <string name="title_activity_video">VideoActivity</string>
     <string name="create">Создать</string>
     <string name="title_activity_create_comment">Написать комментарий</string>
+    <string name="update_in_progress">Производится обновление…</string>
 </resources>

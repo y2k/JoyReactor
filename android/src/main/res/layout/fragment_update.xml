@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <Button android:id="@+id/button"
+            android:background="#f00"
+            android:textColor="@android:color/white"
+            android:text="@string/updates_available"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"/>
+
+    <LinearLayout
+            android:background="@color/primary"
+            android:visibility="gone"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+        <ProgressBar
+                style="?android:progressBarStyle"
+                android:layout_width="30dp"
+                android:layout_height="30dp"/>
+
+        <TextView android:text="@string/update_in_progress"
+                  android:layout_marginLeft="16dp"
+                  android:textColor="@android:color/white"
+                  android:textSize="18sp"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</FrameLayout>
