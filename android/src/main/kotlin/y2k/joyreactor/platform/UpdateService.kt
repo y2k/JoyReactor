@@ -27,7 +27,7 @@ class UpdateService(private val context: Context) {
     }
 
     private fun synchronizeWithServer() {
-        if (System.currentTimeMillis() - prefs.getLong("last-check", 0) < AlarmManager.INTERVAL_HOUR) return
+        if (System.currentTimeMillis() - prefs.getLong("last-check", 0) < AlarmManager.INTERVAL_FIFTEEN_MINUTES) return
         prefs.edit()
             .putLong("last-check", System.currentTimeMillis())
             .putString("server-version", getLatestRelease().getString("tag_name"))
