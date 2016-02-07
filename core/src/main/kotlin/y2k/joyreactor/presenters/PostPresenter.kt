@@ -14,30 +14,33 @@ import java.io.File
 class PostPresenter(
     private val view: PostPresenter.View,
     private val service: PostService,
-    private val userService: ProfileService) {
+    private val userService: ProfileService,
+    private val navigation: Navigation) {
 
     init {
         view.setIsBusy(true)
         service
             .synchronizePostAsync(argumentPostId)
             .subscribeOnMain { post ->
-                view.setIsBusy(false)
                 view.updatePostInformation(post)
 
                 service
-                    .getPostImages(post.id)
+                    .getPostImages()
                     .subscribeOnMain { view.updatePostImages(it) }
 
                 service
                     .getCommentsAsync(post.id, 0)
-                    .subscribeOnMain { view.updateComments(it) }
+                    .subscribeOnMain {
+                        view.updateComments(it)
+                        view.setIsBusy(false)
+                    }
 
                 service
                     .getSimilarPosts(post.id)
                     .subscribeOnMain { view.updateSimilarPosts(it) }
 
                 service
-                    .mainImagePartial(post.serverId!!)
+                    .mainImagePartial(post.serverId)
                     .subscribeOnMain { partial ->
                         if (partial.result == null) {
                             view.updateImageDownloadProgress(partial.progress, partial.max)
@@ -84,6 +87,10 @@ class PostPresenter(
     fun replyToPost() {
         // TODO:
         Navigation.instance.openCreateComment()
+    }
+
+    fun showMoreImages() {
+        navigation.openPostGallery()
     }
 
     interface View {

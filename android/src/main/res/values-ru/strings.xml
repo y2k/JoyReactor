@@ -64,4 +64,9 @@
     <string name="create">Создать</string>
     <string name="title_activity_create_comment">Написать комментарий</string>
     <string name="update_in_progress">Производится обновление…</string>
+    <string name="show_more">Еще</string>
+    <string name="images">Картинки</string>
+    <string name="post_images">Картинки поста</string>
+    <string name="similar_posts">Похожие посты</string>
+    <string name="comments">Комментарии</string>
 </resources>

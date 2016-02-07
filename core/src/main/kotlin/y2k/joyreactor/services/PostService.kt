@@ -60,7 +60,7 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
         return dataContext.applyUse { Posts.first { it.serverId == postId } }
     }
 
-    fun getPostImages(postId: Long): Observable<List<Image>> {
+    fun getPostImages(): Observable<List<Image>> {
         val postAttachments = buffer.attachments.map { it.image }
         val commentAttachments = buffer.comments
             .filter { it.attachmentObject != null }

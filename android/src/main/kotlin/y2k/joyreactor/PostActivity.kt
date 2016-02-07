@@ -10,87 +10,82 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import y2k.joyreactor.common.ComplexViewHolder
-import y2k.joyreactor.common.ServiceLocator
-import y2k.joyreactor.common.compatAnimate
-import y2k.joyreactor.common.isVisible
+import y2k.joyreactor.common.*
 import y2k.joyreactor.presenters.PostPresenter
 import java.io.File
 import java.util.*
 
 class PostActivity : AppCompatActivity() {
 
-    val presenter = ServiceLocator.resolve(ViewImpl())
+    lateinit var presenter: PostPresenter
     val adapter = Adapter()
 
     var imagePath: File? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_post)
-        setSupportActionBar(findViewById(R.id.toolbar) as Toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        setSupportActionBar(find<Toolbar>(R.id.toolbar))
+        supportActionBar.setDisplayHomeAsUpEnabled(true)
 
-        val list = findViewById(R.id.list) as RecyclerView
+        val list = find<RecyclerView>(R.id.list)
         list.adapter = adapter
         list.layoutManager = LinearLayoutManager(this)
 
         val createComment = findViewById(R.id.createComment)
-        createComment.setOnClickListener { v -> presenter.replyToPost() }
+        createComment.setOnClickListener { presenter.replyToPost() }
 
-        createComment.scaleX = 0f
-        createComment.scaleY = 0f
-    }
+        presenter = ServiceLocator.resolve(object : PostPresenter.View {
 
-    inner class ViewImpl : PostPresenter.View {
+            override fun setEnableCreateComments() {
+                createComment.compatAnimate().scaleX(1f).scaleY(1f).setInterpolator(AccelerateInterpolator())
+            }
 
-        override fun setEnableCreateComments() {
-            val createComment = findViewById(R.id.createComment)
-            createComment.compatAnimate().scaleX(1f).scaleY(1f).setInterpolator(AccelerateInterpolator())
-        }
+            override fun updateComments(comments: CommentGroup) {
+                adapter.updatePostComments(comments)
+            }
 
-        override fun updateComments(comments: CommentGroup) {
-            adapter.updatePostComments(comments)
-        }
+            override fun updatePostInformation(post: Post) {
+                adapter.updatePostDetails(post)
+            }
 
-        override fun updatePostInformation(post: Post) {
-            adapter.updatePostDetails(post)
-        }
+            override fun setIsBusy(isBusy: Boolean) {
+                findViewById(R.id.progress).isVisible = isBusy
+            }
 
-        override fun setIsBusy(isBusy: Boolean) {
-            // TODO:
-        }
+            override fun showImageSuccessSavedToGallery() {
+                Toast.makeText(applicationContext, R.string.image_saved_to_gallery, Toast.LENGTH_LONG).show()
+            }
 
-        override fun showImageSuccessSavedToGallery() {
-            Toast.makeText(applicationContext, R.string.image_saved_to_gallery, Toast.LENGTH_LONG).show()
-        }
+            override fun updatePostImages(images: List<Image>) {
+                adapter.updatePostImages(images)
+            }
 
-        override fun updatePostImages(images: List<Image>) {
-            adapter.updatePostImages(images)
-        }
+            override fun updateSimilarPosts(similarPosts: List<SimilarPost>) {
+                adapter.updateSimilarPosts(similarPosts)
+            }
 
-        override fun updateSimilarPosts(similarPosts: List<SimilarPost>) {
-            adapter.updateSimilarPosts(similarPosts)
-        }
+            override fun updatePostImage(image: File) {
+                this@PostActivity.imagePath = image
+                adapter.notifyItemChanged(0)
+                val imageProgress = find<ProgressBar>(R.id.imageProgress)
+                imageProgress.visibility = View.GONE
+            }
 
-        override fun updatePostImage(image: File) {
-            this@PostActivity.imagePath = image
-            adapter.notifyItemChanged(0)
-            val imageProgress = findViewById(R.id.imageProgress) as ProgressBar
-            imageProgress.visibility = View.GONE
-        }
-
-        override fun updateImageDownloadProgress(progress: Int, maxProgress: Int) {
-            val imageProgress = findViewById(R.id.imageProgress) as ProgressBar
-            imageProgress.progress = progress
-            imageProgress.max = maxProgress
-        }
+            override fun updateImageDownloadProgress(progress: Int, maxProgress: Int) {
+                val imageProgress = find<ProgressBar>(R.id.imageProgress)
+                imageProgress.progress = progress
+                imageProgress.max = maxProgress
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -172,7 +167,7 @@ class PostActivity : AppCompatActivity() {
         }
 
         internal inner class HeaderViewHolder(parent: ViewGroup) :
-            ComplexViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.layout_post, parent, false)) {
+            ComplexViewHolder(parent.inflate(R.layout.layout_post)) {
 
             var image: LargeImageView
             var imagePanel: ImagePanel
@@ -184,6 +179,7 @@ class PostActivity : AppCompatActivity() {
                 imagePanel = itemView.findViewById(R.id.images) as ImagePanel
                 similar = itemView.findViewById(R.id.similar) as ImagePanel
                 posterPanel = itemView.findViewById(R.id.posterPanel) as FixedAspectPanel
+                itemView.findViewById(R.id.showMoreImages).setOnClickListener { presenter.showMoreImages() }
             }
 
             override fun bind() {
@@ -208,7 +204,7 @@ class PostActivity : AppCompatActivity() {
         }
 
         internal inner class CommentViewHolder(parent: ViewGroup) :
-            ComplexViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_comment, parent, false)) {
+            ComplexViewHolder(parent.inflate(R.layout.item_comment)) {
 
             var rating: TextView
             var text: TextView

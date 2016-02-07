@@ -1,5 +1,6 @@
 package y2k.joyreactor.common
 
+import y2k.joyreactor.platform.Navigation
 import y2k.joyreactor.presenters.*
 import y2k.joyreactor.services.*
 import y2k.joyreactor.services.repository.DataContext
@@ -63,12 +64,16 @@ object ServiceLocator {
     // Presenters
     // ==========================================
 
+    fun resolve(view: GalleryPresenter.View): GalleryPresenter {
+        return GalleryPresenter(view, resolve(PostService::class))
+    }
+
     fun resolve(lifeCycleService: LifeCycleService, view: PostListPresenter.View): PostListPresenter {
         return PostListPresenter(view, resolve(TagService::class), lifeCycleService)
     }
 
     fun resolve(view: PostPresenter.View): PostPresenter {
-        return PostPresenter(view, resolve(PostService::class), resolve(ProfileService::class))
+        return PostPresenter(view, resolve(PostService::class), resolve(ProfileService::class), Navigation.instance)
     }
 
     fun resolve(lifeCycleService: LifeCycleService, view: TagListPresenter.View): TagListPresenter {

@@ -18,40 +18,54 @@
                 android:layout_height="match_parent"/>
     </y2k.joyreactor.FixedAspectPanel>
 
-    <TextView android:text="Images"
-              android:textColor="@android:color/darker_gray"
-              android:textSize="18sp"
-              android:fontFamily="sans-serif-light"
-              android:layout_marginLeft="8dp"
-              android:layout_marginTop="8dp"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"/>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+    >
+        <TextView android:text="@string/images"
+                  android:textColor="@android:color/darker_gray"
+                  android:textSize="18sp"
+                  android:fontFamily="sans-serif-light"
+                  android:layout_marginLeft="8dp"
+                  android:layout_weight="1"
+                  android:gravity="center_vertical"
+                  android:layout_width="0dp"
+                  android:layout_height="match_parent"/>
+        <Button android:id="@+id/showMoreImages"
+                style="?android:borderlessButtonStyle"
+                android:textColor="@color/primary"
+                android:text="@string/show_more"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+    </LinearLayout>
 
     <y2k.joyreactor.ImagePanel
             android:id="@+id/images"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-    <TextView android:text="Similar"
+    <TextView android:text="@string/similar_posts"
               android:textColor="@android:color/darker_gray"
               android:textSize="18sp"
               android:fontFamily="sans-serif-light"
+              android:gravity="center_vertical"
               android:layout_marginLeft="8dp"
               android:layout_width="wrap_content"
-              android:layout_height="wrap_content"/>
+              android:layout_height="48dp"/>
 
     <y2k.joyreactor.ImagePanel
             android:id="@+id/similar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-    <TextView android:text="Comments"
+    <TextView android:text="@string/comments"
               android:textColor="@android:color/darker_gray"
               android:textSize="18sp"
               android:fontFamily="sans-serif-light"
               android:layout_marginLeft="8dp"
-              android:layout_marginBottom="8dp"
+              android:gravity="center_vertical"
               android:layout_width="wrap_content"
-              android:layout_height="wrap_content"/>
+              android:layout_height="48dp"/>
 
 </LinearLayout>

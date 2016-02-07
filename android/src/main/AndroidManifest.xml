@@ -63,6 +63,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="y2k.joyreactor.MainActivity" />
         </activity>
+        <activity android:name=".GalleryActivity"
+                  android:label="@string/post_images" >
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="y2k.joyreactor.PostActivity" />
+        </activity>
         <activity
             android:name=".CreateCommentActivity"
             android:windowSoftInputMode="stateVisible"

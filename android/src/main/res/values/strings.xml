@@ -65,4 +65,9 @@
     <string name="title_activity_create_comment">Create comment</string>
     <string name="create">Create</string>
     <string name="update_in_progress">Update in progress…</string>
+    <string name="show_more">Show more</string>
+    <string name="images">Images</string>
+    <string name="post_images">Post images</string>
+    <string name="similar_posts">Similar posts</string>
+    <string name="comments">Comments</string>
 </resources>

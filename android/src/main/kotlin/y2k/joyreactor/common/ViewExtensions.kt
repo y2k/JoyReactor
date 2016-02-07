@@ -1,5 +1,6 @@
 package y2k.joyreactor.common
 
+import android.app.Activity
 import android.support.v4.view.ViewCompat
 import android.support.v4.view.ViewPropertyAnimatorCompat
 import android.view.View
@@ -28,4 +29,9 @@ fun ViewGroup.switchByScaleFromTo(firstPosition: Int, secondPosition: Int) {
             second.compatScaleY = 0f
             second.compatAnimate().scaleY(1f)
         }
+}
+
+@Suppress("UNCHECKED_CAST")
+fun <T : View> View.find(id: Int): T {
+    return findViewById(id) as T
 }

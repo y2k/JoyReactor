@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import y2k.joyreactor.*
 import y2k.joyreactor.common.ActivityLifecycleCallbacksAdapter
+import y2k.joyreactor.common.startActivity
 
 /**
  * Created by y2k on 10/19/15.
@@ -21,13 +22,13 @@ class AndroidNavigation(app: Application) : Navigation {
     }
 
     override fun switchProfileToLogin() {
-        currentActivity!!.startActivity(Intent(currentActivity, LoginActivity::class.java))
-        currentActivity!!.finish()
+        currentActivity?.startActivity(LoginActivity::class)
+        currentActivity?.finish()
     }
 
     override fun switchLoginToProfile() {
-        currentActivity!!.startActivity(Intent(currentActivity, ProfileActivity::class.java))
-        currentActivity!!.finish()
+        currentActivity?.startActivity(ProfileActivity::class)
+        currentActivity?.finish()
     }
 
     override fun closeCreateComment() {
@@ -38,9 +39,13 @@ class AndroidNavigation(app: Application) : Navigation {
         AddTagDialogFragment.dismiss(currentActivity as AppCompatActivity)
     }
 
+    override fun openPostGallery() {
+        currentActivity?.startActivity(GalleryActivity::class)
+    }
+
     override fun openPost(postId: String) {
         sPostIdArgument = postId
-        currentActivity!!.startActivity(Intent(currentActivity, PostActivity::class.java))
+        currentActivity?.startActivity(PostActivity::class)
     }
 
     override val argumentPostId: String
@@ -51,9 +56,8 @@ class AndroidNavigation(app: Application) : Navigation {
     }
 
     override fun openVideo(postId: String) {
-        // TODO:
-        sPostIdArgument = postId
-        currentActivity!!.startActivity(Intent(currentActivity, VideoActivity::class.java))
+        sPostIdArgument = postId // TODO:
+        currentActivity?.startActivity(VideoActivity::class)
     }
 
     override fun openImageView(post: Post) {
@@ -61,7 +65,7 @@ class AndroidNavigation(app: Application) : Navigation {
     }
 
     override fun openCreateComment() {
-        currentActivity!!.startActivity(Intent(currentActivity, CreateCommentActivity::class.java))
+        currentActivity?.startActivity(CreateCommentActivity::class)
     }
 
     private inner class MyActivityLifecycleCallbacks : ActivityLifecycleCallbacksAdapter() {

@@ -25,6 +25,8 @@ interface Navigation {
 
     fun openCreateComment()
 
+    fun openPostGallery()
+
     val argumentPostId: String
 
     companion object {

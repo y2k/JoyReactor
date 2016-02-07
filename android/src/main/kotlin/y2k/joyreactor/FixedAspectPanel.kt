@@ -12,7 +12,7 @@ import y2k.joyreactor.common.measureSpec
  */
 class FixedAspectPanel(context: Context, attrs: AttributeSet) : ViewGroup(context, attrs) {
 
-    private var aspect: Float = 0f
+    private var aspect: Float = 1f
 
     init {
         if (isInEditMode) aspect = 2f
