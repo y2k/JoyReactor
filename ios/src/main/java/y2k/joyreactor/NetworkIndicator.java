@@ -16,12 +16,12 @@ public class NetworkIndicator {
 
     public NetworkIndicator() {
         Observable
-                .create(subscriber -> this.subscriber = subscriber)
-                .buffer(500, TimeUnit.MILLISECONDS)
-                .filter(s -> s.size() > 0)
-                .map(s -> s.get(s.size() - 1))
-                .observeOn(ForegroundScheduler.getInstance())
-                .subscribe(s -> update((Boolean) s));
+            .create(subscriber -> this.subscriber = subscriber)
+            .buffer(500, TimeUnit.MILLISECONDS)
+            .filter(s -> s.size() > 0)
+            .map(s -> s.get(s.size() - 1))
+            .observeOn(ForegroundScheduler.INSTANCE.getInstance())
+            .subscribe(s -> update((Boolean) s));
     }
 
     public void setEnabled(boolean isEnabled) {

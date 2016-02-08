@@ -1,9 +1,11 @@
 package y2k.joyreactor;
 
+import org.jetbrains.annotations.NotNull;
 import org.robovm.apple.foundation.NSIndexPath;
 import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
+import y2k.joyreactor.common.BaseUIViewController;
 import y2k.joyreactor.common.ServiceLocator;
 import y2k.joyreactor.presenters.MessagesPresenter;
 
@@ -13,10 +15,10 @@ import java.util.List;
  * Created by y2k on 10/2/15.
  */
 @CustomClass("MessageViewController")
-public class MessageViewController extends UIViewController implements MessagesPresenter.View {
+public class MessageViewController extends BaseUIViewController implements MessagesPresenter.View {
 
     UITableView list;
-    List<? extends Message> messages;
+    List<Message> messages;
     UITextView newMessage;
     UIButton sendButton;
 
@@ -49,13 +51,13 @@ public class MessageViewController extends UIViewController implements MessagesP
             }
         });
         sendButton.addOnTouchUpInsideListener(
-                (sender, e) -> presenter.reply(newMessage.getText()));
+            (sender, e) -> presenter.reply(newMessage.getText()));
 
-        presenter = ServiceLocator.getInstance().provideMessagesPresenter(this);
+        presenter = ServiceLocator.INSTANCE.resolve(getLifeCycleService(), this);
     }
 
     @Override
-    public void updateMessages(List<? extends Message> messages) {
+    public void updateMessages(@NotNull List<Message> messages) {
         System.out.println("updateMessages | " + messages);
         this.messages = messages;
         list.reloadData();
@@ -65,6 +67,11 @@ public class MessageViewController extends UIViewController implements MessagesP
     public void setBusy(boolean isBusy) {
         // TODO:
         getNavigationItem().setHidesBackButton(isBusy, true);
+    }
+
+    @Override
+    public void clearMessage() {
+        newMessage.setText(null);
     }
 
     // ==========================================

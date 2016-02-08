@@ -1,5 +1,6 @@
 package y2k.joyreactor;
 
+import org.jetbrains.annotations.NotNull;
 import org.robovm.apple.foundation.NSIndexPath;
 import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
@@ -13,10 +14,10 @@ import java.util.List;
  * Created by y2k on 10/2/15.
  */
 @CustomClass("MessageThreadViewController")
-public class MessageThreadViewController extends UIViewController implements MessageThreadsPresenter.View {
+public class MessageThreadViewController extends UIViewController {
 
     UITableView list;
-    List<? extends Message> threads;
+    List<Message> threads;
 
     @Override
     public void viewDidLoad() {
@@ -45,18 +46,19 @@ public class MessageThreadViewController extends UIViewController implements Mes
             }
         });
 
-        ServiceLocator.getInstance().provideMessageThreadsPresenter(this);
-    }
+        ServiceLocator.INSTANCE.resolve(new MessageThreadsPresenter.View() {
 
-    @Override
-    public void setIsBusy(boolean isBusy) {
-        // TODO:
-    }
+            @Override
+            public void reloadData(@NotNull List<Message> threads) {
+                MessageThreadViewController.this.threads = threads;
+                list.reloadData();
+            }
 
-    @Override
-    public void reloadData(List<? extends Message> threads) {
-        this.threads = threads;
-        list.reloadData();
+            @Override
+            public void setIsBusy(boolean isBusy) {
+                // TODO:
+            }
+        });
     }
 
     // ==========================================
