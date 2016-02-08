@@ -14,7 +14,7 @@ import y2k.joyreactor.platform.PlatformImpl
 class Main : UIApplicationDelegateAdapter() {
 
     override fun didFinishLaunching(application: UIApplication?, launchOptions: UIApplicationLaunchOptions?): Boolean {
-        Platform.Instance = PlatformImpl()
+        Platform.instance = PlatformImpl()
         ForegroundScheduler.instance = DispatchQueueSchedulerFactory().make()
         HttpClient.instance = NetworkActivityIndicatorHttpClient()
         return true
@@ -28,4 +28,3 @@ class Main : UIApplicationDelegateAdapter() {
         }
     }
 }
-

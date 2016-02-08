@@ -25,7 +25,7 @@ public class MenuViewController extends UIViewController implements TagListPrese
     public void viewDidLoad() {
         super.viewDidLoad();
 
-        presenter = ServiceLocator.getInstance().provideTagListPresenter(this);
+        presenter = ServiceLocator.INSTANCE.resolve(this);
         list.setDataSource(new TagDataSource());
         list.setDelegate(new TagDelegate());
     }

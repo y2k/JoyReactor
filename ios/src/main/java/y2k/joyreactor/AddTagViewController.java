@@ -18,7 +18,7 @@ public class AddTagViewController extends UIViewController implements AddTagPres
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
-        AddTagPresenter presenter = ServiceLocator.getInstance().provideAddTagPresenter(this);
+        AddTagPresenter presenter = ServiceLocator.INSTANCE.resolve(this);
 
         getNavigationItem().getRightBarButtonItem()
                 .setOnClickListener(sender -> presenter.add(tagNameView.getText()));

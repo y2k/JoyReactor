@@ -22,7 +22,7 @@ public class CreateCommentViewController extends UIViewController implements Cre
     public void viewDidLoad() {
         super.viewDidLoad();
 
-        CreateCommentPresenter presenter = ServiceLocator.getInstance().provideCreateCommentPresenter(this);
+        CreateCommentPresenter presenter = ServiceLocator.INSTANCE.resolve(this);
         cancelButton.addOnTouchUpInsideListener(
                 (sender, e) -> getNavigationController().popViewController(true));
         sendButton.addOnTouchUpInsideListener(
