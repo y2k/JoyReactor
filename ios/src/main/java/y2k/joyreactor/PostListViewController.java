@@ -6,6 +6,7 @@ import org.robovm.apple.foundation.NSIndexPath;
 import org.robovm.apple.uikit.*;
 import org.robovm.objc.annotation.CustomClass;
 import org.robovm.objc.annotation.IBOutlet;
+import y2k.joyreactor.common.BaseUIViewController;
 import y2k.joyreactor.common.ServiceLocator;
 import y2k.joyreactor.platform.ImageRequest;
 import y2k.joyreactor.presenters.PostListPresenter;
@@ -16,7 +17,7 @@ import java.util.List;
  * Created by y2k on 9/26/15.
  */
 @CustomClass("PostListViewController")
-public class PostListViewController extends UIViewController implements PostListPresenter.View {
+public class PostListViewController extends BaseUIViewController implements PostListPresenter.View {
 
     @IBOutlet
     UITableView list;
@@ -27,7 +28,7 @@ public class PostListViewController extends UIViewController implements PostList
     UIRefreshControl refresher;
 
     PostListPresenter presenter;
-    List<? extends Post> posts;
+    List<Post> posts;
 
     @Override
     public void viewDidLoad() {
@@ -40,30 +41,18 @@ public class PostListViewController extends UIViewController implements PostList
         list.addSubview(refresher = new UIRefreshControl());
 
         getNavigationItem().getRightBarButtonItem().setOnClickListener(sender ->
-                new MenuController(this)
-                        .addNavigation("Add tag", "AddTag")
-                        .addNavigation("Profile", "Profile")
-                        .addNavigation("Messages", "MessageThreads")
-                        .addCancel("Cancel")
-                        .present());
+            new MenuController(this)
+                .addNavigation("Add tag", "AddTag")
+                .addNavigation("Profile", "Profile")
+                .addNavigation("Messages", "MessageThreads")
+                .addCancel("Cancel")
+                .present());
 
         progressView.stopAnimating();
 
         applyButton.addOnTouchUpInsideListener((sender, e) -> presenter.applyNew());
 
-        presenter = ServiceLocator.getInstance().providePostListPresenter(this);
-    }
-
-    @Override
-    public void viewWillAppear(boolean animated) {
-        super.viewWillAppear(animated);
-        presenter.activate();
-    }
-
-    @Override
-    public void viewWillDisappear(boolean animated) {
-        super.viewWillDisappear(animated);
-        presenter.deactivate();
+        presenter = ServiceLocator.INSTANCE.resolve(getLifeCycleService(), this);
     }
 
     // ==========================================
@@ -77,7 +66,7 @@ public class PostListViewController extends UIViewController implements PostList
     }
 
     @Override
-    public void reloadPosts(List<? extends Post> posts, Integer divider) {
+    public void reloadPosts(List<Post> posts, Integer divider) {
         this.posts = posts;
         list.reloadData();
     }
@@ -114,8 +103,8 @@ public class PostListViewController extends UIViewController implements PostList
                     // TODO
                 } else {
                     loadImage(post.getImage(), 300,
-                            (int) (300 / image.getAspect()),
-                            (UIImageView) cell.getViewWithTag(1));
+                        (int) (300 / image.getAspect()),
+                        (UIImageView) cell.getViewWithTag(1));
                 }
 
                 UIImageView userImageView = (UIImageView) cell.getViewWithTag(2);
@@ -134,13 +123,13 @@ public class PostListViewController extends UIViewController implements PostList
         void loadImage(Image image, int width, int height, UIImageView iv) {
             iv.setAlpha(0);
             new ImageRequest()
-                    .setUrl(image)
-                    .setSize(width, height)
-                    .to(iv, data -> {
-                        iv.setImage(data);
-                        UIView.animate(0.3, () -> iv.setAlpha(1));
-                        return Unit.INSTANCE;
-                    });
+                .setUrl(image)
+                .setSize(width, height)
+                .to(iv, data -> {
+                    iv.setImage(data);
+                    UIView.animate(0.3, () -> iv.setAlpha(1));
+                    return Unit.INSTANCE;
+                });
         }
     }
 

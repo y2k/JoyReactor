@@ -21,7 +21,7 @@ public class LoginViewController extends UIViewController implements LoginPresen
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
-        LoginPresenter presenter = ServiceLocator.getInstance().provideLoginPresenter(this);
+        LoginPresenter presenter = ServiceLocator.INSTANCE.resolve(this);
 
         loginButton.addOnTouchUpInsideListener((sender, e) -> presenter.login(
                 username.getText(), password.getText()));

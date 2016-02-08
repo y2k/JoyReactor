@@ -1,9 +1,10 @@
 package y2k.joyreactor.platform;
 
+import kotlin.Unit;
 import org.robovm.apple.foundation.*;
 import org.robovm.apple.uikit.UIImage;
 import rx.Observable;
-import y2k.joyreactor.common.ObservableUtils;
+import y2k.joyreactor.common.ObservableExtensionsKt;
 
 import java.io.File;
 import java.util.List;
@@ -17,8 +18,8 @@ public class PlatformImpl extends Platform {
 
     private static File dogGetCurrentDirectory() {
         List<String> dirs = NSPathUtilities.getSearchPathForDirectoriesInDomains(
-                NSSearchPathDirectory.DocumentDirectory,
-                NSSearchPathDomainMask.UserDomainMask, true);
+            NSSearchPathDirectory.DocumentDirectory,
+            NSSearchPathDomainMask.UserDomainMask, true);
         return new File(dirs.get(0));
     }
 
@@ -40,7 +41,9 @@ public class PlatformImpl extends Platform {
 
     @Override
     public Observable<?> saveToGallery(File imageFile) {
-        return ObservableUtils.create(() ->
-                new UIImage(imageFile).saveToPhotosAlbum(null));
+        return ObservableExtensionsKt.ioUnitObservable(() -> {
+            new UIImage(imageFile).saveToPhotosAlbum(null);
+            return Unit.INSTANCE;
+        });
     }
 }

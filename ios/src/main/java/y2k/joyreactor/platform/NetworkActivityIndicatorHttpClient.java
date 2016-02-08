@@ -18,7 +18,7 @@ public class NetworkActivityIndicatorHttpClient extends HttpClient {
     private NetworkIndicator indicator = new NetworkIndicator();
 
     @Override
-    public Document getDocument(String url) {
+    public Document getDocument(@NotNull String url) {
         try {
             indicator.setEnabled(true);
             return super.getDocument(url);
@@ -28,7 +28,7 @@ public class NetworkActivityIndicatorHttpClient extends HttpClient {
     }
 
     @Override
-    public String getText(String url) {
+    public String getText(@NotNull String url) {
         try {
             indicator.setEnabled(true);
             return super.getText(url);
@@ -38,7 +38,7 @@ public class NetworkActivityIndicatorHttpClient extends HttpClient {
     }
 
     @Override
-    public void downloadToFile(@NotNull String url, @NotNull File file, @Nullable Function2<? super Integer, ? super Integer, ? extends Unit> callback) {
+    public void downloadToFile(@NotNull String url, @NotNull File file, @Nullable Function2<? super Integer, ? super Integer, Unit> callback) {
         try {
             indicator.setEnabled(true);
             super.downloadToFile(url, file, callback);

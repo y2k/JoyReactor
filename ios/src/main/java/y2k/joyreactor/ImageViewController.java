@@ -24,7 +24,7 @@ public class ImageViewController extends UIViewController implements ImagePresen
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
-        ServiceLocator.getInstance().provideImagePresenter(this);
+        ServiceLocator.INSTANCE.resolve(this);
     }
 
     @Override

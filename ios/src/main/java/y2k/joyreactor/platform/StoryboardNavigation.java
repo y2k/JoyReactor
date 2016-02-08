@@ -12,7 +12,7 @@ import y2k.joyreactor.Post;
 /**
  * Created by y2k on 02/10/15.
  */
-public class StoryboardNavigation extends Navigation {
+public class StoryboardNavigation implements Navigation {
 
     private static Post sPostArgument; // TODO:
     private static String sPostIdArgument; // TODO:
@@ -87,6 +87,11 @@ public class StoryboardNavigation extends Navigation {
 
     @Override
     public void openCreateComment() {
+        // TODO:
+    }
+
+    @Override
+    public void openPostGallery() {
         // TODO:
     }
 }
