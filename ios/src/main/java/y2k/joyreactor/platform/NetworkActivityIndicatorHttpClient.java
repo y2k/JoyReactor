@@ -5,7 +5,7 @@ import kotlin.jvm.functions.Function2;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.nodes.Document;
-import y2k.joyreactor.NetworkIndicator;
+import y2k.joyreactor.common.NetworkIndicator;
 import y2k.joyreactor.http.HttpClient;
 
 import java.io.File;
