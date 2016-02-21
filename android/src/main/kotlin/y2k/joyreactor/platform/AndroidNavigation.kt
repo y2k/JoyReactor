@@ -60,7 +60,7 @@ class AndroidNavigation(app: Application) : Navigation {
         currentActivity?.startActivity(VideoActivity::class)
     }
 
-    override fun openImageView(post: Post) {
+    override fun openImageView(postId: String) {
         // TODO:
     }
 
@@ -85,7 +85,6 @@ class AndroidNavigation(app: Application) : Navigation {
 
     companion object {
 
-        internal lateinit var sPostArgument: Post // FIXME:
         internal var sPostIdArgument = "2294127" // FIXME:
     }
 }

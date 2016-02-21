@@ -73,9 +73,9 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
     }
 
     fun mainImage(serverPostId: String): Observable<File> {
-        return Observable
-            .just(buffer.post.image!!.fullUrl(null))
-            .flatMap({ url -> imageRequestFactory.request(url) })
+        return dataContext
+            .applyUse { Posts.first { it.serverId==serverPostId } }
+            .flatMap { imageRequestFactory.request(it.image!!.fullUrl(null)) }
     }
 
     fun mainImagePartial(serverPostId: String): Observable<PartialResult<File>> {

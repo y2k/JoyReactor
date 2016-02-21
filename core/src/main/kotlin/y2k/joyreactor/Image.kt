@@ -32,7 +32,7 @@ class Image(
 
     private fun toURL(width: Int?, height: Int?, format: String?): URL {
         if (width == null || height == null)
-            return URL("https", "api-i-twister.net", 8011, "/cache/original?url=" + url + getFormatPart(format))
+            return URL("https", "api-i-twister.net", 8011, "/cache/original?url=$url${getFormatPart(format)}")
 
         return URL(
                 "https", "api-i-twister.net", 8011,
@@ -54,8 +54,8 @@ class Image(
         return Math.min(2f, Math.max(min, aspect))
     }
 
-    override fun equals(obj: Any?): Boolean {
-        return (obj is Image) && obj.url == url;
+    override fun equals(other: Any?): Boolean {
+        return (other is Image) && other.url == url;
     }
 
     companion object {

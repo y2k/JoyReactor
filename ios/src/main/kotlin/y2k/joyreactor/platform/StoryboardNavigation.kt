@@ -6,7 +6,6 @@ import org.robovm.apple.uikit.UIApplication
 import org.robovm.apple.uikit.UINavigationController
 import org.robovm.apple.uikit.UIViewController
 import y2k.joyreactor.ImageViewController
-import y2k.joyreactor.Post
 
 /**
  * Created by y2k on 02/10/15.
@@ -57,8 +56,8 @@ class StoryboardNavigation : Navigation {
         navigationController.pushViewController(instantiateViewController("Video"), true)
     }
 
-    override fun openImageView(post: Post) {
-        sPostArgument = post
+    override fun openImageView(postId: String) {
+        sPostIdArgument = postId
         navigationController.pushViewController(ImageViewController(), true)
     }
 
@@ -72,7 +71,6 @@ class StoryboardNavigation : Navigation {
 
     companion object {
 
-        private var sPostArgument: Post? = null // TODO:
         private var sPostIdArgument: String? = null // TODO:
 
         val navigationController: UINavigationController
