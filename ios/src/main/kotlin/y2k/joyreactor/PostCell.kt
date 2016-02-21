@@ -32,7 +32,7 @@ class PostCell : UITableViewCell() {
             // TODO:
         })
         alert.addAction(UIAlertAction("Cancel".translate(), UIAlertActionStyle.Cancel, null))
-        StoryboardNavigation.getNavigationController().presentViewController(alert, true, null)
+        StoryboardNavigation.navigationController.presentViewController(alert, true, null)
     }
 
     @IBAction
