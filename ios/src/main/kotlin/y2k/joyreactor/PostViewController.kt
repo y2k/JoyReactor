@@ -5,6 +5,7 @@ import org.robovm.apple.uikit.*
 import org.robovm.objc.annotation.CustomClass
 import org.robovm.objc.annotation.IBOutlet
 import y2k.joyreactor.common.ServiceLocator
+import y2k.joyreactor.common.translate
 import y2k.joyreactor.platform.ImageRequest
 import y2k.joyreactor.presenters.PostPresenter
 
@@ -48,13 +49,13 @@ class PostViewController : UIViewController(), PostPresenter.View {
 
         navigationItem.rightBarButtonItem.setOnClickListener { sender ->
             val alert = UIAlertController()
-            alert.addAction(UIAlertAction(Translator.get("Add comment"), UIAlertActionStyle.Default) { s ->
+            alert.addAction(UIAlertAction("Add comment".translate(), UIAlertActionStyle.Default) { s ->
                 navigationController.pushViewController(
                     storyboard.instantiateViewController("CreateComment"), true)
             })
-            alert.addAction(UIAlertAction(Translator.get("Save image to gallery"),
+            alert.addAction(UIAlertAction("Save image to gallery".translate(),
                 UIAlertActionStyle.Default) { s -> presenter.saveImageToGallery() })
-            alert.addAction(UIAlertAction(Translator.get("Open in Safari"),
+            alert.addAction(UIAlertAction("Open in Safari".translate(),
                 UIAlertActionStyle.Default) { s -> presenter.openPostInBrowser() })
             alert.addAction(UIAlertAction("Cancel", UIAlertActionStyle.Cancel, null))
             presentViewController(alert, true, null)

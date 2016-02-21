@@ -4,7 +4,7 @@ import org.robovm.apple.uikit.*
 import org.robovm.objc.annotation.CustomClass
 import org.robovm.objc.annotation.IBAction
 import org.robovm.objc.annotation.IBOutlet
-import y2k.joyreactor.common.translation
+import y2k.joyreactor.common.translate
 import y2k.joyreactor.platform.StoryboardNavigation
 import y2k.joyreactor.presenters.PostListPresenter
 
@@ -25,23 +25,23 @@ class PostCell : UITableViewCell() {
     @IBAction
     internal fun rate() {
         val alert = UIAlertController()
-        alert.addAction(UIAlertAction("Like".translation, UIAlertActionStyle.Default) {
+        alert.addAction(UIAlertAction("Like".translate(), UIAlertActionStyle.Default) {
             // TODO:
         })
-        alert.addAction(UIAlertAction("Dislike".translation, UIAlertActionStyle.Destructive) {
+        alert.addAction(UIAlertAction("Dislike".translate(), UIAlertActionStyle.Destructive) {
             // TODO:
         })
-        alert.addAction(UIAlertAction("Cancel".translation, UIAlertActionStyle.Cancel, null))
+        alert.addAction(UIAlertAction("Cancel".translate(), UIAlertActionStyle.Cancel, null))
         StoryboardNavigation.getNavigationController().presentViewController(alert, true, null)
     }
 
     @IBAction
-    internal fun clicked() {
+    fun clicked() {
         presenter.postClicked(post)
     }
 
     @IBAction
-    internal fun play() {
+    fun play() {
         presenter.playClicked(post)
     }
 
@@ -57,5 +57,5 @@ class PostCell : UITableViewCell() {
     }
 
     private val playButtonTitle: String
-        get() = if (post.image?.isAnimated ?: false) "Play".translation else "View".translation
+        get() = if (post.image?.isAnimated ?: false) "Play".translate() else "View".translate()
 }

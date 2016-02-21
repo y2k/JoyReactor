@@ -18,18 +18,19 @@ class MenuViewController : BaseUIViewController() {
     @IBOutlet lateinit var list: UITableView
 
     var tags: List<Tag>? = null
-    var presenter: TagListPresenter? = null
+    lateinit var presenter: TagListPresenter
 
     override fun viewDidLoad() {
         super.viewDidLoad()
 
-        presenter = ServiceLocator.resolve(lifeCycleService, object : TagListPresenter.View {
+        presenter = ServiceLocator.resolve(lifeCycleService,
+            object : TagListPresenter.View {
 
-            override fun reloadData(tags: List<Tag>) {
-                this@MenuViewController.tags = tags
-                list.reloadData()
-            }
-        })
+                override fun reloadData(tags: List<Tag>) {
+                    this@MenuViewController.tags = tags
+                    list.reloadData()
+                }
+            })
 
         list.dataSource = TagDataSource()
         list.setDelegate(TagDelegate())
@@ -41,13 +42,13 @@ class MenuViewController : BaseUIViewController() {
             return ((if (tags == null) 0 else tags!!.size) + 1).toLong()
         }
 
-        override fun getCellForRow(tableView: UITableView?, indexPath: NSIndexPath?): UITableViewCell {
-            if (indexPath!!.row == 0) {
-                val cell = tableView!!.dequeueReusableCell("Header") as MenuHeaderCell
+        override fun getCellForRow(tableView: UITableView, indexPath: NSIndexPath): UITableViewCell {
+            if (indexPath.row == 0) {
+                val cell = tableView.dequeueReusableCell("Header") as MenuHeaderCell
                 cell.setPresenter(presenter)
                 return cell
             } else {
-                val cell = tableView!!.dequeueReusableCell("Tag")
+                val cell = tableView.dequeueReusableCell("Tag")
                 val i = tags!![indexPath.row - 1]
 
                 val iv = cell.getViewWithTag(1) as UIImageView
@@ -64,13 +65,13 @@ class MenuViewController : BaseUIViewController() {
 
     inner class TagDelegate : UITableViewDelegateAdapter() {
 
-        override fun getHeightForRow(tableView: UITableView?, indexPath: NSIndexPath?): Double {
-            return (if (indexPath!!.row == 0) 136 else 50).toDouble()
+        override fun getHeightForRow(tableView: UITableView, indexPath: NSIndexPath): Double {
+            return (if (indexPath.row == 0) 136 else 50).toDouble()
         }
 
-        override fun didSelectRow(tableView: UITableView?, indexPath: NSIndexPath?) {
-            presenter!!.selectTag(tags!![indexPath!!.row - 1])
-            tableView!!.deselectRow(indexPath, true)
+        override fun didSelectRow(tableView: UITableView, indexPath: NSIndexPath) {
+            presenter.selectTag(tags!![indexPath.row - 1])
+            tableView.deselectRow(indexPath, true)
         }
     }
 }
