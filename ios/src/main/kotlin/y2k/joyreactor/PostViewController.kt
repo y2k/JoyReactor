@@ -66,7 +66,7 @@ class PostViewController : UIViewController(), PostPresenter.View {
         list.rowHeight = UITableView.getAutomaticDimension()
         list.estimatedRowHeight = 44.0
 
-        ServiceLocator.resolve(this)
+        presenter = ServiceLocator.resolve(this)
     }
 
     override fun updateComments(comments: CommentGroup) {
