@@ -38,7 +38,6 @@ class PostActivity : AppCompatActivity() {
 
         val list = find<RecyclerView>(R.id.list)
         list.adapter = adapter
-        list.layoutManager = LinearLayoutManager(this)
 
         val createComment = findViewById(R.id.createComment)
         createComment.setOnClickListener { presenter.replyToPost() }
