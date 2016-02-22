@@ -13,6 +13,25 @@ interface CommentGroup {
 
     fun getId(position: Int): Long
 
+    object Empty : CommentGroup {
+
+        override fun size(): Int {
+            return 0
+        }
+
+        override fun get(position: Int): Comment {
+            throw UnsupportedOperationException()
+        }
+
+        override fun isChild(position: Int): Boolean {
+            throw UnsupportedOperationException()
+        }
+
+        override fun getId(position: Int): Long {
+            throw UnsupportedOperationException()
+        }
+    }
+
     /**
      * Created by y2k on 11/28/15.
      */

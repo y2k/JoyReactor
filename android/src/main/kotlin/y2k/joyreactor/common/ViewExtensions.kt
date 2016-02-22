@@ -1,6 +1,5 @@
 package y2k.joyreactor.common
 
-import android.app.Activity
 import android.support.v4.view.ViewCompat
 import android.support.v4.view.ViewPropertyAnimatorCompat
 import android.view.View

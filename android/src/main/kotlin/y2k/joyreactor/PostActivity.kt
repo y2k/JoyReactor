@@ -94,14 +94,12 @@ class PostActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.reply)
-            presenter.replyToPost()
-        else if (item.itemId == R.id.openInBrowser)
-            presenter.openPostInBrowser()
-        else if (item.itemId == R.id.saveImageToGallery)
-            saveImageToGallery()
-        else
-            super.onOptionsItemSelected(item)
+        when (item.itemId) {
+            R.id.reply -> presenter.replyToPost()
+            R.id.openInBrowser -> presenter.openPostInBrowser()
+            R.id.saveImageToGallery -> saveImageToGallery()
+            else -> super.onOptionsItemSelected(item)
+        }
         return true
     }
 
@@ -116,7 +114,7 @@ class PostActivity : AppCompatActivity() {
 
     inner class Adapter : RecyclerView.Adapter<ComplexViewHolder>() {
 
-        private var comments: CommentGroup? = null
+        private var comments: CommentGroup = CommentGroup.Empty
         private var post: Post? = null
         private var images: List<Image> = emptyList()
         private var similarPosts: List<SimilarPost> = emptyList()
@@ -126,7 +124,7 @@ class PostActivity : AppCompatActivity() {
         }
 
         override fun getItemId(position: Int): Long {
-            return if (position == 0) 0 else comments!!.get(position - 1).id
+            return if (position == 0) 0 else comments[position - 1].id
         }
 
         override fun getItemViewType(position: Int): Int {
@@ -143,7 +141,7 @@ class PostActivity : AppCompatActivity() {
         }
 
         override fun getItemCount(): Int {
-            return 1 + (if (comments == null) 0 else comments!!.size())
+            return comments.size() + 1
         }
 
         fun updatePostComments(comments: CommentGroup) {
@@ -219,14 +217,14 @@ class PostActivity : AppCompatActivity() {
                 replies = itemView.findViewById(R.id.replies) as TextView
                 attachment = itemView.findViewById(R.id.attachment) as WebImageView
 
-                itemView.findViewById(R.id.action).setOnClickListener { v -> presenter.selectComment(comments!!.getId(realPosition)) }
+                itemView.findViewById(R.id.action).setOnClickListener { presenter.selectComment(comments.getId(realPosition)) }
 
                 val commentButton = itemView.findViewById(R.id.commentMenu)
-                commentButton.setOnClickListener { v ->
+                commentButton.setOnClickListener {
                     val menu = PopupMenu(parent.context, commentButton)
                     menu.setOnMenuItemClickListener { menuItem ->
                         if (menuItem.itemId == R.id.reply)
-                            presenter.replyToComment(comments!!.get(realPosition))
+                            presenter.replyToComment(comments[realPosition])
                         true
                     }
                     menu.inflate(R.menu.comment)
@@ -235,9 +233,9 @@ class PostActivity : AppCompatActivity() {
             }
 
             override fun bind() {
-                (itemView.layoutParams as ViewGroup.MarginLayoutParams).leftMargin = if (comments!!.isChild(realPosition)) toPx(64) else toPx(8)
+                (itemView.layoutParams as ViewGroup.MarginLayoutParams).leftMargin = if (comments.isChild(realPosition)) toPx(64) else toPx(8)
 
-                val c = comments!!.get(realPosition)
+                val c = comments[realPosition]
                 text.text = c.text
                 avatar.setImage(c.userImageObject.toImage())
                 rating.text = "" + c.rating
