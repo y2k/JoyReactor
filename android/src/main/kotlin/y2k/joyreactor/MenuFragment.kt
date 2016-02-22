@@ -1,7 +1,6 @@
 package y2k.joyreactor
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -21,24 +20,24 @@ class MenuFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_menu, container, false)
         val list = view.findViewById(R.id.list) as RecyclerView
-        list.layoutManager = LinearLayoutManager(context)
 
         val adapter = TagsAdapter()
         list.adapter = adapter
 
-        presenter = ServiceLocator.resolve(lifeCycleService, object : TagListPresenter.View {
+        presenter = ServiceLocator.resolve(lifeCycleService,
+            object : TagListPresenter.View {
 
-            override fun reloadData(tags: List<Tag>) {
-                adapter.updateData(tags)
-            }
-        })
+                override fun reloadData(tags: List<Tag>) {
+                    adapter.updateData(tags)
+                }
+            })
 
         return view
     }
 
     inner class TagsAdapter : RecyclerView.Adapter<TagsAdapter.ViewHolder>() {
 
-        private var tags: List<Tag>? = null
+        private var tags = emptyList<Tag>()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
@@ -47,14 +46,14 @@ class MenuFragment : BaseFragment() {
 
         override fun onBindViewHolder(vh: ViewHolder, position: Int) {
             if (vh.title != null && vh.icon != null) {
-                val item = tags!![position - 1]
+                val item = tags[position - 1]
                 vh.title.text = item.title
                 vh.icon.setImage(item.image)
             }
         }
 
         override fun getItemCount(): Int {
-            return (if (tags == null) 0 else tags!!.size) + 1
+            return tags.size + 1
         }
 
         override fun getItemViewType(position: Int): Int {
@@ -74,10 +73,10 @@ class MenuFragment : BaseFragment() {
             init {
                 val action = view.findViewById(R.id.action)
                 if (action == null) {
-                    view.findViewById(R.id.selectFeatured).setOnClickListener { v -> presenter.selectedFeatured() }
-                    view.findViewById(R.id.selectFavorite).setOnClickListener { v -> presenter.selectedFavorite() }
+                    view.findViewById(R.id.selectFeatured).setOnClickListener { presenter.selectedFeatured() }
+                    view.findViewById(R.id.selectFavorite).setOnClickListener { presenter.selectedFavorite() }
                 } else {
-                    action.setOnClickListener { presenter.selectTag(tags!![adapterPosition - 1]) }
+                    action.setOnClickListener { presenter.selectTag(tags[adapterPosition - 1]) }
                 }
             }
         }
