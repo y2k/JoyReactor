@@ -17,6 +17,8 @@
         <android.support.v7.widget.RecyclerView
                 app:layoutManager="android.support.v7.widget.LinearLayoutManager"
                 android:id="@+id/list"
+                android:paddingBottom="60dp"
+                android:clipToPadding="false"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

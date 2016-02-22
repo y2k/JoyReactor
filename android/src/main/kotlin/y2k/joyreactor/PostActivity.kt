@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -27,7 +26,6 @@ class PostActivity : AppCompatActivity() {
 
     lateinit var presenter: PostPresenter
     val adapter = Adapter()
-
     var imagePath: File? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
