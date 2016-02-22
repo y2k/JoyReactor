@@ -22,7 +22,7 @@ class UpdateService(private val context: Context) {
     fun checkHasUpdates(): Observable<Boolean> {
         return ioObservable {
             synchronizeWithServer()
-            BuildConfig.VERSION_NAME != prefs.getString("server-version", "")
+            BuildConfig.VERSION_NAME.code < prefs.getString("server-version", "").code
         }
     }
 
@@ -55,4 +55,7 @@ class UpdateService(private val context: Context) {
         val json = URL("https://api.github.com/repos/y2k/JoyReactor/releases/latest").readText()
         return JSONObject(json)
     }
+
+    val String.code: Int
+        get() = this.split('.').last().toInt()
 }
