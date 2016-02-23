@@ -79,7 +79,7 @@ class PostPresenter(
     }
 
     private val argumentPostId: String
-        get() = NavigationService.instance.argumentPostId
+        get() = NavigationService.instance.argument
 
     fun replyToComment(comment: Comment) {
         // TODO:

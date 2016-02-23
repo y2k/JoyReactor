@@ -109,19 +109,32 @@ class BindingBuilder(private val root: ViewResolver) {
 
 class DslRecyclerView<T> {
 
-    private lateinit var createVH: (ViewGroup) -> ListViewHolder<T>
+    private lateinit var createVH: (ViewGroup, Int) -> ListViewHolder<T>
     private var getItemId: ((T) -> Long)? = null
+    private var viewTypeFactory: (ItemViewTypeProperties<T>) -> Int = { 0 }
+
+    fun itemViewType(f: (ItemViewTypeProperties<T>) -> Int) {
+        viewTypeFactory = f
+    }
 
     fun itemId(getItemId: (T) -> Long) {
         this.getItemId = getItemId
     }
 
-    fun viewHolder(createVH: (ViewGroup) -> ListViewHolder<T>) {
+    fun viewHolderWithType(createVH: (ViewGroup, Int) -> ListViewHolder<T>) {
         this.createVH = createVH
+    }
+
+    fun viewHolder(createVH: (ViewGroup) -> ListViewHolder<T>) {
+        this.createVH = { v, i -> createVH(v) }
     }
 
     fun build(): ListAdapter<T, ListViewHolder<T>> {
         return object : ListAdapter<T, ListViewHolder<T>>() {
+
+            override fun getItemViewType(position: Int): Int {
+                return viewTypeFactory(ItemViewTypeProperties(items[position], items, position))
+            }
 
             override fun getItemId(position: Int): Long {
                 return getItemId?.invoke(items[position]) ?: 0L
@@ -132,10 +145,12 @@ class DslRecyclerView<T> {
             }
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder<T>? {
-                return createVH(parent)
+                return createVH(parent, viewType)
             }
         }
     }
+
+    class ItemViewTypeProperties<T>(val value: T, val items: List<T>, val position: Int)
 }
 
 abstract class ListViewHolder<T>(view: View) : RecyclerView.ViewHolder(view) {

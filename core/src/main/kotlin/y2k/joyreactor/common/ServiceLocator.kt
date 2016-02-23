@@ -8,6 +8,7 @@ import y2k.joyreactor.services.requests.*
 import y2k.joyreactor.services.synchronizers.MyTagFetcher
 import y2k.joyreactor.services.synchronizers.PostMerger
 import y2k.joyreactor.services.synchronizers.PrivateMessageFetcher
+import y2k.joyreactor.viewmodel.MessagesViewModel
 import y2k.joyreactor.viewmodel.ThreadsViewModel
 import java.util.*
 import kotlin.reflect.KClass
@@ -24,6 +25,10 @@ object ServiceLocator {
         add(ThreadsViewModel::class) {
             ThreadsViewModel(resolve(NavigationService::class), resolve(UserMessagesService::class))
         }
+        add(MessagesViewModel::class) {
+            MessagesViewModel(resolve(NavigationService::class), resolve(UserMessagesService::class))
+        }
+        add(SendMessageRequest::class) { SendMessageRequest() }
 
         add(MessageListRequest::class) { MessageListRequest(resolve(UserImageRequest::class)) }
         add(PostMerger::class) { PostMerger(resolve(DataContext.Factory::class)) }
@@ -56,7 +61,7 @@ object ServiceLocator {
             ProfileService(resolve(ProfileRequestFactory::class), resolve(LoginRequestFactory::class))
         }
         add(UserMessagesService::class) {
-            UserMessagesService(resolve(PrivateMessageFetcher::class), resolve(DataContext.Factory::class))
+            UserMessagesService(resolve(SendMessageRequest::class), resolve(PrivateMessageFetcher::class), resolve(DataContext.Factory::class))
         }
         add(CommentService::class) {
             CommentService(
@@ -103,10 +108,6 @@ object ServiceLocator {
 
     fun resolve(view: AddTagPresenter.View): AddTagPresenter {
         return AddTagPresenter(view, resolve(TagListService::class))
-    }
-
-    fun resolve(lifeCycleService: LifeCycleService, view: MessagesPresenter.View): MessagesPresenter {
-        return MessagesPresenter(view, resolve(UserMessagesService::class), lifeCycleService)
     }
 
     fun resolve(view: ImagePresenter.View): ImagePresenter {

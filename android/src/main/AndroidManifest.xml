@@ -49,6 +49,14 @@
                 android:value="y2k.joyreactor.MainActivity" />
         </activity>
         <activity
+                android:name=".ThreadsActivity"
+                android:screenOrientation="portrait"
+                android:label="@string/messages" >
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="y2k.joyreactor.MainActivity" />
+        </activity>
+        <activity
             android:name=".PostActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_post" >

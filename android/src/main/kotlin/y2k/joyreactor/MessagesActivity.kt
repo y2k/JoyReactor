@@ -6,9 +6,12 @@ import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.TextView
 import org.ocpsoft.prettytime.PrettyTime
-import y2k.joyreactor.common.*
+import y2k.joyreactor.common.ListViewHolder
+import y2k.joyreactor.common.ServiceLocator
+import y2k.joyreactor.common.bindingBuilder
+import y2k.joyreactor.common.inflate
 import y2k.joyreactor.model.Message
-import y2k.joyreactor.viewmodel.ThreadsViewModel
+import y2k.joyreactor.viewmodel.MessagesViewModel
 
 /**
  * Created by y2k on 11/13/15.
@@ -20,35 +23,36 @@ class MessagesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_messages)
         setSupportActionBar(findViewById(R.id.toolbar) as Toolbar)
 
-        val vm = ServiceLocator.resolve(ThreadsViewModel::class)
+        val vm = ServiceLocator.resolve(MessagesViewModel::class)
         bindingBuilder(this) {
-            loadingProgressBar(R.id.progress, vm.isBusy)
-            visibility(R.id.progress, vm.isBusy)
-            recyclerView(R.id.list, vm.threads) {
-                viewHolder {
-                    VH(it.inflate(R.layout.item_message_thread)).apply {
-                        itemView.findViewById(R.id.button).setOnClickListener {
-                            vm.selectThread(adapterPosition)
-                        }
+            recyclerView(R.id.list, vm.messages) {
+                itemViewType {
+                    if (it.value.isMine) {
+                        if (isFirst(it.items, it.position)) R.layout.item_message_outbox_first
+                        else R.layout.item_message_outbox
+                    } else {
+                        if (isFirst(it.items, it.position)) R.layout.item_message_inbox_first
+                        else R.layout.item_message_inbox
                     }
                 }
+                viewHolderWithType { parent, type -> VH(parent.inflate(type)) }
             }
         }
     }
 
+    private fun isFirst(items: List<Message>, position: Int): Boolean {
+        return position == items.size - 1 || items[position].isMine != items[position + 1].isMine
+    }
+
     class VH(view: View) : ListViewHolder<Message>(view) {
 
-        val userImage = view.find<WebImageView>(R.id.userImage)
-        val userName = view.find<TextView>(R.id.userName)
-        val lastMessage = view.find<TextView>(R.id.lastMessage)
-        val time = view.find<TextView>(R.id.time)
+        val message = view.findViewById(R.id.message) as TextView
+        val created = view.findViewById(R.id.created) as TextView
         val prettyTime = PrettyTime()
 
         override fun update(item: Message) {
-            userImage.setImage(item.getUserImageObject().toImage())
-            userName.text = item.userName
-            lastMessage.text = item.text
-            time.text = prettyTime.format(item.date)
+            message.text = item.text
+            created.text = prettyTime.format(item.date)
         }
     }
 }

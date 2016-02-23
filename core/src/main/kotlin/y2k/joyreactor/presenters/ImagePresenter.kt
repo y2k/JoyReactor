@@ -14,7 +14,7 @@ class ImagePresenter(view: ImagePresenter.View, service: PostService) {
     init {
         view.setBusy(true)
         service
-            .mainImage(NavigationService.instance.argumentPostId)
+            .mainImage(NavigationService.instance.argument)
             .subscribeOnMain({
                 view.showImage(it)
                 view.setBusy(false)

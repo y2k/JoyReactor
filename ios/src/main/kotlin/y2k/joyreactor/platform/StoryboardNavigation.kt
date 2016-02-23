@@ -33,7 +33,7 @@ class StoryboardNavigation : NavigationService {
         navigationController.pushViewController(instantiateViewController("Post"), true)
     }
 
-    override val argumentPostId: String
+    override val argument: String
         get() = sPostIdArgument!!
 
     private fun switchTo(storyboardId: String) {

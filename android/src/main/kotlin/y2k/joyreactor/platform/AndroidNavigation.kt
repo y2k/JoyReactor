@@ -21,8 +21,9 @@ class AndroidNavigation(app: Application) : NavigationService {
         app.registerActivityLifecycleCallbacks(MyActivityLifecycleCallbacks())
     }
 
-    override fun openPrivateMessages(name: String) {
-        throw UnsupportedOperationException()
+    override fun openMessages(name: String) {
+        sArgument = name
+        currentActivity?.startActivity(MessagesActivity::class)
     }
 
     override fun switchProfileToLogin() {
@@ -48,19 +49,19 @@ class AndroidNavigation(app: Application) : NavigationService {
     }
 
     override fun openPost(postId: String) {
-        sPostIdArgument = postId
+        sArgument = postId
         currentActivity?.startActivity(PostActivity::class)
     }
 
-    override val argumentPostId: String
-        get() = sPostIdArgument
+    override val argument: String
+        get() = sArgument
 
     override fun openBrowser(url: String) {
         currentActivity!!.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
     }
 
     override fun openVideo(postId: String) {
-        sPostIdArgument = postId // TODO:
+        sArgument = postId // TODO:
         currentActivity?.startActivity(VideoActivity::class)
     }
 
@@ -89,6 +90,7 @@ class AndroidNavigation(app: Application) : NavigationService {
 
     companion object {
 
-        internal var sPostIdArgument = "2294127" // FIXME:
+        // FIXME: перенести на уровень платформы
+        internal var sArgument = "2294127"
     }
 }

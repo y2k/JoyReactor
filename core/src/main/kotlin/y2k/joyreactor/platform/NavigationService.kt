@@ -5,7 +5,7 @@ package y2k.joyreactor.platform
  */
 interface NavigationService {
 
-    fun openPrivateMessages(name: String)
+    fun openMessages(name: String)
 
     fun switchProfileToLogin()
 
@@ -27,7 +27,7 @@ interface NavigationService {
 
     fun openPostGallery()
 
-    val argumentPostId: String
+    val argument: String
 
     companion object {
 

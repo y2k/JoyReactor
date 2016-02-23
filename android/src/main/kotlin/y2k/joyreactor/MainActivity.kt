@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.profile -> startActivity(Intent(this, ProfileActivity::class.java))
-            R.id.messages -> startActivity(Intent(this, MessagesActivity::class.java))
+            R.id.messages -> startActivity(Intent(this, ThreadsActivity::class.java))
             R.id.addTag -> AddTagDialogFragment.show(supportFragmentManager)
             else -> return super.onOptionsItemSelected(item)
         }

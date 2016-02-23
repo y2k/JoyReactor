@@ -7,9 +7,9 @@ import y2k.joyreactor.http.HttpClient
 /**
  * Created by y2k on 10/2/15.
  */
-class SendMessageRequest(private val username: String) {
+class SendMessageRequest() {
 
-    fun request(message: String): Observable<Unit> {
+    fun request(username: String, message: String): Observable<Unit> {
         return ioUnitObservable {
             HttpClient.instance
                 .beginForm()

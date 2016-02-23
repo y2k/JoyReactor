@@ -30,6 +30,6 @@ class ThreadsViewModel(
     }
 
     fun selectThread(index: Int) {
-        navigation.openPrivateMessages(threads.value[index].userName)
+        navigation.openMessages(threads.value[index].userName)
     }
 }

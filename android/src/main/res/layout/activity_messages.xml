@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -5,24 +6,53 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     <include layout="@layout/toolbar"/>
-    <FrameLayout
-            android:background="@android:color/white"
+    <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-                android:id="@+id/list"
+        <FrameLayout
+                android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-        <android.support.v4.widget.ContentLoadingProgressBar
-                style="?android:progressBarStyle"
-                android:id="@+id/progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
-
-    </FrameLayout>
+                android:layout_height="0dp">
+            <android.support.v7.widget.RecyclerView
+                    app:reverseLayout="true"
+                    app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                    android:id="@+id/list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            <ProgressBar
+                    style="?android:progressBarStyle"
+                    android:id="@+id/progress"
+                    android:visibility="gone"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </FrameLayout>
+        <LinearLayout
+                android:id="@+id/inputPanel"
+                android:background="@android:color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <EditText android:id="@+id/newMessage"
+                      android:paddingLeft="20dp"
+                      android:paddingTop="8dp"
+                      android:paddingBottom="8dp"
+                      android:paddingRight="8dp"
+                      android:background="@null"
+                      android:hint="@string/your_new_message_here"
+                      android:textColorHint="#bdbdbd"
+                      android:textColor="@color/text_secondary"
+                      android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:minHeight="48dp"
+                      android:inputType="textMultiLine"/>
+            <ImageButton
+                    android:id="@+id/createMessage"
+                    android:src="@drawable/ic_send_grey600_24dp"
+                    android:background="?android:listChoiceBackgroundIndicator"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"/>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
