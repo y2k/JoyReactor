@@ -132,6 +132,10 @@ class DslRecyclerView<T> {
     fun build(): ListAdapter<T, ListViewHolder<T>> {
         return object : ListAdapter<T, ListViewHolder<T>>() {
 
+            init {
+                setHasStableIds(getItemId != null)
+            }
+
             override fun getItemViewType(position: Int): Int {
                 return viewTypeFactory(ItemViewTypeProperties(items[position], items, position))
             }
