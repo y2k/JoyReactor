@@ -2,7 +2,7 @@ package y2k.joyreactor.presenters
 
 import y2k.joyreactor.model.Profile
 import y2k.joyreactor.common.subscribeOnMain
-import y2k.joyreactor.platform.Navigation
+import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.CommentService
 import y2k.joyreactor.services.ProfileService
 
@@ -25,7 +25,7 @@ class CreateCommentPresenter(
         service
             .createComment("2219757", commentText)
             .subscribeOnMain {
-                Navigation.instance.closeCreateComment()
+                NavigationService.instance.closeCreateComment()
                 view.setIsBusy(false)
             }
     }

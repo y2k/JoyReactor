@@ -1,7 +1,7 @@
 package y2k.joyreactor.presenters
 
 import y2k.joyreactor.common.subscribeOnMain
-import y2k.joyreactor.platform.Navigation
+import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.TagListService
 
 /**
@@ -18,7 +18,7 @@ class AddTagPresenter(
             .addTag(tag)
             .subscribeOnMain({
                 view.setIsBusy(false)
-                Navigation.instance.closeAddTag()
+                NavigationService.instance.closeAddTag()
             }, {
                 it.printStackTrace()
                 view.setIsBusy(false)

@@ -1,26 +1,28 @@
-<android.support.v4.widget.DrawerLayout
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/drawer_layout"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="y2k.joyreactor.Main2Activity">
-    <LinearLayout android:orientation="vertical"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent">
-        <include layout="@layout/toolbar"/>
-        <fragment
-                android:id="@+id/container"
-                android:name="y2k.joyreactor.MessageFragment"
+        android:layout_height="match_parent">
+    <include layout="@layout/toolbar"/>
+    <FrameLayout
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                android:id="@+id/list"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                tools:layout="@layout/fragment_messages"/>
-    </LinearLayout>
-    <fragment android:id="@+id/navigation_drawer"
-              android:name="y2k.joyreactor.ThreadsFragment"
-              android:layout_width="@dimen/navigation_drawer_width"
-              android:layout_height="match_parent"
-              android:layout_gravity="start"
-              tools:layout="@layout/fragment_menu"/>
-</android.support.v4.widget.DrawerLayout>
+                android:layout_height="match_parent"/>
+
+        <android.support.v4.widget.ContentLoadingProgressBar
+                style="?android:progressBarStyle"
+                android:id="@+id/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
+
+    </FrameLayout>
+</LinearLayout>

@@ -8,7 +8,7 @@ import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.platform.AndroidNavigation
 import y2k.joyreactor.platform.HandlerSchedulerFactory
-import y2k.joyreactor.platform.Navigation
+import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.platform.Platform
 import java.io.File
 
@@ -31,7 +31,7 @@ class App : Application() {
 
             override val currentDirectory: File = filesDir
 
-            override val navigator: Navigation = AndroidNavigation(this@App)
+            override val navigator: NavigationService = AndroidNavigation(this@App)
 
             override fun loadFromBundle(name: String, ext: String): ByteArray {
                 return assets.open(name + "." + ext).use { it.readBytes() }

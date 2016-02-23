@@ -1,7 +1,7 @@
 package y2k.joyreactor.presenters
 
 import y2k.joyreactor.common.subscribeOnMain
-import y2k.joyreactor.platform.Navigation
+import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.PostService
 
 import java.io.File
@@ -14,7 +14,7 @@ class ImagePresenter(view: ImagePresenter.View, service: PostService) {
     init {
         view.setBusy(true)
         service
-            .mainImage(Navigation.instance.argumentPostId)
+            .mainImage(NavigationService.instance.argumentPostId)
             .subscribeOnMain({
                 view.showImage(it)
                 view.setBusy(false)

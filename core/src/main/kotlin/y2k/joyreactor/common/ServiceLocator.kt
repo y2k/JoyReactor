@@ -1,6 +1,6 @@
 package y2k.joyreactor.common
 
-import y2k.joyreactor.platform.Navigation
+import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.presenters.*
 import y2k.joyreactor.services.*
 import y2k.joyreactor.services.repository.DataContext
@@ -8,6 +8,7 @@ import y2k.joyreactor.services.requests.*
 import y2k.joyreactor.services.synchronizers.MyTagFetcher
 import y2k.joyreactor.services.synchronizers.PostMerger
 import y2k.joyreactor.services.synchronizers.PrivateMessageFetcher
+import y2k.joyreactor.viewmodel.ThreadsViewModel
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -19,6 +20,11 @@ object ServiceLocator {
     private val map = HashMap <KClass<*>, () -> Any>()
 
     init {
+        add(NavigationService::class) { NavigationService.instance }
+        add(ThreadsViewModel::class) {
+            ThreadsViewModel(resolve(NavigationService::class), resolve(UserMessagesService::class))
+        }
+
         add(MessageListRequest::class) { MessageListRequest(resolve(UserImageRequest::class)) }
         add(PostMerger::class) { PostMerger(resolve(DataContext.Factory::class)) }
         add(MemoryBuffer::class) { MemoryBuffer }
@@ -73,7 +79,7 @@ object ServiceLocator {
     }
 
     fun resolve(view: PostPresenter.View): PostPresenter {
-        return PostPresenter(view, resolve(PostService::class), resolve(ProfileService::class), Navigation.instance)
+        return PostPresenter(view, resolve(PostService::class), resolve(ProfileService::class), NavigationService.instance)
     }
 
     fun resolve(lifeCycleService: LifeCycleService, view: TagListPresenter.View): TagListPresenter {
@@ -101,10 +107,6 @@ object ServiceLocator {
 
     fun resolve(lifeCycleService: LifeCycleService, view: MessagesPresenter.View): MessagesPresenter {
         return MessagesPresenter(view, resolve(UserMessagesService::class), lifeCycleService)
-    }
-
-    fun resolve(view: MessageThreadsPresenter.View): MessageThreadsPresenter {
-        return MessageThreadsPresenter(view, resolve(BroadcastService::class), resolve(UserMessagesService::class))
     }
 
     fun resolve(view: ImagePresenter.View): ImagePresenter {

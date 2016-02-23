@@ -1,7 +1,7 @@
 package y2k.joyreactor.presenters
 
 import y2k.joyreactor.common.subscribeOnMain
-import y2k.joyreactor.platform.Navigation
+import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.PostService
 import y2k.joyreactor.services.requests.OriginalImageRequestFactory
 
@@ -14,7 +14,7 @@ class VideoPresenter(view: VideoPresenter.View, service: PostService) {
 
     init {
         view.setBusy(true)
-        service.getFromCache(Navigation.instance.argumentPostId)
+        service.getFromCache(NavigationService.instance.argumentPostId)
             .map { it.image!!.fullUrl("mp4") }
             .flatMap { OriginalImageRequestFactory().request(it) }
             .subscribeOnMain({ videoFile ->

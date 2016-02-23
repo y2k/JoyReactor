@@ -1,8 +1,8 @@
 package y2k.joyreactor.services
 
 import rx.Observable
-import y2k.joyreactor.model.Message
 import y2k.joyreactor.common.concatAndRepeat
+import y2k.joyreactor.model.Message
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.synchronizers.PrivateMessageFetcher
 

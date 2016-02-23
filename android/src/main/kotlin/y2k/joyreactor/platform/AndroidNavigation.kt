@@ -13,12 +13,16 @@ import y2k.joyreactor.common.startActivity
 /**
  * Created by y2k on 10/19/15.
  */
-class AndroidNavigation(app: Application) : Navigation {
+class AndroidNavigation(app: Application) : NavigationService {
 
     internal var currentActivity: Activity? = null
 
     init {
         app.registerActivityLifecycleCallbacks(MyActivityLifecycleCallbacks())
+    }
+
+    override fun openPrivateMessages(name: String) {
+        throw UnsupportedOperationException()
     }
 
     override fun switchProfileToLogin() {

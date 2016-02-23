@@ -14,7 +14,7 @@ class PlatformImpl : Platform() {
     override val currentDirectory: File
         get() = CURRENT_DIRECTORY
 
-    override val navigator: Navigation
+    override val navigator: NavigationService
         get() = StoryboardNavigation()
 
     override fun loadFromBundle(name: String, ext: String): ByteArray {

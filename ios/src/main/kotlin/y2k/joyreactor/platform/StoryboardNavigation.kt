@@ -10,7 +10,7 @@ import y2k.joyreactor.ImageViewController
 /**
  * Created by y2k on 02/10/15.
  */
-class StoryboardNavigation : Navigation {
+class StoryboardNavigation : NavigationService {
 
     override fun switchProfileToLogin() {
         switchTo("Login")

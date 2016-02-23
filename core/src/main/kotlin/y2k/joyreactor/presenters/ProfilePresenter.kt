@@ -2,7 +2,7 @@ package y2k.joyreactor.presenters
 
 import y2k.joyreactor.model.Profile
 import y2k.joyreactor.common.subscribeOnMain
-import y2k.joyreactor.platform.Navigation
+import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.ProfileService
 
 /**
@@ -21,12 +21,12 @@ class ProfilePresenter(
                 view.setBusy(false)
             }, {
                 it.printStackTrace()
-                Navigation.instance.switchProfileToLogin()
+                NavigationService.instance.switchProfileToLogin()
             })
     }
 
     fun logout() {
-        service.logout().subscribeOnMain { Navigation.instance.switchProfileToLogin() }
+        service.logout().subscribeOnMain { NavigationService.instance.switchProfileToLogin() }
     }
 
     interface View {

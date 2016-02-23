@@ -3,7 +3,9 @@ package y2k.joyreactor.platform
 /**
  * Created by y2k on 02/10/15.
  */
-interface Navigation {
+interface NavigationService {
+
+    fun openPrivateMessages(name: String)
 
     fun switchProfileToLogin()
 
@@ -29,7 +31,7 @@ interface Navigation {
 
     companion object {
 
-        val instance: Navigation
+        val instance: NavigationService
             get() = Platform.instance.navigator
     }
 }

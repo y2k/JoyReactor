@@ -1,7 +1,7 @@
 package y2k.joyreactor.presenters
 
 import y2k.joyreactor.common.subscribeOnMain
-import y2k.joyreactor.platform.Navigation
+import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.ProfileService
 
 /**
@@ -17,7 +17,7 @@ class LoginPresenter(
             .login(username, password)
             .subscribeOnMain({
                 view.setBusy(false)
-                Navigation.instance.switchLoginToProfile()
+                NavigationService.instance.switchLoginToProfile()
             }, {
                 it.printStackTrace()
                 view.setBusy(false)

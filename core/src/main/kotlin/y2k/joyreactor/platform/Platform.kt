@@ -11,7 +11,7 @@ abstract class Platform {
 
     abstract val currentDirectory: File
 
-    abstract val navigator: Navigation
+    abstract val navigator: NavigationService
 
     abstract fun loadFromBundle(name: String, ext: String): ByteArray
 

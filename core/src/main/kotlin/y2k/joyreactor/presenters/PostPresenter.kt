@@ -3,7 +3,7 @@ package y2k.joyreactor.presenters
 import y2k.joyreactor.*
 import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.model.*
-import y2k.joyreactor.platform.Navigation
+import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.platform.Platform
 import y2k.joyreactor.services.PostService
 import y2k.joyreactor.services.ProfileService
@@ -16,7 +16,7 @@ class PostPresenter(
     private val view: PostPresenter.View,
     private val service: PostService,
     private val userService: ProfileService,
-    private val navigation: Navigation) {
+    private val navigation: NavigationService) {
 
     init {
         view.setIsBusy(true)
@@ -64,7 +64,7 @@ class PostPresenter(
     }
 
     fun openPostInBrowser() {
-        Navigation.instance.openBrowser("http://joyreactor.cc/post/" + argumentPostId)
+        NavigationService.instance.openBrowser("http://joyreactor.cc/post/" + argumentPostId)
     }
 
     fun saveImageToGallery() {
@@ -79,7 +79,7 @@ class PostPresenter(
     }
 
     private val argumentPostId: String
-        get() = Navigation.instance.argumentPostId
+        get() = NavigationService.instance.argumentPostId
 
     fun replyToComment(comment: Comment) {
         // TODO:
@@ -87,7 +87,7 @@ class PostPresenter(
 
     fun replyToPost() {
         // TODO:
-        Navigation.instance.openCreateComment()
+        NavigationService.instance.openCreateComment()
     }
 
     fun showMoreImages() {

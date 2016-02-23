@@ -4,7 +4,7 @@ import rx.Observable
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.model.Tag
 import y2k.joyreactor.common.subscribeOnMain
-import y2k.joyreactor.platform.Navigation
+import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.TagService
@@ -71,12 +71,12 @@ class PostListPresenter(
     }
 
     fun postClicked(post: Post) {
-        Navigation.instance.openPost(post.serverId)
+        NavigationService.instance.openPost(post.serverId)
     }
 
     fun playClicked(post: Post) {
-        if (post.image!!.isAnimated) Navigation.instance.openVideo(post.serverId)
-        else Navigation.instance.openImageView(post.serverId)
+        if (post.image!!.isAnimated) NavigationService.instance.openVideo(post.serverId)
+        else NavigationService.instance.openImageView(post.serverId)
     }
 
     interface View {
