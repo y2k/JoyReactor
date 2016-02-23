@@ -1,8 +1,8 @@
 package y2k.joyreactor.services.synchronizers
 
 import rx.Observable
-import y2k.joyreactor.Image
-import y2k.joyreactor.Tag
+import y2k.joyreactor.model.Image
+import y2k.joyreactor.model.Tag
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.TagsForUserRequest
 import y2k.joyreactor.services.requests.UserNameRequest

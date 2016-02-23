@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import y2k.joyreactor.common.BaseFragment
 import y2k.joyreactor.common.ItemDividerDecoration
 import y2k.joyreactor.common.ServiceLocator
+import y2k.joyreactor.model.Post
 import y2k.joyreactor.presenters.PostListPresenter
 
 /**

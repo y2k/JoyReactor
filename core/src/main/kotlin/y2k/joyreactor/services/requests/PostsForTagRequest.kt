@@ -3,9 +3,9 @@ package y2k.joyreactor.services.requests
 import org.jsoup.nodes.Element
 import rx.Observable
 import rx.schedulers.Schedulers
-import y2k.joyreactor.Image
-import y2k.joyreactor.Post
-import y2k.joyreactor.Tag
+import y2k.joyreactor.model.Image
+import y2k.joyreactor.model.Post
+import y2k.joyreactor.model.Tag
 import y2k.joyreactor.http.HttpClient
 import java.util.*
 import java.util.regex.Pattern

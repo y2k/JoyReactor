@@ -8,6 +8,7 @@ import org.robovm.objc.annotation.CustomClass
 import org.robovm.objc.annotation.IBOutlet
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.common.translate
+import y2k.joyreactor.model.Profile
 import y2k.joyreactor.platform.ImageRequest
 import y2k.joyreactor.presenters.ProfilePresenter
 

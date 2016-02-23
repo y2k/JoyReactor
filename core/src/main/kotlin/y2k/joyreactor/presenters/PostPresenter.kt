@@ -2,6 +2,7 @@ package y2k.joyreactor.presenters
 
 import y2k.joyreactor.*
 import y2k.joyreactor.common.subscribeOnMain
+import y2k.joyreactor.model.*
 import y2k.joyreactor.platform.Navigation
 import y2k.joyreactor.platform.Platform
 import y2k.joyreactor.services.PostService

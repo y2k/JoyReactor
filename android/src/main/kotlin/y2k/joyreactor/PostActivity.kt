@@ -18,6 +18,10 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import y2k.joyreactor.common.*
+import y2k.joyreactor.model.CommentGroup
+import y2k.joyreactor.model.Image
+import y2k.joyreactor.model.Post
+import y2k.joyreactor.model.SimilarPost
 import y2k.joyreactor.presenters.PostPresenter
 import java.io.File
 import java.util.*

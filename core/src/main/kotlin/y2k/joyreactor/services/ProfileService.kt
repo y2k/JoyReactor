@@ -1,7 +1,7 @@
 package y2k.joyreactor.services
 
 import rx.Observable
-import y2k.joyreactor.Profile
+import y2k.joyreactor.model.Profile
 import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.http.HttpClient
 import y2k.joyreactor.services.requests.LoginRequestFactory

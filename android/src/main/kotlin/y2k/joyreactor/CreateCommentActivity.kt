@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.TextView
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.common.compatAnimate
+import y2k.joyreactor.model.Profile
 import y2k.joyreactor.presenters.CreateCommentPresenter
 
 class CreateCommentActivity : AppCompatActivity() {

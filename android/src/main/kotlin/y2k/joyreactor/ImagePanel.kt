@@ -7,6 +7,7 @@ import android.widget.FrameLayout
 import y2k.joyreactor.common.forEachChild
 import y2k.joyreactor.common.inflateToSelf
 import y2k.joyreactor.common.isVisible
+import y2k.joyreactor.model.Image
 import java.util.*
 
 /**

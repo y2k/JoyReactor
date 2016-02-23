@@ -1,4 +1,4 @@
-package y2k.joyreactor
+package y2k.joyreactor.model
 
 import y2k.joyreactor.services.repository.DataSet
 import java.io.Serializable

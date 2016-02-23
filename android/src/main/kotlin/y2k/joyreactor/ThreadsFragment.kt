@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import org.ocpsoft.prettytime.PrettyTime
 import y2k.joyreactor.common.ServiceLocator
+import y2k.joyreactor.model.Message
 import y2k.joyreactor.presenters.MessageThreadsPresenter
 
 /**

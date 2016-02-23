@@ -2,10 +2,10 @@ package y2k.joyreactor.services.repository
 
 import rx.Observable
 import rx.schedulers.Schedulers
-import y2k.joyreactor.Message
-import y2k.joyreactor.Post
-import y2k.joyreactor.Tag
-import y2k.joyreactor.TagPost
+import y2k.joyreactor.model.Message
+import y2k.joyreactor.model.Post
+import y2k.joyreactor.model.Tag
+import y2k.joyreactor.model.TagPost
 import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.platform.Platform
 import java.io.EOFException

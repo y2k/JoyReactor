@@ -1,10 +1,10 @@
 package y2k.joyreactor.services
 
 import rx.Observable
-import y2k.joyreactor.CommentGroup
-import y2k.joyreactor.Image
-import y2k.joyreactor.Post
-import y2k.joyreactor.SimilarPost
+import y2k.joyreactor.model.CommentGroup
+import y2k.joyreactor.model.Image
+import y2k.joyreactor.model.Post
+import y2k.joyreactor.model.SimilarPost
 import y2k.joyreactor.common.PartialResult
 import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.services.repository.DataContext

@@ -2,6 +2,7 @@ package y2k.joyreactor.services.requests
 
 import y2k.joyreactor.*
 import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.model.*
 import java.util.*
 import java.util.regex.Pattern
 
@@ -41,8 +42,8 @@ class PostRequest {
         if (imgElement.size > 1)
             for (e in imgElement.subList(1, imgElement.size - 1)) {
                 val a = Attachment(Image(e.absUrl("src"),
-                        Integer.parseInt(e.attr("width")),
-                        Integer.parseInt(e.attr("height"))))
+                    Integer.parseInt(e.attr("width")),
+                    Integer.parseInt(e.attr("height"))))
                 attachments.add(a)
             }
     }

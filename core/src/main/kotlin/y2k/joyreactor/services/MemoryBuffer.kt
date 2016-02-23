@@ -1,6 +1,7 @@
 package y2k.joyreactor.services
 
 import y2k.joyreactor.*
+import y2k.joyreactor.model.*
 import y2k.joyreactor.services.requests.PostRequest
 
 /**

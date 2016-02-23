@@ -6,6 +6,7 @@ import org.robovm.apple.uikit.UIViewController
 import org.robovm.objc.annotation.CustomClass
 import org.robovm.objc.annotation.IBOutlet
 import y2k.joyreactor.common.ServiceLocator
+import y2k.joyreactor.model.Profile
 import y2k.joyreactor.presenters.CreateCommentPresenter
 
 /**

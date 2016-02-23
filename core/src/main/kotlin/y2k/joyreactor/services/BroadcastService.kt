@@ -1,7 +1,7 @@
 package y2k.joyreactor.services
 
-import y2k.joyreactor.Message
-import y2k.joyreactor.Tag
+import y2k.joyreactor.model.Message
+import y2k.joyreactor.model.Tag
 import java.util.*
 import kotlin.reflect.KClass
 

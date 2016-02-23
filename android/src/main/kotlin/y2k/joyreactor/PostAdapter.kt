@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import org.ocpsoft.prettytime.PrettyTime
 import y2k.joyreactor.common.ComplexViewHolder
+import y2k.joyreactor.model.Post
 import y2k.joyreactor.presenters.PostListPresenter
 import java.util.*
 

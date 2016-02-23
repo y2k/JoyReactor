@@ -1,7 +1,8 @@
 package y2k.joyreactor.services.requests
 
-import y2k.joyreactor.Message
+import y2k.joyreactor.model.Message
 import y2k.joyreactor.http.HttpClient
+import java.lang.Long
 import java.util.*
 
 /**

@@ -1,6 +1,6 @@
 package y2k.joyreactor.presenters
 
-import y2k.joyreactor.Image
+import y2k.joyreactor.model.Image
 import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.services.PostService
 

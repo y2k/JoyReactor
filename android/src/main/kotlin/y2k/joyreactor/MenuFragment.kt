@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import y2k.joyreactor.common.BaseFragment
 import y2k.joyreactor.common.ServiceLocator
+import y2k.joyreactor.model.Tag
 import y2k.joyreactor.presenters.TagListPresenter
 
 /**

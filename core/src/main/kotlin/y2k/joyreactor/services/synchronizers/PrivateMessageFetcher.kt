@@ -1,7 +1,7 @@
 package y2k.joyreactor.services.synchronizers
 
 import rx.Observable
-import y2k.joyreactor.Message
+import y2k.joyreactor.model.Message
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.MessageListRequest
 import java.util.*

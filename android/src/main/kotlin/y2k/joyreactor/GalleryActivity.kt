@@ -11,6 +11,7 @@ import y2k.joyreactor.common.ListAdapter
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.common.find
 import y2k.joyreactor.common.inflate
+import y2k.joyreactor.model.Image
 import y2k.joyreactor.presenters.GalleryPresenter
 
 /**

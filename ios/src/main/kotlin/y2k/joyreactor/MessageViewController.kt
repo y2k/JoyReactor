@@ -6,6 +6,7 @@ import org.robovm.objc.annotation.CustomClass
 import org.robovm.objc.annotation.IBOutlet
 import y2k.joyreactor.common.BaseUIViewController
 import y2k.joyreactor.common.ServiceLocator
+import y2k.joyreactor.model.Message
 import y2k.joyreactor.presenters.MessagesPresenter
 
 /**

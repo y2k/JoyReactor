@@ -8,6 +8,7 @@ import android.widget.RatingBar
 import android.widget.TextView
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.common.isVisible
+import y2k.joyreactor.model.Profile
 import y2k.joyreactor.presenters.ProfilePresenter
 
 class ProfileActivity : AppCompatActivity() {

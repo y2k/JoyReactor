@@ -1,6 +1,6 @@
 package y2k.joyreactor.presenters
 
-import y2k.joyreactor.Message
+import y2k.joyreactor.model.Message
 import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService

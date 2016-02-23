@@ -1,4 +1,4 @@
-package y2k.joyreactor
+package y2k.joyreactor.model
 
 import java.io.Serializable
 import java.net.MalformedURLException
@@ -35,8 +35,8 @@ class Image(
             return URL("https", "api-i-twister.net", 8011, "/cache/original?url=$url${getFormatPart(format)}")
 
         return URL(
-                "https", "api-i-twister.net", 8011,
-                "/cache/fit?quality=30&bgColor=ffffff&width=$width&height=$height&url=$url")
+            "https", "api-i-twister.net", 8011,
+            "/cache/fit?quality=30&bgColor=ffffff&width=$width&height=$height&url=$url")
     }
 
     private fun getFormatPart(format: String?): String {

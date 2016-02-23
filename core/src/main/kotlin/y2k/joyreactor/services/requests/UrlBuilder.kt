@@ -1,6 +1,6 @@
 package y2k.joyreactor.services.requests
 
-import y2k.joyreactor.Tag
+import y2k.joyreactor.model.Tag
 
 import java.net.URLEncoder
 

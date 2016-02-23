@@ -5,6 +5,7 @@ import org.robovm.objc.annotation.CustomClass
 import org.robovm.objc.annotation.IBAction
 import org.robovm.objc.annotation.IBOutlet
 import y2k.joyreactor.common.translate
+import y2k.joyreactor.model.Post
 import y2k.joyreactor.platform.StoryboardNavigation
 import y2k.joyreactor.presenters.PostListPresenter
 
