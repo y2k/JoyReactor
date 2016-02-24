@@ -23,7 +23,9 @@ class MessagesViewModel(
     }
 
     fun sendNewMessage() {
-        service.sendNewMessage(navigation.argument, newMessage.value)
+        service
+            .sendNewMessage(navigation.argument, newMessage.value)
+            .subscribeOnMain {  }
         newMessage.value = ""
     }
 }

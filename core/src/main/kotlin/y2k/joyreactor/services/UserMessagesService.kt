@@ -16,7 +16,9 @@ class UserMessagesService(
     private val entities: DataContext.Factory) {
 
     fun sendNewMessage(username: String, message: String): Observable<Unit> {
-        return sendRequest.request(username, message)
+        return sendRequest
+            .request(username, message)
+            .flatMap { fetcher.execute() }
     }
 
     fun getThreads(): Observable<List<Message>> {
