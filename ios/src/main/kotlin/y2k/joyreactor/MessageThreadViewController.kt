@@ -1,37 +1,35 @@
 package y2k.joyreactor
 
+import org.ocpsoft.prettytime.PrettyTime
 import org.robovm.apple.foundation.NSIndexPath
-import org.robovm.apple.uikit.*
+import org.robovm.apple.uikit.UITableView
+import org.robovm.apple.uikit.UITableViewDelegateAdapter
 import org.robovm.objc.annotation.CustomClass
 import org.robovm.objc.annotation.IBOutlet
+import y2k.joyreactor.common.BaseUIViewController
+import y2k.joyreactor.common.ListCell
 import y2k.joyreactor.common.ServiceLocator
+import y2k.joyreactor.common.bindingBuilder
 import y2k.joyreactor.model.Message
-import y2k.joyreactor.presenters.MessageThreadsPresenter
+import y2k.joyreactor.viewmodel.ThreadsViewModel
 
 /**
  * Created by y2k on 10/2/15.
  */
 @CustomClass("MessageThreadViewController")
-class MessageThreadViewController : UIViewController() {
+class MessageThreadViewController : BaseUIViewController() {
 
     @IBOutlet lateinit var list: UITableView
-    var threads: List<Message> = emptyList()
 
     override fun viewDidLoad() {
         super.viewDidLoad()
-        list.dataSource = object : UITableViewDataSourceAdapter() {
 
-            override fun getNumberOfRowsInSection(tableView: UITableView?, section: Long): Long {
-                return  threads.size.toLong()
-            }
-
-            override fun getCellForRow(tableView: UITableView?, indexPath: NSIndexPath?): UITableViewCell {
-                val cell = tableView!!.dequeueReusableCell("Thread")
-                val thread = threads[indexPath!!.row]
-                cell.textLabel.text = thread.text
-                return cell
-            }
+        val vm = ServiceLocator.resolve(lifeCycleService, ThreadsViewModel::class)
+        bindingBuilder {
+            tableView(list, ThreadCell::class, vm.threads)
         }
+
+        // TODO:
         list.setDelegate(object : UITableViewDelegateAdapter() {
 
             override fun didSelectRow(tableView: UITableView?, indexPath: NSIndexPath?) {
@@ -39,17 +37,16 @@ class MessageThreadViewController : UIViewController() {
                 navigationController.pushViewController(vc, true)
             }
         })
+    }
 
-        ServiceLocator.resolve(object : MessageThreadsPresenter.View {
+    @CustomClass("ThreadCell")
+    class ThreadCell : ListCell<Message>() {
 
-            override fun reloadData(threads: List<Message>) {
-                this@MessageThreadViewController.threads = threads
-                list.reloadData()
-            }
+        val prettyTime = PrettyTime()
 
-            override fun setIsBusy(isBusy: Boolean) {
-                // TODO:
-            }
-        })
+        override fun bind(data: Message) {
+            textLabel.text = data.text
+            detailTextLabel.text = prettyTime.format(data.date)
+        }
     }
 }

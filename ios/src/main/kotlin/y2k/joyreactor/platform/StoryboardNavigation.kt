@@ -12,6 +12,11 @@ import y2k.joyreactor.ImageViewController
  */
 class StoryboardNavigation : NavigationService {
 
+    override fun openMessages(name: String) {
+        sArgument = name
+        switchTo("Messages")
+    }
+
     override fun switchProfileToLogin() {
         switchTo("Login")
     }
@@ -29,12 +34,12 @@ class StoryboardNavigation : NavigationService {
     }
 
     override fun openPost(postId: String) {
-        sPostIdArgument = postId
+        sArgument = postId
         navigationController.pushViewController(instantiateViewController("Post"), true)
     }
 
     override val argument: String
-        get() = sPostIdArgument!!
+        get() = sArgument!!
 
     private fun switchTo(storyboardId: String) {
         val stack = NSMutableArray(navigationController.viewControllers)
@@ -52,12 +57,12 @@ class StoryboardNavigation : NavigationService {
     }
 
     override fun openVideo(postId: String) {
-        sPostIdArgument = postId
+        sArgument = postId
         navigationController.pushViewController(instantiateViewController("Video"), true)
     }
 
     override fun openImageView(postId: String) {
-        sPostIdArgument = postId
+        sArgument = postId
         navigationController.pushViewController(ImageViewController(), true)
     }
 
@@ -71,7 +76,7 @@ class StoryboardNavigation : NavigationService {
 
     companion object {
 
-        private var sPostIdArgument: String? = null // TODO:
+        private var sArgument: String? = null // TODO:
 
         val navigationController: UINavigationController
             get() = UIApplication.getSharedApplication().windows[0].rootViewController as UINavigationController

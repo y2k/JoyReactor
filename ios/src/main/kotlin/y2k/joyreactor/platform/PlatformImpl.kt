@@ -1,6 +1,7 @@
 package y2k.joyreactor.platform
 
 import org.robovm.apple.foundation.*
+import org.robovm.apple.uikit.UIAlertView
 import org.robovm.apple.uikit.UIImage
 import rx.Observable
 import y2k.joyreactor.common.ioUnitObservable
