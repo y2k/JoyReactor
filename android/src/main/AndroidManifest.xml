@@ -66,6 +66,7 @@
         </activity>
         <activity
             android:name=".VideoActivity"
+            android:screenOrientation="landscape"
             android:label="@string/title_activity_video" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

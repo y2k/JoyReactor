@@ -1,31 +1,54 @@
 package y2k.joyreactor.widget
 
 import android.content.Context
-import android.content.ContextWrapper
-import android.content.Intent
+import android.media.MediaPlayer
 import android.util.AttributeSet
-import android.util.Log
-import android.widget.VideoView
+import android.view.SurfaceHolder
+import android.view.SurfaceView
+import android.view.View
+import java.io.File
 
 /**
  * Created by y2k on 26/02/16.
  */
-class MuteVideoView(context: Context?, attrs: AttributeSet?) :
-    VideoView(MuteAudioContext(context), attrs) {
+class MuteVideoView(context: Context?, attrs: AttributeSet?) : SurfaceView(context, attrs) {
 
-    class MuteAudioContext(base: Context?) : ContextWrapper(base) {
+    private val player = MediaPlayer()
 
-        override fun sendBroadcast(intent: Intent?) {
-            // Ignore stop music broadcast for Android < 5.0
-        }
+    init {
+        holder.addCallback(object : SurfaceHolder.Callback {
 
-        override fun getSystemService(name: String?): Any? {
-            Log.i("MuteVideoView", "getSystemService | " + name)
-            if (name == Context.AUDIO_SERVICE) {
-//                val init = AudioManager::class.java.getConstructor(Context::class.java)
-//                return init.newInstance(null)
+            override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
             }
-            return super.getSystemService(name)
+
+            override fun surfaceDestroyed(holder: SurfaceHolder?) {
+                player.release()
+            }
+
+            override fun surfaceCreated(holder: SurfaceHolder?) {
+            }
+        })
+        player.setOnVideoSizeChangedListener { player, w, h ->
+            val screenWidth = (parent as View).width
+            val screenHeight = (parent as View).height
+            val videoParams = layoutParams
+            if (w > h) {
+                videoParams.width = screenWidth
+                videoParams.height = screenWidth * h / w
+            } else {
+                videoParams.width = screenHeight * w / h
+                videoParams.height = screenHeight
+            }
+            layoutParams = videoParams
         }
+    }
+
+    fun play(path: File) {
+        player.setDisplay(holder)
+        player.setDataSource(path.absolutePath)
+        player.isLooping = true
+        player.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT)
+        player.prepare()
+        player.start()
     }
 }
