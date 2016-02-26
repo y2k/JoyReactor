@@ -14,7 +14,7 @@ class StoryboardNavigation : NavigationService {
 
     override fun openMessages(name: String) {
         sArgument = name
-        switchTo("Messages")
+        navigationController.pushViewController(instantiateViewController("Messages"), true)
     }
 
     override fun switchProfileToLogin() {

@@ -26,15 +26,6 @@ class MessagesViewController : BaseUIViewController() {
     override fun viewDidLoad() {
         super.viewDidLoad()
 
-        // TODO:
-        //        list.setDelegate(object : UITableViewDelegateAdapter() {
-        //
-        //            override fun didSelectRow(tableView: UITableView?, indexPath: NSIndexPath?) {
-        //                val vc = storyboard.instantiateViewController("Messages")
-        //                navigationController.pushViewController(vc, true)
-        //            }
-        //        })
-
         val vm = ServiceLocator.resolve(lifeCycleService, MessagesViewModel::class)
         bindingBuilder {
             textView(newMessage, vm.newMessage)

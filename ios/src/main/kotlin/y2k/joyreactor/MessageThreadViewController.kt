@@ -29,12 +29,12 @@ class MessageThreadViewController : BaseUIViewController() {
             tableView(list, ThreadCell::class, vm.threads)
         }
 
-        // TODO:
+        // TODO: вынести в билдер
         list.setDelegate(object : UITableViewDelegateAdapter() {
 
-            override fun didSelectRow(tableView: UITableView?, indexPath: NSIndexPath?) {
-                val vc = storyboard.instantiateViewController("Messages")
-                navigationController.pushViewController(vc, true)
+            override fun willSelectRow(tableView: UITableView?, indexPath: NSIndexPath): NSIndexPath? {
+                vm.selectThread(indexPath.row)
+                return null
             }
         })
     }
