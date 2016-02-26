@@ -6,7 +6,7 @@
         android:background="@android:color/black"
         tools:context="y2k.joyreactor.VideoActivity">
 
-    <VideoView
+    <y2k.joyreactor.widget.MuteVideoView
             android:id="@+id/video"
             android:layout_gravity="center"
             android:layout_width="match_parent"

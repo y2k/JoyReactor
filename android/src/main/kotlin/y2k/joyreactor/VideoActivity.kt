@@ -16,7 +16,7 @@ class VideoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_video)
 
         val videoView = findViewById(R.id.video) as VideoView
-        videoView.setOnPreparedListener { mp -> mp.isLooping = true }
+        videoView.setOnPreparedListener { it.isLooping = true }
 
         ServiceLocator.resolve(
             object : VideoPresenter.View {
