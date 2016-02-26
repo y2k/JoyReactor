@@ -19,18 +19,20 @@ class ThreadsViewModel(
     val isBusy = binding(false)
 
     init {
-        lifeCycleService.add {
-            isBusy.value = true
-            var isWeb = false // TODO: переделать
-            service
-                .getThreads()
-                .subscribeOnMain {
-                    threads.value = it
+        lifeCycleService.add { refresh() }
+    }
 
-                    if (isWeb) isBusy.value = false
-                    else isWeb = true
-                }
-        }
+    fun refresh() {
+        isBusy.value = true
+        var isWeb = false // TODO: переделать
+        service
+            .getThreads()
+            .subscribeOnMain {
+                threads.value = it
+
+                if (isWeb) isBusy.value = false
+                else isWeb = true
+            }
     }
 
     fun selectThread(index: Int) {

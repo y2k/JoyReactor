@@ -21,8 +21,10 @@ class ThreadsActivity : LifeCycleActivity() {
 
         val vm = ServiceLocator.resolve(lifeCycleService, ThreadsViewModel::class)
         bindingBuilder(this) {
-            loadingProgressBar(R.id.progress, vm.isBusy)
-            visibility(R.id.progress, vm.isBusy)
+            refreshLayout(R.id.refresher) {
+                isRefreshing(vm.isBusy)
+                command { vm.refresh() }
+            }
             recyclerView(R.id.list, vm.threads) {
                 viewHolder {
                     VH(it.inflate(R.layout.item_message_thread)).apply {

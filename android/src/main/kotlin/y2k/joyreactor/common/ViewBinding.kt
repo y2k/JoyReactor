@@ -3,6 +3,7 @@ package y2k.joyreactor.common
 import android.app.Activity
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.ContentLoadingProgressBar
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.view.View
@@ -50,6 +51,15 @@ private class ActivityViewResolver(private val activity: Activity) : ViewResolve
 }
 
 class BindingBuilder(private val root: ViewResolver) {
+
+    //    fun refreshLayout(id: Int, binding: Binding<Boolean>) {
+    //        val view = root.find<SwipeRefreshLayout>(id)
+    //        binding.subscribe { view.isRefreshing = it }
+    //    }
+
+    fun refreshLayout(id: Int, init: SwipeRefreshLayoutBinding.() -> Unit) {
+        SwipeRefreshLayoutBinding(root.find<SwipeRefreshLayout>(id)).init()
+    }
 
     fun view(id: Int, init: ViewBinding.() -> Unit) {
         ViewBinding(root.find<View>(id)).init()
@@ -105,6 +115,17 @@ class BindingBuilder(private val root: ViewResolver) {
                 binding.value = position
             }
         })
+    }
+}
+
+class SwipeRefreshLayoutBinding(private val view: SwipeRefreshLayout) {
+
+    fun isRefreshing(binding: Binding<Boolean>) {
+        binding.subscribe { view.isRefreshing = it }
+    }
+
+    fun command(func: () -> Unit) {
+        view.setOnRefreshListener(func)
     }
 }
 
