@@ -77,6 +77,7 @@ class BindingBuilder(private val root: ViewResolver) {
 
     fun editText(id: Int, binding: Binding<String>) {
         val view = root.find<EditText>(id)
+        binding.subscribe { if (view.text.toString() != it) view.setText(it) }
         view.addTextChangedListener(object : TextWatcherAdapter() {
 
             override fun afterTextChanged(s: Editable?) {

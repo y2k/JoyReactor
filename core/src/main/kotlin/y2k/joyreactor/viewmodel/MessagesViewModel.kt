@@ -25,7 +25,7 @@ class MessagesViewModel(
     fun sendNewMessage() {
         service
             .sendNewMessage(navigation.argument, newMessage.value)
-            .subscribeOnMain {  }
+            .subscribeOnMain { messages.value = it }
         newMessage.value = ""
     }
 }

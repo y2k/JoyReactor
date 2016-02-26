@@ -23,7 +23,10 @@ object ServiceLocator {
     init {
         add(NavigationService::class) { NavigationService.instance }
         add(ThreadsViewModel::class) {
-            ThreadsViewModel(resolve(NavigationService::class), resolve(UserMessagesService::class))
+            ThreadsViewModel(
+                resolve(LifeCycleService::class),
+                resolve(NavigationService::class),
+                resolve(UserMessagesService::class))
         }
         add(MessagesViewModel::class) {
             MessagesViewModel(resolve(NavigationService::class), resolve(UserMessagesService::class))
@@ -123,11 +126,21 @@ object ServiceLocator {
     // ==========================================
 
     @Suppress("UNCHECKED_CAST")
+    public fun <T : Any> resolve(lifeCycleService: LifeCycleService, type: KClass<T>): T {
+        add(LifeCycleService::class) { lifeCycleService }
+        return resolve(type).apply { remove(LifeCycleService::class) }
+    }
+
+    @Suppress("UNCHECKED_CAST")
     public fun <T : Any> resolve(type: KClass<T>): T {
         return map[type]?.let { it() as T } ?: type.java.newInstance()
     }
 
     private fun <T : Any> add(type: KClass<T>, factory: () -> T) {
         map[type] = factory
+    }
+
+    private fun <T : Any> remove(type: KClass<T>) {
+        map.remove(type)
     }
 }

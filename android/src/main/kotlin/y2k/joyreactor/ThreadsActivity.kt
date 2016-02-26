@@ -1,7 +1,6 @@
 package y2k.joyreactor
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.TextView
@@ -13,14 +12,14 @@ import y2k.joyreactor.viewmodel.ThreadsViewModel
 /**
  * Created by y2k on 2/23/16.
  */
-class ThreadsActivity : AppCompatActivity() {
+class ThreadsActivity : LifeCycleActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_threads)
         setSupportActionBar(findViewById(R.id.toolbar) as Toolbar)
 
-        val vm = ServiceLocator.resolve(ThreadsViewModel::class)
+        val vm = ServiceLocator.resolve(lifeCycleService, ThreadsViewModel::class)
         bindingBuilder(this) {
             loadingProgressBar(R.id.progress, vm.isBusy)
             visibility(R.id.progress, vm.isBusy)
