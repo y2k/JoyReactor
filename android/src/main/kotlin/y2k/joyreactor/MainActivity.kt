@@ -8,8 +8,12 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import y2k.joyreactor.common.ServiceLocator
+import y2k.joyreactor.platform.ReportService
 
 class MainActivity : AppCompatActivity() {
+
+    val reportService = ServiceLocator.resolve(ReportService::class)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.feedback -> reportService.createFeedback()
             R.id.profile -> startActivity(Intent(this, ProfileActivity::class.java))
             R.id.messages -> startActivity(Intent(this, ThreadsActivity::class.java))
             R.id.addTag -> AddTagDialogFragment.show(supportFragmentManager)

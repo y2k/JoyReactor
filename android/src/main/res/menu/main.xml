@@ -2,6 +2,10 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="y2k.joyreactor.Main2Activity">
+    <item android:id="@+id/feedback"
+          android:icon="@drawable/ic_warning_white_24dp"
+          android:title="@string/send_feedback"
+          app:showAsAction="ifRoom"/>
     <item android:id="@+id/addTag"
           android:title="@string/add_tag"
           app:showAsAction="never"/>
