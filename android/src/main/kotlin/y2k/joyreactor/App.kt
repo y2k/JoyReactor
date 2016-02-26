@@ -24,7 +24,7 @@ class App : Application() {
         if (!BuildConfig.DEBUG) {
             Mint.disableNetworkMonitoring()
             Mint.initAndStartSession(this, "66d8751e")
-        };
+        }
 
         ForegroundScheduler.instance = HandlerSchedulerFactory().make()
         Platform.instance = object : Platform() {
