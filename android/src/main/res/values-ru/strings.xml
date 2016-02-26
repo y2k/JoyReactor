@@ -24,10 +24,10 @@
     <string name="login_error">Не удалось авторизоваться. Пожалуйста, попробуйте позже.</string>
     <string name="your_new_message_here">Напишите здесь свое сообщение…</string>
     <string name="you_are_not_authorized">You are not authorized</string>
-    <string name="send_feedback">Send feedback</string>
+    <string name="send_feedback">Отправить отзыв</string>
     <string name="updates_available">Доступно обновление</string>
     <string name="open">Open</string>
-    <string name="write_feedback">Write feedback</string>
+    <string name="write_feedback">Напишите отзыв</string>
     <string name="error_email_client_not_installed">You don\'t have any email client installed.</string>
     <string name="unknow_error">Произошла ошибка. Пожалуйста, попробуйте позже.</string>
     <string name="authorization">Авторизация</string>
