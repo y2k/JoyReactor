@@ -31,6 +31,11 @@ fun ViewGroup.switchByScaleFromTo(firstPosition: Int, secondPosition: Int) {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <T : View> View.find(id: Int): T {
+fun <T> View.find(id: Int): T {
     return findViewById(id) as T
+}
+
+@Suppress("UNCHECKED_CAST")
+fun <T> View.findOrNull(id: Int): T? {
+    return findViewById(id) as T?
 }

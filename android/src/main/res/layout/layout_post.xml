@@ -18,10 +18,16 @@
                 android:layout_height="match_parent"/>
     </y2k.joyreactor.FixedAspectPanel>
 
+    <TextView android:id="@+id/description"
+              android:padding="8dp"
+              android:textSize="16sp"
+              android:textColor="#444"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"/>
+
     <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-    >
+            android:layout_height="48dp">
         <TextView android:text="@string/images"
                   android:textColor="@android:color/darker_gray"
                   android:textSize="18sp"
