@@ -26,6 +26,7 @@ class PostActivity : AppCompatActivity() {
         bindingBuilder(this) {
             viewResolver(R.id.list)
 
+            progressImageView(R.id.poster, vm.poster)
             textView(R.id.description, vm.description)
             action(vm.postData) {
                 // TODO:

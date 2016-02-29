@@ -13,6 +13,8 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.EditText
 import android.widget.TextView
+import y2k.joyreactor.widget.ProgressImageView
+import java.io.File
 
 /**
  * Created by y2k on 2/23/16.
@@ -95,6 +97,11 @@ class BindingBuilder(root: ViewResolver) {
     fun textView(id: Int, binding: Binding<String>) {
         val view = find<TextView>(id)
         binding.subscribe { if (view.text.toString() != it) view.setText(it) }
+    }
+
+    fun progressImageView(id: Int, binding: Binding<PartialResult<File>>) {
+        val view = find<ProgressImageView>(id)
+        binding.subscribe { view.image = it }
     }
 
     fun editText(id: Int, binding: Binding<String>) {

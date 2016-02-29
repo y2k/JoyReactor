@@ -11,8 +11,8 @@
             android:layout_gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <y2k.joyreactor.LargeImageView
-                android:id="@+id/image"
+        <y2k.joyreactor.widget.ProgressImageView
+                android:id="@+id/poster"
                 android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>

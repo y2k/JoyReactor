@@ -1,5 +1,6 @@
 package y2k.joyreactor.viewmodel
 
+import y2k.joyreactor.common.PartialResult
 import y2k.joyreactor.common.binding
 import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.model.Comment
@@ -7,6 +8,7 @@ import y2k.joyreactor.model.Post
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.PostService
 import y2k.joyreactor.services.ProfileService
+import java.io.File
 
 /**
  * Created by y2k on 2/28/16.
@@ -20,6 +22,7 @@ class PostViewModel(
     val postData = binding(null as Post?)
     val comments = binding(emptyList<Comment>())
     val description = binding("")
+    val poster = binding(PartialResult.inProgress<File>(0, 100))
 
     init {
         // TODO:
@@ -44,6 +47,18 @@ class PostViewModel(
 
                         isBusy.value = false
                     }
+
+                service
+                    .mainImagePartial(post.serverId)
+                    .subscribeOnMain { partial ->
+                        poster.value = partial
+                        //                        if (partial.result == null) {
+                        //                            view.updateImageDownloadProgress(partial.progress, partial.max)
+                        //                        } else {
+                        //                            view.updatePostImage(partial.result)
+                        //                        }
+                    }
+
 
                 //                service
                 //                    .getSimilarPosts(post.id)
