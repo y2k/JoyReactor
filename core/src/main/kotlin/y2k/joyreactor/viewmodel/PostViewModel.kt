@@ -22,11 +22,12 @@ class PostViewModel(
     val postData = binding(null as Post?)
     val comments = binding(emptyList<Comment>())
     val description = binding("")
+
     val poster = binding(PartialResult.inProgress<File>(0, 100))
+    val posterAspect = binding(1f)
 
     init {
         // TODO:
-
         isBusy.value = true
         service
             .synchronizePostAsync(navigation.argument)
@@ -38,6 +39,8 @@ class PostViewModel(
                 //                    .subscribeOnMain { view.updatePostImages(it) }
 
                 description.value = post.title
+
+                posterAspect.value = post.image?.aspect ?: 1f
 
                 service
                     .getCommentsAsync(post.id, 0)

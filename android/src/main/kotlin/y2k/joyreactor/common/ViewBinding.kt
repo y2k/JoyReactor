@@ -13,6 +13,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.EditText
 import android.widget.TextView
+import y2k.joyreactor.FixedAspectPanel
 import y2k.joyreactor.widget.ProgressImageView
 import java.io.File
 
@@ -97,6 +98,11 @@ class BindingBuilder(root: ViewResolver) {
     fun textView(id: Int, binding: Binding<String>) {
         val view = find<TextView>(id)
         binding.subscribe { if (view.text.toString() != it) view.setText(it) }
+    }
+
+    fun fixedAspectPanel(id: Int, binding: Binding<Float>) {
+        val view = find<FixedAspectPanel>(id)
+        binding.subscribe { view.setAspect(it) }
     }
 
     fun progressImageView(id: Int, binding: Binding<PartialResult<File>>) {
