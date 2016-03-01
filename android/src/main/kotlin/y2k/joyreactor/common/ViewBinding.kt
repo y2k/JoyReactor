@@ -14,6 +14,8 @@ import android.webkit.WebViewClient
 import android.widget.EditText
 import android.widget.TextView
 import y2k.joyreactor.FixedAspectPanel
+import y2k.joyreactor.ImagePanel
+import y2k.joyreactor.model.Image
 import y2k.joyreactor.widget.ProgressImageView
 import java.io.File
 
@@ -110,6 +112,11 @@ class BindingBuilder(root: ViewResolver) {
         binding.subscribe { view.image = it }
     }
 
+    fun imagePanel(id: Int, binding: Binding<List<Image>>) {
+        val view = find<ImagePanel>(id)
+        binding.subscribe { view.setImages(it) }
+    }
+
     fun editText(id: Int, binding: Binding<String>) {
         val view = find<EditText>(id)
         binding.subscribe { if (view.text.toString() != it) view.setText(it) }
@@ -119,6 +126,11 @@ class BindingBuilder(root: ViewResolver) {
                 binding.value = "" + s
             }
         })
+    }
+
+    fun <T> visibility(id: Int, binding: Binding<T>, converter: (T) -> Boolean) {
+        val view = find<View>(id)
+        binding.subscribe { view.visibility = if (converter(it)) View.VISIBLE else View.GONE }
     }
 
     fun visibility(id: Int, binding: Binding<Boolean>, invert: Boolean = false) {

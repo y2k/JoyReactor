@@ -4,6 +4,7 @@ import y2k.joyreactor.common.PartialResult
 import y2k.joyreactor.common.binding
 import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.model.Comment
+import y2k.joyreactor.model.Image
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.PostService
@@ -26,6 +27,8 @@ class PostViewModel(
     val poster = binding(PartialResult.inProgress<File>(0, 100))
     val posterAspect = binding(1f)
 
+    val images = binding(emptyList<Image>())
+
     init {
         // TODO:
         isBusy.value = true
@@ -34,9 +37,9 @@ class PostViewModel(
             .subscribeOnMain { post ->
                 postData.value = post
 
-                //                service
-                //                    .getPostImages()
-                //                    .subscribeOnMain { view.updatePostImages(it) }
+                service
+                    .getPostImages()
+                    .subscribeOnMain { images.value = it }
 
                 description.value = post.title
 

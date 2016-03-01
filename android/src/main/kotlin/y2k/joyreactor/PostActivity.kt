@@ -29,6 +29,9 @@ class PostActivity : AppCompatActivity() {
             progressImageView(R.id.poster, vm.poster)
             fixedAspectPanel(R.id.posterPanel, vm.posterAspect)
 
+            imagePanel(R.id.images, vm.images)
+            visibility(R.id.showMoreImages, vm.images, { it.size > 3 })
+
             textView(R.id.description, vm.description)
             action(vm.postData) {
                 // TODO:
