@@ -7,6 +7,7 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
 import java.io.File
+import java.io.FileInputStream
 
 /**
  * Created by y2k on 26/02/16.
@@ -43,11 +44,10 @@ class MuteVideoView(context: Context?, attrs: AttributeSet?) : SurfaceView(conte
         }
     }
 
-    fun play(path: File) {
+    fun play(file: File) {
+        file.inputStream().use { player.setDataSource((it as FileInputStream).fd) }
         player.setDisplay(holder)
-        player.setDataSource(path.absolutePath)
         player.isLooping = true
-        player.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT)
         player.prepare()
         player.start()
     }
