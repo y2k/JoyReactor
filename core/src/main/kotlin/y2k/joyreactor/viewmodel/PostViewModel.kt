@@ -29,12 +29,14 @@ class PostViewModel(
 
     val images = binding(emptyList<Image>())
 
+    val error = binding(false)
+
     init {
         // TODO:
         isBusy.value = true
         service
             .synchronizePostAsync(navigation.argument)
-            .subscribeOnMain { post ->
+            .subscribeOnMain({ post ->
                 postData.value = post
 
                 service
@@ -83,6 +85,9 @@ class PostViewModel(
                 //                userService
                 //                    .isAuthorized()
                 //                    .subscribeOnMain { if (it) view.setEnableCreateComments() }
-            }
+            }, {
+                it.printStackTrace()
+                error.value = true
+            })
     }
 }

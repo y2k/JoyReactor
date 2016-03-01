@@ -32,6 +32,8 @@ class PostActivity : AppCompatActivity() {
             imagePanel(R.id.images, vm.images)
             visibility(R.id.showMoreImages, vm.images, { it.size > 3 })
 
+            visibility(R.id.error, vm.error)
+
             textView(R.id.description, vm.description)
             action(vm.postData) {
                 // TODO:
