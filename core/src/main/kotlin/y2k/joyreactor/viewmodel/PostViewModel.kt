@@ -20,7 +20,6 @@ class PostViewModel(
     private val navigation: NavigationService) {
 
     val isBusy = binding(false)
-    val postData = binding(null as Post?)
     val comments = binding(emptyList<Comment>())
     val description = binding("")
 
@@ -37,8 +36,6 @@ class PostViewModel(
         service
             .synchronizePostAsync(navigation.argument)
             .subscribeOnMain({ post ->
-                postData.value = post
-
                 service
                     .getPostImages()
                     .subscribeOnMain { images.value = it }
@@ -67,7 +64,6 @@ class PostViewModel(
                         //                        }
                     }
 
-
                 //                service
                 //                    .getSimilarPosts(post.id)
                 //                    .subscribeOnMain { view.updateSimilarPosts(it) }
@@ -89,5 +85,9 @@ class PostViewModel(
                 it.printStackTrace()
                 error.value = true
             })
+    }
+
+    fun showMoreImages() {
+        navigation.openPostGallery()
     }
 }
