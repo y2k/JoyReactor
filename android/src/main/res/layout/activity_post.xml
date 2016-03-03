@@ -1,4 +1,4 @@
-<LinearLayout
+<FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,47 +9,44 @@
 
     <include layout="@layout/toolbar"/>
 
-    <FrameLayout
-            android:layout_weight="1"
+    <y2k.joyreactor.widget.HeaderRecyclerView
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            android:id="@+id/list"
+            android:paddingBottom="60dp"
+            android:clipToPadding="false"
+            android:layout_marginTop="?attr/actionBarSize"
             android:layout_width="match_parent"
-            android:layout_height="0dp">
+            android:layout_height="match_parent"/>
 
-        <android.support.v7.widget.RecyclerView
-                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-                android:id="@+id/list"
-                android:paddingBottom="60dp"
-                android:clipToPadding="false"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+    <android.support.design.widget.FloatingActionButton
+            android:id="@+id/createComment"
+            android:src="@drawable/ic_comment_white_24dp"
+            android:scaleY="0"
+            android:scaleX="0"
+            android:layout_margin="16dp"
+            android:layout_gravity="bottom|right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-        <android.support.design.widget.FloatingActionButton
-                android:id="@+id/createComment"
-                android:src="@drawable/ic_comment_white_24dp"
-                android:scaleY="0"
-                android:scaleX="0"
-                android:layout_margin="16dp"
-                android:layout_gravity="bottom|right"
+    <FrameLayout
+            android:id="@+id/progress"
+            android:background="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <ProgressBar
+                style="?android:borderlessButtonStyle"
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-
-        <ProgressBar
-                android:id="@+id/imageProgress"
-                style="?android:progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-        <FrameLayout
-                android:id="@+id/progress"
-                android:background="@android:color/white"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            <ProgressBar
-                    style="?android:borderlessButtonStyle"
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-        </FrameLayout>
-
     </FrameLayout>
 
-</LinearLayout>
+    <TextView android:id="@+id/error"
+              android:text="@string/unknown_error"
+              android:gravity="center"
+              android:background="@android:color/white"
+              android:textSize="18sp"
+              android:textColor="@color/primary"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"/>
+
+</FrameLayout>

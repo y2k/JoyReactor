@@ -11,7 +11,9 @@ import java.io.File
 /**
  * Created by y2k on 12/8/15.
  */
-class LargeImageView(context: Context, attrs: AttributeSet) : ImageView(context, attrs) {
+@Deprecated("Use ProgressImageView")
+class LargeImageView(context: Context, attrs: AttributeSet) :
+    ImageView(context, attrs) {
 
     private var path: File? = null
 

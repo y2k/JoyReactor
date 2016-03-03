@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          tools:text="Test Tag"
+          android:background="@drawable/drawable_tag"
+          android:textSize="16sp"
+          android:textColor="@android:color/white"
+          android:padding="8dp"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>

@@ -12,6 +12,13 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.EditText
+import android.widget.TextView
+import y2k.joyreactor.FixedAspectPanel
+import y2k.joyreactor.ImagePanel
+import y2k.joyreactor.model.Image
+import y2k.joyreactor.widget.ProgressImageView
+import y2k.joyreactor.widget.TagsView
+import java.io.File
 
 /**
  * Created by y2k on 2/23/16.
@@ -38,35 +45,41 @@ fun bindingBuilder(root: Activity, init: BindingBuilder.() -> Unit) {
 
 private class ViewGroupResolver(private val view: View) : ViewResolver {
 
-    override fun <T : View> find(id: Int): T {
-        return view.find<T>(id)
+    override fun <T> find(id: Int): T? {
+        return view.findOrNull<T>(id)
     }
 }
 
 private class ActivityViewResolver(private val activity: Activity) : ViewResolver {
 
-    override fun <T : View> find(id: Int): T {
-        return activity.find<T>(id)
+    override fun <T> find(id: Int): T? {
+        return activity.findOrNull<T>(id)
     }
 }
 
-class BindingBuilder(private val root: ViewResolver) {
+class BindingBuilder(root: ViewResolver) {
+
+    val resolvers = arrayListOf(root)
 
     //    fun refreshLayout(id: Int, binding: Binding<Boolean>) {
     //        val view = root.find<SwipeRefreshLayout>(id)
     //        binding.subscribe { view.isRefreshing = it }
     //    }
 
+    fun viewResolver(id: Int) {
+        resolvers.add(find<ViewResolver>(id))
+    }
+
     fun refreshLayout(id: Int, init: SwipeRefreshLayoutBinding.() -> Unit) {
-        SwipeRefreshLayoutBinding(root.find<SwipeRefreshLayout>(id)).init()
+        SwipeRefreshLayoutBinding(find<SwipeRefreshLayout>(id)).init()
     }
 
     fun view(id: Int, init: ViewBinding.() -> Unit) {
-        ViewBinding(root.find<View>(id)).init()
+        ViewBinding(find<View>(id)).init()
     }
 
     fun click(id: Int, f: () -> Unit) {
-        root.find<View>(id).setOnClickListener { f() }
+        find<View>(id).setOnClickListener { f() }
     }
 
     fun <T> action(binding: Binding<T>, f: (T) -> Unit) {
@@ -74,19 +87,44 @@ class BindingBuilder(private val root: ViewResolver) {
     }
 
     fun <T> recyclerView(id: Int, binding: Binding<List<T>>, init: DslRecyclerView<T>.() -> Unit) {
-        val view = root.find<RecyclerView>(id)
+        val view = find<RecyclerView>(id)
         val dsl = DslRecyclerView<T>()
         dsl.init()
         view.adapter = dsl.build().apply { binding.subscribe { update(it) } }
     }
 
     fun loadingProgressBar(id: Int, binding: Binding<Boolean>) {
-        val view = root.find<ContentLoadingProgressBar>(id)
+        val view = find<ContentLoadingProgressBar>(id)
         binding.subscribe { if (it) view.show() else view.hide() }
     }
 
+    fun textView(id: Int, binding: Binding<String>) {
+        val view = find<TextView>(id)
+        binding.subscribe { if (view.text.toString() != it) view.setText(it) }
+    }
+
+    fun fixedAspectPanel(id: Int, binding: Binding<Float>) {
+        val view = find<FixedAspectPanel>(id)
+        binding.subscribe { view.setAspect(it) }
+    }
+
+    fun progressImageView(id: Int, binding: Binding<PartialResult<File>>) {
+        val view = find<ProgressImageView>(id)
+        binding.subscribe { view.image = it }
+    }
+
+    fun tagsView(id: Int, binding: Binding<List<String>>) {
+        val view = find<TagsView>(id)
+        binding.subscribe { view.tags = it }
+    }
+
+    fun imagePanel(id: Int, binding: Binding<List<Image>>) {
+        val view = find<ImagePanel>(id)
+        binding.subscribe { view.setImages(it) }
+    }
+
     fun editText(id: Int, binding: Binding<String>) {
-        val view = root.find<EditText>(id)
+        val view = find<EditText>(id)
         binding.subscribe { if (view.text.toString() != it) view.setText(it) }
         view.addTextChangedListener(object : TextWatcherAdapter() {
 
@@ -96,8 +134,13 @@ class BindingBuilder(private val root: ViewResolver) {
         })
     }
 
+    fun <T> visibility(id: Int, binding: Binding<T>, converter: (T) -> Boolean) {
+        val view = find<View>(id)
+        binding.subscribe { view.visibility = if (converter(it)) View.VISIBLE else View.GONE }
+    }
+
     fun visibility(id: Int, binding: Binding<Boolean>, invert: Boolean = false) {
-        val view = root.find<View>(id)
+        val view = find<View>(id)
         binding.subscribe {
             if (invert) view.visibility = if (it) View.GONE else View.VISIBLE
             else view.visibility = if (it) View.VISIBLE else View.GONE
@@ -105,7 +148,7 @@ class BindingBuilder(private val root: ViewResolver) {
     }
 
     fun webView(id: Int, init: WebViewBinding.() -> Unit) {
-        WebViewBinding(root.find<WebView>(id)).init()
+        WebViewBinding(find<WebView>(id)).init()
     }
 
     fun viewPager(view: ViewPager, binding: Binding<Int>) {
@@ -115,6 +158,10 @@ class BindingBuilder(private val root: ViewResolver) {
                 binding.value = position
             }
         })
+    }
+
+    private fun <T : Any> find(id: Int): T {
+        return resolvers.mapNotNull { it.find<T>(id) }.first()
     }
 }
 
@@ -220,5 +267,6 @@ class WebViewBinding(private val webView: WebView) {
 }
 
 interface ViewResolver {
-    fun <T : View> find(id: Int): T
+
+    fun <T> find(id: Int): T?
 }

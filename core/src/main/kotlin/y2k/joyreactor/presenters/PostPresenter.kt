@@ -1,6 +1,5 @@
 package y2k.joyreactor.presenters
 
-import y2k.joyreactor.*
 import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.model.*
 import y2k.joyreactor.platform.NavigationService
@@ -12,6 +11,7 @@ import java.io.File
 /**
  * Created by y2k on 28/09/15.
  */
+@Deprecated("")
 class PostPresenter(
     private val view: PostPresenter.View,
     private val service: PostService,

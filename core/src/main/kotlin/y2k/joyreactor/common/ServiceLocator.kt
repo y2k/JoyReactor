@@ -9,6 +9,7 @@ import y2k.joyreactor.services.synchronizers.MyTagFetcher
 import y2k.joyreactor.services.synchronizers.PostMerger
 import y2k.joyreactor.services.synchronizers.PrivateMessageFetcher
 import y2k.joyreactor.viewmodel.MessagesViewModel
+import y2k.joyreactor.viewmodel.PostViewModel
 import y2k.joyreactor.viewmodel.ThreadsViewModel
 import java.util.*
 import kotlin.reflect.KClass
@@ -21,6 +22,13 @@ object ServiceLocator {
     private val map = HashMap <KClass<*>, () -> Any>()
 
     init {
+        add(PostViewModel::class) {
+            PostViewModel(
+                resolve(PostService::class),
+                resolve(ProfileService::class),
+                resolve(NavigationService::class))
+        }
+
         add(NavigationService::class) { NavigationService.instance }
         add(ThreadsViewModel::class) {
             ThreadsViewModel(

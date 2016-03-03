@@ -20,6 +20,10 @@
         <item name="actionBarStyle">@style/AppActionBar</item>
     </style>
 
+    <style name="AppTheme.FullScreen">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
     <!--<style name="AppTheme.Launcher">-->
         <!--<item name="android:windowBackground">@drawable/launch_screen</item>-->
     <!--</style>-->
