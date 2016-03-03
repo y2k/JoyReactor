@@ -3,6 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         app:popupTheme="@style/ToolbarPopupTheme"
+        app:layout_scrollFlags="scroll|enterAlways"
         android:id="@+id/toolbar"
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
         android:layout_width="match_parent"
