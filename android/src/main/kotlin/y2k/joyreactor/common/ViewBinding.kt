@@ -17,6 +17,7 @@ import y2k.joyreactor.FixedAspectPanel
 import y2k.joyreactor.ImagePanel
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.widget.ProgressImageView
+import y2k.joyreactor.widget.TagsView
 import java.io.File
 
 /**
@@ -110,6 +111,11 @@ class BindingBuilder(root: ViewResolver) {
     fun progressImageView(id: Int, binding: Binding<PartialResult<File>>) {
         val view = find<ProgressImageView>(id)
         binding.subscribe { view.image = it }
+    }
+
+    fun tagsView(id: Int, binding: Binding<List<String>>) {
+        val view = find<TagsView>(id)
+        binding.subscribe { view.tags = it }
     }
 
     fun imagePanel(id: Int, binding: Binding<List<Image>>) {

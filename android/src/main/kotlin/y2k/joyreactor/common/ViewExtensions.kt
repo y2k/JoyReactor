@@ -39,3 +39,7 @@ fun <T> View.find(id: Int): T {
 fun <T> View.findOrNull(id: Int): T? {
     return findViewById(id) as T?
 }
+
+fun ViewGroup.getChildren(): List<View> {
+    return (0..childCount - 1).map { getChildAt(it) }
+}

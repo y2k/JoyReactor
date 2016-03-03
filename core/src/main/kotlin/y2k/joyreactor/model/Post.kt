@@ -15,7 +15,8 @@ class Post(
     val created: Date,
     val serverId: String,
     val commentCount: Int,
-    val rating: Float) : Serializable, Comparable<Post>, DataSet.Dto {
+    val rating: Float,
+    val tags: List<String>) : Serializable, Comparable<Post>, DataSet.Dto {
 
     override var id: Long = 0
 

@@ -25,6 +25,12 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"/>
 
+    <y2k.joyreactor.widget.TagsView
+            android:id="@+id/tags"
+            android:padding="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
     <RelativeLayout
             android:id="@+id/imagePanel"
             android:layout_width="match_parent"

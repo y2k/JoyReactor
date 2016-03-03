@@ -5,7 +5,6 @@ import y2k.joyreactor.common.binding
 import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.model.Comment
 import y2k.joyreactor.model.Image
-import y2k.joyreactor.model.Post
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.PostService
 import y2k.joyreactor.services.ProfileService
@@ -26,6 +25,8 @@ class PostViewModel(
     val poster = binding(PartialResult.inProgress<File>(0, 100))
     val posterAspect = binding(1f)
 
+    val tags = binding(emptyList<String>())
+
     val images = binding(emptyList<Image>())
 
     val error = binding(false)
@@ -36,13 +37,11 @@ class PostViewModel(
         service
             .synchronizePostAsync(navigation.argument)
             .subscribeOnMain({ post ->
-                service
-                    .getPostImages()
-                    .subscribeOnMain { images.value = it }
+                posterAspect.value = post.image?.aspect ?: 1f
+                service.getPostImages().subscribeOnMain { images.value = it }
 
                 description.value = post.title
-
-                posterAspect.value = post.image?.aspect ?: 1f
+                tags.value = post.tags
 
                 service
                     .getCommentsAsync(post.id, 0)
