@@ -6,5 +6,6 @@
           android:textSize="16sp"
           android:textColor="@android:color/white"
           android:padding="8dp"
+          android:clickable="true"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"/>

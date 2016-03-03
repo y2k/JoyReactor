@@ -33,7 +33,7 @@ class TagsView(context: Context?, attrs: AttributeSet?) : ViewGroup(context, att
         removeAllViews()
         tags.forEach {
             addView((inflate(R.layout.item_post_tag) as TextView).apply {
-                text = "#${it.toLowerCase()}"
+                text = "#${it.toLowerCase().replace("#", "")}"
                 setPadding(8.dipToPx(), 8.dipToPx(), 8.dipToPx(), 8.dipToPx())
                 setBackgroundResource(R.drawable.drawable_tag)
             })
