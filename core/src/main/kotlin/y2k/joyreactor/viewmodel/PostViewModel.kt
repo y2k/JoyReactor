@@ -33,7 +33,6 @@ class PostViewModel(
     val error = binding(false)
 
     init {
-        // TODO:
         isBusy.value = true
         service
             .synchronizePostAsync(navigation.argument)
@@ -55,29 +54,8 @@ class PostViewModel(
 
                 service
                     .mainImagePartial(post.serverId)
-                    .subscribeOnMain { partial ->
-                        poster.value = partial
-                        //                        if (partial.result == null) {
-                        //                            view.updateImageDownloadProgress(partial.progress, partial.max)
-                        //                        } else {
-                        //                            view.updatePostImage(partial.result)
-                        //                        }
-                    }
+                    .subscribeOnMain { poster.value = it }
 
-                //                service
-                //                    .getSimilarPosts(post.id)
-                //                    .subscribeOnMain { view.updateSimilarPosts(it) }
-                //
-                //                service
-                //                    .mainImagePartial(post.serverId)
-                //                    .subscribeOnMain { partial ->
-                //                        if (partial.result == null) {
-                //                            view.updateImageDownloadProgress(partial.progress, partial.max)
-                //                        } else {
-                //                            view.updatePostImage(partial.result)
-                //                        }
-                //                    }
-                //
                 //                userService
                 //                    .isAuthorized()
                 //                    .subscribeOnMain { if (it) view.setEnableCreateComments() }
