@@ -10,7 +10,7 @@ import y2k.joyreactor.common.*
 import y2k.joyreactor.model.Comment
 import y2k.joyreactor.viewmodel.PostViewModel
 
-class PostActivity : AppCompatActivity() {
+class PostActivity : BaseActivity() {
 
     //    lateinit var presenter: PostPresenter
     //    val adapter = Adapter()
@@ -37,8 +37,6 @@ class PostActivity : AppCompatActivity() {
             visibility(R.id.imagePanel, vm.images, { it.isNotEmpty() })
             click(R.id.showMoreImages, { vm.showMoreImages() })
 
-            visibility(R.id.error, vm.error)
-
             textView(R.id.description, vm.description)
             recyclerView(R.id.list, vm.comments) {
                 // TODO:
@@ -46,7 +44,14 @@ class PostActivity : AppCompatActivity() {
                     CommentViewHolder(it)
                 }
             }
+
+            visibility(R.id.error, vm.error)
             visibility(R.id.progress, vm.isBusy)
+
+            menu(R.menu.menu_post) {
+                command(R.id.saveImageToGallery) { vm.saveToGallery() }
+                command(R.id.openInBrowser) { vm.openInBrowser() }
+            }
         }
 
         //        val list = find<RecyclerView>(R.id.list)

@@ -50,7 +50,7 @@ private class ViewGroupResolver(private val view: View) : ViewResolver {
     }
 }
 
-private class ActivityViewResolver(private val activity: Activity) : ViewResolver {
+private class ActivityViewResolver(val activity: Activity) : ViewResolver {
 
     override fun <T> find(id: Int): T? {
         return activity.findOrNull<T>(id)
@@ -60,6 +60,10 @@ private class ActivityViewResolver(private val activity: Activity) : ViewResolve
 class BindingBuilder(root: ViewResolver) {
 
     val resolvers = arrayListOf(root)
+
+    fun menu(menuId: Int, init: MenuBinding.() -> Unit) {
+        MenuBinding(menuId, resolvers).init()
+    }
 
     //    fun refreshLayout(id: Int, binding: Binding<Boolean>) {
     //        val view = root.find<SwipeRefreshLayout>(id)
@@ -162,6 +166,23 @@ class BindingBuilder(root: ViewResolver) {
 
     private fun <T : Any> find(id: Int): T {
         return resolvers.mapNotNull { it.find<T>(id) }.first()
+    }
+}
+
+class MenuBinding(menuId: Int, resolvers: List<ViewResolver>) {
+
+    private val menu = MenuHolder(menuId)
+
+    init {
+        val activity = resolvers
+            .filterIsInstance(ActivityViewResolver::class.java)
+            .map { it.activity as BaseActivity }
+            .first()
+        activity.menuHolder = menu
+    }
+
+    fun command(id: Int, command: () -> Unit) {
+        menu.addAction(id, command)
     }
 }
 

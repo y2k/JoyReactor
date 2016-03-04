@@ -6,6 +6,7 @@ import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.model.Comment
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.platform.NavigationService
+import y2k.joyreactor.platform.Platform
 import y2k.joyreactor.services.PostService
 import y2k.joyreactor.services.ProfileService
 import java.io.File
@@ -88,5 +89,18 @@ class PostViewModel(
 
     fun showMoreImages() {
         navigation.openPostGallery()
+    }
+
+    fun saveToGallery() {
+        isBusy.value = true
+        service
+            .getFromCache(navigation.argument)
+            .flatMap { service.mainImage(it.serverId) }
+            .flatMap { Platform.instance.saveToGallery(it) }
+            .subscribeOnMain { isBusy.value = false }
+    }
+
+    fun openInBrowser() {
+        navigation.openBrowser("http://joyreactor.cc/post/" + navigation.argument)
     }
 }
