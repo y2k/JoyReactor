@@ -3,10 +3,7 @@ package y2k.joyreactor.services
 import rx.Observable
 import y2k.joyreactor.common.PartialResult
 import y2k.joyreactor.common.ioObservable
-import y2k.joyreactor.model.CommentGroup
-import y2k.joyreactor.model.Image
-import y2k.joyreactor.model.Post
-import y2k.joyreactor.model.SimilarPost
+import y2k.joyreactor.model.*
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.OriginalImageRequestFactory
 import y2k.joyreactor.services.requests.PostRequest
@@ -30,8 +27,8 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
 
     fun getCommentsAsync(postId: Long, parentCommentId: Long): Observable<CommentGroup> {
         return when (parentCommentId) {
-            0L -> CommentGroup.populateForPost(buffer, postId)
-            else -> CommentGroup.populateForComment(buffer, parentCommentId)
+            0L -> RootComments.create(buffer, postId)
+            else -> ChildComments.create(buffer, parentCommentId)
         }
     }
 

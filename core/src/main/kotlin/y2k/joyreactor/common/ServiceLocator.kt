@@ -52,10 +52,6 @@ object ServiceLocator {
         return PostListPresenter(view, resolve(), lifeCycleService)
     }
 
-    fun resolve(view: PostPresenter.View): PostPresenter {
-        return PostPresenter(view, resolve(), resolve(), NavigationService.instance)
-    }
-
     fun resolve(lifeCycleService: LifeCycleService, view: TagListPresenter.View): TagListPresenter {
         return TagListPresenter(view, resolve(), resolve(), lifeCycleService)
     }

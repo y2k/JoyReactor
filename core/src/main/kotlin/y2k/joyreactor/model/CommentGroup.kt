@@ -7,34 +7,27 @@ import java.util.*
 /**
  * Created by y2k on 07/12/15.
  */
-abstract class CommentGroup : ArrayList<Comment>() {
+interface CommentGroup : List<Comment> {
 
-    abstract fun getNavigation(comment: Comment): Long
+    fun getNavigation(comment: Comment): Long
+}
+
+class EmptyGroup() : ArrayList<Comment>(), CommentGroup {
+
+    override fun getNavigation(comment: Comment): Long {
+        throw UnsupportedOperationException()
+    }
+}
+
+class RootComments() : ArrayList<Comment>(), CommentGroup {
+
+    override fun getNavigation(comment: Comment): Long {
+        return comment.id
+    }
 
     companion object {
 
-        val Empty = object : CommentGroup() {
-            override fun getNavigation(comment: Comment): Long {
-                throw UnsupportedOperationException()
-            }
-        }
-
-        fun populateForComment(buffer: MemoryBuffer, parentCommentId: Long): Observable<CommentGroup> {
-            val parent = buffer.comments.first { it.id == parentCommentId }
-            val children = buffer.comments
-                .filter { it.parentId == parentCommentId }
-                .toList()
-
-            // TODO: убрать мутабельность
-            children.forEach { it.level = 1 }
-
-            return Observable.just(TwoLevel().apply {
-                this.add(parent) // TODO: разобраться почему не работает без this.
-                addAll(children)
-            })
-        }
-
-        fun populateForPost(buffer: MemoryBuffer, postId: Long): Observable<CommentGroup> {
+        fun create(buffer: MemoryBuffer, postId: Long): Observable<CommentGroup> {
             val firstLevelComments = HashSet<Long>()
             val comments = buffer.comments
                 .filter { it.postId == postId }
@@ -53,24 +46,33 @@ abstract class CommentGroup : ArrayList<Comment>() {
                 .filter { firstLevelComments.contains(it.parentId) }
                 .forEach { it.level = 1 }
 
-            return Observable.just(OneLevel().apply { addAll(comments) })
+            return Observable.just(RootComments().apply { addAll(comments) })
         }
     }
 }
 
-/**
- * Created by y2k on 11/28/15.
- */
-private class OneLevel() : CommentGroup() {
-
-    override fun getNavigation(comment: Comment): Long {
-        return comment.id
-    }
-}
-
-private class TwoLevel() : CommentGroup() {
+class ChildComments() : ArrayList<Comment>(), CommentGroup {
 
     override fun getNavigation(comment: Comment): Long {
         return if (comment.id == this[0].id) comment.parentId else comment.id
+    }
+
+    companion object {
+
+        fun create(buffer: MemoryBuffer, parentCommentId: Long): Observable<CommentGroup> {
+            val parent = buffer.comments.first { it.id == parentCommentId }
+            val children = buffer.comments
+                .filter { it.parentId == parentCommentId }
+                .toList()
+
+            // TODO: убрать мутабельность
+            parent.level = 0
+            children.forEach { it.level = 1 }
+
+            return Observable.just(ChildComments().apply {
+                this.add(parent) // TODO: разобраться почему не работает без this.
+                addAll(children)
+            })
+        }
     }
 }
