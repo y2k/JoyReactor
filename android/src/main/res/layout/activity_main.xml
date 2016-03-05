@@ -5,28 +5,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="y2k.joyreactor.Main2Activity">
-    <android.support.design.widget.CoordinatorLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        <android.support.design.widget.AppBarLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            <include layout="@layout/toolbar"/>
-            <fragment android:id="@+id/updateFragment"
-                      android:name="y2k.joyreactor.UpdateFragment"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"/>
-        </android.support.design.widget.AppBarLayout>
-        <fragment android:id="@+id/container"
-                  android:name="y2k.joyreactor.PostListFragment"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  tools:layout="@layout/fragment_posts"/>
-    </android.support.design.widget.CoordinatorLayout>
+    <fragment android:id="@+id/container"
+              android:name="y2k.joyreactor.PostListFragment"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:layout="@layout/fragment_posts"/>
     <fragment android:id="@+id/navigation_drawer"
               android:layout_width="@dimen/navigation_drawer_width"
               android:layout_height="match_parent"
               android:layout_gravity="start"
               android:name="y2k.joyreactor.MenuFragment"
               tools:layout="@layout/fragment_menu"/>
+    <!--<fragment android:id="@+id/updateFragment"-->
+    <!--android:name="y2k.joyreactor.UpdateFragment"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"/>-->
 </android.support.v4.widget.DrawerLayout>
