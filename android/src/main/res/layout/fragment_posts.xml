@@ -8,13 +8,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <include layout="@layout/toolbar"/>
+        <fragment android:id="@+id/updateFragment"
+                  android:name="y2k.joyreactor.UpdateFragment"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"/>
     </android.support.design.widget.AppBarLayout>
     <y2k.joyreactor.ColorSwipeRefreshLayout
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:id="@+id/refresher"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         <android.support.v7.widget.RecyclerView
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/list"/>

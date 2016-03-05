@@ -16,8 +16,4 @@
               android:layout_gravity="start"
               android:name="y2k.joyreactor.MenuFragment"
               tools:layout="@layout/fragment_menu"/>
-    <!--<fragment android:id="@+id/updateFragment"-->
-    <!--android:name="y2k.joyreactor.UpdateFragment"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"/>-->
 </android.support.v4.widget.DrawerLayout>
