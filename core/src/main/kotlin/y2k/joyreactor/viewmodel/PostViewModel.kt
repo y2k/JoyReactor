@@ -4,6 +4,7 @@ import y2k.joyreactor.common.PartialResult
 import y2k.joyreactor.common.binding
 import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.model.Comment
+import y2k.joyreactor.model.CommentGroup
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.platform.Platform
@@ -20,7 +21,7 @@ class PostViewModel(
     private val navigation: NavigationService) {
 
     val isBusy = binding(false)
-    val comments = binding(emptyList<Comment>())
+    val comments = binding(CommentGroup.Empty)
     val description = binding("")
 
     val poster = binding(PartialResult.inProgress<File>(0, 100))
@@ -45,10 +46,8 @@ class PostViewModel(
 
                 service
                     .getCommentsAsync(post.id, 0)
-                    .subscribeOnMain { group ->
-                        //                        comments.value = it
-                        comments.value = (0..group.size() - 1).map { group[it] }
-
+                    .subscribeOnMain {
+                        comments.value = it
                         isBusy.value = false
                     }
 
@@ -80,5 +79,12 @@ class PostViewModel(
 
     fun openInBrowser() {
         navigation.openBrowser("http://joyreactor.cc/post/" + navigation.argument)
+    }
+
+    fun selectComment(comment: Comment) {
+        service
+            .getFromCache(navigation.argument)
+            .flatMap { service.getCommentsAsync(it.id, comments.value.getNavigation(comment)) }
+            .subscribeOnMain { comments.value = it }
     }
 }

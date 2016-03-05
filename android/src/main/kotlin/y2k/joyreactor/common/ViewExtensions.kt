@@ -43,3 +43,12 @@ fun <T> View.findOrNull(id: Int): T? {
 fun ViewGroup.getChildren(): List<View> {
     return (0..childCount - 1).map { getChildAt(it) }
 }
+
+fun View.updateMargin(left: Int? = null, top: Int? = null, right: Int? = null, bottom: Int? = null) {
+    val lp = layoutParams as ViewGroup.MarginLayoutParams
+    if (left != null) lp.leftMargin = left
+    if (top != null) lp.topMargin = top
+    if (right != null) lp.rightMargin = right
+    if (bottom != null) lp.bottomMargin = bottom
+    layoutParams = lp
+}

@@ -26,7 +26,7 @@ class MessagesActivity : AppCompatActivity() {
         val vm = ServiceLocator.resolve<MessagesViewModel>()
         bindingBuilder(this) {
             editText(R.id.newMessage, vm.newMessage)
-            click(R.id.createMessage, { vm.sendNewMessage() })
+            command(R.id.createMessage, { vm.sendNewMessage() })
             recyclerView(R.id.list, vm.messages) {
                 itemViewType {
                     if (it.value.isMine) {

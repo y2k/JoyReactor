@@ -1,83 +1,76 @@
 package y2k.joyreactor.model
 
+import rx.Observable
+import y2k.joyreactor.services.MemoryBuffer
+import java.util.*
+
 /**
  * Created by y2k on 07/12/15.
  */
-interface CommentGroup {
+abstract class CommentGroup : ArrayList<Comment>() {
 
-    operator fun get(position: Int): Comment
+    abstract fun getNavigation(comment: Comment): Long
 
-    fun size(): Int
+    companion object {
 
-    fun isChild(position: Int): Boolean
-
-    fun getId(position: Int): Long
-
-    object Empty : CommentGroup {
-
-        override fun size(): Int {
-            return 0
+        val Empty = object : CommentGroup() {
+            override fun getNavigation(comment: Comment): Long {
+                throw UnsupportedOperationException()
+            }
         }
 
-        override fun get(position: Int): Comment {
-            throw UnsupportedOperationException()
+        fun populateForComment(buffer: MemoryBuffer, parentCommentId: Long): Observable<CommentGroup> {
+            val parent = buffer.comments.first { it.id == parentCommentId }
+            val children = buffer.comments
+                .filter { it.parentId == parentCommentId }
+                .toList()
+
+            // TODO: убрать мутабельность
+            children.forEach { it.level = 1 }
+
+            return Observable.just(TwoLevel().apply {
+                this.add(parent) // TODO: разобраться почему не работает без this.
+                addAll(children)
+            })
         }
 
-        override fun isChild(position: Int): Boolean {
-            throw UnsupportedOperationException()
-        }
+        fun populateForPost(buffer: MemoryBuffer, postId: Long): Observable<CommentGroup> {
+            val firstLevelComments = HashSet<Long>()
+            val comments = buffer.comments
+                .filter { it.postId == postId }
+                .filter {
+                    if (it.parentId == 0L) {
+                        firstLevelComments.add(it.id)
+                        true
+                    } else {
+                        firstLevelComments.contains(it.parentId)
+                    }
+                }
+                .toList()
 
-        override fun getId(position: Int): Long {
-            throw UnsupportedOperationException()
-        }
-    }
+            // TODO: убрать мутабельность
+            comments
+                .filter { firstLevelComments.contains(it.parentId) }
+                .forEach { it.level = 1 }
 
-    /**
-     * Created by y2k on 11/28/15.
-     */
-    class OneLevel(private val parent: Comment?, private val children: List<Comment>) : CommentGroup {
-
-        constructor(children: List<Comment>) : this(null, children) {
-        }
-
-        override operator fun get(position: Int): Comment {
-            if (parent == null) return children[position]
-            if (position == 0) return parent
-            return children[position - 1]
-        }
-
-        override fun size(): Int {
-            return children.size + if (parent == null) 0 else 1
-        }
-
-        override fun isChild(position: Int): Boolean {
-            // is need divider
-            return parent != null && position > 0
-        }
-
-        override fun getId(position: Int): Long {
-            if (parent == null) return children[position].id
-            if (position == 0) return parent.parentId
-            return children[position - 1].id
+            return Observable.just(OneLevel().apply { addAll(comments) })
         }
     }
+}
 
-    class TwoLevel(private val comments: List<Comment>) : CommentGroup {
+/**
+ * Created by y2k on 11/28/15.
+ */
+private class OneLevel() : CommentGroup() {
 
-        override fun isChild(position: Int): Boolean {
-            return comments[position].parentId != 0L
-        }
+    override fun getNavigation(comment: Comment): Long {
+        return comment.id
+    }
+}
 
-        override operator fun get(position: Int): Comment {
-            return comments[position]
-        }
+private class TwoLevel() : CommentGroup() {
 
-        override fun size(): Int {
-            return comments.size
-        }
-
-        override fun getId(position: Int): Long {
-            return comments[position].id
-        }
+    override fun getNavigation(comment: Comment): Long {
+        return if (comment.id == this[0].id) comment.parentId else comment.id
     }
 }

@@ -82,7 +82,7 @@ class BindingBuilder(root: ViewResolver) {
         ViewBinding(find<View>(id)).init()
     }
 
-    fun click(id: Int, f: () -> Unit) {
+    fun command(id: Int, f: () -> Unit) {
         find<View>(id).setOnClickListener { f() }
     }
 
@@ -90,11 +90,12 @@ class BindingBuilder(root: ViewResolver) {
         binding.subscribe(f)
     }
 
-    fun <T> recyclerView(id: Int, binding: Binding<List<T>>, init: DslRecyclerView<T>.() -> Unit) {
+    fun <T> recyclerView(id: Int, binding: Binding<out List<T>>, init: DslRecyclerView<T>.() -> Unit) {
         val view = find<RecyclerView>(id)
         val dsl = DslRecyclerView<T>()
         dsl.init()
-        view.adapter = dsl.build().apply { binding.subscribe { update(it) } }
+        // TODO: разобраться с конвертирование
+        view.adapter = dsl.build().apply { binding.subscribe { update(it as List<T>) } }
     }
 
     fun loadingProgressBar(id: Int, binding: Binding<Boolean>) {
