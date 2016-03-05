@@ -30,6 +30,10 @@ class HeaderRecyclerView(context: Context?, attrs: AttributeSet?) : RecyclerView
     inner class HeaderAdapter(
         private val base: RecyclerView.Adapter<ViewHolder>) : RecyclerView.Adapter<ViewHolder>() {
 
+        init {
+            setHasStableIds(base.hasStableIds())
+        }
+
         override fun getItemViewType(position: Int): Int {
             return if (position == 0) 111 else base.getItemViewType(position - 1)
         }
