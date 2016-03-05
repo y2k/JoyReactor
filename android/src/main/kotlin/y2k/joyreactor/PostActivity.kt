@@ -22,7 +22,7 @@ class PostActivity : BaseActivity() {
         setSupportActionBar(find<Toolbar>(R.id.toolbar))
         supportActionBar.setDisplayHomeAsUpEnabled(true)
 
-        val vm = ServiceLocator.resolve(PostViewModel::class)
+        val vm = ServiceLocator.resolve<PostViewModel>()
         bindingBuilder(this) {
             viewResolver(R.id.list)
 

@@ -27,4 +27,9 @@ class LifeCycleService(
     fun deactivate() {
         broadcastService.unregister(this)
     }
+
+    companion object {
+
+        val Stub = LifeCycleService(BroadcastService())
+    }
 }

@@ -3,8 +3,8 @@ package y2k.joyreactor.common
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.presenters.*
 import y2k.joyreactor.services.*
-import y2k.joyreactor.services.repository.DataContext
-import y2k.joyreactor.services.requests.*
+import y2k.joyreactor.services.requests.MessageListRequest
+import y2k.joyreactor.services.requests.SendMessageRequest
 import y2k.joyreactor.services.synchronizers.MyTagFetcher
 import y2k.joyreactor.services.synchronizers.PostMerger
 import y2k.joyreactor.services.synchronizers.PrivateMessageFetcher
@@ -22,64 +22,23 @@ object ServiceLocator {
     private val map = HashMap <KClass<*>, () -> Any>()
 
     init {
-        add(PostViewModel::class) {
-            PostViewModel(
-                resolve(PostService::class),
-                resolve(ProfileService::class),
-                resolve(NavigationService::class))
-        }
+        add { PostViewModel(resolve(), resolve(), resolve()) }
+        add { NavigationService.instance }
+        add { ThreadsViewModel(resolve(), resolve(), resolve()) }
+        add { MessagesViewModel(resolve(), resolve()) }
 
-        add(NavigationService::class) { NavigationService.instance }
-        add(ThreadsViewModel::class) {
-            ThreadsViewModel(
-                resolve(LifeCycleService::class),
-                resolve(NavigationService::class),
-                resolve(UserMessagesService::class))
-        }
-        add(MessagesViewModel::class) {
-            MessagesViewModel(resolve(NavigationService::class), resolve(UserMessagesService::class))
-        }
-        add(SendMessageRequest::class) { SendMessageRequest() }
+        add { MessageListRequest(resolve()) }
+        add { PostMerger(resolve()) }
+        add { MemoryBuffer }
+        add { MyTagFetcher(resolve()) }
+        add { PrivateMessageFetcher(resolve(), resolve()) }
 
-        add(MessageListRequest::class) { MessageListRequest(resolve(UserImageRequest::class)) }
-        add(PostMerger::class) { PostMerger(resolve(DataContext.Factory::class)) }
-        add(MemoryBuffer::class) { MemoryBuffer }
-        add(MyTagFetcher::class) { MyTagFetcher(resolve(DataContext.Factory::class)) }
-        add(PrivateMessageFetcher::class) {
-            PrivateMessageFetcher(resolve(MessageListRequest::class), resolve(DataContext.Factory::class))
-        }
-
-        add(PostService::class) {
-            PostService(
-                resolve(OriginalImageRequestFactory::class),
-                resolve(PostRequest::class),
-                resolve(MemoryBuffer::class),
-                resolve(DataContext.Factory::class))
-        }
-        add(TagService::class) {
-            TagService(
-                resolve(DataContext.Factory::class),
-                resolve(PostsForTagRequest::class),
-                resolve(PostMerger::class))
-        }
-        add(TagListService::class) {
-            TagListService(
-                resolve(DataContext.Factory::class),
-                resolve(UserNameRequest::class),
-                resolve(MyTagFetcher::class))
-        }
-        add(ProfileService::class) {
-            ProfileService(resolve(ProfileRequestFactory::class), resolve(LoginRequestFactory::class))
-        }
-        add(UserMessagesService::class) {
-            UserMessagesService(resolve(SendMessageRequest::class), resolve(PrivateMessageFetcher::class), resolve(DataContext.Factory::class))
-        }
-        add(CommentService::class) {
-            CommentService(
-                resolve(CreateCommentRequestFactory::class),
-                resolve(PostRequest::class),
-                resolve(MemoryBuffer::class))
-        }
+        add { PostService(resolve(), resolve(), resolve(), resolve()) }
+        add { TagService(resolve(), resolve(), resolve()) }
+        add { TagListService(resolve(), resolve(), resolve()) }
+        add { ProfileService(resolve(), resolve()) }
+        add { UserMessagesService(resolve(), resolve(), resolve()) }
+        add { CommentService(resolve(), resolve(), resolve()) }
     }
 
     // ==========================================
@@ -87,61 +46,62 @@ object ServiceLocator {
     // ==========================================
 
     fun resolve(view: GalleryPresenter.View): GalleryPresenter {
-        return GalleryPresenter(view, resolve(PostService::class))
+        return GalleryPresenter(view, resolve())
     }
 
     fun resolve(lifeCycleService: LifeCycleService, view: PostListPresenter.View): PostListPresenter {
-        return PostListPresenter(view, resolve(TagService::class), lifeCycleService)
+        return PostListPresenter(view, resolve(), lifeCycleService)
     }
 
     fun resolve(view: PostPresenter.View): PostPresenter {
-        return PostPresenter(view, resolve(PostService::class), resolve(ProfileService::class), NavigationService.instance)
+        return PostPresenter(view, resolve(), resolve(), NavigationService.instance)
     }
 
     fun resolve(lifeCycleService: LifeCycleService, view: TagListPresenter.View): TagListPresenter {
-        return TagListPresenter(view,
-            resolve(TagListService::class),
-            resolve(BroadcastService::class),
-            lifeCycleService)
+        return TagListPresenter(view, resolve(), resolve(), lifeCycleService)
     }
 
     fun resolve(view: ProfilePresenter.View): ProfilePresenter {
-        return ProfilePresenter(view, resolve(ProfileService::class))
+        return ProfilePresenter(view, resolve())
     }
 
     fun resolve(view: CreateCommentPresenter.View): CreateCommentPresenter {
-        return CreateCommentPresenter(view, resolve(ProfileService::class), resolve(CommentService::class))
+        return CreateCommentPresenter(view, resolve(), resolve())
     }
 
     fun resolve(view: LoginPresenter.View): LoginPresenter {
-        return LoginPresenter(view, resolve(ProfileService::class))
+        return LoginPresenter(view, resolve())
     }
 
     fun resolve(view: AddTagPresenter.View): AddTagPresenter {
-        return AddTagPresenter(view, resolve(TagListService::class))
+        return AddTagPresenter(view, resolve())
     }
 
     fun resolve(view: ImagePresenter.View): ImagePresenter {
-        return ImagePresenter(view, resolve(PostService::class))
+        return ImagePresenter(view, resolve())
     }
 
     fun resolve(view: VideoPresenter.View): VideoPresenter {
-        return VideoPresenter(view, resolve(PostService::class))
+        return VideoPresenter(view, resolve())
     }
 
     // ==========================================
     // Private methods
     // ==========================================
 
-    @Suppress("UNCHECKED_CAST")
-    public fun <T : Any> resolve(lifeCycleService: LifeCycleService, type: KClass<T>): T {
-        add(LifeCycleService::class) { lifeCycleService }
-        return resolve(type).apply { remove(LifeCycleService::class) }
+    public inline fun <reified T : Any> resolve(lifeCycleService: LifeCycleService = LifeCycleService.Stub): T {
+        return resolveOld(lifeCycleService, T::class)
     }
 
     @Suppress("UNCHECKED_CAST")
-    public fun <T : Any> resolve(type: KClass<T>): T {
-        return map[type]?.let { it() as T } ?: type.java.newInstance()
+    public fun <T : Any> resolveOld(lifeCycleService: LifeCycleService, type: KClass<T>): T {
+        add(LifeCycleService::class) { lifeCycleService }
+        val instance = map[type]?.let { it() as T } ?: type.java.newInstance()
+        return instance.apply { remove(LifeCycleService::class) }
+    }
+
+    private inline fun <reified T : Any> add(noinline factory: () -> T) {
+        add(T::class, factory)
     }
 
     private fun <T : Any> add(type: KClass<T>, factory: () -> T) {

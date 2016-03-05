@@ -9,7 +9,7 @@ import y2k.joyreactor.services.LifeCycleService
  */
 abstract class LifeCycleActivity : AppCompatActivity() {
 
-    val lifeCycleService = LifeCycleService(ServiceLocator.resolve(BroadcastService::class))
+    val lifeCycleService = LifeCycleService(ServiceLocator.resolve<BroadcastService>())
 
     override fun onResume() {
         super.onResume()

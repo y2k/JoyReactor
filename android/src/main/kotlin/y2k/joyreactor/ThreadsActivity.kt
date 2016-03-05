@@ -19,7 +19,7 @@ class ThreadsActivity : LifeCycleActivity() {
         setContentView(R.layout.activity_threads)
         setSupportActionBar(findViewById(R.id.toolbar) as Toolbar)
 
-        val vm = ServiceLocator.resolve(lifeCycleService, ThreadsViewModel::class)
+        val vm = ServiceLocator.resolve<ThreadsViewModel>(lifeCycleService)
         bindingBuilder(this) {
             refreshLayout(R.id.refresher) {
                 isRefreshing(vm.isBusy)

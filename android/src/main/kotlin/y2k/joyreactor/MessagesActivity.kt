@@ -23,7 +23,7 @@ class MessagesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_messages)
         setSupportActionBar(findViewById(R.id.toolbar) as Toolbar)
 
-        val vm = ServiceLocator.resolve(MessagesViewModel::class)
+        val vm = ServiceLocator.resolve<MessagesViewModel>()
         bindingBuilder(this) {
             editText(R.id.newMessage, vm.newMessage)
             click(R.id.createMessage, { vm.sendNewMessage() })

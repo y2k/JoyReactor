@@ -13,7 +13,7 @@ import y2k.joyreactor.platform.ReportService
 
 class MainActivity : AppCompatActivity() {
 
-    val reportService = ServiceLocator.resolve(ReportService::class)
+    val reportService = ServiceLocator.resolve<ReportService>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
