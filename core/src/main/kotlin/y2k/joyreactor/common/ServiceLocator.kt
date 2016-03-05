@@ -4,7 +4,6 @@ import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.presenters.*
 import y2k.joyreactor.services.*
 import y2k.joyreactor.services.requests.MessageListRequest
-import y2k.joyreactor.services.requests.SendMessageRequest
 import y2k.joyreactor.services.synchronizers.MyTagFetcher
 import y2k.joyreactor.services.synchronizers.PostMerger
 import y2k.joyreactor.services.synchronizers.PrivateMessageFetcher
@@ -89,13 +88,13 @@ object ServiceLocator {
     // Private methods
     // ==========================================
 
-    public inline fun <reified T : Any> resolve(lifeCycleService: LifeCycleService = LifeCycleService.Stub): T {
-        return resolveOld(lifeCycleService, T::class)
+    inline fun <reified T : Any> resolve(lifeCycleService: LifeCycleService = LifeCycleService.Stub): T {
+        return resolve(lifeCycleService, T::class)
     }
 
     @Suppress("UNCHECKED_CAST")
-    public fun <T : Any> resolveOld(lifeCycleService: LifeCycleService, type: KClass<T>): T {
-        add(LifeCycleService::class) { lifeCycleService }
+    fun <T : Any> resolve(lifeCycleService: LifeCycleService, type: KClass<T>): T {
+        add { lifeCycleService }
         val instance = map[type]?.let { it() as T } ?: type.java.newInstance()
         return instance.apply { remove(LifeCycleService::class) }
     }
