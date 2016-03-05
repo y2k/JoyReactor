@@ -20,6 +20,7 @@ class UpdateService(private val context: Context) {
     private val prefs = context.getSharedPreferences("update-service", 0)
 
     fun checkHasUpdates(): Observable<Boolean> {
+        if (BuildConfig.DEBUG) return Observable.just(false)
         return ioObservable {
             synchronizeWithServer()
             BuildConfig.VERSION_NAME.code < prefs.getString("server-version", "").code
