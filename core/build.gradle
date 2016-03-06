@@ -28,7 +28,7 @@ sourceSets {
 }
 
 dependencies {
-    compile 'io.reactivex:rxjava:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.1'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'org.ocpsoft.prettytime:prettytime:3.2.7.Final'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
