@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import org.ocpsoft.prettytime.PrettyTime
 import y2k.joyreactor.common.ComplexViewHolder
+import y2k.joyreactor.common.find
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.presenters.PostListPresenter
 import java.util.*
@@ -54,25 +55,17 @@ class PostAdapter(private val presenter: PostListPresenter) : RecyclerView.Adapt
     inner class PostViewHolder(parent: ViewGroup) :
         ComplexViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_feed, parent, false)) {
 
-        val imagePanel: FixedAspectPanel
-        val image: WebImageView
-        val userImage: WebImageView
-        val videoMark: View
-        val commentCount: TextView
-        val time: TextView
-        val userName: TextView
+        val imagePanel = itemView.find<FixedAspectPanel>(R.id.imagePanel)
+        val image = itemView.find<WebImageView>(R.id.image)
+        val userImage = itemView.find<WebImageView>(R.id.userImage)
+        val videoMark = itemView.find<View>(R.id.videoMark)
+        val commentCount = itemView.find<TextView>(R.id.commentCount)
+        val time = itemView.find<TextView>(R.id.time)
+        val userName = itemView.find<TextView>(R.id.userName)
 
         init {
-            image = itemView.findViewById(R.id.image) as WebImageView
-            imagePanel = itemView.findViewById(R.id.imagePanel) as FixedAspectPanel
-            userImage = itemView.findViewById(R.id.userImage) as WebImageView
-            videoMark = itemView.findViewById(R.id.videoMark)
-            commentCount = itemView.findViewById(R.id.commentCount) as TextView
-            time = itemView.findViewById(R.id.time) as TextView
-            userName = itemView.findViewById(R.id.userName) as TextView
-
-            itemView.findViewById(R.id.card).setOnClickListener { presenter.postClicked(posts[adapterPosition]!!) }
-            itemView.findViewById(R.id.videoMark).setOnClickListener { presenter.playClicked(posts[adapterPosition]!!) }
+            itemView.findViewById(R.id.card).setOnClickListener { presenter.postClicked(posts[layoutPosition]!!) }
+            itemView.findViewById(R.id.videoMark).setOnClickListener { presenter.playClicked(posts[layoutPosition]!!) }
         }
 
         override fun bind() {
