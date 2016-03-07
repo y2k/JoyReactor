@@ -2,11 +2,11 @@ package y2k.joyreactor.services.repository
 
 import rx.Observable
 import rx.schedulers.Schedulers
+import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.model.Message
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.model.Tag
 import y2k.joyreactor.model.TagPost
-import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.platform.Platform
 import java.io.EOFException
 import java.io.File
@@ -70,6 +70,8 @@ class DataContext {
 
     private object Serializer {
 
+        private val version = 1
+
         fun <T : DataSet.Dto> loadFromDisk(dataSet: DataSet<T>) {
             getFile(dataSet)
                 .let { if (it.exists()) it else null }
@@ -97,7 +99,7 @@ class DataContext {
         }
 
         private fun getFile(datasSet: DataSet<*>): File {
-            return File(Platform.instance.currentDirectory, "${datasSet.name}.db")
+            return File(Platform.instance.currentDirectory, "${datasSet.name}.$version.db")
         }
     }
 }
