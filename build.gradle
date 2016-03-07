@@ -1,11 +1,11 @@
 ext.kotlin_version = '1.0.0-beta-4584'
 
 def computeAppVersionName() {
-    return "0.9.22." + (System.getenv("SING_BUILD") ?: "1")
+    return "0.9.23." + (System.getenv("SING_BUILD") ?: "1")
 }
 
 def computeAppVersionCode() {
-    return 922
+    return 923
 }
 
 task wrapper(type: Wrapper) {
