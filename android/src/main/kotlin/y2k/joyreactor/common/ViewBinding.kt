@@ -110,7 +110,7 @@ class BindingBuilder(root: ViewResolver) {
 
     fun fixedAspectPanel(id: Int, binding: Binding<Float>) {
         val view = find<FixedAspectPanel>(id)
-        binding.subscribe { view.setAspect(it) }
+        binding.subscribe { view.aspect = it }
     }
 
     fun progressImageView(id: Int, binding: Binding<PartialResult<File>>) {

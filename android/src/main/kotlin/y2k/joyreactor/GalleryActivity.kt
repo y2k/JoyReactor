@@ -25,8 +25,7 @@ class GalleryActivity : AppCompatActivity() {
 
         setSupportActionBar(find<Toolbar>(R.id.toolbar))
 
-        val list = findViewById(R.id.list) as RecyclerView
-        list.layoutManager = GridLayoutManager(this, 3)
+        val list = find<RecyclerView>(R.id.list)
         val adapter = ImageAdapter(); list.adapter = adapter
 
         ServiceLocator.resolve(object : GalleryPresenter.View {

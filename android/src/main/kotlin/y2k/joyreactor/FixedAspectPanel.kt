@@ -6,28 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import y2k.joyreactor.common.forEachChild
 import y2k.joyreactor.common.measureSpec
+import kotlin.properties.Delegates
 
 /**
  * Created by y2k on 9/26/15.
  */
 class FixedAspectPanel(context: Context, attrs: AttributeSet) : ViewGroup(context, attrs) {
 
-    private var aspect: Float = 1f
+    var aspect by Delegates.observable(1f) { prop, old, new ->
+        if (old != new) requestLayout()
+    }
 
     init {
         if (isInEditMode) aspect = 2f
-    }
-
-    fun setAspect(aspect: Float) {
-        if (this.aspect != aspect) {
-            this.aspect = aspect
-            requestLayout()
-        }
-    }
-
-    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        for (i in 0..childCount - 1)
-            getChildAt(i).layout(l, t, r, b)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -49,5 +40,9 @@ class FixedAspectPanel(context: Context, attrs: AttributeSet) : ViewGroup(contex
                 w.measureSpec(View.MeasureSpec.EXACTLY),
                 h.measureSpec(View.MeasureSpec.EXACTLY))
         }
+    }
+
+    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        forEachChild { it.layout(l, t, r, b) }
     }
 }

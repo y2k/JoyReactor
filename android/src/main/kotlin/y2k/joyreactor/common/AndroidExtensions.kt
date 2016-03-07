@@ -44,7 +44,7 @@ fun <T : Any> Activity.startActivity(type: KClass<T>) {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <T> Activity.find(id: Int): T {
+inline fun <T> Activity.find(id: Int): T {
     return findViewById(id) as T
 }
 

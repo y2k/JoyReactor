@@ -82,7 +82,7 @@ class PostAdapter(private val presenter: PostListPresenter) : RecyclerView.Adapt
                 imagePanel.visibility = View.GONE
             } else {
                 imagePanel.visibility = View.VISIBLE
-                imagePanel.setAspect(i.image!!.getAspect(0.5f))
+                imagePanel.aspect = i.image!!.getAspect(0.5f)
                 image.setImage(i.image)
             }
 
