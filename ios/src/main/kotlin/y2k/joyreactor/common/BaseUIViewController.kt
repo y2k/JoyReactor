@@ -9,7 +9,7 @@ import y2k.joyreactor.services.LifeCycleService
  */
 open class BaseUIViewController : UIViewController() {
 
-    val lifeCycleService = LifeCycleService(ServiceLocator.resolve(BroadcastService::class))
+    val lifeCycleService = LifeCycleService(ServiceLocator.resolve<BroadcastService>())
 
     override fun viewWillAppear(animated: Boolean) {
         super.viewWillAppear(animated)
