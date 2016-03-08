@@ -1,17 +1,19 @@
 package y2k.joyreactor
 
-import org.robovm.apple.foundation.NSURL
-import org.robovm.apple.uikit.*
+import org.robovm.apple.uikit.UIButton
+import org.robovm.apple.uikit.UITextField
+import org.robovm.apple.uikit.UIViewController
 import org.robovm.objc.annotation.CustomClass
 import org.robovm.objc.annotation.IBOutlet
 import y2k.joyreactor.common.ServiceLocator
-import y2k.joyreactor.presenters.LoginPresenter
+import y2k.joyreactor.common.bindingBuilder
+import y2k.joyreactor.viewmodel.LoginViewModel
 
 /**
  * Created by y2k on 9/30/15.
  */
 @CustomClass("LoginViewController")
-class LoginViewController : UIViewController(), LoginPresenter.View {
+class LoginViewController : UIViewController() {
 
     @IBOutlet lateinit var username: UITextField
     @IBOutlet lateinit var password: UITextField
@@ -20,44 +22,18 @@ class LoginViewController : UIViewController(), LoginPresenter.View {
 
     override fun viewDidLoad() {
         super.viewDidLoad()
-        val presenter = ServiceLocator.resolve(this)
 
-        loginButton.addOnTouchUpInsideListener { sender, e ->
-            presenter.login(username.text, password.text)
-        }
-        registerButton.addOnTouchUpInsideListener { sender, e -> presenter.register() }
-
-        username.delegate = DefaultUITextFieldDelegate(password)
-        password.delegate = DefaultUITextFieldDelegate()
-    }
-
-    // ==========================================
-    // Implement View methods
-    // ==========================================
-
-    override fun setBusy(isBusy: Boolean) {
-        navigationItem.setHidesBackButton(isBusy)
-        loginButton.isEnabled = !isBusy
-    }
-
-    override fun showError() {
-        // TODO:
-    }
-
-    override fun openUrl(url: String) {
-        UIApplication.getSharedApplication().openURL(NSURL(url))
-    }
-
-    // ==========================================
-    // Outlets
-    // ==========================================
-
-    private class DefaultUITextFieldDelegate(val next: UITextField? = null) : UITextFieldDelegateAdapter() {
-
-        override fun shouldReturn(textField: UITextField): Boolean {
-            if (next == null) textField.resignFirstResponder()
-            else next.becomeFirstResponder()
-            return true
+        val vm = ServiceLocator.resolve<LoginViewModel>()
+        bindingBuilder {
+            focusOrder(username, password)
+            action(vm.isBusy) {
+                navigationItem.setHidesBackButton(it)
+                loginButton.isEnabled = !it
+            }
+            textField(username, vm.username)
+            textField(password, vm.password)
+            command(loginButton, { vm.login() })
+            command(registerButton, { vm.register() })
         }
     }
 }

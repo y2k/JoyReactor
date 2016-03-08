@@ -29,7 +29,7 @@ class MessagesViewController : BaseUIViewController() {
         val vm = ServiceLocator.resolve(lifeCycleService, MessagesViewModel::class)
         bindingBuilder {
             textView(newMessage, vm.newMessage)
-            click(sendButton, { vm.sendNewMessage() })
+            command(sendButton, { vm.sendNewMessage() })
             tableView(list, MessageCell::class, vm.messages)
         }
     }

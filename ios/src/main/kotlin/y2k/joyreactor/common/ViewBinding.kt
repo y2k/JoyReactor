@@ -16,6 +16,23 @@ fun bindingBuilder(init: BindingBuild.() -> Unit) {
 
 class BindingBuild {
 
+    fun focusOrder(vararg views: UITextField) {
+        for (i in 0..views.size - 2)
+            views[i].delegate = DefaultUITextFieldDelegate(views[i + 1])
+        views.last().delegate = DefaultUITextFieldDelegate()
+    }
+
+    fun <T> action(binding: Binding<T>, callback: (T) -> Unit) {
+        binding.subscribe(callback)
+    }
+
+    fun textField(view: UITextField, binding: Binding<String>) {
+        binding.subscribe { view.text = it }
+        view.addOnEditingChangedListener {
+            binding.value = view.text
+        }
+    }
+
     fun textView(view: UITextView, binding: Binding<String>) {
         binding.subscribe { view.text = it }
         view.setDelegate(object : UITextViewDelegateAdapter() {
@@ -32,11 +49,11 @@ class BindingBuild {
         view.dataSource = source
     }
 
-    fun click(view: UIButton, command: () -> Unit) {
+    fun command(view: UIButton, command: () -> Unit) {
         view.addOnTouchUpInsideListener { sender, e -> command() }
     }
 
-    fun view(view: UIView, binding: Binding<Boolean>, invert: Boolean = false) {
+    fun visible(view: UIView, binding: Binding<Boolean>, invert: Boolean = false) {
         binding.subscribe { view.isHidden = !it xor invert }
     }
 }
@@ -90,4 +107,13 @@ abstract class ListDataSource<T>(private val tableView: UITableView) : UITableVi
 abstract class ListCell<T> : UITableViewCell() {
 
     abstract fun bind(data: T)
+}
+
+private class DefaultUITextFieldDelegate(val next: UITextField? = null) : UITextFieldDelegateAdapter() {
+
+    override fun shouldReturn(textField: UITextField): Boolean {
+        if (next == null) textField.resignFirstResponder()
+        else next.becomeFirstResponder()
+        return true
+    }
 }

@@ -7,6 +7,7 @@ import y2k.joyreactor.services.requests.MessageListRequest
 import y2k.joyreactor.services.synchronizers.MyTagFetcher
 import y2k.joyreactor.services.synchronizers.PostMerger
 import y2k.joyreactor.services.synchronizers.PrivateMessageFetcher
+import y2k.joyreactor.viewmodel.LoginViewModel
 import y2k.joyreactor.viewmodel.MessagesViewModel
 import y2k.joyreactor.viewmodel.PostViewModel
 import y2k.joyreactor.viewmodel.ThreadsViewModel
@@ -38,6 +39,7 @@ object ServiceLocator {
         add { ProfileService(resolve(), resolve()) }
         add { UserMessagesService(resolve(), resolve(), resolve()) }
         add { CommentService(resolve(), resolve(), resolve()) }
+        add { LoginViewModel(resolve(), resolve()) }
     }
 
     // ==========================================
@@ -62,10 +64,6 @@ object ServiceLocator {
 
     fun resolve(view: CreateCommentPresenter.View): CreateCommentPresenter {
         return CreateCommentPresenter(view, resolve(), resolve())
-    }
-
-    fun resolve(view: LoginPresenter.View): LoginPresenter {
-        return LoginPresenter(view, resolve())
     }
 
     fun resolve(view: AddTagPresenter.View): AddTagPresenter {
