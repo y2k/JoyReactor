@@ -1,7 +1,6 @@
 package y2k.joyreactor.common
 
 import y2k.joyreactor.platform.NavigationService
-import y2k.joyreactor.presenters.PostListPresenter
 import y2k.joyreactor.services.*
 import y2k.joyreactor.services.requests.MessageListRequest
 import y2k.joyreactor.services.synchronizers.MyTagFetcher
@@ -43,14 +42,7 @@ object ServiceLocator {
         register { VideoViewModel(resolve()) }
         register { ProfileViewModel(resolve(), resolve()) }
         register { AddTagViewModel(resolve(), resolve()) }
-    }
-
-    // ==========================================
-    // Presenters
-    // ==========================================
-
-    fun resolve(lifeCycleService: LifeCycleService, view: PostListPresenter.View): PostListPresenter {
-        return PostListPresenter(view, resolve(), lifeCycleService)
+        register { PostListViewModel(resolve(), resolve(), resolve()) }
     }
 
     // ==========================================

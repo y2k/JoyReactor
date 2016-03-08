@@ -10,6 +10,10 @@ import android.view.ViewGroup
  * Created by y2k on 2/6/16.
  */
 
+inline fun View.setOnClickListener(id: Int, crossinline onClick: () -> Unit) {
+    findViewById(id).setOnClickListener { onClick() }
+}
+
 fun TypedArray.use(f: TypedArray.() -> Unit) {
     try {
         f()
@@ -40,7 +44,7 @@ fun ViewGroup.switchByScaleFromTo(firstPosition: Int, secondPosition: Int) {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <T> View.find(id: Int): T {
+inline fun <T> View.find(id: Int): T {
     return findViewById(id) as T
 }
 

@@ -19,6 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         <android.support.v7.widget.RecyclerView
+                app:spanCount="2"
+                app:layoutManager="android.support.v7.widget.StaggeredGridLayoutManager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/list"/>
@@ -38,5 +40,6 @@
               android:background="@color/text_secondary"
               android:padding="30dp"
               android:textAllCaps="true"
+              android:visibility="gone"
               android:text="@string/unknown_error"/>
 </android.support.design.widget.CoordinatorLayout>
