@@ -1,6 +1,6 @@
 package y2k.joyreactor.services.requests
 
-import rx.Observable
+import rx.Completable
 import y2k.joyreactor.common.ioUnitObservable
 import y2k.joyreactor.http.HttpClient
 import java.net.URLEncoder
@@ -8,14 +8,14 @@ import java.net.URLEncoder
 /**
  * Created by y2k on 19/10/15.
  */
-class AddTagRequest(private val tagName: String) {
+class AddTagRequest() {
 
-    fun request(): Observable<Unit> {
+    fun request(tagName: String): Completable {
         return ioUnitObservable {
             val tagUrl = "http://joyreactor.cc/tag/" + URLEncoder.encode(tagName)
             val tagPage = HttpClient.instance.getDocument(tagUrl)
             val addTagLink = tagPage.select("a.change_favorite_link").first().absUrl("href")
             HttpClient.instance.getText(addTagLink)
-        }
+        }.toCompletable()
     }
 }

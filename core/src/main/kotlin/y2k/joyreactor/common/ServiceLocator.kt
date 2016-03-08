@@ -1,7 +1,6 @@
 package y2k.joyreactor.common
 
 import y2k.joyreactor.platform.NavigationService
-import y2k.joyreactor.presenters.AddTagPresenter
 import y2k.joyreactor.presenters.PostListPresenter
 import y2k.joyreactor.services.*
 import y2k.joyreactor.services.requests.MessageListRequest
@@ -33,7 +32,7 @@ object ServiceLocator {
 
         register { PostService(resolve(), resolve(), resolve(), resolve()) }
         register { TagService(resolve(), resolve(), resolve()) }
-        register { TagListService(resolve(), resolve(), resolve()) }
+        register { UserService(resolve(), resolve(), resolve(), resolve()) }
         register { ProfileService(resolve(), resolve()) }
         register { UserMessagesService(resolve(), resolve(), resolve()) }
         register { CommentService(resolve(), resolve(), resolve()) }
@@ -43,6 +42,7 @@ object ServiceLocator {
         register { ImageViewModel(resolve()) }
         register { VideoViewModel(resolve()) }
         register { ProfileViewModel(resolve(), resolve()) }
+        register { AddTagViewModel(resolve(), resolve()) }
     }
 
     // ==========================================
@@ -53,10 +53,6 @@ object ServiceLocator {
         return PostListPresenter(view, resolve(), lifeCycleService)
     }
 
-    fun resolve(view: AddTagPresenter.View): AddTagPresenter {
-        return AddTagPresenter(view, resolve())
-    }
-
     // ==========================================
     // Private methods
     // ==========================================
@@ -65,8 +61,6 @@ object ServiceLocator {
         register { lifeCycleService }
         try {
             return resolve()
-        } catch (e: Exception) {
-            throw IllegalArgumentException("Can't resolve type ${T::class}")
         } finally {
             unregister(LifeCycleService::class)
         }
@@ -78,7 +72,11 @@ object ServiceLocator {
 
     @Suppress("UNCHECKED_CAST")
     fun <T : Any> resolve(type: KClass<T>): T {
-        return map[type]?.let { it() as T } ?: type.java.newInstance()
+        try {
+            return map[type]?.let { it() as T } ?: type.java.newInstance()
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Can't resolve type $type")
+        }
     }
 
     inline fun <reified T : Any> register(noinline factory: () -> T) {

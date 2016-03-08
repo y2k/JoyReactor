@@ -5,13 +5,13 @@ import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.model.Tag
 import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
-import y2k.joyreactor.services.TagListService
+import y2k.joyreactor.services.UserService
 
 /**
  * Created by y2k on 3/8/16.
  */
 class TagListViewModel(
-    private val service: TagListService,
+    private val service: UserService,
     private val broadcastService: BroadcastService,
     private val lifeCycleService: LifeCycleService) {
 

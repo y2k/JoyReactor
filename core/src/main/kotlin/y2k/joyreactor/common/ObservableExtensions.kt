@@ -1,5 +1,6 @@
 package y2k.joyreactor.common
 
+import rx.Completable
 import rx.Observable
 import rx.Subscription
 import rx.schedulers.Schedulers
@@ -34,6 +35,10 @@ fun <T> ioObservable(func: () -> T): Observable<T> {
 
 fun <T, R> Observable<T>.concatAndRepeat(other: Observable<R>): Observable<T> {
     return concatWith(other.flatMap { this })
+}
+
+fun Completable.subscribeOnMain(onComplete: () -> Unit, onError: (Throwable) -> Unit): Subscription {
+    return observeOn(ForegroundScheduler.instance).subscribe(onError, onComplete)
 }
 
 fun <T> Observable<T>.subscribeOnMain(onNext: (T) -> Unit, onError: (Throwable) -> Unit): Subscription {

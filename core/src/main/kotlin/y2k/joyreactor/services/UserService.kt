@@ -1,8 +1,9 @@
 package y2k.joyreactor.services
 
+import rx.Completable
 import rx.Observable
-import y2k.joyreactor.model.Tag
 import y2k.joyreactor.common.concatAndRepeat
+import y2k.joyreactor.model.Tag
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.AddTagRequest
 import y2k.joyreactor.services.requests.UserNameRequest
@@ -11,7 +12,8 @@ import y2k.joyreactor.services.synchronizers.MyTagFetcher
 /**
  * Created by y2k on 11/24/15.
  */
-class TagListService(
+class UserService(
+    private val addTagRequest: AddTagRequest,
     private val dataContext: DataContext.Factory,
     private val userNameRequest: UserNameRequest,
     private val synchronizer: MyTagFetcher) {
@@ -24,8 +26,8 @@ class TagListService(
             .concatAndRepeat(synchronizer.synchronize())
     }
 
-    fun addTag(tag: String): Observable<Unit> {
-        return AddTagRequest(tag).request()
+    fun addTag(tag: String): Completable {
+        return addTagRequest.request(tag)
     }
 
     fun getTagForFavorite(): Observable<Tag> {

@@ -11,10 +11,7 @@ import android.view.ViewGroup
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.RatingBar
-import android.widget.TextView
+import android.widget.*
 import y2k.joyreactor.FixedAspectPanel
 import y2k.joyreactor.ImagePanel
 import y2k.joyreactor.WebImageView
@@ -73,6 +70,11 @@ class BindingBuilder(root: ViewResolver) {
     //        val view = root.find<SwipeRefreshLayout>(id)
     //        binding.subscribe { view.isRefreshing = it }
     //    }
+
+    fun <T> animator(id: Int, binding: Binding<T>, convert: (T) -> Int) {
+        val view = find<ViewAnimator>(id)
+        binding.subscribe { view.displayedChild = convert(it) }
+    }
 
     fun progressBar(id: Int, binding: Binding<Float>) {
         val view = find<ProgressBar>(id)
@@ -152,6 +154,10 @@ class BindingBuilder(root: ViewResolver) {
         binding.subscribe { view.setImages(it) }
     }
 
+    fun editText(id: Int, init: EditTextBinding.() -> Unit) {
+        EditTextBinding(find<EditText>(id)).init()
+    }
+
     fun editText(id: Int, binding: Binding<String>) {
         val view = find<EditText>(id)
         binding.subscribe { if (view.text.toString() != it) view.setText(it) }
@@ -191,6 +197,23 @@ class BindingBuilder(root: ViewResolver) {
 
     private fun <T : Any> find(id: Int): T {
         return resolvers.mapNotNull { it.find<T>(id) }.first()
+    }
+}
+
+class EditTextBinding(val view: EditText) {
+
+    fun text(binding: Binding<String>) {
+        binding.subscribe { if (view.text.toString() != it) view.setText(it) }
+        view.addTextChangedListener(object : TextWatcherAdapter() {
+
+            override fun afterTextChanged(s: Editable?) {
+                binding.value = "" + s
+            }
+        })
+    }
+
+    fun error(binding: Binding<Boolean>, text: String) {
+        binding.subscribe { view.error = if (it) text else null }
     }
 }
 
