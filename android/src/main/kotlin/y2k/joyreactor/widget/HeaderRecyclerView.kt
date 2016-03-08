@@ -9,14 +9,24 @@ import y2k.joyreactor.R
 import y2k.joyreactor.common.ViewResolver
 import y2k.joyreactor.common.findOrNull
 import y2k.joyreactor.common.inflate
+import y2k.joyreactor.common.use
 
 /**
  * Created by y2k on 2/28/16.
  */
-class HeaderRecyclerView(context: Context?, attrs: AttributeSet?) : RecyclerView(context, attrs), ViewResolver {
+class HeaderRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerView(context, attrs), ViewResolver {
 
-    // FIXME:
-    private val holder by lazy { HeaderViewHolder(inflate(R.layout.layout_post)) }
+    // TODO: убрать лишние поле
+    private var headerLayout = 0
+    private val holder by lazy { HeaderViewHolder(inflate(headerLayout)) }
+
+    init {
+        context.theme
+            .obtainStyledAttributes(attrs, R.styleable.HeaderRecyclerView, 0, 0)
+            .use {
+                headerLayout = getResourceId(R.styleable.HeaderRecyclerView_header, 0)
+            }
+    }
 
     override fun <T> find(id: Int): T? {
         return holder.itemView.findOrNull<T>(id)

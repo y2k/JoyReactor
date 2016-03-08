@@ -1,5 +1,6 @@
 package y2k.joyreactor.common
 
+import android.content.res.TypedArray
 import android.support.v4.view.ViewCompat
 import android.support.v4.view.ViewPropertyAnimatorCompat
 import android.view.View
@@ -8,6 +9,14 @@ import android.view.ViewGroup
 /**
  * Created by y2k on 2/6/16.
  */
+
+fun TypedArray.use(f: TypedArray.() -> Unit) {
+    try {
+        f()
+    } finally {
+        recycle()
+    }
+}
 
 fun View.compatAnimate(): ViewPropertyAnimatorCompat {
     return ViewCompat.animate(this)

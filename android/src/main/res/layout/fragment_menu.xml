@@ -6,8 +6,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
+    <y2k.joyreactor.widget.HeaderRecyclerView
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            app:header="@layout/layout_subscriptions_header"
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

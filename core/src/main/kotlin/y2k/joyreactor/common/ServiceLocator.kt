@@ -7,10 +7,7 @@ import y2k.joyreactor.services.requests.MessageListRequest
 import y2k.joyreactor.services.synchronizers.MyTagFetcher
 import y2k.joyreactor.services.synchronizers.PostMerger
 import y2k.joyreactor.services.synchronizers.PrivateMessageFetcher
-import y2k.joyreactor.viewmodel.LoginViewModel
-import y2k.joyreactor.viewmodel.MessagesViewModel
-import y2k.joyreactor.viewmodel.PostViewModel
-import y2k.joyreactor.viewmodel.ThreadsViewModel
+import y2k.joyreactor.viewmodel.*
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -22,24 +19,25 @@ object ServiceLocator {
     private val map = HashMap <KClass<*>, () -> Any>()
 
     init {
-        add { PostViewModel(resolve(), resolve(), resolve()) }
-        add { NavigationService.instance }
-        add { ThreadsViewModel(resolve(), resolve(), resolve()) }
-        add { MessagesViewModel(resolve(), resolve()) }
+        register { PostViewModel(resolve(), resolve(), resolve()) }
+        register { NavigationService.instance }
+        register { ThreadsViewModel(resolve(), resolve(), resolve()) }
+        register { MessagesViewModel(resolve(), resolve()) }
 
-        add { MessageListRequest(resolve()) }
-        add { PostMerger(resolve()) }
-        add { MemoryBuffer }
-        add { MyTagFetcher(resolve()) }
-        add { PrivateMessageFetcher(resolve(), resolve()) }
+        register { MessageListRequest(resolve()) }
+        register { PostMerger(resolve()) }
+        register { MemoryBuffer }
+        register { MyTagFetcher(resolve()) }
+        register { PrivateMessageFetcher(resolve(), resolve()) }
 
-        add { PostService(resolve(), resolve(), resolve(), resolve()) }
-        add { TagService(resolve(), resolve(), resolve()) }
-        add { TagListService(resolve(), resolve(), resolve()) }
-        add { ProfileService(resolve(), resolve()) }
-        add { UserMessagesService(resolve(), resolve(), resolve()) }
-        add { CommentService(resolve(), resolve(), resolve()) }
-        add { LoginViewModel(resolve(), resolve()) }
+        register { PostService(resolve(), resolve(), resolve(), resolve()) }
+        register { TagService(resolve(), resolve(), resolve()) }
+        register { TagListService(resolve(), resolve(), resolve()) }
+        register { ProfileService(resolve(), resolve()) }
+        register { UserMessagesService(resolve(), resolve(), resolve()) }
+        register { CommentService(resolve(), resolve(), resolve()) }
+        register { LoginViewModel(resolve(), resolve()) }
+        register { TagListViewModel(resolve(), resolve(), resolve()) }
     }
 
     // ==========================================
@@ -52,10 +50,6 @@ object ServiceLocator {
 
     fun resolve(lifeCycleService: LifeCycleService, view: PostListPresenter.View): PostListPresenter {
         return PostListPresenter(view, resolve(), lifeCycleService)
-    }
-
-    fun resolve(lifeCycleService: LifeCycleService, view: TagListPresenter.View): TagListPresenter {
-        return TagListPresenter(view, resolve(), resolve(), lifeCycleService)
     }
 
     fun resolve(view: ProfilePresenter.View): ProfilePresenter {
@@ -82,26 +76,35 @@ object ServiceLocator {
     // Private methods
     // ==========================================
 
-    inline fun <reified T : Any> resolve(lifeCycleService: LifeCycleService = LifeCycleService.Stub): T {
-        return resolve(lifeCycleService, T::class)
+    inline fun <reified T : Any> resolve(lifeCycleService: LifeCycleService): T {
+        register { lifeCycleService }
+        try {
+            return resolve()
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Can't resolve type ${T::class}")
+        } finally {
+            unregister(LifeCycleService::class)
+        }
+    }
+
+    inline fun <reified T : Any> resolve(): T {
+        return resolve(T::class)
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T : Any> resolve(lifeCycleService: LifeCycleService, type: KClass<T>): T {
-        add { lifeCycleService }
-        val instance = map[type]?.let { it() as T } ?: type.java.newInstance()
-        return instance.apply { remove(LifeCycleService::class) }
+    fun <T : Any> resolve(type: KClass<T>): T {
+        return map[type]?.let { it() as T } ?: type.java.newInstance()
     }
 
-    private inline fun <reified T : Any> add(noinline factory: () -> T) {
-        add(T::class, factory)
+    inline fun <reified T : Any> register(noinline factory: () -> T) {
+        register(T::class, factory)
     }
 
-    private fun <T : Any> add(type: KClass<T>, factory: () -> T) {
+    fun <T : Any> register(type: KClass<T>, factory: () -> T) {
         map[type] = factory
     }
 
-    private fun <T : Any> remove(type: KClass<T>) {
+    fun <T : Any> unregister(type: KClass<T>) {
         map.remove(type)
     }
 }

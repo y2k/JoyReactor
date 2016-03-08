@@ -16,6 +16,7 @@
     <y2k.joyreactor.widget.HeaderRecyclerView
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:header="@layout/layout_post"
             android:id="@+id/list"
             android:paddingBottom="60dp"
             android:clipToPadding="false"
