@@ -24,3 +24,7 @@ class Binding<T>(private val initValue: T) {
 fun <T> binding(defaultValue: T): Binding<T> {
     return Binding(defaultValue)
 }
+
+fun <T> binding(): Binding<T?> {
+    return Binding<T?>(null)
+}

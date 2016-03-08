@@ -2,17 +2,11 @@ package y2k.joyreactor
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.View
-import android.view.ViewGroup
-import y2k.joyreactor.common.ListAdapter
-import y2k.joyreactor.common.ServiceLocator
-import y2k.joyreactor.common.find
-import y2k.joyreactor.common.inflate
+import y2k.joyreactor.common.*
 import y2k.joyreactor.model.Image
-import y2k.joyreactor.presenters.GalleryPresenter
+import y2k.joyreactor.viewmodel.GalleryViewModel
 
 /**
  * Created by y2k on 2/7/16.
@@ -22,30 +16,24 @@ class GalleryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
-
         setSupportActionBar(find<Toolbar>(R.id.toolbar))
 
-        val list = find<RecyclerView>(R.id.list)
-        val adapter = ImageAdapter(); list.adapter = adapter
-
-        ServiceLocator.resolve(object : GalleryPresenter.View {
-
-            override fun update(images: List<Image>) = adapter.update(images)
-        })
+        val vm = ServiceLocator.resolve<GalleryViewModel>()
+        bindingBuilder(this) {
+            recyclerView(R.id.list, vm.images) {
+                viewHolder {
+                    VH(it.inflate(R.layout.item_image))
+                }
+            }
+        }
     }
 
-    class ImageAdapter : ListAdapter<Image, ImageAdapter.VH>() {
+    class VH(view: View) : ListViewHolder<Image>(view) {
 
-        override fun onBindViewHolder(holder: VH, position: Int) {
-            holder.image.setImage(items[position])
-        }
+        val image = view.find<WebImageView>(R.id.image)
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH? {
-            return VH(parent.inflate(R.layout.item_image))
-        }
-
-        class VH(view: View) : RecyclerView.ViewHolder(view) {
-            val image = view.find<WebImageView>(R.id.image)
+        override fun update(item: Image) {
+            image.setImage(item)
         }
     }
 }

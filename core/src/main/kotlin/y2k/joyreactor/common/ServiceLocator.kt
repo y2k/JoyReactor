@@ -38,15 +38,13 @@ object ServiceLocator {
         register { CommentService(resolve(), resolve(), resolve()) }
         register { LoginViewModel(resolve(), resolve()) }
         register { TagListViewModel(resolve(), resolve(), resolve()) }
+        register { GalleryViewModel(resolve()) }
+        register { ImageViewModel(resolve()) }
     }
 
     // ==========================================
     // Presenters
     // ==========================================
-
-    fun resolve(view: GalleryPresenter.View): GalleryPresenter {
-        return GalleryPresenter(view, resolve())
-    }
 
     fun resolve(lifeCycleService: LifeCycleService, view: PostListPresenter.View): PostListPresenter {
         return PostListPresenter(view, resolve(), lifeCycleService)
@@ -62,10 +60,6 @@ object ServiceLocator {
 
     fun resolve(view: AddTagPresenter.View): AddTagPresenter {
         return AddTagPresenter(view, resolve())
-    }
-
-    fun resolve(view: ImagePresenter.View): ImagePresenter {
-        return ImagePresenter(view, resolve())
     }
 
     fun resolve(view: VideoPresenter.View): VideoPresenter {
