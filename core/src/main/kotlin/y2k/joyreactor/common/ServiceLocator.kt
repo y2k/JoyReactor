@@ -2,7 +2,6 @@ package y2k.joyreactor.common
 
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.presenters.AddTagPresenter
-import y2k.joyreactor.presenters.CreateCommentPresenter
 import y2k.joyreactor.presenters.PostListPresenter
 import y2k.joyreactor.services.*
 import y2k.joyreactor.services.requests.MessageListRequest
@@ -52,10 +51,6 @@ object ServiceLocator {
 
     fun resolve(lifeCycleService: LifeCycleService, view: PostListPresenter.View): PostListPresenter {
         return PostListPresenter(view, resolve(), lifeCycleService)
-    }
-
-    fun resolve(view: CreateCommentPresenter.View): CreateCommentPresenter {
-        return CreateCommentPresenter(view, resolve(), resolve())
     }
 
     fun resolve(view: AddTagPresenter.View): AddTagPresenter {
