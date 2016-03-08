@@ -12,9 +12,12 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.EditText
+import android.widget.ProgressBar
+import android.widget.RatingBar
 import android.widget.TextView
 import y2k.joyreactor.FixedAspectPanel
 import y2k.joyreactor.ImagePanel
+import y2k.joyreactor.WebImageView
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.widget.MuteVideoView
 import y2k.joyreactor.widget.ProgressImageView
@@ -71,6 +74,21 @@ class BindingBuilder(root: ViewResolver) {
     //        binding.subscribe { view.isRefreshing = it }
     //    }
 
+    fun progressBar(id: Int, binding: Binding<Float>) {
+        val view = find<ProgressBar>(id)
+        binding.subscribe { view.progress = it.toInt() }
+    }
+
+    fun ratingBar(id: Int, binding: Binding<Float>) {
+        val view = find<RatingBar>(id)
+        binding.subscribe { view.rating = it }
+    }
+
+    fun webImageView(id: Int, binding: Binding<Image?>) {
+        val view = find<WebImageView>(id)
+        binding.subscribe { view.setImage(it) }
+    }
+
     fun muteVideoView(id: Int, binding: Binding<File?>) {
         val view = find<MuteVideoView>(id)
         binding.subscribe { it?.let { view.play(it) } }
@@ -109,9 +127,9 @@ class BindingBuilder(root: ViewResolver) {
         binding.subscribe { if (it) view.show() else view.hide() }
     }
 
-    fun textView(id: Int, binding: Binding<String>) {
+    fun <T> textView(id: Int, binding: Binding<T>) {
         val view = find<TextView>(id)
-        binding.subscribe { if (view.text.toString() != it) view.setText(it) }
+        binding.subscribe { if (view.text.toString() != it.toString()) view.text = it.toString() }
     }
 
     fun fixedAspectPanel(id: Int, binding: Binding<Float>) {

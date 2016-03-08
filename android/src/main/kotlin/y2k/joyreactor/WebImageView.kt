@@ -13,6 +13,7 @@ class WebImageView(context: Context, attrs: AttributeSet) : ImageView(context, a
 
     private val invalidator = Invalidator()
 
+    // TODO: заменить на свойство (если возможно)
     fun setImage(image: Image?) {
         invalidator.invalidateStateChanges(image ?: EMPTY)
     }
