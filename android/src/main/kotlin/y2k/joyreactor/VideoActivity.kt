@@ -2,11 +2,9 @@ package y2k.joyreactor
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import y2k.joyreactor.common.ServiceLocator
-import y2k.joyreactor.presenters.VideoPresenter
-import y2k.joyreactor.widget.MuteVideoView
-import java.io.File
+import y2k.joyreactor.common.bindingBuilder
+import y2k.joyreactor.viewmodel.VideoViewModel
 
 class VideoActivity : AppCompatActivity() {
 
@@ -14,17 +12,10 @@ class VideoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video)
 
-        val videoView = findViewById(R.id.video) as MuteVideoView
-        ServiceLocator.resolve(
-            object : VideoPresenter.View {
-
-                override fun showVideo(videoFile: File) {
-                    videoView.play(videoFile)
-                }
-
-                override fun setBusy(isBusy: Boolean) {
-                    findViewById(R.id.progress).visibility = if (isBusy) View.VISIBLE else View.GONE
-                }
-            })
+        val vm = ServiceLocator.resolve<VideoViewModel>()
+        bindingBuilder(this) {
+            muteVideoView(R.id.video, vm.videoFile)
+            visibility(R.id.progress, vm.isBusy)
+        }
     }
 }

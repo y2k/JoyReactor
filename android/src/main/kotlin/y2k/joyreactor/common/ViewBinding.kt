@@ -16,6 +16,7 @@ import android.widget.TextView
 import y2k.joyreactor.FixedAspectPanel
 import y2k.joyreactor.ImagePanel
 import y2k.joyreactor.model.Image
+import y2k.joyreactor.widget.MuteVideoView
 import y2k.joyreactor.widget.ProgressImageView
 import y2k.joyreactor.widget.TagsView
 import java.io.File
@@ -69,6 +70,11 @@ class BindingBuilder(root: ViewResolver) {
     //        val view = root.find<SwipeRefreshLayout>(id)
     //        binding.subscribe { view.isRefreshing = it }
     //    }
+
+    fun muteVideoView(id: Int, binding: Binding<File?>) {
+        val view = find<MuteVideoView>(id)
+        binding.subscribe { it?.let { view.play(it) } }
+    }
 
     fun viewResolver(id: Int) {
         resolvers.add(find<ViewResolver>(id))
