@@ -26,7 +26,7 @@ class UserService(
             .concatAndRepeat(synchronizer.synchronize())
     }
 
-    fun addTag(tag: String): Completable {
+    fun favoriteTag(tag: String): Completable {
         return addTagRequest.request(tag)
     }
 

@@ -20,7 +20,7 @@ class AddTagViewModel(
         isBusy.value = true
         error.value = false
         service
-            .addTag(tag.value)
+            .favoriteTag(tag.value)
             .subscribeOnMain({
                 isBusy.value = false
                 navigationService.closeAddTag()
