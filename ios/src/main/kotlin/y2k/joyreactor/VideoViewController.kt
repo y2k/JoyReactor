@@ -11,25 +11,50 @@ import org.robovm.apple.uikit.UIViewController
 import org.robovm.objc.annotation.CustomClass
 import org.robovm.objc.annotation.IBOutlet
 import y2k.joyreactor.common.ServiceLocator
-import y2k.joyreactor.presenters.VideoPresenter
-import java.io.File
+import y2k.joyreactor.common.bindingBuilder
+import y2k.joyreactor.viewmodel.VideoViewModel
 
 /**
  * Created by y2k on 22/10/15.
  */
 @CustomClass("VideoViewController")
-class VideoViewController : UIViewController(), VideoPresenter.View {
+class VideoViewController : UIViewController() {
 
-    @IBOutlet
-    lateinit var indicatorView: UIActivityIndicatorView
+    @IBOutlet lateinit var indicatorView: UIActivityIndicatorView
 
     lateinit var player: AVPlayer
     var repeatObserver: NSObject? = null
 
     override fun viewDidLoad() {
         super.viewDidLoad()
-        ServiceLocator.resolve(this)
+
         navigationController.setNavigationBarHidden(true, true)
+
+        val vm = ServiceLocator.resolve<VideoViewModel>()
+        bindingBuilder {
+            action(vm.isBusy) {
+                navigationItem.setHidesBackButton(it, true)
+                if (it) indicatorView.startAnimating()
+                else indicatorView.stopAnimating()
+            }
+            action(vm.videoFile) {
+                if (it == null) return@action
+
+                // TODO: вынести в отдельный контрол
+                player = AVPlayer(NSURL(it))
+                repeatObserver = player.addBoundaryTimeObserver(
+                    listOf(player.currentItem.asset.duration.subtract(CMTime.create(0.1, 600))),
+                    null) { player.seekToTime(CMTime.Zero()) }
+
+                val layer = AVPlayerLayer()
+                layer.player = player
+                layer.frame = view.frame
+                layer.videoGravity = AVLayerVideoGravity.ResizeAspect
+
+                view.layer.addSublayer(layer)
+                player.play()
+            }
+        }
     }
 
     override fun viewWillAppear(animated: Boolean) {
@@ -41,28 +66,5 @@ class VideoViewController : UIViewController(), VideoPresenter.View {
         super.viewWillDisappear(animated)
         navigationController.setHidesBarsOnTap(false)
         if (repeatObserver != null) player.removeTimeObserver(repeatObserver)
-    }
-
-    override fun showVideo(videoFile: File) {
-        player = AVPlayer(NSURL(videoFile))
-        repeatObserver = player.addBoundaryTimeObserver(
-            listOf(player.currentItem.asset.duration.subtract(CMTime.create(0.1, 600))),
-            null) { player.seekToTime(CMTime.Zero()) }
-
-        val layer = AVPlayerLayer()
-        layer.player = player
-        layer.frame = view.frame
-        layer.videoGravity = AVLayerVideoGravity.ResizeAspect
-
-        view.layer.addSublayer(layer)
-        player.play()
-    }
-
-    override fun setBusy(isBusy: Boolean) {
-        navigationItem.setHidesBackButton(isBusy, true)
-        if (isBusy)
-            indicatorView.startAnimating()
-        else
-            indicatorView.stopAnimating()
     }
 }
