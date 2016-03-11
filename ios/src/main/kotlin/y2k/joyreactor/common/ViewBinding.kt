@@ -10,11 +10,15 @@ import kotlin.reflect.KClass
 /**
  * Created by y2k on 2/26/16.
  */
-fun bindingBuilder(init: BindingBuild.() -> Unit) {
-    BindingBuild().init()
+fun bindingBuilder(controller: UIViewController? = null, init: BindingBuild.() -> Unit) {
+    BindingBuild(controller).init()
 }
 
-class BindingBuild {
+class BindingBuild(private val controller: UIViewController?) {
+
+    fun navigationItem(init: NavigationItemBinding.() -> Unit) {
+        NavigationItemBinding(controller!!).init() // TODO:
+    }
 
     fun focusOrder(vararg views: UITextField) {
         for (i in 0..views.size - 2)
@@ -55,6 +59,15 @@ class BindingBuild {
 
     fun visible(view: UIView, binding: Binding<Boolean>, invert: Boolean = false) {
         binding.subscribe { view.isHidden = !it xor invert }
+    }
+}
+
+class NavigationItemBinding(private val controller: UIViewController) {
+
+    fun rightCommand(command: () -> Unit) {
+        controller.navigationItem
+            .rightBarButtonItem
+            .setOnClickListener { command() }
     }
 }
 
