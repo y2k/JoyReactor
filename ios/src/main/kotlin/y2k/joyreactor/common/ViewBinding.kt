@@ -4,6 +4,10 @@ import org.robovm.apple.foundation.NSIndexPath
 import org.robovm.apple.foundation.NSURL
 import org.robovm.apple.foundation.NSURLRequest
 import org.robovm.apple.uikit.*
+import y2k.joyreactor.ProgressBar
+import y2k.joyreactor.StarProgress
+import y2k.joyreactor.model.Image
+import y2k.joyreactor.platform.ImageRequest
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -15,6 +19,31 @@ fun bindingBuilder(controller: UIViewController? = null, init: BindingBuild.() -
 }
 
 class BindingBuild(private val controller: UIViewController?) {
+
+    fun starProgress(view: StarProgress, binding: Binding<Float>) {
+        subscribe(binding) { view.setStars(it.toInt()) }
+    }
+
+    fun progressBar(view: ProgressBar, binding: Binding<Float>) {
+        subscribe(binding) { view.setValue(it) }
+    }
+
+    fun imageView(view: UIImageView, binding: Binding<Image?>) {
+        subscribe(binding) {
+            ImageRequest()
+                .setUrl(it)
+                .setSize(view.frame.width.toInt(), view.frame.height.toInt())
+                .to(view) { view.image = it }
+        }
+    }
+
+    inline fun <T> label(view: UILabel, binding: Binding<T>, crossinline converter: (T) -> String) {
+        binding.subscribe { view.text = converter(it) }
+    }
+
+    fun label(view: UILabel, binding: Binding<String>) {
+        subscribe(binding) { view.text = it }
+    }
 
     fun navigationItem(init: NavigationItemBinding.() -> Unit) {
         NavigationItemBinding(controller!!).init() // TODO:
@@ -31,14 +60,14 @@ class BindingBuild(private val controller: UIViewController?) {
     }
 
     fun textField(view: UITextField, binding: Binding<String>) {
-        binding.subscribe { view.text = it }
+        subscribe(binding) { view.text = it }
         view.addOnEditingChangedListener {
             binding.value = view.text
         }
     }
 
     fun textView(view: UITextView, binding: Binding<String>) {
-        binding.subscribe { view.text = it }
+        subscribe(binding) { view.text = it }
         view.setDelegate(object : UITextViewDelegateAdapter() {
 
             override fun didChange(textView: UITextView) {
@@ -49,7 +78,7 @@ class BindingBuild(private val controller: UIViewController?) {
 
     fun <T, TC : ListCell<T>> tableView(view: UITableView, type: KClass<TC>, binding: Binding<List<T>>) {
         val source = ListDataSource.Default<T, TC>(view);
-        binding.subscribe { source.update(it) }
+        subscribe(binding) { source.update(it) }
         view.dataSource = source
     }
 
@@ -58,7 +87,11 @@ class BindingBuild(private val controller: UIViewController?) {
     }
 
     fun visible(view: UIView, binding: Binding<Boolean>, invert: Boolean = false) {
-        binding.subscribe { view.isHidden = !it xor invert }
+        subscribe(binding) { view.isHidden = !it xor invert }
+    }
+
+    private inline fun <T> subscribe(binding: Binding<T>, crossinline f: (T) -> Unit) {
+        binding.subscribe { f(it) }
     }
 }
 

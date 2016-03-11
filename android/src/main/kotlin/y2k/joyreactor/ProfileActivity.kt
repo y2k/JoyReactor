@@ -20,7 +20,7 @@ class ProfileActivity : AppCompatActivity() {
         bindingBuilder(this) {
             visibility(R.id.progress, vm.isBusy)
 
-            webImageView(R.id.avatar, vm.avatar)
+            webImageView(R.id.avatar, vm.userImage)
             textView(R.id.rating, vm.rating)
             ratingBar(R.id.stars, vm.stars)
             progressBar(R.id.nextStarProgress, vm.nextStarProgress)

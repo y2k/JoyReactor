@@ -13,10 +13,11 @@ class ProfileViewModel(
     private val navigationService: NavigationService,
     private val service: ProfileService) {
 
-    val avatar = binding<Image>()
+    val userImage = binding<Image>()
     val rating = binding(0f)
     val stars = binding(0f)
     val nextStarProgress = binding(0f)
+    val userName = binding("")
 
     val isBusy = binding(false)
 
@@ -25,8 +26,8 @@ class ProfileViewModel(
         service
             .getProfile()
             .subscribeOnMain({
-                //                view.setProfile(it)
-                avatar.value = it.userImage
+                userName.value = it.userName
+                userImage.value = it.userImage
                 rating.value = it.rating
                 stars.value = it.stars.toFloat()
                 nextStarProgress.value = it.progressToNewStar
