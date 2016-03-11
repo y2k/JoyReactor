@@ -20,6 +20,13 @@ fun bindingBuilder(controller: UIViewController? = null, init: BindingBuild.() -
 
 class BindingBuild(private val controller: UIViewController?) {
 
+    fun indicatorView(view: UIActivityIndicatorView, binding: Binding<Boolean>) {
+        subscribe(binding) {
+            if (it) view.startAnimating();
+            else view.stopAnimating();
+        }
+    }
+
     fun starProgress(view: StarProgress, binding: Binding<Float>) {
         subscribe(binding) { view.setStars(it.toInt()) }
     }

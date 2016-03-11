@@ -8,8 +8,8 @@ import org.robovm.apple.uikit.UIViewController
 import org.robovm.objc.annotation.CustomClass
 import org.robovm.objc.annotation.IBOutlet
 import y2k.joyreactor.common.ServiceLocator
-import y2k.joyreactor.presenters.ImagePresenter
-
+import y2k.joyreactor.common.bindingBuilder
+import y2k.joyreactor.viewmodel.ImageViewModel
 import java.io.File
 
 /**
@@ -23,24 +23,21 @@ class ImageViewController : UIViewController() {
     override fun viewDidLoad() {
         super.viewDidLoad()
 
-        ServiceLocator.resolve(object : ImagePresenter.View {
-
-            override fun setBusy(isBusy: Boolean) {
-                // FIXME:
-                //        if (isBusy) indicatorView.startAnimating();
-                //        else indicatorView.stopAnimating();
-            }
-
-            override fun showImage(imageFile: File) {
+        val vm = ServiceLocator.resolve<ImageViewModel>()
+        bindingBuilder {
+            indicatorView(indicatorView, vm.isBusy)
+            action(vm.imageFile) {
+                if (it == null) return@action
                 val scrollView = ImageScrollView(view.frame)
+                // TODO: вынести в ImageScrollView
                 scrollView.autoresizingMask = UIViewAutoresizing(((1 shl 1) + (1 shl 4)).toLong())
                 view.addSubview(scrollView)
-                scrollView.displayTiledImageNamed(imageFile.absolutePath, getImageSize(imageFile))
+                scrollView.displayTiledImageNamed(it.absolutePath, getImageSize(it))
             }
-        })
+        }
     }
 
-    private fun getImageSize(imageFile: File): CGSize {
-        return UIImage(imageFile).size
+    fun getImageSize(imageFile: File): CGSize {
+        return UIImage.getImage(imageFile).size
     }
 }
