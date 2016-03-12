@@ -8,9 +8,9 @@ import org.robovm.objc.annotation.IBOutlet
 import y2k.joyreactor.common.*
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.model.Post
+import y2k.joyreactor.platform.ImageRequest
 import y2k.joyreactor.platform.StoryboardNavigation
 import y2k.joyreactor.viewmodel.PostListViewModel
-import y2k.joyreactor.platform.ImageRequest
 
 /**
  * Created by y2k on 9/26/15.
@@ -25,6 +25,9 @@ class PostListViewController : BaseUIViewController() {
 
     override fun viewDidLoad() {
         super.viewDidLoad()
+
+        list.estimatedRowHeight = 100.0
+        list.rowHeight = UITableView.getAutomaticDimension()
 
         SideMenu(this, "Menu").attach()
         val refresher = UIRefreshControl()
@@ -81,6 +84,8 @@ class PostListViewController : BaseUIViewController() {
         @IBOutlet lateinit var image: UIImageView
         @IBOutlet lateinit var root: UIView
 
+        @IBOutlet lateinit var height: NSLayoutConstraint
+
         //        private lateinit var presenter: PostListPresenter
         //        private lateinit var post: Post
 
@@ -124,6 +129,7 @@ class PostListViewController : BaseUIViewController() {
             if (i == null) {
                 // TODO
             } else {
+                height.constant = image.frame.width / i.aspect
                 loadImage(post.image!!, 300, (300 / i.aspect).toInt(), image)
             }
 

@@ -331,7 +331,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <inset key="scrollIndicatorInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Post" rowHeight="310" id="5Ro-Wk-r2I" customClass="PostCell">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Post" id="5Ro-Wk-r2I" customClass="PostCell">
                                         <rect key="frame" x="0.0" y="92" width="320" height="310"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5Ro-Wk-r2I" id="6E6-b2-GcU">
@@ -343,6 +343,9 @@
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="p14-PC-4AZ">
                                                             <rect key="frame" x="0.0" y="0.0" width="304" height="228"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="228" id="eRM-F3-Lmr"/>
+                                                            </constraints>
                                                         </imageView>
                                                         <imageView userInteractionEnabled="NO" tag="2" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9R5-ne-hWN">
                                                             <rect key="frame" x="8" y="236" width="50" height="50"/>
@@ -434,6 +437,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <connections>
                                             <outlet property="created" destination="4qi-4V-VOZ" id="VAn-Pc-c9e"/>
+                                            <outlet property="height" destination="eRM-F3-Lmr" id="A1C-AY-cIz"/>
                                             <outlet property="image" destination="p14-PC-4AZ" id="fXn-Om-XQs"/>
                                             <outlet property="playButton" destination="gJF-oW-aaa" id="pgK-Pf-h46"/>
                                             <outlet property="rateButton" destination="fOe-6s-9F0" id="pkq-h3-Sit"/>
