@@ -20,6 +20,13 @@ fun bindingBuilder(controller: UIViewController? = null, init: BindingBuild.() -
 
 class BindingBuild(private val controller: UIViewController?) {
 
+    fun refreshControl(view: UIRefreshControl, binding: Binding<Boolean>) {
+        subscribe(binding) {
+            if (it) view.beginRefreshing()
+            else view.endRefreshing()
+        }
+    }
+
     fun indicatorView(view: UIActivityIndicatorView, binding: Binding<Boolean>) {
         subscribe(binding) {
             if (it) view.startAnimating();
@@ -89,6 +96,13 @@ class BindingBuild(private val controller: UIViewController?) {
         view.dataSource = source
     }
 
+    fun <T> tableView(view: UITableView, binding: Binding<List<T>>, init: UITableViewBinding<T>.() -> Unit) {
+        //        val source = ListDataSource.Default<T, TC>(view);
+        //        subscribe(binding) { source.update(it) }
+        //        view.dataSource = source
+        UITableViewBinding(view, binding).init()
+    }
+
     fun command(view: UIButton, command: () -> Unit) {
         view.addOnTouchUpInsideListener { sender, e -> command() }
     }
@@ -99,6 +113,31 @@ class BindingBuild(private val controller: UIViewController?) {
 
     private inline fun <T> subscribe(binding: Binding<T>, crossinline f: (T) -> Unit) {
         binding.subscribe { f(it) }
+    }
+}
+
+class UITableViewBinding<T>(
+    private val view: UITableView,
+    private val binding: Binding<List<T>>) {
+
+    val source = ListDataSource2<T>(view);
+
+    init {
+        binding.subscribe { source.update(it) }
+        view.dataSource = source
+    }
+
+    fun command(f: (Int) -> Unit) {
+        view.setDelegate(object : UITableViewDelegateAdapter() {
+            override fun willSelectRow(tableView: UITableView?, indexPath: NSIndexPath): NSIndexPath? {
+                f(indexPath.row)
+                return null
+            }
+        })
+    }
+
+    fun cellSelector(f: (T) -> String) {
+        source.selector = f
     }
 }
 

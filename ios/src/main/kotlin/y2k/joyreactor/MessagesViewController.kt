@@ -26,7 +26,7 @@ class MessagesViewController : BaseUIViewController() {
     override fun viewDidLoad() {
         super.viewDidLoad()
 
-        val vm = ServiceLocator.resolve(lifeCycleService, MessagesViewModel::class)
+        val vm = ServiceLocator.resolve<MessagesViewModel>(lifeCycleService)
         bindingBuilder {
             textView(newMessage, vm.newMessage)
             command(sendButton, { vm.sendNewMessage() })

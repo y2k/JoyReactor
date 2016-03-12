@@ -28,6 +28,11 @@ class TagListViewModel(
         lifeCycleService.toString()
     }
 
+    fun selectTag(position: Int) {
+        val tag = tags.value[position]
+        broadcastService.broadcast(BroadcastService.TagSelected(tag))
+    }
+
     fun selectTag(tag: Tag) {
         broadcastService.broadcast(BroadcastService.TagSelected(tag))
     }

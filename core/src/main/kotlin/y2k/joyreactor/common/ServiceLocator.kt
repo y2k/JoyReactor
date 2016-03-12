@@ -66,8 +66,8 @@ object ServiceLocator {
     fun <T : Any> resolve(type: KClass<T>): T {
         try {
             return map[type]?.let { it() as T } ?: type.java.newInstance()
-        } catch (e: Exception) {
-            throw IllegalArgumentException("Can't resolve type $type")
+        } catch (e: InstantiationException) {
+            throw IllegalArgumentException("Can't resolve type $type", e)
         }
     }
 

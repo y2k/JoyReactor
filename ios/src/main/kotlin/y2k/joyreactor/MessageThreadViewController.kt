@@ -24,7 +24,7 @@ class MessageThreadViewController : BaseUIViewController() {
     override fun viewDidLoad() {
         super.viewDidLoad()
 
-        val vm = ServiceLocator.resolve(lifeCycleService, ThreadsViewModel::class)
+        val vm = ServiceLocator.resolve<ThreadsViewModel>()
         bindingBuilder {
             tableView(list, ThreadCell::class, vm.threads)
         }
