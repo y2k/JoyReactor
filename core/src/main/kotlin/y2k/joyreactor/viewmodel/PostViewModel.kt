@@ -82,6 +82,10 @@ class PostViewModel(
         navigation.openBrowser("http://joyreactor.cc/post/" + navigation.argument)
     }
 
+    fun selectComment(position: Int) {
+        TODO()
+    }
+
     fun selectComment(comment: Comment) {
         service
             .getCommentsAsync(comment.postId, comments.value.getNavigation(comment))

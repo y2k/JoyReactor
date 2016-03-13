@@ -96,7 +96,7 @@ class BindingBuild(private val controller: UIViewController?) {
         view.dataSource = source
     }
 
-    fun <T> tableView(view: UITableView, binding: Binding<List<T>>, init: UITableViewBinding<T>.() -> Unit) {
+    fun <T> tableView(view: UITableView, binding: Binding<out List<T>>, init: UITableViewBinding<T>.() -> Unit) {
         //        val source = ListDataSource.Default<T, TC>(view);
         //        subscribe(binding) { source.update(it) }
         //        view.dataSource = source
@@ -118,12 +118,12 @@ class BindingBuild(private val controller: UIViewController?) {
 
 class UITableViewBinding<T>(
     private val view: UITableView,
-    private val binding: Binding<List<T>>) {
+    private val binding: Binding<out List<T>>) {
 
     val source = ListDataSource2<T>(view);
 
     init {
-        binding.subscribe { source.update(it) }
+        binding.subscribe { source.update(it as List<T>) }
         view.dataSource = source
     }
 

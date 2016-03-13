@@ -51,9 +51,13 @@ class PostViewController : UIViewController() {
 
         bindingBuilder {
             // FIXME: вернуть загрузку поста
+            tableView(list, vm.comments) {
+                cellSelector { "Comment" }
+                command { vm.selectComment(it) }
+            }
         }
 
-        navigationItem.rightBarButtonItem.setOnClickListener { sender ->
+        navigationItem.rightBarButtonItem.setOnClickListener {
             val alert = UIAlertController()
             alert.addAction(UIAlertAction("Add comment".translate(), UIAlertActionStyle.Default) { s ->
                 navigationController.pushViewController(
@@ -80,27 +84,30 @@ class PostViewController : UIViewController() {
     @CustomClass("CommentCell")
     class CommentCell : ListCell<Comment>() {
 
+        @IBOutlet lateinit var commentText: UILabel
+        @IBOutlet lateinit var userImage: UIImageView
+        @IBOutlet lateinit var replies: UILabel
+        @IBOutlet lateinit var rating: UILabel
+
         override fun bind(data: Comment) {
-            (getViewWithTag(1) as UILabel).text = data.text
+            commentText.text = data.text
 
-            val iv = this.getViewWithTag(2) as UIImageView
-            iv.layer.cornerRadius = iv.frame.width / 2
-
+            userImage.layer.cornerRadius = userImage.frame.width / 2
             ImageRequest()
                 .setUrl(data.userImageObject.toImage())
-                .setSize(iv.frame.width.toInt(), iv.frame.height.toInt())
-                .to(iv, { iv.image = it })
+                .setSize(userImage.frame.width.toInt(), userImage.frame.height.toInt())
+                .to(userImage, { userImage.image = it })
 
-            (getViewWithTag(3) as UILabel).text = "" + data.replies
-            (getViewWithTag(4) as UILabel).text = "" + data.rating
+            replies.text = "" + data.replies
+            rating.text = "" + data.rating
         }
     }
 
-    class CommentDataSource : UITableViewDataSourceAdapter() {
-        override fun getTitleForHeader(tableView: UITableView?, section: Long): String? {
-            return super.getTitleForHeader(tableView, section)
-        }
-    }
+    //    class CommentDataSource : UITableViewDataSourceAdapter() {
+    //        override fun getTitleForHeader(tableView: UITableView?, section: Long): String? {
+    //            return super.getTitleForHeader(tableView, section)
+    //        }
+    //    }
 
     //    override fun updateComments(comments: CommentGroup) {
     //        this.comments = comments

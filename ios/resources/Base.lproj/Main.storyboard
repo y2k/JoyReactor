@@ -727,7 +727,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Comment" rowHeight="70" id="c4l-n9-NMZ">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Comment" rowHeight="70" id="c4l-n9-NMZ" customClass="CommentCell">
                                         <rect key="frame" x="0.0" y="342" width="320" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="c4l-n9-NMZ" id="kql-nz-EgN">
@@ -784,6 +784,12 @@
                                                 <constraint firstItem="TZH-uR-INw" firstAttribute="leading" secondItem="sPf-oa-RJs" secondAttribute="trailing" constant="8" id="uFn-ns-xuu"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="commentText" destination="TZH-uR-INw" id="kJ0-3B-dXb"/>
+                                            <outlet property="rating" destination="Nl4-9n-YLe" id="FbC-BY-YbQ"/>
+                                            <outlet property="replies" destination="mi0-fH-S2H" id="aMX-uk-MzH"/>
+                                            <outlet property="userImage" destination="sPf-oa-RJs" id="pvw-77-3zr"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
