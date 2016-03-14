@@ -20,6 +20,10 @@ fun bindingBuilder(controller: UIViewController? = null, init: BindingBuild.() -
 
 class BindingBuild(private val controller: UIViewController?) {
 
+    fun <T> bind(source: Binding<T>, destination: Binding<T>) {
+        subscribe(source) { destination.value = it }
+    }
+
     fun refreshControl(view: UIRefreshControl, binding: Binding<Boolean>) {
         subscribe(binding) {
             if (it) view.beginRefreshing()

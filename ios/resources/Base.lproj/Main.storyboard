@@ -474,26 +474,49 @@
                                 <rect key="frame" x="142" y="246" width="37" height="37"/>
                                 <color key="color" red="0.94509803920000002" green="0.58823529409999997" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
                             </activityIndicatorView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hj3-rR-kKH">
-                                <rect key="frame" x="0.0" y="476" width="320" height="54"/>
-                                <color key="backgroundColor" red="0.8862745098" green="0.53333333329999999" blue="0.18039215689999999" alpha="1" colorSpace="calibratedRGB"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="faw-hk-0Ne" customClass="Snackbar">
+                                <rect key="frame" x="0.0" y="480" width="320" height="50"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hj3-rR-kKH">
+                                        <rect key="frame" x="240" y="5" width="60" height="40"/>
+                                        <color key="backgroundColor" red="0.1960784314" green="0.19215686269999999" blue="0.1843137255" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="60" id="4kz-Vh-dv2"/>
+                                            <constraint firstAttribute="height" constant="40" id="lAi-Nb-jB6"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                        <state key="normal" title="APPLY">
+                                            <color key="titleColor" red="0.92549019607843142" green="0.53725490196078429" blue="0.16470588235294117" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Has new posts" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hwk-hN-3xH">
+                                        <rect key="frame" x="20" y="15" width="106" height="20"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="16"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.19607843137254902" green="0.19215686274509805" blue="0.18431372549019609" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="54" id="xLs-jz-PBo"/>
+                                    <constraint firstItem="hwk-hN-3xH" firstAttribute="centerY" secondItem="faw-hk-0Ne" secondAttribute="centerY" id="Bdg-BQ-yLD"/>
+                                    <constraint firstAttribute="height" constant="50" id="J6U-52-VRo"/>
+                                    <constraint firstAttribute="trailing" secondItem="Hj3-rR-kKH" secondAttribute="trailing" constant="20" id="LRU-SV-X1a"/>
+                                    <constraint firstItem="hwk-hN-3xH" firstAttribute="leading" secondItem="faw-hk-0Ne" secondAttribute="leading" constant="20" id="TUz-f9-Q9n"/>
+                                    <constraint firstItem="Hj3-rR-kKH" firstAttribute="centerY" secondItem="faw-hk-0Ne" secondAttribute="centerY" id="rJ3-jC-Myb"/>
                                 </constraints>
-                                <state key="normal" title="Has new posts"/>
-                            </button>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.97647058823529409" green="0.97647058823529409" blue="0.97647058823529409" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="Hj3-rR-kKH" secondAttribute="trailing" id="DpI-Fs-GZA"/>
-                            <constraint firstItem="GRf-jy-2iC" firstAttribute="top" secondItem="Hj3-rR-kKH" secondAttribute="bottom" id="ENf-Bq-Mi4"/>
                             <constraint firstItem="GRf-jy-2iC" firstAttribute="top" secondItem="3Tb-xx-2IX" secondAttribute="bottom" id="Kwl-Uu-coX"/>
                             <constraint firstItem="3Tb-xx-2IX" firstAttribute="top" secondItem="xOT-TG-81E" secondAttribute="top" id="LgE-Yb-0wv"/>
                             <constraint firstItem="jCg-BN-mSk" firstAttribute="centerY" secondItem="xOT-TG-81E" secondAttribute="centerY" id="Q90-bs-NG2"/>
                             <constraint firstAttribute="trailing" secondItem="3Tb-xx-2IX" secondAttribute="trailing" id="YTv-W7-luc"/>
                             <constraint firstItem="3Tb-xx-2IX" firstAttribute="leading" secondItem="xOT-TG-81E" secondAttribute="leading" id="d3f-iN-JDw"/>
+                            <constraint firstItem="faw-hk-0Ne" firstAttribute="leading" secondItem="xOT-TG-81E" secondAttribute="leading" id="dgR-pq-mjM"/>
+                            <constraint firstItem="GRf-jy-2iC" firstAttribute="top" secondItem="faw-hk-0Ne" secondAttribute="bottom" id="fu6-WC-JdW"/>
+                            <constraint firstAttribute="trailing" secondItem="faw-hk-0Ne" secondAttribute="trailing" id="ikI-MZ-91p"/>
                             <constraint firstItem="jCg-BN-mSk" firstAttribute="centerX" secondItem="xOT-TG-81E" secondAttribute="centerX" id="sNQ-0h-2Pj"/>
-                            <constraint firstItem="Hj3-rR-kKH" firstAttribute="leading" secondItem="xOT-TG-81E" secondAttribute="leading" id="ueP-jg-kFR"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Featured" id="P8z-RY-c2R">
@@ -502,7 +525,8 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="530"/>
                     <connections>
-                        <outlet property="applyButton" destination="Hj3-rR-kKH" id="cq8-Gx-xHh"/>
+                        <outlet property="applyButton" destination="Hj3-rR-kKH" id="427-4A-X7e"/>
+                        <outlet property="hasNewPosts" destination="faw-hk-0Ne" id="KOI-Ae-EA8"/>
                         <outlet property="list" destination="3Tb-xx-2IX" id="Oim-ws-X1H"/>
                         <outlet property="progressView" destination="jCg-BN-mSk" id="c23-uT-4O0"/>
                     </connections>

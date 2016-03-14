@@ -11,6 +11,7 @@ import y2k.joyreactor.model.Post
 import y2k.joyreactor.platform.ImageRequest
 import y2k.joyreactor.platform.StoryboardNavigation
 import y2k.joyreactor.viewmodel.PostListViewModel
+import y2k.joyreactor.widget.Snackbar
 
 /**
  * Created by y2k on 9/26/15.
@@ -21,6 +22,7 @@ class PostListViewController : BaseUIViewController() {
     @IBOutlet lateinit var list: UITableView
     @IBOutlet lateinit var progressView: UIActivityIndicatorView
     @IBOutlet lateinit var applyButton: UIButton
+    @IBOutlet lateinit var hasNewPosts: Snackbar
 
     override fun viewDidLoad() {
         super.viewDidLoad()
@@ -36,8 +38,10 @@ class PostListViewController : BaseUIViewController() {
         bindingBuilder(this) {
             refreshControl(refresher, vm.isBusy)
             action(vm.hasNewPosts) { BottomButton(applyButton).setHidden(!it) }
-            command(applyButton) { vm.applyNew() }
             indicatorView(progressView, vm.isBusy)
+
+            command(applyButton) { vm.applyNew() }
+            bind(vm.hasNewPosts, hasNewPosts.visible)
 
             navigationItem {
                 rightCommand {
