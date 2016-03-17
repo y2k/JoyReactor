@@ -14,7 +14,7 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
         setSupportActionBar(find<Toolbar>(R.id.toolbar))
-        supportActionBar.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val vm = ServiceLocator.resolve<ProfileViewModel>()
         bindingBuilder(this) {

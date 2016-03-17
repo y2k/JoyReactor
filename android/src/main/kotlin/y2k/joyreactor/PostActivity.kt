@@ -15,7 +15,7 @@ class PostActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post)
         setSupportActionBar(find<Toolbar>(R.id.toolbar))
-        supportActionBar.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val vm = ServiceLocator.resolve<PostViewModel>()
         bindingBuilder(this) {

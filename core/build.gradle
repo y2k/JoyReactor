@@ -8,15 +8,10 @@ buildscript {
     }
 }
 
-//plugins {
-//    id "me.tatarka.retrolambda" version "3.2.2"
-//}
 apply plugin: 'java'
 apply plugin: 'kotlin'
 
 version 'unspecified'
-//sourceCompatibility = 1.8
-//targetCompatibility = 1.8
 
 repositories {
     jcenter()

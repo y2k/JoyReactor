@@ -13,7 +13,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         setSupportActionBar(findViewById(R.id.toolbar) as Toolbar)
-        supportActionBar.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val vm = ServiceLocator.resolve<LoginViewModel>()
         bindingBuilder(this) {

@@ -44,7 +44,7 @@ class UpdateFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        view.isVisible = false
-        service.checkHasUpdates().subscribeOnMain { view.isVisible = it }
+        view?.isVisible = false
+        service.checkHasUpdates().subscribeOnMain { view?.isVisible = it }
     }
 }

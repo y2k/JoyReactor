@@ -1,10 +1,11 @@
 package y2k.joyreactor.services.synchronizers
 
 import rx.Observable
+import y2k.joyreactor.common.toArrayList
+import y2k.joyreactor.common.unionOrdered
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.model.Tag
 import y2k.joyreactor.model.TagPost
-import y2k.joyreactor.common.unionOrdered
 import y2k.joyreactor.services.repository.DataContext
 import java.util.*
 
