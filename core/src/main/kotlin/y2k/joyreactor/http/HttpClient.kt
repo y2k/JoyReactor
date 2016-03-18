@@ -4,8 +4,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import rx.Observable
-import y2k.joyreactor.common.ioObservable
 import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
@@ -23,7 +21,7 @@ open class HttpClient() {
     open fun downloadToFile(url: String, file: File, callback: ((Int, Int) -> Unit)?) {
         val request = Request.Builder().url(url).build()
         val response = client.newCall(request).execute()
-        if (!response.isSuccessful) throw IOException("Unexpected code " + response);
+        if (!response.isSuccessful) throw IOException("Unexpected code " + response)
 
         val contentLength = response.body().contentLength().toInt()
         response.body().byteStream().use { inStream ->
