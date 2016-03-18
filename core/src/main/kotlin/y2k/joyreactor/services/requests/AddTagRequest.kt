@@ -8,14 +8,14 @@ import java.net.URLEncoder
 /**
  * Created by y2k on 19/10/15.
  */
-class AddTagRequest() {
+class AddTagRequest(private val httpClient: HttpClient) {
 
     fun request(tagName: String): Completable {
         return ioUnitObservable {
             val tagUrl = "http://joyreactor.cc/tag/" + URLEncoder.encode(tagName)
-            val tagPage = HttpClient.instance.getDocument(tagUrl)
+            val tagPage = httpClient.getDocument(tagUrl)
             val addTagLink = tagPage.select("a.change_favorite_link").first().absUrl("href")
-            HttpClient.instance.getText(addTagLink)
+            httpClient.getText(addTagLink)
         }.toCompletable()
     }
 }

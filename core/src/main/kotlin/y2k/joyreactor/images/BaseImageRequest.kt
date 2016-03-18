@@ -2,8 +2,10 @@ package y2k.joyreactor.images
 
 import rx.Observable
 import rx.Subscription
-import y2k.joyreactor.model.Image
 import y2k.joyreactor.common.ForegroundScheduler
+import y2k.joyreactor.common.ServiceLocator
+import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.model.Image
 import java.io.File
 import java.util.*
 
@@ -37,19 +39,19 @@ abstract class BaseImageRequest<T> {
         }
 
         subscription = getFromCache()
-                .flatMap({ image ->
-                    if (image != null) Observable.just<T>(image)
-                    else putToCache().flatMap { getFromCache() }
-                })
-                .observeOn(ForegroundScheduler.instance)
-                .filter { sLinks[target] === subscription }
-                .subscribe({
-                    callback(it);
-                    sLinks.remove(target)
-                }, {
-                    it.printStackTrace();
-                    sLinks.remove(target)
-                })
+            .flatMap({ image ->
+                if (image != null) Observable.just<T>(image)
+                else putToCache().flatMap { getFromCache() }
+            })
+            .observeOn(ForegroundScheduler.instance)
+            .filter { sLinks[target] === subscription }
+            .subscribe({
+                callback(it);
+                sLinks.remove(target)
+            }, {
+                it.printStackTrace();
+                sLinks.remove(target)
+            })
 
         callback(null)
         sLinks.put(target, subscription!!)
@@ -61,9 +63,10 @@ abstract class BaseImageRequest<T> {
 
     private fun putToCache(): Observable<Any> {
         val dir = sDiskCache.cacheDirectory
-        return MultiTryDownloader(dir, toURLString())
-                .downloadAsync()
-                .flatMap({ s -> sDiskCache.put(s, toURLString()) })
+        val client = ServiceLocator.resolve<HttpClient>()
+        return MultiTryDownloader(client, dir, toURLString())
+            .downloadAsync()
+            .flatMap({ s -> sDiskCache.put(s, toURLString()) })
     }
 
     private fun toURLString(): String {

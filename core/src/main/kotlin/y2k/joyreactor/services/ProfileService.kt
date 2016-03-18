@@ -11,6 +11,7 @@ import y2k.joyreactor.services.requests.ProfileRequestFactory
  * Created by y2k on 11/25/15.
  */
 class ProfileService(
+    private val httpClient: HttpClient,
     private val profileRequestFactory: ProfileRequestFactory,
     private val loginRequestFactory: LoginRequestFactory) {
 
@@ -23,7 +24,7 @@ class ProfileService(
     }
 
     fun logout(): Observable<Unit> {
-        return ioObservable { HttpClient.instance.clearCookies() }
+        return ioObservable { httpClient.clearCookies() }
     }
 
     fun isAuthorized(): Observable<Boolean> {

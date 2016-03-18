@@ -163,8 +163,6 @@ open class HttpClient() {
 
     companion object {
 
-        var instance = HttpClient()
-
         private val sCookies = CookieStorage()
     }
 }

@@ -17,6 +17,12 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
                   private val buffer: MemoryBuffer,
                   private val dataContext: DataContext.Factory) {
 
+    fun getVideo(postId: String): Observable<File> {
+        return getFromCache(postId)
+            .map { it.image!!.fullUrl("mp4") }
+            .flatMap { imageRequestFactory.request(it) }
+    }
+
     fun synchronizePostAsync(postId: String): Observable<Post> {
         return ioObservable {
             postRequest.request(postId);

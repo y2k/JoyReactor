@@ -1,21 +1,21 @@
 package y2k.joyreactor.services.requests
 
-import y2k.joyreactor.model.Message
 import y2k.joyreactor.http.HttpClient
-import java.lang.Long
+import y2k.joyreactor.model.Message
 import java.util.*
 
 /**
  * Created by y2k on 11/17/15.
  */
 class MessageListRequest(
+    private val httpClient: HttpClient,
     private val imageRequest: UserImageRequest) {
 
     fun getMessages(page: String?): Pair<List<Message>, String?> {
         val messages = ArrayList<Message>()
 
         val url = page ?: "http://joyreactor.cc/private/list"
-        val document = HttpClient.instance.getDocument(url)
+        val document = httpClient.getDocument(url)
 
         for (s in document.select("div.messages_wr > div.article")) {
             val username = s.select("div.mess_from > a").text()

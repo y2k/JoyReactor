@@ -2,23 +2,23 @@ package y2k.joyreactor.services.requests
 
 import org.jsoup.nodes.Document
 import rx.Observable
-import y2k.joyreactor.model.Image
-import y2k.joyreactor.model.Profile
 import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.model.Image
+import y2k.joyreactor.model.Profile
 import java.util.regex.Pattern
 
 /**
  * Created by y2k on 19/10/15.
  */
-class ProfileRequestFactory {
+class ProfileRequestFactory(private val httpClient: HttpClient) {
 
     fun request(): Observable<Profile> {
-        return UserNameRequest()
+        return UserNameRequest(httpClient)
             .request()
             .flatMap { username ->
                 ioObservable {
-                    val page = HttpClient.instance.getDocument(getUrl(username))
+                    val page = httpClient.getDocument(getUrl(username))
                     ProfileParser(page).parse()
                 }
             }

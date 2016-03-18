@@ -13,13 +13,13 @@ import java.util.regex.Pattern
 /**
  * Created by y2k on 9/26/15.
  */
-class PostsForTagRequest {
+class PostsForTagRequest(private val httpClient: HttpClient) {
 
     fun requestAsync(tagId: Tag, pageId: String? = null): Observable<Data> {
         return Observable
             .fromCallable {
                 val url = UrlBuilder().build(tagId, pageId)
-                val doc = HttpClient.instance.getDocument(url)
+                val doc = httpClient.getDocument(url)
 
                 val posts = ArrayList<Post>()
                 for (e in doc.select("div.postContainer"))

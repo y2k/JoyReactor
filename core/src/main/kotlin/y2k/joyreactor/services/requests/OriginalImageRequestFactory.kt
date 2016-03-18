@@ -13,14 +13,14 @@ import java.util.regex.Pattern
 /**
  * Created by y2k on 16/10/15.
  */
-class OriginalImageRequestFactory {
+class OriginalImageRequestFactory(private val httpClient: HttpClient) {
 
     fun request(imageUrl: String): Observable<File> {
         return ioObservable {
             val file = File(Platform.instance.currentDirectory, "" + imageUrl.hashCode() + "." + getExtension(imageUrl))
             if (!file.exists()) {
                 try {
-                    HttpClient.instance.downloadToFile(imageUrl, file, null)
+                    httpClient.downloadToFile(imageUrl, file, null)
                 } catch (e: Exception) {
                     file.delete()
                     throw e
@@ -37,7 +37,7 @@ class OriginalImageRequestFactory {
             if (file.exists()) subscriber.onNext(PartialResult.complete(file))
 
             try {
-                HttpClient.instance.downloadToFile(imageUrl, file) {
+                httpClient.downloadToFile(imageUrl, file) {
                     progress, max ->
                     subscriber.onNext(PartialResult.inProgress<File>(progress, max))
                 }

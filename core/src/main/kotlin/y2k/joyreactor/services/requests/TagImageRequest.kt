@@ -7,7 +7,7 @@ import java.net.URLEncoder
 /**
  * Created by y2k on 10/18/15.
  */
-class TagImageRequest {
+class TagImageRequest(private val httpClient: HttpClient) {
 
     private val cache = PersistentMap("tag-images.1.dat")
 
@@ -31,7 +31,7 @@ class TagImageRequest {
     }
 
     private fun getFromWeb(tag: String): String {
-        val doc = HttpClient.instance.getDocument("http://joyreactor.cc/tag/" + URLEncoder.encode(tag))
+        val doc = httpClient.getDocument("http://joyreactor.cc/tag/" + URLEncoder.encode(tag))
         val result = doc.select("img.blog_avatar").first().attr("src")
         println("Not found in cache | $tag | $result")
         return result

@@ -7,11 +7,11 @@ import y2k.joyreactor.http.HttpClient
 /**
  * Created by y2k on 9/30/15.
  */
-class LoginRequestFactory {
+class LoginRequestFactory(private val httpClient: HttpClient) {
 
     fun request(username: String, password: String): Observable<Unit> {
         return ioObservable {
-            val doc = HttpClient.instance
+            val doc = httpClient
                 .beginForm()
                 .put("signin[username]", username)
                 .put("signin[password]", password)
@@ -28,7 +28,7 @@ class LoginRequestFactory {
     }
 
     private fun getCsrf(): String {
-        val document = HttpClient.instance.getDocument("http://joyreactor.cc/login")
+        val document = httpClient.getDocument("http://joyreactor.cc/login")
         return document.getElementById("signin__csrf_token").attr("value")
     }
 }

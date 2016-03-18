@@ -11,14 +11,17 @@ import java.util.*
 /**
  * Created by y2k on 11/25/15.
  */
-class MyTagFetcher(private val dataContext: DataContext.Factory) {
+class MyTagFetcher(
+    private val userNameRequest: UserNameRequest,
+    private val tagsForUserRequest: TagsForUserRequest,
+    private val dataContext: DataContext.Factory) {
 
     fun synchronize(): Observable<Unit> {
-        return UserNameRequest()
+        return userNameRequest
             .request()
             .flatMap {
                 if (it == null) DefaultTagRequest().request()
-                else TagsForUserRequest(it).request()
+                else tagsForUserRequest.request(it)
             }
             .flatMap { newTags ->
                 dataContext.use { entities ->

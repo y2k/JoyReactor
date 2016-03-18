@@ -12,7 +12,10 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by y2k on 12/10/15.
  */
-internal class MultiTryDownloader(private val dir: File, private val url: String) {
+internal class MultiTryDownloader(
+    private val httpClient: HttpClient,
+    private val dir: File,
+    private val url: String) {
 
     fun downloadAsync(): Observable<File> {
         return Observable.create<File> { downloadAsync(0, it) }
@@ -36,7 +39,7 @@ internal class MultiTryDownloader(private val dir: File, private val url: String
         var result: File? = null
         try {
             result = File.createTempFile("download_", null, dir)
-            HttpClient.instance.downloadToFile(url, result, null)
+            httpClient.downloadToFile(url, result, null)
             return result
         } catch (e: IOException) {
             if (result != null) result.delete()

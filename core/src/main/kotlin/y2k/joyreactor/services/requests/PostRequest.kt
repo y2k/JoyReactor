@@ -1,6 +1,5 @@
 package y2k.joyreactor.services.requests
 
-import y2k.joyreactor.*
 import y2k.joyreactor.http.HttpClient
 import y2k.joyreactor.model.*
 import java.util.*
@@ -9,7 +8,7 @@ import java.util.regex.Pattern
 /**
  * Created by y2k on 11/21/15.
  */
-class PostRequest {
+class PostRequest(private val httpClient: HttpClient) {
 
     var post: Post? = null
         private set
@@ -25,7 +24,7 @@ class PostRequest {
         get() = commentsRequest.comments
 
     fun request(postId: String) {
-        val page = HttpClient.instance.getDocument(getPostUrl(postId))
+        val page = httpClient.getDocument(getPostUrl(postId))
 
         val postNode = page.select("div.postContainer").first()
         post = PostsForTagRequest.newPost(postNode) // TODO:
