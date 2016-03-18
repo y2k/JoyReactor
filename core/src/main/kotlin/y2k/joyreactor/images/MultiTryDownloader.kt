@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 internal class MultiTryDownloader(private val dir: File, private val url: String) {
 
     fun downloadAsync(): Observable<File> {
-        return Observable.create<File> { subscriber -> downloadAsync(0, subscriber) }
+        return Observable.create<File> { downloadAsync(0, it) }
     }
 
     private fun downloadAsync(tryNumber: Int, subscriber: Subscriber<in File>) {
@@ -25,10 +25,8 @@ internal class MultiTryDownloader(private val dir: File, private val url: String
                     subscriber.onNext(downloadToTempFile())
                     subscriber.onCompleted()
                 } catch (e: Exception) {
-                    if (tryNumber >= MAX_RETRY)
-                        subscriber.onError(e)
-                    else
-                        downloadAsync(tryNumber + 1, subscriber)
+                    if (tryNumber >= MAX_RETRY) subscriber.onError(e)
+                    else downloadAsync(tryNumber + 1, subscriber)
                 }
             }
         }, 250L shl tryNumber, TimeUnit.MILLISECONDS)

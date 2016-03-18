@@ -1,13 +1,12 @@
 package y2k.joyreactor.http
 
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import rx.Observable
 import y2k.joyreactor.common.ioObservable
-import java.io.BufferedReader
-import java.io.File
-import java.io.InputStream
-import java.io.InputStreamReader
+import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
@@ -17,11 +16,17 @@ import java.util.zip.GZIPInputStream
 /**
  * Created by y2k on 9/29/15.
  */
-open class HttpClient protected constructor() {
+open class HttpClient() {
+
+    private val client = OkHttpClient()
 
     open fun downloadToFile(url: String, file: File, callback: ((Int, Int) -> Unit)?) {
-        val connection = URL(url).openConnection()
-        connection.inputStream.use { inStream ->
+        val request = Request.Builder().url(url).build()
+        val response = client.newCall(request).execute()
+        if (!response.isSuccessful) throw IOException("Unexpected code " + response);
+
+        val contentLength = response.body().contentLength().toInt()
+        response.body().byteStream().use { inStream ->
             file.outputStream().use { outStream ->
                 val buf = ByteArray(4 * 1024)
                 var count: Int
@@ -29,7 +34,7 @@ open class HttpClient protected constructor() {
                 var lastCallTime: Long = 0
 
                 while (true) {
-                    count = inStream!!.read(buf)
+                    count = inStream.read(buf)
                     if (count == -1) break;
 
                     outStream.write(buf, 0, count)
@@ -37,7 +42,7 @@ open class HttpClient protected constructor() {
                     if (callback != null) {
                         transfer += count
                         if (System.currentTimeMillis() - lastCallTime > 1000 / 60) {
-                            callback(transfer, connection.contentLength)
+                            callback(transfer, contentLength)
                             lastCallTime = System.currentTimeMillis()
                         }
                     }
@@ -68,10 +73,6 @@ open class HttpClient protected constructor() {
         }
     }
 
-    fun getDocumentAsync(url: String): Observable<Document> {
-        return ioObservable { getDocument(url) }
-    }
-
     open fun getDocument(url: String): Document {
         var stream: InputStream? = null
         try {
@@ -97,8 +98,7 @@ open class HttpClient protected constructor() {
     }
 
     private fun createConnection(url: String): HttpURLConnection {
-        val conn: HttpURLConnection
-        conn = URL(url).openConnection() as HttpURLConnection
+        val conn = URL(url).openConnection() as HttpURLConnection
         conn.setRequestProperty("Accept-Encoding", "gzip")
         conn.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko")
         sCookies.attach(conn)
