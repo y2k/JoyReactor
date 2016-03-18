@@ -1,12 +1,11 @@
 package y2k.joyreactor.http
 
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import okhttp3.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import java.io.*
-import java.net.HttpURLConnection
-import java.net.URL
+import java.io.File
+import java.io.IOException
+import java.io.InputStream
 import java.net.URLEncoder
 import java.util.*
 import java.util.zip.GZIPInputStream
@@ -19,10 +18,7 @@ open class HttpClient() {
     private val client = OkHttpClient()
 
     open fun downloadToFile(url: String, file: File, callback: ((Int, Int) -> Unit)?) {
-        val request = Request.Builder().url(url).build()
-        val response = client.newCall(request).execute()
-        if (!response.isSuccessful) throw IOException("Unexpected code " + response)
-
+        val response = executeRequest(url)
         val contentLength = response.body().contentLength().toInt()
         response.body().byteStream().use { inStream ->
             file.outputStream().use { outStream ->
@@ -50,58 +46,41 @@ open class HttpClient() {
     }
 
     open fun getText(url: String): String {
-        var stream: InputStream? = null
-        try {
-            val conn = createConnection(url)
-            stream = getInputStream(conn)
-            sCookies.grab(conn)
-
-            val reader = BufferedReader(InputStreamReader(stream))
-            val buffer = StringBuilder()
-            var line: String
-
-            while (true) {
-                line = reader.readLine()
-                if (line == null) break;
-                buffer.append(line).append("\n")
-            }
-            return buffer.toString()
-        } finally {
-            if (stream != null) stream.close()
-        }
+        return executeRequest(url, true).body().string()
     }
 
     open fun getDocument(url: String): Document {
-        var stream: InputStream? = null
-        try {
-            val conn = createConnection(url)
-            stream = getInputStream(conn)
-            sCookies.grab(conn)
-            return Jsoup.parse(stream, "utf-8", url)
-        } finally {
-            if (stream != null) stream.close()
+        return executeRequest(url, true)
+            .gzip().use { Jsoup.parse(it, "utf-8", url) }
+    }
+
+    private fun executeRequest(url: String, isBrowser: Boolean = false, init: (Request.Builder.() -> Unit)? = null): Response {
+        val request = Request.Builder().url(url)
+            .header("Accept-Encoding", "gzip")
+        if (isBrowser) {
+            request.header("User-Agent", BrowserUserAgent)
+            sCookies.attach(request)
         }
+        if (init != null) request.init()
+
+        val response = client.newCall(request.build()).execute()
+        if (!response.isSuccessful) throw IOException("Unexpected code " + response)
+
+        if (isBrowser) sCookies.grab(response)
+        return response
     }
 
-    private fun getInputStream(connection: HttpURLConnection): InputStream {
-        var connection = connection
-        val redirect = connection.getHeaderField("Location")
-        if (redirect != null) {
-            connection.disconnect()
-            connection = createConnection(redirect)
-        }
-
-        val stream = if (connection.responseCode < 300) connection.inputStream else connection.errorStream
-        return if ("gzip" == connection.contentEncoding) GZIPInputStream(stream) else stream
-    }
-
-    private fun createConnection(url: String): HttpURLConnection {
-        val conn = URL(url).openConnection() as HttpURLConnection
-        conn.setRequestProperty("Accept-Encoding", "gzip")
-        conn.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko")
-        sCookies.attach(conn)
-        return conn
-    }
+    //    private fun getInputStream(connection: HttpURLConnection): InputStream {
+    //        var connection = connection
+    //        val redirect = connection.getHeaderField("Location")
+    //        if (redirect != null) {
+    //            connection.disconnect()
+    //            connection = createConnection(redirect)
+    //        }
+    //
+    //        val stream = if (connection.responseCode < 300) connection.inputStream else connection.errorStream
+    //        return if ("gzip" == connection.contentEncoding) GZIPInputStream(stream) else stream
+    //    }
 
     fun beginForm(): Form {
         return Form()
@@ -111,10 +90,14 @@ open class HttpClient() {
         sCookies.clear()
     }
 
+    private fun Response.gzip(): InputStream {
+        return if ("gzip" == header("Content-Encoding")) GZIPInputStream(body().byteStream()) else body().byteStream()
+    }
+
     inner class Form {
 
-        internal var form: MutableMap<String, String> = HashMap()
-        internal var headers: MutableMap<String, String> = HashMap()
+        private val form = HashMap<String, String>()
+        private val headers = HashMap<String, String>()
 
         fun put(key: String, value: String): Form {
             form.put(key, value)
@@ -127,40 +110,24 @@ open class HttpClient() {
         }
 
         fun send(url: String): Document {
-            val connection = createConnection(url)
-            connection.requestMethod = "POST"
-            connection.instanceFollowRedirects = false
-            connection.addRequestProperty("Content-Type", "application/x-www-form-urlencoded")
-            for (name in headers.keys)
-                connection.addRequestProperty(name, headers[name])
-            connection.outputStream.write(serializeForm())
-
-            // TODO:
-            var stream: InputStream? = null
-            try {
-                stream = getInputStream(connection)
-                sCookies.grab(connection)
-                return Jsoup.parse(stream, "utf-8", url)
-            } finally {
-                if (stream != null) stream.close()
+            var response = executeRequest(url, true) {
+                headers.forEach { header(it.key, it.value) }
+                post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"), serializeForm()))
             }
+            return response.gzip().use { Jsoup.parse(it, "utf-8", url) }
         }
 
         private fun serializeForm(): ByteArray {
-            val buffer = StringBuilder()
-            for (key in form.keys) {
-                buffer.append(key)
-                buffer.append("=")
-                buffer.append(URLEncoder.encode(form[key], "UTF-8"))
-                buffer.append("&")
-            }
-            buffer.replace(buffer.length - 1, buffer.length, "")
-            return buffer.toString().toByteArray()
+            return form
+                .map { it.key + "=" + URLEncoder.encode(it.value, "UTF-8") }
+                .joinToString (separator = "&")
+                .toByteArray()
         }
     }
 
     companion object {
 
+        private val BrowserUserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko"
         private val sCookies = CookieStorage()
     }
 }
