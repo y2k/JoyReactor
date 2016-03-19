@@ -13,9 +13,11 @@ import java.util.zip.GZIPInputStream
 /**
  * Created by y2k on 9/29/15.
  */
-open class HttpClient() {
+open class HttpClient(private val cookies: CookieStorage) {
 
-    private val client = OkHttpClient()
+    private val client = OkHttpClient.Builder()
+        .addNetworkInterceptor { cookies.grab(it.proceed(it.request())) }
+        .build()
 
     open fun downloadToFile(url: String, file: File, callback: ((Int, Int) -> Unit)?) {
         val response = executeRequest(url)
@@ -50,47 +52,32 @@ open class HttpClient() {
     }
 
     open fun getDocument(url: String): Document {
-        return executeRequest(url, true)
-            .gzip().use { Jsoup.parse(it, "utf-8", url) }
+        return executeRequest(url, true).stream().use { Jsoup.parse(it, "utf-8", url) }
     }
 
     private fun executeRequest(url: String, isBrowser: Boolean = false, init: (Request.Builder.() -> Unit)? = null): Response {
         val request = Request.Builder().url(url)
             .header("Accept-Encoding", "gzip")
         if (isBrowser) {
-            request.header("User-Agent", BrowserUserAgent)
-            sCookies.attach(request)
+            request.header("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko")
+            cookies.attach(request)
         }
         if (init != null) request.init()
 
         val response = client.newCall(request.build()).execute()
-        if (!response.isSuccessful) throw IOException("Unexpected code " + response)
-
-        if (isBrowser) sCookies.grab(response)
+        if (response.code() >= 400 && response.code() != 401) throw IOException("Unexpected code " + response)
         return response
     }
-
-    //    private fun getInputStream(connection: HttpURLConnection): InputStream {
-    //        var connection = connection
-    //        val redirect = connection.getHeaderField("Location")
-    //        if (redirect != null) {
-    //            connection.disconnect()
-    //            connection = createConnection(redirect)
-    //        }
-    //
-    //        val stream = if (connection.responseCode < 300) connection.inputStream else connection.errorStream
-    //        return if ("gzip" == connection.contentEncoding) GZIPInputStream(stream) else stream
-    //    }
 
     fun beginForm(): Form {
         return Form()
     }
 
     fun clearCookies() {
-        sCookies.clear()
+        cookies.clear()
     }
 
-    private fun Response.gzip(): InputStream {
+    private fun Response.stream(): InputStream {
         return if ("gzip" == header("Content-Encoding")) GZIPInputStream(body().byteStream()) else body().byteStream()
     }
 
@@ -114,7 +101,7 @@ open class HttpClient() {
                 headers.forEach { header(it.key, it.value) }
                 post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"), serializeForm()))
             }
-            return response.gzip().use { Jsoup.parse(it, "utf-8", url) }
+            return response.stream().use { Jsoup.parse(it, "utf-8", url) }
         }
 
         private fun serializeForm(): ByteArray {
@@ -123,11 +110,5 @@ open class HttpClient() {
                 .joinToString (separator = "&")
                 .toByteArray()
         }
-    }
-
-    companion object {
-
-        private val BrowserUserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko"
-        private val sCookies = CookieStorage()
     }
 }
