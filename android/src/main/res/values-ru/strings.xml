@@ -70,4 +70,7 @@
     <string name="post_images">Картинки поста</string>
     <string name="similar_posts">Похожие посты</string>
     <string name="comments">Комментарии</string>
+    <string name="good">Хорошее</string>
+    <string name="Best">Лутшее</string>
+    <string name="New">Новое</string>
 </resources>

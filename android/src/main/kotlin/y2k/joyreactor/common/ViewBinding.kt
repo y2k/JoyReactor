@@ -71,6 +71,14 @@ class BindingBuilder(root: ViewResolver) {
     //        binding.subscribe { view.isRefreshing = it }
     //    }
 
+    fun radioGroup(id: Int, binding: Binding<Int>) {
+        val view = find<RadioGroup>(id)
+        binding.subscribe { (view.getChildAt(it) as RadioButton).isChecked = true }
+        view.setOnCheckedChangeListener { group, id ->
+            view.getChildren().map { it as RadioButton }.indexOfFirst { it.isChecked }
+        }
+    }
+
     fun <T> animator(id: Int, binding: Binding<T>, convert: (T) -> Int) {
         val view = find<ViewAnimator>(id)
         binding.subscribe { view.displayedChild = convert(it) }

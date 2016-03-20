@@ -42,4 +42,39 @@
               android:textAllCaps="true"
               android:visibility="gone"
               android:text="@string/unknown_error"/>
+    <RadioGroup
+            android:id="@+id/tagMode"
+            app:layout_behavior="y2k.joyreactor.common.BottomBarBehaviour"
+            android:orientation="horizontal"
+            android:layout_gravity="bottom"
+            android:layout_width="match_parent"
+            android:layout_height="56dp">
+        <RadioButton
+                android:background="@drawable/tab_background"
+                android:text="@string/good"
+                android:gravity="center"
+                android:button="@android:color/transparent"
+                android:textColor="@android:color/white"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+        <RadioButton
+                android:background="@drawable/tab_background"
+                android:text="@string/Best"
+                android:button="@android:color/transparent"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+        <RadioButton
+                android:background="@drawable/tab_background"
+                android:text="@string/New"
+                android:button="@android:color/transparent"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+    </RadioGroup>
 </android.support.design.widget.CoordinatorLayout>

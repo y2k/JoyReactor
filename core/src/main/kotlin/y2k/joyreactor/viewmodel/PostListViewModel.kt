@@ -5,6 +5,7 @@ import y2k.joyreactor.common.binding
 import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.model.Tag
+import y2k.joyreactor.model.TagListType
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
@@ -22,6 +23,7 @@ class PostListViewModel(
     val isBusy = binding(false)
     val posts = binding(emptyList<Post?>())
     val hasNewPosts = binding(false)
+    val mode = binding(0)
 
     init {
         lifeCycleService.add(BroadcastService.TagSelected::class) { currentTagChanged(it.tag) }

@@ -71,4 +71,7 @@
     <string name="post_images">Post images</string>
     <string name="similar_posts">Similar posts</string>
     <string name="comments">Comments</string>
+    <string name="good">Good</string>
+    <string name="Best">Best</string>
+    <string name="New">New</string>
 </resources>
