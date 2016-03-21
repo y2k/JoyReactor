@@ -1,9 +1,11 @@
 package y2k.joyreactor.services
 
+import rx.Completable
 import rx.Observable
+import rx.subjects.PublishSubject
+import y2k.joyreactor.common.peek
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.model.Tag
-import y2k.joyreactor.common.peek
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.PostsForTagRequest
 import y2k.joyreactor.services.synchronizers.PostMerger
@@ -18,8 +20,7 @@ class TagService(private val dataContext: DataContext.Factory,
     private lateinit var tag: Tag
     private @Volatile lateinit var lastPage: PostsForTagRequest.Data
 
-    val divider: Int?
-        get() = merger.divider
+    private var currentSubscription = PublishSubject.create<Pair<List<Post>, Int?>>()
 
     fun setTag(tag: Tag) {
         this.tag = tag
@@ -29,19 +30,25 @@ class TagService(private val dataContext: DataContext.Factory,
         return requestAsync().flatMap { merger.isUnsafeUpdate(tag, it.posts) }
     }
 
-    fun applyNew(): Observable<List<Post>> {
+    fun queryAsync(tag: Tag): Observable<Pair<List<Post>, Int?>> {
+        return currentSubscription!!
+    }
+
+    fun applyNew(): Completable {
         return merger
             .mergeFirstPage(tag, lastPage.posts)
-            .flatMap { getFromRepository() }
+            .doOnNext { notifyDataChanged() }
+            .toCompletable()
     }
 
-    fun loadNextPage(): Observable<List<Post>> {
+    fun loadNextPage(): Completable {
         return requestAsync(lastPage.nextPage)
             .flatMap { merger.mergeNextPage(tag, it.posts) }
-            .flatMap { getFromRepository() }
+            .doOnNext { notifyDataChanged() }
+            .toCompletable()
     }
 
-    fun reloadFirstPage(): Observable<List<Post>> {
+    fun reloadFirstPage(): Completable {
         return requestAsync()
             .flatMap { data ->
                 dataContext
@@ -54,24 +61,24 @@ class TagService(private val dataContext: DataContext.Factory,
                     .map { data }
             }
             .flatMap { merger.mergeFirstPage(tag, it.posts) }
-            .flatMap { getFromRepository() }
+            .doOnNext { notifyDataChanged() }
+            .toCompletable()
+    }
+
+    private fun notifyDataChanged() {
+        dataContext
+            .applyUse {
+                TagPosts
+                    .filter { it.tagId == tag.id }
+                    .map { link -> Posts.first { it.id == link.postId } }
+            }
+            .map { it to merger.divider }
+            .subscribe { currentSubscription?.onNext(it) }
     }
 
     fun requestAsync(page: String? = null): Observable<PostsForTagRequest.Data> {
         return postsRequest
             .requestAsync(tag, page)
             .peek { lastPage = it }
-    }
-
-    fun queryAsync(): Observable<List<Post>> {
-        return getFromRepository()
-    }
-
-    private fun getFromRepository(): Observable<List<Post>> {
-        return dataContext.use { entities ->
-            entities.TagPosts
-                .filter { it.tagId == tag.id }
-                .map { link -> entities.Posts.first { it.id == link.postId } }
-        }
     }
 }

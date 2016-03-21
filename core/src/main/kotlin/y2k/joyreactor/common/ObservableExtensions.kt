@@ -41,6 +41,10 @@ fun Completable.subscribeOnMain(onComplete: () -> Unit, onError: (Throwable) -> 
     return observeOn(ForegroundScheduler.instance).subscribe(onError, onComplete)
 }
 
+fun Completable.subscribeOnMain(onComplete: () -> Unit): Subscription {
+    return observeOn(ForegroundScheduler.instance).subscribe({ it.printStackTrace() }, onComplete)
+}
+
 fun <T> Observable<T>.subscribeOnMain(onNext: (T) -> Unit, onError: (Throwable) -> Unit): Subscription {
     return observeOn(ForegroundScheduler.instance).subscribe(onNext, onError)
 }

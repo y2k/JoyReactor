@@ -1,11 +1,10 @@
 package y2k.joyreactor.viewmodel
 
-import rx.Observable
+import rx.Subscription
 import y2k.joyreactor.common.binding
 import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.model.Tag
-import y2k.joyreactor.model.TagListType
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
@@ -23,19 +22,28 @@ class PostListViewModel(
     val isBusy = binding(false)
     val posts = binding(emptyList<Post?>())
     val hasNewPosts = binding(false)
-    val mode = binding(0)
+    val tagMode = binding(0)
+
+    var postsSubscription: Subscription? = null
 
     init {
-        lifeCycleService.add(BroadcastService.TagSelected::class) { currentTagChanged(it.tag) }
-        currentTagChanged(Tag.makeFeatured())
+        lifeCycleService.add(BroadcastService.TagSelected::class) { setCurrentTag(it.tag) }
+        setCurrentTag(Tag.makeFeatured())
     }
 
-    private fun currentTagChanged(newTag: Tag) {
+    private fun setCurrentTag(newTag: Tag) {
+        postsSubscription?.unsubscribe()
+        postsSubscription = service
+            .queryAsync(Tag.makeFeatured())
+            .subscribeOnMain {
+                val postsWithDiv = ArrayList<Post?>(it.first)
+                it.second?.let { postsWithDiv.add(it, null) }
+                this.posts.value = postsWithDiv
+            }
+
         service.setTag(newTag)
 
         isBusy.value = true
-        getFromRepository().subscribeOnMain { reloadPosts(it, null) }
-
         service
             .preloadNewPosts()
             .subscribeOnMain { unsafeUpdate ->
@@ -46,22 +54,12 @@ class PostListViewModel(
     }
 
     fun applyNew() {
-        service.
-            applyNew()
-            .subscribeOnMain {
-                hasNewPosts.value = false
-                reloadPosts(it, service.divider)
-            }
+        service.applyNew().subscribeOnMain { hasNewPosts.value = false }
     }
 
     fun loadMore() {
         isBusy.value = true
-        service
-            .loadNextPage()
-            .subscribeOnMain {
-                reloadPosts(it, service.divider)
-                isBusy.value = false
-            }
+        service.loadNextPage().subscribeOnMain { isBusy.value = false }
     }
 
     fun reloadFirstPage() {
@@ -69,20 +67,9 @@ class PostListViewModel(
         service
             .reloadFirstPage()
             .subscribeOnMain {
-                reloadPosts(it, it.size)
                 isBusy.value = false
                 hasNewPosts.value = false
             }
-    }
-
-    private fun reloadPosts(posts: List<Post>, dividerPosition: Int?) {
-        val postsWithDiv = ArrayList<Post?>(posts)
-        if (dividerPosition != null) postsWithDiv.add(dividerPosition, null)
-        this.posts.value = postsWithDiv
-    }
-
-    private fun getFromRepository(): Observable<List<Post>> {
-        return service.queryAsync()
     }
 
     fun itemSelected(position: Int) {

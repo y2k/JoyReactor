@@ -22,7 +22,7 @@ class PostListFragment : BaseFragment() {
         view.find<RecyclerView>(R.id.list).apply { addItemDecoration(ItemDividerDecoration(this)) }
         val vm = ServiceLocator.resolve<PostListViewModel>(lifeCycleService)
         bindingBuilder(view) {
-            radioGroup(R.id.tagMode, vm.mode)
+            radioGroup(R.id.tagMode, vm.tagMode)
             visibility(R.id.tagMode, vm.hasNewPosts, true)
 
             visibility(R.id.apply, vm.hasNewPosts)
