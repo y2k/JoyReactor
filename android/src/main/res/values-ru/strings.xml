@@ -71,6 +71,6 @@
     <string name="similar_posts">Похожие посты</string>
     <string name="comments">Комментарии</string>
     <string name="good">Хорошее</string>
-    <string name="Best">Лутшее</string>
-    <string name="New">Новое</string>
+    <string name="best">Лутшее</string>
+    <string name="newPosts">Новое</string>
 </resources>

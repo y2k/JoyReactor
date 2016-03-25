@@ -8,6 +8,5 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="3dp"
         android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary"/>

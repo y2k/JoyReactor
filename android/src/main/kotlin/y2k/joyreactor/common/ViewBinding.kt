@@ -1,6 +1,7 @@
 package y2k.joyreactor.common
 
 import android.app.Activity
+import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.ContentLoadingProgressBar
 import android.support.v4.widget.SwipeRefreshLayout
@@ -70,6 +71,17 @@ class BindingBuilder(root: ViewResolver) {
     //        val view = root.find<SwipeRefreshLayout>(id)
     //        binding.subscribe { view.isRefreshing = it }
     //    }
+
+    fun tabLayout(id: Int, binding: Binding<Int>) {
+        val view = find<TabLayout>(id)
+        view.setOnTabSelectedListener(object : OnTabSelectedListenerAdapter() {
+
+            override fun onTabReselected(tab: TabLayout.Tab) {
+                binding.value = tab.position
+            }
+        })
+        binding.subscribe { view.getTabAt(it)?.select() }
+    }
 
     fun radioGroup(id: Int, binding: Binding<Int>) {
         val view = find<RadioGroup>(id)

@@ -72,6 +72,6 @@
     <string name="similar_posts">Similar posts</string>
     <string name="comments">Comments</string>
     <string name="good">Good</string>
-    <string name="Best">Best</string>
-    <string name="New">New</string>
+    <string name="best">Best</string>
+    <string name="newPosts">New</string>
 </resources>
