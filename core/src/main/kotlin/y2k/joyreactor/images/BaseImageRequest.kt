@@ -40,10 +40,7 @@ abstract class BaseImageRequest<T> {
         }
 
         subscription = getFromCache()
-            .flatMap {
-                if (it != null) Single.just<T>(it)
-                else putToCache().andThen(getFromCache())
-            }
+            .isEmpty(putToCache().andThen(getFromCache()))
             .observeOn(ForegroundScheduler.instance)
             .subscribe { result, e ->
                 if (sLinks[target] === subscription) {

@@ -10,6 +10,13 @@ import rx.schedulers.Schedulers
  * Created by y2k on 1/31/16.
  */
 
+fun <T> Single<T>.isEmpty(other: Single<T>): Single<T> {
+    return flatMap {
+        if (it != null) Single.just<T>(it)
+        else other
+    }
+}
+
 fun <T> Single<T>.toCompletable(): Completable {
     return Completable.fromSingle(this)
 }
