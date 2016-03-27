@@ -79,22 +79,22 @@ class PostListViewModel(
 
     fun postClicked(id: Long) {
         val post = posts.value.firstOrNull { it?.id == id } ?: return
-        navigationService.openPost(post.serverId)
+        navigationService.openPost(post.id)
     }
 
     fun postClicked(position: Int) {
-        navigationService.openPost(posts.value[position]!!.serverId)
+        navigationService.openPost(posts.value[position]!!.id)
     }
 
     fun playClicked(id: Long) {
         val post = posts.value.firstOrNull { it?.id == id } ?: return
-        if (post.image?.isAnimated ?: false) navigationService.openVideo(post.serverId)
-        else navigationService.openImageView(post.serverId)
+        if (post.image?.isAnimated ?: false) navigationService.openVideo(post.id)
+        else navigationService.openImageView(post.id)
     }
 
     fun playClicked(position: Int) {
         val post = posts.value[position]!!
-        if (post.image?.isAnimated ?: false) navigationService.openVideo(post.serverId)
-        else navigationService.openImageView(post.serverId)
+        if (post.image?.isAnimated ?: false) navigationService.openVideo(post.id)
+        else navigationService.openImageView(post.id)
     }
 }

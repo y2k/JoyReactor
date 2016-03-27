@@ -21,13 +21,18 @@ class DataSet<T : DataSet.Dto>(val name: String) : Iterable<T> {
         items.remove(element)
     }
 
-    fun add(element: T) {
-        if (element.id == 0L) element.id = (Math.random() * Long.MAX_VALUE).toLong()
-        items.add(element)
+    fun add(element: T): T {
+        val id = (Math.random() * Long.MAX_VALUE).toLong()
+        @Suppress("UNCHECKED_CAST")
+        val e = if (element.id == 0L) element.identify(id)  as T else element
+        items.add(e)
+        return e
     }
 
     interface Dto {
 
-        var id: Long
+        val id: Long
+
+        fun identify(newId: Long): Dto
     }
 }

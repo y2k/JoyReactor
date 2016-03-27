@@ -6,13 +6,16 @@ import java.io.Serializable
 /**
  * Created by y2k on 9/26/15.
  */
-class Tag(
+data class Tag(
     val serverId: String?,
     val title: String,
-    var isVisible: Boolean, // TODO: сделать val
-    val image: Image?) : Serializable, DataSet.Dto {
+    val isVisible: Boolean,
+    val image: Image?,
+    override val id: Long = 0) : Serializable, DataSet.Dto {
 
-    override var id: Long = 0
+    override fun identify(newId: Long): Tag {
+        return copy(id = newId)
+    }
 
     val username: String
         get() = serverId!!.substring(MARK_USERNAME.length)

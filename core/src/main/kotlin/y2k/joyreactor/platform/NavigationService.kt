@@ -15,13 +15,13 @@ interface NavigationService {
 
     fun closeAddTag()
 
-    fun openPost(postId: String)
+    fun openPost(postId: Long)
 
     fun openBrowser(url: String)
 
-    fun openVideo(postId: String)
+    fun openVideo(postId: Long)
 
-    fun openImageView(postId: String)
+    fun openImageView(postId: Long)
 
     fun openCreateComment()
 

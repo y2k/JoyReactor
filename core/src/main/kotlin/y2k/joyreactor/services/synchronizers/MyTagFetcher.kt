@@ -36,27 +36,18 @@ class MyTagFetcher(
     }
 
     private fun merge(oldTags: List<Tag>, newTags: List<Tag>): List<Tag> {
-        val result = ArrayList<Tag>()
-
-        for (s in oldTags) s.isVisible = false
-        for (s in newTags) s.isVisible = true
-
-        result.addAll(oldTags)
-        addOrReplaceAll(result, newTags)
-
-        return result
+        return addOrReplaceAll(
+            oldTags.map { it.copy(isVisible = false) },
+            newTags.map { it.copy(isVisible = true) })
     }
 
-    private fun addOrReplaceAll(left: MutableList<Tag>, right: List<Tag>) {
+    private fun addOrReplaceAll(left: List<Tag>, right: List<Tag>): List<Tag> {
+        val result = ArrayList<Tag>()
         for (tag in right) {
             val old = searchForServerId(left, tag.serverId)
-            if (old == null) {
-                left.add(tag)
-            } else {
-                tag.id = old.id
-                left[left.indexOf(old)] = tag
-            }
+            result.add(if (old == null) tag else tag.identify(old.id))
         }
+        return result
     }
 
     private fun searchForServerId(tags: List<Tag>, serverId: String?): Tag? {

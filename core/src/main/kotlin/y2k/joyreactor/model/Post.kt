@@ -7,18 +7,20 @@ import java.util.*
 /**
  * Created by y2k on 9/27/15.
  */
-class Post(
+data class Post(
     val title: String,
     val image: Image?,
     val userImage: String,
     val userName: String,
     val created: Date,
-    val serverId: String,
     val commentCount: Int,
     val rating: Float,
-    val tags: List<String>) : Serializable, Comparable<Post>, DataSet.Dto {
+    val tags: List<String>,
+    override val id: Long) : Serializable, Comparable<Post>, DataSet.Dto {
 
-    override var id: Long = 0
+    override fun identify(newId: Long): Post {
+        throw UnsupportedOperationException()
+    }
 
     // TODO:
     fun getUserImage2(): UserImage {

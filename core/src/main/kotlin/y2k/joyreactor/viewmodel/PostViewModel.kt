@@ -53,7 +53,7 @@ class PostViewModel(
                     }
 
                 service
-                    .mainImagePartial(post.serverId)
+                    .mainImagePartial(post.id)
                     .subscribeOnMain { poster.value = it }
 
                 //                userService
@@ -73,7 +73,7 @@ class PostViewModel(
         isBusy.value = true
         service
             .getFromCache(navigation.argument)
-            .flatMap { service.mainImage(it.serverId) }
+            .flatMap { service.mainImage(it.id) }
             .flatMap { Platform.instance.saveToGallery(it) }
             .subscribeOnMain { isBusy.value = false }
     }

@@ -133,10 +133,10 @@ class PostsForTagRequest(private val httpClient: HttpClient) {
                 element.select("div.uhead_nick > img").attr("src"),
                 element.select("div.uhead_nick > a").text(),
                 parser.created,
-                extractNumberFromEnd(element.id()),
                 parser.commentCount,
                 parser.rating,
-                element.select(".taglist a").map { it.text() })
+                element.select(".taglist a").map { it.text() },
+                extractNumberFromEnd(element.id()).toLong())
         }
 
         private fun extractNumberFromEnd(text: String): String {

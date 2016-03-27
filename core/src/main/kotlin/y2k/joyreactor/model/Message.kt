@@ -7,14 +7,17 @@ import java.util.*
 /**
  * Created by y2k on 10/1/15.
  */
-class Message(
+data class Message(
     val text: String,
     val date: Date,
     val isMine: Boolean,
     val userName: String,
-    val userImage: String?) : DataSet.Dto, Serializable {
+    val userImage: String?,
+    override val id: Long = 0) : DataSet.Dto, Serializable {
 
-    override var id: Long = 0
+    override fun identify(newId: Long): Message {
+        return copy(id = newId)
+    }
 
     fun getUserImageObject(): UserImage {
         return if (userImage == null) UserImage() else UserImage(userImage)

@@ -17,7 +17,7 @@ class ImageViewModel(service: PostService) {
     init {
         isBusy.value = true
         service
-            .mainImage(NavigationService.instance.argument)
+            .mainImage(NavigationService.instance.argument.toLong())
             .subscribeOnMain({
                 imageFile.value = it
                 isBusy.value = false

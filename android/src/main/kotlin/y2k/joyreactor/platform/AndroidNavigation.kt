@@ -48,8 +48,8 @@ class AndroidNavigation(app: Application) : NavigationService {
         currentActivity?.startActivity(GalleryActivity::class)
     }
 
-    override fun openPost(postId: String) {
-        sArgument = postId
+    override fun openPost(postId: Long) {
+        sArgument = postId.toString()
         currentActivity?.startActivity(PostActivity::class)
     }
 
@@ -60,12 +60,12 @@ class AndroidNavigation(app: Application) : NavigationService {
         currentActivity!!.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
     }
 
-    override fun openVideo(postId: String) {
-        sArgument = postId // TODO:
+    override fun openVideo(postId: Long) {
+        sArgument = postId.toString() // TODO:
         currentActivity?.startActivity(VideoActivity::class)
     }
 
-    override fun openImageView(postId: String) {
+    override fun openImageView(postId: Long) {
         // TODO:
     }
 
