@@ -15,19 +15,19 @@ internal class DiskCache {
         cacheDirectory.mkdirs()
     }
 
-    operator fun get(url: String): Observable<File?> {
-        return Observable.create<File?> { subscriber ->
+    fun get(url: String): Observable<File?> {
+        return Observable.create<File?> {
             val file = urlToFile(url)
-            subscriber.onNext(if (file.exists()) file else null)
-            subscriber.onCompleted()
+            it.onNext(if (file.exists()) file else null)
+            it.onCompleted()
         }.subscribeOn(Schedulers.from(DISK_EXECUTOR))
     }
 
     fun put(newImageFile: File, url: String): Observable<*> {
-        return Observable.create<Any> { subscriber ->
+        return Observable.create<Any> {
             newImageFile.renameTo(urlToFile(url))
-            subscriber.onNext(null)
-            subscriber.onCompleted()
+            it.onNext(null)
+            it.onCompleted()
         }.subscribeOn(Schedulers.from(DISK_EXECUTOR))
     }
 

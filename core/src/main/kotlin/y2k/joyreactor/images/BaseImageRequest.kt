@@ -4,6 +4,7 @@ import rx.Observable
 import rx.Subscription
 import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.common.ServiceLocator
+import y2k.joyreactor.common.mapNotNull
 import y2k.joyreactor.http.HttpClient
 import y2k.joyreactor.model.Image
 import java.io.File
@@ -58,7 +59,7 @@ abstract class BaseImageRequest<T> {
     }
 
     private fun getFromCache(): Observable<T?> {
-        return sDiskCache[toURLString()].map({ it?.let { decode(it) } })
+        return sDiskCache.get(toURLString()).mapNotNull { decode(it) }
     }
 
     private fun putToCache(): Observable<Any> {
@@ -66,7 +67,8 @@ abstract class BaseImageRequest<T> {
         val client = ServiceLocator.resolve<HttpClient>()
         return MultiTryDownloader(client, dir, toURLString())
             .downloadAsync()
-            .flatMap({ s -> sDiskCache.put(s, toURLString()) })
+            .toObservable()
+            .flatMap { sDiskCache.put(it, toURLString()) }
     }
 
     private fun toURLString(): String {
