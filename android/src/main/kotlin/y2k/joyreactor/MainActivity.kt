@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         val toolbar = findViewById(R.id.toolbar) as Toolbar
+        toolbar.title = ""
         setSupportActionBar(toolbar)
         ActionBarDrawerToggle(this, findViewById(R.id.drawer_layout) as DrawerLayout,
             toolbar, R.string.app_name, R.string.app_name).syncState()

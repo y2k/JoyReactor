@@ -1,4 +1,9 @@
 <resources>
+    <string-array name="tabs_mode">
+        <item>Good</item>
+        <item>Best</item>
+        <item>All</item>
+    </string-array>
     <string name="app_name" translatable="false">JoyReactor</string>
     <string name="add_tag">Add tag</string>
     <string name="profile">Profile</string>

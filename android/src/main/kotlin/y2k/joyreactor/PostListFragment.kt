@@ -23,7 +23,7 @@ class PostListFragment : BaseFragment() {
         val vm = ServiceLocator.resolve<PostListViewModel>(lifeCycleService)
 
         bindingBuilder(view) {
-            tabLayout(R.id.tabs, vm.tagMode)
+            spinner(R.id.tabs, vm.tagMode)
             visibility(R.id.apply, vm.hasNewPosts)
             command(R.id.apply, { vm.applyNew() })
             refreshLayout(R.id.refresher) {

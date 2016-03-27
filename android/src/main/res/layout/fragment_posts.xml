@@ -7,35 +7,24 @@
     <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <include layout="@layout/toolbar"/>
+        <android.support.v7.widget.Toolbar
+                app:popupTheme="@style/ToolbarPopupTheme"
+                app:layout_scrollFlags="scroll|enterAlways"
+                android:id="@+id/toolbar"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                android:background="?attr/colorPrimary">
+            <y2k.joyreactor.widget.TabSpinner
+                    android:id="@+id/tabs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </android.support.v7.widget.Toolbar>
         <fragment android:id="@+id/updateFragment"
                   android:name="y2k.joyreactor.UpdateFragment"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"/>
-
-        <android.support.design.widget.CollapsingToolbarLayout
-                android:id="@+id/collapsing_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
-            <android.support.design.widget.TabLayout
-                    android:id="@+id/tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize">
-                <android.support.design.widget.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="@string/good"/>
-                <android.support.design.widget.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="@string/best"/>
-                <android.support.design.widget.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="@string/newPosts"/>
-            </android.support.design.widget.TabLayout>
-        </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
     <y2k.joyreactor.ColorSwipeRefreshLayout
             app:layout_behavior="@string/appbar_scrolling_view_behavior"

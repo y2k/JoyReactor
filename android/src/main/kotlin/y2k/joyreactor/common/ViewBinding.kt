@@ -1,6 +1,7 @@
 package y2k.joyreactor.common
 
 import android.app.Activity
+import android.content.Context
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.ContentLoadingProgressBar
@@ -13,6 +14,7 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.*
+import y2k.joyreactor.App
 import y2k.joyreactor.FixedAspectPanel
 import y2k.joyreactor.ImagePanel
 import y2k.joyreactor.WebImageView
@@ -33,7 +35,7 @@ fun View.command(id: Int, command: () -> Unit): View {
 }
 
 fun bindingBuilder(root: View, init: BindingBuilder.() -> Unit): View {
-    BindingBuilder(ViewGroupResolver(root)).init()
+    BindingBuilder(ViewGroupResolver(root), root.context).init()
     return root
 }
 
@@ -59,7 +61,7 @@ private class ActivityViewResolver(val activity: Activity) : ViewResolver {
     }
 }
 
-class BindingBuilder(root: ViewResolver) {
+class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
 
     val resolvers = arrayListOf(root)
 
@@ -71,6 +73,20 @@ class BindingBuilder(root: ViewResolver) {
     //        val view = root.find<SwipeRefreshLayout>(id)
     //        binding.subscribe { view.isRefreshing = it }
     //    }
+
+    fun spinner(id: Int, binding: Binding<Int>) {
+        val view = find<Spinner>(id)
+        binding.subscribe { view.setSelection(it) }
+        view.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                binding.value = position
+            }
+        }
+    }
 
     fun tabLayout(id: Int, binding: Binding<Int>) {
         val view = find<TabLayout>(id)
