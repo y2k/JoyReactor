@@ -1,6 +1,7 @@
 package y2k.joyreactor.images
 
 import rx.Observable
+import rx.Single
 import rx.Subscription
 import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.common.ServiceLocator
@@ -40,10 +41,11 @@ abstract class BaseImageRequest<T> {
         }
 
         subscription = getFromCache()
-            .flatMap({ image ->
-                if (image != null) Observable.just<T>(image)
-                else putToCache().flatMap { getFromCache() }
-            })
+            .flatMap {
+                if (it != null) Single.just<T>(it)
+                else putToCache().toSingle().flatMap { getFromCache() }
+            }
+            .toObservable()
             .observeOn(ForegroundScheduler.instance)
             .filter { sLinks[target] === subscription }
             .subscribe({
@@ -58,8 +60,10 @@ abstract class BaseImageRequest<T> {
         sLinks.put(target, subscription!!)
     }
 
-    private fun getFromCache(): Observable<T?> {
-        return sDiskCache.get(toURLString()).mapNotNull { decode(it) }
+    private fun getFromCache(): Single<T?> {
+        return sDiskCache
+            .get(toURLString())
+            .mapNotNull { decode(it) }
     }
 
     private fun putToCache(): Observable<Any> {

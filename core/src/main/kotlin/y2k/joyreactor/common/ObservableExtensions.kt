@@ -2,6 +2,7 @@ package y2k.joyreactor.common
 
 import rx.Completable
 import rx.Observable
+import rx.Single
 import rx.Subscription
 import rx.schedulers.Schedulers
 
@@ -17,6 +18,10 @@ fun <T> Observable<T>.peek(func: (T) -> Unit): Observable<T> {
 }
 
 inline fun <T, R> Observable<T?>.mapNotNull(crossinline f: (T) -> R): Observable<R?> {
+    return map { it?.let(f) }
+}
+
+inline fun <T, R> Single<T?>.mapNotNull(crossinline f: (T) -> R): Single<R?> {
     return map { it?.let(f) }
 }
 
