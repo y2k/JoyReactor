@@ -40,12 +40,12 @@ abstract class BaseImageRequest<T> {
         }
 
         subscription = getFromCache()
-            .isEmpty(putToCache().andThen(getFromCache()))
+            .replaceIfNull(putToCache().andThen(getFromCache()))
             .observeOn(ForegroundScheduler.instance)
-            .subscribe { result, e ->
+            .subscribe { image, e ->
+                e?.printStackTrace()
                 if (sLinks[target] === subscription) {
-                    result?.let(callback)
-                    e?.printStackTrace()
+                    image?.let(callback)
                     sLinks.remove(target)
                 }
             }
