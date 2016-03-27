@@ -68,10 +68,10 @@ class PostListFragment : BaseFragment() {
             } else {
                 imagePanel.visibility = View.VISIBLE
                 imagePanel.aspect = item.image!!.getAspect(0.5f)
-                image.setImage(item.image)
+                image.image = item.image
             }
 
-            userImage.setImage(item.getUserImage2().toImage())
+            userImage.image = item.getUserImage2().toImage()
             userName.text = item.userName
             videoMark.visibility = if (item.image?.isAnimated ?: false) View.VISIBLE else View.GONE
 

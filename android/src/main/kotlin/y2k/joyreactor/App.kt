@@ -1,6 +1,7 @@
 package y2k.joyreactor
 
 import android.app.Application
+import android.os.StrictMode
 import android.provider.MediaStore
 import com.splunk.mint.Mint
 import rx.Observable
@@ -21,7 +22,9 @@ class App : Application() {
         super.onCreate()
         instance = this
 
-        if (!BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
+            StrictMode.enableDefaults()
+        } else {
             Mint.disableNetworkMonitoring()
             Mint.initAndStartSession(this, "66d8751e")
         }

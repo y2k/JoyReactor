@@ -2,9 +2,7 @@ package y2k.joyreactor.images
 
 import rx.Observable
 import rx.Subscription
-import y2k.joyreactor.common.ForegroundScheduler
-import y2k.joyreactor.common.ServiceLocator
-import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.common.*
 import y2k.joyreactor.model.Image
 import java.io.File
 import java.util.*
@@ -14,7 +12,9 @@ import java.util.*
  */
 abstract class BaseImageRequest<T> {
 
-    private var subscription: Subscription? = null
+    private lateinit var subscription: Subscription
+
+    private val client = ServiceLocator.resolve<MultiTryDownloader>()
 
     private var image: Image? = null
     private var width: Int? = null
@@ -33,40 +33,34 @@ abstract class BaseImageRequest<T> {
 
     fun to(target: Any, callback: (T?) -> Unit) {
         if (image == null) {
-            sLinks.remove(target)
+            sLinks.remove(target)?.let { it.unsubscribe() }
             callback(null)
             return
         }
 
         subscription = getFromCache()
-            .flatMap({ image ->
-                if (image != null) Observable.just<T>(image)
-                else putToCache().flatMap { getFromCache() }
-            })
+            .replaceIfNull { putToCache().flatMap { getFromCache() } }
             .observeOn(ForegroundScheduler.instance)
-            .filter { sLinks[target] === subscription }
-            .subscribe({
-                callback(it);
-                sLinks.remove(target)
-            }, {
-                it.printStackTrace();
-                sLinks.remove(target)
-            })
+            .subscribe { image, e ->
+                e?.printStackTrace()
+                if (sLinks[target] === subscription) {
+                    image?.let(callback)
+                    sLinks.remove(target)
+                }
+            }
 
         callback(null)
-        sLinks.put(target, subscription!!)
+        sLinks.put(target, subscription)?.let { it.unsubscribe() }
     }
 
     private fun getFromCache(): Observable<T?> {
-        return sDiskCache[toURLString()].map({ it?.let { decode(it) } })
+        return sDiskCache.get(toURLString()).mapNotNull { decode(it) }.toObservable()
     }
 
-    private fun putToCache(): Observable<Any> {
-        val dir = sDiskCache.cacheDirectory
-        val client = ServiceLocator.resolve<HttpClient>()
-        return MultiTryDownloader(client, dir, toURLString())
-            .downloadAsync()
-            .flatMap({ s -> sDiskCache.put(s, toURLString()) })
+    private fun putToCache(): Observable<Unit> {
+        return client
+            .downloadAsync(sDiskCache.cacheDirectory, toURLString())
+            .flatMapObservable { sDiskCache.put(it, toURLString()).toObservable() }
     }
 
     private fun toURLString(): String {

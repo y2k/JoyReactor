@@ -65,7 +65,7 @@ open class HttpClient(private val cookies: CookieStorage) {
         if (init != null) request.init()
 
         val response = client.newCall(request.build()).execute()
-        if (response.code() >= 400 && response.code() != 401){
+        if (response.code() >= 400 && response.code() != 401) {
             response.body().close()
             throw IOException("Unexpected code " + response)
         }

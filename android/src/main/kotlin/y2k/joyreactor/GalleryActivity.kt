@@ -33,7 +33,7 @@ class GalleryActivity : AppCompatActivity() {
         val image = view.find<WebImageView>(R.id.image)
 
         override fun update(item: Image) {
-            image.setImage(item)
+            image.image = item
         }
     }
 }

@@ -31,7 +31,7 @@ class ImagePanel(context: Context, attrs: AttributeSet) : FrameLayout(context, a
 
     fun setImages(images: List<Image>) {
         for (i in 0..Math.min(images.size, imageViews.size) - 1)
-            imageViews[i].setImage(images[i])
+            imageViews[i].image = images[i]
         imageViews.forEachIndexed { i, view -> view.isVisible = i < images.size }
     }
 }
