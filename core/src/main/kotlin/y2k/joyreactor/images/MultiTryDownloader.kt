@@ -24,23 +24,30 @@ internal class MultiTryDownloader(private val httpClient: HttpClient) {
         TIMER.schedule(250L shl tryNumber) {
             DOWNLOAD_EXECUTOR.execute {
                 try {
-                    subscriber.onSuccess(downloadToTempFile(tempDir, url))
+                    subscriber.onSuccess(downloadToTempFile(tempDir, url, subscriber))
                 } catch (e: Exception) {
-                    if (tryNumber >= MAX_RETRY) subscriber.onError(e)
-                    else downloadAsync(tempDir, url, tryNumber + 1, subscriber)
+                    if (tryNumber >= MAX_RETRY || subscriber.isUnsubscribed) {
+                        println("DOWNLOAD CANCELED :: OUTSIDE")
+                        subscriber.onError(e)
+                    } else downloadAsync(tempDir, url, tryNumber + 1, subscriber)
                 }
             }
         }
     }
 
-    private fun downloadToTempFile(tempDir: File, url: String): File {
+    private fun downloadToTempFile(tempDir: File, url: String, subscriber: SingleSubscriber<in File>): File {
         var result: File? = null
         try {
             result = File.createTempFile("download_", null, tempDir)
-            httpClient.downloadToFile(url, result, null)
+            httpClient.downloadToFile(url, result) { a, b ->
+                if (subscriber.isUnsubscribed) {
+                    println("DOWNLOAD CANCELED :: INSIDE")
+                    throw IOException("DOWNLOAD CANCELED")
+                }
+            }
             return result
-        } catch (e: IOException) {
-            if (result != null) result.delete()
+        } catch (e: Exception) {
+            result?.delete()
             throw e
         }
     }
@@ -48,7 +55,7 @@ internal class MultiTryDownloader(private val httpClient: HttpClient) {
     companion object {
 
         private val MAX_RETRY = 5
-        private val MAX_THREADS = 5
+        private val MAX_THREADS = 1
         private val TIMER = Executors.newSingleThreadScheduledExecutor()
         private val DOWNLOAD_EXECUTOR = ThreadPoolExecutor(MAX_THREADS, MAX_THREADS, 1, TimeUnit.SECONDS,
             object : LinkedBlockingDeque<Runnable>() {

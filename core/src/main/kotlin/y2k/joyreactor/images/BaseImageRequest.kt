@@ -51,7 +51,10 @@ abstract class BaseImageRequest<T> {
             }
 
         callback(null)
-        sLinks.put(target, subscription)
+        sLinks.put(target, subscription)?.let {
+            println("IMAGE REQUEST :: UNSUBSCRIBE")
+            it.unsubscribe()
+        }
     }
 
     private fun getFromCache(): Single<T?> {
