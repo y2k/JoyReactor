@@ -5,6 +5,7 @@ import rx.Subscription
 import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.common.mapNotNull
+import y2k.joyreactor.common.subscribe
 import y2k.joyreactor.http.HttpClient
 import y2k.joyreactor.model.Image
 import java.io.File
@@ -15,7 +16,7 @@ import java.util.*
  */
 abstract class BaseImageRequest<T> {
 
-    private var subscription: Subscription? = null
+    private lateinit var subscription: Subscription
 
     private var image: Image? = null
     private var width: Int? = null
@@ -44,25 +45,21 @@ abstract class BaseImageRequest<T> {
                 if (it != null) Single.just<T>(it)
                 else putToCache().flatMap { getFromCache() }
             }
-            .toObservable()
             .observeOn(ForegroundScheduler.instance)
-            .filter { sLinks[target] === subscription }
-            .subscribe({
-                callback(it);
-                sLinks.remove(target)
-            }, {
-                it.printStackTrace();
-                sLinks.remove(target)
-            })
+            .subscribe { result, e ->
+                if (sLinks[target] === subscription) {
+                    result?.let(callback)
+                    e?.printStackTrace()
+                    sLinks.remove(target)
+                }
+            }
 
         callback(null)
-        sLinks.put(target, subscription!!)
+        sLinks.put(target, subscription)
     }
 
     private fun getFromCache(): Single<T?> {
-        return sDiskCache
-            .get(toURLString())
-            .mapNotNull { decode(it) }
+        return sDiskCache.get(toURLString()).mapNotNull { decode(it) }
     }
 
     private fun putToCache(): Single<Unit> {

@@ -10,6 +10,10 @@ import rx.schedulers.Schedulers
  * Created by y2k on 1/31/16.
  */
 
+inline fun <T> Single<T>.subscribe(crossinline f: (T?, Throwable?) -> Unit): Subscription {
+    return subscribe({ f(it, null) }, { f(null, it) })
+}
+
 fun <T> Observable<T>.peek(func: (T) -> Unit): Observable<T> {
     return map {
         func(it);
