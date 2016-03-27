@@ -16,6 +16,10 @@ fun <T> Observable<T>.peek(func: (T) -> Unit): Observable<T> {
     }
 }
 
+inline fun <T, R> Observable<T?>.mapNotNull(crossinline f: (T) -> R): Observable<R?> {
+    return map { it?.let(f) }
+}
+
 fun ioUnitObservable(func: () -> Unit): Observable<Unit> {
     return ioObservable(func)
 }
