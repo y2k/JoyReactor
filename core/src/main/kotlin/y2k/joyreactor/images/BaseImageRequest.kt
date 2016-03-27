@@ -42,10 +42,10 @@ abstract class BaseImageRequest<T> {
             return
         }
 
-        val old = sChecks[image!!.fullUrl(null)]
-        val new = "${width}x$height"
-        if (old != null && old != new) throw Exception("Size changed $old -> $new")
-        sChecks[image!!.fullUrl(null)] = new
+        //        val old = sChecks[image!!.fullUrl(null)]
+        //        val new = "${width}x$height"
+        //        if (old != null && old != new) throw Exception("Size changed $old -> $new")
+        //        sChecks[image!!.fullUrl(null)] = new
 
         subscription = getFromCache()
             .replaceIfNull(putToCache().andThen(getFromCache()))
@@ -84,7 +84,7 @@ abstract class BaseImageRequest<T> {
 
     companion object {
 
-        private val sChecks = HashMap<String, String>()
+        //        private val sChecks = HashMap<String, String>()
 
         private val sDiskCache = DiskCache()
         private val sLinks = HashMap<Any, Subscription>()
