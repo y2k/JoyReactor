@@ -1,7 +1,6 @@
 package y2k.joyreactor.images
 
 import rx.Observable
-import rx.Single
 import rx.Subscription
 import y2k.joyreactor.common.*
 import y2k.joyreactor.model.Image
@@ -68,8 +67,7 @@ abstract class BaseImageRequest<T> {
     private fun putToCache(): Observable<Unit> {
         return client
             .downloadAsync(sDiskCache.cacheDirectory, toURLString())
-            .toObservable()
-            .flatMap { sDiskCache.put(it, toURLString()).toObservable() }
+            .flatMapObservable { sDiskCache.put(it, toURLString()).toObservable() }
     }
 
     private fun toURLString(): String {
