@@ -18,9 +18,9 @@ class PostMerger(
     var divider: Int? = null
         private set
 
-    fun mergeFirstPage(tag: Tag, newPosts2: List<Post>): Observable<Unit> {
-        return updatePostsAsync(newPosts2)
-            .flatMap { newPosts ->
+    fun mergeFirstPage(tag: Tag, newPosts: List<Post>): Observable<Unit> {
+        return updatePostsAsync(newPosts)
+            .flatMap {
                 dataContext.use { entities ->
                     divider = newPosts.size
 
@@ -89,19 +89,17 @@ class PostMerger(
             }
     }
 
-    private fun updatePostsAsync(newPosts: List<Post>): Observable<List<Post>> {
+    private fun updatePostsAsync(newPosts: List<Post>): Observable<Unit> {
         return dataContext.use { entities ->
-            val result = ArrayList<Post>()
             for (p in newPosts) {
                 val old = entities.Posts.firstOrNull { it.id == p.id }
                 if (old == null) entities.Posts.add(p)
                 else {
                     entities.Posts.remove(old)
-                    entities.Posts.add(p.identify(old.id))
+                    entities.Posts.add(p)
                 }
             }
             entities.saveChanges()
-            result
         }
     }
 

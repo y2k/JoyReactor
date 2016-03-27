@@ -34,7 +34,7 @@ class PostListViewModel(
     private fun setCurrentTag(newTag: Tag) {
         postsSubscription?.unsubscribe()
         postsSubscription = service
-            .queryAsync(Tag.makeFeatured())
+            .queryAsync(newTag)
             .subscribeOnMain {
                 val postsWithDiv = ArrayList<Post?>(it.first)
                 it.second?.let { postsWithDiv.add(it, null) }
@@ -49,7 +49,7 @@ class PostListViewModel(
             .subscribeOnMain { unsafeUpdate ->
                 hasNewPosts.value = unsafeUpdate
                 isBusy.value = false
-                if ((!unsafeUpdate)) applyNew()
+                if (!unsafeUpdate) applyNew()
             }
     }
 
