@@ -20,12 +20,11 @@ class WebImageView(context: Context, attrs: AttributeSet) : ImageView(context, a
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        val newState = ImageState(image, canvas.width, canvas.height)
-        if (state != newState) {
-            state = newState
+        if (state.image != image || state.width != canvas.width || state.height != canvas.height) {
+            state = ImageState(image, canvas.width, canvas.height)
             ImageRequest()
-                .setUrl(newState.image)
-                .setSize(newState.width, newState.height)
+                .setUrl(state.image)
+                .setSize(state.width, state.height)
                 .to(this) { setImageBitmap(it) }
         }
     }
