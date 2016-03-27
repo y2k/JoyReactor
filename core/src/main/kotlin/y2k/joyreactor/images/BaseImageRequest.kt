@@ -1,6 +1,5 @@
 package y2k.joyreactor.images
 
-import rx.Observable
 import rx.Single
 import rx.Subscription
 import y2k.joyreactor.common.ForegroundScheduler
@@ -43,7 +42,7 @@ abstract class BaseImageRequest<T> {
         subscription = getFromCache()
             .flatMap {
                 if (it != null) Single.just<T>(it)
-                else putToCache().toSingle().flatMap { getFromCache() }
+                else putToCache().flatMap { getFromCache() }
             }
             .toObservable()
             .observeOn(ForegroundScheduler.instance)
@@ -66,12 +65,11 @@ abstract class BaseImageRequest<T> {
             .mapNotNull { decode(it) }
     }
 
-    private fun putToCache(): Observable<Any> {
+    private fun putToCache(): Single<Unit> {
         val dir = sDiskCache.cacheDirectory
         val client = ServiceLocator.resolve<HttpClient>()
         return MultiTryDownloader(client, dir, toURLString())
             .downloadAsync()
-            .toObservable()
             .flatMap { sDiskCache.put(it, toURLString()) }
     }
 
