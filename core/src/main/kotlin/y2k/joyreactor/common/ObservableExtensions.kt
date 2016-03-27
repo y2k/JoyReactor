@@ -10,10 +10,17 @@ import rx.schedulers.Schedulers
  * Created by y2k on 1/31/16.
  */
 
-fun <T> Single<T>.replaceIfNull(other: Single<T>): Single<T> {
+fun <T> Single<T>.replaceIfNull(f: () -> Single<T>): Single<T> {
     return flatMap {
         if (it != null) Single.just<T>(it)
-        else other
+        else f()
+    }
+}
+
+fun <T> Observable<T>.replaceIfNull(f: () -> Observable<T>): Observable<T> {
+    return flatMap {
+        if (it != null) Observable.just<T>(it)
+        else f()
     }
 }
 
@@ -26,6 +33,10 @@ fun <T> Completable.andThen(single: Single<T>): Single<T> {
 }
 
 inline fun <T> Single<T>.subscribe(crossinline f: (T?, Throwable?) -> Unit): Subscription {
+    return subscribe({ f(it, null) }, { f(null, it) })
+}
+
+inline fun <T> Observable<T>.subscribe(crossinline f: (T?, Throwable?) -> Unit): Subscription {
     return subscribe({ f(it, null) }, { f(null, it) })
 }
 

@@ -1,12 +1,13 @@
 package y2k.joyreactor.images
 
-import rx.Completable
+import rx.Observable
 import rx.Single
 import rx.Subscription
 import y2k.joyreactor.common.*
 import y2k.joyreactor.model.Image
 import java.io.File
 import java.util.*
+
 
 /**
  * Created by y2k on 12/10/15.
@@ -42,13 +43,8 @@ abstract class BaseImageRequest<T> {
             return
         }
 
-        //        val old = sChecks[image!!.fullUrl(null)]
-        //        val new = "${width}x$height"
-        //        if (old != null && old != new) throw Exception("Size changed $old -> $new")
-        //        sChecks[image!!.fullUrl(null)] = new
-
         subscription = getFromCache()
-            .replaceIfNull(putToCache().andThen(getFromCache()))
+            .replaceIfNull { putToCache().flatMap { getFromCache() } }
             .observeOn(ForegroundScheduler.instance)
             .subscribe { image, e ->
                 e?.printStackTrace()
@@ -65,15 +61,15 @@ abstract class BaseImageRequest<T> {
         }
     }
 
-    private fun getFromCache(): Single<T?> {
-        return sDiskCache.get(toURLString()).mapNotNull { decode(it) }
+    private fun getFromCache(): Observable<T?> {
+        return sDiskCache.get(toURLString()).mapNotNull { decode(it) }.toObservable()
     }
 
-    private fun putToCache(): Completable {
+    private fun putToCache(): Observable<Unit> {
         return client
             .downloadAsync(sDiskCache.cacheDirectory, toURLString())
-            .flatMap { sDiskCache.put(it, toURLString()) }
-            .toCompletable()
+            .toObservable()
+            .flatMap { sDiskCache.put(it, toURLString()).toObservable() }
     }
 
     private fun toURLString(): String {
@@ -83,8 +79,6 @@ abstract class BaseImageRequest<T> {
     protected abstract fun decode(path: File): T
 
     companion object {
-
-        //        private val sChecks = HashMap<String, String>()
 
         private val sDiskCache = DiskCache()
         private val sLinks = HashMap<Any, Subscription>()
