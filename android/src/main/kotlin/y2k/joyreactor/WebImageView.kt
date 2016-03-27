@@ -33,10 +33,8 @@ class WebImageView(context: Context, attrs: AttributeSet) : ImageView(context, a
             if (newImage === EMPTY) {
                 invalidateToEmpty()
             } else {
-                if (newImage == null)
-                    invalidateOnChangeSize()
-                else
-                    invalidateOnImageChanged(newImage)
+                if (newImage == null) invalidateOnChangeSize()
+                else invalidateOnImageChanged(newImage)
             }
         }
 

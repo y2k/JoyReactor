@@ -34,7 +34,10 @@ abstract class BaseImageRequest<T> {
 
     fun to(target: Any, callback: (T?) -> Unit) {
         if (image == null) {
-            sLinks.remove(target)
+            sLinks.remove(target)?.let {
+                println("IMAGE REQUEST :: UNSUBSCRIBE")
+                it.unsubscribe()
+            }
             callback(null)
             return
         }
