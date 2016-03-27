@@ -46,7 +46,7 @@ class ThreadsActivity : LifeCycleActivity() {
         val prettyTime = PrettyTime()
 
         override fun update(item: Message) {
-            userImage.setImage(item.getUserImageObject().toImage())
+            userImage.image = item.getUserImageObject().toImage()
             userName.text = item.userName
             lastMessage.text = item.text
             time.text = prettyTime.format(item.date)

@@ -88,7 +88,7 @@ class BindingBuilder(root: ViewResolver) {
 
     fun webImageView(id: Int, binding: Binding<Image?>) {
         val view = find<WebImageView>(id)
-        binding.subscribe { view.setImage(it) }
+        binding.subscribe { view.image = it }
     }
 
     fun muteVideoView(id: Int, binding: Binding<File?>) {

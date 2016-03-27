@@ -71,12 +71,12 @@ class PostActivity : BaseActivity() {
             itemView.updateMargin(left = (28 * item.level + 8).dipToPx())
 
             text.text = item.text
-            avatar.setImage(item.userImageObject.toImage())
+            avatar.image = item.userImageObject.toImage()
             rating.text = "" + item.rating
             replies.text = "" + item.replies
 
             attachment.visibility = if (item.attachmentObject == null) View.GONE else View.VISIBLE
-            attachment.setImage(item.attachmentObject)
+            attachment.image = item.attachmentObject
         }
     }
 }

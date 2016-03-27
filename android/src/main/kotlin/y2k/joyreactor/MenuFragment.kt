@@ -60,7 +60,7 @@ class MenuFragment : BaseFragment() {
 
         override fun update(item: Tag) {
             title.text = item.title
-            icon.setImage(item.image)
+            icon.image = item.image
         }
     }
 
