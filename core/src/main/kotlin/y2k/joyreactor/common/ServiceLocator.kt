@@ -2,6 +2,7 @@ package y2k.joyreactor.common
 
 import y2k.joyreactor.http.CookieStorage
 import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.images.MultiTryDownloader
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.*
 import y2k.joyreactor.services.requests.*
@@ -55,6 +56,8 @@ object ServiceLocator {
         register { ProfileViewModel(resolve(), resolve()) }
         register { AddTagViewModel(resolve(), resolve()) }
         register { PostListViewModel(resolve(), resolve(), resolve()) }
+
+        register { MultiTryDownloader(resolve()) }
     }
 
     // ==========================================

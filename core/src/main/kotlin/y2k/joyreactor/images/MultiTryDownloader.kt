@@ -14,32 +14,29 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by y2k on 12/10/15.
  */
-internal class MultiTryDownloader(
-    private val httpClient: HttpClient,
-    private val dir: File,
-    private val url: String) {
+internal class MultiTryDownloader(private val httpClient: HttpClient) {
 
-    fun downloadAsync(): Single<File> {
-        return Single.create<File> { downloadAsync(0, it) }
+    fun downloadAsync(tempDir: File, url: String): Single<File> {
+        return Single.create<File> { downloadAsync(tempDir, url, 0, it) }
     }
 
-    private fun downloadAsync(tryNumber: Int, subscriber: SingleSubscriber<in File>) {
+    private fun downloadAsync(tempDir: File, url: String, tryNumber: Int, subscriber: SingleSubscriber<in File>) {
         TIMER.schedule(250L shl tryNumber) {
             DOWNLOAD_EXECUTOR.execute {
                 try {
-                    subscriber.onSuccess(downloadToTempFile())
+                    subscriber.onSuccess(downloadToTempFile(tempDir, url))
                 } catch (e: Exception) {
                     if (tryNumber >= MAX_RETRY) subscriber.onError(e)
-                    else downloadAsync(tryNumber + 1, subscriber)
+                    else downloadAsync(tempDir, url, tryNumber + 1, subscriber)
                 }
             }
         }
     }
 
-    private fun downloadToTempFile(): File {
+    private fun downloadToTempFile(tempDir: File, url: String): File {
         var result: File? = null
         try {
-            result = File.createTempFile("download_", null, dir)
+            result = File.createTempFile("download_", null, tempDir)
             httpClient.downloadToFile(url, result, null)
             return result
         } catch (e: IOException) {

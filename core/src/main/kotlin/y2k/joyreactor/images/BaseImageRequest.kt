@@ -1,12 +1,9 @@
 package y2k.joyreactor.images
 
+import rx.Completable
 import rx.Single
 import rx.Subscription
-import y2k.joyreactor.common.ForegroundScheduler
-import y2k.joyreactor.common.ServiceLocator
-import y2k.joyreactor.common.mapNotNull
-import y2k.joyreactor.common.subscribe
-import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.common.*
 import y2k.joyreactor.model.Image
 import java.io.File
 import java.util.*
@@ -17,6 +14,8 @@ import java.util.*
 abstract class BaseImageRequest<T> {
 
     private lateinit var subscription: Subscription
+
+    private val client = ServiceLocator.resolve<MultiTryDownloader>()
 
     private var image: Image? = null
     private var width: Int? = null
@@ -43,7 +42,7 @@ abstract class BaseImageRequest<T> {
         subscription = getFromCache()
             .flatMap {
                 if (it != null) Single.just<T>(it)
-                else putToCache().flatMap { getFromCache() }
+                else putToCache().andThen(getFromCache())
             }
             .observeOn(ForegroundScheduler.instance)
             .subscribe { result, e ->
@@ -62,12 +61,11 @@ abstract class BaseImageRequest<T> {
         return sDiskCache.get(toURLString()).mapNotNull { decode(it) }
     }
 
-    private fun putToCache(): Single<Unit> {
-        val dir = sDiskCache.cacheDirectory
-        val client = ServiceLocator.resolve<HttpClient>()
-        return MultiTryDownloader(client, dir, toURLString())
-            .downloadAsync()
+    private fun putToCache(): Completable {
+        return client
+            .downloadAsync(sDiskCache.cacheDirectory, toURLString())
             .flatMap { sDiskCache.put(it, toURLString()) }
+            .toCompletable()
     }
 
     private fun toURLString(): String {

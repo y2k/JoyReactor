@@ -10,6 +10,14 @@ import rx.schedulers.Schedulers
  * Created by y2k on 1/31/16.
  */
 
+fun <T> Single<T>.toCompletable(): Completable {
+    return Completable.fromSingle(this)
+}
+
+fun <T> Completable.andThen(single: Single<T>): Single<T> {
+    return andThen(single.toObservable()).toSingle()
+}
+
 inline fun <T> Single<T>.subscribe(crossinline f: (T?, Throwable?) -> Unit): Subscription {
     return subscribe({ f(it, null) }, { f(null, it) })
 }
