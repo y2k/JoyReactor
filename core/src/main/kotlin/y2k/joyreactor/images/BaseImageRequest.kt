@@ -7,7 +7,6 @@ import y2k.joyreactor.model.Image
 import java.io.File
 import java.util.*
 
-
 /**
  * Created by y2k on 12/10/15.
  */
@@ -34,10 +33,7 @@ abstract class BaseImageRequest<T> {
 
     fun to(target: Any, callback: (T?) -> Unit) {
         if (image == null) {
-            sLinks.remove(target)?.let {
-                println("IMAGE REQUEST :: UNSUBSCRIBE")
-                it.unsubscribe()
-            }
+            sLinks.remove(target)?.let { it.unsubscribe() }
             callback(null)
             return
         }
@@ -54,10 +50,7 @@ abstract class BaseImageRequest<T> {
             }
 
         callback(null)
-        sLinks.put(target, subscription)?.let {
-            println("IMAGE REQUEST :: UNSUBSCRIBE")
-            it.unsubscribe()
-        }
+        sLinks.put(target, subscription)?.let { it.unsubscribe() }
     }
 
     private fun getFromCache(): Observable<T?> {
