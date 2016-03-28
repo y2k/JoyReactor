@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import y2k.joyreactor.common.*
-import y2k.joyreactor.model.Tag
+import y2k.joyreactor.model.Group
 import y2k.joyreactor.viewmodel.TagListViewModel
 
 /**
@@ -53,12 +53,12 @@ class MenuFragment : BaseFragment() {
         return view
     }
 
-    class ViewHolder(view: View) : ListViewHolder<Tag>(view) {
+    class ViewHolder(view: View) : ListViewHolder<Group>(view) {
 
         val title = view.find<TextView>(R.id.title)
         val icon = view.find<WebImageView>(R.id.icon)
 
-        override fun update(item: Tag) {
+        override fun update(item: Group) {
             title.text = item.title
             icon.image = item.image
         }

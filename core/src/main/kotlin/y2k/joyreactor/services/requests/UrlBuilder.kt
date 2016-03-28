@@ -1,6 +1,6 @@
 package y2k.joyreactor.services.requests
 
-import y2k.joyreactor.model.Tag
+import y2k.joyreactor.model.Group
 
 import java.net.URLEncoder
 
@@ -9,12 +9,12 @@ import java.net.URLEncoder
  */
 internal class UrlBuilder {
 
-    fun build(tag: Tag, pageId: String?): String {
+    fun build(group: Group, pageId: String?): String {
         var url = "http://joyreactor.cc/"
-        if (tag.isFavorite)
-            url += "user/" + URLEncoder.encode(tag.username)
-        else if (tag.serverId != null)
-            url += "tag/" + URLEncoder.encode(tag.serverId)
+        if (group.isFavorite)
+            url += "user/" + URLEncoder.encode(group.username)
+        else if (group.serverId != null)
+            url += "tag/" + URLEncoder.encode(group.serverId)
         if (pageId != null) url += "/" + pageId
         return url
     }

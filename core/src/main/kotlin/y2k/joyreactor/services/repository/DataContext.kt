@@ -5,7 +5,7 @@ import rx.schedulers.Schedulers
 import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.model.Message
 import y2k.joyreactor.model.Post
-import y2k.joyreactor.model.Tag
+import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.TagPost
 import y2k.joyreactor.platform.Platform
 import java.io.EOFException
@@ -24,7 +24,7 @@ class DataContext {
 
     val Posts = register<Post>("posts")
 
-    val Tags = register<Tag>("tags")
+    val Tags = register<Group>("tags")
 
     val TagPosts = register<TagPost>("tag_posts")
 

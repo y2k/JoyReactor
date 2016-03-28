@@ -5,7 +5,7 @@ import rx.Observable
 import rx.subjects.PublishSubject
 import y2k.joyreactor.common.peek
 import y2k.joyreactor.model.Post
-import y2k.joyreactor.model.Tag
+import y2k.joyreactor.model.Group
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.PostsForTagRequest
 import y2k.joyreactor.services.synchronizers.PostMerger
@@ -17,33 +17,33 @@ class TagService(private val dataContext: DataContext.Factory,
                  private val postsRequest: PostsForTagRequest,
                  private val merger: PostMerger) {
 
-    private lateinit var tag: Tag
+    private lateinit var group: Group
     private @Volatile lateinit var lastPage: PostsForTagRequest.Data
 
     private var currentSubscription = PublishSubject.create<Pair<List<Post>, Int?>>()
 
-    fun setTag(tag: Tag) {
-        this.tag = tag
+    fun setTag(group: Group) {
+        this.group = group
     }
 
     fun preloadNewPosts(): Observable<Boolean> {
-        return requestAsync().flatMap { merger.isUnsafeUpdate(tag, it.posts) }
+        return requestAsync().flatMap { merger.isUnsafeUpdate(group, it.posts) }
     }
 
-    fun queryAsync(tag: Tag): Observable<Pair<List<Post>, Int?>> {
+    fun queryAsync(group: Group): Observable<Pair<List<Post>, Int?>> {
         return currentSubscription!!
     }
 
     fun applyNew(): Completable {
         return merger
-            .mergeFirstPage(tag, lastPage.posts)
+            .mergeFirstPage(group, lastPage.posts)
             .doOnNext { notifyDataChanged() }
             .toCompletable()
     }
 
     fun loadNextPage(): Completable {
         return requestAsync(lastPage.nextPage)
-            .flatMap { merger.mergeNextPage(tag, it.posts) }
+            .flatMap { merger.mergeNextPage(group, it.posts) }
             .doOnNext { notifyDataChanged() }
             .toCompletable()
     }
@@ -54,13 +54,13 @@ class TagService(private val dataContext: DataContext.Factory,
                 dataContext
                     .use { entities ->
                         entities.TagPosts
-                            .filter { it.tagId == tag.id }
+                            .filter { it.tagId == group.id }
                             .forEach { entities.TagPosts.remove(it) }
                         entities.saveChanges()
                     }
                     .map { data }
             }
-            .flatMap { merger.mergeFirstPage(tag, it.posts) }
+            .flatMap { merger.mergeFirstPage(group, it.posts) }
             .doOnNext { notifyDataChanged() }
             .toCompletable()
     }
@@ -69,7 +69,7 @@ class TagService(private val dataContext: DataContext.Factory,
         dataContext
             .applyUse {
                 TagPosts
-                    .filter { it.tagId == tag.id }
+                    .filter { it.tagId == group.id }
                     .map { link -> Posts.first { it.id == link.postId } }
             }
             .map { it to merger.divider }
@@ -78,7 +78,7 @@ class TagService(private val dataContext: DataContext.Factory,
 
     fun requestAsync(page: String? = null): Observable<PostsForTagRequest.Data> {
         return postsRequest
-            .requestAsync(tag, page)
+            .requestAsync(group, page)
             .peek { lastPage = it }
     }
 }

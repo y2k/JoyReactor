@@ -4,7 +4,7 @@ import rx.Subscription
 import y2k.joyreactor.common.binding
 import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.model.Post
-import y2k.joyreactor.model.Tag
+import y2k.joyreactor.model.Group
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
@@ -27,21 +27,21 @@ class PostListViewModel(
     var postsSubscription: Subscription? = null
 
     init {
-        lifeCycleService.add(BroadcastService.TagSelected::class) { setCurrentTag(it.tag) }
-        setCurrentTag(Tag.makeFeatured())
+        lifeCycleService.add(BroadcastService.TagSelected::class) { setCurrentTag(it.group) }
+        setCurrentTag(Group.makeFeatured())
     }
 
-    private fun setCurrentTag(newTag: Tag) {
+    private fun setCurrentTag(newGroup: Group) {
         postsSubscription?.unsubscribe()
         postsSubscription = service
-            .queryAsync(newTag)
+            .queryAsync(newGroup)
             .subscribeOnMain {
                 val postsWithDiv = ArrayList<Post?>(it.first)
                 it.second?.let { postsWithDiv.add(it, null) }
                 this.posts.value = postsWithDiv
             }
 
-        service.setTag(newTag)
+        service.setTag(newGroup)
 
         isBusy.value = true
         service

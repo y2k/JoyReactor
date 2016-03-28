@@ -2,7 +2,7 @@ package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.binding
 import y2k.joyreactor.common.subscribeOnMain
-import y2k.joyreactor.model.Tag
+import y2k.joyreactor.model.Group
 import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.UserService
@@ -15,7 +15,7 @@ class TagListViewModel(
     private val broadcastService: BroadcastService,
     private val lifeCycleService: LifeCycleService) {
 
-    val tags = binding(emptyList<Tag>())
+    val tags = binding(emptyList<Group>())
 
     init {
         lifeCycleService.add {
@@ -33,12 +33,12 @@ class TagListViewModel(
         broadcastService.broadcast(BroadcastService.TagSelected(tag))
     }
 
-    fun selectTag(tag: Tag) {
-        broadcastService.broadcast(BroadcastService.TagSelected(tag))
+    fun selectTag(group: Group) {
+        broadcastService.broadcast(BroadcastService.TagSelected(group))
     }
 
     fun selectedFeatured() {
-        broadcastService.broadcast(BroadcastService.TagSelected(Tag.makeFeatured()))
+        broadcastService.broadcast(BroadcastService.TagSelected(Group.makeFeatured()))
     }
 
     fun selectedFavorite() {

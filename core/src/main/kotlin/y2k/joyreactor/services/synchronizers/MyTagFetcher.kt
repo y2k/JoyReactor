@@ -2,7 +2,7 @@ package y2k.joyreactor.services.synchronizers
 
 import rx.Observable
 import y2k.joyreactor.model.Image
-import y2k.joyreactor.model.Tag
+import y2k.joyreactor.model.Group
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.TagsForUserRequest
 import y2k.joyreactor.services.requests.UserNameRequest
@@ -35,14 +35,14 @@ class MyTagFetcher(
             }
     }
 
-    private fun merge(oldTags: List<Tag>, newTags: List<Tag>): List<Tag> {
+    private fun merge(oldTags: List<Group>, newGroups: List<Group>): List<Group> {
         return addOrReplaceAll(
             oldTags.map { it.copy(isVisible = false) },
-            newTags.map { it.copy(isVisible = true) })
+            newGroups.map { it.copy(isVisible = true) })
     }
 
-    private fun addOrReplaceAll(left: List<Tag>, right: List<Tag>): List<Tag> {
-        val result = ArrayList<Tag>()
+    private fun addOrReplaceAll(left: List<Group>, right: List<Group>): List<Group> {
+        val result = ArrayList<Group>()
         for (tag in right) {
             val old = searchForServerId(left, tag.serverId)
             result.add(if (old == null) tag else tag.identify(old.id))
@@ -50,8 +50,8 @@ class MyTagFetcher(
         return result
     }
 
-    private fun searchForServerId(tags: List<Tag>, serverId: String?): Tag? {
-        for (tag in tags)
+    private fun searchForServerId(groups: List<Group>, serverId: String?): Group? {
+        for (tag in groups)
             if (serverId == tag.serverId) return tag
         return null
     }
@@ -74,11 +74,11 @@ class MyTagFetcher(
             makeTag("Видео", "1243"),
             makeTag("Story", "227"))
 
-        private fun makeTag(title: String, tagId: String): Tag {
-            return Tag(title, title, false, Image("http://img0.joyreactor.cc/pics/avatar/tag/" + tagId))
+        private fun makeTag(title: String, tagId: String): Group {
+            return Group(title, title, false, Image("http://img0.joyreactor.cc/pics/avatar/tag/" + tagId))
         }
 
-        fun request(): Observable<List<Tag>> {
+        fun request(): Observable<List<Group>> {
             return Observable.just(tags)
         }
     }

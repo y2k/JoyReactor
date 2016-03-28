@@ -1,7 +1,7 @@
 package y2k.joyreactor.services
 
 import y2k.joyreactor.model.Message
-import y2k.joyreactor.model.Tag
+import y2k.joyreactor.model.Group
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -24,7 +24,7 @@ class BroadcastService {
 
     class ThreadSelectedMessage(val thread: Message)
 
-    class TagSelected(var tag: Tag)
+    class TagSelected(var group: Group)
 
     // TODO: Слить с родительским классом
     private object DefaultMessenger {

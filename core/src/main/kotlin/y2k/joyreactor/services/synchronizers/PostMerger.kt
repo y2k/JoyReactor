@@ -4,7 +4,7 @@ import rx.Observable
 import y2k.joyreactor.common.toArrayList
 import y2k.joyreactor.common.unionOrdered
 import y2k.joyreactor.model.Post
-import y2k.joyreactor.model.Tag
+import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.TagPost
 import y2k.joyreactor.services.repository.DataContext
 import java.util.*
@@ -18,7 +18,7 @@ class PostMerger(
     var divider: Int? = null
         private set
 
-    fun mergeFirstPage(tag: Tag, newPosts: List<Post>): Observable<Unit> {
+    fun mergeFirstPage(group: Group, newPosts: List<Post>): Observable<Unit> {
         return updatePostsAsync(newPosts)
             .flatMap {
                 dataContext.use { entities ->
@@ -26,14 +26,14 @@ class PostMerger(
 
                     val result = ArrayList<TagPost>()
                     for (s in newPosts)
-                        result.add(TagPost(tag.id, s.id))
+                        result.add(TagPost(group.id, s.id))
                     entities.TagPosts
-                        .filter { it.tagId == tag.id }
+                        .filter { it.tagId == group.id }
                         .filterNot { s -> newPosts.any { it.id == s.postId } }
                         .forEach { result.add(it) }
 
                     entities.TagPosts
-                        .filter { it.tagId == tag.id }
+                        .filter { it.tagId == group.id }
                         .forEach { entities.TagPosts.remove(it) }
 
                     // TODO: Понять почему здесь падает
@@ -45,9 +45,9 @@ class PostMerger(
             }
     }
 
-    fun isUnsafeUpdate(tag: Tag, newPosts: List<Post>): Observable<Boolean> {
+    fun isUnsafeUpdate(group: Group, newPosts: List<Post>): Observable<Boolean> {
         return dataContext.use { entities ->
-            val oldPosts = entities.getPostsForTag(tag)
+            val oldPosts = entities.getPostsForTag(group)
             if (oldPosts.size == 0) return@use false
             if (newPosts.size > oldPosts.size) return@use true
             for (i in newPosts.indices) {
@@ -59,22 +59,22 @@ class PostMerger(
         }
     }
 
-    private fun DataContext.getPostsForTag(tag: Tag): List<Post> {
+    private fun DataContext.getPostsForTag(group: Group): List<Post> {
         return TagPosts
-            .filter { it.tagId == tag.id }
+            .filter { it.tagId == group.id }
             .map { tp -> Posts.first { it.id == tp.postId } }
     }
 
-    fun mergeNextPage(tag: Tag, newPosts: List<Post>): Observable<Unit> {
+    fun mergeNextPage(group: Group, newPosts: List<Post>): Observable<Unit> {
         return updatePostsAsync(newPosts)
             .flatMap {
                 dataContext.use { entities ->
-                    var links = entities.TagPosts.filter { it.tagId == tag.id }
+                    var links = entities.TagPosts.filter { it.tagId == group.id }
                     val actualPosts = links.subList(0, divider!!).toArrayList()
                     val expiredPosts = links.subList(divider!!, links.size).toArrayList()
 
                     for (p in newPosts) {
-                        addIfNew(tag, actualPosts, p)
+                        addIfNew(group, actualPosts, p)
                         remove(expiredPosts, p)
                     }
                     divider = actualPosts.size
@@ -103,10 +103,10 @@ class PostMerger(
         }
     }
 
-    private fun addIfNew(tag: Tag, list: MutableList<TagPost>, item: Post) {
+    private fun addIfNew(group: Group, list: MutableList<TagPost>, item: Post) {
         for (s in list)
             if (s.postId == item.id) return
-        list.add(TagPost(tag.id, item.id))
+        list.add(TagPost(group.id, item.id))
     }
 
     private fun remove(list: MutableList<TagPost>, item: Post) {

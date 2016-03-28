@@ -10,7 +10,7 @@ import y2k.joyreactor.common.BaseUIViewController
 import y2k.joyreactor.common.ListCell
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.common.bindingBuilder
-import y2k.joyreactor.model.Tag
+import y2k.joyreactor.model.Group
 import y2k.joyreactor.platform.ImageRequest
 import y2k.joyreactor.viewmodel.TagListViewModel
 
@@ -54,12 +54,12 @@ class MenuViewController : BaseUIViewController() {
     }
 
     @CustomClass("TagCell")
-    class TagCell : ListCell<Tag>() {
+    class TagCell : ListCell<Group>() {
 
         @IBOutlet lateinit var icon: UIImageView
         @IBOutlet lateinit var title: UILabel
 
-        override fun bind(data: Tag) {
+        override fun bind(data: Group) {
             icon.layer.cornerRadius = icon.frame.width / 2
             ImageRequest()
                 .setUrl(data.image)

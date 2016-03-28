@@ -6,7 +6,7 @@ import rx.schedulers.Schedulers
 import y2k.joyreactor.http.HttpClient
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.model.Post
-import y2k.joyreactor.model.Tag
+import y2k.joyreactor.model.Group
 import java.util.*
 import java.util.regex.Pattern
 
@@ -15,10 +15,10 @@ import java.util.regex.Pattern
  */
 class PostsForTagRequest(private val httpClient: HttpClient) {
 
-    fun requestAsync(tagId: Tag, pageId: String? = null): Observable<Data> {
+    fun requestAsync(groupId: Group, pageId: String? = null): Observable<Data> {
         return Observable
             .fromCallable {
-                val url = UrlBuilder().build(tagId, pageId)
+                val url = UrlBuilder().build(groupId, pageId)
                 val doc = httpClient.getDocument(url)
 
                 val posts = ArrayList<Post>()

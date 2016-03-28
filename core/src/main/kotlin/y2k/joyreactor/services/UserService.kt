@@ -3,7 +3,7 @@ package y2k.joyreactor.services
 import rx.Completable
 import rx.Observable
 import y2k.joyreactor.common.concatAndRepeat
-import y2k.joyreactor.model.Tag
+import y2k.joyreactor.model.Group
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.AddTagRequest
 import y2k.joyreactor.services.requests.UserNameRequest
@@ -18,7 +18,7 @@ class UserService(
     private val userNameRequest: UserNameRequest,
     private val synchronizer: MyTagFetcher) {
 
-    fun getMyTags(): Observable<List<Tag>> {
+    fun getMyTags(): Observable<List<Group>> {
         return dataContext
             .applyUse {
                 Tags.filter { it.isVisible }.sortedBy { it.title.toLowerCase() }
@@ -30,9 +30,9 @@ class UserService(
         return addTagRequest.request(tag)
     }
 
-    fun getTagForFavorite(): Observable<Tag> {
+    fun getTagForFavorite(): Observable<Group> {
         return userNameRequest
             .request()
-            .map { Tag.makeFavorite(it!!) }
+            .map { Group.makeFavorite(it!!) }
     }
 }
