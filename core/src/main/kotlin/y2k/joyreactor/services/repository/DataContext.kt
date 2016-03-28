@@ -6,7 +6,7 @@ import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.model.Message
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.model.Group
-import y2k.joyreactor.model.TagPost
+import y2k.joyreactor.model.GroupPost
 import y2k.joyreactor.platform.Platform
 import java.io.EOFException
 import java.io.File
@@ -26,7 +26,7 @@ class DataContext {
 
     val Tags = register<Group>("tags")
 
-    val TagPosts = register<TagPost>("tag_posts")
+    val TagPosts = register<GroupPost>("tag_posts")
 
     val Messages = register<Message>("messages")
 

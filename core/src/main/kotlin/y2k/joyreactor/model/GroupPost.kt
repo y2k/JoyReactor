@@ -6,12 +6,12 @@ import java.io.Serializable
 /**
  * Created by y2k on 11/24/15.
  */
-data class TagPost(
-    val tagId: Long,
+data class GroupPost(
+    val groupId: Long,
     val postId: Long,
     override val id: Long = 0) : Serializable, DataSet.Dto {
 
-    override fun identify(newId: Long): TagPost {
+    override fun identify(newId: Long): GroupPost {
         return copy(id = newId)
     }
 }

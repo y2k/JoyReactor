@@ -54,7 +54,7 @@ class TagService(private val dataContext: DataContext.Factory,
                 dataContext
                     .use { entities ->
                         entities.TagPosts
-                            .filter { it.tagId == group.id }
+                            .filter { it.groupId == group.id }
                             .forEach { entities.TagPosts.remove(it) }
                         entities.saveChanges()
                     }
@@ -69,7 +69,7 @@ class TagService(private val dataContext: DataContext.Factory,
         dataContext
             .applyUse {
                 TagPosts
-                    .filter { it.tagId == group.id }
+                    .filter { it.groupId == group.id }
                     .map { link -> Posts.first { it.id == link.postId } }
             }
             .map { it to merger.divider }

@@ -5,7 +5,7 @@ import y2k.joyreactor.common.toArrayList
 import y2k.joyreactor.common.unionOrdered
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.model.Group
-import y2k.joyreactor.model.TagPost
+import y2k.joyreactor.model.GroupPost
 import y2k.joyreactor.services.repository.DataContext
 import java.util.*
 
@@ -24,16 +24,16 @@ class PostMerger(
                 dataContext.use { entities ->
                     divider = newPosts.size
 
-                    val result = ArrayList<TagPost>()
+                    val result = ArrayList<GroupPost>()
                     for (s in newPosts)
-                        result.add(TagPost(group.id, s.id))
+                        result.add(GroupPost(group.id, s.id))
                     entities.TagPosts
-                        .filter { it.tagId == group.id }
+                        .filter { it.groupId == group.id }
                         .filterNot { s -> newPosts.any { it.id == s.postId } }
                         .forEach { result.add(it) }
 
                     entities.TagPosts
-                        .filter { it.tagId == group.id }
+                        .filter { it.groupId == group.id }
                         .forEach { entities.TagPosts.remove(it) }
 
                     // TODO: Понять почему здесь падает
@@ -61,7 +61,7 @@ class PostMerger(
 
     private fun DataContext.getPostsForTag(group: Group): List<Post> {
         return TagPosts
-            .filter { it.tagId == group.id }
+            .filter { it.groupId == group.id }
             .map { tp -> Posts.first { it.id == tp.postId } }
     }
 
@@ -69,7 +69,7 @@ class PostMerger(
         return updatePostsAsync(newPosts)
             .flatMap {
                 dataContext.use { entities ->
-                    var links = entities.TagPosts.filter { it.tagId == group.id }
+                    var links = entities.TagPosts.filter { it.groupId == group.id }
                     val actualPosts = links.subList(0, divider!!).toArrayList()
                     val expiredPosts = links.subList(divider!!, links.size).toArrayList()
 
@@ -103,13 +103,13 @@ class PostMerger(
         }
     }
 
-    private fun addIfNew(group: Group, list: MutableList<TagPost>, item: Post) {
+    private fun addIfNew(group: Group, list: MutableList<GroupPost>, item: Post) {
         for (s in list)
             if (s.postId == item.id) return
-        list.add(TagPost(group.id, item.id))
+        list.add(GroupPost(group.id, item.id))
     }
 
-    private fun remove(list: MutableList<TagPost>, item: Post) {
+    private fun remove(list: MutableList<GroupPost>, item: Post) {
         val iterator = list.iterator()
         while (iterator.hasNext())
             if (iterator.next().postId == item.id) iterator.remove()

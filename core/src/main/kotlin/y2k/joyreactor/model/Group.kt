@@ -11,8 +11,8 @@ data class Group(
     val name: String,
     val quality: Quality,
     val title: String,
-    val isVisible: Boolean = false,
     val image: Image? = null,
+    val isVisible: Boolean = false,
     override val id: Long = 0) : Serializable, DataSet.Dto {
 
     override fun identify(newId: Long): Group {
@@ -25,14 +25,7 @@ data class Group(
     val username: String
         get() = name
 
-    val isFavorite: Boolean
-        get() = type == Type.Favorite
-
     companion object {
-
-        fun makeUsers(user: String): Group {
-            return Group(Type.User, user, Quality.Good, user)
-        }
 
         fun makeFavorite(user: String): Group {
             return Group(Type.Favorite, user, Quality.Good, user)
@@ -40,6 +33,10 @@ data class Group(
 
         fun makeFeatured(): Group {
             return Group(Type.Favorite, "", Quality.Good, "")
+        }
+
+        fun makeTag(name: String, image: Image? = null): Group {
+            return Group(Type.Tag, name, Quality.Good, name, image)
         }
     }
 

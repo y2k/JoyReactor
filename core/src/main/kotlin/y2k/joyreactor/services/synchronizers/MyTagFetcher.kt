@@ -1,8 +1,8 @@
 package y2k.joyreactor.services.synchronizers
 
 import rx.Observable
-import y2k.joyreactor.model.Image
 import y2k.joyreactor.model.Group
+import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.TagsForUserRequest
 import y2k.joyreactor.services.requests.UserNameRequest
@@ -75,7 +75,7 @@ class MyTagFetcher(
             makeTag("Story", "227"))
 
         private fun makeTag(title: String, tagId: String): Group {
-            return Group(title, title, false, Image("http://img0.joyreactor.cc/pics/avatar/tag/" + tagId))
+            return Group.makeTag(title, Image("http://img0.joyreactor.cc/pics/avatar/tag/" + tagId))
         }
 
         fun request(): Observable<List<Group>> {

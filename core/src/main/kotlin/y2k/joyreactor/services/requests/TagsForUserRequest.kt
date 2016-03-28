@@ -3,8 +3,8 @@ package y2k.joyreactor.services.requests
 import rx.Observable
 import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.http.HttpClient
-import y2k.joyreactor.model.Image
 import y2k.joyreactor.model.Group
+import y2k.joyreactor.model.Image
 import java.util.*
 
 /**
@@ -22,7 +22,7 @@ class TagsForUserRequest(private val httpClient: HttpClient) {
                 if ("Читает" == h.text()) {
                     for (a in h.parent().select("a")) {
                         val name = a.text()
-                        tags.add(Group(name, name, false, Image(imageRequest.request(name))))
+                        tags.add(Group.makeTag(name, Image(imageRequest.request(name))))
                     }
                     break
                 }
