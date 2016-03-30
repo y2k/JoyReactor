@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.binding
-import y2k.joyreactor.common.subscribeOnMain
+import y2k.joyreactor.common.await
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.UserService
 
@@ -21,7 +21,7 @@ class AddTagViewModel(
         error.value = false
         service
             .favoriteTag(tag.value)
-            .subscribeOnMain({
+            .await({
                 isBusy.value = false
                 navigationService.closeAddTag()
             }, {

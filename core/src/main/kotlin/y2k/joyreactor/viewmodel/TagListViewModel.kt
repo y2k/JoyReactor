@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.binding
-import y2k.joyreactor.common.subscribeOnMain
+import y2k.joyreactor.common.await
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
@@ -21,7 +21,7 @@ class TagListViewModel(
         lifeCycleService.add {
             service
                 .getMyTags()
-                .subscribeOnMain {
+                .await {
                     tags.value = it
                 }
         }
@@ -44,6 +44,6 @@ class TagListViewModel(
     fun selectedFavorite() {
         service
             .getTagForFavorite()
-            .subscribeOnMain { broadcastService.broadcast(BroadcastService.TagSelected(it)) }
+            .await { broadcastService.broadcast(BroadcastService.TagSelected(it)) }
     }
 }

@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.binding
-import y2k.joyreactor.common.subscribeOnMain
+import y2k.joyreactor.common.await
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.ProfileService
@@ -25,7 +25,7 @@ class ProfileViewModel(
         isBusy.value = true
         service
             .getProfile()
-            .subscribeOnMain({
+            .await({
                 userName.value = it.userName
                 userImage.value = it.userImage
                 rating.value = it.rating
@@ -41,6 +41,6 @@ class ProfileViewModel(
     fun logout() {
         service
             .logout()
-            .subscribeOnMain { navigationService.switchProfileToLogin() }
+            .await { navigationService.switchProfileToLogin() }
     }
 }

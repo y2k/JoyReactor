@@ -1,8 +1,8 @@
 package y2k.joyreactor.viewmodel
 
 import rx.Subscription
+import y2k.joyreactor.common.await
 import y2k.joyreactor.common.binding
-import y2k.joyreactor.common.subscribeOnMain
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.platform.NavigationService
@@ -33,17 +33,15 @@ class PostListViewModel(
         if (old == new) return@observable
 
         postsSubscription?.unsubscribe()
-        postsSubscription = service
-            .query(new)
-            .subscribeOnMain {
-                val postsWithDiv = ArrayList<Post?>(it.posts)
-                it.divider?.let { postsWithDiv.add(it, null) }
-                posts.value = postsWithDiv
-                hasNewPosts.value = it.hasNew
-            }
+        postsSubscription = service.query(new).await {
+            val postsWithDiv = ArrayList<Post?>(it.posts)
+            it.divider?.let { postsWithDiv.add(it, null) }
+            posts.value = postsWithDiv
+            hasNewPosts.value = it.hasNew
+        }
 
         isBusy.value = true
-        service.preloadNewPosts(new).subscribeOnMain { isBusy.value = false }
+        service.preloadNewPosts(new).await { isBusy.value = false }
     }
 
     init {
@@ -53,7 +51,7 @@ class PostListViewModel(
         tagMode
             .asObservable()
             .flatMap { userService.makeGroup(group, qualityFromIndex(it)) }
-            .subscribeOnMain { group = it }
+            .await { group = it }
     }
 
     private fun qualityFromIndex(it: Int): Group.Quality {
@@ -70,22 +68,20 @@ class PostListViewModel(
 
     fun applyNew() {
         hasNewPosts.value = false
-        service.applyNew(group).subscribe()
+        service.applyNew(group).await()
     }
 
     fun loadMore() {
         isBusy.value = true
-        service.loadNextPage(group).subscribeOnMain { isBusy.value = false }
+        service.loadNextPage(group).await { isBusy.value = false }
     }
 
     fun reloadFirstPage() {
         isBusy.value = true
-        service
-            .reloadFirstPage(group)
-            .subscribeOnMain {
-                isBusy.value = false
-                hasNewPosts.value = false
-            }
+        service.reloadFirstPage(group).await {
+            isBusy.value = false
+            hasNewPosts.value = false
+        }
     }
 
     // ==============================================================

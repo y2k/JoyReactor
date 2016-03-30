@@ -76,18 +76,22 @@ fun <T, R> Observable<T>.concatAndRepeat(other: Observable<R>): Observable<T> {
     return concatWith(other.flatMap { this })
 }
 
-fun Completable.subscribeOnMain(onComplete: () -> Unit, onError: (Throwable) -> Unit): Subscription {
+fun Completable.await(): Subscription {
+    return subscribe()
+}
+
+fun Completable.await(onComplete: () -> Unit, onError: (Throwable) -> Unit): Subscription {
     return observeOn(ForegroundScheduler.instance).subscribe(onError, onComplete)
 }
 
-fun Completable.subscribeOnMain(onComplete: () -> Unit): Subscription {
+fun Completable.await(onComplete: () -> Unit): Subscription {
     return observeOn(ForegroundScheduler.instance).subscribe({ it.printStackTrace() }, onComplete)
 }
 
-fun <T> Observable<T>.subscribeOnMain(onNext: (T) -> Unit, onError: (Throwable) -> Unit): Subscription {
+fun <T> Observable<T>.await(onNext: (T) -> Unit, onError: (Throwable) -> Unit): Subscription {
     return observeOn(ForegroundScheduler.instance).subscribe(onNext, onError)
 }
 
-fun <T> Observable<T>.subscribeOnMain(onNext: (T) -> Unit): Subscription {
+fun <T> Observable<T>.await(onNext: (T) -> Unit): Subscription {
     return observeOn(ForegroundScheduler.instance).subscribe(onNext, { it.printStackTrace() })
 }

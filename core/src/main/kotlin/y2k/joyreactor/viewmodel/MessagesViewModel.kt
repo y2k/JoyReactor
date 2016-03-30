@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.binding
-import y2k.joyreactor.common.subscribeOnMain
+import y2k.joyreactor.common.await
 import y2k.joyreactor.model.Message
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.UserMessagesService
@@ -19,13 +19,13 @@ class MessagesViewModel(
     init {
         service
             .getMessages(navigation.argument)
-            .subscribeOnMain { messages.value = it }
+            .await { messages.value = it }
     }
 
     fun sendNewMessage() {
         service
             .sendNewMessage(navigation.argument, newMessage.value)
-            .subscribeOnMain { messages.value = it }
+            .await { messages.value = it }
         newMessage.value = ""
     }
 }

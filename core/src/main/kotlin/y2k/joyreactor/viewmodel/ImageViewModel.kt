@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.binding
-import y2k.joyreactor.common.subscribeOnMain
+import y2k.joyreactor.common.await
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.PostService
 import java.io.File
@@ -18,7 +18,7 @@ class ImageViewModel(service: PostService) {
         isBusy.value = true
         service
             .mainImage(NavigationService.instance.argument.toLong())
-            .subscribeOnMain({
+            .await({
                 imageFile.value = it
                 isBusy.value = false
             }) {

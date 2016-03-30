@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.binding
-import y2k.joyreactor.common.subscribeOnMain
+import y2k.joyreactor.common.await
 import y2k.joyreactor.model.Message
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.LifeCycleService
@@ -27,7 +27,7 @@ class ThreadsViewModel(
         var isWeb = false // TODO: переделать
         service
             .getThreads()
-            .subscribeOnMain {
+            .await {
                 threads.value = it
 
                 if (isWeb) isBusy.value = false

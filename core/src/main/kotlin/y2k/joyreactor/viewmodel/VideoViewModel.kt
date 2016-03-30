@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.binding
-import y2k.joyreactor.common.subscribeOnMain
+import y2k.joyreactor.common.await
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.PostService
 import java.io.File
@@ -20,7 +20,7 @@ class VideoViewModel(
         isBusy.value = true
         service
             .getVideo(navigationService.argument)
-            .subscribeOnMain({
+            .await({
                 videoFile.value = it
                 isBusy.value = false
             }, {

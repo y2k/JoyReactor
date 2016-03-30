@@ -2,7 +2,7 @@ package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.PartialResult
 import y2k.joyreactor.common.binding
-import y2k.joyreactor.common.subscribeOnMain
+import y2k.joyreactor.common.await
 import y2k.joyreactor.model.Comment
 import y2k.joyreactor.model.CommentGroup
 import y2k.joyreactor.model.EmptyGroup
@@ -38,23 +38,23 @@ class PostViewModel(
         isBusy.value = true
         service
             .synchronizePostAsync(navigation.argument)
-            .subscribeOnMain({ post ->
+            .await({ post ->
                 posterAspect.value = post.image?.aspect ?: 1f
-                service.getPostImages().subscribeOnMain { images.value = it }
+                service.getPostImages().await { images.value = it }
 
                 description.value = post.title
                 tags.value = post.tags
 
                 service
                     .getCommentsAsync(post.id, 0)
-                    .subscribeOnMain {
+                    .await {
                         comments.value = it
                         isBusy.value = false
                     }
 
                 service
                     .mainImagePartial(post.id)
-                    .subscribeOnMain { poster.value = it }
+                    .await { poster.value = it }
 
                 //                userService
                 //                    .isAuthorized()
@@ -75,7 +75,7 @@ class PostViewModel(
             .getFromCache(navigation.argument)
             .flatMap { service.mainImage(it.id) }
             .flatMap { Platform.instance.saveToGallery(it) }
-            .subscribeOnMain { isBusy.value = false }
+            .await { isBusy.value = false }
     }
 
     fun openInBrowser() {
@@ -89,6 +89,6 @@ class PostViewModel(
     fun selectComment(comment: Comment) {
         service
             .getCommentsAsync(comment.postId, comments.value.getNavigation(comment))
-            .subscribeOnMain { comments.value = it }
+            .await { comments.value = it }
     }
 }

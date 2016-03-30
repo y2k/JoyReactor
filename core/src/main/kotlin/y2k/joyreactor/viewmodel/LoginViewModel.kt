@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.binding
-import y2k.joyreactor.common.subscribeOnMain
+import y2k.joyreactor.common.await
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.ProfileService
 
@@ -22,7 +22,7 @@ class LoginViewModel(
         isError.value = false
         service
             .login(username.value, password.value)
-            .subscribeOnMain({
+            .await({
                 isBusy.value = false
                 NavigationService.instance.switchLoginToProfile()
             }, {
