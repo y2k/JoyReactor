@@ -76,10 +76,6 @@ fun <T, R> Observable<T>.concatAndRepeat(other: Observable<R>): Observable<T> {
     return concatWith(other.flatMap { this })
 }
 
-fun Completable.await(): Subscription {
-    return subscribe()
-}
-
 fun Completable.await(onComplete: () -> Unit, onError: (Throwable) -> Unit): Subscription {
     return observeOn(ForegroundScheduler.instance).subscribe(onError, onComplete)
 }

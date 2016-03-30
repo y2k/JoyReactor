@@ -68,7 +68,7 @@ class PostListViewModel(
 
     fun applyNew() {
         hasNewPosts.value = false
-        service.applyNew(group).await()
+        service.applyNew(group)
     }
 
     fun loadMore() {

@@ -29,26 +29,27 @@ class TagService(private val dataContext: DataContext.Factory,
                             .map { link -> Posts.first { it.id == link.postId } }
                     }
             }
-            .map { State(it, buffer.dividers[group.id], buffer.hasNew[group.id]!!) }
+            .map { State(it, buffer.dividers[group.id], buffer.hasNew[group.id] ?: false) }
     }
 
     fun preloadNewPosts(group: Group): Completable {
+        notifyDataChanged()
         return requestAsync(group)
             .flatMap { merger.isUnsafeUpdate(group, it.posts) }
             .doOnNext { buffer.hasNew[group.id] = it }
             .flatMap {
                 if (it) Observable.empty<Unit>()
-                else applyNew(group).toObservable<Unit>()
+                else merger.mergeFirstPage(group, buffer.requests[group.id]!!.posts)
             }
             .doOnCompleted { notifyDataChanged() }
             .toCompletable()
     }
 
-    fun applyNew(group: Group): Completable {
-        return merger
+    fun applyNew(group: Group) {
+        merger
             .mergeFirstPage(group, buffer.requests[group.id]!!.posts)
             .doOnNext { notifyDataChanged() }
-            .toCompletable()
+            .subscribe()
     }
 
     fun loadNextPage(group: Group): Completable {
