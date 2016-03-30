@@ -28,7 +28,7 @@ object ServiceLocator {
         register { MessagesViewModel(resolve(), resolve()) }
 
         register { MessageListRequest(resolve(), resolve()) }
-        register { PostMerger(resolve()) }
+        register { PostMerger(resolve(), resolve()) }
         register { MemoryBuffer }
         register { MyTagFetcher(resolve(), resolve(), resolve()) }
         register { PrivateMessageFetcher(resolve(), resolve()) }
@@ -43,7 +43,7 @@ object ServiceLocator {
         register { SendMessageRequest(resolve()) }
 
         register { PostService(resolve(), resolve(), resolve(), resolve()) }
-        register { TagService(resolve(), resolve(), resolve()) }
+        register { TagService(resolve(), resolve(), resolve(), resolve()) }
         register { UserService(resolve(), resolve(), resolve(), resolve()) }
         register { ProfileService(resolve(), resolve(), resolve()) }
         register { UserMessagesService(resolve(), resolve(), resolve()) }

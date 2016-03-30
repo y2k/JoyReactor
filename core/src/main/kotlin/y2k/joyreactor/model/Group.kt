@@ -27,6 +27,8 @@ data class Group(
 
     companion object {
 
+        val Undefined = Group(Group.Type.Tag, "", Group.Quality.Good, "")
+
         fun makeFavorite(user: String): Group {
             return Group(Type.Favorite, user, Quality.Good, user)
         }

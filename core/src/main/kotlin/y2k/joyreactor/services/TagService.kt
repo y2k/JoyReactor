@@ -3,7 +3,6 @@ package y2k.joyreactor.services
 import rx.Completable
 import rx.Observable
 import rx.subjects.PublishSubject
-import y2k.joyreactor.common.peek
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.services.repository.DataContext
@@ -15,18 +14,12 @@ import y2k.joyreactor.services.synchronizers.PostMerger
  */
 class TagService(private val dataContext: DataContext.Factory,
                  private val postsRequest: PostsForTagRequest,
-                 private val merger: PostMerger) {
-
-    private @Volatile lateinit var lastPage: PostsForTagRequest.Data
+                 private val merger: PostMerger,
+                 private val buffer: MemoryBuffer) {
 
     private val tagChangedEvent = PublishSubject.create<Unit>()
 
-    fun preloadNewPosts(group: Group): Observable<Boolean> {
-        notifyDataChanged()
-        return requestAsync(group).flatMap { merger.isUnsafeUpdate(group, it.posts) }
-    }
-
-    fun queryAsync(group: Group): Observable<Pair<List<Post>, Int?>> {
+    fun query(group: Group): Observable<State> {
         return tagChangedEvent
             .flatMap {
                 dataContext
@@ -36,18 +29,30 @@ class TagService(private val dataContext: DataContext.Factory,
                             .map { link -> Posts.first { it.id == link.postId } }
                     }
             }
-            .map { it to merger.divider }
+            .map { State(it, buffer.dividers[group.id], buffer.hasNew[group.id]!!) }
+    }
+
+    fun preloadNewPosts(group: Group): Completable {
+        return requestAsync(group)
+            .flatMap { merger.isUnsafeUpdate(group, it.posts) }
+            .doOnNext { buffer.hasNew[group.id] = it }
+            .flatMap {
+                if (it) Observable.empty<Unit>()
+                else applyNew(group).toObservable<Unit>()
+            }
+            .doOnCompleted { notifyDataChanged() }
+            .toCompletable()
     }
 
     fun applyNew(group: Group): Completable {
         return merger
-            .mergeFirstPage(group, lastPage.posts)
+            .mergeFirstPage(group, buffer.requests[group.id]!!.posts)
             .doOnNext { notifyDataChanged() }
             .toCompletable()
     }
 
     fun loadNextPage(group: Group): Completable {
-        return requestAsync(group, lastPage.nextPage)
+        return requestAsync(group, buffer.requests[group.id]!!.nextPage)
             .flatMap { merger.mergeNextPage(group, it.posts) }
             .doOnNext { notifyDataChanged() }
             .toCompletable()
@@ -70,13 +75,15 @@ class TagService(private val dataContext: DataContext.Factory,
             .toCompletable()
     }
 
-    private fun notifyDataChanged() {
+    fun notifyDataChanged() {
         tagChangedEvent.onNext(null)
     }
 
     fun requestAsync(group: Group, page: String? = null): Observable<PostsForTagRequest.Data> {
         return postsRequest
             .requestAsync(group, page)
-            .peek { lastPage = it }
+            .doOnNext { buffer.requests[group.id] = it }
     }
+
+    data class State(val posts: List<Post>, val divider: Int?, val hasNew: Boolean)
 }

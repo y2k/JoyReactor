@@ -29,26 +29,21 @@ class PostListViewModel(
 
     var postsSubscription: Subscription? = null
 
-    var group by Delegates.observable(Group.makeFeatured()) { p, old, new ->
+    private var group by Delegates.observable(Group.Undefined) { p, old, new ->
         if (old == new) return@observable
 
         postsSubscription?.unsubscribe()
         postsSubscription = service
-            .queryAsync(new)
+            .query(new)
             .subscribeOnMain {
-                val postsWithDiv = ArrayList<Post?>(it.first)
-                it.second?.let { postsWithDiv.add(it, null) }
-                this.posts.value = postsWithDiv
+                val postsWithDiv = ArrayList<Post?>(it.posts)
+                it.divider?.let { postsWithDiv.add(it, null) }
+                posts.value = postsWithDiv
+                hasNewPosts.value = it.hasNew
             }
 
         isBusy.value = true
-        service
-            .preloadNewPosts(new)
-            .subscribeOnMain { unsafeUpdate ->
-                hasNewPosts.value = unsafeUpdate
-                isBusy.value = false
-                if (!unsafeUpdate) applyNew()
-            }
+        service.preloadNewPosts(new).subscribeOnMain { isBusy.value = false }
     }
 
     init {
@@ -61,7 +56,7 @@ class PostListViewModel(
             .subscribeOnMain { group = it }
     }
 
-    private fun qualityFromIndex(it: Int?): Group.Quality {
+    private fun qualityFromIndex(it: Int): Group.Quality {
         return when (it) {
             1 -> Group.Quality.Best
             2 -> Group.Quality.All
@@ -69,8 +64,13 @@ class PostListViewModel(
         }
     }
 
+    // ==============================================================
+    // Commands
+    // ==============================================================
+
     fun applyNew() {
-        service.applyNew(group).subscribeOnMain { hasNewPosts.value = false }
+        hasNewPosts.value = false
+        service.applyNew(group).subscribe()
     }
 
     fun loadMore() {
@@ -87,6 +87,10 @@ class PostListViewModel(
                 hasNewPosts.value = false
             }
     }
+
+    // ==============================================================
+    // Item commands
+    // ==============================================================
 
     fun itemSelected(position: Int) {
         val post = posts.value[position]

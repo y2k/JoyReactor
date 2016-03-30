@@ -3,9 +3,10 @@ package y2k.joyreactor.services.synchronizers
 import rx.Observable
 import y2k.joyreactor.common.toArrayList
 import y2k.joyreactor.common.unionOrdered
-import y2k.joyreactor.model.Post
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.GroupPost
+import y2k.joyreactor.model.Post
+import y2k.joyreactor.services.MemoryBuffer
 import y2k.joyreactor.services.repository.DataContext
 import java.util.*
 
@@ -13,16 +14,14 @@ import java.util.*
  * Created by y2k on 10/31/15.
  */
 class PostMerger(
+    private val buffer: MemoryBuffer,
     private val dataContext: DataContext.Factory) {
-
-    var divider: Int? = null
-        private set
 
     fun mergeFirstPage(group: Group, newPosts: List<Post>): Observable<Unit> {
         return updatePostsAsync(newPosts)
             .flatMap {
                 dataContext.use { entities ->
-                    divider = newPosts.size
+                    buffer.dividers[group.id] = newPosts.size
 
                     val result = ArrayList<GroupPost>()
                     for (s in newPosts)
@@ -43,6 +42,7 @@ class PostMerger(
                     entities.saveChanges()
                 }
             }
+            .doOnNext { buffer.hasNew[group.id] = false }
     }
 
     fun isUnsafeUpdate(group: Group, newPosts: List<Post>): Observable<Boolean> {
@@ -70,14 +70,14 @@ class PostMerger(
             .flatMap {
                 dataContext.use { entities ->
                     var links = entities.TagPosts.filter { it.groupId == group.id }
-                    val actualPosts = links.subList(0, divider!!).toArrayList()
-                    val expiredPosts = links.subList(divider!!, links.size).toArrayList()
+                    val actualPosts = links.subList(0, buffer.dividers[group.id]!!).toArrayList()
+                    val expiredPosts = links.subList(buffer.dividers[group.id]!!, links.size).toArrayList()
 
                     for (p in newPosts) {
                         addIfNew(group, actualPosts, p)
                         remove(expiredPosts, p)
                     }
-                    divider = actualPosts.size
+                    buffer.dividers[group.id] = actualPosts.size
 
                     links.forEach { entities.TagPosts.remove(it) }
                     actualPosts
