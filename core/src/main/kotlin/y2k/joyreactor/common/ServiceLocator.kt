@@ -55,7 +55,7 @@ object ServiceLocator {
         register { VideoViewModel(resolve(), resolve()) }
         register { ProfileViewModel(resolve(), resolve()) }
         register { AddTagViewModel(resolve(), resolve()) }
-        register { PostListViewModel(resolve(), resolve(), resolve()) }
+        register { PostListViewModel(resolve(), resolve(), resolve(), resolve()) }
 
         register { MultiTryDownloader(resolve()) }
     }

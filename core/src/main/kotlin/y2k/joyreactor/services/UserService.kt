@@ -35,4 +35,12 @@ class UserService(
             .request()
             .map { Group.makeFavorite(it!!) }
     }
+
+    fun makeGroup(base: Group, quality: Group.Quality): Observable<Group> {
+        return dataContext.applyUse {
+            val group = base.copy(id = 0L, quality = quality, isVisible = false)
+            val exists = Tags.firstOrNull { it.serverId == group.serverId }
+            exists ?: Tags.add(group).apply { saveChanges() }
+        }
+    }
 }

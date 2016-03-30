@@ -1,5 +1,6 @@
 package y2k.joyreactor.common
 
+import rx.Observable
 import rx.subjects.PublishSubject
 import rx.subjects.Subject
 import kotlin.properties.Delegates
@@ -19,6 +20,10 @@ class Binding<T>(private val initValue: T) {
         subject.subscribe(f)
         f(value)
     }
+
+    fun asObservable(): Observable<T> {
+        return subject;
+    }
 }
 
 fun <T> binding(defaultValue: T): Binding<T> {
@@ -26,5 +31,5 @@ fun <T> binding(defaultValue: T): Binding<T> {
 }
 
 fun <T> binding(): Binding<T?> {
-    return Binding<T?>(null)
+    return Binding(null)
 }

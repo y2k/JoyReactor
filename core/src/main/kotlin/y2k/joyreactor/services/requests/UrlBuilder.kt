@@ -10,12 +10,16 @@ import java.net.URLEncoder
 internal class UrlBuilder {
 
     fun build(group: Group, pageId: String?): String {
-        var url = "http://joyreactor.cc/"
-        if (group.type == Group.Type.User)
-            url += "user/" + URLEncoder.encode(group.name)
-        else if (group.type == Group.Type.Tag)
-            url += "tag/" + URLEncoder.encode(group.name)
-        if (pageId != null) url += "/" + pageId
-        return url
+        val url = StringBuilder("http://joyreactor.cc/")
+        when (group.type) {
+            Group.Type.User -> url.append("user/" + URLEncoder.encode(group.name))
+            Group.Type.Tag -> url.append("tag/" + URLEncoder.encode(group.name))
+        }
+        when (group.quality) {
+            Group.Quality.Best -> url.append("/best")
+            Group.Quality.All -> url.append("/all")
+        }
+        if (pageId != null) url.append("/" + pageId)
+        return "" + url
     }
 }
