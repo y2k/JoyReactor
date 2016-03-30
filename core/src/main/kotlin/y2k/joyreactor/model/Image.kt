@@ -8,9 +8,9 @@ import java.net.URL
  * Created by y2k on 10/29/15.
  */
 class Image(
-        url: String? = null,
-        private val width: Int = 0,
-        private val height: Int = 0) : Serializable {
+    url: String? = null,
+    private val width: Int = 0,
+    private val height: Int = 0) : Serializable {
 
     private val url: String? = clearUrl(url)
 
@@ -32,10 +32,9 @@ class Image(
 
     private fun toURL(width: Int?, height: Int?, format: String?): URL {
         if (width == null || height == null)
-            return URL("https", "api-i-twister.net", 8011, "/cache/original?url=$url${getFormatPart(format)}")
-
+            return URL("https", "jr.y2k.work", 443, "/cache/original?url=$url${getFormatPart(format)}")
         return URL(
-            "https", "api-i-twister.net", 8011,
+            "https", "jr.y2k.work", 443,
             "/cache/fit?quality=30&bgColor=ffffff&width=$width&height=$height&url=$url")
     }
 
@@ -64,9 +63,9 @@ class Image(
 
         private fun clearUrl(url: String?): String? {
             return url
-                    ?.replace("(/comment/).+(-\\d+\\.[\\w\\d]+)$".toRegex(), "$1$2")
-                    ?.replace("(/full/).+(-\\d+\\.)".toRegex(), "$1$2")
-                    ?.replace("(/post/).+(-\\d+\\.)".toRegex(), "$1$2")
+                ?.replace("(/comment/).+(-\\d+\\.[\\w\\d]+)$".toRegex(), "$1$2")
+                ?.replace("(/full/).+(-\\d+\\.)".toRegex(), "$1$2")
+                ?.replace("(/post/).+(-\\d+\\.)".toRegex(), "$1$2")
         }
     }
 }
