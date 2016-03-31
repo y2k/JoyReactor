@@ -32,9 +32,9 @@ class Image(
 
     private fun toURL(width: Int?, height: Int?, format: String?): URL {
         if (width == null || height == null)
-            return URL("https", "jr.y2k.work", 443, "/cache/original?url=$url${getFormatPart(format)}")
+            return URL("https", "azure.y2k.work", 443, "/cache/original?url=$url${getFormatPart(format)}")
         return URL(
-            "https", "jr.y2k.work", 443,
+            "https", "azure.y2k.work", 443,
             "/cache/fit?quality=30&bgColor=ffffff&width=$width&height=$height&url=$url")
     }
 
