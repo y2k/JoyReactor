@@ -20,34 +20,34 @@ fun bindingBuilder(controller: UIViewController? = null, init: BindingBuild.() -
 
 class BindingBuild(private val controller: UIViewController?) {
 
-    fun <T> bind(source: Binding<T>, destination: Binding<T>) {
+    fun <T> bind(source: ObservableProperty<T>, destination: ObservableProperty<T>) {
         subscribe(source) { destination.value = it }
     }
 
-    fun refreshControl(view: UIRefreshControl, binding: Binding<Boolean>) {
-        subscribe(binding) {
+    fun refreshControl(view: UIRefreshControl, property: ObservableProperty<Boolean>) {
+        subscribe(property) {
             if (it) view.beginRefreshing()
             else view.endRefreshing()
         }
     }
 
-    fun indicatorView(view: UIActivityIndicatorView, binding: Binding<Boolean>) {
-        subscribe(binding) {
+    fun indicatorView(view: UIActivityIndicatorView, property: ObservableProperty<Boolean>) {
+        subscribe(property) {
             if (it) view.startAnimating();
             else view.stopAnimating();
         }
     }
 
-    fun starProgress(view: StarProgress, binding: Binding<Float>) {
-        subscribe(binding) { view.setStars(it.toInt()) }
+    fun starProgress(view: StarProgress, property: ObservableProperty<Float>) {
+        subscribe(property) { view.setStars(it.toInt()) }
     }
 
-    fun progressBar(view: ProgressBar, binding: Binding<Float>) {
-        subscribe(binding) { view.setValue(it) }
+    fun progressBar(view: ProgressBar, property: ObservableProperty<Float>) {
+        subscribe(property) { view.setValue(it) }
     }
 
-    fun imageView(view: UIImageView, binding: Binding<Image?>) {
-        subscribe(binding) {
+    fun imageView(view: UIImageView, property: ObservableProperty<Image?>) {
+        subscribe(property) {
             ImageRequest()
                 .setUrl(it)
                 .setSize(view.frame.width.toInt(), view.frame.height.toInt())
@@ -55,12 +55,12 @@ class BindingBuild(private val controller: UIViewController?) {
         }
     }
 
-    inline fun <T> label(view: UILabel, binding: Binding<T>, crossinline converter: (T) -> String) {
-        binding.subscribe { view.text = converter(it) }
+    inline fun <T> label(view: UILabel, property: ObservableProperty<T>, crossinline converter: (T) -> String) {
+        property.subscribe { view.text = converter(it) }
     }
 
-    fun label(view: UILabel, binding: Binding<String>) {
-        subscribe(binding) { view.text = it }
+    fun label(view: UILabel, property: ObservableProperty<String>) {
+        subscribe(property) { view.text = it }
     }
 
     fun navigationItem(init: NavigationItemBinding.() -> Unit) {
@@ -73,61 +73,61 @@ class BindingBuild(private val controller: UIViewController?) {
         views.last().delegate = DefaultUITextFieldDelegate()
     }
 
-    fun <T> action(binding: Binding<T>, callback: (T) -> Unit) {
-        binding.subscribe(callback)
+    fun <T> action(property: ObservableProperty<T>, callback: (T) -> Unit) {
+        property.subscribe(callback)
     }
 
-    fun textField(view: UITextField, binding: Binding<String>) {
-        subscribe(binding) { view.text = it }
+    fun textField(view: UITextField, property: ObservableProperty<String>) {
+        subscribe(property) { view.text = it }
         view.addOnEditingChangedListener {
-            binding.value = view.text
+            property.value = view.text
         }
     }
 
-    fun textView(view: UITextView, binding: Binding<String>) {
-        subscribe(binding) { view.text = it }
+    fun textView(view: UITextView, property: ObservableProperty<String>) {
+        subscribe(property) { view.text = it }
         view.setDelegate(object : UITextViewDelegateAdapter() {
 
             override fun didChange(textView: UITextView) {
-                binding.value = textView.text
+                property.value = textView.text
             }
         })
     }
 
-    fun <T, TC : ListCell<T>> tableView(view: UITableView, type: KClass<TC>, binding: Binding<List<T>>) {
+    fun <T, TC : ListCell<T>> tableView(view: UITableView, type: KClass<TC>, property: ObservableProperty<List<T>>) {
         val source = ListDataSource.Default<T, TC>(view);
-        subscribe(binding) { source.update(it) }
+        subscribe(property) { source.update(it) }
         view.dataSource = source
     }
 
-    fun <T> tableView(view: UITableView, binding: Binding<out List<T>>, init: UITableViewBinding<T>.() -> Unit) {
+    fun <T> tableView(view: UITableView, property: ObservableProperty<out List<T>>, init: UITableViewBinding<T>.() -> Unit) {
         //        val source = ListDataSource.Default<T, TC>(view);
         //        subscribe(binding) { source.update(it) }
         //        view.dataSource = source
-        UITableViewBinding(view, binding).init()
+        UITableViewBinding(view, property).init()
     }
 
     fun command(view: UIButton, command: () -> Unit) {
         view.addOnTouchUpInsideListener { sender, e -> command() }
     }
 
-    fun visible(view: UIView, binding: Binding<Boolean>, invert: Boolean = false) {
-        subscribe(binding) { view.isHidden = !it xor invert }
+    fun visible(view: UIView, property: ObservableProperty<Boolean>, invert: Boolean = false) {
+        subscribe(property) { view.isHidden = !it xor invert }
     }
 
-    private inline fun <T> subscribe(binding: Binding<T>, crossinline f: (T) -> Unit) {
-        binding.subscribe { f(it) }
+    private inline fun <T> subscribe(property: ObservableProperty<T>, crossinline f: (T) -> Unit) {
+        property.subscribe { f(it) }
     }
 }
 
 class UITableViewBinding<T>(
     private val view: UITableView,
-    private val binding: Binding<out List<T>>) {
+    private val property: ObservableProperty<out List<T>>) {
 
     val source = ListDataSource2<T>(view);
 
     init {
-        binding.subscribe { source.update(it as List<T>) }
+        property.subscribe { source.update(it as List<T>) }
         view.dataSource = source
     }
 
@@ -154,22 +154,22 @@ class NavigationItemBinding(private val controller: UIViewController) {
     }
 }
 
-fun UIWebView.bindUrl(binding: Binding<String>) {
-    binding.subscribe { loadRequest(NSURLRequest(NSURL(it))) }
-    loadRequest(NSURLRequest(NSURL(binding.value))) // TODO:
+fun UIWebView.bindUrl(property: ObservableProperty<String>) {
+    property.subscribe { loadRequest(NSURLRequest(NSURL(it))) }
+    loadRequest(NSURLRequest(NSURL(property.value))) // TODO:
 }
 
-fun UIWebView.bindTitle(binding: Binding<String>) {
+fun UIWebView.bindTitle(property: ObservableProperty<String>) {
     delegate = object : UIWebViewDelegateAdapter() {
 
         override fun didFinishLoad(webView: UIWebView?) {
-            binding.value = evaluateJavaScript("document.title")
+            property.value = evaluateJavaScript("document.title")
         }
     }
 }
 
-fun UIView.bind(binding: Binding<Boolean>) {
-    binding.subscribe { isHidden = !it }
+fun UIView.bind(property: ObservableProperty<Boolean>) {
+    property.subscribe { isHidden = !it }
 }
 
 fun UILabel.bind(text: String) {

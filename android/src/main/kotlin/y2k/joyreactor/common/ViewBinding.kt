@@ -74,62 +74,62 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
     //        binding.subscribe { view.isRefreshing = it }
     //    }
 
-    fun spinner(id: Int, binding: Binding<Int>) {
+    fun spinner(id: Int, property: ObservableProperty<Int>) {
         val view = find<Spinner>(id)
-        binding.subscribe { view.setSelection(it) }
+        property.subscribe { view.setSelection(it) }
         view.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                binding += position
+                property += position
             }
         }
     }
 
-    fun tabLayout(id: Int, binding: Binding<Int>) {
+    fun tabLayout(id: Int, property: ObservableProperty<Int>) {
         val view = find<TabLayout>(id)
         view.setOnTabSelectedListener(object : OnTabSelectedListenerAdapter() {
 
             override fun onTabReselected(tab: TabLayout.Tab) {
-                binding += tab.position
+                property += tab.position
             }
         })
-        binding.subscribe { view.getTabAt(it)?.select() }
+        property.subscribe { view.getTabAt(it)?.select() }
     }
 
-    fun radioGroup(id: Int, binding: Binding<Int>) {
+    fun radioGroup(id: Int, property: ObservableProperty<Int>) {
         val view = find<RadioGroup>(id)
-        binding.subscribe { (view.getChildAt(it) as RadioButton).isChecked = true }
+        property.subscribe { (view.getChildAt(it) as RadioButton).isChecked = true }
         view.setOnCheckedChangeListener { group, id ->
             view.getChildren().map { it as RadioButton }.indexOfFirst { it.isChecked }
         }
     }
 
-    fun <T> animator(id: Int, binding: Binding<T>, convert: (T) -> Int) {
+    fun <T> animator(id: Int, property: ObservableProperty<T>, convert: (T) -> Int) {
         val view = find<ViewAnimator>(id)
-        binding.subscribe { view.displayedChild = convert(it) }
+        property.subscribe { view.displayedChild = convert(it) }
     }
 
-    fun progressBar(id: Int, binding: Binding<Float>) {
+    fun progressBar(id: Int, property: ObservableProperty<Float>) {
         val view = find<ProgressBar>(id)
-        binding.subscribe { view.progress = it.toInt() }
+        property.subscribe { view.progress = it.toInt() }
     }
 
-    fun ratingBar(id: Int, binding: Binding<Float>) {
+    fun ratingBar(id: Int, property: ObservableProperty<Float>) {
         val view = find<RatingBar>(id)
-        binding.subscribe { view.rating = it }
+        property.subscribe { view.rating = it }
     }
 
-    fun webImageView(id: Int, binding: Binding<Image?>) {
+    fun webImageView(id: Int, property: ObservableProperty<Image?>) {
         val view = find<WebImageView>(id)
-        binding.subscribe { view.image = it }
+        property.subscribe { view.image = it }
     }
 
-    fun muteVideoView(id: Int, binding: Binding<File?>) {
+    fun muteVideoView(id: Int, property: ObservableProperty<File?>) {
         val view = find<MuteVideoView>(id)
-        binding.subscribe { it?.let { view.play(it) } }
+        property.subscribe { it?.let { view.play(it) } }
     }
 
     fun viewResolver(id: Int) {
@@ -148,71 +148,71 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
         find<View>(id).setOnClickListener { f() }
     }
 
-    fun <T> action(binding: Binding<T>, f: (T) -> Unit) {
-        binding.subscribe(f)
+    fun <T> action(property: ObservableProperty<T>, f: (T) -> Unit) {
+        property.subscribe(f)
     }
 
-    fun <T> recyclerView(id: Int, binding: Binding<out List<T>>, init: DslRecyclerView<T>.() -> Unit) {
+    fun <T> recyclerView(id: Int, property: ObservableProperty<out List<T>>, init: DslRecyclerView<T>.() -> Unit) {
         val view = find<RecyclerView>(id)
         val dsl = DslRecyclerView<T>()
         dsl.init()
         // TODO: разобраться с конвертирование
-        view.adapter = dsl.build().apply { binding.subscribe { update(it as List<T>) } }
+        view.adapter = dsl.build().apply { property.subscribe { update(it as List<T>) } }
     }
 
-    fun loadingProgressBar(id: Int, binding: Binding<Boolean>) {
+    fun loadingProgressBar(id: Int, property: ObservableProperty<Boolean>) {
         val view = find<ContentLoadingProgressBar>(id)
-        binding.subscribe { if (it) view.show() else view.hide() }
+        property.subscribe { if (it) view.show() else view.hide() }
     }
 
-    fun <T> textView(id: Int, binding: Binding<T>) {
+    fun <T> textView(id: Int, property: ObservableProperty<T>) {
         val view = find<TextView>(id)
-        binding.subscribe { if (view.text.toString() != it.toString()) view.text = it.toString() }
+        property.subscribe { if (view.text.toString() != it.toString()) view.text = it.toString() }
     }
 
-    fun fixedAspectPanel(id: Int, binding: Binding<Float>) {
+    fun fixedAspectPanel(id: Int, property: ObservableProperty<Float>) {
         val view = find<FixedAspectPanel>(id)
-        binding.subscribe { view.aspect = it }
+        property.subscribe { view.aspect = it }
     }
 
-    fun progressImageView(id: Int, binding: Binding<PartialResult<File>>) {
+    fun progressImageView(id: Int, property: ObservableProperty<PartialResult<File>>) {
         val view = find<ProgressImageView>(id)
-        binding.subscribe { view.image = it }
+        property.subscribe { view.image = it }
     }
 
-    fun tagsView(id: Int, binding: Binding<List<String>>) {
+    fun tagsView(id: Int, property: ObservableProperty<List<String>>) {
         val view = find<TagsView>(id)
-        binding.subscribe { view.tags = it }
+        property.subscribe { view.tags = it }
     }
 
-    fun imagePanel(id: Int, binding: Binding<List<Image>>) {
+    fun imagePanel(id: Int, property: ObservableProperty<List<Image>>) {
         val view = find<ImagePanel>(id)
-        binding.subscribe { view.setImages(it) }
+        property.subscribe { view.setImages(it) }
     }
 
     fun editText(id: Int, init: EditTextBinding.() -> Unit) {
         EditTextBinding(find<EditText>(id)).init()
     }
 
-    fun editText(id: Int, binding: Binding<String>) {
+    fun editText(id: Int, property: ObservableProperty<String>) {
         val view = find<EditText>(id)
-        binding.subscribe { if (view.text.toString() != it) view.setText(it) }
+        property.subscribe { if (view.text.toString() != it) view.setText(it) }
         view.addTextChangedListener(object : TextWatcherAdapter() {
 
             override fun afterTextChanged(s: Editable?) {
-                binding += "" + s
+                property += "" + s
             }
         })
     }
 
-    fun <T> visibility(id: Int, binding: Binding<T>, converter: (T) -> Boolean) {
+    fun <T> visibility(id: Int, property: ObservableProperty<T>, converter: (T) -> Boolean) {
         val view = find<View>(id)
-        binding.subscribe { view.visibility = if (converter(it)) View.VISIBLE else View.GONE }
+        property.subscribe { view.visibility = if (converter(it)) View.VISIBLE else View.GONE }
     }
 
-    fun visibility(id: Int, binding: Binding<Boolean>, invert: Boolean = false) {
+    fun visibility(id: Int, property: ObservableProperty<Boolean>, invert: Boolean = false) {
         val view = find<View>(id)
-        binding.subscribe {
+        property.subscribe {
             if (invert) view.visibility = if (it) View.GONE else View.VISIBLE
             else view.visibility = if (it) View.VISIBLE else View.GONE
         }
@@ -222,11 +222,11 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
         WebViewBinding(find<WebView>(id)).init()
     }
 
-    fun viewPager(view: ViewPager, binding: Binding<Int>) {
+    fun viewPager(view: ViewPager, property: ObservableProperty<Int>) {
         view.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
 
             override fun onPageSelected(position: Int) {
-                binding += position
+                property += position
             }
         })
     }
@@ -238,18 +238,18 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
 
 class EditTextBinding(val view: EditText) {
 
-    fun text(binding: Binding<String>) {
-        binding.subscribe { if (view.text.toString() != it) view.setText(it) }
+    fun text(property: ObservableProperty<String>) {
+        property.subscribe { if (view.text.toString() != it) view.setText(it) }
         view.addTextChangedListener(object : TextWatcherAdapter() {
 
             override fun afterTextChanged(s: Editable?) {
-                binding += "" + s
+                property += "" + s
             }
         })
     }
 
-    fun error(binding: Binding<Boolean>, text: String) {
-        binding.subscribe { view.error = if (it) text else null }
+    fun error(property: ObservableProperty<Boolean>, text: String) {
+        property.subscribe { view.error = if (it) text else null }
     }
 }
 
@@ -272,8 +272,8 @@ class MenuBinding(menuId: Int, resolvers: List<ViewResolver>) {
 
 class SwipeRefreshLayoutBinding(private val view: SwipeRefreshLayout) {
 
-    fun isRefreshing(binding: Binding<Boolean>) {
-        binding.subscribe { view.isRefreshing = it }
+    fun isRefreshing(property: ObservableProperty<Boolean>) {
+        property.subscribe { view.isRefreshing = it }
     }
 
     fun command(func: () -> Unit) {
@@ -342,8 +342,8 @@ class ViewBinding(private val view: View) {
         view.setOnClickListener { f() }
     }
 
-    fun visibility(binding: Binding<Boolean>) {
-        binding.subscribe { view.visibility = if (it) View.VISIBLE else View.GONE }
+    fun visibility(property: ObservableProperty<Boolean>) {
+        property.subscribe { view.visibility = if (it) View.VISIBLE else View.GONE }
     }
 }
 
@@ -352,15 +352,15 @@ class WebViewBinding(private val webView: WebView) {
     val settings: WebSettings
         get() = webView.settings
 
-    fun url(binding: Binding<String>) {
-        binding.subscribe { webView.loadUrl(it) }
+    fun url(property: ObservableProperty<String>) {
+        property.subscribe { webView.loadUrl(it) }
     }
 
-    fun title(binding: Binding<String>) {
+    fun title(property: ObservableProperty<String>) {
         webView.setWebViewClient(object : WebViewClient() {
 
             override fun onPageFinished(view: WebView, url: String?) {
-                binding += view.title
+                property += view.title
             }
 
             override fun shouldOverrideUrlLoading(view: WebView, url: String?): Boolean {

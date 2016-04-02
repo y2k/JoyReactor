@@ -8,7 +8,7 @@ import kotlin.properties.Delegates
 /**
  * Created by y2k on 2/23/16.
  */
-class Binding<T>(initValue: T) {
+class ObservableProperty<T>(initValue: T) {
 
     private val subject: Subject<T, T> = PublishSubject.create()
 
@@ -30,10 +30,10 @@ class Binding<T>(initValue: T) {
     }
 }
 
-fun <T> binding(defaultValue: T): Binding<T> {
-    return Binding(defaultValue)
+fun <T> binding(defaultValue: T): ObservableProperty<T> {
+    return ObservableProperty(defaultValue)
 }
 
-fun <T> binding(): Binding<T?> {
-    return Binding(null)
+fun <T> binding(): ObservableProperty<T?> {
+    return ObservableProperty(null)
 }
