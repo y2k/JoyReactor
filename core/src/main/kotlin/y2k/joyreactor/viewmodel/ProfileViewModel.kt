@@ -22,16 +22,16 @@ class ProfileViewModel(
     val isBusy = binding(false)
 
     init {
-        isBusy.value = true
+        isBusy += true
         service
             .getProfile()
             .await({
-                userName.value = it.userName
-                userImage.value = it.userImage
-                rating.value = it.rating
-                stars.value = it.stars.toFloat()
-                nextStarProgress.value = it.progressToNewStar
-                isBusy.value = false
+                userName += it.userName
+                userImage += it.userImage
+                rating += it.rating
+                stars += it.stars.toFloat()
+                nextStarProgress += it.progressToNewStar
+                isBusy += false
             }, {
                 it.printStackTrace()
                 navigationService.switchProfileToLogin()

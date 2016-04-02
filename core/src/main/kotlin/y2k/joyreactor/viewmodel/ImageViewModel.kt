@@ -15,15 +15,15 @@ class ImageViewModel(service: PostService) {
     val imageFile = binding<File>()
 
     init {
-        isBusy.value = true
+        isBusy += true
         service
             .mainImage(NavigationService.instance.argument.toLong())
             .await({
-                imageFile.value = it
-                isBusy.value = false
+                imageFile += it
+                isBusy += false
             }) {
                 it.printStackTrace()
-                isBusy.value = false
+                isBusy += false
             }
     }
 }

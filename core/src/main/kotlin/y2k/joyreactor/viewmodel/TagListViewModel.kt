@@ -22,7 +22,7 @@ class TagListViewModel(
             service
                 .getMyTags()
                 .await {
-                    tags.value = it
+                    tags += it
                 }
         }
         lifeCycleService.toString()

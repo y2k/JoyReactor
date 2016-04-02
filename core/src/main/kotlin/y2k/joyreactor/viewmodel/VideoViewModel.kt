@@ -17,15 +17,15 @@ class VideoViewModel(
     val videoFile = binding<File>()
 
     init {
-        isBusy.value = true
+        isBusy += true
         service
             .getVideo(navigationService.argument)
             .await({
-                videoFile.value = it
-                isBusy.value = false
+                videoFile += it
+                isBusy += false
             }, {
                 it.printStackTrace()
-                isBusy.value = false
+                isBusy += false
             })
     }
 }

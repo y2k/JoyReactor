@@ -19,13 +19,13 @@ class MessagesViewModel(
     init {
         service
             .getMessages(navigation.argument)
-            .await { messages.value = it }
+            .await { messages += it }
     }
 
     fun sendNewMessage() {
         service
             .sendNewMessage(navigation.argument, newMessage.value)
-            .await { messages.value = it }
-        newMessage.value = ""
+            .await { messages += it }
+        newMessage += ""
     }
 }

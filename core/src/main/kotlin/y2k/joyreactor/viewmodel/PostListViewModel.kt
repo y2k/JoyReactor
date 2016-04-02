@@ -36,12 +36,12 @@ class PostListViewModel(
         postsSubscription = service.query(new).await {
             val postsWithDiv = ArrayList<Post?>(it.posts)
             it.divider?.let { postsWithDiv.add(it, null) }
-            posts.value = postsWithDiv
-            hasNewPosts.value = it.hasNew
+            posts += postsWithDiv
+            hasNewPosts += it.hasNew
         }
 
-        isBusy.value = true
-        service.preloadNewPosts(new).await { isBusy.value = false }
+        isBusy += true
+        service.preloadNewPosts(new).await { isBusy += false }
     }
 
     init {
@@ -67,20 +67,20 @@ class PostListViewModel(
     // ==============================================================
 
     fun applyNew() {
-        hasNewPosts.value = false
+        hasNewPosts += false
         service.applyNew(group)
     }
 
     fun loadMore() {
-        isBusy.value = true
-        service.loadNextPage(group).await { isBusy.value = false }
+        isBusy += true
+        service.loadNextPage(group).await { isBusy += false }
     }
 
     fun reloadFirstPage() {
-        isBusy.value = true
+        isBusy += true
         service.reloadFirstPage(group).await {
-            isBusy.value = false
-            hasNewPosts.value = false
+            isBusy += false
+            hasNewPosts += false
         }
     }
 

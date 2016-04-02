@@ -18,17 +18,17 @@ class LoginViewModel(
     val isError = binding(false)
 
     fun login() {
-        isBusy.value = true
-        isError.value = false
+        isBusy += true
+        isError += false
         service
             .login(username.value, password.value)
             .await({
-                isBusy.value = false
+                isBusy += false
                 NavigationService.instance.switchLoginToProfile()
             }, {
                 it.printStackTrace()
-                isBusy.value = false
-                isError.value = true
+                isBusy += false
+                isError += true
             })
     }
 

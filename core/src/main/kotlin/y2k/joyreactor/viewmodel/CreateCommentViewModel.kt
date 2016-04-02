@@ -25,18 +25,18 @@ class CreateCommentViewModel(
         profileService
             .getProfile()
             .await {
-                username.value = it.userName
-                avatar.value = it.userImage
+                username += it.userName
+                avatar += it.userImage
             }
     }
 
     fun create() {
-        isBusy.value = true
+        isBusy += true
         service
             .createComment("2219757", commentText.value) // FIXME:
             .await {
                 NavigationService.instance.closeCreateComment()
-                isBusy.value = false
+                isBusy += false
             }
     }
 }

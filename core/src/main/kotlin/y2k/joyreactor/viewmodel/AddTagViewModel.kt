@@ -17,17 +17,17 @@ class AddTagViewModel(
     val error = binding(false)
 
     fun add() {
-        isBusy.value = true
-        error.value = false
+        isBusy += true
+        error += false
         service
             .favoriteTag(tag.value)
             .await({
-                isBusy.value = false
+                isBusy += false
                 navigationService.closeAddTag()
             }, {
                 it.printStackTrace()
-                isBusy.value = false
-                error.value = true
+                isBusy += false
+                error += true
             })
     }
 }

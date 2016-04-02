@@ -15,6 +15,6 @@ class GalleryViewModel(private val postService: PostService) {
     init {
         postService
             .getPostImages()
-            .await { images.value = it }
+            .await { images += it }
     }
 }

@@ -23,14 +23,14 @@ class ThreadsViewModel(
     }
 
     fun refresh() {
-        isBusy.value = true
+        isBusy += true
         var isWeb = false // TODO: переделать
         service
             .getThreads()
             .await {
-                threads.value = it
+                threads += it
 
-                if (isWeb) isBusy.value = false
+                if (isWeb) isBusy += false
                 else isWeb = true
             }
     }

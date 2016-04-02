@@ -83,7 +83,7 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                binding.value = position
+                binding += position
             }
         }
     }
@@ -93,7 +93,7 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
         view.setOnTabSelectedListener(object : OnTabSelectedListenerAdapter() {
 
             override fun onTabReselected(tab: TabLayout.Tab) {
-                binding.value = tab.position
+                binding += tab.position
             }
         })
         binding.subscribe { view.getTabAt(it)?.select() }
@@ -200,7 +200,7 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
         view.addTextChangedListener(object : TextWatcherAdapter() {
 
             override fun afterTextChanged(s: Editable?) {
-                binding.value = "" + s
+                binding += "" + s
             }
         })
     }
@@ -226,7 +226,7 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
         view.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
 
             override fun onPageSelected(position: Int) {
-                binding.value = position
+                binding += position
             }
         })
     }
@@ -243,7 +243,7 @@ class EditTextBinding(val view: EditText) {
         view.addTextChangedListener(object : TextWatcherAdapter() {
 
             override fun afterTextChanged(s: Editable?) {
-                binding.value = "" + s
+                binding += "" + s
             }
         })
     }
@@ -360,7 +360,7 @@ class WebViewBinding(private val webView: WebView) {
         webView.setWebViewClient(object : WebViewClient() {
 
             override fun onPageFinished(view: WebView, url: String?) {
-                binding.value = view.title
+                binding += view.title
             }
 
             override fun shouldOverrideUrlLoading(view: WebView, url: String?): Boolean {

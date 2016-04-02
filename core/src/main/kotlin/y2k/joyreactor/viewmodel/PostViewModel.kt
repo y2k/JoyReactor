@@ -35,33 +35,33 @@ class PostViewModel(
     val error = binding(false)
 
     init {
-        isBusy.value = true
+        isBusy += true
         service
             .synchronizePostAsync(navigation.argument)
             .await({ post ->
-                posterAspect.value = post.image?.aspect ?: 1f
-                service.getPostImages().await { images.value = it }
+                posterAspect += post.image?.aspect ?: 1f
+                service.getPostImages().await { images += it }
 
-                description.value = post.title
-                tags.value = post.tags
+                description += post.title
+                tags += post.tags
 
                 service
                     .getCommentsAsync(post.id, 0)
                     .await {
-                        comments.value = it
-                        isBusy.value = false
+                        comments += it
+                        isBusy += false
                     }
 
                 service
                     .mainImagePartial(post.id)
-                    .await { poster.value = it }
+                    .await { poster += it }
 
                 //                userService
                 //                    .isAuthorized()
                 //                    .subscribeOnMain { if (it) view.setEnableCreateComments() }
             }, {
                 it.printStackTrace()
-                error.value = true
+                error += true
             })
     }
 
@@ -70,12 +70,12 @@ class PostViewModel(
     }
 
     fun saveToGallery() {
-        isBusy.value = true
+        isBusy += true
         service
             .getFromCache(navigation.argument)
             .flatMap { service.mainImage(it.id) }
             .flatMap { Platform.instance.saveToGallery(it) }
-            .await { isBusy.value = false }
+            .await { isBusy += false }
     }
 
     fun openInBrowser() {
@@ -89,6 +89,6 @@ class PostViewModel(
     fun selectComment(comment: Comment) {
         service
             .getCommentsAsync(comment.postId, comments.value.getNavigation(comment))
-            .await { comments.value = it }
+            .await { comments += it }
     }
 }
