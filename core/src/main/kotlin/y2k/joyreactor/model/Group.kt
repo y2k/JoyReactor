@@ -1,6 +1,7 @@
 package y2k.joyreactor.model
 
-import y2k.joyreactor.services.repository.DataSet
+import y2k.joyreactor.services.repository.ArrayListDataSet
+import y2k.joyreactor.services.repository.Dto
 import java.io.Serializable
 
 /**
@@ -13,7 +14,7 @@ data class Group(
     val title: String,
     val image: Image? = null,
     val isVisible: Boolean = false,
-    override val id: Long = 0) : Serializable, DataSet.Dto {
+    override val id: Long = 0) : Serializable, Dto {
 
     override fun identify(newId: Long): Group {
         return copy(id = newId)

@@ -3,15 +3,11 @@ package y2k.joyreactor.services.repository
 import rx.Observable
 import rx.schedulers.Schedulers
 import y2k.joyreactor.common.ForegroundScheduler
-import y2k.joyreactor.model.Message
-import y2k.joyreactor.model.Post
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.GroupPost
-import y2k.joyreactor.platform.Platform
-import java.io.EOFException
-import java.io.File
-import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
+import y2k.joyreactor.model.Message
+import y2k.joyreactor.model.Post
+import y2k.joyreactor.services.repository.arraylist.ArrayListSerializer
 import java.util.*
 import java.util.concurrent.Executors
 
@@ -20,7 +16,7 @@ import java.util.concurrent.Executors
  */
 class DataContext {
 
-    private val tables = ArrayList<DataSet<*>>()
+    private val tables = ArrayList<ArrayListDataSet<*>>()
 
     val Posts = register<Post>("posts")
 
@@ -30,13 +26,13 @@ class DataContext {
 
     val Messages = register<Message>("messages")
 
-    private fun <T : DataSet.Dto> register(name: String): DataSet<T> {
-        return DataSet<T>(name).apply { tables.add(this) }
+    private fun <T : Dto> register(name: String): ArrayListDataSet<T> {
+        return ArrayListDataSet<T>(name).apply { tables.add(this) }
     }
 
     fun saveChanges() {
         // TODO: при forEach падает
-        for (it in tables) Serializer.saveToDisk(it)
+        for (it in tables) ArrayListSerializer.saveToDisk(it)
     }
 
     class Factory {
@@ -58,48 +54,13 @@ class DataContext {
         private fun innerMakeDataContext(): DataContext {
             val entities = DataContext()
             // TODO: при forEach падает
-            for (it in entities.tables) Serializer.loadFromDisk(it)
+            for (it in entities.tables) ArrayListSerializer.loadFromDisk(it)
             return entities
         }
 
         companion object {
 
             private val executor = Executors.newSingleThreadExecutor()
-        }
-    }
-
-    private object Serializer {
-
-        private val version = 1
-
-        fun <T : DataSet.Dto> loadFromDisk(dataSet: DataSet<T>) {
-            getFile(dataSet)
-                .let { if (it.exists()) it else null }
-                ?.let { file ->
-                    file.inputStream()
-                        .let { ObjectInputStream(it) }
-                        .use { stream ->
-                            while (true) {
-                                try {
-                                    @Suppress("UNCHECKED_CAST")
-                                    dataSet.add(stream.readObject() as T)
-                                } catch(e: EOFException) {
-                                    break
-                                }
-                            }
-                        }
-                }
-        }
-
-        fun saveToDisk(dataSet: DataSet<*>) {
-            getFile(dataSet)
-                .outputStream()
-                .let { ObjectOutputStream(it) }
-                .use { stream -> dataSet.forEach { stream.writeObject(it) } }
-        }
-
-        private fun getFile(datasSet: DataSet<*>): File {
-            return File(Platform.instance.currentDirectory, "${datasSet.name}.$version.db")
         }
     }
 }

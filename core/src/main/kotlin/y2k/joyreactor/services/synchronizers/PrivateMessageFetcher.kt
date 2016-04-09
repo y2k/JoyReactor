@@ -23,7 +23,7 @@ class PrivateMessageFetcher(
                 val (messages, next) = request.getMessages(nextPage)
 
                 updateLastMessageDates(messages)
-                val needLoadNext = isNeedLoadNext(Messages)
+                val needLoadNext = isNeedLoadNext(Messages.asIterable())
 
                 messages
                     .filter { s -> Messages.none { it.isMine == s.isMine && it.date == s.date } }

@@ -1,6 +1,7 @@
 package y2k.joyreactor.model
 
-import y2k.joyreactor.services.repository.DataSet
+import y2k.joyreactor.services.repository.ArrayListDataSet
+import y2k.joyreactor.services.repository.Dto
 import java.io.Serializable
 
 /**
@@ -9,7 +10,7 @@ import java.io.Serializable
 data class GroupPost(
     val groupId: Long,
     val postId: Long,
-    override val id: Long = 0) : Serializable, DataSet.Dto {
+    override val id: Long = 0) : Serializable, Dto {
 
     override fun identify(newId: Long): GroupPost {
         return copy(id = newId)

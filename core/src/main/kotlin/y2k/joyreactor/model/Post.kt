@@ -1,6 +1,7 @@
 package y2k.joyreactor.model
 
-import y2k.joyreactor.services.repository.DataSet
+import y2k.joyreactor.services.repository.ArrayListDataSet
+import y2k.joyreactor.services.repository.Dto
 import java.io.Serializable
 import java.util.*
 
@@ -16,7 +17,7 @@ data class Post(
     val commentCount: Int,
     val rating: Float,
     val tags: List<String>,
-    override val id: Long) : Serializable, Comparable<Post>, DataSet.Dto {
+    override val id: Long) : Serializable, Comparable<Post>, Dto {
 
     override fun identify(newId: Long): Post {
         throw UnsupportedOperationException()

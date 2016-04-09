@@ -1,6 +1,7 @@
 package y2k.joyreactor.model
 
-import y2k.joyreactor.services.repository.DataSet
+import y2k.joyreactor.services.repository.ArrayListDataSet
+import y2k.joyreactor.services.repository.Dto
 import java.io.Serializable
 import java.util.*
 
@@ -13,7 +14,7 @@ data class Message(
     val isMine: Boolean,
     val userName: String,
     val userImage: String?,
-    override val id: Long = 0) : DataSet.Dto, Serializable {
+    override val id: Long = 0) : Dto, Serializable {
 
     override fun identify(newId: Long): Message {
         return copy(id = newId)

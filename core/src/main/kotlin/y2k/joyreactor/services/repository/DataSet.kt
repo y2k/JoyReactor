@@ -1,38 +1,36 @@
 package y2k.joyreactor.services.repository
 
-import java.util.*
-
 /**
- * Created by y2k on 12/23/15.
+ * Created by y2k on 4/9/16.
  */
-class DataSet<T : DataSet.Dto>(val name: String) : Iterable<T> {
+interface DataSet <T : Dto> {
 
-    private val items = ArrayList<T>()
+    fun clear()
 
-    override fun iterator(): Iterator<T> {
-        return items.iterator()
-    }
+    fun remove(element: T)
 
-    fun clear() {
-        items.clear()
-    }
+    fun add(element: T): T
 
-    fun remove(element: T) {
-        items.remove(element)
-    }
+    fun filter(f: (T) -> Boolean): List<T>
 
-    fun add(element: T): T {
-        val id = (Math.random() * Long.MAX_VALUE).toLong()
-        @Suppress("UNCHECKED_CAST")
-        val e = if (element.id == 0L) element.identify(id)  as T else element
-        items.add(e)
-        return e
-    }
+    fun firstOrNull(f: (T) -> Boolean): T?
 
-    interface Dto {
+    fun toList(): List<T>
 
-        val id: Long
+    fun forEach(f: (T) -> Unit)
 
-        fun identify(newId: Long): Dto
-    }
+    fun none(f: (T) -> Boolean): Boolean
+
+    fun asIterable(): Iterable<T>
+
+    fun first(f: (T) -> Boolean): T
+
+    fun <K> groupBy(f: (T) -> K): Map<K, List<T>>
+}
+
+interface Dto {
+
+    val id: Long
+
+    fun identify(newId: Long): Dto
 }
