@@ -1,6 +1,6 @@
 package y2k.joyreactor.model
 
-import y2k.joyreactor.services.repository.ArrayListDataSet
+import y2k.joyreactor.services.repository.arraylist.ArrayListDataSet
 import y2k.joyreactor.services.repository.Dto
 import java.io.Serializable
 import java.util.*

@@ -1,7 +1,7 @@
 package y2k.joyreactor.services.repository.arraylist
 
 import y2k.joyreactor.platform.Platform
-import y2k.joyreactor.services.repository.ArrayListDataSet
+import y2k.joyreactor.services.repository.arraylist.ArrayListDataSet
 import y2k.joyreactor.services.repository.Dto
 import java.io.EOFException
 import java.io.File

@@ -7,55 +7,40 @@ import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.GroupPost
 import y2k.joyreactor.model.Message
 import y2k.joyreactor.model.Post
-import y2k.joyreactor.services.repository.arraylist.ArrayListSerializer
-import java.util.*
+import y2k.joyreactor.services.repository.arraylist.ArrayListDataContext
 import java.util.concurrent.Executors
 
 /**
  * Created by y2k on 12/22/15.
  */
-class DataContext {
+class DataContext(val factory: IDataContext) {
 
-    private val tables = ArrayList<ArrayListDataSet<*>>()
+    val Posts = factory.register<Post>("posts")
 
-    val Posts = register<Post>("posts")
+    val Tags = factory.register<Group>("tags")
 
-    val Tags = register<Group>("tags")
+    val TagPosts = factory.register<GroupPost>("tag_posts")
 
-    val TagPosts = register<GroupPost>("tag_posts")
-
-    val Messages = register<Message>("messages")
-
-    private fun <T : Dto> register(name: String): DataSet<T> {
-        return ArrayListDataSet<T>(name).apply { tables.add(this) }
-    }
+    val Messages = factory.register<Message>("messages")
 
     fun saveChanges() {
-        // TODO: при forEach падает
-        for (it in tables) ArrayListSerializer.saveToDisk(it)
+        factory.saveChanges()
     }
 
     class Factory {
 
         fun <T> applyUse(callback: DataContext.() -> T): Observable<T> {
-            return Observable
-                .fromCallable { innerMakeDataContext().callback(); }
-                .subscribeOn(Schedulers.from(executor))
-                .observeOn(ForegroundScheduler.instance);
+            return use { it.callback() }
         }
 
         fun <T> use(callback: (DataContext) -> T): Observable<T> {
             return Observable
-                .fromCallable { callback(innerMakeDataContext()) }
+                .fromCallable {
+                    val f = ArrayListDataContext()
+                    callback(DataContext(f))
+                }
                 .subscribeOn(Schedulers.from(executor))
                 .observeOn(ForegroundScheduler.instance);
-        }
-
-        private fun innerMakeDataContext(): DataContext {
-            val entities = DataContext()
-            // TODO: при forEach падает
-            for (it in entities.tables) ArrayListSerializer.loadFromDisk(it)
-            return entities
         }
 
         companion object {
