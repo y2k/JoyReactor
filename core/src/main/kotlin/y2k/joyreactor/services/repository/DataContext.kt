@@ -7,7 +7,6 @@ import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.GroupPost
 import y2k.joyreactor.model.Message
 import y2k.joyreactor.model.Post
-import y2k.joyreactor.services.repository.arraylist.ArrayListDataContext
 import java.util.concurrent.Executors
 
 /**
@@ -27,7 +26,7 @@ class DataContext(val factory: IDataContext) {
         factory.saveChanges()
     }
 
-    class Factory {
+    class Factory(val factory: IDataContext) {
 
         fun <T> applyUse(callback: DataContext.() -> T): Observable<T> {
             return use { it.callback() }
@@ -35,10 +34,7 @@ class DataContext(val factory: IDataContext) {
 
         fun <T> use(callback: (DataContext) -> T): Observable<T> {
             return Observable
-                .fromCallable {
-                    val f = ArrayListDataContext()
-                    callback(DataContext(f))
-                }
+                .fromCallable { callback(DataContext(factory)) }
                 .subscribeOn(Schedulers.from(executor))
                 .observeOn(ForegroundScheduler.instance);
         }
