@@ -26,7 +26,7 @@ class DataContext {
 
     val Messages = register<Message>("messages")
 
-    private fun <T : Dto> register(name: String): ArrayListDataSet<T> {
+    private fun <T : Dto> register(name: String): DataSet<T> {
         return ArrayListDataSet<T>(name).apply { tables.add(this) }
     }
 
