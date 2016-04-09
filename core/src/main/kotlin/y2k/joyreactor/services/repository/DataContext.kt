@@ -14,13 +14,10 @@ import java.util.concurrent.Executors
  */
 class DataContext(val factory: IDataContext) {
 
-    val Posts = factory.register<Post>("posts")
-
-    val Tags = factory.register<Group>("tags")
-
-    val TagPosts = factory.register<GroupPost>("tag_posts")
-
-    val Messages = factory.register<Message>("messages")
+    val Posts = factory.register(Post::class)
+    val Tags = factory.register(Group::class)
+    val TagPosts = factory.register(GroupPost::class)
+    val Messages = factory.register(Message::class)
 
     fun saveChanges() {
         factory.saveChanges()
