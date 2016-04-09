@@ -25,6 +25,8 @@ interface DataSet <T : Dto> {
 
     fun getById(id: Long): T
 
+    fun getByIdOrNull(id: Long): T?
+
     fun <K> groupBy(f: (T) -> K): Map<K, List<T>>
 }
 

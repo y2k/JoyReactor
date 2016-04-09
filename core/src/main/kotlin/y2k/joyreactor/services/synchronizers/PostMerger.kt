@@ -92,7 +92,7 @@ class PostMerger(
     private fun updatePostsAsync(newPosts: List<Post>): Observable<Unit> {
         return dataContext.use { entities ->
             for (p in newPosts) {
-                val old = entities.Posts.firstOrNull { it.id == p.id }
+                val old = entities.Posts.getByIdOrNull(p.id)
                 if (old == null) entities.Posts.add(p)
                 else {
                     entities.Posts.remove(old)

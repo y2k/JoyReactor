@@ -51,6 +51,10 @@ class ArrayListDataSet<T : Dto>(val name: String) : DataSet<T> {
         return items.first { it.id == id }
     }
 
+    override fun getByIdOrNull(id: Long): T? {
+        return items.firstOrNull { it.id == id }
+    }
+
     override fun asIterable(): Iterable<T> {
         return items.asIterable()
     }
