@@ -1,5 +1,6 @@
 package y2k.joyreactor.services.repository.ormlite
 
+import com.j256.ormlite.dao.Dao
 import com.j256.ormlite.dao.DaoManager
 import com.j256.ormlite.jdbc.JdbcConnectionSource
 import com.j256.ormlite.table.TableUtils
@@ -23,7 +24,7 @@ class OrmLiteDataContext(val platform: Platform) : IDataContext {
         val path = File(platform.currentDirectory, "main.db")
         val connection = JdbcConnectionSource("jdbc:sqlite:$path")
 
-        val dao = DaoManager.createDao(connection, clazz.java)
+        val dao: Dao<T, Long> = DaoManager.createDao(connection, clazz.java)
         TableUtils.createTableIfNotExists(connection, clazz.java)
 
         return OrmLiteDataSet(dao)

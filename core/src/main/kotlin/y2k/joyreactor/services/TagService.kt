@@ -26,7 +26,7 @@ class TagService(private val dataContext: DataContext.Factory,
                     .applyUse {
                         TagPosts
                             .filter { it.groupId == group.id }
-                            .map { link -> Posts.first { it.id == link.postId } }
+                            .map { Posts.getById(it.postId) }
                     }
             }
             .map { State(it, buffer.dividers[group.id], buffer.hasNew[group.id] ?: false) }

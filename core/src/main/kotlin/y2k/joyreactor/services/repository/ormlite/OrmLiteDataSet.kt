@@ -7,7 +7,7 @@ import y2k.joyreactor.services.repository.Dto
 /**
  * Created by y2k on 4/10/16.
  */
-class OrmLiteDataSet<T : Dto>(private val dao: Dao<T, *>) : DataSet<T> {
+class OrmLiteDataSet<T : Dto>(private val dao: Dao<T, Long>) : DataSet<T> {
 
     override fun clear() {
         dao.deleteBuilder().delete()
@@ -46,8 +46,8 @@ class OrmLiteDataSet<T : Dto>(private val dao: Dao<T, *>) : DataSet<T> {
         return dao
     }
 
-    override fun first(f: (T) -> Boolean): T {
-        throw UnsupportedOperationException()
+    override fun getById(id: Long): T {
+        return dao.queryForId(id)
     }
 
     override fun <K> groupBy(f: (T) -> K): Map<K, List<T>> {

@@ -23,7 +23,7 @@ interface DataSet <T : Dto> {
 
     fun asIterable(): Iterable<T>
 
-    fun first(f: (T) -> Boolean): T
+    fun getById(id: Long): T
 
     fun <K> groupBy(f: (T) -> K): Map<K, List<T>>
 }

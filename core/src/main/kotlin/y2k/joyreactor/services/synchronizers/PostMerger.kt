@@ -62,7 +62,7 @@ class PostMerger(
     private fun DataContext.getPostsForTag(group: Group): List<Post> {
         return TagPosts
             .filter { it.groupId == group.id }
-            .map { tp -> Posts.first { it.id == tp.postId } }
+            .map { Posts.getById(it.postId) }
     }
 
     fun mergeNextPage(group: Group, newPosts: List<Post>): Observable<Unit> {

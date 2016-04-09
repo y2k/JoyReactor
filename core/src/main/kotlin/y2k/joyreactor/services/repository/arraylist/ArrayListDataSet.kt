@@ -47,12 +47,12 @@ class ArrayListDataSet<T : Dto>(val name: String) : DataSet<T> {
         return items.none(f)
     }
 
-    override fun asIterable(): Iterable<T> {
-        return items.asIterable()
+    override fun getById(id: Long): T {
+        return items.first { it.id == id }
     }
 
-    override fun first(f: (T) -> Boolean): T {
-        return items.first(f)
+    override fun asIterable(): Iterable<T> {
+        return items.asIterable()
     }
 
     override fun <K> groupBy(f: (T) -> K): Map<K, List<T>> {
