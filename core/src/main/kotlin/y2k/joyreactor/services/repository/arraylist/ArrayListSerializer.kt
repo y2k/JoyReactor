@@ -38,6 +38,6 @@ object ArrayListSerializer {
     }
 
     private fun getFile(datasSet: ArrayListDataSet<*>): File {
-        return File(Platform.instance.currentDirectory, "${datasSet.name}.$version.db")
+        return File(Platform.instance.currentDirectory, "${datasSet.javaClass.simpleName}.$version.db")
     }
 }

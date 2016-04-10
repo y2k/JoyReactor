@@ -19,7 +19,7 @@ class ArrayListDataContext : IDataContext {
     }
 
     override fun <T : Dto> register(clazz: KClass<T>): DataSet<T> {
-        return ArrayListDataSet<T>(clazz.java.simpleName).apply {
+        return ArrayListDataSet<T>().apply {
             ArrayListSerializer.loadFromDisk(this)
             tables.add(this)
         }

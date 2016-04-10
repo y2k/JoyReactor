@@ -7,7 +7,7 @@ import java.util.*
 /**
  * Created by y2k on 12/23/15.
  */
-class ArrayListDataSet<T : Dto>(val name: String) : DataSet<T> {
+class ArrayListDataSet<T : Dto>() : DataSet<T> {
 
     private val items = ArrayList<T>()
 
