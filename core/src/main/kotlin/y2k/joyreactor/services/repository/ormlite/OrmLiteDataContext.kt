@@ -19,10 +19,8 @@ class OrmLiteDataContext(val platform: Platform) : IDataContext {
     val connection = platform.buildConnection(path)
 
     override fun <T : Dto> register(type: KClass<T>): DataSet<T> {
-
         val dao: Dao<T, Long> = DaoManager.createDao(connection, type.java)
         TableUtils.createTableIfNotExists(connection, type.java)
-
         return OrmLiteDataSet(dao)
     }
 

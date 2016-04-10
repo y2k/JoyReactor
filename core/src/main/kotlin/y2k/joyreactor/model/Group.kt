@@ -1,5 +1,6 @@
 package y2k.joyreactor.model
 
+import com.j256.ormlite.field.DatabaseField
 import y2k.joyreactor.services.repository.Dto
 import java.io.Serializable
 
@@ -7,13 +8,13 @@ import java.io.Serializable
  * Created by y2k on 9/26/15.
  */
 data class Group(
-    val type: Type,
-    val name: String,
-    val quality: Quality,
-    val title: String,
-    val image: Image? = null,
-    val isVisible: Boolean = false,
-    override val id: Long = 0) : Serializable, Dto {
+    @DatabaseField val type: Type = Type.Featured,
+    @DatabaseField val name: String = "",
+    @DatabaseField val quality: Quality = Quality.Good,
+    @DatabaseField val title: String = "",
+    @DatabaseField(dataType = com.j256.ormlite.field.DataType.SERIALIZABLE) val image: Image? = null,
+    @DatabaseField val isVisible: Boolean = false,
+    @DatabaseField(generatedId = true) override val id: Long = 0) : Serializable, Dto {
 
     override fun identify(newId: Long): Group {
         return copy(id = newId)

@@ -1,5 +1,6 @@
 package y2k.joyreactor.model
 
+import com.j256.ormlite.field.DatabaseField
 import y2k.joyreactor.services.repository.Dto
 import java.io.Serializable
 import java.util.*
@@ -7,16 +8,16 @@ import java.util.*
 /**
  * Created by y2k on 9/27/15.
  */
-data class Post(
-    val title: String,
-    val image: Image?,
-    val userImage: String,
-    val userName: String,
-    val created: Date,
-    val commentCount: Int,
-    val rating: Float,
-    val tags: List<String>,
-    override val id: Long) : Serializable, Comparable<Post>, Dto {
+class Post(
+    @DatabaseField val title: String = "",
+    @DatabaseField(dataType = com.j256.ormlite.field.DataType.SERIALIZABLE) val image: Image? = null,
+    @DatabaseField val userImage: String = "",
+    @DatabaseField val userName: String = "",
+    @DatabaseField val created: Date = Date(),
+    @DatabaseField val commentCount: Int = 0,
+    @DatabaseField val rating: Float = 0f,
+    val tags: List<String> = emptyList(),
+    @DatabaseField(id = true) override val id: Long = 0) : Serializable, Comparable<Post>, Dto {
 
     override fun identify(newId: Long): Post {
         throw UnsupportedOperationException()
