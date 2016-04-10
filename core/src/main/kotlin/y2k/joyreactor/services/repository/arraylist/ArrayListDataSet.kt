@@ -27,10 +27,6 @@ class ArrayListDataSet<T : Dto>() : DataSet<T> {
         return e
     }
 
-    override fun filter(f: (T) -> Boolean): List<T> {
-        return items.filter(f)
-    }
-
     override fun toList(): List<T> {
         return items.toList()
     }

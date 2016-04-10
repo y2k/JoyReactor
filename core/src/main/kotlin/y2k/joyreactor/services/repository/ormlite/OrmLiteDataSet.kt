@@ -46,10 +46,6 @@ class OrmLiteDataSet<T : Dto>(private val dao: Dao<T, Long>) : DataSet<T> {
         return dao.queryForId(id)
     }
 
-    override fun filter(f: (T) -> Boolean): List<T> {
-        TODO()
-    }
-
     override fun <K> groupBy(f: (T) -> K): Map<K, List<T>> {
         TODO()
     }

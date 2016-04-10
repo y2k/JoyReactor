@@ -25,10 +25,6 @@ interface DataSet <T : Dto> {
 
     fun <K> groupBy(f: (T) -> K): Map<K, List<T>>
 
-    fun filter(f: (T) -> Boolean): List<T>
-
-    //    fun firstOrNull(f: (T) -> Boolean): T?
-
     fun filter(field: String, value: Any): List<T>
 }
 
