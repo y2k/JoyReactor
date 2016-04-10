@@ -1,8 +1,8 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.PartialResult
-import y2k.joyreactor.common.binding
 import y2k.joyreactor.common.await
+import y2k.joyreactor.common.binding
 import y2k.joyreactor.model.Comment
 import y2k.joyreactor.model.CommentGroup
 import y2k.joyreactor.model.EmptyGroup

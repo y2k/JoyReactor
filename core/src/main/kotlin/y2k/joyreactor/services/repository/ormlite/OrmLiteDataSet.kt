@@ -22,14 +22,6 @@ class OrmLiteDataSet<T : Dto>(private val dao: Dao<T, Long>) : DataSet<T> {
         return element
     }
 
-    override fun filter(f: (T) -> Boolean): List<T> {
-        throw UnsupportedOperationException()
-    }
-
-    override fun firstOrNull(f: (T) -> Boolean): T? {
-        throw UnsupportedOperationException()
-    }
-
     override fun toList(): List<T> {
         return dao.toList()
     }
@@ -52,6 +44,14 @@ class OrmLiteDataSet<T : Dto>(private val dao: Dao<T, Long>) : DataSet<T> {
 
     override fun getByIdOrNull(id: Long): T? {
         return dao.queryForId(id)
+    }
+
+    override fun filter(f: (T) -> Boolean): List<T> {
+        throw UnsupportedOperationException()
+    }
+
+    override fun firstOrNull(f: (T) -> Boolean): T? {
+        throw UnsupportedOperationException()
     }
 
     override fun <K> groupBy(f: (T) -> K): Map<K, List<T>> {

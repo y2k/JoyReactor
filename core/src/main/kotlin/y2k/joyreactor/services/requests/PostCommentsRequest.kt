@@ -2,7 +2,6 @@ package y2k.joyreactor.services.requests
 
 import org.jsoup.nodes.Document
 import y2k.joyreactor.model.Comment
-import java.lang.Float
 import java.util.*
 import java.util.regex.Pattern
 

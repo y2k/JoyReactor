@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
-import y2k.joyreactor.common.binding
 import y2k.joyreactor.common.await
+import y2k.joyreactor.common.binding
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
