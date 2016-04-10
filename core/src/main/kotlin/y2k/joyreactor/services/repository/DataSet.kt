@@ -11,10 +11,6 @@ interface DataSet <T : Dto> {
 
     fun add(element: T): T
 
-    fun filter(f: (T) -> Boolean): List<T>
-
-    fun firstOrNull(f: (T) -> Boolean): T?
-
     fun toList(): List<T>
 
     fun forEach(f: (T) -> Unit)
@@ -28,6 +24,12 @@ interface DataSet <T : Dto> {
     fun getByIdOrNull(id: Long): T?
 
     fun <K> groupBy(f: (T) -> K): Map<K, List<T>>
+
+    fun filter(f: (T) -> Boolean): List<T>
+
+    //    fun firstOrNull(f: (T) -> Boolean): T?
+
+    fun filter(field: String, value: Any): List<T>
 }
 
 interface Dto {

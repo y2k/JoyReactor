@@ -31,10 +31,6 @@ class ArrayListDataSet<T : Dto>() : DataSet<T> {
         return items.filter(f)
     }
 
-    override fun firstOrNull(f: (T) -> Boolean): T? {
-        return items.firstOrNull(f)
-    }
-
     override fun toList(): List<T> {
         return items.toList()
     }
@@ -61,5 +57,9 @@ class ArrayListDataSet<T : Dto>() : DataSet<T> {
 
     override fun <K> groupBy(f: (T) -> K): Map<K, List<T>> {
         return items.groupBy(f)
+    }
+
+    override fun filter(field: String, value: Any): List<T> {
+        TODO()
     }
 }

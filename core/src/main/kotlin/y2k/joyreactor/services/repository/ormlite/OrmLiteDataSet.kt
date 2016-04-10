@@ -47,14 +47,14 @@ class OrmLiteDataSet<T : Dto>(private val dao: Dao<T, Long>) : DataSet<T> {
     }
 
     override fun filter(f: (T) -> Boolean): List<T> {
-        throw UnsupportedOperationException()
-    }
-
-    override fun firstOrNull(f: (T) -> Boolean): T? {
-        throw UnsupportedOperationException()
+        TODO()
     }
 
     override fun <K> groupBy(f: (T) -> K): Map<K, List<T>> {
-        throw UnsupportedOperationException()
+        TODO()
+    }
+
+    override fun filter(field: String, value: Any): List<T> {
+        TODO()
     }
 }

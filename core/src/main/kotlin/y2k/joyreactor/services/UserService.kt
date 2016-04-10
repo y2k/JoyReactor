@@ -21,7 +21,7 @@ class UserService(
     fun getMyTags(): Observable<List<Group>> {
         return dataContext
             .applyUse {
-                Tags.filter { it.isVisible }.sortedBy { it.title.toLowerCase() }
+                Tags.filter("isVisible", true).sortedBy { it.title.toLowerCase() }
             }
             .concatAndRepeat(synchronizer.synchronize())
     }
@@ -39,7 +39,7 @@ class UserService(
     fun makeGroup(base: Group, quality: Group.Quality): Observable<Group> {
         return dataContext.applyUse {
             val group = base.copy(id = 0L, quality = quality, isVisible = false)
-            val exists = Tags.firstOrNull { it.serverId == group.serverId }
+            val exists = Tags.filter("serverId", group.serverId).firstOrNull()
             exists ?: Tags.add(group).apply { saveChanges() }
         }
     }
