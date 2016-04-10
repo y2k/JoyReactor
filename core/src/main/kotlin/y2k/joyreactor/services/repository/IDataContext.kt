@@ -9,5 +9,5 @@ interface IDataContext {
 
     fun saveChanges()
 
-    fun <T : Dto> register(clazz: KClass<T>): DataSet<T>
+    fun <T : Dto> register(type: KClass<T>): DataSet<T>
 }

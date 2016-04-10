@@ -6,13 +6,14 @@ import java.io.EOFException
 import java.io.File
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
+import kotlin.reflect.KClass
 
 object ArrayListSerializer {
 
     private val version = 1
 
     fun <T : Dto> loadFromDisk(dataSet: ArrayListDataSet<T>) {
-        getFile(dataSet)
+        getFile(dataSet.type)
             .let { if (it.exists()) it else null }
             ?.let { file ->
                 file.inputStream()
@@ -30,14 +31,14 @@ object ArrayListSerializer {
             }
     }
 
-    fun saveToDisk(dataSet: ArrayListDataSet<*>) {
-        getFile(dataSet)
+    fun <T : Dto> saveToDisk(dataSet: ArrayListDataSet<T>) {
+        getFile(dataSet.type)
             .outputStream()
             .let { ObjectOutputStream(it) }
             .use { stream -> dataSet.forEach { stream.writeObject(it) } }
     }
 
-    private fun getFile(datasSet: ArrayListDataSet<*>): File {
-        return File(Platform.instance.currentDirectory, "${datasSet.javaClass.simpleName}.$version.db")
+    private fun getFile(type: KClass<*>): File {
+        return File(Platform.instance.currentDirectory, "${type.java.simpleName}.$version.db")
     }
 }

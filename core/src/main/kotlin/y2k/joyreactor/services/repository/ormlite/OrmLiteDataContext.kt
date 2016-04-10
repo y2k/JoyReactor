@@ -20,12 +20,12 @@ class OrmLiteDataContext(val platform: Platform) : IDataContext {
         // Ignore
     }
 
-    override fun <T : Dto> register(clazz: KClass<T>): DataSet<T> {
+    override fun <T : Dto> register(type: KClass<T>): DataSet<T> {
         val path = File(platform.currentDirectory, "main.db")
         val connection = JdbcConnectionSource("jdbc:sqlite:$path")
 
-        val dao: Dao<T, Long> = DaoManager.createDao(connection, clazz.java)
-        TableUtils.createTableIfNotExists(connection, clazz.java)
+        val dao: Dao<T, Long> = DaoManager.createDao(connection, type.java)
+        TableUtils.createTableIfNotExists(connection, type.java)
 
         return OrmLiteDataSet(dao)
     }

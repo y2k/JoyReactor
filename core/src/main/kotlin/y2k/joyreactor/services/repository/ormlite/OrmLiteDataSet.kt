@@ -46,11 +46,14 @@ class OrmLiteDataSet<T : Dto>(private val dao: Dao<T, Long>) : DataSet<T> {
         return dao.queryForId(id)
     }
 
-    override fun <K> groupBy(f: (T) -> K): Map<K, List<T>> {
-        TODO()
+    override fun filter(propertyName: String, value: Any): List<T> {
+        return dao.queryForEq(propertyName, value)
     }
 
-    override fun filter(field: String, value: Any): List<T> {
-        TODO()
+    override fun groupBy(groupProp: String, orderProp: String): List<T> {
+        return dao.queryBuilder()
+            .orderBy(orderProp, true)
+            .groupBy(groupProp)
+            .query()
     }
 }

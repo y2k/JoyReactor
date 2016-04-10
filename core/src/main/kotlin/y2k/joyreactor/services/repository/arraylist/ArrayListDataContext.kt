@@ -14,12 +14,11 @@ class ArrayListDataContext : IDataContext {
     private val tables = ArrayList<ArrayListDataSet<*>>()
 
     override fun saveChanges() {
-        // TODO: при forEach падает
         tables.forEach { ArrayListSerializer.saveToDisk(it) }
     }
 
-    override fun <T : Dto> register(clazz: KClass<T>): DataSet<T> {
-        return ArrayListDataSet<T>().apply {
+    override fun <T : Dto> register(type: KClass<T>): DataSet<T> {
+        return ArrayListDataSet(type).apply {
             ArrayListSerializer.loadFromDisk(this)
             tables.add(this)
         }

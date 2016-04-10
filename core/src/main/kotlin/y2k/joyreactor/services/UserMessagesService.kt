@@ -26,8 +26,7 @@ class UserMessagesService(
         return entities
             .applyUse {
                 Messages
-                    .groupBy { it.userName }
-                    .map { it.value.maxBy { it.date }!! }
+                    .groupBy("userName", orderProp = "date")
                     .sortedByDescending { it.date }
             }
             .concatAndRepeat(fetcher.execute())

@@ -3,11 +3,12 @@ package y2k.joyreactor.services.repository.arraylist
 import y2k.joyreactor.services.repository.DataSet
 import y2k.joyreactor.services.repository.Dto
 import java.util.*
+import kotlin.reflect.KClass
 
 /**
  * Created by y2k on 12/23/15.
  */
-class ArrayListDataSet<T : Dto>() : DataSet<T> {
+class ArrayListDataSet<T : Dto>(val type: KClass<T>) : DataSet<T> {
 
     private val items = ArrayList<T>()
 
@@ -51,11 +52,22 @@ class ArrayListDataSet<T : Dto>() : DataSet<T> {
         return items.asIterable()
     }
 
-    override fun <K> groupBy(f: (T) -> K): Map<K, List<T>> {
-        return items.groupBy(f)
+    override fun filter(propertyName: String, value: Any): List<T> {
+        val getter = type.java.getMethod(toGetterName(propertyName))
+        return items.filter { getter(it) == value }
     }
 
-    override fun filter(field: String, value: Any): List<T> {
-        TODO()
+    override fun groupBy(groupProp: String, orderProp: String): List<T> {
+        val groupGetter = type.java.getMethod(toGetterName(groupProp))
+        val sortGetter = type.java.getMethod(toGetterName(orderProp))
+
+        return items
+            .groupBy { groupGetter(it) }
+            .map { it.value.maxBy { sortGetter(it) as Comparable<Any> }!! }
+    }
+
+    private fun toGetterName(propertyName: String): String {
+        if (propertyName.startsWith("is")) return propertyName
+        return "get${propertyName.substring(0..0).toUpperCase()}${propertyName.substring(1)}"
     }
 }

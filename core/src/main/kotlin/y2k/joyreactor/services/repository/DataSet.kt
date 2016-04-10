@@ -23,9 +23,9 @@ interface DataSet <T : Dto> {
 
     fun getByIdOrNull(id: Long): T?
 
-    fun <K> groupBy(f: (T) -> K): Map<K, List<T>>
+    fun filter(propertyName: String, value: Any): List<T>
 
-    fun filter(field: String, value: Any): List<T>
+    fun groupBy(groupProp: String, orderProp: String): List<T>
 }
 
 interface Dto {
