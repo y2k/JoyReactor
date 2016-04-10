@@ -31,9 +31,11 @@ class DataContext(val factory: IDataContext) {
 
         fun <T> use(callback: (DataContext) -> T): Observable<T> {
             return Observable
-                .fromCallable { callback(DataContext(factory)) }
-                .subscribeOn(Schedulers.from(executor))
-                .observeOn(ForegroundScheduler.instance);
+                    .fromCallable {
+                        factory.use { callback(DataContext(it)) }
+                    }
+                    .subscribeOn(Schedulers.from(executor))
+                    .observeOn(ForegroundScheduler.instance);
         }
 
         companion object {

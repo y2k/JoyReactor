@@ -2,7 +2,6 @@ package y2k.joyreactor.services.repository.ormlite
 
 import com.j256.ormlite.dao.Dao
 import com.j256.ormlite.dao.DaoManager
-import com.j256.ormlite.jdbc.JdbcConnectionSource
 import com.j256.ormlite.table.TableUtils
 import y2k.joyreactor.platform.Platform
 import y2k.joyreactor.services.repository.DataSet
@@ -16,17 +15,22 @@ import kotlin.reflect.KClass
  */
 class OrmLiteDataContext(val platform: Platform) : IDataContext {
 
-    override fun saveChanges() {
-        // Ignore
-    }
+    val path = File(platform.currentDirectory, "main.db")
+    val connection = platform.buildConnection(path)
 
     override fun <T : Dto> register(type: KClass<T>): DataSet<T> {
-        val path = File(platform.currentDirectory, "main.db")
-        val connection = JdbcConnectionSource("jdbc:sqlite:$path")
 
         val dao: Dao<T, Long> = DaoManager.createDao(connection, type.java)
         TableUtils.createTableIfNotExists(connection, type.java)
 
         return OrmLiteDataSet(dao)
+    }
+
+    override fun close() {
+        connection.close()
+    }
+
+    override fun saveChanges() {
+        // Ignore
     }
 }

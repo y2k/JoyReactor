@@ -4,10 +4,12 @@ import y2k.joyreactor.http.CookieStorage
 import y2k.joyreactor.http.HttpClient
 import y2k.joyreactor.images.MultiTryDownloader
 import y2k.joyreactor.platform.NavigationService
+import y2k.joyreactor.platform.Platform
 import y2k.joyreactor.services.*
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.repository.IDataContext
 import y2k.joyreactor.services.repository.arraylist.ArrayListDataContext
+import y2k.joyreactor.services.repository.ormlite.OrmLiteDataContext
 import y2k.joyreactor.services.requests.*
 import y2k.joyreactor.services.synchronizers.MyTagFetcher
 import y2k.joyreactor.services.synchronizers.PostMerger
@@ -62,7 +64,7 @@ object ServiceLocator {
 
         register { MultiTryDownloader(resolve()) }
 
-        register<IDataContext> { ArrayListDataContext() }
+        register<IDataContext> { OrmLiteDataContext(Platform.instance) }
         register { DataContext.Factory(resolve()) }
     }
 

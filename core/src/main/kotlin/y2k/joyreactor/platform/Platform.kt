@@ -1,5 +1,6 @@
 package y2k.joyreactor.platform
 
+import com.j256.ormlite.support.ConnectionSource
 import rx.Observable
 
 import java.io.File
@@ -16,6 +17,8 @@ abstract class Platform {
     abstract fun loadFromBundle(name: String, ext: String): ByteArray
 
     abstract fun saveToGallery(imageFile: File): Observable<*>
+
+    abstract fun buildConnection(file: File): ConnectionSource
 
     companion object {
 

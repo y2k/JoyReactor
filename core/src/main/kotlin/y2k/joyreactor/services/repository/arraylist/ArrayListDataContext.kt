@@ -23,4 +23,8 @@ class ArrayListDataContext : IDataContext {
             tables.add(this)
         }
     }
+
+    override fun close() {
+        // Ignore
+    }
 }

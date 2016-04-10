@@ -1,8 +1,11 @@
 package y2k.joyreactor
 
 import android.app.Application
+import android.database.sqlite.SQLiteDatabase
 import android.os.StrictMode
 import android.provider.MediaStore
+import com.j256.ormlite.android.AndroidConnectionSource
+import com.j256.ormlite.support.ConnectionSource
 import com.splunk.mint.Mint
 import rx.Observable
 import y2k.joyreactor.common.ForegroundScheduler
@@ -31,6 +34,11 @@ class App : Application() {
 
         ForegroundScheduler.instance = HandlerSchedulerFactory().make()
         Platform.instance = object : Platform() {
+
+            override fun buildConnection(file: File): ConnectionSource {
+                val database = SQLiteDatabase.openDatabase(file.absolutePath, null, SQLiteDatabase.OPEN_READWRITE or SQLiteDatabase.CREATE_IF_NECESSARY)
+                return AndroidConnectionSource(database)
+            }
 
             override val currentDirectory: File = filesDir
 
