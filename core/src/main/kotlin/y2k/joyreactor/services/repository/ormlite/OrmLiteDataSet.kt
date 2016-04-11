@@ -1,6 +1,7 @@
 package y2k.joyreactor.services.repository.ormlite
 
 import com.j256.ormlite.dao.Dao
+import y2k.joyreactor.common.queryRawList
 import y2k.joyreactor.services.repository.DataSet
 import y2k.joyreactor.services.repository.Dto
 
@@ -34,6 +35,7 @@ class OrmLiteDataSet<T : Dto>(private val dao: Dao<T, Long>) : DataSet<T> {
         return dao.none(f)
     }
 
+    // TODO: убрать метод или утечку курсора
     override fun asIterable(): Iterable<T> {
         return dao
     }
@@ -51,9 +53,6 @@ class OrmLiteDataSet<T : Dto>(private val dao: Dao<T, Long>) : DataSet<T> {
     }
 
     override fun groupBy(groupProp: String, orderProp: String): List<T> {
-        return dao.queryBuilder()
-            .orderBy(orderProp, true)
-            .groupBy(groupProp)
-            .query()
+        return dao.queryRawList("select * from (select * from {table-name} order by $orderProp) group by $groupProp")
     }
 }
