@@ -2,6 +2,7 @@ package y2k.joyreactor.services.repository.ormlite
 
 import com.j256.ormlite.dao.Dao
 import com.j256.ormlite.stmt.Where
+import y2k.joyreactor.common.autoClose
 import y2k.joyreactor.common.queryRawList
 import y2k.joyreactor.services.repository.DataSet
 import y2k.joyreactor.services.repository.Dto
@@ -25,11 +26,11 @@ class OrmLiteDataSet<T : Dto>(private val dao: Dao<T, Long>) : DataSet<T> {
     }
 
     override fun toList(): List<T> {
-        return dao.toList()
+        return dao.autoClose { toList() }
     }
 
     override fun forEach(f: (T) -> Unit) {
-        dao.forEach(f)
+        dao.autoClose { forEach(f) }
     }
 
     override fun getById(id: Long): T {
