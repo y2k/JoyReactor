@@ -32,10 +32,6 @@ class OrmLiteDataSet<T : Dto>(private val dao: Dao<T, Long>) : DataSet<T> {
         dao.forEach(f)
     }
 
-    override fun none(f: (T) -> Boolean): Boolean {
-        return dao.none(f)
-    }
-
     override fun getById(id: Long): T {
         return dao.queryForId(id)
     }

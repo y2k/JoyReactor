@@ -27,7 +27,7 @@ class PrivateMessageFetcher(
                 val needLoadNext = isNeedLoadNext(Messages)
 
                 messages
-                    .filter { s -> Messages.none { it.isMine == s.isMine && it.date == s.date } }
+                    .filter { s -> Messages.filter("isMine" to s.isMine, "date" to s.date).none() }
                     .forEach { Messages.add(it) }
 
                 if (next == null)

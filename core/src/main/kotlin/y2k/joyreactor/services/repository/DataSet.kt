@@ -15,8 +15,6 @@ interface DataSet <T : Dto> {
 
     fun forEach(f: (T) -> Unit)
 
-    fun none(f: (T) -> Boolean): Boolean
-
     fun getById(id: Long): T
 
     fun getByIdOrNull(id: Long): T?

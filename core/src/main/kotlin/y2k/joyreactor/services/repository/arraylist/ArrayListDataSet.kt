@@ -37,10 +37,6 @@ class ArrayListDataSet<T : Dto>(val type: KClass<T>) : DataSet<T> {
         items.forEach(f)
     }
 
-    override fun none(f: (T) -> Boolean): Boolean {
-        return items.none(f)
-    }
-
     override fun getById(id: Long): T {
         return items.first { it.id == id }
     }
