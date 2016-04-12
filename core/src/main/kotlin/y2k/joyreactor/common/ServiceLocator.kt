@@ -8,7 +8,6 @@ import y2k.joyreactor.platform.Platform
 import y2k.joyreactor.services.*
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.repository.IDataContext
-import y2k.joyreactor.services.repository.arraylist.ArrayListDataContext
 import y2k.joyreactor.services.repository.ormlite.OrmLiteDataContext
 import y2k.joyreactor.services.requests.*
 import y2k.joyreactor.services.synchronizers.MyTagFetcher
@@ -26,7 +25,7 @@ object ServiceLocator {
     private val map = HashMap <KClass<*>, () -> Any>()
 
     init {
-        register(HttpClient(CookieStorage()))
+        registerSingleton { HttpClient(CookieStorage()) }
         register { PostViewModel(resolve(), resolve(), resolve()) }
         register { NavigationService.instance }
         register { ThreadsViewModel(resolve(), resolve(), resolve()) }
@@ -64,7 +63,7 @@ object ServiceLocator {
 
         register { MultiTryDownloader(resolve()) }
 
-        register<IDataContext> { OrmLiteDataContext(Platform.instance) }
+        registerSingleton<IDataContext> { OrmLiteDataContext(Platform.instance) }
         register { DataContext.Factory(resolve()) }
     }
 
@@ -94,8 +93,12 @@ object ServiceLocator {
         }
     }
 
-    fun <T : Any> register(singleton: T) {
-        register(singleton.javaClass.kotlin) { singleton }
+    inline fun <reified T : Any> registerSingleton(noinline factory: () -> T) {
+        var singleton: T? = null
+        register(T::class, {
+            if (singleton == null) singleton = factory()
+            singleton!!
+        })
     }
 
     inline fun <reified T : Any> register(noinline factory: () -> T) {
