@@ -35,7 +35,7 @@ class UserMessagesService(
     fun getMessages(username: String): Observable<List<Message>> {
         return entities.applyUse {
             Messages
-                .filter("userName", username)
+                .filter("userName" to username)
                 .sortedByDescending { it.date }
         }
     }

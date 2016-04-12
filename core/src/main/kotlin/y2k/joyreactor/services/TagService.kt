@@ -25,7 +25,7 @@ class TagService(private val dataContext: DataContext.Factory,
                 dataContext
                     .applyUse {
                         TagPosts
-                            .filter("groupId", group.id)
+                            .filter("groupId" to group.id)
                             .map { Posts.getById(it.postId) }
                     }
             }
@@ -65,7 +65,7 @@ class TagService(private val dataContext: DataContext.Factory,
                 dataContext
                     .use { entities ->
                         entities.TagPosts
-                            .filter("groupId", group.id)
+                            .filter("groupId" to group.id)
                             .forEach { entities.TagPosts.remove(it) }
                         entities.saveChanges()
                     }

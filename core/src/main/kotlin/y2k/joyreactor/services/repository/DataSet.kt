@@ -21,8 +21,6 @@ interface DataSet <T : Dto> {
 
     fun getByIdOrNull(id: Long): T?
 
-    fun filter(propertyName: String, value: Any): List<T>
-
     fun filter(vararg conditions: Pair<String, Any?>): List<T>
 
     fun groupBy(groupProp: String, orderProp: String): List<T>

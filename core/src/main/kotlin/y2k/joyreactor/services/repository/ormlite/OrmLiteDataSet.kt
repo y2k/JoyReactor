@@ -44,10 +44,6 @@ class OrmLiteDataSet<T : Dto>(private val dao: Dao<T, Long>) : DataSet<T> {
         return dao.queryForId(id)
     }
 
-    override fun filter(propertyName: String, value: Any): List<T> {
-        return dao.queryForEq(propertyName, value)
-    }
-
     override fun filter(vararg conditions: Pair<String, Any?>): List<T> {
         val q = dao.queryBuilder()
         var prev: Where<T, Long>? = null

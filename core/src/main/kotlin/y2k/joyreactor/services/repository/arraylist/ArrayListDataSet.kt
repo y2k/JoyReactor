@@ -54,11 +54,6 @@ class ArrayListDataSet<T : Dto>(val type: KClass<T>) : DataSet<T> {
         return items.filter { s -> q.all { it.first(s) == it.second } }
     }
 
-    override fun filter(propertyName: String, value: Any): List<T> {
-        val getter = getGetter(propertyName)
-        return items.filter { getter(it) == value }
-    }
-
     override fun groupBy(groupProp: String, orderProp: String): List<T> {
         val groupGetter = getGetter(groupProp)
         val sortGetter = getGetter(orderProp)

@@ -27,12 +27,12 @@ class PostMerger(
                     for (s in newPosts)
                         result.add(GroupPost(group.id, s.id))
                     entities.TagPosts
-                        .filter("groupId", group.id)
+                        .filter("groupId" to group.id)
                         .filterNot { s -> newPosts.any { it.id == s.postId } }
                         .forEach { result.add(it) }
 
                     entities.TagPosts
-                        .filter("groupId", group.id)
+                        .filter("groupId" to group.id)
                         .forEach { entities.TagPosts.remove(it) }
 
                     // TODO: Понять почему здесь падает
@@ -61,7 +61,7 @@ class PostMerger(
 
     private fun DataContext.getPostsForTag(group: Group): List<Post> {
         return TagPosts
-            .filter("groupId", group.id)
+            .filter("groupId" to group.id)
             .map { Posts.getById(it.postId) }
     }
 
@@ -69,7 +69,7 @@ class PostMerger(
         return updatePostsAsync(newPosts)
             .flatMap {
                 dataContext.use { entities ->
-                    var links = entities.TagPosts.filter("groupId", group.id)
+                    var links = entities.TagPosts.filter("groupId" to group.id)
                     val actualPosts = links.subList(0, buffer.dividers[group.id]!!).toArrayList()
                     val expiredPosts = links.subList(buffer.dividers[group.id]!!, links.size).toArrayList()
 
