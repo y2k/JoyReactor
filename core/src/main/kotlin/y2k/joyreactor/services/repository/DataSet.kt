@@ -17,13 +17,13 @@ interface DataSet <T : Dto> {
 
     fun none(f: (T) -> Boolean): Boolean
 
-    fun asIterable(): Iterable<T>
-
     fun getById(id: Long): T
 
     fun getByIdOrNull(id: Long): T?
 
     fun filter(propertyName: String, value: Any): List<T>
+
+    fun filter(vararg conditions: Pair<String, Any?>): List<T>
 
     fun groupBy(groupProp: String, orderProp: String): List<T>
 }

@@ -2,6 +2,7 @@ package y2k.joyreactor.services.repository.arraylist
 
 import y2k.joyreactor.services.repository.DataSet
 import y2k.joyreactor.services.repository.Dto
+import java.lang.reflect.Method
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -48,26 +49,30 @@ class ArrayListDataSet<T : Dto>(val type: KClass<T>) : DataSet<T> {
         return items.firstOrNull { it.id == id }
     }
 
-    override fun asIterable(): Iterable<T> {
-        return items.asIterable()
+    override fun filter(vararg conditions: Pair<String, Any?>): List<T> {
+        val q = conditions.map { getGetter(it.first) to it.second }
+        return items.filter { s -> q.all { it.first(s) == it.second } }
     }
 
     override fun filter(propertyName: String, value: Any): List<T> {
-        val getter = type.java.getMethod(toGetterName(propertyName))
+        val getter = getGetter(propertyName)
         return items.filter { getter(it) == value }
     }
 
     override fun groupBy(groupProp: String, orderProp: String): List<T> {
-        val groupGetter = type.java.getMethod(toGetterName(groupProp))
-        val sortGetter = type.java.getMethod(toGetterName(orderProp))
+        val groupGetter = getGetter(groupProp)
+        val sortGetter = getGetter(orderProp)
 
         return items
             .groupBy { groupGetter(it) }
             .map { it.value.maxBy { sortGetter(it) as Comparable<Any> }!! }
     }
 
-    private fun toGetterName(propertyName: String): String {
-        if (propertyName.startsWith("is")) return propertyName
-        return "get${propertyName.substring(0..0).toUpperCase()}${propertyName.substring(1)}"
+    private fun getGetter(propertyName: String): Method {
+        val getterName = when {
+            propertyName.startsWith("is") -> propertyName
+            else -> "get${propertyName.substring(0..0).toUpperCase()}${propertyName.substring(1)}"
+        }
+        return type.java.getMethod(getterName)
     }
 }

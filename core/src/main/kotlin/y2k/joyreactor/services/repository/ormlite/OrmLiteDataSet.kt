@@ -1,6 +1,7 @@
 package y2k.joyreactor.services.repository.ormlite
 
 import com.j256.ormlite.dao.Dao
+import com.j256.ormlite.stmt.Where
 import y2k.joyreactor.common.queryRawList
 import y2k.joyreactor.services.repository.DataSet
 import y2k.joyreactor.services.repository.Dto
@@ -35,11 +36,6 @@ class OrmLiteDataSet<T : Dto>(private val dao: Dao<T, Long>) : DataSet<T> {
         return dao.none(f)
     }
 
-    // TODO: убрать метод или утечку курсора
-    override fun asIterable(): Iterable<T> {
-        return dao
-    }
-
     override fun getById(id: Long): T {
         return dao.queryForId(id)
     }
@@ -50,6 +46,16 @@ class OrmLiteDataSet<T : Dto>(private val dao: Dao<T, Long>) : DataSet<T> {
 
     override fun filter(propertyName: String, value: Any): List<T> {
         return dao.queryForEq(propertyName, value)
+    }
+
+    override fun filter(vararg conditions: Pair<String, Any?>): List<T> {
+        val q = dao.queryBuilder()
+        var prev: Where<T, Long>? = null
+        conditions.forEach {
+            if (prev == null) prev = q.where().eq(it.first, it.second)
+            else prev = prev?.and()?.eq(it.first, it.second)
+        }
+        return dao.query(q.prepare())
     }
 
     override fun groupBy(groupProp: String, orderProp: String): List<T> {

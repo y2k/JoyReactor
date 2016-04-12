@@ -3,6 +3,7 @@ package y2k.joyreactor.services.synchronizers
 import rx.Observable
 import y2k.joyreactor.model.Message
 import y2k.joyreactor.services.repository.DataContext
+import y2k.joyreactor.services.repository.DataSet
 import y2k.joyreactor.services.requests.MessageListRequest
 import java.util.*
 
@@ -23,7 +24,7 @@ class PrivateMessageFetcher(
                 val (messages, next) = request.getMessages(nextPage)
 
                 updateLastMessageDates(messages)
-                val needLoadNext = isNeedLoadNext(Messages.asIterable())
+                val needLoadNext = isNeedLoadNext(Messages)
 
                 messages
                     .filter { s -> Messages.none { it.isMine == s.isMine && it.date == s.date } }
@@ -51,13 +52,13 @@ class PrivateMessageFetcher(
         }
     }
 
-    private fun isNeedLoadNext(messages: Iterable<Message>): Boolean {
+    private fun isNeedLoadNext(messages: DataSet<Message>): Boolean {
         if (mineOldest != null) {
-            if (messages.none { it.isMine == true && it.date == mineOldest })
+            if (messages.filter("isMine" to true, "date" to mineOldest).none())
                 return true
         }
         if (theirOldest != null) {
-            if (messages.none { it.isMine == false && it.date == theirOldest })
+            if (messages.filter ("isMine" to false, "date" to theirOldest).none())
                 return true
         }
         return false
