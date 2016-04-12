@@ -13,7 +13,7 @@ class PersistentMap(name: String) {
     private val map = ConcurrentHashMap<String, String>()
 
     init {
-        cookieFile = File(Platform.instance.currentDirectory, name)
+        cookieFile = File(Platform.instance.currentDirectory, "$ApplicationDataVersion.$name")
         if (cookieFile.exists())
             map.putAll(cookieFile.readLines().groupToPair())
     }

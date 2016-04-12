@@ -1,5 +1,6 @@
 package y2k.joyreactor.services.repository.arraylist
 
+import y2k.joyreactor.common.ApplicationDataVersion
 import y2k.joyreactor.platform.Platform
 import y2k.joyreactor.services.repository.Dto
 import java.io.EOFException
@@ -9,8 +10,6 @@ import java.io.ObjectOutputStream
 import kotlin.reflect.KClass
 
 object ArrayListSerializer {
-
-    private val version = 1
 
     fun <T : Dto> loadFromDisk(dataSet: ArrayListDataSet<T>) {
         getFile(dataSet.type)
@@ -39,6 +38,6 @@ object ArrayListSerializer {
     }
 
     private fun getFile(type: KClass<*>): File {
-        return File(Platform.instance.currentDirectory, "${type.java.simpleName}.$version.db")
+        return File(Platform.instance.currentDirectory, "${type.java.simpleName}.$ApplicationDataVersion.db")
     }
 }

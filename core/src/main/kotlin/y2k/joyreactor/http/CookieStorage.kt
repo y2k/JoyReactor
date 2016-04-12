@@ -10,7 +10,7 @@ import java.util.regex.Pattern
  */
 class CookieStorage {
 
-    private val map = PersistentMap("cookies.1.dat")
+    private val map = PersistentMap("cookies.dat")
 
     fun attach(request: Request.Builder) {
         if (map.isEmpty) return
