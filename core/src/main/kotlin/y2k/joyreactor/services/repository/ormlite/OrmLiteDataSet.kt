@@ -26,7 +26,7 @@ class OrmLiteDataSet<T : Dto>(private val dao: Dao<T, Long>) : DataSet<T> {
     }
 
     override fun toList(): List<T> {
-        return dao.autoClose { toList() }
+        return dao.queryForAll()
     }
 
     override fun forEach(f: (T) -> Unit) {
