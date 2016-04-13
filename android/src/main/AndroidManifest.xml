@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="y2k.joyreactor"
-    android:installLocation="preferExternal" >
+          package="y2k.joyreactor"
+          android:installLocation="preferExternal">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".App"
@@ -13,78 +12,86 @@
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".ProfileActivity"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_profile" >
+            android:label="@string/title_activity_profile">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="y2k.joyreactor.MainActivity" />
+                android:value="y2k.joyreactor.MainActivity"/>
         </activity>
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_login" >
+            android:label="@string/title_activity_login">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="y2k.joyreactor.MainActivity" />
+                android:value="y2k.joyreactor.MainActivity"/>
         </activity>
         <activity
             android:name=".MessagesActivity"
             android:screenOrientation="portrait"
-            android:label="@string/messages" >
+            android:label="@string/messages">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="y2k.joyreactor.MainActivity" />
+                android:value="y2k.joyreactor.MainActivity"/>
         </activity>
         <activity
-                android:name=".ThreadsActivity"
-                android:screenOrientation="portrait"
-                android:label="@string/messages" >
+            android:name=".ThreadsActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/messages">
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="y2k.joyreactor.MainActivity" />
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="y2k.joyreactor.MainActivity"/>
         </activity>
         <activity
             android:name=".PostActivity"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_post" >
+            android:label="@string/title_activity_post">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="y2k.joyreactor.MainActivity" />
+                android:value="y2k.joyreactor.MainActivity"/>
         </activity>
         <activity
             android:name=".VideoActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.FullScreen"
-            android:label="@string/title_activity_video" >
+            android:label="@string/title_activity_video">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="y2k.joyreactor.MainActivity" />
+                android:value="y2k.joyreactor.MainActivity"/>
         </activity>
         <activity android:name=".GalleryActivity"
-                  android:label="@string/post_images" >
+                  android:label="@string/post_images">
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="y2k.joyreactor.PostActivity" />
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="y2k.joyreactor.PostActivity"/>
         </activity>
         <activity
             android:name=".CreateCommentActivity"
             android:windowSoftInputMode="stateVisible"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.CreateComment"
-            android:label="@string/title_activity_create_comment" >
+            android:label="@string/title_activity_create_comment">
+        </activity>
+        <activity
+            android:name=".ImageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="y2k.joyreactor.MainActivity"/>
         </activity>
     </application>
 </manifest>

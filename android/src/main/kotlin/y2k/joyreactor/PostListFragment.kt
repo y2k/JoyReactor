@@ -73,7 +73,9 @@ class PostListFragment : BaseFragment() {
 
             userImage.image = item.getUserImage2().toImage()
             userName.text = item.userName
-            videoMark.visibility = if (item.image?.isAnimated ?: false) View.VISIBLE else View.GONE
+
+            //            videoMark.visibility = if (item.image?.isAnimated ?: false) View.VISIBLE else View.GONE
+            videoMark.setVisible(item.image != null)
 
             commentCount.text = "" + item.commentCount
             time.text = prettyTime.format(item.created)

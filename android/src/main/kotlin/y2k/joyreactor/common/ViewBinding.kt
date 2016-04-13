@@ -2,6 +2,7 @@ package y2k.joyreactor.common
 
 import android.app.Activity
 import android.content.Context
+import android.net.Uri
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.ContentLoadingProgressBar
@@ -178,6 +179,11 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
     fun progressImageView(id: Int, property: ObservableProperty<PartialResult<File>>) {
         val view = find<ProgressImageView>(id)
         property.subscribe { view.image = it }
+    }
+
+    fun imageView(id: Int, property: ObservableProperty<File?>) {
+        val view = find<ImageView>(id)
+        property.subscribe { view.setImageURI(it?.let { Uri.fromFile(it) }) }
     }
 
     fun tagsView(id: Int, property: ObservableProperty<List<String>>) {

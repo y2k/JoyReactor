@@ -66,7 +66,8 @@ class AndroidNavigation(app: Application) : NavigationService {
     }
 
     override fun openImageView(postId: Long) {
-        // TODO:
+        sArgument = postId.toString() // TODO:
+        currentActivity?.startActivity(ImageActivity::class)
     }
 
     override fun openCreateComment() {

@@ -10,6 +10,10 @@ import android.view.ViewGroup
  * Created by y2k on 2/6/16.
  */
 
+fun View.setVisible(visible: Boolean) {
+    visibility = if (visible) View.VISIBLE else View.GONE
+}
+
 inline fun View.setOnClickListener(id: Int, crossinline onClick: () -> Unit) {
     findViewById(id).setOnClickListener { onClick() }
 }
