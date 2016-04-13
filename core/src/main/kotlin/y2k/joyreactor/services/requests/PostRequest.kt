@@ -29,7 +29,7 @@ class PostRequest(private val httpClient: HttpClient) {
         val postNode = page.select("div.postContainer").first()
         post = PostsForTagRequest.newPost(postNode) // TODO:
 
-        commentsRequest.request(page)
+        commentsRequest.request(page, postId.toLong())
 
         for (e in page.select(".similar_post img")) {
             val similarPost = SimilarPost(getPostId(e.parent().attr("href")))

@@ -13,7 +13,7 @@ class PostCommentsRequest {
     var comments: List<Comment> = ArrayList()
         private set
 
-    fun request(doc: Document) {
+    fun request(doc: Document, postId: Long) {
         val result = ArrayList<Comment>()
         for (node in doc.select("div.comment")) {
             val parent = node.parent()
@@ -24,8 +24,8 @@ class PostCommentsRequest {
                 node.select("img.avatar").attr("src"),
                 (node.select("span.comment_rating").attr("comment_id")).toLong(),
                 parentId,
-                java.lang.Float.parseFloat(node.select("span.comment_rating").text().trim { it <= ' ' })
-            )
+                java.lang.Float.parseFloat(node.select("span.comment_rating").text().trim { it <= ' ' }),
+                postId)
 
             val imgElement = node.select("div.image > img").first()
             if (imgElement != null)

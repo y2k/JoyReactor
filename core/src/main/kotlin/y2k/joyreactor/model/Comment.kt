@@ -10,9 +10,9 @@ class Comment(
     val userImage: String?,
     val id: Long,
     val parentId: Long,
-    val rating: Float) : Serializable {
+    val rating: Float,
+    val postId: Long) : Serializable {
 
-    var postId = 0L
     var replies = 0
     var level = 0
 
