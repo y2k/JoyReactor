@@ -21,6 +21,9 @@ repositories {
     mavenCentral()
 }
 
+Properties localProperties = new Properties()
+localProperties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
@@ -52,7 +55,11 @@ android {
         }
     }
     buildTypes {
+        debug {
+            buildConfigField "String", "FEEDBACK_TELEGRAM", '"' + localProperties.getProperty('feedback.telegram') + '"'
+        }
         release {
+            buildConfigField "String", "FEEDBACK_TELEGRAM", '"' + localProperties.getProperty('feedback.telegram') + '"'
             signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

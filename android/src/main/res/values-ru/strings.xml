@@ -73,4 +73,5 @@
     <string name="good">Хорошее</string>
     <string name="best">Лутшее</string>
     <string name="newPosts">Новое</string>
+    <string name="send_feedback_by">Отправить отзыв через</string>
 </resources>

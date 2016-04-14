@@ -79,4 +79,5 @@
     <string name="good">Good</string>
     <string name="best">Best</string>
     <string name="newPosts">New</string>
+    <string name="send_feedback_by">Send feedback by</string>
 </resources>
