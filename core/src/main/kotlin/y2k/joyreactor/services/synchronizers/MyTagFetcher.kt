@@ -44,7 +44,7 @@ class MyTagFetcher(
     private fun addOrReplaceAll(left: List<Group>, right: List<Group>): List<Group> {
         val result = ArrayList<Group>()
         for (tag in right) {
-            val old = searchForServerId(left, tag.serverId2)
+            val old = searchForServerId(left, tag.serverId)
             result.add(if (old == null) tag else tag.identify(old.id))
         }
         return result
@@ -52,7 +52,7 @@ class MyTagFetcher(
 
     private fun searchForServerId(groups: List<Group>, serverId: String?): Group? {
         for (tag in groups)
-            if (serverId == tag.serverId2) return tag
+            if (serverId == tag.serverId) return tag
         return null
     }
 

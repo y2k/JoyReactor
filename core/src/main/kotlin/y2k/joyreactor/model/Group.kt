@@ -8,20 +8,22 @@ import java.io.Serializable
  * Created by y2k on 9/26/15.
  */
 data class Group(
-    @DatabaseField val type: Type = Type.Featured,
-    @DatabaseField val name: String = "",
-    @DatabaseField val quality: Quality = Quality.Good,
+    @DatabaseField val serverId: String = "",
     @DatabaseField val title: String = "",
     @DatabaseField(dataType = com.j256.ormlite.field.DataType.SERIALIZABLE) val image: Image? = null,
     @DatabaseField val isVisible: Boolean = false,
     @DatabaseField(generatedId = true) override val id: Long = 0) : Serializable, Dto {
 
+    val type: Type
+        get() = Type.valueOf(serverId.split(":")[0])
+    val name: String
+        get() = serverId.split(":")[1]
+    val quality: Quality
+        get() = Quality.valueOf(serverId.split(":")[2])
+
     override fun identify(newId: Long): Group {
         return copy(id = newId)
     }
-
-    val serverId2: String
-        get() = "$type:$name:$quality"
 
     val username: String
         get() = name
@@ -50,4 +52,12 @@ data class Group(
     enum class Quality {
         Good, Best, All
     }
+}
+
+fun Group(base: Group, quality: Group.Quality): Group {
+    return Group(base.type, base.name, quality, base.title, base.image)
+}
+
+fun Group(type: Group.Type, name: String, quality: Group.Quality, title: String, image: Image? = null): Group {
+    return Group("$type:$name:$quality", title, image)
 }
