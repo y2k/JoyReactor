@@ -6,6 +6,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import org.ocpsoft.prettytime.PrettyTime
 import y2k.joyreactor.common.*
@@ -54,7 +55,7 @@ class PostListFragment : BaseFragment() {
         val imagePanel = itemView.find<FixedAspectPanel>(R.id.imagePanel)
         val image = itemView.find<WebImageView>(R.id.image)
         val userImage = itemView.find<WebImageView>(R.id.userImage)
-        val videoMark = itemView.find<View>(R.id.videoMark)
+        val videoMark = itemView.find<ImageView>(R.id.videoMark)
         val commentCount = itemView.find<TextView>(R.id.commentCount)
         val time = itemView.find<TextView>(R.id.time)
         val userName = itemView.find<TextView>(R.id.userName)
@@ -67,15 +68,17 @@ class PostListFragment : BaseFragment() {
                 imagePanel.visibility = View.GONE
             } else {
                 imagePanel.visibility = View.VISIBLE
-                imagePanel.aspect = item.image!!.getAspect(0.5f)
+                imagePanel.aspect = item.image!!.getAspect(0.7f)
                 image.image = item.image
             }
 
             userImage.image = item.getUserImage2().toImage()
             userName.text = item.userName
 
-            //            videoMark.visibility = if (item.image?.isAnimated ?: false) View.VISIBLE else View.GONE
             videoMark.setVisible(item.image != null)
+            videoMark.setImageResource(
+                if (item.image?.isAnimated == true) R.drawable.ic_play_circle_filled_white_24dp
+                else R.drawable.ic_zoom_in_white_24dp)
 
             commentCount.text = "" + item.commentCount
             time.text = prettyTime.format(item.created)

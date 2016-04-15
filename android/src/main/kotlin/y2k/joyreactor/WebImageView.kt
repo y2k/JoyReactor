@@ -19,6 +19,7 @@ class WebImageView(context: Context, attrs: AttributeSet) : ImageView(context, a
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        if (isInEditMode) return
 
         if (state.image != image || state.width != canvas.width || state.height != canvas.height) {
             state = ImageState(image, canvas.width, canvas.height)
