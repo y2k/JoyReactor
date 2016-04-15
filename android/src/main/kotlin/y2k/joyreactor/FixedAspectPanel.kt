@@ -43,6 +43,6 @@ class FixedAspectPanel(context: Context, attrs: AttributeSet) : ViewGroup(contex
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        forEachChild { it.layout(l, t, r, b) }
+        forEachChild { it.layout(0, 0, r - l, b - t) }
     }
 }
