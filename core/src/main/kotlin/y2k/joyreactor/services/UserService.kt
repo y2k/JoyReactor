@@ -39,7 +39,7 @@ class UserService(
     fun makeGroup(base: Group, quality: Group.Quality): Observable<Group> {
         return dataContext.applyUse {
             val group = base.copy(id = 0L, quality = quality, isVisible = false)
-            val exists = Tags.filter("serverId" to group.serverId).firstOrNull()
+            val exists = Tags.filter("type" to group.type, "name" to group.name, "quality" to group.name).firstOrNull()
             exists ?: Tags.add(group).apply { saveChanges() }
         }
     }

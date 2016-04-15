@@ -20,7 +20,7 @@ data class Group(
         return copy(id = newId)
     }
 
-    val serverId: String
+    val serverId2: String
         get() = "$type:$name:$quality"
 
     val username: String
