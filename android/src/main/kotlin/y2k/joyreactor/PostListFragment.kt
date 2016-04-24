@@ -75,10 +75,10 @@ class PostListFragment : BaseFragment() {
             userImage.image = item.getUserImage2().toImage()
             userName.text = item.userName
 
-            videoMark.setVisible(item.image != null)
-            videoMark.setImageResource(
-                if (item.image?.isAnimated == true) R.drawable.ic_play_circle_filled_white_24dp
-                else R.drawable.ic_zoom_in_white_24dp)
+            videoMark.setVisible(item.image?.isAnimated ?: false)
+//            videoMark.setImageResource(
+//                if (item.image?.isAnimated == true) R.drawable.ic_play_circle_filled_white_24dp
+//                else R.drawable.ic_zoom_in_white_24dp)
 
             commentCount.text = "" + item.commentCount
             time.text = prettyTime.format(item.created)
