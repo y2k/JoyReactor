@@ -60,6 +60,7 @@ object ServiceLocator {
         register { ProfileViewModel(resolve(), resolve()) }
         register { AddTagViewModel(resolve(), resolve()) }
         register { PostListViewModel(resolve(), resolve(), resolve(), resolve()) }
+        register { PostLikeViewModel(resolve(), resolve()) }
 
         register { MultiTryDownloader(resolve()) }
 

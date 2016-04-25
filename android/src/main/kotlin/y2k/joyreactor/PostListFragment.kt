@@ -37,6 +37,7 @@ class PostListFragment : BaseFragment() {
                 viewHolderWithType { parent, type ->
                     when (type) {
                         1 -> PostViewHolder(parent.inflate(R.layout.item_feed)).apply {
+                            itemView.setOnClickListener(R.id.like) { vm.changeLike(layoutPosition) }
                             itemView.setOnClickListener(R.id.card, { vm.postClicked(layoutPosition) })
                             itemView.setOnClickListener(R.id.videoMark) { vm.playClicked(layoutPosition) }
                         }
@@ -76,10 +77,6 @@ class PostListFragment : BaseFragment() {
             userName.text = item.userName
 
             videoMark.setVisible(item.image?.isAnimated ?: false)
-//            videoMark.setImageResource(
-//                if (item.image?.isAnimated == true) R.drawable.ic_play_circle_filled_white_24dp
-//                else R.drawable.ic_zoom_in_white_24dp)
-
             commentCount.text = "" + item.commentCount
             time.text = prettyTime.format(item.created)
         }

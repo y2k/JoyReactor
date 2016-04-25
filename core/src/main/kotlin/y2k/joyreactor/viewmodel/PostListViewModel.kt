@@ -12,6 +12,7 @@ import y2k.joyreactor.services.TagService
 import y2k.joyreactor.services.UserService
 import java.util.*
 import kotlin.properties.Delegates
+import y2k.joyreactor.platform.open
 
 /**
  * Created by y2k on 3/8/16.
@@ -112,5 +113,10 @@ class PostListViewModel(
         val post = posts.value[position]!!
         if (post.image?.isAnimated ?: false) navigationService.openVideo(post.id)
         else navigationService.openImageView(post.id)
+    }
+
+    fun changeLike(position: Int) {
+        val post = posts.value[position] ?: return
+        navigationService.open<PostLikeViewModel>("" + post.id)
     }
 }

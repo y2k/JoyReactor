@@ -1,6 +1,7 @@
 package y2k.joyreactor.services
 
 import rx.Observable
+import rx.schedulers.Schedulers
 import y2k.joyreactor.common.PartialResult
 import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.model.*
@@ -8,6 +9,7 @@ import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.OriginalImageRequestFactory
 import y2k.joyreactor.services.requests.PostRequest
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by y2k on 11/24/15.
@@ -64,5 +66,9 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
         return Observable
             .just(buffer.post.image!!.fullUrl(null))
             .flatMap({ url -> imageRequestFactory.requestPartial(url) })
+    }
+
+    fun updatePostLike(postId: Long, like: Boolean): Observable<Unit> {
+        return Observable.fromCallable { Thread.sleep(2000) }.subscribeOn(Schedulers.io())
     }
 }

@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDialog
-import android.support.v7.app.AppCompatDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import y2k.joyreactor.common.BaseDialogFragment
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.common.bindingBuilder
 import y2k.joyreactor.viewmodel.AddTagViewModel
@@ -16,7 +16,7 @@ import y2k.joyreactor.viewmodel.AddTagViewModel
 /**
  * Created by y2k on 11/27/15.
  */
-class AddTagDialogFragment : AppCompatDialogFragment() {
+class AddTagDialogFragment : BaseDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.layout_add_tag, container, false)
@@ -25,7 +25,7 @@ class AddTagDialogFragment : AppCompatDialogFragment() {
             command(R.id.cancel, { dismiss() })
             command(R.id.ok, { vm.add() })
             editText(R.id.tag, vm.tag)
-            visibility(R.id.error,vm.error)
+            visibility(R.id.error, vm.error)
             animator(R.id.animator, vm.isBusy, { if (it) 1 else 0 })
         }
         return view
