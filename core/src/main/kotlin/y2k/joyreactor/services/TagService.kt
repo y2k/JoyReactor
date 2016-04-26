@@ -3,6 +3,7 @@ package y2k.joyreactor.services
 import rx.Completable
 import rx.Observable
 import rx.subjects.PublishSubject
+import y2k.joyreactor.common.mapDatabase
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.services.repository.DataContext
@@ -12,24 +13,26 @@ import y2k.joyreactor.services.synchronizers.PostMerger
 /**
  * Created by y2k on 11/24/15.
  */
-class TagService(private val dataContext: DataContext.Factory,
-                 private val postsRequest: PostsForTagRequest,
-                 private val merger: PostMerger,
-                 private val buffer: MemoryBuffer) {
+class TagService(
+    private val dataContext: DataContext.Factory,
+    private val postsRequest: PostsForTagRequest,
+    private val merger: PostMerger,
+    private val buffer: MemoryBuffer) {
 
     private val tagChangedEvent = PublishSubject.create<Unit>()
 
     fun query(group: Group): Observable<State> {
         return tagChangedEvent
-            .flatMap {
-                dataContext
-                    .applyUse {
-                        TagPosts
-                            .filter("groupId" to group.id)
-                            .map { Posts.getById(it.postId) }
-                    }
+            .mapDatabase(dataContext) {
+                TagPosts
+                    .filter("groupId" to group.id)
+                    .map { Posts.getById(it.postId) }
             }
-            .map { State(it, buffer.dividers[group.id], buffer.hasNew[group.id] ?: false) }
+            .map {
+                State(it,
+                    buffer.dividers[group.id],
+                    buffer.hasNew[group.id] ?: false)
+            }
     }
 
     fun preloadNewPosts(group: Group): Completable {
@@ -61,15 +64,12 @@ class TagService(private val dataContext: DataContext.Factory,
 
     fun reloadFirstPage(group: Group): Completable {
         return requestAsync(group)
-            .flatMap { data ->
-                dataContext
-                    .use { entities ->
-                        entities.TagPosts
-                            .filter("groupId" to group.id)
-                            .forEach { entities.TagPosts.remove(it) }
-                        entities.saveChanges()
-                    }
-                    .map { data }
+            .mapDatabase(dataContext) {
+                TagPosts
+                    .filter("groupId" to group.id)
+                    .forEach { TagPosts.remove(it) }
+                saveChanges()
+                it
             }
             .flatMap { merger.mergeFirstPage(group, it.posts) }
             .doOnNext { notifyDataChanged() }
