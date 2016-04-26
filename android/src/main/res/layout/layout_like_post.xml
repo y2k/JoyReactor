@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ViewAnimator
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/animator"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/do_you_want_to_like_dislike_this_post"
+            android:textColor="#333"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center_horizontal"
+            android:text="@string/unknown_error"
+            android:textColor="#f00"
+            android:textSize="16sp"/>
+
+        <Button
+            android:id="@+id/like"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/error"
+            android:layout_marginRight="20dp"
+            android:minWidth="50dp"
+            android:text="@string/like"
+            android:textColor="#3C3"/>
+
+        <Button
+            android:id="@+id/dislike"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/error"
+            android:layout_toLeftOf="@id/like"
+            android:minWidth="50dp"
+            android:text="@string/dislike"
+            android:textColor="#333"/>
+    </RelativeLayout>
+
+    <ProgressBar
+        style="?android:progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+</ViewAnimator>

@@ -1,6 +1,7 @@
 package y2k.joyreactor.common
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.net.Uri
 import android.support.design.widget.TabLayout
@@ -66,6 +67,10 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
 
     val resolvers = arrayListOf(root)
 
+    fun blockDialog(dialog: Dialog, property: ObservableProperty<Boolean>) {
+        property.subscribe { dialog.setCancelable(!it) }
+    }
+
     fun menu(menuId: Int, init: MenuBinding.() -> Unit) {
         MenuBinding(menuId, resolvers).init()
     }
@@ -106,6 +111,10 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
         view.setOnCheckedChangeListener { group, id ->
             view.getChildren().map { it as RadioButton }.indexOfFirst { it.isChecked }
         }
+    }
+
+    fun animator(id: Int, property: ObservableProperty<Boolean>) {
+        animator(id, property) { if (it) 1 else (0) }
     }
 
     fun <T> animator(id: Int, property: ObservableProperty<T>, convert: (T) -> Int) {

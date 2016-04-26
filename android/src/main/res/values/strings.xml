@@ -80,4 +80,7 @@
     <string name="best">Best</string>
     <string name="newPosts">New</string>
     <string name="send_feedback_by">Send feedback by</string>
+    <string name="do_you_want_to_like_dislike_this_post">Do you want to like/dislike this post?</string>
+    <string name="like">Like</string>
+    <string name="dislike">Dislike</string>
 </resources>

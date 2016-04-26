@@ -1,20 +1,20 @@
 <resources>
     <string name="add_tag">Добавить тег</string>
     <string name="profile">Профиль</string>
-    <string name="settings">Settings</string>
-    <string name="about">About</string>
+    <string name="settings">Настройки</string>
+    <string name="about">О программе</string>
     <string name="favorite">Избранное</string>
     <string name="feed">Лента</string>
     <string name="post_acitivty">Post</string>
-    <string name="create_tag">Create tag</string>
+    <string name="create_tag">Добавить тег</string>
     <string name="tag_name">Имя тега</string>
-    <string name="example_tag">Example: Android, Anime</string>
-    <string name="required_field">Required field</string>
+    <string name="example_tag">Пример: Android, Anime</string>
+    <string name="required_field">Обязательное поле</string>
     <string name="username">Имя пользователя</string>
     <string name="password">Пароль</string>
     <string name="login">Войти</string>
     <string name="logout">Выйти</string>
-    <string name="activity_private_messages">Private messages</string>
+    <string name="activity_private_messages">Личные сообщения</string>
     <string name="new_posts">Есть новые посты</string>
     <string name="apply_caps">ОБНОВИТЬ</string>
     <string name="load_more_caps">ДАЛЬШЕ</string>
@@ -23,12 +23,12 @@
     <string name="star_progress">Прогресс до следующей звезды:</string>
     <string name="login_error">Не удалось авторизоваться. Пожалуйста, попробуйте позже.</string>
     <string name="your_new_message_here">Напишите здесь свое сообщение…</string>
-    <string name="you_are_not_authorized">You are not authorized</string>
+    <string name="you_are_not_authorized">Вы не авторизированы</string>
     <string name="send_feedback">Отправить отзыв</string>
     <string name="updates_available">Доступно обновление</string>
     <string name="open">Open</string>
     <string name="write_feedback">Напишите отзыв</string>
-    <string name="error_email_client_not_installed">You don\'t have any email client installed.</string>
+    <string name="error_email_client_not_installed">У вас не установлен почтовый клиент.</string>
     <string name="unknow_error">Произошла ошибка. Пожалуйста, попробуйте позже.</string>
     <string name="unknown_error">Произошла ошибка. Пожалуйста, попробуйте позже.</string>
     <string name="authorization">Авторизация</string>
@@ -74,4 +74,7 @@
     <string name="best">Лутшее</string>
     <string name="newPosts">Новое</string>
     <string name="send_feedback_by">Отправить отзыв через</string>
+    <string name="do_you_want_to_like_dislike_this_post">Хотите оценить этот пост?</string>
+    <string name="dislike">Минус</string>
+    <string name="like">Плюс</string>
 </resources>
