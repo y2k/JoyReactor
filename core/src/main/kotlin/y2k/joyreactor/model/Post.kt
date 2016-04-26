@@ -8,7 +8,7 @@ import java.util.*
 /**
  * Created by y2k on 9/27/15.
  */
-class Post(
+data class Post(
     @DatabaseField val title: String = "",
     @DatabaseField(dataType = com.j256.ormlite.field.DataType.SERIALIZABLE) val image: Image? = null,
     @DatabaseField val userImage: String = "",

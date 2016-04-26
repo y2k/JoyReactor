@@ -1,15 +1,14 @@
 package y2k.joyreactor.services
 
 import rx.Observable
-import rx.schedulers.Schedulers
 import y2k.joyreactor.common.PartialResult
 import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.model.*
 import y2k.joyreactor.services.repository.DataContext
+import y2k.joyreactor.services.requests.LikePostRequest
 import y2k.joyreactor.services.requests.OriginalImageRequestFactory
 import y2k.joyreactor.services.requests.PostRequest
 import java.io.File
-import java.util.concurrent.TimeUnit
 
 /**
  * Created by y2k on 11/24/15.
@@ -17,7 +16,8 @@ import java.util.concurrent.TimeUnit
 class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
                   private val postRequest: PostRequest,
                   private val buffer: MemoryBuffer,
-                  private val dataContext: DataContext.Factory) {
+                  private val dataContext: DataContext.Factory,
+                  private val likePostRequest: LikePostRequest) {
 
     fun getVideo(postId: String): Observable<File> {
         return getFromCache(postId)
@@ -68,7 +68,14 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
             .flatMap({ url -> imageRequestFactory.requestPartial(url) })
     }
 
-    fun updatePostLike(postId: Long, like: Boolean): Observable<Unit> {
-        return Observable.fromCallable { Thread.sleep(2000) }.subscribeOn(Schedulers.io())
+    fun updatePostLike(postId: Long, like: Boolean): Observable<Any> {
+        return likePostRequest
+            .like(postId, like)
+            .flatMap {
+                dataContext.applyUse {
+                    val post = Posts.getById(postId)
+                    Posts.add(post.copy(rating = it))
+                }
+            }
     }
 }

@@ -15,14 +15,14 @@ class CreateCommentRequestFactory(private val httpClient: HttpClient) {
     fun create(postId: String, commentText: String): Observable<Unit> {
         return ioUnitObservable {
             httpClient
-                .beginForm()
-                .put("parent_id", commentId ?: "0")
-                .put("post_id", postId)
-                .put("token", getToken())
-                .put("comment_text", commentText)
+                .buildRequest()
+                .addField("parent_id", commentId ?: "0")
+                .addField("post_id", postId)
+                .addField("token", getToken())
+                .addField("comment_text", commentText)
                 .putHeader("X-Requested-With", "XMLHttpRequest")
                 .putHeader("Referer", "http://joyreactor.cc/post/" + postId)
-                .send("http://joyreactor.cc/post_comment/create")
+                .post("http://joyreactor.cc/post_comment/create")
         }
     }
 

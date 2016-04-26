@@ -56,7 +56,8 @@ open class HttpClient(private val cookies: CookieStorage) {
     }
 
     private fun executeRequest(url: String, isBrowser: Boolean = false, init: (Request.Builder.() -> Unit)? = null): Response {
-        val request = Request.Builder().url(url)
+        val request = Request.Builder()
+            .url(url)
             .header("Accept-Encoding", "gzip")
         if (isBrowser) {
             request.header("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko")
@@ -72,7 +73,7 @@ open class HttpClient(private val cookies: CookieStorage) {
         return response
     }
 
-    fun beginForm(): Form {
+    fun buildRequest(): Form {
         return Form()
     }
 
@@ -89,7 +90,7 @@ open class HttpClient(private val cookies: CookieStorage) {
         private val form = HashMap<String, String>()
         private val headers = HashMap<String, String>()
 
-        fun put(key: String, value: String): Form {
+        fun addField(key: String, value: String): Form {
             form.put(key, value)
             return this
         }
@@ -99,7 +100,14 @@ open class HttpClient(private val cookies: CookieStorage) {
             return this
         }
 
-        fun send(url: String): Document {
+        fun get(url: String): Document {
+            var response = executeRequest(url, true) {
+                headers.forEach { header(it.key, it.value) }
+            }
+            return response.stream().use { Jsoup.parse(it, "utf-8", url) }
+        }
+
+        fun post(url: String): Document {
             var response = executeRequest(url, true) {
                 headers.forEach { header(it.key, it.value) }
                 post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"), serializeForm()))

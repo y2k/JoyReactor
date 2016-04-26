@@ -31,6 +31,8 @@ object ServiceLocator {
         register { ThreadsViewModel(resolve(), resolve(), resolve()) }
         register { MessagesViewModel(resolve(), resolve()) }
 
+        register { TokenRequest(resolve()) }
+        register { LikePostRequest(resolve(), resolve()) }
         register { MessageListRequest(resolve(), resolve()) }
         register { PostMerger(resolve(), resolve()) }
         register { MemoryBuffer }
@@ -46,7 +48,7 @@ object ServiceLocator {
         register { LoginRequestFactory(resolve()) }
         register { SendMessageRequest(resolve()) }
 
-        register { PostService(resolve(), resolve(), resolve(), resolve()) }
+        register { PostService(resolve(), resolve(), resolve(), resolve(), resolve()) }
         register { TagService(resolve(), resolve(), resolve(), resolve()) }
         register { UserService(resolve(), resolve(), resolve(), resolve()) }
         register { ProfileService(resolve(), resolve(), resolve()) }
