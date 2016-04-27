@@ -3,19 +3,22 @@ package y2k.joyreactor.services
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Message
 import java.util.*
-import kotlin.reflect.KClass
 
 /**
  * Created by y2k on 2/3/16.
  */
 class BroadcastService {
 
-    fun broadcast(message: Any) {
-        DefaultMessenger.send(message)
+    inline fun <reified T : Any> broadcast(message: T) {
+        broadcast(T::class, message)
     }
 
-    fun <T : Any> register(receiver: Any, callback: (T) -> Unit, type: KClass<T>) {
-        DefaultMessenger.register(receiver, callback, type.java)
+    fun broadcast(token: Any, message: Any) {
+        DefaultMessenger.send(token, message)
+    }
+
+    fun <T : Any> register(receiver: Any, callback: (T) -> Unit, token: Any) {
+        DefaultMessenger.register(receiver, callback, token)
     }
 
     fun unregister(receiver: Any) {
@@ -29,19 +32,19 @@ class BroadcastService {
     // TODO: Слить с родительским классом
     private object DefaultMessenger {
 
-        private val observers = HashMap<Class<*>, Observable>()
+        private val observers = HashMap<Any, Observable>()
         private val registrations = HashMap<ActionObserver<*>, Any>()
 
-        fun send(message: Any) {
-            val observable = observers[message.javaClass]
+        fun send(token: Any, message: Any) {
+            val observable = observers[token]
             observable?.notifyObservers(message)
         }
 
-        fun <T> register(receiver: Any, callback: (T) -> Unit, type: Class<T>) {
-            var observable = observers[type]
+        fun <T> register(receiver: Any, callback: (T) -> Unit, token: Any) {
+            var observable = observers[token]
             if (observable == null) {
                 observable = ObservableImpl()
-                observers.put(type, observable)
+                observers.put(token, observable)
             }
 
             val o = ActionObserver(callback)

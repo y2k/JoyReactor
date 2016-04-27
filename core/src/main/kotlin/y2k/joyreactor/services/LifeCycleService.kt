@@ -15,8 +15,12 @@ class LifeCycleService(
         actions.add(func)
     }
 
-    fun <T : Any> add(type: KClass<T>, func: (T) -> Unit) {
-        actions.add { broadcastService.register(this, func, type) }
+    fun <T : Any> add(tokenType: KClass<T>, func: (T) -> Unit) {
+        actions.add { broadcastService.register(this, func, tokenType) }
+    }
+
+    fun addByToken(token: Any, func: () -> Unit) {
+        actions.add { broadcastService.register<Any>(this, { func() }, token) }
     }
 
     fun activate() {
