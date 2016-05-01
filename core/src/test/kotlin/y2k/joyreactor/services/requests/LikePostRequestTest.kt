@@ -5,6 +5,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.verify
 import org.powermock.api.mockito.PowerMockito.mock
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
@@ -34,6 +35,7 @@ class LikePostRequestTest {
     fun test() {
         val actual = LikePostRequest(mockHttpClient, mockTokenRequest).like(99, true).toBlocking().first()
         assertEquals(13f, actual)
+        verify(mockRequestBuilder).get(url)
     }
 }
 

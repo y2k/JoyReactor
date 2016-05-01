@@ -1,18 +1,19 @@
 package y2k.joyreactor.viewmodel
 
-import rx.Subscription
+import y2k.joyreactor.common.Notifications
 import y2k.joyreactor.common.await
+import y2k.joyreactor.common.awaitPeriodic
 import y2k.joyreactor.common.binding
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.platform.NavigationService
+import y2k.joyreactor.platform.open
 import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.TagService
 import y2k.joyreactor.services.UserService
 import java.util.*
 import kotlin.properties.Delegates
-import y2k.joyreactor.platform.open
 
 /**
  * Created by y2k on 3/8/16.
@@ -28,18 +29,15 @@ class PostListViewModel(
     val hasNewPosts = binding(false)
     val tagMode = binding(0)
 
-    var postsSubscription: Subscription? = null
-
     private var group by Delegates.observable(Group.Undefined) { p, old, new ->
         if (old == new) return@observable
 
-        postsSubscription?.unsubscribe()
-        postsSubscription = service.query(new).await {
-            val postsWithDiv = ArrayList<Post?>(it.posts)
-            it.divider?.let { postsWithDiv.add(it, null) }
-            posts += postsWithDiv
-            hasNewPosts += it.hasNew
-        }
+        service
+            .query(new)
+            .awaitPeriodic(lifeCycleService, Notifications.Posts) {
+                posts += toViewModelList(it)
+                hasNewPosts += it.hasNew
+            }
 
         isBusy += true
         service.preloadNewPosts(new).await { isBusy += false }
@@ -61,6 +59,12 @@ class PostListViewModel(
             2 -> Group.Quality.All
             else -> Group.Quality.Good
         }
+    }
+
+    private fun toViewModelList(it: TagService.State): ArrayList<Post?> {
+        val result = ArrayList<Post?>(it.posts)
+        it.divider?.let { result.add(it, null) }
+        return result
     }
 
     // ==============================================================

@@ -5,6 +5,7 @@ import rx.Observable
 import rx.Single
 import rx.Subscription
 import rx.schedulers.Schedulers
+import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.repository.DataContext
 
 /**
@@ -97,4 +98,12 @@ fun <T> Observable<T>.await(onNext: (T) -> Unit, onError: (Throwable) -> Unit): 
 
 fun <T> Observable<T>.await(onNext: (T) -> Unit): Subscription {
     return observeOn(ForegroundScheduler.instance).subscribe(onNext, { it.printStackTrace() })
+}
+
+fun <T> Single<T>.awaitPeriodic(lifeCycle: LifeCycleService, notification: Notifications, onNext: (T) -> Unit) {
+    lifeCycle.addByToken(notification) {
+        observeOn(ForegroundScheduler.instance).subscribe(onNext, { it.printStackTrace() })
+    }
+
+    var subscripiton: Subscription? = null
 }
