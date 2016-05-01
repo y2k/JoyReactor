@@ -1,8 +1,6 @@
 package y2k.joyreactor.viewmodel
 
-import y2k.joyreactor.common.Notifications
 import y2k.joyreactor.common.await
-import y2k.joyreactor.common.awaitPeriodic
 import y2k.joyreactor.common.binding
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Post
@@ -34,7 +32,7 @@ class PostListViewModel(
 
         service
             .query(new)
-            .awaitPeriodic(lifeCycleService, Notifications.Posts) {
+            .await(lifeCycleService) {
                 posts += toViewModelList(it)
                 hasNewPosts += it.hasNew
             }

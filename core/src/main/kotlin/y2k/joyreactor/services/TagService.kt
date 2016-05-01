@@ -4,6 +4,7 @@ import rx.Completable
 import rx.Observable
 import rx.Single
 import rx.subjects.PublishSubject
+import y2k.joyreactor.common.Notifications
 import y2k.joyreactor.common.mapDatabase
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Post
@@ -22,9 +23,9 @@ class TagService(
 
     private val tagChangedEvent = PublishSubject.create<Unit>()
 
-    fun query(group: Group): Single<State> {
-        return tagChangedEvent
-            .mapDatabase(dataContext) {
+    fun query(group: Group): Pair<Single<State>, Notifications> {
+        return dataContext
+            .applyUse {
                 TagPosts
                     .filter("groupId" to group.id)
                     .map { Posts.getById(it.postId) }
@@ -34,7 +35,7 @@ class TagService(
                     buffer.dividers[group.id],
                     buffer.hasNew[group.id] ?: false)
             }
-            .toSingle()
+            .toSingle() to Notifications.Posts
     }
 
     fun preloadNewPosts(group: Group): Completable {

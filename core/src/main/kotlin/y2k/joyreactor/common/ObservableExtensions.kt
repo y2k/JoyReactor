@@ -100,10 +100,8 @@ fun <T> Observable<T>.await(onNext: (T) -> Unit): Subscription {
     return observeOn(ForegroundScheduler.instance).subscribe(onNext, { it.printStackTrace() })
 }
 
-fun <T> Single<T>.awaitPeriodic(lifeCycle: LifeCycleService, notification: Notifications, onNext: (T) -> Unit) {
-    lifeCycle.addByToken(notification) {
-        observeOn(ForegroundScheduler.instance).subscribe(onNext, { it.printStackTrace() })
+fun <T> Pair<Single<T>, Notifications>.await(lifeCycle: LifeCycleService, onNext: (T) -> Unit) {
+    lifeCycle.addByToken(second) {
+        first.observeOn(ForegroundScheduler.instance).subscribe(onNext, { it.printStackTrace() })
     }
-
-    var subscripiton: Subscription? = null
 }
