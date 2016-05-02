@@ -13,14 +13,14 @@ object BroadcastService {
     private val registrations = HashMap<ActionObserver<*>, Any>()
 
     inline fun <reified T : Any> broadcast(message: T) {
-        ForegroundScheduler.instance.createWorker().schedule {
-            broadcast(T::class, message)
-        }
+        broadcast(message, message)
     }
 
     fun broadcast(token: Any, message: Any) {
-        val observable = observers[token]
-        observable?.notifyObservers(message)
+        ForegroundScheduler.instance.createWorker().schedule {
+            val observable = observers[token]
+            observable?.notifyObservers(message)
+        }
     }
 
     fun <T : Any> register(receiver: Any, token: Any, callback: (T) -> Unit) {
