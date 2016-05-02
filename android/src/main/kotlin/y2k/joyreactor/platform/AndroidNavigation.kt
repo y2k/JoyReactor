@@ -11,7 +11,7 @@ import android.support.v7.app.AppCompatActivity
 import y2k.joyreactor.*
 import y2k.joyreactor.common.ActivityLifecycleCallbacksAdapter
 import y2k.joyreactor.common.startActivity
-import y2k.joyreactor.viewmodel.PostLikeViewModel
+import y2k.joyreactor.viewmodel.*
 import kotlin.reflect.KClass
 
 /**
@@ -36,14 +36,15 @@ class AndroidNavigation(app: Application) : NavigationService {
     override fun <T : Any> open(vmType: KClass<T>, argument: String) {
         sArgument = argument
         when (vmType) {
+            MessagesViewModel::class -> currentActivity?.startActivity(MessagesActivity::class)
             PostLikeViewModel::class -> PostLikeFragment().show(fragmentManager, "dialog")
+            PostViewModel::class -> currentActivity?.startActivity(PostActivity::class)
+            CreateCommentViewModel::class -> currentActivity?.startActivity(CreateCommentActivity::class)
+            GalleryViewModel::class -> currentActivity?.startActivity(GalleryActivity::class)
+            VideoViewModel::class -> currentActivity?.startActivity(VideoActivity::class)
+            ImageViewModel::class -> currentActivity?.startActivity(ImageActivity::class)
             else -> throw Exception("Can't handler navigation to $vmType")
         }
-    }
-
-    override fun openMessages(name: String) {
-        sArgument = name
-        currentActivity?.startActivity(MessagesActivity::class)
     }
 
     override fun switchProfileToLogin() {
@@ -60,38 +61,11 @@ class AndroidNavigation(app: Application) : NavigationService {
         currentActivity!!.finish()
     }
 
-    override fun closeAddTag() {
-        AddTagDialogFragment.dismiss(currentActivity as AppCompatActivity)
-    }
-
-    override fun openPostGallery() {
-        currentActivity?.startActivity(GalleryActivity::class)
-    }
-
-    override fun openPost(postId: Long) {
-        sArgument = postId.toString()
-        currentActivity?.startActivity(PostActivity::class)
-    }
-
     override val argument: String
         get() = sArgument
 
     override fun openBrowser(url: String) {
         currentActivity!!.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-    }
-
-    override fun openVideo(postId: Long) {
-        sArgument = postId.toString() // TODO:
-        currentActivity?.startActivity(VideoActivity::class)
-    }
-
-    override fun openImageView(postId: Long) {
-        sArgument = postId.toString() // TODO:
-        currentActivity?.startActivity(ImageActivity::class)
-    }
-
-    override fun openCreateComment() {
-        currentActivity?.startActivity(CreateCommentActivity::class)
     }
 
     private inner class MyActivityLifecycleCallbacks : ActivityLifecycleCallbacksAdapter() {

@@ -99,23 +99,23 @@ class PostListViewModel(
 
     fun postClicked(id: Long) {
         val post = posts.value.firstOrNull { it?.id == id } ?: return
-        navigationService.openPost(post.id)
+        navigationService.open<PostViewModel>(post.id)
     }
 
     fun postClicked(position: Int) {
-        navigationService.openPost(posts.value[position]!!.id)
+        navigationService.open<PostViewModel>(posts.value[position]!!.id)
     }
 
     fun playClicked(id: Long) {
         val post = posts.value.firstOrNull { it?.id == id } ?: return
-        if (post.image?.isAnimated ?: false) navigationService.openVideo(post.id)
-        else navigationService.openImageView(post.id)
+        if (post.image?.isAnimated ?: false) navigationService.open<VideoViewModel>(post.id)
+        else navigationService.open<ImageViewModel>(post.id)
     }
 
     fun playClicked(position: Int) {
         val post = posts.value[position]!!
-        if (post.image?.isAnimated ?: false) navigationService.openVideo(post.id)
-        else navigationService.openImageView(post.id)
+        if (post.image?.isAnimated ?: false) navigationService.open<VideoViewModel>(post.id)
+        else navigationService.open<ImageViewModel>(post.id)
     }
 
     fun changeLike(position: Int) {

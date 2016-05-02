@@ -23,7 +23,7 @@ class AddTagViewModel(
             .favoriteTag(tag.value)
             .await({
                 isBusy += false
-                navigationService.closeAddTag()
+                navigationService.close()
             }, {
                 it.printStackTrace()
                 isBusy += false

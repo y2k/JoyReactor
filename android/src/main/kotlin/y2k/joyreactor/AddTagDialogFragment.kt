@@ -3,7 +3,6 @@ package y2k.joyreactor
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDialog
 import android.view.LayoutInflater
 import android.view.View
@@ -39,15 +38,10 @@ class AddTagDialogFragment : BaseDialogFragment() {
 
     companion object {
 
-        private val TAG_ID = "add_tag"
+        private val TAG_ID = "dialog"
 
         fun show(fragmentManager: FragmentManager) {
             AddTagDialogFragment().show(fragmentManager, TAG_ID)
-        }
-
-        fun dismiss(activity: AppCompatActivity) {
-            val dialog = activity.supportFragmentManager.findFragmentByTag(TAG_ID) as AddTagDialogFragment
-            dialog.dismiss()
         }
     }
 }

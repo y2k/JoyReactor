@@ -6,6 +6,7 @@ import y2k.joyreactor.model.Message
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.UserMessagesService
+import y2k.joyreactor.platform.open
 
 /**
  * Created by y2k on 2/23/16.
@@ -36,6 +37,6 @@ class ThreadsViewModel(
     }
 
     fun selectThread(index: Int) {
-        navigation.openMessages(threads.value[index].userName)
+        navigation.open<MessagesViewModel>(threads.value[index].userName)
     }
 }

@@ -7,27 +7,13 @@ import kotlin.reflect.KClass
  */
 interface NavigationService {
 
-    fun openMessages(name: String)
-
     fun switchProfileToLogin()
 
     fun switchLoginToProfile()
 
     fun closeCreateComment()
 
-    fun closeAddTag()
-
-    fun openPost(postId: Long)
-
     fun openBrowser(url: String)
-
-    fun openVideo(postId: Long)
-
-    fun openImageView(postId: Long)
-
-    fun openCreateComment()
-
-    fun openPostGallery()
 
     fun close()
 
@@ -42,6 +28,6 @@ interface NavigationService {
     }
 }
 
-inline fun <reified T : Any> NavigationService.open(argument: String) {
-    open(T::class, argument)
+inline fun <reified T : Any> NavigationService.open(argument: Any? = null) {
+    open(T::class, argument.toString())
 }
