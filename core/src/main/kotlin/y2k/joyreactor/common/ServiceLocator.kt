@@ -31,6 +31,8 @@ object ServiceLocator {
         register { ThreadsViewModel(resolve(), resolve(), resolve()) }
         register { MessagesViewModel(resolve(), resolve()) }
 
+        register { BroadcastService }
+
         register { TokenRequest(resolve()) }
         register { LikePostRequest(resolve(), resolve()) }
         register { MessageListRequest(resolve(), resolve()) }

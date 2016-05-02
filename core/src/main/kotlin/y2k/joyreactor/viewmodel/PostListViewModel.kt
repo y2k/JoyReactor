@@ -2,6 +2,7 @@ package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.await
 import y2k.joyreactor.common.binding
+import y2k.joyreactor.common.subscribe
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.platform.NavigationService
@@ -32,7 +33,7 @@ class PostListViewModel(
 
         service
             .query(new)
-            .await(lifeCycleService) {
+            .subscribe(lifeCycleService) {
                 posts += toViewModelList(it)
                 hasNewPosts += it.hasNew
             }
@@ -42,7 +43,7 @@ class PostListViewModel(
     }
 
     init {
-        lifeCycleService.add(BroadcastService.TagSelected::class) { group = it.group }
+        lifeCycleService.register<BroadcastService.TagSelected> { group = it.group }
         group = Group.makeFeatured()
 
         tagMode

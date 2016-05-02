@@ -3,7 +3,6 @@ package y2k.joyreactor.services
 import rx.Completable
 import rx.Observable
 import rx.Single
-import rx.subjects.PublishSubject
 import y2k.joyreactor.common.Notifications
 import y2k.joyreactor.common.mapDatabase
 import y2k.joyreactor.model.Group
@@ -20,8 +19,6 @@ class TagService(
     private val postsRequest: PostsForTagRequest,
     private val merger: PostMerger,
     private val buffer: MemoryBuffer) {
-
-    private val tagChangedEvent = PublishSubject.create<Unit>()
 
     fun query(group: Group): Pair<Single<State>, Notifications> {
         return dataContext
@@ -80,7 +77,7 @@ class TagService(
     }
 
     fun notifyDataChanged() {
-        tagChangedEvent.onNext(null)
+        BroadcastService.broadcast(Notifications.Posts)
     }
 
     fun requestAsync(group: Group, page: String? = null): Observable<PostsForTagRequest.Data> {

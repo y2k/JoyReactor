@@ -18,7 +18,7 @@ class TagListViewModel(
     val tags = binding(emptyList<Group>())
 
     init {
-        lifeCycleService.add {
+        lifeCycleService.register {
             service
                 .getMyTags()
                 .await {

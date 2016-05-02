@@ -19,7 +19,7 @@ class ThreadsViewModel(
     val isBusy = binding(false)
 
     init {
-        lifeCycleService.add { refresh() }
+        lifeCycleService.register { refresh() }
     }
 
     fun refresh() {

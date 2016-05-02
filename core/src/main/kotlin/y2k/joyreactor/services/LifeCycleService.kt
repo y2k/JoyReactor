@@ -1,5 +1,6 @@
 package y2k.joyreactor.services
 
+import y2k.joyreactor.common.Notifications
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -8,32 +9,36 @@ import kotlin.reflect.KClass
  */
 class LifeCycleService(
     private val broadcastService: BroadcastService) {
+    private val actions = ArrayList<Pair<Any?, () -> Unit>>()
 
-    private val actions = ArrayList<() -> Unit>()
-
-    fun add(func: () -> Unit) {
-        actions.add(func)
+    fun register(func: () -> Unit) {
+        actions.add(null to func)
     }
 
-    fun <T : Any> add(tokenType: KClass<T>, func: (T) -> Unit) {
-        actions.add { broadcastService.register(this, func, tokenType) }
+    inline fun <reified T : Any> register(noinline func: (T) -> Unit) {
+        return register(T::class, func)
     }
 
-    fun addByToken(token: Any, func: () -> Unit) {
-        actions.add { broadcastService.register<Any>(this, { func() }, token) }
+    fun <T : Any> register(token: KClass<T>, func: (T) -> Unit) {
+        actions.add(null to { broadcastService.register(this, token, func) })
+    }
+
+    fun register(token: Notifications, func: () -> Unit) {
+        val old = actions.firstOrNull { it.first == token }
+        if (old != null) {
+            old.first?.let { broadcastService.unregisterToken(it) }
+            actions.remove(old)
+        }
+
+        actions.add(token to { broadcastService.register<Any>(this, token, { func() }) })
     }
 
     fun activate() {
         // TODO: Понять почему forEach вызывает падение
-        for (action in actions) action()
+        for (it in actions) it.second()
     }
 
     fun deactivate() {
         broadcastService.unregister(this)
-    }
-
-    companion object {
-
-        val Stub = LifeCycleService(BroadcastService())
     }
 }

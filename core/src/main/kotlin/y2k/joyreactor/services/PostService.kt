@@ -1,6 +1,8 @@
 package y2k.joyreactor.services
 
+import rx.Completable
 import rx.Observable
+import y2k.joyreactor.common.Notifications
 import y2k.joyreactor.common.PartialResult
 import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.model.*
@@ -68,7 +70,7 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
             .flatMap({ url -> imageRequestFactory.requestPartial(url) })
     }
 
-    fun updatePostLike(postId: Long, like: Boolean): Observable<Any> {
+    fun updatePostLike(postId: Long, like: Boolean): Completable {
         return likePostRequest
             .like(postId, like)
             .flatMap {
@@ -77,5 +79,7 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
                     Posts.add(post.copy(rating = it))
                 }
             }
+            .doOnCompleted { BroadcastService.broadcast(Notifications.Posts) }
+            .toCompletable()
     }
 }
