@@ -100,20 +100,6 @@ fun <T> Observable<T>.await(onNext: (T) -> Unit): Subscription {
     return observeOn(ForegroundScheduler.instance).subscribe(onNext, { it.printStackTrace() })
 }
 
-//fun <T> Pair<Single<T>, Notifications>.asLifeObservable(lifeCycle: LifeCycleService): Observable<T> {
-//    val subject = PublishSubject.create<T>();
-//
-//    subject.doOnSubscribe {
-//        first.subscribe({ subject.onNext(it) }, { subject.onError(it) })
-//    }
-//
-//    lifeCycle.register(second) {
-//        first.subscribe({ subject.onNext(it) }, { subject.onError(it) })
-//    }
-//
-//    return subject
-//}
-
 fun <T> Pair<Single<T>, Notifications>.subscribe(lifeCycle: LifeCycleService, onNext: (T) -> Unit) {
     val (single, token) = this
     single
