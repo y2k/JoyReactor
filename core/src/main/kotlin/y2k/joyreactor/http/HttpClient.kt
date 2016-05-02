@@ -3,6 +3,7 @@ package y2k.joyreactor.http
 import okhttp3.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import y2k.joyreactor.common.string
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -48,7 +49,7 @@ open class HttpClient(private val cookies: CookieStorage) {
     }
 
     open fun getText(url: String): String {
-        return executeRequest(url, true).body().string()
+        return executeRequest(url, true).string()
     }
 
     open fun getDocument(url: String): Document {
