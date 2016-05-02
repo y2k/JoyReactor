@@ -12,7 +12,8 @@ import y2k.joyreactor.services.ProfileService
  */
 class CreateCommentViewModel(
     private val profileService: ProfileService,
-    private val service: CommentService) {
+    private val service: CommentService,
+    private val navigationService: NavigationService) {
 
     val isBusy = binding(false)
 
@@ -35,7 +36,7 @@ class CreateCommentViewModel(
         service
             .createComment("2219757", commentText.value) // FIXME:
             .await {
-                NavigationService.instance.closeCreateComment()
+                navigationService.close()
                 isBusy += false
             }
     }

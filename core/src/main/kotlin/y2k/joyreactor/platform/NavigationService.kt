@@ -11,8 +11,6 @@ interface NavigationService {
 
     fun switchLoginToProfile()
 
-    fun closeCreateComment()
-
     fun openBrowser(url: String)
 
     fun close()

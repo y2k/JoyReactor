@@ -29,8 +29,9 @@ class AndroidNavigation(app: Application) : NavigationService {
     }
 
     override fun close() {
-        val dialog = fragmentManager?.findFragmentByTag("dialog") ?: return
-        (dialog as DialogFragment).dismiss()
+        val dialog = fragmentManager?.findFragmentByTag("dialog")
+        if (dialog == null) currentActivity?.finish()
+        else (dialog as DialogFragment).dismiss()
     }
 
     override fun <T : Any> open(vmType: KClass<T>, argument: String) {
@@ -55,10 +56,6 @@ class AndroidNavigation(app: Application) : NavigationService {
     override fun switchLoginToProfile() {
         currentActivity?.startActivity(ProfileActivity::class)
         currentActivity?.finish()
-    }
-
-    override fun closeCreateComment() {
-        currentActivity!!.finish()
     }
 
     override val argument: String
