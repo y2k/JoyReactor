@@ -4,6 +4,7 @@ import y2k.joyreactor.common.await
 import y2k.joyreactor.common.binding
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.platform.NavigationService
+import y2k.joyreactor.platform.open
 import y2k.joyreactor.services.ProfileService
 
 /**
@@ -34,13 +35,17 @@ class ProfileViewModel(
                 isBusy += false
             }, {
                 it.printStackTrace()
-                navigationService.switchProfileToLogin()
+                navigationService.open<LoginViewModel>()
+                navigationService.close()
             })
     }
 
     fun logout() {
         service
             .logout()
-            .await { navigationService.switchProfileToLogin() }
+            .await {
+                navigationService.open<LoginViewModel>()
+                navigationService.close()
+            }
     }
 }

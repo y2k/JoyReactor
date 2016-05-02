@@ -3,6 +3,7 @@ package y2k.joyreactor.viewmodel
 import y2k.joyreactor.common.await
 import y2k.joyreactor.common.binding
 import y2k.joyreactor.platform.NavigationService
+import y2k.joyreactor.platform.open
 import y2k.joyreactor.services.ProfileService
 
 /**
@@ -24,7 +25,8 @@ class LoginViewModel(
             .login(username.value, password.value)
             .await({
                 isBusy += false
-                NavigationService.instance.switchLoginToProfile()
+                navigationService.open<ProfileViewModel>()
+                navigationService.close()
             }, {
                 it.printStackTrace()
                 isBusy += false

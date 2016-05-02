@@ -37,25 +37,21 @@ class AndroidNavigation(app: Application) : NavigationService {
     override fun <T : Any> open(vmType: KClass<T>, argument: String) {
         sArgument = argument
         when (vmType) {
-            MessagesViewModel::class -> currentActivity?.startActivity(MessagesActivity::class)
             PostLikeViewModel::class -> PostLikeFragment().show(fragmentManager, "dialog")
-            PostViewModel::class -> currentActivity?.startActivity(PostActivity::class)
-            CreateCommentViewModel::class -> currentActivity?.startActivity(CreateCommentActivity::class)
-            GalleryViewModel::class -> currentActivity?.startActivity(GalleryActivity::class)
-            VideoViewModel::class -> currentActivity?.startActivity(VideoActivity::class)
-            ImageViewModel::class -> currentActivity?.startActivity(ImageActivity::class)
+            CreateCommentViewModel::class -> startActivity(CreateCommentActivity::class)
+            MessagesViewModel::class -> startActivity(MessagesActivity::class)
+            GalleryViewModel::class -> startActivity(GalleryActivity::class)
+            ProfileViewModel::class -> startActivity(ProfileActivity::class)
+            VideoViewModel::class -> startActivity(VideoActivity::class)
+            ImageViewModel::class -> startActivity(ImageActivity::class)
+            LoginViewModel::class -> startActivity(LoginActivity::class)
+            PostViewModel::class -> startActivity(PostActivity::class)
             else -> throw Exception("Can't handler navigation to $vmType")
         }
     }
 
-    override fun switchProfileToLogin() {
-        currentActivity?.startActivity(LoginActivity::class)
-        currentActivity?.finish()
-    }
-
-    override fun switchLoginToProfile() {
-        currentActivity?.startActivity(ProfileActivity::class)
-        currentActivity?.finish()
+    private fun startActivity(activityType: KClass<out Activity>) {
+        currentActivity?.startActivity(activityType)
     }
 
     override val argument: String

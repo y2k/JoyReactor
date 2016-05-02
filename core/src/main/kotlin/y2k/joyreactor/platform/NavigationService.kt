@@ -7,10 +7,6 @@ import kotlin.reflect.KClass
  */
 interface NavigationService {
 
-    fun switchProfileToLogin()
-
-    fun switchLoginToProfile()
-
     fun openBrowser(url: String)
 
     fun close()
