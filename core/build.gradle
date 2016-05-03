@@ -22,6 +22,12 @@ sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
 }
 
+task copyTestResources(type: Copy) {
+    from sourceSets.test.resources
+    into sourceSets.test.output.classesDir
+}
+processTestResources.dependsOn copyTestResources
+
 dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'io.reactivex:rxjava:1.1.3'

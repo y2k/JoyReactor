@@ -15,7 +15,10 @@ data class Post(
     @DatabaseField val userName: String = "",
     @DatabaseField val created: Date = Date(),
     @DatabaseField val commentCount: Int = 0,
+
     @DatabaseField val rating: Float = 0f,
+    @DatabaseField val myLike: MyLike = MyLike.Like,
+
     val tags: List<String> = emptyList(),
     @DatabaseField(id = true) override val id: Long = 0) : Serializable, Comparable<Post>, Dto {
 
@@ -31,4 +34,8 @@ data class Post(
     override fun compareTo(other: Post): Int {
         return (id - other.id).toInt()
     }
+}
+
+enum class MyLike {
+    Unknown, Like, Dislike, Blocked
 }
