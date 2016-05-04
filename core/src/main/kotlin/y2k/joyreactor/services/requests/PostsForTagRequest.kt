@@ -58,10 +58,7 @@ class PostsForTagRequest(private val httpClient: HttpClient) {
         val myLike: MyLike
             get() {
                 val e = element.select("span.post_rating > span").first()
-                if (e.children().size == 0) return MyLike.Blocked
-                if (!e.select("div.vote-minus.vote-change").isEmpty()) return MyLike.Like
-                if (!e.select("div.vote-plus.vote-change").isEmpty()) return MyLike.Dislike
-                return MyLike.Unknown
+                return LikeParser(e).myLike
             }
 
         companion object {
@@ -69,6 +66,17 @@ class PostsForTagRequest(private val httpClient: HttpClient) {
             private val COMMENT_COUNT_REGEX = Pattern.compile("\\d+")
             private val RATING_REGEX = Pattern.compile("[\\d\\.]+")
         }
+    }
+
+    class LikeParser(private val element: Element) {
+
+        val myLike: MyLike
+            get() {
+                if (element.children().size == 0) return MyLike.Blocked
+                if (!element.select("div.vote-minus.vote-change").isEmpty()) return MyLike.Like
+                if (!element.select("div.vote-plus.vote-change").isEmpty()) return MyLike.Dislike
+                return MyLike.Unknown
+            }
     }
 
     internal class ThumbnailParser(private val element: Element) {

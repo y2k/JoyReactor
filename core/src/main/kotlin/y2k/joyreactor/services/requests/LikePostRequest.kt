@@ -4,6 +4,7 @@ import org.jsoup.nodes.Document
 import rx.Observable
 import y2k.joyreactor.common.ajax
 import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.model.MyLike
 
 /**
  * Created by y2k on 4/24/16.
@@ -19,7 +20,7 @@ class LikePostRequest(
     private val httpClient: HttpClient,
     private val tokenRequest: TokenRequest) {
 
-    fun like(id: Long, like: Boolean): Observable<Float> {
+    fun like(id: Long, like: Boolean): Observable<Pair<Float, MyLike>> {
         return tokenRequest
             .request()
             .map {
@@ -28,7 +29,10 @@ class LikePostRequest(
                     .buildRequest()
                     .ajax("http://joyreactor.cc/")
                     .get(url)
-                getNewRating(likeResponse)
+
+                val rating = getNewRating(likeResponse)
+                val myLike = getMyLike(likeResponse)
+                rating to myLike
             }
     }
 
@@ -36,5 +40,9 @@ class LikePostRequest(
 
     private fun getNewRating(likeResponse: Document): Float {
         return likeResponse.select("span").first().childNodes()[0].outerHtml().toFloat()
+    }
+
+    private fun getMyLike(document: Document): MyLike {
+        return PostsForTagRequest.LikeParser(document.body()).myLike
     }
 }

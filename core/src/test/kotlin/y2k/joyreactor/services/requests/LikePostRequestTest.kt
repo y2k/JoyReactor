@@ -11,6 +11,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import rx.Observable
 import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.model.MyLike
 
 /**
  * Created by y2k on 4/26/16.
@@ -34,7 +35,8 @@ class LikePostRequestTest {
     @Test
     fun test() {
         val actual = LikePostRequest(mockHttpClient, mockTokenRequest).like(99, true).toBlocking().first()
-        assertEquals(13f, actual)
+        assertEquals(13f, actual.first)
+        assertEquals(MyLike.Like, actual.second)
         verify(mockRequestBuilder).get(url)
     }
 }

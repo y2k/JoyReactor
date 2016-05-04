@@ -76,7 +76,7 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
             .flatMap {
                 dataContext.applyUse {
                     val post = Posts.getById(postId)
-                    Posts.add(post.copy(rating = it))
+                    Posts.add(post.copy(rating = it.first, myLike = it.second))
                 }
             }
             .doOnCompleted { BroadcastService.broadcast(Notifications.Posts) }
