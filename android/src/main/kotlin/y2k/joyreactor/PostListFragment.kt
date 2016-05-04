@@ -12,6 +12,7 @@ import org.ocpsoft.prettytime.PrettyTime
 import y2k.joyreactor.common.*
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.viewmodel.PostListViewModel
+import y2k.joyreactor.widget.LikeButton
 
 /**
  * Created by y2k on 9/26/15.
@@ -60,6 +61,7 @@ class PostListFragment : BaseFragment() {
         val commentCount = itemView.find<TextView>(R.id.commentCount)
         val time = itemView.find<TextView>(R.id.time)
         val userName = itemView.find<TextView>(R.id.userName)
+        val likeButton = itemView.find<LikeButton>(R.id.like)
 
         val prettyTime = PrettyTime()
 
@@ -79,6 +81,7 @@ class PostListFragment : BaseFragment() {
             videoMark.setVisible(item.image?.isAnimated ?: false)
             commentCount.text = "" + item.commentCount
             time.text = prettyTime.format(item.created)
+            likeButton.like = item.myLike
         }
     }
 
