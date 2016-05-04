@@ -55,6 +55,15 @@ class PostsForTagRequest(private val httpClient: HttpClient) {
                 return Date(1000L * java.lang.Long.parseLong(e.attr("data-time")))
             }
 
+        val myLike: MyLike
+            get() {
+                val e = element.select("span.post_rating > span").first()
+                if (e.children().size == 0) return MyLike.Blocked
+                if (!e.select("div.vote-minus.vote-change").isEmpty()) return MyLike.Like
+                if (!e.select("div.vote-plus.vote-change").isEmpty()) return MyLike.Dislike
+                return MyLike.Unknown
+            }
+
         companion object {
 
             private val COMMENT_COUNT_REGEX = Pattern.compile("\\d+")
@@ -136,7 +145,7 @@ class PostsForTagRequest(private val httpClient: HttpClient) {
                 parser.created,
                 parser.commentCount,
                 parser.rating,
-                MyLike.Unknown,
+                parser.myLike,
                 element.select(".taglist a").map { it.text() },
                 extractNumberFromEnd(element.id()).toLong())
         }
