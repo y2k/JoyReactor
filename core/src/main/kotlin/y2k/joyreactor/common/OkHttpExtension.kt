@@ -11,7 +11,7 @@ import okio.Okio
 fun Response.string(): String {
     // TODO: заменить на стандартный метод string(), когда он будет поддержвать Gzip
     return when {
-        isCompressed() -> Okio.buffer(GzipSource(body().source())).readUtf8()
+        isCompressed() -> GzipSource(body().source()).use { Okio.buffer(it).readUtf8() }
         else -> body().string()
     }
 }
