@@ -2,7 +2,6 @@ package y2k.joyreactor
 
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import y2k.joyreactor.common.*
@@ -36,7 +35,11 @@ class PostActivity : BaseActivity() {
             recyclerView(R.id.list, vm.comments) {
                 itemId { it.id }
                 viewHolder {
-                    CommentViewHolder(it, vm)
+                    CommentViewHolder(it).apply {
+                        itemView.findViewById(R.id.action).setOnClickListener {
+                            lastComment?.let { vm.selectComment(it) }
+                        }
+                    }
                 }
             }
 
@@ -50,7 +53,7 @@ class PostActivity : BaseActivity() {
         }
     }
 
-    class CommentViewHolder(parent: ViewGroup, vm: PostViewModel) :
+    class CommentViewHolder(parent: ViewGroup) :
         ListViewHolder<Comment>(parent.inflate(R.layout.item_comment)) {
 
         val rating = itemView.find<TextView>(R.id.rating)
@@ -59,12 +62,6 @@ class PostActivity : BaseActivity() {
         val avatar = itemView.find<WebImageView>(R.id.avatar)
         val attachment = itemView.find<WebImageView>(R.id.attachment)
         var lastComment: Comment? = null
-
-        init {
-            itemView.findViewById(R.id.action).setOnClickListener {
-                lastComment?.let { vm.selectComment(it) }
-            }
-        }
 
         override fun update(item: Comment) {
             lastComment = item
@@ -75,7 +72,7 @@ class PostActivity : BaseActivity() {
             rating.text = "" + item.rating
             replies.text = "" + item.replies
 
-            attachment.visibility = if (item.attachmentObject == null) View.GONE else View.VISIBLE
+            attachment.setVisible(item.attachmentObject != null)
             attachment.image = item.attachmentObject
         }
     }
