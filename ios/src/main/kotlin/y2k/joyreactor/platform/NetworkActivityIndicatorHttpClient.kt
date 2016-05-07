@@ -2,7 +2,7 @@ package y2k.joyreactor.platform
 
 import org.jsoup.nodes.Document
 import y2k.joyreactor.common.NetworkIndicator
-import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.common.http.HttpClient
 
 import java.io.File
 

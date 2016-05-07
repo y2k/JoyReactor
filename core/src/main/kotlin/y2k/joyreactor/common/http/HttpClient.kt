@@ -1,4 +1,4 @@
-package y2k.joyreactor.http
+package y2k.joyreactor.common.http
 
 import okhttp3.*
 import org.jsoup.Jsoup

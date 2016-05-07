@@ -5,7 +5,7 @@ import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.mockito.Mockito.*
-import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.MyLike
 import y2k.joyreactor.requests.MockRequest

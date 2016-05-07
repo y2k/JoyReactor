@@ -1,8 +1,8 @@
 package y2k.joyreactor.common
 
-import y2k.joyreactor.http.CookieStorage
-import y2k.joyreactor.http.HttpClient
-import y2k.joyreactor.images.MultiTryDownloader
+import y2k.joyreactor.common.http.CookieStorage
+import y2k.joyreactor.common.http.HttpClient
+import y2k.joyreactor.common.images.MultiTryDownloader
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.platform.Platform
 import y2k.joyreactor.services.*

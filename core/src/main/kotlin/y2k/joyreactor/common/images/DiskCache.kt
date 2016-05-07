@@ -1,4 +1,4 @@
-package y2k.joyreactor.images
+package y2k.joyreactor.common.images
 
 import rx.Single
 import rx.schedulers.Schedulers
@@ -34,7 +34,7 @@ internal class DiskCache {
     }
 
     val cacheDirectory: File
-        get() = File(Platform.instance.currentDirectory, "images")
+        get() = File(Platform.Companion.instance.currentDirectory, "images")
 
     companion object {
 

@@ -3,7 +3,7 @@ package y2k.joyreactor.services.requests
 import org.jsoup.nodes.Element
 import rx.Observable
 import rx.schedulers.Schedulers
-import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.model.MyLike

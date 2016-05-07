@@ -2,7 +2,7 @@ package y2k.joyreactor.services.requests
 
 import rx.Observable
 import y2k.joyreactor.common.ioObservable
-import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.common.http.HttpClient
 
 /**
  * Created by y2k on 10/4/15.

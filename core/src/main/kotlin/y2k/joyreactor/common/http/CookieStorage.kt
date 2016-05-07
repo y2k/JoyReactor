@@ -1,4 +1,4 @@
-package y2k.joyreactor.http
+package y2k.joyreactor.common.http
 
 import okhttp3.Request
 import okhttp3.Response

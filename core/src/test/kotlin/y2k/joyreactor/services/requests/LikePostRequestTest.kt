@@ -10,7 +10,7 @@ import org.powermock.api.mockito.PowerMockito.mock
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import rx.Observable
-import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.model.MyLike
 
 /**

@@ -2,7 +2,7 @@ package y2k.joyreactor.platform
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import y2k.joyreactor.images.BaseImageRequest
+import y2k.joyreactor.common.images.BaseImageRequest
 
 import java.io.File
 

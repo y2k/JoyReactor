@@ -3,7 +3,7 @@ package y2k.joyreactor.services.requests
 import org.jsoup.nodes.Document
 import rx.Observable
 import y2k.joyreactor.common.ioObservable
-import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.model.Profile
 import java.util.regex.Pattern

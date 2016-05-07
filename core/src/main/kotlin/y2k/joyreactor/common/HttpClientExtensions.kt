@@ -1,6 +1,6 @@
 package y2k.joyreactor.common
 
-import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.common.http.HttpClient
 
 /**
  * Created by y2k on 4/26/16.

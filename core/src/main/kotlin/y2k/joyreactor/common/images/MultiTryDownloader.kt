@@ -1,9 +1,9 @@
-package y2k.joyreactor.images
+package y2k.joyreactor.common.images
 
 import rx.Single
 import rx.SingleSubscriber
 import y2k.joyreactor.common.schedule
-import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.common.http.HttpClient
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.Executors

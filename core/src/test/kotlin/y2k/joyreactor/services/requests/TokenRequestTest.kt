@@ -4,7 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
-import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.common.http.HttpClient
 
 /**
  * Created by y2k on 4/26/16.

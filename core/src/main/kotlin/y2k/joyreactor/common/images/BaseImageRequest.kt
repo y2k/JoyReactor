@@ -1,4 +1,4 @@
-package y2k.joyreactor.images
+package y2k.joyreactor.common.images
 
 import rx.Observable
 import rx.Subscription

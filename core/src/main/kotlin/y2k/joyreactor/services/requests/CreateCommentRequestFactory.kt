@@ -2,7 +2,7 @@ package y2k.joyreactor.services.requests
 
 import rx.Observable
 import y2k.joyreactor.common.ioUnitObservable
-import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.common.http.HttpClient
 import java.util.regex.Pattern
 
 /**

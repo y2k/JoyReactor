@@ -5,7 +5,7 @@ import org.robovm.apple.uikit.UIApplication
 import org.robovm.apple.uikit.UIApplicationDelegateAdapter
 import org.robovm.apple.uikit.UIApplicationLaunchOptions
 import y2k.joyreactor.common.ForegroundScheduler
-import y2k.joyreactor.http.HttpClient
+import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.platform.DispatchQueueSchedulerFactory
 import y2k.joyreactor.platform.NetworkActivityIndicatorHttpClient
 import y2k.joyreactor.platform.Platform
