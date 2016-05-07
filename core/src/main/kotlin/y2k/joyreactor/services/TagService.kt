@@ -6,7 +6,6 @@ import rx.Single
 import y2k.joyreactor.common.Notifications
 import y2k.joyreactor.common.mapDatabase
 import y2k.joyreactor.model.Group
-import y2k.joyreactor.model.Post
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.PostsForTagRequest
 import y2k.joyreactor.services.synchronizers.PostMerger
@@ -20,7 +19,7 @@ class TagService(
     private val merger: PostMerger,
     private val buffer: MemoryBuffer) {
 
-    fun query(group: Group): Pair<Single<State>, Notifications> {
+    fun queryPosts(group: Group): Pair<Single<ListState>, Notifications> {
         return dataContext
             .applyUse {
                 TagPosts
@@ -28,7 +27,7 @@ class TagService(
                     .map { Posts.getById(it.postId) }
             }
             .map {
-                State(it,
+                ListState(it,
                     buffer.dividers[group.id],
                     buffer.hasNew[group.id] ?: false)
             }
@@ -85,6 +84,4 @@ class TagService(
             .requestAsync(group, page)
             .doOnNext { buffer.requests[group.id] = it }
     }
-
-    data class State(val posts: List<Post>, val divider: Int?, val hasNew: Boolean)
 }

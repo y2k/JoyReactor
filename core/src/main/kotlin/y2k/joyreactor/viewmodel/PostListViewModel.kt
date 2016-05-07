@@ -7,10 +7,7 @@ import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.platform.open
-import y2k.joyreactor.services.BroadcastService
-import y2k.joyreactor.services.LifeCycleService
-import y2k.joyreactor.services.TagService
-import y2k.joyreactor.services.UserService
+import y2k.joyreactor.services.*
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -32,7 +29,7 @@ class PostListViewModel(
         if (old == new) return@observable
 
         service
-            .query(new)
+            .queryPosts(new)
             .subscribe(lifeCycleService) {
                 posts += toViewModelList(it)
                 hasNewPosts += it.hasNew
@@ -60,7 +57,7 @@ class PostListViewModel(
         }
     }
 
-    private fun toViewModelList(it: TagService.State): ArrayList<Post?> {
+    private fun toViewModelList(it: ListState): ArrayList<Post?> {
         val result = ArrayList<Post?>(it.posts)
         it.divider?.let { result.add(it, null) }
         return result
