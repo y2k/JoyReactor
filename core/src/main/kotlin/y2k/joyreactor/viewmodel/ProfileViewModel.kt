@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.await
-import y2k.joyreactor.common.binding
+import y2k.joyreactor.common.property
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.platform.open
@@ -14,13 +14,13 @@ class ProfileViewModel(
     private val navigationService: NavigationService,
     private val service: ProfileService) {
 
-    val userImage = binding<Image>()
-    val rating = binding(0f)
-    val stars = binding(0f)
-    val nextStarProgress = binding(0f)
-    val userName = binding("")
+    val userImage = property<Image>()
+    val rating = property(0f)
+    val stars = property(0f)
+    val nextStarProgress = property(0f)
+    val userName = property("")
 
-    val isBusy = binding(false)
+    val isBusy = property(false)
 
     init {
         isBusy += true

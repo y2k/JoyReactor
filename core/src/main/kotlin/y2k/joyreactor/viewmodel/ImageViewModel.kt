@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.await
-import y2k.joyreactor.common.binding
+import y2k.joyreactor.common.property
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.PostService
 import java.io.File
@@ -11,8 +11,8 @@ import java.io.File
  */
 class ImageViewModel(service: PostService) {
 
-    val isBusy = binding(false)
-    val imageFile = binding<File>()
+    val isBusy = property(false)
+    val imageFile = property<File>()
 
     init {
         isBusy += true

@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.await
-import y2k.joyreactor.common.binding
+import y2k.joyreactor.common.property
 import y2k.joyreactor.model.Message
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.LifeCycleService
@@ -16,8 +16,8 @@ class ThreadsViewModel(
     private val navigation: NavigationService,
     private val service: UserMessagesService) {
 
-    val threads = binding(emptyList<Message>())
-    val isBusy = binding(false)
+    val threads = property(emptyList<Message>())
+    val isBusy = property(false)
 
     init {
         lifeCycleService.register { refresh() }

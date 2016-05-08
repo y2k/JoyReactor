@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.await
-import y2k.joyreactor.common.binding
+import y2k.joyreactor.common.property
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.CommentService
@@ -15,12 +15,12 @@ class CreateCommentViewModel(
     private val service: CommentService,
     private val navigationService: NavigationService) {
 
-    val isBusy = binding(false)
+    val isBusy = property(false)
 
-    val username = binding("")
-    val avatar = binding<Image>()
+    val username = property("")
+    val avatar = property<Image>()
 
-    val commentText = binding("")
+    val commentText = property("")
 
     init {
         profileService

@@ -1,14 +1,17 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.await
-import y2k.joyreactor.common.binding
+import y2k.joyreactor.common.property
 import y2k.joyreactor.common.subscribe
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.ListState
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.platform.open
-import y2k.joyreactor.services.*
+import y2k.joyreactor.services.BroadcastService
+import y2k.joyreactor.services.LifeCycleService
+import y2k.joyreactor.services.TagService
+import y2k.joyreactor.services.UserService
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -21,10 +24,10 @@ class PostListViewModel(
     private val userService: UserService,
     private val lifeCycleService: LifeCycleService) {
 
-    val isBusy = binding(false)
-    val posts = binding(emptyList<Post?>())
-    val hasNewPosts = binding(false)
-    val tagMode = binding(0)
+    val isBusy = property(false)
+    val posts = property(emptyList<Post?>())
+    val hasNewPosts = property(false)
+    val tagMode = property(0)
 
     private var group by Delegates.observable(Group.Undefined) { p, old, new ->
         if (old == new) return@observable

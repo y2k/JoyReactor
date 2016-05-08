@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.await
-import y2k.joyreactor.common.binding
+import y2k.joyreactor.common.property
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
@@ -15,7 +15,7 @@ class TagListViewModel(
     private val broadcastService: BroadcastService,
     private val lifeCycleService: LifeCycleService) {
 
-    val tags = binding(emptyList<Group>())
+    val tags = property(emptyList<Group>())
 
     init {
         lifeCycleService.register {

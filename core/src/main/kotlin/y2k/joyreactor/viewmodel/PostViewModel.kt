@@ -2,7 +2,7 @@ package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.PartialResult
 import y2k.joyreactor.common.await
-import y2k.joyreactor.common.binding
+import y2k.joyreactor.common.property
 import y2k.joyreactor.model.Comment
 import y2k.joyreactor.model.CommentGroup
 import y2k.joyreactor.model.EmptyGroup
@@ -22,18 +22,18 @@ class PostViewModel(
     private val userService: ProfileService,
     private val navigation: NavigationService) {
 
-    val isBusy = binding(false)
-    val comments = binding<CommentGroup>(EmptyGroup())
-    val description = binding("")
+    val isBusy = property(false)
+    val comments = property<CommentGroup>(EmptyGroup())
+    val description = property("")
 
-    val poster = binding(PartialResult.inProgress<File>(0, 100))
-    val posterAspect = binding(1f)
+    val poster = property(PartialResult.inProgress<File>(0, 100))
+    val posterAspect = property(1f)
 
-    val tags = binding(emptyList<String>())
+    val tags = property(emptyList<String>())
 
-    val images = binding(emptyList<Image>())
+    val images = property(emptyList<Image>())
 
-    val error = binding(false)
+    val error = property(false)
 
     init {
         isBusy += true

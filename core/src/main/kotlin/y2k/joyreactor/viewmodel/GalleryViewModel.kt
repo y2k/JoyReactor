@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.await
-import y2k.joyreactor.common.binding
+import y2k.joyreactor.common.property
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.PostService
 
@@ -10,7 +10,7 @@ import y2k.joyreactor.services.PostService
  */
 class GalleryViewModel(private val postService: PostService) {
 
-    val images = binding(emptyList<Image>())
+    val images = property(emptyList<Image>())
 
     init {
         postService

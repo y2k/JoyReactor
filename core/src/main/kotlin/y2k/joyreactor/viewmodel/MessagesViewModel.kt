@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.await
-import y2k.joyreactor.common.binding
+import y2k.joyreactor.common.property
 import y2k.joyreactor.model.Message
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.UserMessagesService
@@ -13,8 +13,8 @@ class MessagesViewModel(
     private val navigation: NavigationService,
     private val service: UserMessagesService) {
 
-    val messages = binding(emptyList<Message>())
-    val newMessage = binding("")
+    val messages = property(emptyList<Message>())
+    val newMessage = property("")
 
     init {
         service

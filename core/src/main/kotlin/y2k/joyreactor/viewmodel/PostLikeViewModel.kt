@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.await
-import y2k.joyreactor.common.binding
+import y2k.joyreactor.common.property
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.PostService
 
@@ -12,8 +12,8 @@ class PostLikeViewModel(
     private val service: PostService,
     private val navigation: NavigationService) {
 
-    val isBusy = binding(false)
-    val isError = binding(false)
+    val isBusy = property(false)
+    val isError = property(false)
 
     fun like() = updatePost(true)
 

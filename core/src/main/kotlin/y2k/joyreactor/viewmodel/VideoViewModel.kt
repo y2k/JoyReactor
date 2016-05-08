@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.await
-import y2k.joyreactor.common.binding
+import y2k.joyreactor.common.property
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.PostService
 import java.io.File
@@ -13,8 +13,8 @@ class VideoViewModel(
     private val navigationService: NavigationService,
     private val service: PostService) {
 
-    val isBusy = binding(false)
-    val videoFile = binding<File>()
+    val isBusy = property(false)
+    val videoFile = property<File>()
 
     init {
         isBusy += true

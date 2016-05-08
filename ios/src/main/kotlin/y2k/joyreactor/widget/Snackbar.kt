@@ -3,7 +3,7 @@ package y2k.joyreactor.widget
 import org.robovm.apple.foundation.NSCoder
 import org.robovm.apple.uikit.UIView
 import org.robovm.objc.annotation.CustomClass
-import y2k.joyreactor.common.binding
+import y2k.joyreactor.common.property
 
 /**
  * Created by y2k on 3/13/16.
@@ -11,7 +11,7 @@ import y2k.joyreactor.common.binding
 @CustomClass("Snackbar")
 class Snackbar(aDecoder: NSCoder) : UIView(aDecoder) {
 
-    val visible = binding(false)
+    val visible = property(false)
 
     init {
         isHidden = true

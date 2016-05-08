@@ -30,10 +30,10 @@ class ObservableProperty<T>(initValue: T) {
     }
 }
 
-fun <T> binding(defaultValue: T): ObservableProperty<T> {
+fun <T> property(defaultValue: T): ObservableProperty<T> {
     return ObservableProperty(defaultValue)
 }
 
-fun <T> binding(): ObservableProperty<T?> {
+fun <T> property(): ObservableProperty<T?> {
     return ObservableProperty(null)
 }

@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.await
-import y2k.joyreactor.common.binding
+import y2k.joyreactor.common.property
 import y2k.joyreactor.platform.NavigationService
 import y2k.joyreactor.services.UserService
 
@@ -12,9 +12,9 @@ class AddTagViewModel(
     private val navigationService: NavigationService,
     private val service: UserService) {
 
-    val isBusy = binding(false)
-    val tag = binding("")
-    val error = binding(false)
+    val isBusy = property(false)
+    val tag = property("")
+    val error = property(false)
 
     fun add() {
         isBusy += true
