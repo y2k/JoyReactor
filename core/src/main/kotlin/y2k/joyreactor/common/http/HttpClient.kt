@@ -18,7 +18,5 @@ interface HttpClient {
 
     fun clearCookies()
 
-    fun buildRequest(): HttpRequestBuilder
-
     fun executeRequest(url: String, isBrowser: Boolean = false, init: (Request.Builder.() -> Unit)? = null): Response
 }

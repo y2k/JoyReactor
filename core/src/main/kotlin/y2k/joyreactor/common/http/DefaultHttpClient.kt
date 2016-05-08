@@ -1,14 +1,14 @@
 package y2k.joyreactor.common.http
 
-import okhttp3.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import y2k.joyreactor.common.stream
 import y2k.joyreactor.common.string
 import java.io.File
 import java.io.IOException
-import java.net.URLEncoder
-import java.util.*
 
 /**
  * Created by y2k on 9/29/15.
@@ -73,12 +73,7 @@ open class DefaultHttpClient(private val cookies: CookieStorage) : HttpClient {
         return response
     }
 
-    override fun buildRequest(): HttpRequestBuilder {
-        return HttpRequestBuilder(this)
-    }
-
     override fun clearCookies() {
         cookies.clear()
     }
-
 }

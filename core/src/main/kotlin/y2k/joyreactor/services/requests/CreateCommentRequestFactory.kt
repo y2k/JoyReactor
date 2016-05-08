@@ -1,8 +1,9 @@
 package y2k.joyreactor.services.requests
 
 import rx.Observable
-import y2k.joyreactor.common.ioUnitObservable
+import y2k.joyreactor.common.buildRequest
 import y2k.joyreactor.common.http.HttpClient
+import y2k.joyreactor.common.ioUnitObservable
 import java.util.regex.Pattern
 
 /**
