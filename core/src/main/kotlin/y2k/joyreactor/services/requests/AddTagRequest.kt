@@ -1,8 +1,8 @@
 package y2k.joyreactor.services.requests
 
 import rx.Completable
-import y2k.joyreactor.common.ioUnitObservable
 import y2k.joyreactor.common.http.HttpClient
+import y2k.joyreactor.common.ioUnitObservable
 import java.net.URLEncoder
 
 /**

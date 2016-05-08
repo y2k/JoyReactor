@@ -1,8 +1,8 @@
 package y2k.joyreactor.services.requests
 
 import rx.Observable
-import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.common.http.HttpClient
+import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Image
 import java.util.*
