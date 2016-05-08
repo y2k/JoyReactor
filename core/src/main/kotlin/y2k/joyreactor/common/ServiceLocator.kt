@@ -1,6 +1,7 @@
 package y2k.joyreactor.common
 
 import y2k.joyreactor.common.http.CookieStorage
+import y2k.joyreactor.common.http.DefaultHttpClient
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.images.MultiTryDownloader
 import y2k.joyreactor.platform.NavigationService
@@ -25,7 +26,7 @@ object ServiceLocator {
     private val map = HashMap <KClass<*>, () -> Any>()
 
     init {
-        registerSingleton { HttpClient(CookieStorage()) }
+        registerSingleton<HttpClient> { DefaultHttpClient(CookieStorage()) }
         register { PostViewModel(resolve(), resolve(), resolve()) }
         register { NavigationService.instance }
         register { ThreadsViewModel(resolve(), resolve(), resolve()) }

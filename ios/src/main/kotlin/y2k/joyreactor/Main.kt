@@ -5,6 +5,7 @@ import org.robovm.apple.uikit.UIApplication
 import org.robovm.apple.uikit.UIApplicationDelegateAdapter
 import org.robovm.apple.uikit.UIApplicationLaunchOptions
 import y2k.joyreactor.common.ForegroundScheduler
+import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.platform.DispatchQueueSchedulerFactory
 import y2k.joyreactor.platform.NetworkActivityIndicatorHttpClient
@@ -16,7 +17,8 @@ class Main : UIApplicationDelegateAdapter() {
     override fun didFinishLaunching(application: UIApplication?, launchOptions: UIApplicationLaunchOptions?): Boolean {
         Platform.instance = PlatformImpl()
         ForegroundScheduler.instance = DispatchQueueSchedulerFactory().make()
-        HttpClient.instance = NetworkActivityIndicatorHttpClient()
+        var client = NetworkActivityIndicatorHttpClient(ServiceLocator.resolve<HttpClient>())
+        ServiceLocator.registerSingleton { client }
         return true
     }
 

@@ -5,44 +5,52 @@ import org.robovm.apple.foundation.NSURL
 import org.robovm.apple.uikit.UIApplication
 import org.robovm.apple.uikit.UINavigationController
 import org.robovm.apple.uikit.UIViewController
-import y2k.joyreactor.ImageViewController
+import kotlin.reflect.KClass
 
 /**
  * Created by y2k on 02/10/15.
  */
 class StoryboardNavigation : NavigationService {
 
-    override fun openMessages(name: String) {
-        sArgument = name
-        navigationController.pushViewController(instantiateViewController("Messages"), true)
+    override fun close() {
+        throw UnsupportedOperationException()
     }
 
-    override fun switchProfileToLogin() {
-        switchTo("Login")
+    override fun <T : Any> open(vmType: KClass<T>, argument: String) {
+        throw UnsupportedOperationException()
     }
 
-    override fun switchLoginToProfile() {
-        switchTo("Profile")
-    }
-
-    override fun closeCreateComment() {
-        navigationController.popViewController(true)
-    }
-
-    override fun closeAddTag() {
-        navigationController.popViewController(true)
-    }
-
-    override fun openPost(postId: String) {
-        sArgument = postId
-        navigationController.pushViewController(instantiateViewController("Post"), true)
-    }
+    //    override fun openMessages(name: String) {
+//        sArgument = name
+//        navigationController.pushViewController(instantiateViewController("Messages"), true)
+//    }
+//
+//    override fun switchProfileToLogin() {
+//        switchTo("Login")
+//    }
+//
+//    override fun switchLoginToProfile() {
+//        switchTo("Profile")
+//    }
+//
+//    override fun closeCreateComment() {
+//        navigationController.popViewController(true)
+//    }
+//
+//    override fun closeAddTag() {
+//        navigationController.popViewController(true)
+//    }
+//
+//    override fun openPost(postId: String) {
+//        sArgument = postId
+//        navigationController.pushViewController(instantiateViewController("Post"), true)
+//    }
 
     override val argument: String
         get() = sArgument!!
 
     private fun switchTo(storyboardId: String) {
-        val stack = NSMutableArray(navigationController.viewControllers)
+        val stack = NSMutableArray(navigationController.viewControllers.toList())
         stack.removeAt(stack.size - 1)
         stack.add(instantiateViewController(storyboardId))
         navigationController.setViewControllers(stack, true)
@@ -56,23 +64,23 @@ class StoryboardNavigation : NavigationService {
         UIApplication.getSharedApplication().openURL(NSURL(url))
     }
 
-    override fun openVideo(postId: String) {
-        sArgument = postId
-        navigationController.pushViewController(instantiateViewController("Video"), true)
-    }
-
-    override fun openImageView(postId: String) {
-        sArgument = postId
-        navigationController.pushViewController(ImageViewController(), true)
-    }
-
-    override fun openCreateComment() {
-        // TODO:
-    }
-
-    override fun openPostGallery() {
-        // TODO:
-    }
+//    override fun openVideo(postId: String) {
+//        sArgument = postId
+//        navigationController.pushViewController(instantiateViewController("Video"), true)
+//    }
+//
+//    override fun openImageView(postId: String) {
+//        sArgument = postId
+//        navigationController.pushViewController(ImageViewController(), true)
+//    }
+//
+//    override fun openCreateComment() {
+//        // TODO:
+//    }
+//
+//    override fun openPostGallery() {
+//        // TODO:
+//    }
 
     companion object {
 
