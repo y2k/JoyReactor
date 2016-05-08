@@ -6,6 +6,7 @@ import rx.Single
 import y2k.joyreactor.common.Notifications
 import y2k.joyreactor.common.mapDatabase
 import y2k.joyreactor.model.Group
+import y2k.joyreactor.model.ListState
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.PostsForTagRequest
 import y2k.joyreactor.services.synchronizers.PostMerger
