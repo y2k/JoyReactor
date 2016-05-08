@@ -1,7 +1,7 @@
 package y2k.joyreactor.platform
 
+import com.j256.ormlite.support.ConnectionSource
 import org.robovm.apple.foundation.*
-import org.robovm.apple.uikit.UIAlertView
 import org.robovm.apple.uikit.UIImage
 import rx.Observable
 import y2k.joyreactor.common.ioUnitObservable
@@ -11,6 +11,10 @@ import java.io.File
  * Created by y2k on 29/09/15.
  */
 class PlatformImpl : Platform() {
+
+    override fun buildConnection(file: File): ConnectionSource {
+        throw UnsupportedOperationException()
+    }
 
     override val currentDirectory: File
         get() = CURRENT_DIRECTORY
