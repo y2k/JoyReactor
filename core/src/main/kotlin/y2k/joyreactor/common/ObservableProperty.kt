@@ -29,6 +29,10 @@ class ObservableProperty<T>(initValue: T) {
         f(value)
     }
 
+    fun subscribeLazy(f: (T) -> Unit) {
+        subject.subscribe(f)
+    }
+
     fun subscribe(target: ObservableProperty<T>) {
         val sub = subject.subscribe { target += value }
         targetMap[target] = sub

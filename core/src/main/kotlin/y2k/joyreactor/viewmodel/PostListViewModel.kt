@@ -27,23 +27,26 @@ class PostListViewModel(
     val quality = property(Group.Quality.Good)
     val group = property(Group.makeFeatured())
 
-    private var state = StatelessPostListViewModel(navigationService, service, lifeCycleService, Group.makeFeatured())
+    private lateinit var state: StatelessPostListViewModel
 
     init {
         lifeCycleService.registerProperty(BroadcastService.TagSelected::class, group)
-        group.subscribe { changeCurrentGroup() }
-        quality.subscribe { changeCurrentGroup() }
+        group.subscribeLazy { changeCurrentGroup() }
+        quality.subscribeLazy { changeCurrentGroup() }
+        changeCurrentGroup(true)
     }
 
-    fun changeCurrentGroup() {
+    fun changeCurrentGroup(isFirst: Boolean = false) {
         userService
             .makeGroup(group.value, quality.value)
             .await {
                 println("PostListViewModel | $it")
 
-                state.isBusy.unsubscribe(isBusy)
-                state.posts.unsubscribe(posts)
-                state.hasNewPosts.unsubscribe(hasNewPosts)
+                if (!isFirst) {
+                    state.isBusy.unsubscribe(isBusy)
+                    state.posts.unsubscribe(posts)
+                    state.hasNewPosts.unsubscribe(hasNewPosts)
+                }
 
                 state = StatelessPostListViewModel(navigationService, service, lifeCycleService, it)
 
