@@ -8,11 +8,11 @@ import java.io.Serializable
  * Created by y2k on 9/26/15.
  */
 data class Group(
+    @DatabaseField(generatedId = true, allowGeneratedIdInsert = true) override val id: Long = 0,
     @DatabaseField val serverId: String = "",
     @DatabaseField val title: String = "",
     @DatabaseField(dataType = com.j256.ormlite.field.DataType.SERIALIZABLE) val image: Image? = null,
-    @DatabaseField val isVisible: Boolean = false,
-    @DatabaseField(generatedId = true) override val id: Long = 0) : Serializable, Dto {
+    @DatabaseField val isVisible: Boolean = false) : Serializable, Dto {
 
     val type: Type
         get() = Type.valueOf(serverId.split(":")[0])
@@ -59,5 +59,5 @@ fun Group(base: Group, quality: Group.Quality): Group {
 }
 
 fun Group(type: Group.Type, name: String, quality: Group.Quality, title: String, image: Image? = null): Group {
-    return Group("$type:$name:$quality", title, image)
+    return Group(serverId = "$type:$name:$quality", title = title, image = image)
 }
