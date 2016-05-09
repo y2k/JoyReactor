@@ -58,7 +58,7 @@ object ServiceLocator {
         register { UserMessagesService(resolve(), resolve(), resolve()) }
         register { CommentService(resolve(), resolve(), resolve()) }
         register { LoginViewModel(resolve(), resolve()) }
-        register { TagListViewModel(resolve(), resolve(), resolve()) }
+        register { MenuViewModel(resolve(), resolve(), resolve()) }
         register { GalleryViewModel(resolve()) }
         register { ImageViewModel(resolve()) }
         register { VideoViewModel(resolve(), resolve()) }

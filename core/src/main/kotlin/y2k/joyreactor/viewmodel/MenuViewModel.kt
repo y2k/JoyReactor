@@ -11,7 +11,7 @@ import y2k.joyreactor.services.UserService
 /**
  * Created by y2k on 3/8/16.
  */
-class TagListViewModel(
+class MenuViewModel(
     private val service: UserService,
     private val broadcastService: BroadcastService,
     private val lifeCycleService: LifeCycleService) {

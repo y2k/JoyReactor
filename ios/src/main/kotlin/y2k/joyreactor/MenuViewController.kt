@@ -12,7 +12,7 @@ import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.common.bindingBuilder
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.platform.ImageRequest
-import y2k.joyreactor.viewmodel.TagListViewModel
+import y2k.joyreactor.viewmodel.MenuViewModel
 
 /**
  * Created by y2k on 9/26/15.
@@ -42,7 +42,7 @@ class MenuViewController : BaseUIViewController() {
         //        list.dataSource = TagDataSource()
         //        list.setDelegate(TagDelegate())
 
-        val vm = ServiceLocator.resolve<TagListViewModel>(lifeCycleService)
+        val vm = ServiceLocator.resolve<MenuViewModel>(lifeCycleService)
         bindingBuilder {
             command(featuredButton) { vm.selectedFeatured() }
             command(favoriteButton) { vm.selectedFavorite() }

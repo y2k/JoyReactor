@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import y2k.joyreactor.common.*
 import y2k.joyreactor.model.Group
-import y2k.joyreactor.viewmodel.TagListViewModel
+import y2k.joyreactor.viewmodel.MenuViewModel
 
 /**
  * Created by y2k on 11/12/15.
@@ -16,7 +16,7 @@ class MenuFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_menu, container, false)
-        val vm = ServiceLocator.resolve<TagListViewModel>(lifeCycleService)
+        val vm = ServiceLocator.resolve<MenuViewModel>(lifeCycleService)
         bindingBuilder(view) {
             viewResolver(R.id.list)
 
