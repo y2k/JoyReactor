@@ -11,6 +11,8 @@ class LifeCycleService(
     private val broadcastService: BroadcastService) {
     private val actions = ArrayList<Pair<Any?, () -> Unit>>()
 
+    private var isActivated = false
+
     fun register(func: () -> Unit) {
         actions.add(null to func)
     }
@@ -30,15 +32,21 @@ class LifeCycleService(
             actions.remove(old)
         }
 
-        actions.add(token to { broadcastService.register<Any>(this, token, { func() }) })
+        val onActivated = {
+            broadcastService.register<Any>(this, token, { func() })
+            func()
+        }
+        actions.add(token to onActivated)
+        if (isActivated) onActivated()
     }
 
     fun activate() {
-        // TODO: Понять почему forEach вызывает падение
-        for (it in actions) it.second()
+        isActivated = true
+        actions.forEach { it.second() }
     }
 
     fun deactivate() {
         broadcastService.unregister(this)
+        isActivated = false
     }
 }

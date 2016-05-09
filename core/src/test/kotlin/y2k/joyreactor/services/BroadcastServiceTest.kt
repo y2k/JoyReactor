@@ -44,23 +44,23 @@ class BroadcastServiceTest {
         var count = 0
         single.subscribe(lifeCycleService) { count++ }
 
+        assertEquals(0, count)
+
+        BroadcastService.broadcast(Notifications.Posts)
+        assertEquals(0, count)
+
+        lifeCycleService.activate()
         assertEquals(1, count)
 
         BroadcastService.broadcast(Notifications.Posts)
-        assertEquals(1, count)
-
-        lifeCycleService.activate()
         assertEquals(2, count)
+        BroadcastService.broadcast(Notifications.Posts)
+        assertEquals(3, count)
+
+        lifeCycleService.deactivate()
+        assertEquals(3, count)
 
         BroadcastService.broadcast(Notifications.Posts)
         assertEquals(3, count)
-        BroadcastService.broadcast(Notifications.Posts)
-        assertEquals(4, count)
-
-        lifeCycleService.deactivate()
-        assertEquals(4, count)
-
-        BroadcastService.broadcast(Notifications.Posts)
-        assertEquals(4, count)
     }
 }

@@ -40,8 +40,6 @@ class PostListViewModel(
         userService
             .makeGroup(group.value, quality.value)
             .await {
-                println("PostListViewModel | $it")
-
                 if (!isFirst) {
                     state.isBusy.unsubscribe(isBusy)
                     state.posts.unsubscribe(posts)
