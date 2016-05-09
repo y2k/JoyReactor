@@ -25,9 +25,10 @@ class MyTagFetcher(
                 else tagsForUserRequest.request(it)
             }
             .mapDatabase(dataContext) { newTags ->
-                val old = Tags.toList().map { it.copy(isVisible = false) }
-                val new = newTags.map { it.copy(isVisible = true) }
-                val result = old.union(new).distinctBy { it.serverId }
+                val result = Tags.toList()
+                    .union(newTags)
+                    .distinctBy { it.serverId }
+                    .map { s -> s.copy(isVisible = newTags.any { it.serverId == s.serverId }) }
 
                 Tags.clear()
                 result.forEach { Tags.add(it) }
