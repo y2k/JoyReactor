@@ -44,7 +44,7 @@ class MessageThreadViewController : BaseUIViewController() {
 
         val prettyTime = PrettyTime()
 
-        override fun bind(data: Message) {
+        override fun bind(data: Message, position: Int) {
             textLabel.text = data.text
             detailTextLabel.text = prettyTime.format(data.date)
         }

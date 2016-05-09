@@ -56,7 +56,7 @@ class PostListViewController : BaseUIViewController() {
 
             tableView(list, vm.posts) {
                 cellSelector { if (it == null) "LoadMore" else "Post" }
-                command { vm.itemSelected(it) }
+                command { vm.postClicked(it) }
             }
         }
     }
@@ -64,7 +64,7 @@ class PostListViewController : BaseUIViewController() {
     @CustomClass("LoadMoreCell")
     class LoadMoreCell : ListCell<Post?>() {
 
-        override fun bind(data: Post?) {
+        override fun bind(data: Post?, position: Int) {
             TODO()
         }
     }
@@ -88,6 +88,8 @@ class PostListViewController : BaseUIViewController() {
         lateinit var vm: PostListViewModel
         lateinit var post: Post
 
+        var position = 0
+
         @IBAction
         fun rate() {
             val alert = UIAlertController()
@@ -103,10 +105,12 @@ class PostListViewController : BaseUIViewController() {
 
         @IBAction
         fun play() {
-            vm.playClicked(post.id)
+            vm.playClicked(position)
         }
 
-        override fun bind(data: Post?) {
+        override fun bind(data: Post?, position: Int) {
+            this.position = position
+
             if (data == null) return
             this.post = data
 

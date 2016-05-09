@@ -101,13 +101,10 @@ fun <T> Observable<T>.await(onNext: (T) -> Unit): Subscription {
 }
 
 fun <T> Pair<Single<T>, Notifications>.subscribe(lifeCycle: LifeCycleService, onNext: (T) -> Unit) {
-    val (single, token) = this
-    single
-        .observeOn(ForegroundScheduler.instance)
-        .subscribe(onNext, { it.printStackTrace() })
-    lifeCycle.register(token) {
-        single
-            .observeOn(ForegroundScheduler.instance)
-            .subscribe(onNext, { it.printStackTrace() })
+    val single = first.observeOn(ForegroundScheduler.instance)
+
+    single.subscribe(onNext, Throwable::printStackTrace)
+    lifeCycle.register(second) {
+        single.subscribe(onNext, Throwable::printStackTrace)
     }
 }

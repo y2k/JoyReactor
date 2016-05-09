@@ -59,7 +59,7 @@ class MenuViewController : BaseUIViewController() {
         @IBOutlet lateinit var icon: UIImageView
         @IBOutlet lateinit var title: UILabel
 
-        override fun bind(data: Group) {
+        override fun bind(data: Group, position: Int) {
             icon.layer.cornerRadius = icon.frame.width / 2
             ImageRequest()
                 .setUrl(data.image)

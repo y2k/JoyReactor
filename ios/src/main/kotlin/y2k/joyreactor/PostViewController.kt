@@ -89,7 +89,7 @@ class PostViewController : UIViewController() {
         @IBOutlet lateinit var replies: UILabel
         @IBOutlet lateinit var rating: UILabel
 
-        override fun bind(data: Comment) {
+        override fun bind(data: Comment, position: Int) {
             commentText.text = data.text
 
             userImage.layer.cornerRadius = userImage.frame.width / 2

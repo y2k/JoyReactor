@@ -29,6 +29,6 @@ class ListDataSource2<T>(private val tableView: UITableView) : UITableViewDataSo
     override fun getCellForRow(tableView: UITableView, indexPath: NSIndexPath): UITableViewCell? {
         val item = items[indexPath.row]
         val cell = tableView.dequeueReusableCell(selector(item), indexPath) as ListCell<T>
-        return cell.apply { bind(item) }
+        return cell.apply { bind(item, indexPath.row) }
     }
 }

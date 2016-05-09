@@ -19,21 +19,7 @@ class UserService(
     private val userNameRequest: UserNameRequest,
     private val synchronizer: MyTagFetcher) {
 
-    //    fun getMyTags(): Pair<Observable<List<Group>>, Notifications> {
-    //        val fromDb = dataContext.applyUse {
-    //            Tags.filter("isVisible" to true).sortedBy { it.title.toLowerCase() }
-    //        }
-    //        val observable = Observable.merge(fromDb, synchronizer.synchronize().flatMap { fromDb })
-    //        return observable to Notifications.Groups
-    //    }
-
     fun getMyTags(): Pair<Single<List<Group>>, Notifications> {
-        //        val fromDb = dataContext.applyUse {
-        //            Tags.filter("isVisible" to true).sortedBy { it.title.toLowerCase() }
-        //        }
-        //        val observable = Observable.merge(fromDb, synchronizer.synchronize().flatMap { fromDb })
-        //        return observable to Notifications.Groups
-
         synchronizer
             .synchronize()
             .subscribe { BroadcastService.broadcast(Notifications.Groups) }

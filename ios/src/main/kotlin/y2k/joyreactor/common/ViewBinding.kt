@@ -195,14 +195,14 @@ abstract class ListDataSource<T>(private val tableView: UITableView) : UITableVi
         @Suppress("UNCHECKED_CAST")
         override fun getCellForRow(tableView: UITableView, indexPath: NSIndexPath): UITableViewCell? {
             val cell = tableView.dequeueReusableCell("cell", indexPath) as TC
-            return cell.apply { bind(items[indexPath.row]) }
+            return cell.apply { bind(items[indexPath.row], indexPath.row) }
         }
     }
 }
 
 abstract class ListCell<T> : UITableViewCell() {
 
-    abstract fun bind(data: T)
+    abstract fun bind(data: T, position: Int)
 }
 
 private class DefaultUITextFieldDelegate(val next: UITextField? = null) : UITextFieldDelegateAdapter() {
