@@ -69,24 +69,8 @@ class StatelessPostListViewModel(
     // Item commands
     // ==============================================================
 
-    fun itemSelected(position: Int) {
-        val post = posts.value[position]
-        if (post == null) loadMore() else postClicked(post.id)
-    }
-
-    fun postClicked(id: Long) {
-        val post = posts.value.firstOrNull { it?.id == id } ?: return
-        navigationService.open<PostViewModel>(post.id)
-    }
-
     fun postClicked(position: Int) {
         navigationService.open<PostViewModel>(posts.value[position]!!.id)
-    }
-
-    fun playClicked(id: Long) {
-        val post = posts.value.firstOrNull { it?.id == id } ?: return
-        if (post.image?.isAnimated ?: false) navigationService.open<VideoViewModel>(post.id)
-        else navigationService.open<ImageViewModel>(post.id)
     }
 
     fun playClicked(position: Int) {
