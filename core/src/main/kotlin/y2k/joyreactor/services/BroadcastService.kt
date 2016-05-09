@@ -1,8 +1,10 @@
 package y2k.joyreactor.services
 
 import y2k.joyreactor.common.ForegroundScheduler
+import y2k.joyreactor.common.Notifications
 import y2k.joyreactor.model.Group
 import java.util.*
+import kotlin.reflect.KClass
 
 /**
  * Created by y2k on 2/3/16.
@@ -12,8 +14,12 @@ object BroadcastService {
     private val observers = HashMap<Any, Observable>()
     private val registrations = HashMap<ActionObserver<*>, Any>()
 
-    inline fun <reified T : Any> broadcast(message: T) {
+    fun broadcast(message: Notifications) {
         broadcast(message, message)
+    }
+
+    fun broadcast(message: Any) {
+        broadcast(message.javaClass, message)
     }
 
     fun broadcast(token: Any, message: Any) {

@@ -22,7 +22,7 @@ class LifeCycleService(
     }
 
     fun <T : Any> register(token: KClass<out T>, func: (T) -> Unit) {
-        actions.add(null to { broadcastService.register(this, token, func) })
+        actions.add(null to { broadcastService.register(this, token.java, func) })
     }
 
     fun register(token: Notifications, func: () -> Unit) {
