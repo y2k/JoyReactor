@@ -29,12 +29,8 @@ class MyTagFetcher(
                 val new = newTags.map { it.copy(isVisible = true) }
                 val result = old.union(new).distinctBy { it.serverId }
 
-                println("MyTagFetcher (BEFORE) | " + result.map { it.serverId + "=" + it.id }.joinToString(separator = "\n"))
-
                 Tags.clear()
                 result.forEach { Tags.add(it) }
-
-                println("MyTagFetcher (AFTER) | " + result.map { it.serverId + "=" + it.id }.joinToString(separator = "\n"))
             }
             .toCompletable()
     }
