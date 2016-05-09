@@ -2,21 +2,17 @@ package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.await
 import y2k.joyreactor.common.property
-import y2k.joyreactor.common.subscribe
+import y2k.joyreactor.common.registerProperty
 import y2k.joyreactor.model.Group
-import y2k.joyreactor.model.ListState
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.platform.NavigationService
-import y2k.joyreactor.platform.open
 import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.TagService
 import y2k.joyreactor.services.UserService
-import java.util.*
-import kotlin.properties.Delegates
 
 /**
- * Created by y2k on 3/8/16.
+ * Created by y2k on 5/9/16.
  */
 class PostListViewModel(
     private val navigationService: NavigationService,
@@ -27,100 +23,41 @@ class PostListViewModel(
     val isBusy = property(false)
     val posts = property(emptyList<Post?>())
     val hasNewPosts = property(false)
-    val tagMode = property(0)
 
-    private var group by Delegates.observable(Group.Undefined) { p, old, new ->
-        if (old == new) return@observable
+    val quality = property(Group.Quality.Good)
+    val group = property(Group.makeFeatured())
 
-        service
-            .queryPosts(new)
-            .subscribe(lifeCycleService) {
-                posts += toViewModelList(it)
-                hasNewPosts += it.hasNew
-            }
-
-        isBusy += true
-        service.preloadNewPosts(new).await { isBusy += false }
-    }
+    private var state = StatelessPostListViewModel(navigationService, service, lifeCycleService, Group.makeFeatured())
 
     init {
-        lifeCycleService.register<BroadcastService.TagSelected> { group = it.group }
-        group = Group.makeFeatured()
-
-        tagMode
-            .asObservable()
-            .flatMap { userService.makeGroup(group, qualityFromIndex(it)) }
-            .await { group = it }
+        lifeCycleService.registerProperty(BroadcastService.TagSelected::class, group)
+        group.subscribe { changeCurrentGroup() }
+        quality.subscribe { changeCurrentGroup() }
     }
 
-    private fun qualityFromIndex(it: Int): Group.Quality {
-        return when (it) {
-            1 -> Group.Quality.Best
-            2 -> Group.Quality.All
-            else -> Group.Quality.Good
-        }
+    fun changeCurrentGroup() {
+        userService
+            .makeGroup(group.value, quality.value)
+            .await {
+                println("PostListViewModel | $it")
+
+                state.isBusy.unsubscribe(isBusy)
+                state.posts.unsubscribe(posts)
+                state.hasNewPosts.unsubscribe(hasNewPosts)
+
+                state = StatelessPostListViewModel(navigationService, service, lifeCycleService, it)
+
+                state.isBusy.subscribe(isBusy)
+                state.posts.subscribe(posts)
+                state.hasNewPosts.subscribe(hasNewPosts)
+            }
     }
 
-    private fun toViewModelList(it: ListState): ArrayList<Post?> {
-        val result = ArrayList<Post?>(it.posts)
-        it.divider?.let { result.add(it, null) }
-        return result
-    }
+    fun applyNew() = state.applyNew()
+    fun loadMore() = state.loadMore()
+    fun reloadFirstPage() = state.reloadFirstPage()
 
-    // ==============================================================
-    // Commands
-    // ==============================================================
-
-    fun applyNew() {
-        hasNewPosts += false
-        service.applyNew(group)
-    }
-
-    fun loadMore() {
-        isBusy += true
-        service.loadNextPage(group).await { isBusy += false }
-    }
-
-    fun reloadFirstPage() {
-        isBusy += true
-        service.reloadFirstPage(group).await {
-            isBusy += false
-            hasNewPosts += false
-        }
-    }
-
-    // ==============================================================
-    // Item commands
-    // ==============================================================
-
-    fun itemSelected(position: Int) {
-        val post = posts.value[position]
-        if (post == null) loadMore() else postClicked(post.id)
-    }
-
-    fun postClicked(id: Long) {
-        val post = posts.value.firstOrNull { it?.id == id } ?: return
-        navigationService.open<PostViewModel>(post.id)
-    }
-
-    fun postClicked(position: Int) {
-        navigationService.open<PostViewModel>(posts.value[position]!!.id)
-    }
-
-    fun playClicked(id: Long) {
-        val post = posts.value.firstOrNull { it?.id == id } ?: return
-        if (post.image?.isAnimated ?: false) navigationService.open<VideoViewModel>(post.id)
-        else navigationService.open<ImageViewModel>(post.id)
-    }
-
-    fun playClicked(position: Int) {
-        val post = posts.value[position]!!
-        if (post.image?.isAnimated ?: false) navigationService.open<VideoViewModel>(post.id)
-        else navigationService.open<ImageViewModel>(post.id)
-    }
-
-    fun changeLike(position: Int) {
-        val post = posts.value[position] ?: return
-        navigationService.open<PostLikeViewModel>("" + post.id)
-    }
+    fun postClicked(position: Int) = state.postClicked(position)
+    fun playClicked(position: Int) = state.playClicked(position)
+    fun changeLike(position: Int) = state.changeLike(position)
 }

@@ -2,7 +2,8 @@ package y2k.joyreactor.services
 
 import rx.Completable
 import rx.Observable
-import y2k.joyreactor.common.concatAndRepeat
+import rx.Single
+import y2k.joyreactor.common.Notifications
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.AddTagRequest
@@ -18,12 +19,33 @@ class UserService(
     private val userNameRequest: UserNameRequest,
     private val synchronizer: MyTagFetcher) {
 
-    fun getMyTags(): Observable<List<Group>> {
-        return dataContext
+    //    fun getMyTags(): Pair<Observable<List<Group>>, Notifications> {
+    //        val fromDb = dataContext.applyUse {
+    //            Tags.filter("isVisible" to true).sortedBy { it.title.toLowerCase() }
+    //        }
+    //        val observable = Observable.merge(fromDb, synchronizer.synchronize().flatMap { fromDb })
+    //        return observable to Notifications.Groups
+    //    }
+
+    fun getMyTags(): Pair<Single<List<Group>>, Notifications> {
+        //        val fromDb = dataContext.applyUse {
+        //            Tags.filter("isVisible" to true).sortedBy { it.title.toLowerCase() }
+        //        }
+        //        val observable = Observable.merge(fromDb, synchronizer.synchronize().flatMap { fromDb })
+        //        return observable to Notifications.Groups
+
+        synchronizer
+            .synchronize()
+            .subscribe { BroadcastService.broadcast(Notifications.Groups) }
+
+        val fromDb = dataContext
             .applyUse {
-                Tags.filter("isVisible" to true).sortedBy { it.title.toLowerCase() }
+                Tags.filter("isVisible" to true)
+                    .sortedBy { it.title.toLowerCase() }
             }
-            .concatAndRepeat(synchronizer.synchronize())
+            .toSingle()
+
+        return fromDb to Notifications.Groups
     }
 
     fun favoriteTag(tag: String): Completable {

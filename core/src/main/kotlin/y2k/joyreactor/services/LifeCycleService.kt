@@ -19,7 +19,7 @@ class LifeCycleService(
         return register(T::class, func)
     }
 
-    fun <T : Any> register(token: KClass<T>, func: (T) -> Unit) {
+    fun <T : Any> register(token: KClass<out T>, func: (T) -> Unit) {
         actions.add(null to { broadcastService.register(this, token, func) })
     }
 

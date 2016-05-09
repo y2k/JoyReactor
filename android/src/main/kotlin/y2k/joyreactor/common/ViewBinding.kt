@@ -20,6 +20,7 @@ import y2k.joyreactor.App
 import y2k.joyreactor.FixedAspectPanel
 import y2k.joyreactor.ImagePanel
 import y2k.joyreactor.WebImageView
+import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.widget.MuteVideoView
 import y2k.joyreactor.widget.ProgressImageView
@@ -79,6 +80,20 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
     //        val view = root.find<SwipeRefreshLayout>(id)
     //        binding.subscribe { view.isRefreshing = it }
     //    }
+
+    fun spinnerTemp(id: Int, property: ObservableProperty<Group.Quality>) {
+        val view = find<Spinner>(id)
+        property.subscribe { view.setSelection(it.ordinal) }
+        view.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                property += Group.Quality.valueOf(Group.Quality.values()[position].name)
+            }
+        }
+    }
 
     fun spinner(id: Int, property: ObservableProperty<Int>) {
         val view = find<Spinner>(id)

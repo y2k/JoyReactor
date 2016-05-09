@@ -49,7 +49,9 @@ object BroadcastService {
             }
     }
 
-    class TagSelected(var group: Group)
+    abstract class SubscriptionChangeMessage<T>(val newValue: T)
+
+    class TagSelected(var group: Group) : SubscriptionChangeMessage<Group>(group)
 
     private class ActionObserver<T>(private val callback: (T) -> Unit) : Observer {
 

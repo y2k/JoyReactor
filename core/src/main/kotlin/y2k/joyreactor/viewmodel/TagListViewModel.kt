@@ -2,6 +2,7 @@ package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.await
 import y2k.joyreactor.common.property
+import y2k.joyreactor.common.subscribe
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
@@ -18,14 +19,9 @@ class TagListViewModel(
     val tags = property(emptyList<Group>())
 
     init {
-        lifeCycleService.register {
-            service
-                .getMyTags()
-                .await {
-                    tags += it
-                }
-        }
-        lifeCycleService.toString()
+        service
+            .getMyTags()
+            .subscribe(lifeCycleService) { tags += it }
     }
 
     fun selectTag(position: Int) {
