@@ -37,7 +37,7 @@ data class Group(
         }
 
         fun makeFeatured(): Group {
-            return Group(Type.Favorite, "", Quality.Good, "")
+            return Group(Type.Featured, "", Quality.Good, "")
         }
 
         fun makeTag(name: String, image: Image? = null): Group {
