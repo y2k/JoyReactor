@@ -1,12 +1,13 @@
 package y2k.joyreactor.services.synchronizers
 
+import rx.Completable
 import rx.Observable
+import y2k.joyreactor.common.mapDatabase
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.TagsForUserRequest
 import y2k.joyreactor.services.requests.UserNameRequest
-import java.util.*
 
 /**
  * Created by y2k on 11/25/15.
@@ -16,44 +17,23 @@ class MyTagFetcher(
     private val tagsForUserRequest: TagsForUserRequest,
     private val dataContext: DataContext.Factory) {
 
-    fun synchronize(): Observable<Unit> {
+    fun synchronize(): Completable {
         return userNameRequest
             .request()
             .flatMap {
                 if (it == null) DefaultTagRequest().request()
                 else tagsForUserRequest.request(it)
             }
-            .flatMap { newTags ->
-                dataContext.use { entities ->
-                    val tags = merge(entities.Tags.toList(), newTags)
+            .mapDatabase(dataContext) { newTags ->
+                val old = Tags.toList().map { it.copy(isVisible = false) }
+                val new = newTags.map { it.copy(isVisible = true) }
+                val result = old.union(new).distinctBy { it.serverId }
+                Tags.clear()
+                result.forEach { Tags.add(it) }
 
-                    entities.Tags.clear()
-                    tags.forEach { entities.Tags.add(it) }
-
-                    entities.saveChanges()
-                }
+                println("MyTagFetcher | " + result.joinToString())
             }
-    }
-
-    private fun merge(oldTags: List<Group>, newGroups: List<Group>): List<Group> {
-        return addOrReplaceAll(
-            oldTags.map { it.copy(isVisible = false) },
-            newGroups.map { it.copy(isVisible = true) })
-    }
-
-    private fun addOrReplaceAll(left: List<Group>, right: List<Group>): List<Group> {
-        val result = ArrayList<Group>()
-        for (tag in right) {
-            val old = searchForServerId(left, tag.serverId)
-            result.add(if (old == null) tag else tag.identify(old.id))
-        }
-        return result
-    }
-
-    private fun searchForServerId(groups: List<Group>, serverId: String?): Group? {
-        for (tag in groups)
-            if (serverId == tag.serverId) return tag
-        return null
+            .toCompletable()
     }
 
     private class DefaultTagRequest() {
