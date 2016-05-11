@@ -5,7 +5,6 @@ import y2k.joyreactor.common.http.DefaultHttpClient
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.images.MultiTryDownloader
 import y2k.joyreactor.platform.NavigationService
-import y2k.joyreactor.platform.Platform
 import y2k.joyreactor.services.*
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.repository.IDataContext
@@ -26,7 +25,7 @@ object ServiceLocator {
     private val map = HashMap <KClass<*>, () -> Any>()
 
     init {
-        registerSingleton<HttpClient> { DefaultHttpClient(CookieStorage()) }
+        registerSingleton<HttpClient> { DefaultHttpClient(CookieStorage(resolve())) }
         register { PostViewModel(resolve(), resolve(), resolve()) }
         register { NavigationService.instance }
         register { ThreadsViewModel(resolve(), resolve(), resolve()) }
@@ -44,14 +43,14 @@ object ServiceLocator {
         register { PostsForTagRequest(resolve()) }
         register { AddTagRequest(resolve()) }
         register { UserNameRequest(resolve()) }
-        register { TagsForUserRequest(resolve()) }
-        register { OriginalImageRequestFactory(resolve()) }
+        register { TagsForUserRequest(resolve(), resolve()) }
+        register { OriginalImageRequestFactory(resolve(), resolve()) }
         register { PostRequest(resolve()) }
         register { ProfileRequestFactory(resolve()) }
         register { LoginRequestFactory(resolve()) }
         register { SendMessageRequest(resolve()) }
 
-        register { PostService(resolve(), resolve(), resolve(), resolve(), resolve()) }
+        register { PostService(resolve(), resolve(), resolve(), resolve(), resolve(), resolve()) }
         register { TagService(resolve(), resolve(), resolve(), resolve()) }
         register { UserService(resolve(), resolve(), resolve(), resolve()) }
         register { ProfileService(resolve(), resolve(), resolve()) }
@@ -69,7 +68,7 @@ object ServiceLocator {
 
         register { MultiTryDownloader(resolve()) }
 
-        registerSingleton<IDataContext> { OrmLiteDataContext(Platform.instance) }
+        registerSingleton<IDataContext> { OrmLiteDataContext(resolve()) }
         register { DataContext.Factory(resolve()) }
     }
 

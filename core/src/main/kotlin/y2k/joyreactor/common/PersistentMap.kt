@@ -7,13 +7,13 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * Created by y2k on 19/10/15.
  */
-class PersistentMap(name: String) {
+class PersistentMap(name: String, platform: Platform) {
 
     private val cookieFile: File
     private val map = ConcurrentHashMap<String, String>()
 
     init {
-        cookieFile = File(Platform.instance.currentDirectory, "$ApplicationDataVersion.$name")
+        cookieFile = File(platform.currentDirectory, "$ApplicationDataVersion.$name")
         if (cookieFile.exists())
             map.putAll(cookieFile.readLines().groupToPair())
     }

@@ -1,6 +1,7 @@
 package y2k.joyreactor.services.repository.arraylist
 
 import y2k.joyreactor.common.ApplicationDataVersion
+import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.platform.Platform
 import y2k.joyreactor.services.repository.Dto
 import java.io.EOFException
@@ -38,6 +39,7 @@ object ArrayListSerializer {
     }
 
     private fun getFile(type: KClass<*>): File {
-        return File(Platform.instance.currentDirectory, "${type.java.simpleName}.$ApplicationDataVersion.db")
+        val platform = ServiceLocator.resolve<Platform>()
+        return File(platform.currentDirectory, "${type.java.simpleName}.$ApplicationDataVersion.db")
     }
 }

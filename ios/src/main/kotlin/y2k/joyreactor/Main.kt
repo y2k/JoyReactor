@@ -9,13 +9,10 @@ import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.platform.DispatchQueueSchedulerFactory
 import y2k.joyreactor.platform.NetworkActivityIndicatorHttpClient
-import y2k.joyreactor.platform.Platform
-import y2k.joyreactor.platform.PlatformImpl
 
 class Main : UIApplicationDelegateAdapter() {
 
     override fun didFinishLaunching(application: UIApplication?, launchOptions: UIApplicationLaunchOptions?): Boolean {
-        Platform.instance = PlatformImpl()
         ForegroundScheduler.instance = DispatchQueueSchedulerFactory().make()
         var client = NetworkActivityIndicatorHttpClient(ServiceLocator.resolve<HttpClient>())
         ServiceLocator.registerSingleton { client }

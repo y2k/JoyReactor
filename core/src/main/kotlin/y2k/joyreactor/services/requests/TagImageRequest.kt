@@ -2,17 +2,20 @@ package y2k.joyreactor.services.requests
 
 import y2k.joyreactor.common.PersistentMap
 import y2k.joyreactor.common.http.HttpClient
+import y2k.joyreactor.platform.Platform
 import java.net.URLEncoder
 
 /**
  * Created by y2k on 10/18/15.
  */
-class TagImageRequest(private val httpClient: HttpClient) {
+class TagImageRequest(
+    private val httpClient: HttpClient,
+    platform: Platform) {
 
-    private val cache = PersistentMap("tag-images.1.dat")
+    private val cache = PersistentMap("tag-images.1.dat", platform)
 
     fun request(tag: String): String {
-        sStorage = IconStorage.get(sStorage, "tag.names", "tag.icons")
+        sStorage = IconStorage[sStorage, "tag.names", "tag.icons"]
 
         val clearTag = tag.toLowerCase()
         var imageId = getImageId(clearTag)

@@ -6,6 +6,7 @@ import y2k.joyreactor.common.Notifications
 import y2k.joyreactor.common.PartialResult
 import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.model.*
+import y2k.joyreactor.platform.Platform
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.LikePostRequest
 import y2k.joyreactor.services.requests.OriginalImageRequestFactory
@@ -19,7 +20,8 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
                   private val postRequest: PostRequest,
                   private val buffer: MemoryBuffer,
                   private val dataContext: DataContext.Factory,
-                  private val likePostRequest: LikePostRequest) {
+                  private val likePostRequest: LikePostRequest,
+                  private val platform: Platform) {
 
     fun getVideo(postId: String): Observable<File> {
         return getFromCache(postId)
@@ -56,6 +58,13 @@ class PostService(private val imageRequestFactory: OriginalImageRequestFactory,
 
     fun getSimilarPosts(postId: Long): Observable<List<SimilarPost>> {
         return Observable.just(buffer.similarPosts)
+    }
+
+    fun saveImageToGallery(postId: Long): Completable {
+        return getFromCache("" + postId)
+            .flatMap { mainImage(it.id) }
+            .flatMap { platform.saveToGallery(it) }
+            .toCompletable()
     }
 
     fun mainImage(serverPostId: Long): Observable<File> {

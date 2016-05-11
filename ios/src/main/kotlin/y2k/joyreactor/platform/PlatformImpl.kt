@@ -10,7 +10,7 @@ import java.io.File
 /**
  * Created by y2k on 29/09/15.
  */
-class PlatformImpl : Platform() {
+class PlatformImpl : Platform {
 
     override fun buildConnection(file: File): ConnectionSource {
         throw UnsupportedOperationException()

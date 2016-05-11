@@ -3,14 +3,15 @@ package y2k.joyreactor.common.http
 import okhttp3.Request
 import okhttp3.Response
 import y2k.joyreactor.common.PersistentMap
+import y2k.joyreactor.platform.Platform
 import java.util.regex.Pattern
 
 /**
  * Created by y2k on 10/11/15.
  */
-class CookieStorage {
+class CookieStorage(platform: Platform) {
 
-    private val map = PersistentMap("cookies.dat")
+    private val map = PersistentMap("cookies.dat", platform)
 
     fun attach(request: Request.Builder) {
         if (map.isEmpty) return

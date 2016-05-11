@@ -1,5 +1,6 @@
 package y2k.joyreactor.services.requests
 
+import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.platform.Platform
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -8,7 +9,7 @@ import java.util.*
 /**
  * Created by y2k on 11/23/15.
  */
-internal class IconStorage private constructor(names: String, icons: String) {
+class IconStorage(names: String, icons: String) {
 
     private val names: IntArray
     private val icons: IntArray
@@ -19,7 +20,7 @@ internal class IconStorage private constructor(names: String, icons: String) {
     }
 
     private fun loadIndexes(name: String): IntArray {
-        val tmp = Platform.instance.loadFromBundle(name, "dat")
+        val tmp = ServiceLocator.resolve<Platform>().loadFromBundle(name, "dat")
         val intBuffer = ByteBuffer.wrap(tmp).order(ByteOrder.LITTLE_ENDIAN).asIntBuffer()
 
         val intArray = IntArray(intBuffer.remaining())

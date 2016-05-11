@@ -8,20 +8,15 @@ import java.io.File
 /**
  * Created by y2k on 29/09/15.
  */
-abstract class Platform {
+interface Platform {
 
-    abstract val currentDirectory: File
+    val currentDirectory: File
 
-    abstract val navigator: NavigationService
+    val navigator: NavigationService
 
-    abstract fun loadFromBundle(name: String, ext: String): ByteArray
+    fun loadFromBundle(name: String, ext: String): ByteArray
 
-    abstract fun saveToGallery(imageFile: File): Observable<*>
+    fun saveToGallery(imageFile: File): Observable<*>
 
-    abstract fun buildConnection(file: File): ConnectionSource
-
-    companion object {
-
-        lateinit var instance: Platform
-    }
+    fun buildConnection(file: File): ConnectionSource
 }

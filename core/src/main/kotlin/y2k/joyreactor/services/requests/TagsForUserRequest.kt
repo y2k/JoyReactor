@@ -5,14 +5,17 @@ import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Image
+import y2k.joyreactor.platform.Platform
 import java.util.*
 
 /**
  * Created by y2k on 19/10/15.
  */
-class TagsForUserRequest(private val httpClient: HttpClient) {
+class TagsForUserRequest(
+    private val httpClient: HttpClient,
+    val platform: Platform) {
 
-    private val imageRequest = TagImageRequest(httpClient)
+    private val imageRequest = TagImageRequest(httpClient, platform)
 
     fun request(username: String): Observable<List<Group>> {
         return ioObservable {

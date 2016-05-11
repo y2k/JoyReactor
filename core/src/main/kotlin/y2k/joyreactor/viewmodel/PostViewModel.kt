@@ -73,9 +73,7 @@ class PostViewModel(
     fun saveToGallery() {
         isBusy += true
         service
-            .getFromCache(navigation.argument)
-            .flatMap { service.mainImage(it.id) }
-            .flatMap { Platform.instance.saveToGallery(it) }
+            .saveImageToGallery(navigation.argument.toLong())
             .await { isBusy += false }
     }
 

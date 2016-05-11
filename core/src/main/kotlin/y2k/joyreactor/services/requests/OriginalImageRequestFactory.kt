@@ -13,11 +13,13 @@ import java.util.regex.Pattern
 /**
  * Created by y2k on 16/10/15.
  */
-class OriginalImageRequestFactory(private val httpClient: HttpClient) {
+class OriginalImageRequestFactory(
+    private val httpClient: HttpClient,
+    private val platform: Platform) {
 
     fun request(imageUrl: String): Observable<File> {
         return ioObservable {
-            val file = File(Platform.instance.currentDirectory, "" + imageUrl.hashCode() + "." + getExtension(imageUrl))
+            val file = File(platform.currentDirectory, "" + imageUrl.hashCode() + "." + getExtension(imageUrl))
             if (!file.exists()) {
                 try {
                     httpClient.downloadToFile(imageUrl, file, null)
@@ -33,7 +35,7 @@ class OriginalImageRequestFactory(private val httpClient: HttpClient) {
     fun requestPartial(imageUrl: String): Observable<PartialResult<File>> {
         return Observable.create<PartialResult<File>> { subscriber ->
             // TODO
-            val file = File(Platform.instance.currentDirectory, "" + imageUrl.hashCode() + "." + getExtension(imageUrl))
+            val file = File(platform.currentDirectory, "" + imageUrl.hashCode() + "." + getExtension(imageUrl))
             if (file.exists()) subscriber.onNext(PartialResult.complete(file))
 
             try {
