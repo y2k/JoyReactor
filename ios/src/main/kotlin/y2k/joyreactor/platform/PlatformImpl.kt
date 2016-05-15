@@ -5,12 +5,18 @@ import org.robovm.apple.foundation.*
 import org.robovm.apple.uikit.UIImage
 import rx.Observable
 import y2k.joyreactor.common.ioUnitObservable
+import y2k.joyreactor.common.platform.NavigationService
+import y2k.joyreactor.common.platform.Platform
 import java.io.File
 
 /**
  * Created by y2k on 29/09/15.
  */
 class PlatformImpl : Platform {
+
+    override fun <T> decodeImage(path: File): T {
+        TODO()
+    }
 
     override fun buildConnection(file: File): ConnectionSource {
         throw UnsupportedOperationException()

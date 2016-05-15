@@ -2,7 +2,7 @@ package y2k.joyreactor.services.requests
 
 import y2k.joyreactor.common.PersistentMap
 import y2k.joyreactor.common.http.HttpClient
-import y2k.joyreactor.platform.Platform
+import y2k.joyreactor.common.platform.Platform
 import java.net.URLEncoder
 
 /**

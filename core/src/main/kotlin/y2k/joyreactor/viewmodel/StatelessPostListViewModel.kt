@@ -6,8 +6,8 @@ import y2k.joyreactor.common.subscribe
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.ListState
 import y2k.joyreactor.model.Post
-import y2k.joyreactor.platform.NavigationService
-import y2k.joyreactor.platform.open
+import y2k.joyreactor.common.platform.NavigationService
+import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.TagService
 import java.util.*

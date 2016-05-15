@@ -5,6 +5,7 @@ import org.robovm.apple.foundation.NSURL
 import org.robovm.apple.uikit.UIApplication
 import org.robovm.apple.uikit.UINavigationController
 import org.robovm.apple.uikit.UIViewController
+import y2k.joyreactor.common.platform.NavigationService
 import kotlin.reflect.KClass
 
 /**

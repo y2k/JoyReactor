@@ -1,7 +1,7 @@
 package y2k.joyreactor.services.requests
 
 import y2k.joyreactor.common.ServiceLocator
-import y2k.joyreactor.platform.Platform
+import y2k.joyreactor.common.platform.Platform
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.*

@@ -2,20 +2,26 @@ package y2k.joyreactor.common
 
 import android.app.Application
 import android.database.sqlite.SQLiteDatabase
+import android.graphics.BitmapFactory
 import android.provider.MediaStore
 import com.j256.ormlite.android.AndroidConnectionSource
 import com.j256.ormlite.support.ConnectionSource
 import rx.Observable
 import y2k.joyreactor.App
+import y2k.joyreactor.common.platform.NavigationService
+import y2k.joyreactor.common.platform.Platform
 import y2k.joyreactor.platform.AndroidNavigation
-import y2k.joyreactor.platform.NavigationService
-import y2k.joyreactor.platform.Platform
 import java.io.File
 
 /**
  * Created by y2k on 5/11/16.
  */
 class AndroidPlatform(private val app: Application) : Platform {
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T> decodeImage(path: File): T {
+        return BitmapFactory.decodeFile(path.absolutePath) as T
+    }
 
     override fun buildConnection(file: File): ConnectionSource {
         val database = SQLiteDatabase.openDatabase(file.absolutePath, null, SQLiteDatabase.OPEN_READWRITE or SQLiteDatabase.CREATE_IF_NECESSARY)

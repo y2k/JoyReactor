@@ -1,4 +1,4 @@
-package y2k.joyreactor.platform
+package y2k.joyreactor.common.platform
 
 import y2k.joyreactor.common.ServiceLocator
 import kotlin.reflect.KClass
@@ -19,7 +19,7 @@ interface NavigationService {
     companion object {
 
         val instance: NavigationService
-            get() = ServiceLocator.resolve<Platform>().navigator
+            get() = ServiceLocator.resolve<y2k.joyreactor.common.platform.Platform>().navigator
     }
 }
 

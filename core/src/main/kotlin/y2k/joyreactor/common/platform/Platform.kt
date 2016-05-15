@@ -1,4 +1,4 @@
-package y2k.joyreactor.platform
+package y2k.joyreactor.common.platform
 
 import com.j256.ormlite.support.ConnectionSource
 import rx.Observable
@@ -19,4 +19,6 @@ interface Platform {
     fun saveToGallery(imageFile: File): Observable<*>
 
     fun buildConnection(file: File): ConnectionSource
+
+    fun <T> decodeImage(path: File): T
 }

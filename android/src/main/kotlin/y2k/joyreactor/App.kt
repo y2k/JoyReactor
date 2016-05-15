@@ -7,7 +7,7 @@ import y2k.joyreactor.common.AndroidPlatform
 import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.platform.HandlerSchedulerFactory
-import y2k.joyreactor.platform.Platform
+import y2k.joyreactor.common.platform.Platform
 
 /**
  * Created by y2k on 9/26/15.

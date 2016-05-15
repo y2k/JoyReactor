@@ -5,7 +5,7 @@ import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Image
-import y2k.joyreactor.platform.Platform
+import y2k.joyreactor.common.platform.Platform
 import java.util.*
 
 /**

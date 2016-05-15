@@ -4,7 +4,7 @@ import com.j256.ormlite.dao.Dao
 import com.j256.ormlite.dao.DaoManager
 import com.j256.ormlite.table.TableUtils
 import y2k.joyreactor.common.ApplicationDataVersion
-import y2k.joyreactor.platform.Platform
+import y2k.joyreactor.common.platform.Platform
 import y2k.joyreactor.services.repository.DataSet
 import y2k.joyreactor.services.repository.Dto
 import y2k.joyreactor.services.repository.IDataContext

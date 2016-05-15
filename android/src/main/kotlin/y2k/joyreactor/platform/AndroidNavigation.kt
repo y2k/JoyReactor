@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import y2k.joyreactor.*
 import y2k.joyreactor.common.ActivityLifecycleCallbacksAdapter
+import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.startActivity
 import y2k.joyreactor.viewmodel.*
 import kotlin.reflect.KClass

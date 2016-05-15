@@ -1,6 +1,6 @@
 package y2k.joyreactor.common
 
-import y2k.joyreactor.platform.Platform
+import y2k.joyreactor.common.platform.Platform
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 

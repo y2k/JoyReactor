@@ -1,4 +1,4 @@
-package y2k.joyreactor.common.images
+package y2k.joyreactor.services.images
 
 import rx.Single
 import rx.SingleSubscriber
@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by y2k on 12/10/15.
  */
-internal class MultiTryDownloader(private val httpClient: HttpClient) {
+class MultiTryDownloader(private val httpClient: HttpClient) {
 
     fun downloadAsync(tempDir: File, url: String): Single<File> {
         return Single.create<File> { downloadAsync(tempDir, url, 0, it) }

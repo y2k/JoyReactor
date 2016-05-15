@@ -1,16 +1,15 @@
-package y2k.joyreactor.common.images
+package y2k.joyreactor.services.images
 
 import rx.Single
 import rx.schedulers.Schedulers
-import y2k.joyreactor.common.ServiceLocator
-import y2k.joyreactor.platform.Platform
+import y2k.joyreactor.common.platform.Platform
 import java.io.File
 import java.util.concurrent.Executors
 
 /**
  * Created by y2k on 9/27/15.
  */
-internal class DiskCache {
+class DiskCache(private val platform: Platform) {
 
     init {
         cacheDirectory.mkdirs()
@@ -35,7 +34,7 @@ internal class DiskCache {
     }
 
     val cacheDirectory: File
-        get() = File(ServiceLocator.resolve<Platform>().currentDirectory, "images")
+        get() = File(platform.currentDirectory, "images")
 
     companion object {
 

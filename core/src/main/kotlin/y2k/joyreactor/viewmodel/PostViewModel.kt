@@ -7,9 +7,9 @@ import y2k.joyreactor.model.Comment
 import y2k.joyreactor.model.CommentGroup
 import y2k.joyreactor.model.EmptyGroup
 import y2k.joyreactor.model.Image
-import y2k.joyreactor.platform.NavigationService
-import y2k.joyreactor.platform.Platform
-import y2k.joyreactor.platform.open
+import y2k.joyreactor.common.platform.NavigationService
+import y2k.joyreactor.common.platform.Platform
+import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.services.PostService
 import y2k.joyreactor.services.ProfileService
 import java.io.File

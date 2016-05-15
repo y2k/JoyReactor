@@ -3,9 +3,10 @@ package y2k.joyreactor.common
 import y2k.joyreactor.common.http.CookieStorage
 import y2k.joyreactor.common.http.DefaultHttpClient
 import y2k.joyreactor.common.http.HttpClient
-import y2k.joyreactor.common.images.MultiTryDownloader
-import y2k.joyreactor.platform.NavigationService
+import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.services.*
+import y2k.joyreactor.services.images.DiskCache
+import y2k.joyreactor.services.images.MultiTryDownloader
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.repository.IDataContext
 import y2k.joyreactor.services.repository.ormlite.OrmLiteDataContext
@@ -66,7 +67,9 @@ object ServiceLocator {
         register { PostListViewModel(resolve(), resolve(), resolve(), resolve()) }
         register { PostLikeViewModel(resolve(), resolve()) }
 
+        register { DiskCache(resolve()) }
         register { MultiTryDownloader(resolve()) }
+        register { ImageService(resolve(), resolve(), resolve()) }
 
         registerSingleton<IDataContext> { OrmLiteDataContext(resolve()) }
         register { DataContext.Factory(resolve()) }
