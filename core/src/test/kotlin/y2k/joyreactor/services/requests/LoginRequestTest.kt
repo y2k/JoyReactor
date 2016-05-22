@@ -1,6 +1,7 @@
 package y2k.joyreactor.services.requests
 
 import org.junit.Test
+import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.powermock.core.classloader.annotations.PrepareForTest
 import y2k.joyreactor.common.http.HttpClient
@@ -37,5 +38,6 @@ class LoginRequestTest {
         verify(mockRequestBuilder).addField("signin[username]", "user500")
         verify(mockRequestBuilder).addField("signin[password]", "password")
         verify(mockRequestBuilder).addField("signin[_csrf_token]", "cc037c7f3b0169ec300d6b8d666660fb")
+        verify(mockRequestBuilder, times(3)).addField(anyString(), anyString())
     }
 }

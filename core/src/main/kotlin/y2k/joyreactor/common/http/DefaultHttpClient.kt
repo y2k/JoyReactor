@@ -13,7 +13,7 @@ import java.io.IOException
 /**
  * Created by y2k on 9/29/15.
  */
-open class DefaultHttpClient(private val cookies: CookieStorage) : HttpClient {
+class DefaultHttpClient(private val cookies: CookieStorage) : HttpClient {
 
     private val client = OkHttpClient.Builder()
         .addNetworkInterceptor { cookies.grab(it.proceed(it.request())) }

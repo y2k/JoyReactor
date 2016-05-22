@@ -19,7 +19,6 @@ class LoginRequestFactory(private val httpClient: HttpClient) {
                     .buildRequest()
                     .addField("signin[username]", username)
                     .addField("signin[password]", password)
-                    .addField("signin[remember]", "on")
                     .addField("signin[_csrf_token]", it)
                     .postAsync("http://joyreactor.cc/login")
             }
