@@ -55,7 +55,7 @@ open class DefaultHttpClient(private val cookies: CookieStorage) : HttpClient {
         return executeRequest(url, true).stream().use { Jsoup.parse(it, "utf-8", url) }
     }
 
-    override fun executeRequest(url: String, isBrowser: Boolean, init: (Request.Builder.() -> Unit)?): Response {
+    fun executeRequest(url: String, isBrowser: Boolean = false, init: (Request.Builder.() -> Unit)? = null): Response {
         val request = Request.Builder()
             .url(url)
             .header("Accept-Encoding", "gzip")
@@ -75,5 +75,9 @@ open class DefaultHttpClient(private val cookies: CookieStorage) : HttpClient {
 
     override fun clearCookies() {
         cookies.clear()
+    }
+
+    override fun buildRequest(): RequestBuilder {
+        return HttpRequestBuilder(this)
     }
 }

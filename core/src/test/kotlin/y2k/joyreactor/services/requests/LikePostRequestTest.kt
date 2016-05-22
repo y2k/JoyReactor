@@ -10,7 +10,6 @@ import org.powermock.api.mockito.PowerMockito.mock
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import rx.Observable
-import y2k.joyreactor.common.buildRequest
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.http.HttpRequestBuilder
 import y2k.joyreactor.model.MyLike
@@ -19,7 +18,7 @@ import y2k.joyreactor.model.MyLike
  * Created by y2k on 4/26/16.
  */
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(TokenRequest::class, HttpClient::class)
+@PrepareForTest(TokenRequest::class, HttpClient::class, HttpRequestBuilder::class)
 class LikePostRequestTest {
 
     val mockRequestBuilder = mock(HttpRequestBuilder::class.java).apply {

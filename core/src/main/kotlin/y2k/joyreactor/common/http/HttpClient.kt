@@ -1,7 +1,5 @@
 package y2k.joyreactor.common.http
 
-import okhttp3.Request
-import okhttp3.Response
 import org.jsoup.nodes.Document
 import java.io.File
 
@@ -18,5 +16,16 @@ interface HttpClient {
 
     fun clearCookies()
 
-    fun executeRequest(url: String, isBrowser: Boolean = false, init: (Request.Builder.() -> Unit)? = null): Response
+    fun buildRequest(): RequestBuilder
+}
+
+interface RequestBuilder {
+
+    fun addField(key: String, value: String): RequestBuilder
+
+    fun putHeader(name: String, value: String): RequestBuilder
+
+    fun get(url: String): Document
+
+    fun post(url: String): Document
 }

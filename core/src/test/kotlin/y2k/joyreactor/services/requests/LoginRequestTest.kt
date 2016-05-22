@@ -1,37 +1,41 @@
 package y2k.joyreactor.services.requests
 
-import org.jsoup.Jsoup
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mockito.`when`
-import org.powermock.api.mockito.PowerMockito
+import org.mockito.Mockito.*
 import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 import y2k.joyreactor.common.http.HttpClient
+import y2k.joyreactor.common.http.RequestBuilder
+import y2k.joyreactor.common.when_
 import y2k.joyreactor.requests.MockRequest
 
 /**
  * Created by y2k on 5/21/16.
  */
-@RunWith(PowerMockRunner::class)
 @PrepareForTest(HttpClient::class)
 class LoginRequestTest {
 
-//    val mockResponse = PowerMockito.mock(Response::class.java).apply {
-//
-//    }
+    val mockRequestBuilder = mock(RequestBuilder::class.java).apply {
+        when_(addField(anyString(), anyString())).then { it.mock }
 
-    val mockHttpClient = PowerMockito.mock(HttpClient::class.java).apply {
-        `when`(getDocument("http://joyreactor.cc/login"))
-            .then { Jsoup.parse(MockRequest.load("login.html")) }
+        when_(post(anyString()))
+            .then { MockRequest.loadDocument("login.response.html") }
+    }
 
-//        `when`(executeRequest(anyString(), any(), any()))
-//            .then { null }
+    val mockHttpClient = mock(HttpClient::class.java).apply {
+        when_(getDocument("http://joyreactor.cc/login"))
+            .then { MockRequest.loadDocument("login.html") }
+
+        when_(buildRequest())
+            .then { mockRequestBuilder }
     }
 
     @Test
     fun test() {
         val request = LoginRequestFactory(mockHttpClient)
-        request.request("user500", "password").toBlocking().last();
+        request.request("user500", "password").await()
+
+        verify(mockRequestBuilder).addField("signin[username]", "user500")
+        verify(mockRequestBuilder).addField("signin[password]", "password")
+        verify(mockRequestBuilder).addField("signin[_csrf_token]", "cc037c7f3b0169ec300d6b8d666660fb")
     }
 }

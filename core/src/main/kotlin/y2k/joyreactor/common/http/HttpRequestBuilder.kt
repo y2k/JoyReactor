@@ -8,30 +8,30 @@ import y2k.joyreactor.common.stream
 import java.net.URLEncoder
 import java.util.*
 
-class HttpRequestBuilder(private val httpClient: HttpClient) {
+class HttpRequestBuilder(private val httpClient: DefaultHttpClient) : RequestBuilder {
 
     private val form = HashMap<String, String>()
     private val headers = HashMap<String, String>()
 
-    fun addField(key: String, value: String): HttpRequestBuilder {
+    override fun addField(key: String, value: String): HttpRequestBuilder {
         form.put(key, value)
         return this
     }
 
-    fun putHeader(name: String, value: String): HttpRequestBuilder {
+    override fun putHeader(name: String, value: String): HttpRequestBuilder {
         headers.put(name, value)
         return this
     }
 
-    fun get(url: String): Document {
-        var response = httpClient.executeRequest(url, true) {
+    override fun get(url: String): Document {
+        val response = httpClient.executeRequest(url, true) {
             headers.forEach { header(it.key, it.value) }
         }
         return response.stream().use { Jsoup.parse(it, "utf-8", url) }
     }
 
-    fun post(url: String): Document {
-        var response = httpClient.executeRequest(url, true) {
+    override fun post(url: String): Document {
+        val response = httpClient.executeRequest(url, true) {
             headers.forEach { header(it.key, it.value) }
             post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"), serializeForm()))
         }

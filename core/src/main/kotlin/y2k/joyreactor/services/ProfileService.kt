@@ -1,5 +1,6 @@
 package y2k.joyreactor.services
 
+import rx.Completable
 import rx.Observable
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.ioObservable
@@ -15,7 +16,7 @@ class ProfileService(
     private val profileRequestFactory: ProfileRequestFactory,
     private val loginRequestFactory: LoginRequestFactory) {
 
-    fun login(username: String, password: String): Observable<Unit> {
+    fun login(username: String, password: String): Completable {
         return loginRequestFactory.request(username, password)
     }
 

@@ -3,7 +3,6 @@ package y2k.joyreactor.services.requests
 import org.jsoup.nodes.Document
 import rx.Observable
 import y2k.joyreactor.common.ajax
-import y2k.joyreactor.common.buildRequest
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.model.MyLike
 
