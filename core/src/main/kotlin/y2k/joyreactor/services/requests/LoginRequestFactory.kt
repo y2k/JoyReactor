@@ -1,5 +1,6 @@
 package y2k.joyreactor.services.requests
 
+import org.jsoup.nodes.Document
 import rx.Completable
 import rx.Single
 import y2k.joyreactor.common.getDocumentAsync
@@ -22,10 +23,7 @@ class LoginRequestFactory(private val httpClient: HttpClient) {
                     .addField("signin[_csrf_token]", it)
                     .postAsync("http://joyreactor.cc/login")
             }
-            .doOnSuccess {
-                if (it.getElementById("logout") == null)
-                    throw IllegalStateException()
-            }
+            .doOnSuccess { validateIsSuccessLogin(it) }
             .toCompletable()
     }
 
@@ -33,5 +31,10 @@ class LoginRequestFactory(private val httpClient: HttpClient) {
         return httpClient
             .getDocumentAsync("http://joyreactor.cc/login")
             .map { it.getElementById("signin__csrf_token").attr("value") }
+    }
+
+    private fun validateIsSuccessLogin(mainPage: Document) {
+        if (mainPage.getElementById("logout") == null)
+            throw IllegalStateException()
     }
 }

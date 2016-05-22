@@ -16,6 +16,11 @@ import java.io.IOException
 class DefaultHttpClient(private val cookies: CookieStorage) : HttpClient {
 
     private val client = OkHttpClient.Builder()
+        .addNetworkInterceptor {
+            val request = it.request().newBuilder()
+            cookies.attach(request)
+            it.proceed(request.build())
+        }
         .addNetworkInterceptor { cookies.grab(it.proceed(it.request())) }
         .build()
 
@@ -48,21 +53,18 @@ class DefaultHttpClient(private val cookies: CookieStorage) : HttpClient {
     }
 
     override fun getText(url: String): String {
-        return executeRequest(url, true).string()
+        return executeRequest(url).string()
     }
 
     override fun getDocument(url: String): Document {
-        return executeRequest(url, true).stream().use { Jsoup.parse(it, "utf-8", url) }
+        return executeRequest(url).stream().use { Jsoup.parse(it, "utf-8", url) }
     }
 
-    fun executeRequest(url: String, isBrowser: Boolean = false, init: (Request.Builder.() -> Unit)? = null): Response {
+    fun executeRequest(url: String, init: (Request.Builder.() -> Unit)? = null): Response {
         val request = Request.Builder()
             .url(url)
+            .header("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko")
             .header("Accept-Encoding", "gzip")
-        if (isBrowser) {
-            request.header("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko")
-            cookies.attach(request)
-        }
         if (init != null) request.init()
 
         val response = client.newCall(request.build()).execute()

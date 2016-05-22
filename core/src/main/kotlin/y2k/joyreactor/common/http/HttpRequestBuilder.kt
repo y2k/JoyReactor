@@ -24,14 +24,14 @@ class HttpRequestBuilder(private val httpClient: DefaultHttpClient) : RequestBui
     }
 
     override fun get(url: String): Document {
-        val response = httpClient.executeRequest(url, true) {
+        val response = httpClient.executeRequest(url) {
             headers.forEach { header(it.key, it.value) }
         }
         return response.stream().use { Jsoup.parse(it, "utf-8", url) }
     }
 
     override fun post(url: String): Document {
-        val response = httpClient.executeRequest(url, true) {
+        val response = httpClient.executeRequest(url) {
             headers.forEach { header(it.key, it.value) }
             post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"), serializeForm()))
         }
