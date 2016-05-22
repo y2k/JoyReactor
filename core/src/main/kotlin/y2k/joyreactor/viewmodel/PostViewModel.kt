@@ -2,14 +2,15 @@ package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.PartialResult
 import y2k.joyreactor.common.await
+import y2k.joyreactor.common.platform.NavigationService
+import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.common.property
+import y2k.joyreactor.common.subscribe
 import y2k.joyreactor.model.Comment
 import y2k.joyreactor.model.CommentGroup
 import y2k.joyreactor.model.EmptyGroup
 import y2k.joyreactor.model.Image
-import y2k.joyreactor.common.platform.NavigationService
-import y2k.joyreactor.common.platform.Platform
-import y2k.joyreactor.common.platform.open
+import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.PostService
 import y2k.joyreactor.services.ProfileService
 import java.io.File
@@ -20,7 +21,8 @@ import java.io.File
 class PostViewModel(
     private val service: PostService,
     private val userService: ProfileService,
-    private val navigation: NavigationService) {
+    private val navigation: NavigationService,
+    private val lifeCycle: LifeCycleService) {
 
     val isBusy = property(false)
     val comments = property<CommentGroup>(EmptyGroup())
@@ -40,31 +42,29 @@ class PostViewModel(
     init {
         isBusy += true
         service
-            .synchronizePostAsync(navigation.argument)
-            .await({ post ->
-                posterAspect += post.image?.aspect ?: 1f
-                service.getPostImages().await { images += it }
-
-                description += post.title
-                tags += post.tags
-
-                service
-                    .getCommentsAsync(post.id, 0)
-                    .await {
-                        comments += it
-                        isBusy += false
-                    }
-
-                service
-                    .mainImagePartial(post.id)
-                    .await { poster += it }
-
-                userService.isAuthorized()
-                    .await { canCreateComments += it }
-            }, {
+            .synchronizePost(navigation.argument.toLong())
+            .await({ isBusy += false }, {
                 it.printStackTrace()
                 error += true
             })
+
+        service
+            .getPost(navigation.argument.toLong())
+            .subscribe(lifeCycle) { post ->
+                posterAspect += post.imageAspectOrDefault(1f)
+                description += post.title
+                tags += post.tags
+
+                service.mainImagePartial(post.id).await { poster += it }
+            }
+
+        service.getImages(navigation.argument.toLong())
+            .subscribe(lifeCycle) { images += it }
+
+        userService.isAuthorized().await { canCreateComments += it }
+
+        service.getComments(navigation.argument.toLong(), 0)
+            .subscribe(lifeCycle) { comments += it }
     }
 
     fun commentPost() {

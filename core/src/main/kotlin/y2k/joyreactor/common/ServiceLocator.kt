@@ -27,7 +27,7 @@ object ServiceLocator {
 
     init {
         registerSingleton<HttpClient> { DefaultHttpClient(CookieStorage(resolve())) }
-        register { PostViewModel(resolve(), resolve(), resolve()) }
+        register { PostViewModel(resolve(), resolve(), resolve(), resolve()) }
         register { NavigationService.instance }
         register { ThreadsViewModel(resolve(), resolve(), resolve()) }
         register { MessagesViewModel(resolve(), resolve()) }
@@ -52,7 +52,7 @@ object ServiceLocator {
         register { SendMessageRequest(resolve()) }
         register { CreateCommentRequestFactory(resolve()) }
 
-        register { PostService(resolve(), resolve(), resolve(), resolve(), resolve(), resolve()) }
+        register { PostService(resolve(), resolve(), resolve(), resolve(), resolve(), resolve(), resolve()) }
         register { TagService(resolve(), resolve(), resolve(), resolve()) }
         register { UserService(resolve(), resolve(), resolve(), resolve()) }
         register { ProfileService(resolve(), resolve(), resolve()) }
