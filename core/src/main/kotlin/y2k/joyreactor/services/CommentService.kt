@@ -1,5 +1,6 @@
 package y2k.joyreactor.services
 
+import rx.Completable
 import rx.Observable
 import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.services.requests.CreateCommentRequestFactory
@@ -10,17 +11,12 @@ import y2k.joyreactor.services.requests.PostRequest
  */
 class CommentService(
     private val requestFactory: CreateCommentRequestFactory,
-    private val postRequest: PostRequest,
-    private val postBuffer: MemoryBuffer) {
+    private val postService: PostService) {
 
-    fun createComment(postId: String, commentText: String): Observable<Unit> {
+    fun createComment(postId: String, commentText: String): Completable {
         return requestFactory
             .create(postId, commentText)
-            .flatMap {
-                ioObservable {
-                    postRequest.request(postId);
-                    postBuffer.updatePost(postRequest)
-                }
-            }
+            .flatMap { postService.synchronizePostAsync(postId) }
+            .toCompletable()
     }
 }
