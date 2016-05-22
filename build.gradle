@@ -1,4 +1,4 @@
-ext.kotlin_version = '1.0.1-2'
+ext.kotlin_version = '1.0.2'
 
 def computeAppVersionName() {
     return "0.9.23." + (System.getenv("SING_BUILD") ?: "1")
