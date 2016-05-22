@@ -1,6 +1,7 @@
 package y2k.joyreactor
 
 import android.os.Bundle
+import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v7.widget.Toolbar
 import android.view.ViewGroup
 import android.widget.TextView
@@ -19,6 +20,9 @@ class PostActivity : BaseActivity() {
         val vm = ServiceLocator.resolve<PostViewModel>()
         bindingBuilder(this) {
             viewResolver(R.id.list)
+
+            visibility(R.id.createComment, vm.canCreateComments)
+            command(R.id.createComment) { vm.commentPost() }
 
             progressImageView(R.id.poster, vm.poster)
             fixedAspectPanel(R.id.posterPanel, vm.posterAspect)

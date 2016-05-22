@@ -50,6 +50,7 @@ object ServiceLocator {
         register { ProfileRequestFactory(resolve()) }
         register { LoginRequestFactory(resolve()) }
         register { SendMessageRequest(resolve()) }
+        register { CreateCommentRequestFactory(resolve()) }
 
         register { PostService(resolve(), resolve(), resolve(), resolve(), resolve(), resolve()) }
         register { TagService(resolve(), resolve(), resolve(), resolve()) }
@@ -66,6 +67,7 @@ object ServiceLocator {
         register { AddTagViewModel(resolve(), resolve()) }
         register { PostListViewModel(resolve(), resolve(), resolve(), resolve()) }
         register { PostLikeViewModel(resolve(), resolve()) }
+        register { CreateCommentViewModel(resolve(), resolve(), resolve()) }
 
         register { DiskCache(resolve()) }
         register { MultiTryDownloader(resolve()) }

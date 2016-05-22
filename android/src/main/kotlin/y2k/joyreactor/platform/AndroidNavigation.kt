@@ -39,7 +39,7 @@ class AndroidNavigation(app: Application) : NavigationService {
         sArgument = argument
         when (vmType) {
             PostLikeViewModel::class -> PostLikeFragment().show(fragmentManager, "dialog")
-            CreateCommentViewModel::class -> startActivity(CreateCommentActivity::class)
+            CreateCommentViewModel::class -> CreateCommentFragment().show(fragmentManager, "dialog")
             MessagesViewModel::class -> startActivity(MessagesActivity::class)
             GalleryViewModel::class -> startActivity(GalleryActivity::class)
             ProfileViewModel::class -> startActivity(ProfileActivity::class)

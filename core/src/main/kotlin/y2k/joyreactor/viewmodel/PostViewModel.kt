@@ -35,6 +35,8 @@ class PostViewModel(
 
     val error = property(false)
 
+    val canCreateComments = property(false)
+
     init {
         isBusy += true
         service
@@ -57,13 +59,16 @@ class PostViewModel(
                     .mainImagePartial(post.id)
                     .await { poster += it }
 
-                //                userService
-                //                    .isAuthorized()
-                //                    .subscribeOnMain { if (it) view.setEnableCreateComments() }
+                userService.isAuthorized()
+                    .await { canCreateComments += it }
             }, {
                 it.printStackTrace()
                 error += true
             })
+    }
+
+    fun commentPost() {
+        navigation.open<CreateCommentViewModel>(navigation.argument)
     }
 
     fun showMoreImages() {
