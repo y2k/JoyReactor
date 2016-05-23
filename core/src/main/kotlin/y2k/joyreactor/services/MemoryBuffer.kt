@@ -14,7 +14,7 @@ object MemoryBuffer {
     val requests = Collections.synchronizedMap(HashMap<Long, PostsForTagRequest.Data>())
     val dividers = Collections.synchronizedMap(HashMap<Long, Int>())
 
-    private var request: PostRequest? = null
+    private @Volatile var request: PostRequest? = null
 
     var messages: List<Message> = emptyList()
 

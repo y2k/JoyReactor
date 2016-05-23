@@ -1,11 +1,8 @@
 package y2k.joyreactor.viewmodel
 
-import y2k.joyreactor.common.PartialResult
-import y2k.joyreactor.common.await
+import y2k.joyreactor.common.*
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.open
-import y2k.joyreactor.common.property
-import y2k.joyreactor.common.subscribe
 import y2k.joyreactor.model.Comment
 import y2k.joyreactor.model.CommentGroup
 import y2k.joyreactor.model.EmptyGroup
@@ -40,30 +37,32 @@ class PostViewModel(
     val canCreateComments = property(false)
 
     init {
+        val postId = navigation.argument.toLong()
+
         isBusy += true
         service
-            .synchronizePost(navigation.argument.toLong())
+            .synchronizePost(postId)
             .await({ isBusy += false }, {
                 it.printStackTrace()
                 error += true
             })
 
         service
-            .getPost(navigation.argument.toLong())
+            .getPost(postId)
             .subscribe(lifeCycle) { post ->
                 posterAspect += post.imageAspectOrDefault(1f)
                 description += post.title
                 tags += post.tags
 
-                service.mainImagePartial(post.id).await { poster += it }
+                service.mainImagePartial(postId).await { poster += it }
             }
 
-        service.getImages(navigation.argument.toLong())
+        service.getImages(postId)
             .subscribe(lifeCycle) { images += it }
 
         userService.isAuthorized().await { canCreateComments += it }
 
-        service.getComments(navigation.argument.toLong(), 0)
+        service.getComments(postId, 0)
             .subscribe(lifeCycle) { comments += it }
     }
 

@@ -28,25 +28,23 @@ class RootComments() : ArrayList<Comment>(), CommentGroup {
     companion object {
 
         fun create(buffer: MemoryBuffer, postId: Long): Observable<CommentGroup> {
-            val firstLevelComments = HashSet<Long>()
-            val comments = buffer.comments
-                .filter { it.postId == postId }
-                .filter {
-                    if (it.parentId == 0L) {
-                        firstLevelComments.add(it.id)
-                        true
-                    } else {
-                        firstLevelComments.contains(it.parentId)
+            return Observable.fromCallable {
+                val firstLevelComments = HashSet<Long>()
+                val comments = buffer.comments
+                    .filter { it.postId == postId }
+                    .filter {
+                        if (it.parentId == 0L) {
+                            firstLevelComments.add(it.id)
+                            true
+                        } else {
+                            firstLevelComments.contains(it.parentId)
+                        }
                     }
-                }
-                .toList()
+                    .map { it.copy(level = if (firstLevelComments.contains(it.parentId)) 1 else 0) }
+                    .toList()
 
-            // TODO: убрать мутабельность
-            comments
-                .filter { firstLevelComments.contains(it.parentId) }
-                .forEach { it.level = 1 }
-
-            return Observable.just(RootComments().apply { addAll(comments) })
+                RootComments().apply { addAll(comments) }
+            }
         }
     }
 }
@@ -60,19 +58,21 @@ class ChildComments() : ArrayList<Comment>(), CommentGroup {
     companion object {
 
         fun create(buffer: MemoryBuffer, parentCommentId: Long): Observable<CommentGroup> {
-            val parent = buffer.comments.first { it.id == parentCommentId }
-            val children = buffer.comments
-                .filter { it.parentId == parentCommentId }
-                .toList()
+            return Observable.fromCallable {
+                val parent = buffer.comments
+                    .first { it.id == parentCommentId }
+                    .copy(level = 0)
 
-            // TODO: убрать мутабельность
-            parent.level = 0
-            children.forEach { it.level = 1 }
+                val children = buffer.comments
+                    .filter { it.parentId == parentCommentId }
+                    .map { it.copy(level = 1) }
+                    .toList()
 
-            return Observable.just(ChildComments().apply {
-                this.add(parent) // TODO: разобраться почему не работает без this.
-                addAll(children)
-            })
+                ChildComments().apply {
+                    this.add(parent) // TODO: разобраться почему не работает без this.
+                    addAll(children)
+                }
+            }
         }
     }
 }

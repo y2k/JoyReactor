@@ -5,16 +5,15 @@ import java.io.Serializable
 /**
  * Created by y2k on 28/09/15.
  */
-class Comment(
+data class Comment(
     val text: String,
     val userImage: String?,
     val id: Long,
     val parentId: Long,
     val rating: Float,
-    val postId: Long) : Serializable {
-
-    var replies = 0
-    var level = 0
+    val postId: Long,
+    val level: Int = 0,
+    var replies: Int = 0) : Serializable {
 
     val userImageObject: UserImage
         get() = if (userImage == null) UserImage() else UserImage(userImage)

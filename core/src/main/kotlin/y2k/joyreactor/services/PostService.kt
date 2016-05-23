@@ -6,8 +6,8 @@ import rx.Single
 import y2k.joyreactor.common.Notifications
 import y2k.joyreactor.common.PartialResult
 import y2k.joyreactor.common.ioObservable
-import y2k.joyreactor.model.*
 import y2k.joyreactor.common.platform.Platform
+import y2k.joyreactor.model.*
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.requests.LikePostRequest
 import y2k.joyreactor.services.requests.OriginalImageRequestFactory
@@ -41,17 +41,16 @@ class PostService(
         }.toCompletable()
     }
 
-    fun synchronizePostAsync(postId: String): Observable<Post> {
-        return ioObservable {
-            postRequest.request(postId)
-            buffer.updatePost(postRequest)
-            buffer.post
-        }
-    }
-
     fun getPost(postId: Long): Pair<Single<Post>, Notifications> {
         return ioObservable {
             buffer.post
+        }.toSingle() to Notifications.Post
+    }
+
+    fun getComments(postId: Long, parentCommentId: Long): Pair<Single<CommentGroup>, Notifications> {
+        return when (parentCommentId) {
+            0L -> RootComments.create(buffer, postId)
+            else -> ChildComments.create(buffer, parentCommentId)
         }.toSingle() to Notifications.Post
     }
 
@@ -60,13 +59,6 @@ class PostService(
             0L -> RootComments.create(buffer, postId)
             else -> ChildComments.create(buffer, parentCommentId)
         }
-    }
-
-    fun getComments(postId: Long, parentCommentId: Long): Pair<Single<CommentGroup>, Notifications> {
-        return when (parentCommentId) {
-            0L -> RootComments.create(buffer, postId)
-            else -> ChildComments.create(buffer, parentCommentId)
-        }.toSingle() to Notifications.Post
     }
 
     fun getFromCache(postId: String): Observable<Post> {
