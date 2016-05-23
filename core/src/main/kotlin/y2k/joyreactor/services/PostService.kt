@@ -66,20 +66,20 @@ class PostService(
     }
 
     fun getImages(postId: Long): Pair<Single<List<Image>>, Notifications> {
-        val postAttachments = buffer.attachments.map { it.image }
-        val commentAttachments = buffer.comments
-            .filter { it.attachmentObject != null }
-            .map { it.attachmentObject!! }
-        return Observable
-            .just(postAttachments.union(commentAttachments).toList())
-            .toSingle() to Notifications.Post
+        return Single.fromCallable {
+            val postAttachments = buffer.attachments.map { it.image }
+            val commentAttachments = buffer.comments
+                .map { it.attachmentObject }
+                .filterNotNull()
+            postAttachments.union(commentAttachments).toList()
+        } to Notifications.Post
     }
 
     fun getPostImages(): Observable<List<Image>> {
         val postAttachments = buffer.attachments.map { it.image }
         val commentAttachments = buffer.comments
-            .filter { it.attachmentObject != null }
-            .map { it.attachmentObject!! }
+            .map { it.attachmentObject }
+            .filterNotNull()
         return Observable.just(postAttachments.union(commentAttachments).toList())
     }
 

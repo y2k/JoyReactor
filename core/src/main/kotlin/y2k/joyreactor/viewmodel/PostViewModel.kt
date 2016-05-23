@@ -1,8 +1,11 @@
 package y2k.joyreactor.viewmodel
 
-import y2k.joyreactor.common.*
+import y2k.joyreactor.common.PartialResult
+import y2k.joyreactor.common.await
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.open
+import y2k.joyreactor.common.property
+import y2k.joyreactor.common.subscribe
 import y2k.joyreactor.model.Comment
 import y2k.joyreactor.model.CommentGroup
 import y2k.joyreactor.model.EmptyGroup
@@ -22,23 +25,20 @@ class PostViewModel(
     private val lifeCycle: LifeCycleService) {
 
     val isBusy = property(false)
-    val comments = property<CommentGroup>(EmptyGroup())
-    val description = property("")
+    val error = property(false)
+    val canCreateComments = property(false)
 
+    val description = property("")
     val poster = property(PartialResult.inProgress<File>(0, 100))
     val posterAspect = property(1f)
 
     val tags = property(emptyList<String>())
-
     val images = property(emptyList<Image>())
+    val comments = property<CommentGroup>(EmptyGroup())
 
-    val error = property(false)
-
-    val canCreateComments = property(false)
+    private val postId = navigation.argument.toLong()
 
     init {
-        val postId = navigation.argument.toLong()
-
         isBusy += true
         service
             .synchronizePost(postId)
@@ -76,13 +76,12 @@ class PostViewModel(
 
     fun saveToGallery() {
         isBusy += true
-        service
-            .saveImageToGallery(navigation.argument.toLong())
+        service.saveImageToGallery(postId)
             .await { isBusy += false }
     }
 
     fun openInBrowser() {
-        navigation.openBrowser("http://joyreactor.cc/post/" + navigation.argument)
+        navigation.openBrowser("http://joyreactor.cc/post/" + postId)
     }
 
     fun selectComment(position: Int) {
@@ -90,8 +89,7 @@ class PostViewModel(
     }
 
     fun selectComment(comment: Comment) {
-        service
-            .getCommentsAsync(comment.postId, comments.value.getNavigation(comment))
+        service.getCommentsAsync(comment.postId, comments.value.getNavigation(comment))
             .await { comments += it }
     }
 }
