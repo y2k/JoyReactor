@@ -53,15 +53,16 @@ class PostViewModel(
                 posterAspect += post.imageAspectOrDefault(1f)
                 description += post.title
                 tags += post.tags
-
-                service.mainImagePartial(postId).await { poster += it }
             }
 
+        // FIXME: Пофиксить множественный ".subscribe(lifeCycle)"
+
+        service.mainImageFromDisk(postId)
+            .subscribe(lifeCycle) { poster += it }
         service.getImages(postId)
             .subscribe(lifeCycle) { images += it }
-
-        userService.isAuthorized().await { canCreateComments += it }
-
+        userService.isAuthorized()
+            .await { canCreateComments += it }
         service.getComments(postId, 0)
             .subscribe(lifeCycle) { comments += it }
     }

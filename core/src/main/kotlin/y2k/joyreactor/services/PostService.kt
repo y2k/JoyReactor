@@ -38,6 +38,12 @@ class PostService(
             buffer.updatePost(postRequest)
 
             broadcastService.broadcast(Notifications.Post)
+        }.flatMap {
+            dataContext.applyUse { Posts.getById(postId.toLong()) }
+        }.flatMap {
+            imageRequestFactory.request(it.image!!.fullUrl(null))
+        }.doOnCompleted {
+            broadcastService.broadcast(Notifications.Post)
         }.toCompletable()
     }
 
@@ -92,6 +98,14 @@ class PostService(
             .flatMap { mainImage(it.id) }
             .flatMap { platform.saveToGallery(it) }
             .toCompletable()
+    }
+
+    fun mainImageFromDisk(serverPostId: Long): Pair<Single<PartialResult<File>>, Notifications> {
+        return dataContext
+            .applyUse { Posts.getById(serverPostId) }
+            .flatMap { imageRequestFactory.requestFromCache(it.image!!.fullUrl(null)) }
+            .map { PartialResult.complete(it) }
+            .toSingle() to Notifications.Post
     }
 
     fun mainImage(serverPostId: Long): Observable<File> {

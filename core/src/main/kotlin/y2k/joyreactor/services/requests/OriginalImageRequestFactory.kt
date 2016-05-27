@@ -8,6 +8,7 @@ import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.common.platform.Platform
 import java.io.File
+import java.util.concurrent.CancellationException
 import java.util.regex.Pattern
 
 /**
@@ -17,9 +18,17 @@ class OriginalImageRequestFactory(
     private val httpClient: HttpClient,
     private val platform: Platform) {
 
+    fun requestFromCache(imageUrl: String): Observable<File> {
+        return ioObservable {
+            val file = getTargetFile(imageUrl)
+            if (!file.exists()) throw Exception()
+            file
+        }
+    }
+
     fun request(imageUrl: String): Observable<File> {
         return ioObservable {
-            val file = File(platform.currentDirectory, "" + imageUrl.hashCode() + "." + getExtension(imageUrl))
+            val file = getTargetFile(imageUrl)
             if (!file.exists()) {
                 try {
                     httpClient.downloadToFile(imageUrl, file, null)
@@ -33,23 +42,30 @@ class OriginalImageRequestFactory(
     }
 
     fun requestPartial(imageUrl: String): Observable<PartialResult<File>> {
-        return Observable.create<PartialResult<File>> { subscriber ->
-            // TODO
-            val file = File(platform.currentDirectory, "" + imageUrl.hashCode() + "." + getExtension(imageUrl))
-            if (file.exists()) subscriber.onNext(PartialResult.complete(file))
+        return Observable
+            .create<PartialResult<File>> { subscriber ->
+                // TODO
+                val file = getTargetFile(imageUrl)
+                if (file.exists()) subscriber.onNext(PartialResult.complete(file))
 
-            try {
-                httpClient.downloadToFile(imageUrl, file) {
-                    progress, max ->
-                    subscriber.onNext(PartialResult.inProgress<File>(progress, max))
+                try {
+                    httpClient.downloadToFile(imageUrl, file) { progress, max ->
+                        if (subscriber.isUnsubscribed) throw CancellationException()
+                        subscriber.onNext(PartialResult.inProgress<File>(progress, max))
+                    }
+                    subscriber.onNext(PartialResult.complete(file))
+                    subscriber.onCompleted()
+                } catch (e: Exception) {
+                    file.delete()
+                    subscriber.onError(e)
                 }
-                subscriber.onNext(PartialResult.complete(file))
-            } catch (e: Exception) {
-                file.delete()
-                subscriber.onError(e)
             }
-        }.subscribeOn(Schedulers.io()).observeOn(ForegroundScheduler.instance)
+            .subscribeOn(Schedulers.io())
+            .observeOn(ForegroundScheduler.instance)
     }
+
+    private fun getTargetFile(imageUrl: String) =
+        File(platform.currentDirectory, "" + imageUrl.hashCode() + "." + getExtension(imageUrl))
 
     private fun getExtension(imageUrl: String): String {
         val fm = Pattern.compile("format=([^&]+)").matcher(imageUrl)
