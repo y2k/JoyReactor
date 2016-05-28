@@ -10,17 +10,17 @@
             android:paddingTop="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <y2k.joyreactor.RoundBorderLayout
+        <y2k.joyreactor.widget.RoundBorderLayout
                 android:layout_marginLeft="9dp"
                 android:layout_marginTop="4dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-            <y2k.joyreactor.WebImageView
+            <y2k.joyreactor.widget.WebImageView
                     android:id="@+id/userImage"
                     android:layout_width="38dp"
                     android:layout_height="38dp"
                     android:scaleType="centerCrop"/>
-        </y2k.joyreactor.RoundBorderLayout>
+        </y2k.joyreactor.widget.RoundBorderLayout>
         <TextView
                 android:layout_marginLeft="54dp"
                 android:layout_marginTop="5dp"

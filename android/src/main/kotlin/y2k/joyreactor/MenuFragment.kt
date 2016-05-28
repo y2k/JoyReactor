@@ -8,6 +8,7 @@ import android.widget.TextView
 import y2k.joyreactor.common.*
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.viewmodel.MenuViewModel
+import y2k.joyreactor.widget.WebImageView
 
 /**
  * Created by y2k on 11/12/15.

@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import y2k.joyreactor.R
-import y2k.joyreactor.WebImageView
+import y2k.joyreactor.widget.WebImageView
 import y2k.joyreactor.common.forEachChild
 import y2k.joyreactor.common.inflateToSelf
 import y2k.joyreactor.common.isVisible

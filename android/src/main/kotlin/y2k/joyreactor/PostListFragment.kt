@@ -12,7 +12,9 @@ import org.ocpsoft.prettytime.PrettyTime
 import y2k.joyreactor.common.*
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.viewmodel.PostListViewModel
+import y2k.joyreactor.widget.FixedAspectPanel
 import y2k.joyreactor.widget.LikeButton
+import y2k.joyreactor.widget.WebImageView
 
 /**
  * Created by y2k on 9/26/15.

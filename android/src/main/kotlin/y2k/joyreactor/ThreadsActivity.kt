@@ -8,6 +8,7 @@ import org.ocpsoft.prettytime.PrettyTime
 import y2k.joyreactor.common.*
 import y2k.joyreactor.model.Message
 import y2k.joyreactor.viewmodel.ThreadsViewModel
+import y2k.joyreactor.widget.WebImageView
 
 /**
  * Created by y2k on 2/23/16.

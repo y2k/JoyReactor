@@ -7,6 +7,7 @@ import android.view.View
 import y2k.joyreactor.common.*
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.viewmodel.GalleryViewModel
+import y2k.joyreactor.widget.WebImageView
 
 /**
  * Created by y2k on 2/7/16.

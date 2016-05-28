@@ -1,4 +1,4 @@
-package y2k.joyreactor
+package y2k.joyreactor.widget
 
 import android.content.Context
 import android.util.AttributeSet
@@ -24,11 +24,11 @@ class FixedAspectPanel(context: Context, attrs: AttributeSet) : ViewGroup(contex
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val w: Int
         val h: Int
-        if (View.MeasureSpec.getSize(widthMeasureSpec) != 0) {
-            w = View.MeasureSpec.getSize(widthMeasureSpec)
+        if (MeasureSpec.getSize(widthMeasureSpec) != 0) {
+            w = MeasureSpec.getSize(widthMeasureSpec)
             h = (w / aspect).toInt()
-        } else if (View.MeasureSpec.getSize(heightMeasureSpec) != 0) {
-            h = View.MeasureSpec.getSize(heightMeasureSpec)
+        } else if (MeasureSpec.getSize(heightMeasureSpec) != 0) {
+            h = MeasureSpec.getSize(heightMeasureSpec)
             w = (h * aspect).toInt()
         } else {
             throw IllegalStateException()
@@ -37,8 +37,8 @@ class FixedAspectPanel(context: Context, attrs: AttributeSet) : ViewGroup(contex
 
         forEachChild {
             it.measure(
-                w.measureSpec(View.MeasureSpec.EXACTLY),
-                h.measureSpec(View.MeasureSpec.EXACTLY))
+                w.measureSpec(MeasureSpec.EXACTLY),
+                h.measureSpec(MeasureSpec.EXACTLY))
         }
     }
 

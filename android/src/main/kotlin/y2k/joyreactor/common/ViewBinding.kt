@@ -17,9 +17,9 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.*
 import y2k.joyreactor.App
-import y2k.joyreactor.FixedAspectPanel
+import y2k.joyreactor.widget.FixedAspectPanel
 import y2k.joyreactor.widget.ImagePanel
-import y2k.joyreactor.WebImageView
+import y2k.joyreactor.widget.WebImageView
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.widget.MuteVideoView

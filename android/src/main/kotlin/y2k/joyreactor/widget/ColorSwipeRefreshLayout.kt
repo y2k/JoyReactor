@@ -1,8 +1,9 @@
-package y2k.joyreactor
+package y2k.joyreactor.widget
 
 import android.content.Context
 import android.support.v4.widget.SwipeRefreshLayout
 import android.util.AttributeSet
+import y2k.joyreactor.R
 
 /**
  * Created by y2k on 9/26/15.

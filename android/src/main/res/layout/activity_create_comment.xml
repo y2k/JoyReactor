@@ -16,15 +16,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <y2k.joyreactor.RoundBorderLayout
+        <y2k.joyreactor.widget.RoundBorderLayout
                 app:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-            <y2k.joyreactor.WebImageView
+            <y2k.joyreactor.widget.WebImageView
                     android:id="@+id/userImage"
                     android:layout_width="36dp"
                     android:layout_height="36dp"/>
-        </y2k.joyreactor.RoundBorderLayout>
+        </y2k.joyreactor.widget.RoundBorderLayout>
 
         <TextView android:id="@+id/userName"
                   android:layout_width="wrap_content"

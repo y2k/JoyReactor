@@ -8,6 +8,7 @@ import android.widget.TextView
 import y2k.joyreactor.common.*
 import y2k.joyreactor.model.Comment
 import y2k.joyreactor.viewmodel.PostViewModel
+import y2k.joyreactor.widget.WebImageView
 
 class PostActivity : BaseActivity() {
 

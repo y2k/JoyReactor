@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <y2k.joyreactor.FixedAspectPanel
+    <y2k.joyreactor.widget.FixedAspectPanel
             android:id="@+id/posterPanel"
             android:layout_gravity="center_horizontal"
             android:layout_width="match_parent"
@@ -16,7 +16,7 @@
                 android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-    </y2k.joyreactor.FixedAspectPanel>
+    </y2k.joyreactor.widget.FixedAspectPanel>
 
     <TextView android:id="@+id/description"
               android:padding="8dp"

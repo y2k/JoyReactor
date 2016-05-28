@@ -8,15 +8,15 @@
         android:paddingLeft="14dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <y2k.joyreactor.RoundBorderLayout
+    <y2k.joyreactor.widget.RoundBorderLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-        <y2k.joyreactor.WebImageView
+        <y2k.joyreactor.widget.WebImageView
                 android:id="@+id/icon"
                 android:layout_width="34dp"
                 android:layout_height="34dp"
                 android:scaleType="centerCrop"/>
-    </y2k.joyreactor.RoundBorderLayout>
+    </y2k.joyreactor.widget.RoundBorderLayout>
     <TextView android:layout_marginLeft="13sp"
               android:id="@+id/title"
               android:layout_width="0dp"

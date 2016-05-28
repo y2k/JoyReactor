@@ -7,15 +7,15 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <y2k.joyreactor.RoundBorderLayout
+        <y2k.joyreactor.widget.RoundBorderLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-            <y2k.joyreactor.WebImageView
+            <y2k.joyreactor.widget.WebImageView
                     android:id="@+id/avatar"
                     android:scaleType="centerCrop"
                     android:layout_width="90dp"
                     android:layout_height="90dp"/>
-        </y2k.joyreactor.RoundBorderLayout>
+        </y2k.joyreactor.widget.RoundBorderLayout>
         <TextView
                 android:layout_marginTop="14dp"
                 android:id="@+id/username"

@@ -1,4 +1,4 @@
-package y2k.joyreactor
+package y2k.joyreactor.widget
 
 import android.content.Context
 import android.graphics.Bitmap

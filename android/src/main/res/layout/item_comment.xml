@@ -21,15 +21,15 @@
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <y2k.joyreactor.RoundBorderLayout
+        <y2k.joyreactor.widget.RoundBorderLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-            <y2k.joyreactor.WebImageView
+            <y2k.joyreactor.widget.WebImageView
                     android:id="@+id/avatar"
                     android:scaleType="centerCrop"
                     android:layout_width="40dp"
                     android:layout_height="40dp"/>
-        </y2k.joyreactor.RoundBorderLayout>
+        </y2k.joyreactor.widget.RoundBorderLayout>
         <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -44,7 +44,7 @@
                     android:fontFamily="sans-serif-light"
                     android:textSize="14sp"
                     android:layout_height="wrap_content"/>
-            <y2k.joyreactor.WebImageView
+            <y2k.joyreactor.widget.WebImageView
                     android:id="@+id/attachment"
                     android:scaleType="centerCrop"
                     android:background="#f4f4f4"

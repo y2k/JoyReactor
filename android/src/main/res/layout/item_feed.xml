@@ -20,17 +20,17 @@
             android:gravity="center_vertical"
             android:padding="8dp">
 
-            <y2k.joyreactor.RoundBorderLayout
+            <y2k.joyreactor.widget.RoundBorderLayout
                 android:id="@+id/userImagePanel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <y2k.joyreactor.WebImageView
+                <y2k.joyreactor.widget.WebImageView
                     android:id="@+id/userImage"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:scaleType="centerCrop"/>
-            </y2k.joyreactor.RoundBorderLayout>
+            </y2k.joyreactor.widget.RoundBorderLayout>
 
             <TextView
                 android:id="@+id/userName"
@@ -50,17 +50,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <y2k.joyreactor.FixedAspectPanel
+            <y2k.joyreactor.widget.FixedAspectPanel
                 android:id="@+id/imagePanel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <y2k.joyreactor.WebImageView
+                <y2k.joyreactor.widget.WebImageView
                     android:id="@+id/image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"/>
-            </y2k.joyreactor.FixedAspectPanel>
+            </y2k.joyreactor.widget.FixedAspectPanel>
 
             <ImageView
                 android:id="@+id/videoMark"
