@@ -55,14 +55,14 @@ class PostViewModel(
                 tags += post.tags
             }
 
-        // FIXME: Пофиксить множественный ".subscribe(lifeCycle)"
+        userService.isAuthorized()
+            .await { canCreateComments += it }
 
+        // FIXME: Пофиксить множественный ".subscribe(lifeCycle)"
         service.mainImageFromDisk(postId)
             .subscribe(lifeCycle) { poster += it }
         service.getImages(postId)
             .subscribe(lifeCycle) { images += it }
-        userService.isAuthorized()
-            .await { canCreateComments += it }
         service.getComments(postId, 0)
             .subscribe(lifeCycle) { comments += it }
     }
