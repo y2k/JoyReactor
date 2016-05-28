@@ -155,7 +155,8 @@ class PostsForTagRequest(private val httpClient: HttpClient) {
                 parser.rating,
                 parser.myLike,
                 element.select(".taglist a").map { it.text() },
-                extractNumberFromEnd(element.id()).toLong())
+                extractNumberFromEnd(element.id()).toLong(),
+                element.select("span.favorite").size > 0)
         }
 
         private fun extractNumberFromEnd(text: String): String {

@@ -46,7 +46,7 @@ class PostListViewModel(
                     state.hasNewPosts.unsubscribe(hasNewPosts)
                 }
 
-                state = StatelessPostListViewModel(navigationService, service, lifeCycleService, it)
+                state = StatelessPostListViewModel(navigationService, lifeCycleService, service, it)
 
                 state.isBusy.subscribe(isBusy)
                 state.posts.subscribe(posts)
