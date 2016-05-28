@@ -38,7 +38,7 @@
                 android:layout_height="match_parent"
                 android:id="@+id/list"/>
     </y2k.joyreactor.ColorSwipeRefreshLayout>
-    <y2k.joyreactor.ReloadButton
+    <y2k.joyreactor.widget.ReloadButton
             android:layout_gravity="bottom"
             android:id="@+id/apply"
             android:visibility="gone"

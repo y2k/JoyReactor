@@ -1,9 +1,10 @@
-package y2k.joyreactor
+package y2k.joyreactor.widget
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import y2k.joyreactor.R
 import y2k.joyreactor.common.inflateToSelf
 
 /**
@@ -19,7 +20,7 @@ class ReloadButton(context: Context, attrs: AttributeSet) : FrameLayout(context,
         setVisibility(if (visibility) View.VISIBLE else View.GONE)
     }
 
-    override fun setOnClickListener(l: View.OnClickListener?) {
+    override fun setOnClickListener(l: OnClickListener?) {
         findViewById(R.id.innerReloadButton).setOnClickListener(l)
     }
 }

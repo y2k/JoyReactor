@@ -52,7 +52,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"/>
-        <y2k.joyreactor.ImagePanel
+        <y2k.joyreactor.widget.ImagePanel
                 android:id="@+id/images"
                 android:layout_below="@+id/imagesLabel"
                 android:layout_width="match_parent"
