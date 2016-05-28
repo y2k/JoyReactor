@@ -1,11 +1,11 @@
 package y2k.joyreactor.viewmodel
 
+import y2k.joyreactor.common.Notifications
 import y2k.joyreactor.common.PartialResult
 import y2k.joyreactor.common.await
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.common.property
-import y2k.joyreactor.common.subscribe
 import y2k.joyreactor.model.Comment
 import y2k.joyreactor.model.CommentGroup
 import y2k.joyreactor.model.EmptyGroup
@@ -42,29 +42,31 @@ class PostViewModel(
         isBusy += true
         service
             .synchronizePost(postId)
-            .await({ isBusy += false }, {
+            .await({
+                isBusy += false
+            }, {
                 it.printStackTrace()
                 error += true
             })
 
-        service
-            .getPost(postId)
-            .subscribe(lifeCycle) { post ->
-                posterAspect += post.imageAspectOrDefault(1f)
-                description += post.title
-                tags += post.tags
-            }
+        lifeCycle.register(Notifications.Post) {
+            service.mainImageFromDisk(postId)
+                .await { poster += it }
+            service.getImages(postId)
+                .await { images += it }
+            service.getComments(postId, 0)
+                .await { comments += it }
+            userService.isAuthorized()
+                .await { canCreateComments += it }
 
-        userService.isAuthorized()
-            .await { canCreateComments += it }
-
-        // FIXME: Пофиксить множественный ".subscribe(lifeCycle)"
-        service.mainImageFromDisk(postId)
-            .subscribe(lifeCycle) { poster += it }
-        service.getImages(postId)
-            .subscribe(lifeCycle) { images += it }
-        service.getComments(postId, 0)
-            .subscribe(lifeCycle) { comments += it }
+            service
+                .getPost(postId)
+                .await { post ->
+                    posterAspect += post.imageAspectOrDefault(1f)
+                    description += post.title
+                    tags += post.tags
+                }
+        }
     }
 
     fun commentPost() {

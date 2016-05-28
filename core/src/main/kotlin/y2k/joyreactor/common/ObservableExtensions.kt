@@ -108,7 +108,12 @@ fun <T> Pair<Single<T>, Notifications>.subscribe(lifeCycle: LifeCycleService, on
     }
 }
 
-fun <T> Single<T>.await(onSuccess: (T) -> Unit, onFail: ((Throwable) -> Unit)? = null) {
+fun <T> Single<T>.await(onSuccess: (T) -> Unit, onFail: (Throwable) -> Unit) {
     observeOn(ForegroundScheduler.instance)
-        .subscribe(onSuccess, onFail ?: { it.printStackTrace() })
+        .subscribe(onSuccess, onFail)
+}
+
+fun <T> Single<T>.await(onSuccess: (T) -> Unit) {
+    observeOn(ForegroundScheduler.instance)
+        .subscribe(onSuccess, { it.printStackTrace() })
 }

@@ -47,17 +47,15 @@ class PostService(
         }.toCompletable()
     }
 
-    fun getPost(postId: Long): Pair<Single<Post>, Notifications> {
-        return ioObservable {
-            buffer.post
-        }.toSingle() to Notifications.Post
+    fun getPost(postId: Long): Single<Post> {
+        return ioObservable { buffer.post }.toSingle()
     }
 
-    fun getComments(postId: Long, parentCommentId: Long): Pair<Single<CommentGroup>, Notifications> {
+    fun getComments(postId: Long, parentCommentId: Long): Single<CommentGroup> {
         return when (parentCommentId) {
             0L -> RootComments.create(buffer, postId)
             else -> ChildComments.create(buffer, parentCommentId)
-        }.toSingle() to Notifications.Post
+        }.toSingle()
     }
 
     fun getCommentsAsync(postId: Long, parentCommentId: Long): Observable<CommentGroup> {
@@ -71,14 +69,14 @@ class PostService(
         return dataContext.applyUse { Posts.getById(postId.toLong()) }
     }
 
-    fun getImages(postId: Long): Pair<Single<List<Image>>, Notifications> {
+    fun getImages(postId: Long): Single<List<Image>> {
         return Single.fromCallable {
             val postAttachments = buffer.attachments.map { it.image }
             val commentAttachments = buffer.comments
                 .map { it.attachmentObject }
                 .filterNotNull()
             postAttachments.union(commentAttachments).toList()
-        } to Notifications.Post
+        }
     }
 
     fun getPostImages(): Observable<List<Image>> {
@@ -100,24 +98,18 @@ class PostService(
             .toCompletable()
     }
 
-    fun mainImageFromDisk(serverPostId: Long): Pair<Single<PartialResult<File>>, Notifications> {
+    fun mainImageFromDisk(serverPostId: Long): Single<PartialResult<File>> {
         return dataContext
             .applyUse { Posts.getById(serverPostId) }
             .flatMap { imageRequestFactory.requestFromCache(it.image!!.fullUrl(null)) }
             .map { PartialResult.complete(it) }
-            .toSingle() to Notifications.Post
+            .toSingle()
     }
 
     fun mainImage(serverPostId: Long): Observable<File> {
         return dataContext
             .applyUse { Posts.getById(serverPostId) }
             .flatMap { imageRequestFactory.request(it.image!!.fullUrl(null)) }
-    }
-
-    fun mainImagePartial(serverPostId: Long): Observable<PartialResult<File>> {
-        return Observable
-            .just(buffer.post.image!!.fullUrl(null))
-            .flatMap({ url -> imageRequestFactory.requestPartial(url) })
     }
 
     fun updatePostLike(postId: Long, like: Boolean): Completable {
