@@ -1,4 +1,9 @@
 <resources>
+    <string-array name="tabs_mode">
+        <item>Хорошее</item>
+        <item>Лучшее</item>
+        <item>Новое</item>
+    </string-array>
     <string name="add_tag">Добавить тег</string>
     <string name="profile">Профиль</string>
     <string name="settings">Настройки</string>
