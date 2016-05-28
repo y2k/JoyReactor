@@ -8,6 +8,10 @@ def computeAppVersionCode() {
     return Integer.parseInt(System.getenv("SING_BUILD") ?: "0")
 }
 
+def computeFeedbackTelegram() {
+    return System.getenv("FEEDBACK_TELEGRAM")
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '2.8'
 }
