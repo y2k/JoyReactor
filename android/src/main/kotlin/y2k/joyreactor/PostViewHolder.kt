@@ -5,8 +5,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import org.ocpsoft.prettytime.PrettyTime
 import y2k.joyreactor.common.ListViewHolder
-import y2k.joyreactor.common.find
 import y2k.joyreactor.common.setVisible
+import y2k.joyreactor.common.view
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.widget.FavoriteButton
 import y2k.joyreactor.widget.FixedAspectPanel
@@ -15,17 +15,15 @@ import y2k.joyreactor.widget.WebImageView
 
 class PostViewHolder(view: View) : ListViewHolder<Post?>(view) {
 
-    val imagePanel = itemView.find<FixedAspectPanel>(R.id.imagePanel)
-    val image = itemView.find<WebImageView>(R.id.image)
-    val userImage = itemView.find<WebImageView>(R.id.userImage)
-    val videoMark = itemView.find<ImageView>(R.id.videoMark)
-    val commentCount = itemView.find<TextView>(R.id.commentCount)
-    val time = itemView.find<TextView>(R.id.time)
-    val userName = itemView.find<TextView>(R.id.userName)
-    val likeButton = itemView.find<LikeButton>(R.id.like)
-    val favorite = itemView.find<FavoriteButton>(R.id.favorite)
-
-    val prettyTime = PrettyTime()
+    val imagePanel by view<FixedAspectPanel>()
+    val image by view<WebImageView>()
+    val userImage by view<WebImageView>()
+    val videoMark by view<ImageView>()
+    val commentCount by view<TextView>()
+    val like by view<LikeButton>()
+    val favorite by view<FavoriteButton>()
+    val time by view<TextView>()
+    val userName by view<TextView>()
 
     override fun update(item: Post?) {
         if (item == null) return
@@ -42,9 +40,13 @@ class PostViewHolder(view: View) : ListViewHolder<Post?>(view) {
 
         videoMark.setVisible(item.image?.isAnimated ?: false)
         commentCount.text = "" + item.commentCount
-        time.text = prettyTime.format(item.created)
-        likeButton.like = item.myLike
+        time.text = Companion.prettyTime.format(item.created)
+        like.like = item.myLike
 
         favorite.isFavorite += item.isFavorite
+    }
+
+    companion object {
+        val prettyTime = PrettyTime()
     }
 }
