@@ -26,6 +26,7 @@ class StatelessPostListViewModel(
     val isBusy = property(false)
     val posts = property(emptyList<Post?>())
     val hasNewPosts = property(false)
+    val isError = property(false)
 
     init {
         service
@@ -36,7 +37,12 @@ class StatelessPostListViewModel(
             }
 
         isBusy += true
-        service.preloadNewPosts(group).await { isBusy += false }
+        service
+            .preloadNewPosts(group)
+            .await({ isBusy += false }, {
+                isError += true
+                isBusy += false
+            })
     }
 
     private fun toViewModelList(it: ListState): ArrayList<Post?> {
@@ -61,10 +67,15 @@ class StatelessPostListViewModel(
 
     fun reloadFirstPage() {
         isBusy += true
-        service.reloadFirstPage(group).await {
-            isBusy += false
-            hasNewPosts += false
-        }
+        isError += false
+        service.reloadFirstPage(group)
+            .await({
+                isBusy += false
+                hasNewPosts += false
+            }, {
+                isBusy += false
+                isError += true
+            })
     }
 
     // ==============================================================

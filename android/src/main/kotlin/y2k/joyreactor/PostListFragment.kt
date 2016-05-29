@@ -23,6 +23,7 @@ class PostListFragment : BaseFragment() {
         bindingBuilder(view) {
             spinnerTemp(R.id.tabs, vm.quality)
             visibility(R.id.apply, vm.hasNewPosts)
+            visibility(R.id.error, vm.isError)
             command(R.id.apply) { vm.applyNew() }
             refreshLayout(R.id.refresher) {
                 isRefreshing(vm.isBusy)

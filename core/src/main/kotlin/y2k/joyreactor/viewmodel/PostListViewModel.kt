@@ -21,6 +21,7 @@ class PostListViewModel(
     val isBusy = property(false)
     val posts = property(emptyList<Post?>())
     val hasNewPosts = property(false)
+    val isError = property(false)
 
     val quality = property(Group.Quality.Good)
     val group = property(Group.makeFeatured())
@@ -42,6 +43,7 @@ class PostListViewModel(
                     state.isBusy.unsubscribe(isBusy)
                     state.posts.unsubscribe(posts)
                     state.hasNewPosts.unsubscribe(hasNewPosts)
+                    state.isError.unsubscribe(isError)
                 }
 
                 state = StatelessPostListViewModel(navigationService, lifeCycleService, service, postService, it)
@@ -49,6 +51,7 @@ class PostListViewModel(
                 state.isBusy.subscribe(isBusy)
                 state.posts.subscribe(posts)
                 state.hasNewPosts.subscribe(hasNewPosts)
+                state.isError.subscribe(isError)
             }
     }
 
