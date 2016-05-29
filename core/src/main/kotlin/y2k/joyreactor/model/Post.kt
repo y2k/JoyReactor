@@ -20,7 +20,9 @@ data class Post(
     @DatabaseField val myLike: MyLike = MyLike.Like,
 
     val tags: List<String> = emptyList(),
-    @DatabaseField(id = true) override val id: Long = 0) : Serializable, Comparable<Post>, Dto {
+    @DatabaseField(id = true) override val id: Long = 0,
+    @DatabaseField val isFavorite: Boolean = false
+) : Serializable, Comparable<Post>, Dto {
 
     fun imageAspectOrDefault(default: Float): Float {
         return image?.aspect ?: default

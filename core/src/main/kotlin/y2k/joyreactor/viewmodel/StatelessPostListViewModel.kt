@@ -1,14 +1,15 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.await
+import y2k.joyreactor.common.platform.NavigationService
+import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.common.property
 import y2k.joyreactor.common.subscribe
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.ListState
 import y2k.joyreactor.model.Post
-import y2k.joyreactor.common.platform.NavigationService
-import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.services.LifeCycleService
+import y2k.joyreactor.services.PostService
 import y2k.joyreactor.services.TagService
 import java.util.*
 
@@ -17,8 +18,9 @@ import java.util.*
  */
 class StatelessPostListViewModel(
     private val navigationService: NavigationService,
-    private val service: TagService,
     private val lifeCycleService: LifeCycleService,
+    private val service: TagService,
+    private val postService: PostService,
     private val group: Group) {
 
     val isBusy = property(false)
@@ -74,7 +76,7 @@ class StatelessPostListViewModel(
     }
 
     fun playClicked(position: Int) {
-        val post = posts.value[position]!!
+        val post = posts.value[position] ?: return
         if (post.image?.isAnimated ?: false) navigationService.open<VideoViewModel>(post.id)
         else navigationService.open<ImageViewModel>(post.id)
     }
@@ -82,5 +84,10 @@ class StatelessPostListViewModel(
     fun changeLike(position: Int) {
         val post = posts.value[position] ?: return
         navigationService.open<PostLikeViewModel>("" + post.id)
+    }
+
+    fun toggleFavorite(position: Int) {
+        val post = posts.value[position] ?: return
+        postService.toggleFavorite(post.id).await {}
     }
 }

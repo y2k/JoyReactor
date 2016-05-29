@@ -3,12 +3,11 @@ package y2k.joyreactor.services
 import rx.Completable
 import rx.Observable
 import rx.Single
-import y2k.joyreactor.common.Notifications
-import y2k.joyreactor.common.PartialResult
-import y2k.joyreactor.common.ioObservable
+import y2k.joyreactor.common.*
 import y2k.joyreactor.common.platform.Platform
 import y2k.joyreactor.model.*
 import y2k.joyreactor.services.repository.DataContext
+import y2k.joyreactor.services.requests.ChangePostFavoriteRequest
 import y2k.joyreactor.services.requests.LikePostRequest
 import y2k.joyreactor.services.requests.OriginalImageRequestFactory
 import y2k.joyreactor.services.requests.PostRequest
@@ -24,7 +23,19 @@ class PostService(
     private val dataContext: DataContext.Factory,
     private val likePostRequest: LikePostRequest,
     private val platform: Platform,
-    private val broadcastService: BroadcastService) {
+    private val broadcastService: BroadcastService,
+    private val changePostFavoriteRequest: ChangePostFavoriteRequest) {
+
+    fun toggleFavorite(postId: Long): Completable {
+        return dataContext
+            .applyUse { Posts.first("id" to postId) }
+            .flatMap { changePostFavoriteRequest.execute(postId, !it.isFavorite) }
+            .mapDatabase(dataContext) {
+                Posts.updateAll("id" to postId) { it.copy(isFavorite = !it.isFavorite) }
+                broadcastService.broadcast(Notifications.Posts)
+            }
+            .toCompletable()
+    }
 
     fun getVideo(postId: String): Observable<File> {
         return getFromCache(postId)

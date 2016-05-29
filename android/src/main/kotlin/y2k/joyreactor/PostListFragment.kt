@@ -12,6 +12,7 @@ import org.ocpsoft.prettytime.PrettyTime
 import y2k.joyreactor.common.*
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.viewmodel.PostListViewModel
+import y2k.joyreactor.widget.FavoriteButton
 import y2k.joyreactor.widget.FixedAspectPanel
 import y2k.joyreactor.widget.LikeButton
 import y2k.joyreactor.widget.WebImageView
@@ -43,6 +44,7 @@ class PostListFragment : BaseFragment() {
                             itemView.setOnClickListener(R.id.like) { vm.changeLike(layoutPosition) }
                             itemView.setOnClickListener(R.id.card, { vm.postClicked(layoutPosition) })
                             itemView.setOnClickListener(R.id.videoMark) { vm.playClicked(layoutPosition) }
+                            itemView.setOnClickListener(R.id.favorite) { vm.toggleFavorite(layoutPosition) }
                         }
                         else -> DividerHolder(parent.inflate(R.layout.item_post_divider)).apply {
                             itemView.setOnClickListener(R.id.dividerButton) { vm.loadMore() }
@@ -64,6 +66,7 @@ class PostListFragment : BaseFragment() {
         val time = itemView.find<TextView>(R.id.time)
         val userName = itemView.find<TextView>(R.id.userName)
         val likeButton = itemView.find<LikeButton>(R.id.like)
+        val favorite = itemView.find<FavoriteButton>(R.id.favorite)
 
         val prettyTime = PrettyTime()
 
@@ -84,6 +87,8 @@ class PostListFragment : BaseFragment() {
             commentCount.text = "" + item.commentCount
             time.text = prettyTime.format(item.created)
             likeButton.like = item.myLike
+
+            favorite.isFavorite += item.isFavorite
         }
     }
 

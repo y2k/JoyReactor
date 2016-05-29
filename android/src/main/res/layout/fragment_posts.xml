@@ -1,58 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
     <android.support.design.widget.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
         <android.support.v7.widget.Toolbar
-                app:popupTheme="@style/ToolbarPopupTheme"
-                app:layout_scrollFlags="scroll|enterAlways"
-                android:id="@+id/toolbar"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="?attr/actionBarSize"
-                android:background="?attr/colorPrimary">
-            <y2k.joyreactor.widget.TabSpinner
-                    android:id="@+id/tabs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-        </android.support.v7.widget.Toolbar>
-        <fragment android:id="@+id/updateFragment"
-                  android:name="y2k.joyreactor.UpdateFragment"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"/>
-    </android.support.design.widget.AppBarLayout>
-    <y2k.joyreactor.widget.ColorSwipeRefreshLayout
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:id="@+id/refresher"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        <android.support.v7.widget.RecyclerView
-                app:spanCount="2"
-                app:layoutManager="android.support.v7.widget.StaggeredGridLayoutManager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/list"/>
-    </y2k.joyreactor.widget.ColorSwipeRefreshLayout>
-    <y2k.joyreactor.widget.ReloadButton
-            android:layout_gravity="bottom"
-            android:id="@+id/apply"
-            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/ToolbarPopupTheme">
+
+            <y2k.joyreactor.widget.TabSpinner
+                android:id="@+id/tabs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </android.support.v7.widget.Toolbar>
+
+        <fragment
+            android:id="@+id/updateFragment"
+            android:name="y2k.joyreactor.UpdateFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-    <TextView android:id="@+id/error"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center_vertical"
-              android:gravity="center_horizontal"
-              android:textColor="@color/text_primary"
-              android:background="@color/text_secondary"
-              android:padding="30dp"
-              android:textAllCaps="true"
-              android:visibility="gone"
-              android:text="@string/unknown_error"/>
+    </android.support.design.widget.AppBarLayout>
+
+    <y2k.joyreactor.widget.ColorSwipeRefreshLayout
+        android:id="@+id/refresher"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="android.support.v7.widget.StaggeredGridLayoutManager"
+            app:spanCount="1"/>
+    </y2k.joyreactor.widget.ColorSwipeRefreshLayout>
+
+    <y2k.joyreactor.widget.ReloadButton
+        android:id="@+id/apply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="@color/text_secondary"
+        android:gravity="center_horizontal"
+        android:padding="30dp"
+        android:text="@string/unknown_error"
+        android:textAllCaps="true"
+        android:textColor="@color/text_primary"
+        android:visibility="gone"/>
 </android.support.design.widget.CoordinatorLayout>
