@@ -18,8 +18,8 @@ class PostListFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_posts, container, false)
         view.find<RecyclerView>(R.id.list).apply { addItemDecoration(ItemDividerDecoration(this)) }
-        val vm = ServiceLocator.resolve<PostListViewModel>(lifeCycleService)
 
+        val vm = ServiceLocator.resolve<PostListViewModel>(lifeCycleService)
         bindingBuilder(view) {
             spinnerTemp(R.id.tabs, vm.quality)
             visibility(R.id.apply, vm.hasNewPosts)

@@ -1,10 +1,11 @@
 package y2k.joyreactor.viewmodel
 
+import y2k.joyreactor.common.NotAuthorizedException
 import y2k.joyreactor.common.await
-import y2k.joyreactor.common.property
-import y2k.joyreactor.model.Image
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.open
+import y2k.joyreactor.common.property
+import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.ProfileService
 
 /**
@@ -21,6 +22,7 @@ class ProfileViewModel(
     val userName = property("")
 
     val isBusy = property(false)
+    val isError = property(false)
 
     init {
         isBusy += true
@@ -35,8 +37,13 @@ class ProfileViewModel(
                 isBusy += false
             }, {
                 it.printStackTrace()
-                navigationService.open<LoginViewModel>()
-                navigationService.close()
+                when (it) {
+                    is NotAuthorizedException -> {
+                        navigationService.open<LoginViewModel>()
+                        navigationService.close()
+                    }
+                    else -> isError += true
+                }
             })
     }
 

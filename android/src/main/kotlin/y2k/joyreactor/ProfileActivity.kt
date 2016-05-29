@@ -13,12 +13,12 @@ class ProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
-        setSupportActionBar(find<Toolbar>(R.id.toolbar))
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        initActionBar()
 
         val vm = ServiceLocator.resolve<ProfileViewModel>()
         bindingBuilder(this) {
             visibility(R.id.progress, vm.isBusy)
+            visibility(R.id.error, vm.isError)
 
             webImageView(R.id.avatar, vm.userImage)
             textView(R.id.rating, vm.rating)
@@ -27,5 +27,10 @@ class ProfileActivity : AppCompatActivity() {
 
             command(R.id.logout, { vm.logout() })
         }
+    }
+
+    private fun initActionBar() {
+        setSupportActionBar(find<Toolbar>(R.id.toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 }

@@ -42,7 +42,10 @@ class ImageService(
                     state.sLinks.remove(target)
                 }
                 publish.onCompleted()
-            }, { publish.onError(it) })
+            }, {
+                it.printStackTrace()
+                publish.onCompleted()
+            })
 
         publish.onNext(null)
         state.sLinks.put(target, subscription)?.let { it.unsubscribe() }

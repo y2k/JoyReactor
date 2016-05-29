@@ -2,6 +2,7 @@ package y2k.joyreactor.services.requests
 
 import org.jsoup.nodes.Document
 import rx.Observable
+import y2k.joyreactor.common.NotAuthorizedException
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.model.Image
@@ -18,6 +19,8 @@ class ProfileRequestFactory(private val httpClient: HttpClient) {
             .request()
             .flatMap { username ->
                 ioObservable {
+                    if (username == null) throw NotAuthorizedException()
+                    
                     val page = httpClient.getDocument(getUrl(username))
                     ProfileParser(page).parse()
                 }
