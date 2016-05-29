@@ -2,16 +2,20 @@ package y2k.joyreactor.services.requests
 
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.model.*
+import y2k.joyreactor.services.requests.parser.PostParser
 import java.util.*
 import java.util.regex.Pattern
 
 /**
  * Created by y2k on 11/21/15.
  */
-class PostRequest(private val httpClient: HttpClient) {
+class PostRequest(
+    private val httpClient: HttpClient,
+    private val parser: PostParser) {
 
     var post: Post? = null
         private set
+
     private val commentsRequest = PostCommentsRequest()
     private val similarPosts = ArrayList<SimilarPost>()
     private val attachments = ArrayList<Attachment>()
@@ -27,7 +31,7 @@ class PostRequest(private val httpClient: HttpClient) {
         val page = httpClient.getDocument(getPostUrl(postId))
 
         val postNode = page.select("div.postContainer").first()
-        post = PostsForTagRequest.newPost(postNode) // TODO:
+        post = parser.parse(postNode)
 
         commentsRequest.request(page, postId.toLong())
 

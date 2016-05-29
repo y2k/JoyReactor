@@ -5,6 +5,7 @@ import rx.Observable
 import y2k.joyreactor.common.ajax
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.model.MyLike
+import y2k.joyreactor.services.requests.parser.LikeParser
 
 /**
  * Created by y2k on 4/24/16.
@@ -43,6 +44,6 @@ class LikePostRequest(
     }
 
     private fun getMyLike(document: Document): MyLike {
-        return PostsForTagRequest.LikeParser(document.body()).myLike
+        return LikeParser(document.body()).myLike
     }
 }

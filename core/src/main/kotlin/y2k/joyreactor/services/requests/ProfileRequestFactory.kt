@@ -20,7 +20,7 @@ class ProfileRequestFactory(private val httpClient: HttpClient) {
             .flatMap { username ->
                 ioObservable {
                     if (username == null) throw NotAuthorizedException()
-                    
+
                     val page = httpClient.getDocument(getUrl(username))
                     ProfileParser(page).parse()
                 }

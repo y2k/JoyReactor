@@ -42,12 +42,12 @@ object ServiceLocator {
         register { MemoryBuffer }
         register { MyTagFetcher(resolve(), resolve(), resolve()) }
         register { PrivateMessageFetcher(resolve(), resolve()) }
-        register { PostsForTagRequest(resolve(), resolve()) }
+        register { PostsForTagRequest(resolve(), resolve(), resolve()) }
         register { AddTagRequest(resolve()) }
         register { UserNameRequest(resolve()) }
         register { TagsForUserRequest(resolve(), resolve()) }
         register { OriginalImageRequestFactory(resolve(), resolve()) }
-        register { PostRequest(resolve()) }
+        register { PostRequest(resolve(), resolve()) }
         register { ProfileRequestFactory(resolve()) }
         register { LoginRequestFactory(resolve()) }
         register { SendMessageRequest(resolve()) }
