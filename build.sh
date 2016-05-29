@@ -5,3 +5,5 @@
 export SING_BUILD=$(git rev-list --count master)0
 
 ./gradlew clean assembleRelease
+
+ echo App version = $SING_BUILD
