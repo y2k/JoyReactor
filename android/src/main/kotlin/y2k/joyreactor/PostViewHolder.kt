@@ -24,6 +24,7 @@ class PostViewHolder(view: View) : ListViewHolder<Post?>(view) {
     val favorite by view<FavoriteButton>()
     val time by view<TextView>()
     val userName by view<TextView>()
+    val title by view<TextView>()
 
     override fun update(item: Post?) {
         if (item == null) return
@@ -31,7 +32,7 @@ class PostViewHolder(view: View) : ListViewHolder<Post?>(view) {
             imagePanel.visibility = View.GONE
         } else {
             imagePanel.visibility = View.VISIBLE
-            imagePanel.aspect = item.image!!.getAspect(0.7f)
+            imagePanel.aspect = item.image!!.getAspect(0.85f)
             image.image = item.image
         }
 
@@ -44,6 +45,9 @@ class PostViewHolder(view: View) : ListViewHolder<Post?>(view) {
         like.like = item.myLike
 
         favorite.isFavorite += item.isFavorite
+
+        title.text = item.title
+        title.setVisible(!item.title.isEmpty())
     }
 
     companion object {
