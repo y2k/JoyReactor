@@ -22,7 +22,9 @@ class UserService(
     fun getMyTags(): Pair<Single<List<Group>>, Notifications> {
         synchronizer
             .synchronize()
-            .subscribe { BroadcastService.broadcast(Notifications.Groups) }
+            .subscribe(
+                { it.printStackTrace() },
+                { BroadcastService.broadcast(Notifications.Groups) })
 
         val fromDb = dataContext
             .applyUse {
