@@ -14,12 +14,14 @@ import java.util.regex.Pattern
 /**
  * Created by y2k on 9/26/15.
  */
-class PostsForTagRequest(private val httpClient: HttpClient) {
+class PostsForTagRequest(
+    private val httpClient: HttpClient,
+    private val urlBuilder: UrlBuilder) {
 
     fun requestAsync(groupId: Group, pageId: String? = null): Observable<Data> {
         return Observable
             .fromCallable {
-                val url = UrlBuilder().build(groupId, pageId)
+                val url = urlBuilder.build(groupId, pageId)
                 val doc = httpClient.getDocument(url)
 
                 val posts = ArrayList<Post>()

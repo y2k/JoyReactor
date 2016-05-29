@@ -42,7 +42,7 @@ object ServiceLocator {
         register { MemoryBuffer }
         register { MyTagFetcher(resolve(), resolve(), resolve()) }
         register { PrivateMessageFetcher(resolve(), resolve()) }
-        register { PostsForTagRequest(resolve()) }
+        register { PostsForTagRequest(resolve(), resolve()) }
         register { AddTagRequest(resolve()) }
         register { UserNameRequest(resolve()) }
         register { TagsForUserRequest(resolve(), resolve()) }
