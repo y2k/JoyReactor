@@ -8,4 +8,4 @@ package y2k.joyreactor.common
  * Глобальный идентификатор версии локальных данных.
  * Нужен для легкой миграции beta-версии приложения.
  */
-val ApplicationDataVersion = 5
+val ApplicationDataVersion = 6

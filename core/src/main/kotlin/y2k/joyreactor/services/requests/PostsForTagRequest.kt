@@ -1,6 +1,7 @@
 package y2k.joyreactor.services.requests
 
 import org.jsoup.nodes.Element
+import org.jsoup.nodes.TextNode
 import rx.Observable
 import rx.schedulers.Schedulers
 import y2k.joyreactor.common.http.HttpClient
@@ -147,8 +148,11 @@ class PostsForTagRequest(
 
             val parser = PostParser(element)
 
+            val title = element.select("div.post_content > div > h3").first()
+            val desc = title?.nextSibling()
+
             return Post(
-                element.select("div.post_content").text(),
+                title?.text() ?: "",
                 image,
                 element.select("div.uhead_nick > img").attr("src"),
                 element.select("div.uhead_nick > a").text(),
@@ -158,7 +162,12 @@ class PostsForTagRequest(
                 parser.myLike,
                 element.select(".taglist a").map { it.text() },
                 extractNumberFromEnd(element.id()).toLong(),
-                element.select("span.favorite").size > 0)
+                element.select("span.favorite").size > 0,
+                when (desc) {
+                    is TextNode -> desc.text()
+                    else -> ""
+                }
+            )
         }
 
         private fun extractNumberFromEnd(text: String): String {

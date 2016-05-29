@@ -21,7 +21,8 @@ data class Post(
 
     val tags: List<String> = emptyList(),
     @DatabaseField(id = true) override val id: Long = 0,
-    @DatabaseField val isFavorite: Boolean = false
+    @DatabaseField val isFavorite: Boolean = false,
+    @DatabaseField val description: String = ""
 ) : Serializable, Comparable<Post>, Dto {
 
     fun imageAspectOrDefault(default: Float): Float {
