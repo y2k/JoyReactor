@@ -35,6 +35,7 @@ object ServiceLocator {
         register { BroadcastService }
 
         register { TokenRequest(resolve()) }
+        register { ChangePostFavoriteRequest(resolve(), resolve()) }
         register { LikePostRequest(resolve(), resolve()) }
         register { MessageListRequest(resolve(), resolve()) }
         register { PostMerger(resolve(), resolve()) }
@@ -52,7 +53,7 @@ object ServiceLocator {
         register { SendMessageRequest(resolve()) }
         register { CreateCommentRequestFactory(resolve()) }
 
-        register { PostService(resolve(), resolve(), resolve(), resolve(), resolve(), resolve(), resolve()) }
+        register { PostService(resolve(), resolve(), resolve(), resolve(), resolve(), resolve(), resolve(), resolve()) }
         register { TagService(resolve(), resolve(), resolve(), resolve()) }
         register { UserService(resolve(), resolve(), resolve(), resolve()) }
         register { ProfileService(resolve(), resolve(), resolve()) }
@@ -65,7 +66,7 @@ object ServiceLocator {
         register { VideoViewModel(resolve(), resolve()) }
         register { ProfileViewModel(resolve(), resolve()) }
         register { AddTagViewModel(resolve(), resolve()) }
-        register { PostListViewModel(resolve(), resolve(), resolve(), resolve()) }
+        register { PostListViewModel(resolve(), resolve(), resolve(), resolve(), resolve()) }
         register { PostLikeViewModel(resolve(), resolve()) }
         register { CreateCommentViewModel(resolve(), resolve(), resolve()) }
 

@@ -1,13 +1,13 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.await
+import y2k.joyreactor.common.platform.NavigationService
+import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.common.property
 import y2k.joyreactor.common.subscribe
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.ListState
 import y2k.joyreactor.model.Post
-import y2k.joyreactor.common.platform.NavigationService
-import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.PostService
 import y2k.joyreactor.services.TagService
@@ -86,8 +86,8 @@ class StatelessPostListViewModel(
         navigationService.open<PostLikeViewModel>("" + post.id)
     }
 
-    fun changeFavorite(position: Int) {
+    fun toggleFavorite(position: Int) {
         val post = posts.value[position] ?: return
-        postService.favoritePost(post.id, !post.isFavorite).await {}
+        postService.toggleFavorite(post.id).await {}
     }
 }

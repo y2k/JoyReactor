@@ -10,3 +10,7 @@ import y2k.joyreactor.services.repository.Dto
 fun <T : Dto> DataSet<T>.updateAll(filter: Pair<String, Any>, f: (T) -> T) {
     filter(filter).map { f(it) }.forEach { add(it) }
 }
+
+fun <T : Dto> DataSet<T>.first(filter: Pair<String, Any>): T {
+    return filter(filter).first()
+}

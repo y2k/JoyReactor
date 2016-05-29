@@ -26,11 +26,12 @@ class PostService(
     private val broadcastService: BroadcastService,
     private val changePostFavoriteRequest: ChangePostFavoriteRequest) {
 
-    fun favoritePost(postId: Long, favorite: Boolean): Completable {
-        return changePostFavoriteRequest
-            .execute(postId, favorite)
+    fun toggleFavorite(postId: Long): Completable {
+        return dataContext
+            .applyUse { Posts.first("id" to postId) }
+            .flatMap { changePostFavoriteRequest.execute(postId, !it.isFavorite) }
             .mapDatabase(dataContext) {
-                Posts.updateAll("id" to postId) { it.copy(isFavorite = favorite) }
+                Posts.updateAll("id" to postId) { it.copy(isFavorite = !it.isFavorite) }
                 broadcastService.broadcast(Notifications.Posts)
             }
             .toCompletable()
