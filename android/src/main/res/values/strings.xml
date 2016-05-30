@@ -35,8 +35,8 @@
     <string name="open">Open</string>
     <string name="write_feedback">Write feedback</string>
     <string name="error_email_client_not_installed">You don\'t have any email client installed.</string>
-    <string name="unknow_error">Error. Try again later.</string>
-    <string name="unknown_error">Error. Try again later.</string>
+    <string name="unknow_error">Unknown Error.\nTry again later.</string>
+    <string name="unknown_error">Unknown Error.\nTry again later.</string>
     <string name="authorization">Authorization</string>
     <string name="get_profile">Get profile</string>
     <string name="write_comment">Write comment</string>
