@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "547909687104",
+    "firebase_url": "https://joyreactor-b174d.firebaseio.com",
+    "project_id": "joyreactor-b174d",
+    "storage_bucket": "joyreactor-b174d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:547909687104:android:44e6c0833afbbf00",
+        "android_client_info": {
+          "package_name": "y2k.joyreactor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "547909687104-jdgbbgkv8n7c3ragflrvopu2u7ga39c2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmij95n_ZAP5l12Mie-puzBQpcdEW6wwU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
