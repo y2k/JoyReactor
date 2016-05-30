@@ -59,6 +59,7 @@ object ServiceLocator {
         register { ProfileService(resolve(), resolve(), resolve()) }
         register { UserMessagesService(resolve(), resolve(), resolve()) }
         register { CommentService(resolve(), resolve()) }
+
         register { LoginViewModel(resolve(), resolve()) }
         register { MenuViewModel(resolve(), resolve(), resolve()) }
         register { GalleryViewModel(resolve()) }
@@ -69,6 +70,7 @@ object ServiceLocator {
         register { PostListViewModel(resolve(), resolve(), resolve(), resolve(), resolve()) }
         register { PostLikeViewModel(resolve(), resolve()) }
         register { CreateCommentViewModel(resolve(), resolve(), resolve()) }
+        register { CommentsViewModel(resolve(), resolve(), resolve(), resolve()) }
 
         register { DiskCache(resolve()) }
         register { MultiTryDownloader(resolve()) }

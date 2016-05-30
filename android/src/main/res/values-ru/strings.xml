@@ -82,4 +82,5 @@
     <string name="do_you_want_to_like_dislike_this_post">Хотите оценить этот пост?</string>
     <string name="dislike">Минус</string>
     <string name="like">Плюс</string>
+    <string name="top_comments">Лучшие комментарии</string>
 </resources>

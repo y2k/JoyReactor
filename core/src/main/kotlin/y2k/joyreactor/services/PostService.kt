@@ -62,6 +62,12 @@ class PostService(
         return ioObservable { buffer.post }.toSingle()
     }
 
+    fun getTopComments(count: Int, postId: Long): Single<List<Comment>> {
+        return RootComments.create(buffer, postId)
+            .map { it.filter { it.level == 0 }.sortedByDescending { it.rating }.take(10) }
+            .toSingle()
+    }
+
     fun getComments(postId: Long, parentCommentId: Long): Single<CommentGroup> {
         return when (parentCommentId) {
             0L -> RootComments.create(buffer, postId)

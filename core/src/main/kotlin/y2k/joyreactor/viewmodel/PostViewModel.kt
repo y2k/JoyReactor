@@ -7,8 +7,6 @@ import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.common.property
 import y2k.joyreactor.model.Comment
-import y2k.joyreactor.model.CommentGroup
-import y2k.joyreactor.model.EmptyGroup
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.PostService
@@ -34,7 +32,7 @@ class PostViewModel(
 
     val tags = property(emptyList<String>())
     val images = property(emptyList<Image>())
-    val comments = property<CommentGroup>(EmptyGroup())
+    val comments = property(emptyList<Comment>())
 
     private val postId = navigation.argument.toLong()
 
@@ -54,7 +52,7 @@ class PostViewModel(
                 .await { poster += it }
             service.getImages(postId)
                 .await { images += it }
-            service.getComments(postId, 0)
+            service.getTopComments(10, postId)
                 .await { comments += it }
             userService.isAuthorized()
                 .await { canCreateComments += it }
@@ -92,7 +90,6 @@ class PostViewModel(
     }
 
     fun selectComment(comment: Comment) {
-        service.getCommentsAsync(comment.postId, comments.value.getNavigation(comment))
-            .await { comments += it }
+        navigation.open<CommentsViewModel>(postId.toString())
     }
 }

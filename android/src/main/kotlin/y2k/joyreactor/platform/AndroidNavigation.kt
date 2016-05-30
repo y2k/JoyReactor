@@ -8,11 +8,13 @@ import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
-import y2k.joyreactor.*
+import y2k.joyreactor.CreateCommentFragment
+import y2k.joyreactor.PostLikeFragment
 import y2k.joyreactor.common.ActivityLifecycleCallbacksAdapter
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.startActivity
-import y2k.joyreactor.viewmodel.*
+import y2k.joyreactor.viewmodel.CreateCommentViewModel
+import y2k.joyreactor.viewmodel.PostLikeViewModel
 import kotlin.reflect.KClass
 
 /**
@@ -40,18 +42,22 @@ class AndroidNavigation(app: Application) : NavigationService {
         when (vmType) {
             PostLikeViewModel::class -> PostLikeFragment().show(fragmentManager, "dialog")
             CreateCommentViewModel::class -> CreateCommentFragment().show(fragmentManager, "dialog")
-            MessagesViewModel::class -> startActivity(MessagesActivity::class)
-            GalleryViewModel::class -> startActivity(GalleryActivity::class)
-            ProfileViewModel::class -> startActivity(ProfileActivity::class)
-            VideoViewModel::class -> startActivity(VideoActivity::class)
-            ImageViewModel::class -> startActivity(ImageActivity::class)
-            LoginViewModel::class -> startActivity(LoginActivity::class)
-            PostViewModel::class -> startActivity(PostActivity::class)
-            else -> throw Exception("Can't handler navigation to $vmType")
+            else -> generalOpen(vmType)
         }
     }
 
-    private fun startActivity(activityType: KClass<out Activity>) {
+    private fun <T : Any> generalOpen(vmType: KClass<T>) {
+        try {
+            val activityClsName = vmType.java.simpleName.replace("ViewModel", "Activity")
+            val activityCls = javaClass.classLoader.loadClass(
+                currentActivity!!.packageName + "." + activityClsName)
+            startActivity(activityCls.kotlin)
+        } catch (e: Exception) {
+            throw Exception("Can't handler navigation to $vmType", e)
+        }
+    }
+
+    private fun startActivity(activityType: KClass<*>) {
         currentActivity?.startActivity(activityType)
     }
 
