@@ -2,7 +2,6 @@ package y2k.joyreactor.common
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import y2k.joyreactor.PostViewHolder
 import kotlin.reflect.KProperty
 
 /**
@@ -21,7 +20,7 @@ class ViewHolderDelegate<T : View>() {
 
     private var cached: T? = null
 
-    operator fun getValue(holder: PostViewHolder, property: KProperty<*>): T {
+    operator fun getValue(holder: RecyclerView.ViewHolder, property: KProperty<*>): T {
         if (cached == null) {
             val context = holder.itemView.context
             val id = context.resources.getIdentifier(property.name, "id", context.packageName)

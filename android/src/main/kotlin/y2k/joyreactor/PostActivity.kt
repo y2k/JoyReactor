@@ -1,7 +1,6 @@
 package y2k.joyreactor
 
 import android.os.Bundle
-import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v7.widget.Toolbar
 import android.view.ViewGroup
 import android.widget.TextView
@@ -61,11 +60,12 @@ class PostActivity : BaseActivity() {
     class CommentViewHolder(parent: ViewGroup) :
         ListViewHolder<Comment>(parent.inflate(R.layout.item_comment)) {
 
-        val rating = itemView.find<TextView>(R.id.rating)
-        val text = itemView.find<TextView>(R.id.text)
-        val replies = itemView.find<TextView>(R.id.replies)
-        val avatar = itemView.find<WebImageView>(R.id.avatar)
-        val attachment = itemView.find<WebImageView>(R.id.attachment)
+        val rating by view<TextView>()
+        val text by view<TextView>()
+        val replies by view<TextView>()
+        val avatar by view<WebImageView>()
+        val attachment by view<WebImageView>()
+
         var lastComment: Comment? = null
 
         override fun update(item: Comment) {
