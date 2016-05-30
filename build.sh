@@ -3,7 +3,7 @@
 : ${FEEDBACK_TELEGRAM?"Need to set FEEDBACK_TELEGRAM"}
 : ${GITHUB_AUTH?"Need to set GITHUB_AUTH"}
 
-export SING_BUILD=$(git rev-list --count master)0
+export SING_BUILD=$(git rev-list --count origin/master)0
 
 ./gradlew clean assembleRelease
 
