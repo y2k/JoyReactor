@@ -7,7 +7,6 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
 import java.io.File
-import java.io.FileInputStream
 
 /**
  * Created by y2k on 26/02/16.
@@ -15,6 +14,7 @@ import java.io.FileInputStream
 class MuteVideoView(context: Context?, attrs: AttributeSet?) : SurfaceView(context, attrs) {
 
     private val player = MediaPlayer()
+    private var isDestroyed = false
 
     init {
         holder.addCallback(object : SurfaceHolder.Callback {
@@ -24,6 +24,7 @@ class MuteVideoView(context: Context?, attrs: AttributeSet?) : SurfaceView(conte
 
             override fun surfaceDestroyed(holder: SurfaceHolder?) {
                 player.release()
+                isDestroyed = true
             }
 
             override fun surfaceCreated(holder: SurfaceHolder?) {
@@ -45,7 +46,9 @@ class MuteVideoView(context: Context?, attrs: AttributeSet?) : SurfaceView(conte
     }
 
     fun play(file: File) {
-        file.inputStream().use { player.setDataSource((it as FileInputStream).fd) }
+        if (isDestroyed) return
+
+        file.inputStream().use { player.setDataSource(it.fd) }
         player.setDisplay(holder)
         player.isLooping = true
         player.prepare()
