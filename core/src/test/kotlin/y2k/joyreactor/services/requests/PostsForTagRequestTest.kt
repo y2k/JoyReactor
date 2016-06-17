@@ -8,6 +8,7 @@ import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.MyLike
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.requests.MockRequest
+import y2k.joyreactor.services.requests.parser.PostParser
 
 /**
  * Created by y2k on 5/3/16.
@@ -63,7 +64,7 @@ class PostsForTagRequestTest {
     }
 
     private fun execute(httpClient: HttpClient, group: Group, page: String? = null): List<Post> {
-        return PostsForTagRequest(httpClient, UrlBuilder())
+        return PostsForTagRequest(httpClient, UrlBuilder(), PostParser())
             .requestAsync(group, page)
             .toBlocking().last()
             .posts
