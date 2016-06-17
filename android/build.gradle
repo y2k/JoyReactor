@@ -23,8 +23,8 @@ repositories {
 }
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion "24"
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -32,8 +32,8 @@ android {
 
     defaultConfig {
         applicationId "y2k.joyreactor"
-        minSdkVersion 14
-        targetSdkVersion 23
+        minSdkVersion 15
+        targetSdkVersion 24
         versionCode computeAppVersionCode()
         versionName computeAppVersionName()
         generatedDensities = []
@@ -66,7 +66,7 @@ android {
 }
 
 ext {
-    supportLibVersion = '23.4.0'
+    supportLibVersion = '24.0.0'
 }
 
 dependencies {
@@ -76,6 +76,7 @@ dependencies {
     compile "com.android.support:cardview-v7:${supportLibVersion}"
     compile "com.android.support:gridlayout-v7:${supportLibVersion}"
     compile "com.android.support:design:${supportLibVersion}"
+    compile "com.android.support:customtabs:${supportLibVersion}"
 
     compile 'com.google.firebase:firebase-messaging:9.0.1'
     compile 'com.j256.ormlite:ormlite-android:4.48'
