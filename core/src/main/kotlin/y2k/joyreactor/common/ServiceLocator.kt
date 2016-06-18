@@ -67,7 +67,7 @@ object ServiceLocator {
         register { VideoViewModel(resolve(), resolve()) }
         register { ProfileViewModel(resolve(), resolve()) }
         register { AddTagViewModel(resolve(), resolve()) }
-        register { PostListViewModel(resolve(), resolve(), resolve(), resolve(), resolve()) }
+        register { MainViewModel(resolve(), resolve(), resolve(), resolve(), resolve()) }
         register { PostLikeViewModel(resolve(), resolve()) }
         register { CreateCommentViewModel(resolve(), resolve(), resolve()) }
         register { CommentsViewModel(resolve(), resolve(), resolve(), resolve()) }
