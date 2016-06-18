@@ -1,6 +1,6 @@
 package y2k.joyreactor.viewmodel
 
-import y2k.joyreactor.common.await
+import y2k.joyreactor.common.ui
 import y2k.joyreactor.common.property
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.common.platform.NavigationService
@@ -25,7 +25,7 @@ class CreateCommentViewModel(
     init {
         profileService
             .getProfile()
-            .await {
+            .ui {
                 username += it.userName
                 avatar += it.userImage
             }
@@ -35,7 +35,7 @@ class CreateCommentViewModel(
         isBusy += true
         service
             .createComment(navigation.argument, commentText.value)
-            .await {
+            .ui {
                 navigation.close()
                 isBusy += false
             }

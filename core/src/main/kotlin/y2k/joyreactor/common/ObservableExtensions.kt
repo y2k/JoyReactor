@@ -84,19 +84,19 @@ fun <T, R> Observable<T>.concatAndRepeat(other: Observable<R>): Observable<T> {
     return concatWith(other.flatMap { this })
 }
 
-fun Completable.await(onComplete: () -> Unit, onError: (Throwable) -> Unit): Subscription {
+fun Completable.ui(onComplete: () -> Unit, onError: (Throwable) -> Unit): Subscription {
     return observeOn(ForegroundScheduler.instance).subscribe(onError, onComplete)
 }
 
-fun Completable.await(onComplete: () -> Unit): Subscription {
+fun Completable.ui(onComplete: () -> Unit): Subscription {
     return observeOn(ForegroundScheduler.instance).subscribe({ it.printStackTrace() }, onComplete)
 }
 
-fun <T> Observable<T>.await(onNext: (T) -> Unit, onError: (Throwable) -> Unit): Subscription {
+fun <T> Observable<T>.ui(onNext: (T) -> Unit, onError: (Throwable) -> Unit): Subscription {
     return observeOn(ForegroundScheduler.instance).subscribe(onNext, onError)
 }
 
-fun <T> Observable<T>.await(onNext: (T) -> Unit): Subscription {
+fun <T> Observable<T>.ui(onNext: (T) -> Unit): Subscription {
     return observeOn(ForegroundScheduler.instance).subscribe(onNext, { it.printStackTrace() })
 }
 
@@ -108,12 +108,12 @@ fun <T> Pair<Single<T>, Notifications>.subscribe(lifeCycle: LifeCycleService, on
     }
 }
 
-fun <T> Single<T>.await(onSuccess: (T) -> Unit, onFail: (Throwable) -> Unit) {
+fun <T> Single<T>.ui(onSuccess: (T) -> Unit, onFail: (Throwable) -> Unit) {
     observeOn(ForegroundScheduler.instance)
         .subscribe(onSuccess, onFail)
 }
 
-fun <T> Single<T>.await(onSuccess: (T) -> Unit) {
+fun <T> Single<T>.ui(onSuccess: (T) -> Unit) {
     observeOn(ForegroundScheduler.instance)
         .subscribe(onSuccess, { it.printStackTrace() })
 }

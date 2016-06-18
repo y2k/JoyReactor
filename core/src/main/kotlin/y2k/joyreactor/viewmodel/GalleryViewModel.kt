@@ -1,6 +1,6 @@
 package y2k.joyreactor.viewmodel
 
-import y2k.joyreactor.common.await
+import y2k.joyreactor.common.ui
 import y2k.joyreactor.common.property
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.PostService
@@ -15,6 +15,6 @@ class GalleryViewModel(private val postService: PostService) {
     init {
         postService
             .getPostImages()
-            .await { images += it }
+            .ui { images += it }
     }
 }

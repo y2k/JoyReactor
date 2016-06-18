@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.NotAuthorizedException
-import y2k.joyreactor.common.await
+import y2k.joyreactor.common.ui
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.common.property
@@ -28,7 +28,7 @@ class ProfileViewModel(
         isBusy += true
         service
             .getProfile()
-            .await({
+            .ui({
                 userName += it.userName
                 userImage += it.userImage
                 rating += it.rating
@@ -50,7 +50,7 @@ class ProfileViewModel(
     fun logout() {
         service
             .logout()
-            .await {
+            .ui {
                 navigationService.open<LoginViewModel>()
                 navigationService.close()
             }

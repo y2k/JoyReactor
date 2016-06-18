@@ -2,7 +2,7 @@ package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.Notifications
 import y2k.joyreactor.common.PartialResult
-import y2k.joyreactor.common.await
+import y2k.joyreactor.common.ui
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.common.property
@@ -40,7 +40,7 @@ class PostViewModel(
         isBusy += true
         service
             .synchronizePost(postId)
-            .await({
+            .ui({
                 isBusy += false
             }, {
                 it.printStackTrace()
@@ -49,17 +49,17 @@ class PostViewModel(
 
         lifeCycle.register(Notifications.Post) {
             service.mainImageFromDisk(postId)
-                .await { poster += it }
+                .ui { poster += it }
             service.getImages(postId)
-                .await { images += it }
+                .ui { images += it }
             service.getTopComments(10, postId)
-                .await { comments += it }
+                .ui { comments += it }
             userService.isAuthorized()
-                .await { canCreateComments += it }
+                .ui { canCreateComments += it }
 
             service
                 .getPost(postId)
-                .await { post ->
+                .ui { post ->
                     posterAspect += post.imageAspectOrDefault(1f)
                     description += post.title
                     tags += post.tags
@@ -78,7 +78,7 @@ class PostViewModel(
     fun saveToGallery() {
         isBusy += true
         service.saveImageToGallery(postId)
-            .await { isBusy += false }
+            .ui { isBusy += false }
     }
 
     fun openInBrowser() {

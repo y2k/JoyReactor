@@ -1,6 +1,6 @@
 package y2k.joyreactor.viewmodel
 
-import y2k.joyreactor.common.await
+import y2k.joyreactor.common.ui
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.common.property
@@ -39,7 +39,7 @@ class PostListViewModel(
         isBusy += true
         service
             .preloadNewPosts(group)
-            .await({ isBusy += false }, {
+            .ui({ isBusy += false }, {
                 isError += true
                 isBusy += false
             })
@@ -62,14 +62,14 @@ class PostListViewModel(
 
     fun loadMore() {
         isBusy += true
-        service.loadNextPage(group).await { isBusy += false }
+        service.loadNextPage(group).ui { isBusy += false }
     }
 
     fun reloadFirstPage() {
         isBusy += true
         isError += false
         service.reloadFirstPage(group)
-            .await({
+            .ui({
                 isBusy += false
                 hasNewPosts += false
             }, {
@@ -99,6 +99,6 @@ class PostListViewModel(
 
     fun toggleFavorite(position: Int) {
         val post = posts.value[position] ?: return
-        postService.toggleFavorite(post.id).await {}
+        postService.toggleFavorite(post.id).ui {}
     }
 }

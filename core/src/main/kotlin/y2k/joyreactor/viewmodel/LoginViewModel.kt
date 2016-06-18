@@ -1,6 +1,6 @@
 package y2k.joyreactor.viewmodel
 
-import y2k.joyreactor.common.await
+import y2k.joyreactor.common.ui
 import y2k.joyreactor.common.property
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.open
@@ -23,7 +23,7 @@ class LoginViewModel(
         isError += false
         service
             .login(username.value, password.value)
-            .await({
+            .ui({
                 isBusy += false
                 navigationService.open<ProfileViewModel>()
                 navigationService.close()

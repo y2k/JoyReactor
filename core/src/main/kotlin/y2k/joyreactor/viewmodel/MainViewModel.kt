@@ -1,6 +1,6 @@
 package y2k.joyreactor.viewmodel
 
-import y2k.joyreactor.common.await
+import y2k.joyreactor.common.ui
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.property
 import y2k.joyreactor.common.registerProperty
@@ -38,7 +38,7 @@ class MainViewModel(
     fun changeCurrentGroup(isFirst: Boolean = false) {
         userService
             .makeGroup(group.value, quality.value)
-            .await {
+            .ui {
                 if (!isFirst) {
                     state.isBusy.unsubscribe(isBusy)
                     state.posts.unsubscribe(posts)
