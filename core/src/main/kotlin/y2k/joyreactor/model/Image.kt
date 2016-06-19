@@ -22,20 +22,13 @@ class Image(
         }
     }
 
-    fun thumbnailUrl(width: Int?, height: Int?): String {
-        try {
-            return toURL(width, height, null).toString()
-        } catch (e: MalformedURLException) {
-            throw RuntimeException(e)
-        }
-    }
+    fun thumbnailUrl(width: Int?, height: Int?): String = toURL(width, height, null).toString()
 
     private fun toURL(width: Int?, height: Int?, format: String?): URL {
+        val base = URL("https://azure.y2k.work/")
         if (width == null || height == null)
-            return URL("https", "azure.y2k.work", 443, "/cache/original?url=$url${getFormatPart(format)}")
-        return URL(
-            "https", "azure.y2k.work", 443,
-            "/cache/fit?quality=30&bgColor=ffffff&width=$width&height=$height&url=$url")
+            return URL(base, "/cache/original?url=$url${getFormatPart(format)}")
+        return URL(base, "/cache/fit?quality=30&bgColor=ffffff&width=$width&height=$height&url=$url")
     }
 
     private fun getFormatPart(format: String?): String {
