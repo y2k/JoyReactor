@@ -5,15 +5,16 @@ import android.net.Uri
 import y2k.joyreactor.App
 import y2k.joyreactor.BuildConfig
 import y2k.joyreactor.R
+import y2k.joyreactor.services.ReportService
 
 /**
  * Created by y2k on 2/27/16.
  */
-class ReportService {
+class AndroidReportService : ReportService {
 
     private val context = App.instance
 
-    fun createFeedback() {
+    override fun createFeedback() {
         val emailIntent = createEmailIntent() ?: return
         val telegramIntent = createTelegramIntent()
 

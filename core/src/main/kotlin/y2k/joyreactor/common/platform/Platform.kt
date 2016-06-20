@@ -2,6 +2,7 @@ package y2k.joyreactor.common.platform
 
 import com.j256.ormlite.support.ConnectionSource
 import rx.Observable
+import y2k.joyreactor.services.ReportService
 
 import java.io.File
 
@@ -21,4 +22,6 @@ interface Platform {
     fun buildConnection(file: File): ConnectionSource
 
     fun <T> decodeImage(path: File): T
+
+    fun makeReportService(): ReportService
 }

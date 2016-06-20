@@ -8,12 +8,14 @@ import android.support.customtabs.CustomTabsIntent
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
+import y2k.joyreactor.AddTagDialogFragment
 import y2k.joyreactor.CreateCommentFragment
 import y2k.joyreactor.PostLikeFragment
 import y2k.joyreactor.R
 import y2k.joyreactor.common.ActivityLifecycleCallbacksAdapter
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.startActivity
+import y2k.joyreactor.viewmodel.AddTagViewModel
 import y2k.joyreactor.viewmodel.CreateCommentViewModel
 import y2k.joyreactor.viewmodel.PostLikeViewModel
 import kotlin.reflect.KClass
@@ -43,6 +45,7 @@ class AndroidNavigation(app: Application) : NavigationService {
         when (vmType) {
             PostLikeViewModel::class -> PostLikeFragment().show(fragmentManager, "dialog")
             CreateCommentViewModel::class -> CreateCommentFragment().show(fragmentManager, "dialog")
+            AddTagViewModel::class -> AddTagDialogFragment().show(fragmentManager, "dialog")
             else -> generalOpen(vmType)
         }
     }
