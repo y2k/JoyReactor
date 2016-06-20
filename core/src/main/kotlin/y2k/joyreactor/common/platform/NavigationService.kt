@@ -18,6 +18,7 @@ interface NavigationService {
 
     companion object {
 
+        @Deprecated("")
         val instance: NavigationService
             get() = ServiceLocator.resolve<y2k.joyreactor.common.platform.Platform>().navigator
     }

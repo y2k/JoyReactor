@@ -215,9 +215,9 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
         property.subscribe { view.tags = it }
     }
 
-    fun imagePanel(id: Int, property: ObservableProperty<List<Image>>) {
+    fun imagePanel(id: Int, property: ObservableProperty<List<Image>>, f: (Image) -> Unit) {
         val view = find<ImagePanel>(id)
-        property.subscribe { view.setImages(it) }
+        property.subscribe { view.setImages(it, f) }
     }
 
     fun editText(id: Int, init: EditTextBinding.() -> Unit) {

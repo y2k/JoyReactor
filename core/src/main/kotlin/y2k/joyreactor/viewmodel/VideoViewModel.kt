@@ -1,6 +1,6 @@
 package y2k.joyreactor.viewmodel
 
-import y2k.joyreactor.common.await
+import y2k.joyreactor.common.ui
 import y2k.joyreactor.common.property
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.services.PostService
@@ -20,7 +20,7 @@ class VideoViewModel(
         isBusy += true
         service
             .getVideo(navigationService.argument)
-            .await({
+            .ui({
                 videoFile += it
                 isBusy += false
             }, {

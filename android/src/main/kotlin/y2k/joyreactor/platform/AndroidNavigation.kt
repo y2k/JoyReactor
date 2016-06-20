@@ -2,17 +2,20 @@ package y2k.joyreactor.platform
 
 import android.app.Activity
 import android.app.Application
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.support.customtabs.CustomTabsIntent
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
+import y2k.joyreactor.AddTagDialogFragment
 import y2k.joyreactor.CreateCommentFragment
 import y2k.joyreactor.PostLikeFragment
+import y2k.joyreactor.R
 import y2k.joyreactor.common.ActivityLifecycleCallbacksAdapter
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.startActivity
+import y2k.joyreactor.viewmodel.AddTagViewModel
 import y2k.joyreactor.viewmodel.CreateCommentViewModel
 import y2k.joyreactor.viewmodel.PostLikeViewModel
 import kotlin.reflect.KClass
@@ -42,6 +45,7 @@ class AndroidNavigation(app: Application) : NavigationService {
         when (vmType) {
             PostLikeViewModel::class -> PostLikeFragment().show(fragmentManager, "dialog")
             CreateCommentViewModel::class -> CreateCommentFragment().show(fragmentManager, "dialog")
+            AddTagViewModel::class -> AddTagDialogFragment().show(fragmentManager, "dialog")
             else -> generalOpen(vmType)
         }
     }
@@ -65,7 +69,14 @@ class AndroidNavigation(app: Application) : NavigationService {
         get() = sArgument
 
     override fun openBrowser(url: String) {
-        currentActivity!!.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        currentActivity?.let {
+            CustomTabsIntent.Builder()
+                .enableUrlBarHiding()
+                .setShowTitle(true)
+                .setStartAnimations(it, R.anim.slide_in_right, android.R.anim.fade_out)
+                .setExitAnimations(it, android.R.anim.fade_in, android.R.anim.slide_out_right)
+                .build().launchUrl(it, Uri.parse(url))
+        }
     }
 
     private inner class MyActivityLifecycleCallbacks : ActivityLifecycleCallbacksAdapter() {

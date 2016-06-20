@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import y2k.joyreactor.common.BaseFragment
 import y2k.joyreactor.common.isVisible
-import y2k.joyreactor.common.await
+import y2k.joyreactor.common.ui
 import y2k.joyreactor.common.switchByScaleFromTo
 import y2k.joyreactor.platform.UpdateService
 
@@ -26,7 +26,7 @@ class UpdateFragment : BaseFragment() {
                 setBlocked(true)
                 service
                     .update()
-                    .await({
+                    .ui({
                         setBlocked(false)
                     }, {
                         setBlocked(false)
@@ -45,6 +45,6 @@ class UpdateFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         view?.isVisible = false
-        service.checkHasUpdates().await { view?.isVisible = it }
+        service.checkHasUpdates().ui { view?.isVisible = it }
     }
 }

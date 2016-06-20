@@ -14,8 +14,6 @@ class PostActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post)
-        setSupportActionBar(find<Toolbar>(R.id.toolbar))
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val vm = ServiceLocator.resolve<PostViewModel>(lifeCycleService)
         bindingBuilder(this) {
@@ -30,7 +28,7 @@ class PostActivity : BaseActivity() {
             tagsView(R.id.tags, vm.tags)
 
             // Image panel
-            imagePanel(R.id.images, vm.images)
+            imagePanel(R.id.images, vm.images) { vm.openImage(it) }
             visibility(R.id.showMoreImages, vm.images, { it.size > 3 })
             visibility(R.id.imagePanel, vm.images, { it.isNotEmpty() })
             command(R.id.showMoreImages) { vm.showMoreImages() }

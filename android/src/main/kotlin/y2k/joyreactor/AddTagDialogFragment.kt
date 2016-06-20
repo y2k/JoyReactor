@@ -2,7 +2,6 @@ package y2k.joyreactor
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatDialog
 import android.view.LayoutInflater
 import android.view.View
@@ -33,15 +32,6 @@ class AddTagDialogFragment : BaseDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return AppCompatDialog(activity, R.style.AppTheme_Dialog).apply {
             setTitle(R.string.add_tag)
-        }
-    }
-
-    companion object {
-
-        private val TAG_ID = "dialog"
-
-        fun show(fragmentManager: FragmentManager) {
-            AddTagDialogFragment().show(fragmentManager, TAG_ID)
         }
     }
 }

@@ -1,6 +1,6 @@
 package y2k.joyreactor.viewmodel
 
-import y2k.joyreactor.common.await
+import y2k.joyreactor.common.ui
 import y2k.joyreactor.common.property
 import y2k.joyreactor.common.subscribe
 import y2k.joyreactor.model.Group
@@ -40,6 +40,6 @@ class MenuViewModel(
     fun selectedFavorite() {
         service
             .getTagForFavorite()
-            .await { broadcastService.broadcast(BroadcastService.TagSelected(it)) }
+            .ui { broadcastService.broadcast(BroadcastService.TagSelected(it)) }
     }
 }

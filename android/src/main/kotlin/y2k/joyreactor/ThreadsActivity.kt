@@ -13,12 +13,11 @@ import y2k.joyreactor.widget.WebImageView
 /**
  * Created by y2k on 2/23/16.
  */
-class ThreadsActivity : LifeCycleActivity() {
+class ThreadsActivity : BaseActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_threads)
-        setSupportActionBar(findViewById(R.id.toolbar) as Toolbar)
 
         val vm = ServiceLocator.resolve<ThreadsViewModel>(lifeCycleService)
         bindingBuilder(this) {

@@ -11,12 +11,16 @@ import y2k.joyreactor.App
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.Platform
 import y2k.joyreactor.platform.AndroidNavigation
+import y2k.joyreactor.platform.AndroidReportService
+import y2k.joyreactor.services.ReportService
 import java.io.File
 
 /**
  * Created by y2k on 5/11/16.
  */
 class AndroidPlatform(private val app: Application) : Platform {
+
+    override fun makeReportService(): ReportService = AndroidReportService()
 
     @Suppress("UNCHECKED_CAST")
     override fun <T> decodeImage(path: File): T {

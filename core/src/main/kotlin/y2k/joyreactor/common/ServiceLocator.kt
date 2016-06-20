@@ -4,6 +4,7 @@ import y2k.joyreactor.common.http.CookieStorage
 import y2k.joyreactor.common.http.DefaultHttpClient
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.platform.NavigationService
+import y2k.joyreactor.common.platform.Platform
 import y2k.joyreactor.services.*
 import y2k.joyreactor.services.images.DiskCache
 import y2k.joyreactor.services.images.MultiTryDownloader
@@ -32,6 +33,7 @@ object ServiceLocator {
         register { ThreadsViewModel(resolve(), resolve(), resolve()) }
         register { MessagesViewModel(resolve(), resolve()) }
 
+        register { resolve<Platform>().makeReportService() }
         register { BroadcastService }
 
         register { TokenRequest(resolve()) }
@@ -62,12 +64,12 @@ object ServiceLocator {
 
         register { LoginViewModel(resolve(), resolve()) }
         register { MenuViewModel(resolve(), resolve(), resolve()) }
-        register { GalleryViewModel(resolve()) }
-        register { ImageViewModel(resolve()) }
+        register { GalleryViewModel(resolve(), resolve()) }
+        register { ImageViewModel(resolve(), resolve()) }
         register { VideoViewModel(resolve(), resolve()) }
         register { ProfileViewModel(resolve(), resolve()) }
         register { AddTagViewModel(resolve(), resolve()) }
-        register { PostListViewModel(resolve(), resolve(), resolve(), resolve(), resolve()) }
+        register { MainViewModel(resolve(), resolve(), resolve(), resolve(), resolve(), resolve()) }
         register { PostLikeViewModel(resolve(), resolve()) }
         register { CreateCommentViewModel(resolve(), resolve(), resolve()) }
         register { CommentsViewModel(resolve(), resolve(), resolve(), resolve()) }
