@@ -89,7 +89,7 @@ class PostListViewModel(
     fun playClicked(position: Int) {
         val post = posts.value[position] ?: return
         if (post.image?.isAnimated ?: false) navigationService.open<VideoViewModel>(post.id)
-        else navigationService.open<ImageViewModel>(post.id)
+        else navigationService.open<ImageViewModel>(post.image!!.fullUrl())
     }
 
     fun changeLike(position: Int) {

@@ -28,7 +28,7 @@ class PostActivity : BaseActivity() {
             tagsView(R.id.tags, vm.tags)
 
             // Image panel
-            imagePanel(R.id.images, vm.images)
+            imagePanel(R.id.images, vm.images) { vm.openImage(it) }
             visibility(R.id.showMoreImages, vm.images, { it.size > 3 })
             visibility(R.id.imagePanel, vm.images, { it.isNotEmpty() })
             command(R.id.showMoreImages) { vm.showMoreImages() }

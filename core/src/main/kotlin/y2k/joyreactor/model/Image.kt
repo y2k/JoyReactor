@@ -14,7 +14,7 @@ class Image(
 
     private val url: String? = clearUrl(url)
 
-    fun fullUrl(format: String?): String {
+    fun fullUrl(format: String? = null): String {
         try {
             return toURL(null, null, format).toString()
         } catch (e: MalformedURLException) {

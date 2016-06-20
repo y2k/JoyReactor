@@ -31,9 +31,12 @@ class ImagePanel(context: Context, attrs: AttributeSet) : FrameLayout(context, a
         }
     }
 
-    fun setImages(images: List<Image>) {
-        for (i in 0..Math.min(images.size, imageViews.size) - 1)
-            imageViews[i].image = images[i]
+    fun setImages(images: List<Image>, f: (Image) -> Unit) {
+        for (i in 0..Math.min(images.size, imageViews.size) - 1) {
+            val imageView = imageViews[i]
+            imageView.image = images[i]
+            imageView.setOnClickListener { f(imageView.image!!) }
+        }
         imageViews.forEachIndexed { i, view -> view.isVisible = i < images.size }
     }
 }
