@@ -14,12 +14,12 @@ object MemoryBuffer {
     val requests = Collections.synchronizedMap(HashMap<Long, PostsForTagRequest.Data>())
     val dividers = Collections.synchronizedMap(HashMap<Long, Int>())
 
-    private @Volatile var request: PostRequest? = null
+    private @Volatile var request: PostRequest.Response? = null
 
     var messages: List<Message> = emptyList()
 
     val post: Post get() {
-        return request!!.post!!
+        return request!!.post
     }
 
     val comments: List<Comment> get() {
@@ -27,14 +27,14 @@ object MemoryBuffer {
     }
 
     val attachments: List<Attachment> get() {
-        return request?.getAttachments() ?: emptyList()
+        return request?.attachments ?: emptyList()
     }
 
     val similarPosts: List<SimilarPost> get() {
-        return request?.getSimilarPosts() ?: emptyList()
+        return request?.similarPosts ?: emptyList()
     }
 
-    fun updatePost(request: PostRequest) {
+    fun updatePost(request: PostRequest.Response) {
         this.request = request
     }
 }

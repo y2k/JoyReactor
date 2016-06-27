@@ -45,8 +45,8 @@ class PostService(
 
     fun synchronizePost(postId: Long): Completable {
         return ioObservable {
-            postRequest.request(postId.toString())
-            buffer.updatePost(postRequest)
+            val response = postRequest.request(postId.toString())
+            buffer.updatePost(response)
 
             broadcastService.broadcast(Notifications.Post)
         }.flatMap {

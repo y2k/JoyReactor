@@ -13,25 +13,15 @@ class PostRequest(
     private val httpClient: HttpClient,
     private val parser: PostParser) {
 
-    var post: Post? = null
-        private set
+    fun request(postId: String): Response {
+        val commentsRequest = PostCommentsRequest()
+        val similarPosts = ArrayList<SimilarPost>()
+        val attachments = ArrayList<Attachment>()
 
-    private val commentsRequest = PostCommentsRequest()
-    private val similarPosts = ArrayList<SimilarPost>()
-    private val attachments = ArrayList<Attachment>()
-
-    fun getSimilarPosts(): List<SimilarPost> {
-        return similarPosts
-    }
-
-    val comments: List<Comment>
-        get() = commentsRequest.comments
-
-    fun request(postId: String) {
         val page = httpClient.getDocument(getPostUrl(postId))
 
         val postNode = page.select("div.postContainer").first()
-        post = parser.parse(postNode)
+        val post = parser.parse(postNode)
 
         commentsRequest.request(page, postId.toLong())
 
@@ -49,6 +39,8 @@ class PostRequest(
                     Integer.parseInt(e.attr("height"))))
                 attachments.add(a)
             }
+
+        return Response(post, commentsRequest.comments, similarPosts, attachments)
     }
 
     private fun getPostId(href: String): String {
@@ -61,9 +53,11 @@ class PostRequest(
         return "http://anime.reactor.cc/post/" + postId // TODO:
     }
 
-    fun getAttachments(): List<Attachment> {
-        return attachments
-    }
+    data class Response(
+        val post: Post,
+        val comments: List<Comment>,
+        val similarPosts: List<SimilarPost>,
+        val attachments: List<Attachment>)
 
     companion object {
 
