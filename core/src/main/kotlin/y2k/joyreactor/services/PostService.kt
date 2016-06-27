@@ -89,7 +89,9 @@ class PostService(
     fun getImages(postId: Long): Single<List<Image>> {
         return dataContext
             .applyUse {
-                val postAttachments = buffer.attachments.map { it.image }
+                val postAttachments = attachments
+                    .filter("postId" to postId)
+                    .mapNotNull { it.image }
                 val commentAttachments = comments
                     .filter("postId" to postId)
                     .map { it.attachmentObject }
@@ -102,7 +104,9 @@ class PostService(
     fun getPostImages(postId: Long): Single<List<Image>> {
         return dataContext
             .applyUse {
-                val postAttachments = buffer.attachments.map { it.image }
+                val postAttachments = attachments
+                    .filter("postId" to postId)
+                    .mapNotNull { it.image }
                 val commentAttachments = comments
                     .filter("postId" to postId)
                     .map { it.attachmentObject }

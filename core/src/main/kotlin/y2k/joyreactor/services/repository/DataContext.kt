@@ -16,6 +16,7 @@ class DataContext(val factory: IDataContext) {
     val TagPosts = factory.register(GroupPost::class)
     val Messages = factory.register(Message::class)
     val comments by lazy { factory.register(Comment::class) }
+    val attachments by lazy { factory.register(Attachment::class) }
 
     fun saveChanges() {
         factory.saveChanges()

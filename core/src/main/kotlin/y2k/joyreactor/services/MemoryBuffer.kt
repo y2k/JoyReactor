@@ -16,10 +16,10 @@ object MemoryBuffer {
 
     private @Volatile var request: PostRequest.Response? = null
 
-    val attachments: List<Attachment> get() = request?.attachments ?: emptyList()
+//    val attachments: List<Attachment> get() = request?.attachments ?: emptyList()
     val similarPosts: List<SimilarPost> get() = request?.similarPosts ?: emptyList()
 
-    fun updatePost(request: PostRequest.Response) {
+    fun updatePost(request: PostRequest.Response) { // FIXME:
         this.request = request
     }
 }

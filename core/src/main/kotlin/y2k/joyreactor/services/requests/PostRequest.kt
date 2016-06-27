@@ -34,9 +34,11 @@ class PostRequest(
         val imgElement = postNode.select("div.image > img")
         if (imgElement.size > 1)
             for (e in imgElement.subList(1, imgElement.size - 1)) {
-                val a = Attachment(Image(e.absUrl("src"),
-                    Integer.parseInt(e.attr("width")),
-                    Integer.parseInt(e.attr("height"))))
+                val a = Attachment(
+                    Image(e.absUrl("src"),
+                        Integer.parseInt(e.attr("width")),
+                        Integer.parseInt(e.attr("height"))),
+                    postId.toLong())
                 attachments.add(a)
             }
 
