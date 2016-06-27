@@ -16,23 +16,9 @@ object MemoryBuffer {
 
     private @Volatile var request: PostRequest.Response? = null
 
-    var messages: List<Message> = emptyList()
-
-    val post: Post get() {
-        return request!!.post
-    }
-
-    val comments: List<Comment> get() {
-        return request?.comments ?: emptyList()
-    }
-
-    val attachments: List<Attachment> get() {
-        return request?.attachments ?: emptyList()
-    }
-
-    val similarPosts: List<SimilarPost> get() {
-        return request?.similarPosts ?: emptyList()
-    }
+    val comments: List<Comment> get() = request?.comments ?: emptyList()
+    val attachments: List<Attachment> get() = request?.attachments ?: emptyList()
+    val similarPosts: List<SimilarPost> get() = request?.similarPosts ?: emptyList()
 
     fun updatePost(request: PostRequest.Response) {
         this.request = request

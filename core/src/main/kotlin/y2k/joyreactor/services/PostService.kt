@@ -59,7 +59,7 @@ class PostService(
     }
 
     fun getPost(postId: Long): Single<Post> {
-        return ioObservable { buffer.post }.toSingle()
+        return dataContext.applyUse { Posts.getById(postId) }.toSingle()
     }
 
     fun getTopComments(count: Int, postId: Long): Single<List<Comment>> {
