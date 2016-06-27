@@ -14,7 +14,7 @@ class PostRequest(
     private val httpClient: HttpClient,
     private val parser: PostParser) {
 
-    fun requestAsync(postId: Long) = ioObservable { request(postId.toString()) }
+    operator fun invoke(postId: Long) = ioObservable { request(postId.toString()) }
 
     fun request(postId: String): Response {
         val commentsRequest = PostCommentsRequest()

@@ -13,15 +13,14 @@ import java.io.File
  */
 class ImageViewModel(
     navigation: NavigationService,
-    imageRequestFactory: OriginalImageRequestFactory) {
+    imageRequest: OriginalImageRequestFactory) {
 
     val isBusy = property(false)
     val imageFile = property<File>()
 
     init {
         isBusy += true
-        imageRequestFactory
-            .request(navigation.argument)
+        imageRequest(navigation.argument)
             .ui({
                 imageFile += it
                 isBusy += false

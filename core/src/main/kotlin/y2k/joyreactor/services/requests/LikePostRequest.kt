@@ -21,7 +21,7 @@ class LikePostRequest(
     private val httpClient: HttpClient,
     private val tokenRequest: TokenRequest) {
 
-    fun like(id: Long, like: Boolean): Observable<Pair<Float, MyLike>> {
+    operator fun invoke(id: Long, like: Boolean): Observable<Pair<Float, MyLike>> {
         return tokenRequest
             .request()
             .map {

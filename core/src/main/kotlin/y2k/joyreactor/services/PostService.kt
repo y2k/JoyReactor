@@ -28,7 +28,7 @@ class PostService(
     fun toggleFavorite(postId: Long): Completable {
         return dataContext
             .applyUse { Posts.first("id" to postId) }
-            .flatMap { changePostFavoriteRequest.execute(postId, !it.isFavorite) }
+            .flatMap { changePostFavoriteRequest(postId, !it.isFavorite) }
             .mapDatabase(dataContext) {
                 Posts.updateAll("id" to postId) { it.copy(isFavorite = !it.isFavorite) }
                 broadcastService.broadcast(Notifications.Posts)
@@ -39,12 +39,11 @@ class PostService(
     fun getVideo(postId: String): Observable<File> {
         return getFromCache(postId)
             .map { it.image!!.fullUrl("mp4") }
-            .flatMap { imageRequestFactory.request(it) }
+            .flatMap { imageRequestFactory(it) }
     }
 
     fun synchronizePost(postId: Long): Completable {
-        return postRequest
-            .requestAsync(postId)
+        return postRequest(postId)
             .mapDatabase(dataContext) {
                 attachments.remove("postId" to postId)
                 it.attachments.forEach { attachments.add(it) }
@@ -56,7 +55,7 @@ class PostService(
                 it.comments.forEach { comments.add(it) }
             }
             .flatMap { dataContext.applyUse { Posts.getById(postId.toLong()) } }
-            .flatMap { imageRequestFactory.request(it.image!!.fullUrl(null)) }
+            .flatMap { imageRequestFactory(it.image!!.fullUrl(null)) }
             .doOnCompleted { broadcastService.broadcast(Notifications.Post) }
             .toCompletable()
     }
@@ -142,12 +141,11 @@ class PostService(
     fun mainImage(serverPostId: Long): Observable<File> {
         return dataContext
             .applyUse { Posts.getById(serverPostId) }
-            .flatMap { imageRequestFactory.request(it.image!!.fullUrl(null)) }
+            .flatMap { imageRequestFactory(it.image!!.fullUrl(null)) }
     }
 
     fun updatePostLike(postId: Long, like: Boolean): Completable {
-        return likePostRequest
-            .like(postId, like)
+        return likePostRequest(postId, like)
             .flatMap {
                 dataContext.applyUse {
                     val post = Posts.getById(postId)

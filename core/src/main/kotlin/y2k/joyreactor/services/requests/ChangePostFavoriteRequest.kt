@@ -15,7 +15,7 @@ class ChangePostFavoriteRequest(
     // http://joyreactor.cc/favorite/create/2646561?token=aa2e06a6265aad3ff2ec17b287bee4fa&rand=7412
     // http://joyreactor.cc/favorite/delete/2646561?token=aa2e06a6265aad3ff2ec17b287bee4fa&rand=5241
 
-    fun execute(postId: Long, favorite: Boolean): Observable<Document> {
+    operator fun invoke(postId: Long, favorite: Boolean): Observable<Document> {
         return tokenRequest
             .request()
             .map { token ->

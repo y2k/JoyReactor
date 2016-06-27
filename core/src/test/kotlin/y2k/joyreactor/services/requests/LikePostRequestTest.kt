@@ -35,7 +35,7 @@ class LikePostRequestTest {
 
     @Test
     fun test() {
-        val actual = LikePostRequest(mockHttpClient, mockTokenRequest).like(99, true).toBlocking().first()
+        val actual = LikePostRequest(mockHttpClient, mockTokenRequest).invoke(99, true).toBlocking().first()
         assertEquals(13f, actual.first)
         assertEquals(MyLike.Like, actual.second)
         verify(mockRequestBuilder).get(url)

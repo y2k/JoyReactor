@@ -26,7 +26,7 @@ class OriginalImageRequestFactory(
         }
     }
 
-    fun request(imageUrl: String): Observable<File> {
+    operator fun invoke(imageUrl: String): Observable<File> {
         return ioObservable {
             val file = getTargetFile(imageUrl)
             if (!file.exists()) {
