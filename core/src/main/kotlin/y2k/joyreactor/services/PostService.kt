@@ -49,7 +49,7 @@ class PostService(
                 attachments.remove("postId" to postId)
                 it.attachments.forEach { attachments.add(it) }
 
-                similarPosts.remove("postId" to postId)
+                similarPosts.remove("parentPostId" to postId)
                 it.similarPosts.forEach { similarPosts.add(it) }
 
                 comments.remove("postId" to postId)
@@ -121,7 +121,7 @@ class PostService(
 
     fun getSimilarPosts(postId: Long): Observable<List<SimilarPost>> {
         return dataContext
-            .applyUse { similarPosts.filter("postId" to postId) }
+            .applyUse { similarPosts.filter("parentPostId" to postId) }
     }
 
     fun saveImageToGallery(postId: Long): Completable {
