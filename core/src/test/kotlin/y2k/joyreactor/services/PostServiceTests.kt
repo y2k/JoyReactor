@@ -40,7 +40,6 @@ class PostServiceTests {
         val service = PostService(
             mock(OriginalImageRequestFactory::class.java),
             mock(PostRequest::class.java),
-            mock(MemoryBuffer::class.java),
             mock(DataContext.Factory::class.java),
             mock(LikePostRequest::class.java),
             mock(Platform::class.java),

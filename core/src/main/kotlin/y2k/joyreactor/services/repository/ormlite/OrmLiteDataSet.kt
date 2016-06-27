@@ -20,6 +20,12 @@ class OrmLiteDataSet<T : Dto>(private val dao: Dao<T, Long>) : DataSet<T> {
         dao.delete(element)
     }
 
+    override fun remove(condition: Pair<String, Any?>) {
+        dao.deleteBuilder()
+            .apply { where().eq(condition.first, condition.second) }
+            .delete()
+    }
+
     override fun add(element: T): T {
         dao.createOrUpdate(element)
         return element

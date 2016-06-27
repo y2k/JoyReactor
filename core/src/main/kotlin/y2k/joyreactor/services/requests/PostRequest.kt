@@ -1,6 +1,9 @@
 package y2k.joyreactor.services.requests
 
+import rx.Observable
+import rx.Single
 import y2k.joyreactor.common.http.HttpClient
+import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.model.*
 import y2k.joyreactor.services.requests.parser.PostParser
 import java.util.*
@@ -12,6 +15,8 @@ import java.util.regex.Pattern
 class PostRequest(
     private val httpClient: HttpClient,
     private val parser: PostParser) {
+
+    fun requestAsync(postId: Long) = ioObservable { request(postId.toString()) }
 
     fun request(postId: String): Response {
         val commentsRequest = PostCommentsRequest()

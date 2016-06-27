@@ -19,7 +19,6 @@ import java.io.File
 class PostService(
     private val imageRequestFactory: OriginalImageRequestFactory,
     private val postRequest: PostRequest,
-    private val buffer: MemoryBuffer,
     private val dataContext: DataContext.Factory,
     private val likePostRequest: LikePostRequest,
     private val platform: Platform,
@@ -44,18 +43,22 @@ class PostService(
     }
 
     fun synchronizePost(postId: Long): Completable {
-        return ioObservable {
-            val response = postRequest.request(postId.toString())
-            buffer.updatePost(response)
+        return postRequest
+            .requestAsync(postId)
+            .mapDatabase(dataContext) {
+                attachments.remove("postId" to postId)
+                it.attachments.forEach { attachments.add(it) }
 
-            broadcastService.broadcast(Notifications.Post)
-        }.flatMap {
-            dataContext.applyUse { Posts.getById(postId.toLong()) }
-        }.flatMap {
-            imageRequestFactory.request(it.image!!.fullUrl(null))
-        }.doOnCompleted {
-            broadcastService.broadcast(Notifications.Post)
-        }.toCompletable()
+                similarPosts.remove("postId" to postId)
+                it.similarPosts.forEach { similarPosts.add(it) }
+
+                comments.remove("postId" to postId)
+                it.comments.forEach { comments.add(it) }
+            }
+            .flatMap { dataContext.applyUse { Posts.getById(postId.toLong()) } }
+            .flatMap { imageRequestFactory.request(it.image!!.fullUrl(null)) }
+            .doOnCompleted { broadcastService.broadcast(Notifications.Post) }
+            .toCompletable()
     }
 
     fun getPost(postId: Long): Single<Post> {

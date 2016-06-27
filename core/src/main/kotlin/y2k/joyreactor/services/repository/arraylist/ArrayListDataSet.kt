@@ -21,6 +21,10 @@ class ArrayListDataSet<T : Dto>(val type: KClass<T>) : DataSet<T> {
         items.remove(element)
     }
 
+    override fun remove(condition: Pair<String, Any?>) {
+        filter(condition).forEach { remove(it) }
+    }
+
     override fun add(element: T): T {
         val id = (Math.random() * Long.MAX_VALUE).toLong()
         @Suppress("UNCHECKED_CAST")

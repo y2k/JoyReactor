@@ -1,6 +1,5 @@
 package y2k.joyreactor.services
 
-import y2k.joyreactor.services.requests.PostRequest
 import y2k.joyreactor.services.requests.PostsForTagRequest
 import java.util.*
 
@@ -12,10 +11,4 @@ object MemoryBuffer {
     val hasNew = Collections.synchronizedMap(HashMap<Long, Boolean>())
     val requests = Collections.synchronizedMap(HashMap<Long, PostsForTagRequest.Data>())
     val dividers = Collections.synchronizedMap(HashMap<Long, Int>())
-
-    private @Volatile var request: PostRequest.Response? = null
-
-    fun updatePost(request: PostRequest.Response) { // FIXME:
-        this.request = request
-    }
 }

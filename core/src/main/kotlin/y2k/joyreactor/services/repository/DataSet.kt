@@ -9,6 +9,8 @@ interface DataSet <T : Dto> {
 
     fun remove(element: T)
 
+    fun remove(condition: Pair<String, Any?>)
+
     fun add(element: T): T
 
     fun toList(): List<T>
