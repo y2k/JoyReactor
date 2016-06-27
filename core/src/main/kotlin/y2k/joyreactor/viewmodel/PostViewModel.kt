@@ -2,10 +2,10 @@ package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.Notifications
 import y2k.joyreactor.common.PartialResult
-import y2k.joyreactor.common.ui
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.common.property
+import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Comment
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.LifeCycleService
@@ -46,10 +46,10 @@ class PostViewModel(
             })
 
         lifeCycle.register(Notifications.Post) {
-            service.mainImageFromDisk(postId).ui { poster += it }
-            service.getImages(postId).ui { images += it }
-            service.getTopComments(10, postId).ui { comments += it }
-            userService.isAuthorized().ui { canCreateComments += it }
+            poster += service.mainImageFromDisk(postId)
+            images += service.getImages(postId)
+            comments += service.getTopComments(10, postId)
+            canCreateComments += userService.isAuthorized().toSingle()
 
             service.getPost(postId).ui { post ->
                 posterAspect += post.imageAspectOrDefault(1f)

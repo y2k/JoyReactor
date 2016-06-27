@@ -25,9 +25,9 @@ class ImageViewModel(
             .ui({
                 imageFile += it
                 isBusy += false
-            }) {
+            }, {
                 it.printStackTrace()
                 isBusy += false
-            }
+            })
     }
 }
