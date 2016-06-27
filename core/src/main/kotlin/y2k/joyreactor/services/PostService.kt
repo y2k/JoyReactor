@@ -63,22 +63,22 @@ class PostService(
     }
 
     fun getTopComments(count: Int, postId: Long): Single<List<Comment>> {
-        return RootComments.create(buffer, postId)
+        return RootComments.create(dataContext, postId)
             .map { it.filter { it.level == 0 }.sortedByDescending { it.rating }.take(10) }
             .toSingle()
     }
 
     fun getComments(postId: Long, parentCommentId: Long): Single<CommentGroup> {
         return when (parentCommentId) {
-            0L -> RootComments.create(buffer, postId)
-            else -> ChildComments.create(buffer, parentCommentId)
+            0L -> RootComments.create(dataContext, postId)
+            else -> ChildComments.create(dataContext, parentCommentId, postId)
         }.toSingle()
     }
 
     fun getCommentsAsync(postId: Long, parentCommentId: Long): Observable<CommentGroup> {
         return when (parentCommentId) {
-            0L -> RootComments.create(buffer, postId)
-            else -> ChildComments.create(buffer, parentCommentId)
+            0L -> RootComments.create(dataContext, postId)
+            else -> ChildComments.create(dataContext, parentCommentId, postId)
         }
     }
 

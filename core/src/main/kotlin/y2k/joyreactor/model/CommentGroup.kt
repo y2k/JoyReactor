@@ -1,7 +1,7 @@
 package y2k.joyreactor.model
 
 import rx.Observable
-import y2k.joyreactor.services.MemoryBuffer
+import y2k.joyreactor.services.repository.DataContext
 import java.util.*
 
 /**
@@ -27,10 +27,11 @@ class RootComments() : ArrayList<Comment>(), CommentGroup {
 
     companion object {
 
-        fun create(buffer: MemoryBuffer, postId: Long): Observable<CommentGroup> {
-            return Observable.fromCallable {
+        fun create(entities: DataContext.Factory, postId: Long): Observable<CommentGroup> {
+            return entities.applyUse {
                 val firstLevelComments = HashSet<Long>()
-                val comments = buffer.comments
+                val comments = comments
+                    .filter("postId" to postId)
                     .filter { it.postId == postId }
                     .filter {
                         if (it.parentId == 0L) {
@@ -57,13 +58,15 @@ class ChildComments() : ArrayList<Comment>(), CommentGroup {
 
     companion object {
 
-        fun create(buffer: MemoryBuffer, parentCommentId: Long): Observable<CommentGroup> {
-            return Observable.fromCallable {
-                val parent = buffer.comments
+        fun create(entities: DataContext.Factory, parentCommentId: Long, postId: Long): Observable<CommentGroup> {
+            return entities.applyUse {
+                val parent = comments
+                    .filter("postId" to postId)
                     .first { it.id == parentCommentId }
                     .copy(level = 0)
 
-                val children = buffer.comments
+                val children = comments
+                    .filter("postId" to postId)
                     .filter { it.parentId == parentCommentId }
                     .map { it.copy(level = 1) }
                     .toList()
