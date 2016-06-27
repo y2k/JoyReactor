@@ -117,7 +117,8 @@ class PostService(
     }
 
     fun getSimilarPosts(postId: Long): Observable<List<SimilarPost>> {
-        return Observable.just(buffer.similarPosts)
+        return dataContext
+            .applyUse { similarPosts.filter("postId" to postId) }
     }
 
     fun saveImageToGallery(postId: Long): Completable {

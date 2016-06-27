@@ -26,8 +26,10 @@ class PostRequest(
         commentsRequest.request(page, postId.toLong())
 
         for (e in page.select(".similar_post img")) {
-            val similarPost = SimilarPost(getPostId(e.parent().attr("href")))
-            similarPost.image = Image(e.absUrl("src"), 0, 0)
+            val similarPost = SimilarPost(
+                getPostId(e.parent().attr("href")).toLong(),
+                postId.toLong(),
+                Image(e.absUrl("src"), 0, 0))
             similarPosts.add(similarPost)
         }
 
