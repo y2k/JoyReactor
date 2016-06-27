@@ -1,7 +1,5 @@
 package y2k.joyreactor.services.requests
 
-import rx.Observable
-import rx.Single
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.model.*
