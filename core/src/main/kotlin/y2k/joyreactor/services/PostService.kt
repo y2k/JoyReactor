@@ -87,21 +87,29 @@ class PostService(
     }
 
     fun getImages(postId: Long): Single<List<Image>> {
-        return Single.fromCallable {
-            val postAttachments = buffer.attachments.map { it.image }
-            val commentAttachments = buffer.comments
-                .map { it.attachmentObject }
-                .filterNotNull()
-            postAttachments.union(commentAttachments).toList()
-        }
+        return dataContext
+            .applyUse {
+                val postAttachments = buffer.attachments.map { it.image }
+                val commentAttachments = comments
+                    .filter("postId" to postId)
+                    .map { it.attachmentObject }
+                    .filterNotNull()
+                postAttachments.union(commentAttachments).toList()
+            }
+            .toSingle()
     }
 
-    fun getPostImages(): Observable<List<Image>> {
-        val postAttachments = buffer.attachments.map { it.image }
-        val commentAttachments = buffer.comments
-            .map { it.attachmentObject }
-            .filterNotNull()
-        return Observable.just(postAttachments.union(commentAttachments).toList())
+    fun getPostImages(postId: Long): Single<List<Image>> {
+        return dataContext
+            .applyUse {
+                val postAttachments = buffer.attachments.map { it.image }
+                val commentAttachments = comments
+                    .filter("postId" to postId)
+                    .map { it.attachmentObject }
+                    .filterNotNull()
+                postAttachments.union(commentAttachments).toList()
+            }
+            .toSingle()
     }
 
     fun getSimilarPosts(postId: Long): Observable<List<SimilarPost>> {

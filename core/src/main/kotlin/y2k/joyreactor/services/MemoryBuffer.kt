@@ -16,7 +16,6 @@ object MemoryBuffer {
 
     private @Volatile var request: PostRequest.Response? = null
 
-    val comments: List<Comment> get() = request?.comments ?: emptyList()
     val attachments: List<Attachment> get() = request?.attachments ?: emptyList()
     val similarPosts: List<SimilarPost> get() = request?.similarPosts ?: emptyList()
 

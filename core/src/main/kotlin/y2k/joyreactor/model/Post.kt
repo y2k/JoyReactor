@@ -25,12 +25,12 @@ data class Post(
     @DatabaseField val description: String = ""
 ) : Serializable, Comparable<Post>, Dto {
 
-    fun imageAspectOrDefault(default: Float): Float {
-        return image?.aspect ?: default
-    }
-
     override fun identify(newId: Long): Post {
         throw UnsupportedOperationException()
+    }
+
+    fun imageAspectOrDefault(default: Float): Float {
+        return image?.aspect ?: default
     }
 
     // TODO:

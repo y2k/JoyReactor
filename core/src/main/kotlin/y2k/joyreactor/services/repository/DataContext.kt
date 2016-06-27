@@ -3,10 +3,7 @@ package y2k.joyreactor.services.repository
 import rx.Observable
 import rx.schedulers.Schedulers
 import y2k.joyreactor.common.ForegroundScheduler
-import y2k.joyreactor.model.Group
-import y2k.joyreactor.model.GroupPost
-import y2k.joyreactor.model.Message
-import y2k.joyreactor.model.Post
+import y2k.joyreactor.model.*
 import java.util.concurrent.Executors
 
 /**
@@ -18,6 +15,7 @@ class DataContext(val factory: IDataContext) {
     val Tags = factory.register(Group::class)
     val TagPosts = factory.register(GroupPost::class)
     val Messages = factory.register(Message::class)
+    val comments by lazy { factory.register(Comment::class) }
 
     fun saveChanges() {
         factory.saveChanges()
@@ -31,11 +29,11 @@ class DataContext(val factory: IDataContext) {
 
         fun <T> use(callback: (DataContext) -> T): Observable<T> {
             return Observable
-                    .fromCallable {
-                        factory.use { callback(DataContext(it)) }
-                    }
-                    .subscribeOn(Schedulers.from(executor))
-                    .observeOn(ForegroundScheduler.instance);
+                .fromCallable {
+                    factory.use { callback(DataContext(it)) }
+                }
+                .subscribeOn(Schedulers.from(executor))
+                .observeOn(ForegroundScheduler.instance);
         }
 
         companion object {

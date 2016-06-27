@@ -12,13 +12,16 @@ import y2k.joyreactor.common.platform.open
  */
 class GalleryViewModel(
     private val navigation: NavigationService,
-    private val postService: PostService) {
+    private val service: PostService) {
 
     val images = property(emptyList<Image>())
 
     init {
-        postService.getPostImages().ui { images += it }
+        images += service.getPostImages(navigation.argument.toLong())
     }
 
-    fun openImage(index: Int) = navigation.open<ImageViewModel>(images.value[index].fullUrl())
+    fun openImage(index: Int) {
+        val imgUrl = images.value[index].fullUrl()
+        navigation.open<ImageViewModel>(imgUrl)
+    }
 }
