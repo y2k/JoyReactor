@@ -4,13 +4,14 @@ import com.j256.ormlite.field.DatabaseField
 import y2k.joyreactor.services.repository.Dto
 import java.io.Serializable
 import java.util.*
+import com.j256.ormlite.field.DataType
 
 /**
  * Created by y2k on 9/27/15.
  */
 data class Post(
     @DatabaseField val title: String = "",
-    @DatabaseField(dataType = com.j256.ormlite.field.DataType.SERIALIZABLE) val image: Image? = null,
+    @DatabaseField(dataType = DataType.SERIALIZABLE) val image: Image? = null,
     @DatabaseField val userImage: String = "",
     @DatabaseField val userName: String = "",
     @DatabaseField val created: Date = Date(),

@@ -22,10 +22,10 @@ class PostCommentsRequest {
             val comment = Comment(
                 node.select("div.txt > div").first().text(),
                 node.select("img.avatar").attr("src"),
-                (node.select("span.comment_rating").attr("comment_id")).toLong(),
                 parentId,
                 java.lang.Float.parseFloat(node.select("span.comment_rating").text().trim { it <= ' ' }),
-                postId)
+                postId,
+                id = (node.select("span.comment_rating").attr("comment_id")).toLong())
 
             val imgElement = node.select("div.image > img").first()
             if (imgElement != null)

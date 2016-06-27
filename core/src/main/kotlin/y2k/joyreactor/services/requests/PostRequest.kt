@@ -32,9 +32,9 @@ class PostRequest(
 
         for (e in page.select(".similar_post img")) {
             val similarPost = SimilarPost(
-                getPostId(e.parent().attr("href")).toLong(),
                 postId.toLong(),
-                Image(e.absUrl("src"), 0, 0))
+                Image(e.absUrl("src"), 0, 0),
+                getPostId(e.parent().attr("href")).toLong())
             similarPosts.add(similarPost)
         }
 
@@ -42,10 +42,10 @@ class PostRequest(
         if (imgElement.size > 1)
             for (e in imgElement.subList(1, imgElement.size - 1)) {
                 val a = Attachment(
+                    postId.toLong(),
                     Image(e.absUrl("src"),
                         Integer.parseInt(e.attr("width")),
-                        Integer.parseInt(e.attr("height"))),
-                    postId.toLong())
+                        Integer.parseInt(e.attr("height"))))
                 attachments.add(a)
             }
 

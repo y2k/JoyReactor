@@ -10,12 +10,12 @@ import java.io.Serializable
 data class Comment(
     @DatabaseField val text: String = "",
     @DatabaseField val userImage: String? = null,
-    @DatabaseField override val id: Long = 0,
     @DatabaseField val parentId: Long = 0,
     @DatabaseField val rating: Float = 0f,
     @DatabaseField val postId: Long = 0,
     @DatabaseField val level: Int = 0,
-    @DatabaseField var replies: Int = 0
+    @DatabaseField var replies: Int = 0,
+    @DatabaseField(id = true) override val id: Long = 0
 ) : Dto, Serializable {
 
     override fun identify(newId: Long) = copy(id = newId)

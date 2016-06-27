@@ -60,8 +60,8 @@ class PostViewModel(
     }
 
     fun openInBrowser() = navigation.openBrowser("http://joyreactor.cc/post/" + postId)
-    fun commentPost() = navigation.open<CreateCommentViewModel>(navigation.argument)
-    fun showMoreImages() = navigation.open<GalleryViewModel>()
+    fun commentPost() = navigation.open<CreateCommentViewModel>(postId)
+    fun showMoreImages() = navigation.open<GalleryViewModel>(postId)
     fun openImage(image: Image) = navigation.open<ImageViewModel>(image.fullUrl())
 
     fun saveToGallery() {
