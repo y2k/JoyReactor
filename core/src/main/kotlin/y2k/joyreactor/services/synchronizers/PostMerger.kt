@@ -49,12 +49,12 @@ class PostMerger(
     fun isUnsafeUpdate(group: Group, newPosts: List<Post>): Observable<Boolean> {
         return dataContext.use {
             val oldPosts = getPostsForTag(group)
-            if (oldPosts.size == 0) return@applyUse false
-            if (newPosts.size > oldPosts.size) return@applyUse true
+            if (oldPosts.size == 0) return@use false
+            if (newPosts.size > oldPosts.size) return@use true
             for (i in newPosts.indices) {
                 val oldId = oldPosts[i].id
                 val newId = newPosts[i].id
-                if (oldId != newId) return@applyUse true
+                if (oldId != newId) return@use true
             }
             false
         }
