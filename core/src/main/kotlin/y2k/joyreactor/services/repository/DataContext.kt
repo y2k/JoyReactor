@@ -23,6 +23,8 @@ class DataContext(val factory: IDataContext) {
         factory.saveChanges()
     }
 
+    infix fun String.eq(value:Any) = this to value
+
     class Factory(val factory: IDataContext) {
 
         fun <T> applyUse(callback: DataContext.() -> T): Observable<T> {

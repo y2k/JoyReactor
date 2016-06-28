@@ -27,10 +27,10 @@ class PostService(
 
     fun toggleFavorite(postId: Long): Completable {
         return dataContext
-            .applyUse { Posts.first("id" to postId) }
+            .applyUse { Posts.first("id" eq postId) }
             .flatMap { changePostFavoriteRequest(postId, !it.isFavorite) }
             .mapDatabase(dataContext) {
-                Posts.updateAll("id" to postId) { it.copy(isFavorite = !it.isFavorite) }
+                Posts.updateAll("id" eq postId, { it.copy(isFavorite = !it.isFavorite) })
                 broadcastService.broadcast(Notifications.Posts)
             }
             .toCompletable()
@@ -45,13 +45,13 @@ class PostService(
     fun synchronizePost(postId: Long): Completable {
         return postRequest(postId)
             .mapDatabase(dataContext) {
-                attachments.remove("postId" to postId)
+                attachments.remove("postId" eq postId)
                 it.attachments.forEach { attachments.add(it) }
 
-                similarPosts.remove("parentPostId" to postId)
+                similarPosts.remove("parentPostId" eq postId)
                 it.similarPosts.forEach { similarPosts.add(it) }
 
-                comments.remove("postId" to postId)
+                comments.remove("postId" eq postId)
                 it.comments.forEach { comments.add(it) }
             }
             .flatMap { dataContext.applyUse { Posts.getById(postId.toLong()) } }
@@ -92,10 +92,10 @@ class PostService(
         return dataContext
             .applyUse {
                 val postAttachments = attachments
-                    .filter("postId" to postId)
+                    .filter("postId" eq postId)
                     .mapNotNull { it.image }
                 val commentAttachments = comments
-                    .filter("postId" to postId)
+                    .filter("postId" eq postId)
                     .map { it.attachmentObject }
                     .filterNotNull()
                 postAttachments.union(commentAttachments).toList()
@@ -107,10 +107,10 @@ class PostService(
         return dataContext
             .applyUse {
                 val postAttachments = attachments
-                    .filter("postId" to postId)
+                    .filter("postId" eq postId)
                     .mapNotNull { it.image }
                 val commentAttachments = comments
-                    .filter("postId" to postId)
+                    .filter("postId" eq postId)
                     .map { it.attachmentObject }
                     .filterNotNull()
                 postAttachments.union(commentAttachments).toList()
@@ -120,7 +120,7 @@ class PostService(
 
     fun getSimilarPosts(postId: Long): Observable<List<SimilarPost>> {
         return dataContext
-            .applyUse { similarPosts.filter("parentPostId" to postId) }
+            .applyUse { similarPosts.filter("parentPostId" eq postId) }
     }
 
     fun saveImageToGallery(postId: Long): Completable {
