@@ -64,8 +64,4 @@ class PostViewModel(
     }
 
     fun selectComment(comment: Comment) = navigation.open<CommentsViewModel>(postId)
-
-    operator fun Completable.invoke(f: () -> Unit) {
-        TODO()
-    }
 }
