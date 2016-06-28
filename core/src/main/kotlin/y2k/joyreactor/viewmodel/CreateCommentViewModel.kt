@@ -23,12 +23,10 @@ class CreateCommentViewModel(
     val commentText = property("")
 
     init {
-        profileService
-            .getProfile()
-            .ui {
-                username += it.userName
-                avatar += it.userImage
-            }
+        profileService.getProfile().ui {
+            username += it.userName
+            avatar += it.userImage
+        }
     }
 
     fun create() {
