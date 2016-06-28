@@ -33,11 +33,9 @@ class CreateCommentViewModel(
 
     fun create() {
         isBusy += true
-        service
-            .createComment(navigation.argument, commentText.value)
-            .ui {
-                navigation.close()
-                isBusy += false
-            }
+        service.createComment(navigation.argument.toLong(), commentText.value).ui {
+            navigation.close()
+            isBusy += false
+        }
     }
 }
