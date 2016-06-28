@@ -41,31 +41,8 @@ class OriginalImageRequestFactory(
         }
     }
 
-    fun requestPartial(imageUrl: String): Observable<PartialResult<File>> {
-        return Observable
-            .create<PartialResult<File>> { subscriber ->
-                // TODO
-                val file = getTargetFile(imageUrl)
-                if (file.exists()) subscriber.onNext(PartialResult.complete(file))
-
-                try {
-                    httpClient.downloadToFile(imageUrl, file) { progress, max ->
-                        if (subscriber.isUnsubscribed) throw CancellationException()
-                        subscriber.onNext(PartialResult.inProgress<File>(progress, max))
-                    }
-                    subscriber.onNext(PartialResult.complete(file))
-                    subscriber.onCompleted()
-                } catch (e: Exception) {
-                    file.delete()
-                    subscriber.onError(e)
-                }
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(ForegroundScheduler.instance)
-    }
-
     private fun getTargetFile(imageUrl: String) =
-        File(platform.currentDirectory, "" + imageUrl.hashCode() + "." + getExtension(imageUrl))
+        File(platform.currentDirectory, "${imageUrl.hashCode()}.${getExtension(imageUrl)}")
 
     private fun getExtension(imageUrl: String): String {
         val fm = Pattern.compile("format=([^&]+)").matcher(imageUrl)

@@ -18,7 +18,7 @@ import java.io.File
  * Created by y2k on 11/24/15.
  */
 class PostService(
-    private val imageRequestFactory: OriginalImageRequestFactory,
+    private val requestImage: OriginalImageRequestFactory,
     private val requestPost: (Long) -> Observable<PostRequest.Response>,
     private val entities: Entities,
     private val likePostRequest: LikePostRequest,
@@ -38,16 +38,14 @@ class PostService(
     }
 
     fun getVideo(postId: String): Observable<File> {
-        return getFromCache(postId)
+        return getPost(postId.toLong()).toObservable()
             .map { it.image!!.fullUrl("mp4") }
-            .flatMap { imageRequestFactory(it) }
+            .flatMap { requestImage(it) }
     }
 
     fun synchronizePostWithImage(postId: Long): Completable {
         return syncPost(postId)
-            .doOnNext { broadcastService.broadcast(Notifications.Post) }
             .flatMap { syncPostImage(postId) }
-            .doOnCompleted { broadcastService.broadcast(Notifications.Post) }
             .toCompletable()
     }
 
@@ -63,16 +61,14 @@ class PostService(
                 comments.remove("postId" eq postId)
                 it.comments.forEach { comments.add(it) }
             }
+            .doOnNext { broadcastService.broadcast(Notifications.Post) }
     }
 
     private fun syncPostImage(postId: Long): Observable<*> {
         return entities
             .use { Posts.first("id" eq postId) }
-            .flatMap { imageRequestFactory(it.image!!.fullUrl(null)) }
-    }
-
-    fun getPost(postId: Long): Single<Post> {
-        return entities.use { Posts.getById(postId) }.toSingle()
+            .flatMap { it.image?.let { requestImage(it.original) } }
+            .doOnCompleted { broadcastService.broadcast(Notifications.Post) }
     }
 
     fun getTopComments(count: Int, postId: Long): Single<List<Comment>> {
@@ -93,10 +89,6 @@ class PostService(
             0L -> RootComments.create(entities, postId)
             else -> ChildComments.create(entities, parentCommentId, postId)
         }
-    }
-
-    fun getFromCache(postId: String): Observable<Post> {
-        return entities.use { Posts.getById(postId.toLong()) }
     }
 
     fun getImages(postId: Long): Single<List<Image>> {
@@ -130,7 +122,8 @@ class PostService(
     }
 
     fun saveImageToGallery(postId: Long): Completable {
-        return getFromCache("" + postId)
+        return getPost(postId)
+            .toObservable()
             .flatMap { mainImage(it.id) }
             .flatMap { platform.saveToGallery(it) }
             .toCompletable()
@@ -139,15 +132,17 @@ class PostService(
     fun mainImageFromDisk(serverPostId: Long): Single<PartialResult<File>> {
         return entities
             .use { Posts.getById(serverPostId) }
-            .flatMap { imageRequestFactory.requestFromCache(it.image!!.fullUrl(null)) }
+            .flatMap { requestImage.requestFromCache(it.image!!.fullUrl(null)) }
             .map { PartialResult.complete(it) }
             .toSingle()
     }
 
+    fun getPost(postId: Long) = entities.use { Posts.getById(postId) }.toSingle()
+
     fun mainImage(serverPostId: Long): Observable<File> {
         return entities
             .use { Posts.getById(serverPostId) }
-            .flatMap { imageRequestFactory(it.image!!.fullUrl(null)) }
+            .flatMap { requestImage(it.image!!.fullUrl(null)) }
     }
 
     fun updatePostLike(postId: Long, like: Boolean): Completable {

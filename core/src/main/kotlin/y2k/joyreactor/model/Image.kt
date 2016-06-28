@@ -14,6 +14,9 @@ class Image(
 
     private val url: String? = clearUrl(url)
 
+    val original: String
+        get() = fullUrl(if (isAnimated) "mp4" else null)
+
     fun fullUrl(format: String? = null): String {
         try {
             return toURL(null, null, format).toString()
