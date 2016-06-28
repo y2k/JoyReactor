@@ -43,7 +43,7 @@ class PostViewModel(
             poster += service.mainImageFromDisk(postId)
             images += service.getImages(postId)
             comments += service.getTopComments(10, postId)
-            canCreateComments += userService.isAuthorized().toSingle()
+            canCreateComments += userService.isAuthorized()
 
             service.getPost(postId).ui {
                 posterAspect += it.imageAspectOrDefault(1f)

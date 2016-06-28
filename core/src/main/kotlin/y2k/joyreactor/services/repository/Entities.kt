@@ -7,6 +7,8 @@ import java.util.concurrent.Executors
 
 class Entities(val factory: IDataContext) {
 
+    fun <T> useOnce(callback: DataContext.() -> T) = use(callback).toSingle()
+
     fun <T> use(callback: DataContext.() -> T): Observable<T> {
         return Observable
             .fromCallable {
