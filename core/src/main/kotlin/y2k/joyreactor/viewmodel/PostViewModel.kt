@@ -1,11 +1,9 @@
 package y2k.joyreactor.viewmodel
 
-import y2k.joyreactor.common.Notifications
-import y2k.joyreactor.common.PartialResult
+import rx.Completable
+import y2k.joyreactor.common.*
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.open
-import y2k.joyreactor.common.property
-import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Comment
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.LifeCycleService
@@ -22,7 +20,7 @@ class PostViewModel(
     private val navigation: NavigationService,
     private val lifeCycle: LifeCycleService) {
 
-    val isBusy = property(false)
+    val isBusy = property(true)
     val error = property(false)
     val canCreateComments = property(false)
 
@@ -37,15 +35,11 @@ class PostViewModel(
     private val postId = navigation.argument.toLong()
 
     init {
-        isBusy += true
-        service
-            .synchronizePostWithImage(postId)
-            .ui({ isBusy += false }, {
-                it.printStackTrace()
-                error += true
-            })
-
+        val process = service.synchronizePostWithImage(postId).pack()
         lifeCycle.scope(Notifications.Post) {
+            isBusy += process.isBusy
+            error += process.finishedWithError
+
             poster += service.mainImageFromDisk(postId)
             images += service.getImages(postId)
             comments += service.getTopComments(10, postId)

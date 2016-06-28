@@ -118,3 +118,17 @@ fun <T> Single<T>.ui(onSuccess: (T) -> Unit) {
     observeOn(ForegroundScheduler.instance)
         .subscribe(onSuccess, { it.printStackTrace() })
 }
+
+fun Completable.pack() = PackedCompletable(this)
+
+class PackedCompletable(completable: Completable) {
+
+    var isBusy: Boolean = true
+    var finishedWithError: Boolean = false
+
+    init {
+        completable.ui(
+            { isBusy = false },
+            { it.printStackTrace(); finishedWithError = true })
+    }
+}
