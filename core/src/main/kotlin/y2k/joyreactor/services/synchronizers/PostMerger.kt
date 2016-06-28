@@ -8,6 +8,7 @@ import y2k.joyreactor.model.GroupPost
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.services.MemoryBuffer
 import y2k.joyreactor.services.repository.DataContext
+import y2k.joyreactor.services.repository.Entities
 import java.util.*
 
 /**
@@ -15,45 +16,45 @@ import java.util.*
  */
 class PostMerger(
     private val buffer: MemoryBuffer,
-    private val dataContext: DataContext.Factory) {
+    private val dataContext: Entities) {
 
     fun mergeFirstPage(group: Group, newPosts: List<Post>): Observable<Unit> {
         return updatePostsAsync(newPosts)
             .flatMap {
-                dataContext.use { entities ->
+                dataContext.use {
                     buffer.dividers[group.id] = newPosts.size
 
                     val result = ArrayList<GroupPost>()
                     for (s in newPosts)
                         result.add(GroupPost(group.id, s.id))
-                    entities.TagPosts
+                    TagPosts
                         .filter("groupId" to group.id)
                         .filterNot { s -> newPosts.any { it.id == s.postId } }
                         .forEach { result.add(it) }
 
-                    entities.TagPosts
+                    TagPosts
                         .filter("groupId" to group.id)
-                        .forEach { entities.TagPosts.remove(it) }
+                        .forEach { TagPosts.remove(it) }
 
                     // TODO: Понять почему здесь падает
                     //                    result.forEach { entities.TagPosts.add(it) }
-                    for (s in result) entities.TagPosts.add(s)
+                    for (s in result) TagPosts.add(s)
 
-                    entities.saveChanges()
+                    saveChanges()
                 }
             }
             .doOnNext { buffer.hasNew[group.id] = false }
     }
 
     fun isUnsafeUpdate(group: Group, newPosts: List<Post>): Observable<Boolean> {
-        return dataContext.use { entities ->
-            val oldPosts = entities.getPostsForTag(group)
-            if (oldPosts.size == 0) return@use false
-            if (newPosts.size > oldPosts.size) return@use true
+        return dataContext.use {
+            val oldPosts = getPostsForTag(group)
+            if (oldPosts.size == 0) return@applyUse false
+            if (newPosts.size > oldPosts.size) return@applyUse true
             for (i in newPosts.indices) {
                 val oldId = oldPosts[i].id
                 val newId = newPosts[i].id
-                if (oldId != newId) return@use true
+                if (oldId != newId) return@applyUse true
             }
             false
         }
@@ -68,8 +69,8 @@ class PostMerger(
     fun mergeNextPage(group: Group, newPosts: List<Post>): Observable<Unit> {
         return updatePostsAsync(newPosts)
             .flatMap {
-                dataContext.use { entities ->
-                    var links = entities.TagPosts.filter("groupId" to group.id)
+                dataContext.use {
+                    val links = TagPosts.filter("groupId" to group.id)
                     val actualPosts = links.subList(0, buffer.dividers[group.id]!!).toArrayList()
                     val expiredPosts = links.subList(buffer.dividers[group.id]!!, links.size).toArrayList()
 
@@ -79,27 +80,27 @@ class PostMerger(
                     }
                     buffer.dividers[group.id] = actualPosts.size
 
-                    links.forEach { entities.TagPosts.remove(it) }
+                    links.forEach { TagPosts.remove(it) }
                     actualPosts
                         .unionOrdered(expiredPosts)
-                        .forEach { entities.TagPosts.add(it) }
+                        .forEach { TagPosts.add(it) }
 
-                    entities.saveChanges()
+                    saveChanges()
                 }
             }
     }
 
     private fun updatePostsAsync(newPosts: List<Post>): Observable<Unit> {
-        return dataContext.use { entities ->
+        return dataContext.use {
             for (p in newPosts) {
-                val old = entities.Posts.getByIdOrNull(p.id)
-                if (old == null) entities.Posts.add(p)
+                val old = Posts.getByIdOrNull(p.id)
+                if (old == null) Posts.add(p)
                 else {
-                    entities.Posts.remove(old)
-                    entities.Posts.add(p)
+                    Posts.remove(old)
+                    Posts.add(p)
                 }
             }
-            entities.saveChanges()
+            saveChanges()
         }
     }
 

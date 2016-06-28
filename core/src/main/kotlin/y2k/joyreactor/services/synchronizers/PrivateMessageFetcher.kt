@@ -4,6 +4,7 @@ import rx.Observable
 import y2k.joyreactor.model.Message
 import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.repository.DataSet
+import y2k.joyreactor.services.repository.Entities
 import y2k.joyreactor.services.requests.MessageListRequest
 import java.util.*
 
@@ -12,13 +13,13 @@ import java.util.*
  */
 class PrivateMessageFetcher(
     private val request: MessageListRequest,
-    private val entities: DataContext.Factory) {
+    private val entities: Entities) {
 
     private var mineOldest: Date? = null
     private var theirOldest: Date? = null
 
     fun execute(): Observable<Unit> {
-        return entities.applyUse {
+        return entities.use {
             var nextPage: String? = null
             for (page in 1..MaxPages) {
                 val (messages, next) = request.getMessages(nextPage)

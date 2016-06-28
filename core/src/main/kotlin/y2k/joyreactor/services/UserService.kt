@@ -6,6 +6,7 @@ import rx.Single
 import y2k.joyreactor.common.Notifications
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.services.repository.DataContext
+import y2k.joyreactor.services.repository.Entities
 import y2k.joyreactor.services.requests.AddTagRequest
 import y2k.joyreactor.services.requests.UserNameRequest
 import y2k.joyreactor.services.synchronizers.MyTagFetcher
@@ -15,7 +16,7 @@ import y2k.joyreactor.services.synchronizers.MyTagFetcher
  */
 class UserService(
     private val addTagRequest: AddTagRequest,
-    private val dataContext: DataContext.Factory,
+    private val dataContext: Entities,
     private val userNameRequest: UserNameRequest,
     private val synchronizer: MyTagFetcher) {
 
@@ -27,7 +28,7 @@ class UserService(
                 { BroadcastService.broadcast(Notifications.Groups) })
 
         val fromDb = dataContext
-            .applyUse {
+            .use {
                 Tags.filter("isVisible" to true)
                     .sortedBy { it.title.toLowerCase() }
             }
@@ -47,7 +48,7 @@ class UserService(
     }
 
     fun makeGroup(base: Group, quality: Group.Quality): Observable<Group> {
-        return dataContext.applyUse {
+        return dataContext.use {
             val group = Group(base, quality)
             val exists = Tags.filter("serverId" to group.serverId).firstOrNull()
             exists ?: Tags.add(group).apply { saveChanges() }

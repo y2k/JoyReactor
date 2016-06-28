@@ -6,6 +6,7 @@ import y2k.joyreactor.common.mapDatabase
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.repository.DataContext
+import y2k.joyreactor.services.repository.Entities
 import y2k.joyreactor.services.requests.TagsForUserRequest
 import y2k.joyreactor.services.requests.UserNameRequest
 
@@ -15,7 +16,7 @@ import y2k.joyreactor.services.requests.UserNameRequest
 class MyTagFetcher(
     private val userNameRequest: UserNameRequest,
     private val tagsForUserRequest: TagsForUserRequest,
-    private val dataContext: DataContext.Factory) {
+    private val dataContext: Entities) {
 
     fun synchronize(): Completable {
         return userNameRequest

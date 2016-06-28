@@ -8,6 +8,7 @@ import y2k.joyreactor.common.mapDatabase
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.ListState
 import y2k.joyreactor.services.repository.DataContext
+import y2k.joyreactor.services.repository.Entities
 import y2k.joyreactor.services.requests.PostsForTagRequest
 import y2k.joyreactor.services.synchronizers.PostMerger
 
@@ -15,14 +16,14 @@ import y2k.joyreactor.services.synchronizers.PostMerger
  * Created by y2k on 11/24/15.
  */
 class TagService(
-    private val dataContext: DataContext.Factory,
+    private val dataContext: Entities,
     private val postsRequest: PostsForTagRequest,
     private val merger: PostMerger,
     private val buffer: MemoryBuffer) {
 
     fun queryPosts(group: Group): Pair<Single<ListState>, Notifications> {
         return dataContext
-            .applyUse {
+            .use {
                 TagPosts
                     .filter("groupId" to group.id)
                     .map { Posts.getById(it.postId) }

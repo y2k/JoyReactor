@@ -7,14 +7,15 @@ import rx.Subscription
 import rx.schedulers.Schedulers
 import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.repository.DataContext
+import y2k.joyreactor.services.repository.Entities
 
 /**
  * Created by y2k on 1/31/16.
  */
 
-inline fun <T, R> Observable<T>.mapDatabase(context: DataContext.Factory, crossinline f: DataContext.(T) -> R): Observable<R> {
+inline fun <T, R> Observable<T>.mapDatabase(context: Entities, crossinline f: DataContext.(T) -> R): Observable<R> {
     return flatMap { data ->
-        context.applyUse { f(data) }
+        context.use { f(data) }
     }
 }
 

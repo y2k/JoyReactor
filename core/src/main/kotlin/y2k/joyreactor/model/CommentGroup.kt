@@ -2,6 +2,7 @@ package y2k.joyreactor.model
 
 import rx.Observable
 import y2k.joyreactor.services.repository.DataContext
+import y2k.joyreactor.services.repository.Entities
 import java.util.*
 
 /**
@@ -27,8 +28,8 @@ class RootComments() : ArrayList<Comment>(), CommentGroup {
 
     companion object {
 
-        fun create(entities: DataContext.Factory, postId: Long): Observable<CommentGroup> {
-            return entities.applyUse {
+        fun create(entities: Entities, postId: Long): Observable<CommentGroup> {
+            return entities.use {
                 val firstLevelComments = HashSet<Long>()
                 val comments = comments
                     .filter("postId" to postId)
@@ -58,8 +59,8 @@ class ChildComments() : ArrayList<Comment>(), CommentGroup {
 
     companion object {
 
-        fun create(entities: DataContext.Factory, parentCommentId: Long, postId: Long): Observable<CommentGroup> {
-            return entities.applyUse {
+        fun create(entities: Entities, parentCommentId: Long, postId: Long): Observable<CommentGroup> {
+            return entities.use {
                 val parent = comments
                     .filter("postId" to postId)
                     .first { it.id == parentCommentId }

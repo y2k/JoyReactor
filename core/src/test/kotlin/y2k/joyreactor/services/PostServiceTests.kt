@@ -13,6 +13,7 @@ import rx.schedulers.Schedulers
 import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.common.platform.Platform
 import y2k.joyreactor.services.repository.DataContext
+import y2k.joyreactor.services.repository.Entities
 import y2k.joyreactor.services.requests.ChangePostFavoriteRequest
 import y2k.joyreactor.services.requests.LikePostRequest
 import y2k.joyreactor.services.requests.OriginalImageRequestFactory
@@ -25,7 +26,7 @@ import y2k.joyreactor.services.requests.PostRequest
 @PrepareForTest(
     OriginalImageRequestFactory::class,
     MemoryBuffer::class,
-    DataContext.Factory::class,
+    Entities::class,
     LikePostRequest::class,
     Platform::class,
     BroadcastService::class,
@@ -39,7 +40,7 @@ class PostServiceTests {
         val service = PostService(
             mock(OriginalImageRequestFactory::class.java),
             { Observable.empty() },
-            mock(DataContext.Factory::class.java),
+            mock(Entities::class.java),
             mock(LikePostRequest::class.java),
             mock(Platform::class.java),
             mock(BroadcastService::class.java),
