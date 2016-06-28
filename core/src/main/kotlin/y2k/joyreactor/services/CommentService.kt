@@ -16,7 +16,7 @@ class CommentService(
     fun createComment(postId: String, commentText: String): Completable {
         return requestFactory
             .create(postId, commentText)
-            .flatMap { postService.synchronizePost(postId.toLong()).toObservable<Any>() }
+            .flatMap { postService.synchronizePostWithImage(postId.toLong()).toObservable<Any>() }
             .toCompletable()
     }
 }

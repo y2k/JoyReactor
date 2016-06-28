@@ -19,7 +19,7 @@ import java.io.File
  */
 class PostService(
     private val imageRequestFactory: OriginalImageRequestFactory,
-    private val postRequest: (Long) -> Observable<PostRequest.Response>,
+    private val requestPost: (Long) -> Observable<PostRequest.Response>,
     private val entities: Entities,
     private val likePostRequest: LikePostRequest,
     private val platform: Platform,
@@ -28,7 +28,7 @@ class PostService(
 
     fun toggleFavorite(postId: Long): Completable {
         return entities
-            .use { Posts.first("id" eq postId) }
+            .use { Posts.getById(postId) }
             .flatMap { changePostFavoriteRequest(postId, !it.isFavorite) }
             .mapDatabase(entities) {
                 Posts.updateAll("id" eq postId, { it.copy(isFavorite = !it.isFavorite) })
@@ -43,8 +43,16 @@ class PostService(
             .flatMap { imageRequestFactory(it) }
     }
 
-    fun synchronizePost(postId: Long): Completable {
-        return postRequest(postId)
+    fun synchronizePostWithImage(postId: Long): Completable {
+        return syncPost(postId)
+            .doOnNext { broadcastService.broadcast(Notifications.Post) }
+            .flatMap { syncPostImage(postId) }
+            .doOnCompleted { broadcastService.broadcast(Notifications.Post) }
+            .toCompletable()
+    }
+
+    private fun syncPost(postId: Long): Observable<*> {
+        return requestPost(postId)
             .mapDatabase(entities) {
                 attachments.remove("postId" eq postId)
                 it.attachments.forEach { attachments.add(it) }
@@ -55,11 +63,12 @@ class PostService(
                 comments.remove("postId" eq postId)
                 it.comments.forEach { comments.add(it) }
             }
-            .doOnNext { broadcastService.broadcast(Notifications.Post) }
-            .mapDatabase(entities) { Posts.getById(postId.toLong()) }
+    }
+
+    private fun syncPostImage(postId: Long): Observable<*> {
+        return entities
+            .use { Posts.first("id" eq postId) }
             .flatMap { imageRequestFactory(it.image!!.fullUrl(null)) }
-            .doOnCompleted { broadcastService.broadcast(Notifications.Post) }
-            .toCompletable()
     }
 
     fun getPost(postId: Long): Single<Post> {
@@ -118,11 +127,6 @@ class PostService(
                 postAttachments.union(commentAttachments).toList()
             }
             .toSingle()
-    }
-
-    fun getSimilarPosts(postId: Long): Observable<List<SimilarPost>> {
-        return entities
-            .use { similarPosts.filter("parentPostId" eq postId) }
     }
 
     fun saveImageToGallery(postId: Long): Completable {

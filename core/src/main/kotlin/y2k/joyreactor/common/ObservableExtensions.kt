@@ -102,7 +102,7 @@ fun <T> Observable<T>.ui(onNext: (T) -> Unit): Subscription {
 }
 
 fun <T> Pair<Single<T>, Notifications>.subscribe(lifeCycle: LifeCycleService, onNext: (T) -> Unit) {
-    lifeCycle.register(second) {
+    lifeCycle.scope(second) {
         first
             .observeOn(ForegroundScheduler.instance)
             .subscribe(onNext, Throwable::printStackTrace)

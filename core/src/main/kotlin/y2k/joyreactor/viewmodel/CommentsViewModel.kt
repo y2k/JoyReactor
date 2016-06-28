@@ -26,7 +26,7 @@ class CommentsViewModel(
     init {
         val postId = navigation.argument.toLong()
 
-        lifeCycle.register(Notifications.Post) {
+        lifeCycle.scope(Notifications.Post) {
             service.getComments(postId, 0).ui { comments += it }
             userService.isAuthorized().ui { canCreateComments += it }
         }

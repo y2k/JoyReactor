@@ -25,7 +25,7 @@ class LifeCycleService(
         actions.add(null to { broadcastService.register(this, token.java, func) })
     }
 
-    fun register(token: Notifications, func: () -> Unit) {
+    fun scope(token: Notifications, func: () -> Unit) {
         val old = actions.firstOrNull { it.first == token }
         if (old != null) {
             old.first?.let { broadcastService.unregisterToken(it) }

@@ -39,13 +39,13 @@ class PostViewModel(
     init {
         isBusy += true
         service
-            .synchronizePost(postId)
+            .synchronizePostWithImage(postId)
             .ui({ isBusy += false }, {
                 it.printStackTrace()
                 error += true
             })
 
-        lifeCycle.register(Notifications.Post) {
+        lifeCycle.scope(Notifications.Post) {
             poster += service.mainImageFromDisk(postId)
             images += service.getImages(postId)
             comments += service.getTopComments(10, postId)
