@@ -1,6 +1,5 @@
 package y2k.joyreactor.viewmodel
 
-import rx.Completable
 import y2k.joyreactor.common.*
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.open
@@ -63,5 +62,5 @@ class PostViewModel(
         service.saveImageToGallery(postId).ui { isBusy += false }
     }
 
-    fun selectComment(comment: Comment) = navigation.open<CommentsViewModel>(postId)
+    fun selectComment(comment: Comment) = navigation.open<CommentsViewModel>(comment.id)
 }

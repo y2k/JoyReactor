@@ -18,27 +18,25 @@ class CommentsViewModel(
     private val service: PostService,
     private val userService: ProfileService,
     private val navigation: NavigationService,
-    private val lifeCycle: LifeCycleService) {
+    private val scope: LifeCycleService) {
 
     val comments = property<CommentGroup>(EmptyGroup())
     val canCreateComments = property(false)
 
     init {
-        val postId = navigation.argument.toLong()
-
-        lifeCycle.scope(Notifications.Post) {
-            service.getComments(postId, 0).ui { comments += it }
-            userService.isAuthorized().ui { canCreateComments += it }
+        val commentId = navigation.argument.toLong()
+        scope(Notifications.Post) {
+            comments += service.getCommentsForId(commentId)
+            canCreateComments += userService.isAuthorized()
         }
     }
 
     fun selectComment(position: Int) {
         val comment = comments.value[position]
-        service.getCommentsAsync(comment.postId, comments.value.getNavigation(comment))
+        service
+            .getCommentsAsync(comment.postId, comments.value.getNavigation(comment))
             .ui { comments += it }
     }
 
-    fun commentPost() {
-        navigation.open<CreateCommentViewModel>(navigation.argument)
-    }
+    fun commentPost() = navigation.open<CreateCommentViewModel>(navigation.argument)
 }

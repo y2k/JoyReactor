@@ -90,6 +90,12 @@ class PostService(
         }
     }
 
+    fun getCommentsForId(parentCommentId: Long): Single<CommentGroup> {
+        return entities
+            .useOnce { comments.getById(parentCommentId).postId }
+            .flatMap { ChildComments.create(entities, parentCommentId, it) }
+    }
+
     fun getImages(postId: Long): Single<List<Image>> {
         return entities
             .use {
