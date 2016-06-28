@@ -53,14 +53,14 @@ object ServiceLocator {
         register { ProfileRequestFactory(resolve()) }
         register { LoginRequestFactory(resolve()) }
         register { SendMessageRequest(resolve()) }
-        register { CreateCommentRequestFactory(resolve()) }
+        register { CreateCommentRequest(resolve()) }
 
         register { PostService(resolve(), resolve<PostRequest>(), resolve(), resolve(), resolve(), resolve(), resolve()) }
         register { TagService(resolve(), resolve(), resolve(), resolve()) }
         register { UserService(resolve(), resolve(), resolve(), resolve()) }
         register { ProfileService(resolve(), resolve(), resolve()) }
         register { UserMessagesService(resolve(), resolve(), resolve()) }
-        register { CommentService(resolve(), resolve()) }
+        register { CommentService(resolve<CreateCommentRequest>(), resolve()) }
 
         register { LoginViewModel(resolve(), resolve()) }
         register { MenuViewModel(resolve(), resolve(), resolve()) }

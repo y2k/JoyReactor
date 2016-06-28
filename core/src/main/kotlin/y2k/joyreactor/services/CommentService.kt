@@ -10,6 +10,7 @@ class CommentService(
     private val postService: PostService) {
 
     fun createComment(postId: Long, commentText: String): Completable {
-        return requestFactory(postId, commentText).andThen(postService.synchronizePostWithImage(postId.toLong()))
+        return requestFactory(postId, commentText)
+            .andThen(postService.synchronizePostWithImage(postId.toLong()))
     }
 }

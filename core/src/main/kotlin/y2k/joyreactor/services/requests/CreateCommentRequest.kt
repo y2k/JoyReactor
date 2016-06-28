@@ -8,7 +8,8 @@ import java.util.regex.Pattern
 /**
  * Created by y2k on 19/10/15.
  */
-class CreateCommentRequestFactory(private val httpClient: HttpClient) : Function2<Long, String, Completable> {
+class CreateCommentRequest(
+    private val httpClient: HttpClient) : Function2<Long, String, Completable> {
 
     private val commentId: String? = null
 
