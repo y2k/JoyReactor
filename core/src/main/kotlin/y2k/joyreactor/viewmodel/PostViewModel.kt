@@ -41,7 +41,7 @@ class PostViewModel(
 
             poster += service.mainImageFromDisk(postId)
             images += service.getImages(postId)
-            comments += service.getTopComments(10, postId)
+            comments += service.getTopComments(postId, 10)
             canCreateComments += userService.isAuthorized()
 
             service.getPost(postId).ui {
