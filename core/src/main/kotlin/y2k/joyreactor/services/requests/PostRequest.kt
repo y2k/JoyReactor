@@ -6,15 +6,16 @@ import y2k.joyreactor.model.*
 import y2k.joyreactor.services.requests.parser.PostParser
 import java.util.*
 import java.util.regex.Pattern
+import rx.Observable
 
 /**
  * Created by y2k on 11/21/15.
  */
 class PostRequest(
     private val httpClient: HttpClient,
-    private val parser: PostParser) {
+    private val parser: PostParser) : Function1<Long, Observable<PostRequest.Response>> {
 
-    operator fun invoke(postId: Long) = ioObservable { request(postId.toString()) }
+    override operator fun invoke(postId: Long) = ioObservable { request(postId.toString()) }
 
     fun request(postId: String): Response {
         val commentsRequest = PostCommentsRequest()

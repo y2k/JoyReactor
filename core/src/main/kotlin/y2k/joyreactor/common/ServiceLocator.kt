@@ -55,7 +55,7 @@ object ServiceLocator {
         register { SendMessageRequest(resolve()) }
         register { CreateCommentRequestFactory(resolve()) }
 
-        register { PostService(resolve(), resolve(), resolve(), resolve(), resolve(), resolve(), resolve()) }
+        register { PostService(resolve(), resolve<PostRequest>(), resolve(), resolve(), resolve(), resolve(), resolve()) }
         register { TagService(resolve(), resolve(), resolve(), resolve()) }
         register { UserService(resolve(), resolve(), resolve(), resolve()) }
         register { ProfileService(resolve(), resolve(), resolve()) }

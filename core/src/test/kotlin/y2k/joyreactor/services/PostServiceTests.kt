@@ -8,6 +8,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
+import rx.Observable
 import rx.schedulers.Schedulers
 import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.common.platform.Platform
@@ -23,7 +24,6 @@ import y2k.joyreactor.services.requests.PostRequest
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(
     OriginalImageRequestFactory::class,
-    PostRequest::class,
     MemoryBuffer::class,
     DataContext.Factory::class,
     LikePostRequest::class,
@@ -32,14 +32,13 @@ import y2k.joyreactor.services.requests.PostRequest
     ChangePostFavoriteRequest::class)
 class PostServiceTests {
 
-    @Ignore
     @Test
     fun test() {
         ForegroundScheduler.instance = Schedulers.immediate()
 
         val service = PostService(
             mock(OriginalImageRequestFactory::class.java),
-            mock(PostRequest::class.java),
+            { Observable.empty() },
             mock(DataContext.Factory::class.java),
             mock(LikePostRequest::class.java),
             mock(Platform::class.java),

@@ -18,7 +18,7 @@ import java.io.File
  */
 class PostService(
     private val imageRequestFactory: OriginalImageRequestFactory,
-    private val postRequest: PostRequest,
+    private val postRequest: (Long) -> Observable<PostRequest.Response>,
     private val dataContext: DataContext.Factory,
     private val likePostRequest: LikePostRequest,
     private val platform: Platform,
