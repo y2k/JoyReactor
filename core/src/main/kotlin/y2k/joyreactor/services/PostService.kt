@@ -56,7 +56,7 @@ class PostService(
                 it.comments.forEach { comments.add(it) }
             }
             .doOnNext { broadcastService.broadcast(Notifications.Post) }
-            .flatMap { entities.use { Posts.getById(postId.toLong()) } }
+            .mapDatabase(entities) { Posts.getById(postId.toLong()) }
             .flatMap { imageRequestFactory(it.image!!.fullUrl(null)) }
             .doOnCompleted { broadcastService.broadcast(Notifications.Post) }
             .toCompletable()
