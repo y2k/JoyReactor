@@ -16,7 +16,7 @@ class GalleryViewModel(
     val images = property(emptyList<Image>())
 
     init {
-        images += service.getPostImages(navigation.argument.toLong())
+        images += service.getImages(navigation.argument.toLong())
     }
 
     fun openImage(index: Int) {

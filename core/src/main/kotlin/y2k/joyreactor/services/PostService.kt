@@ -90,33 +90,15 @@ class PostService(
     }
 
     fun getImages(postId: Long): Single<List<Image>> {
-        return entities
-            .use {
-                val postAttachments = attachments
-                    .filter("postId" eq postId)
-                    .mapNotNull { it.image }
-                val commentAttachments = comments
-                    .filter("postId" eq postId)
-                    .map { it.attachmentObject }
-                    .filterNotNull()
-                postAttachments.union(commentAttachments).toList()
-            }
-            .toSingle()
-    }
-
-    fun getPostImages(postId: Long): Single<List<Image>> {
-        return entities
-            .use {
-                val postAttachments = attachments
-                    .filter("postId" eq postId)
-                    .mapNotNull { it.image }
-                val commentAttachments = comments
-                    .filter("postId" eq postId)
-                    .map { it.attachmentObject }
-                    .filterNotNull()
-                postAttachments.union(commentAttachments).toList()
-            }
-            .toSingle()
+        return entities.useOnce {
+            val postAttachments = attachments
+                .filter("postId" eq postId)
+                .mapNotNull { it.image }
+            val commentAttachments = comments
+                .filter("postId" eq postId)
+                .mapNotNull { it.attachmentObject }
+            postAttachments.union(commentAttachments).toList()
+        }
     }
 
     fun saveImageToGallery(postId: Long): Completable {
@@ -135,7 +117,7 @@ class PostService(
             .toSingle()
     }
 
-    fun getPost(postId: Long) = entities.use { Posts.getById(postId) }.toSingle()
+    fun getPost(postId: Long): Single<Post> = entities.useOnce { Posts.getById(postId) }
 
     fun mainImage(serverPostId: Long): Observable<File> {
         return entities
