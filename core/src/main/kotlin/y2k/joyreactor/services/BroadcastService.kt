@@ -4,7 +4,6 @@ import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.common.Notifications
 import y2k.joyreactor.model.Group
 import java.util.*
-import kotlin.reflect.KClass
 
 /**
  * Created by y2k on 2/3/16.

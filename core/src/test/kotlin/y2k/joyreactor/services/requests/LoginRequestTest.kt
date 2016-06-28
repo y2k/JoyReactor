@@ -1,7 +1,6 @@
 package y2k.joyreactor.services.requests
 
 import org.junit.Test
-import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.powermock.core.classloader.annotations.PrepareForTest
 import y2k.joyreactor.common.http.HttpClient

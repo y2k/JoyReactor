@@ -2,7 +2,6 @@ package y2k.joyreactor.services
 
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
@@ -12,12 +11,10 @@ import rx.Observable
 import rx.schedulers.Schedulers
 import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.common.platform.Platform
-import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.repository.Entities
 import y2k.joyreactor.services.requests.ChangePostFavoriteRequest
 import y2k.joyreactor.services.requests.LikePostRequest
 import y2k.joyreactor.services.requests.OriginalImageRequestFactory
-import y2k.joyreactor.services.requests.PostRequest
 
 /**
  * Created by y2k on 27/06/16.

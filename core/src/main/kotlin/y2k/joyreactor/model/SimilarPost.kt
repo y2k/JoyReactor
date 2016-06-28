@@ -3,7 +3,6 @@ package y2k.joyreactor.model
 import com.j256.ormlite.field.DatabaseField
 import y2k.joyreactor.services.repository.Dto
 import java.io.Serializable
-import com.j256.ormlite.field.DataType
 
 /**
  * Created by y2k on 12/1/15.

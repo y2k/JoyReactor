@@ -5,7 +5,6 @@ import rx.Observable
 import rx.Single
 import y2k.joyreactor.common.Notifications
 import y2k.joyreactor.model.Group
-import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.repository.Entities
 import y2k.joyreactor.services.requests.AddTagRequest
 import y2k.joyreactor.services.requests.UserNameRequest

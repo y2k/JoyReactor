@@ -1,7 +1,6 @@
 package y2k.joyreactor.model
 
 import rx.Observable
-import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.repository.Entities
 import java.util.*
 

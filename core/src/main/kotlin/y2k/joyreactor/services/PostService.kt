@@ -6,7 +6,6 @@ import rx.Single
 import y2k.joyreactor.common.*
 import y2k.joyreactor.common.platform.Platform
 import y2k.joyreactor.model.*
-import y2k.joyreactor.services.repository.DataContext
 import y2k.joyreactor.services.repository.Entities
 import y2k.joyreactor.services.requests.ChangePostFavoriteRequest
 import y2k.joyreactor.services.requests.LikePostRequest

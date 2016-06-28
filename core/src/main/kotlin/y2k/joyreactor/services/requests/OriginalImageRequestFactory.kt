@@ -1,14 +1,10 @@
 package y2k.joyreactor.services.requests
 
 import rx.Observable
-import rx.schedulers.Schedulers
-import y2k.joyreactor.common.ForegroundScheduler
-import y2k.joyreactor.common.PartialResult
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.common.platform.Platform
 import java.io.File
-import java.util.concurrent.CancellationException
 import java.util.regex.Pattern
 
 /**

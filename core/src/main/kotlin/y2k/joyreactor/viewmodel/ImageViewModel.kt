@@ -1,10 +1,8 @@
 package y2k.joyreactor.viewmodel
 
-import y2k.joyreactor.common.ui
-import y2k.joyreactor.common.property
 import y2k.joyreactor.common.platform.NavigationService
-import y2k.joyreactor.model.Image
-import y2k.joyreactor.services.PostService
+import y2k.joyreactor.common.property
+import y2k.joyreactor.common.ui
 import y2k.joyreactor.services.requests.OriginalImageRequestFactory
 import java.io.File
 
