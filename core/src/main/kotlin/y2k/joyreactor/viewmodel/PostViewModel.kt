@@ -18,7 +18,7 @@ class PostViewModel(
     private val service: PostService,
     private val userService: ProfileService,
     private val navigation: NavigationService,
-    private val lifeCycle: LifeCycleService) {
+    private val scope: LifeCycleService) {
 
     val isBusy = property(true)
     val error = property(false)
@@ -36,7 +36,7 @@ class PostViewModel(
 
     init {
         val process = service.synchronizePostWithImage(postId).pack()
-        lifeCycle.scope(Notifications.Post) {
+        scope(Notifications.Post) {
             isBusy += process.isBusy
             error += process.finishedWithError
 
@@ -45,10 +45,10 @@ class PostViewModel(
             comments += service.getTopComments(10, postId)
             canCreateComments += userService.isAuthorized().toSingle()
 
-            service.getPost(postId).ui { post ->
-                posterAspect += post.imageAspectOrDefault(1f)
-                description += post.title
-                tags += post.tags
+            service.getPost(postId).ui {
+                posterAspect += it.imageAspectOrDefault(1f)
+                description += it.title
+                tags += it.tags
             }
         }
     }
@@ -63,5 +63,9 @@ class PostViewModel(
         service.saveImageToGallery(postId).ui { isBusy += false }
     }
 
-    fun selectComment(comment: Comment) = navigation.open<CommentsViewModel>(postId.toString())
+    fun selectComment(comment: Comment) = navigation.open<CommentsViewModel>(postId)
+
+    operator fun Completable.invoke(f: () -> Unit) {
+        TODO()
+    }
 }

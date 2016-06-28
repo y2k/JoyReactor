@@ -67,6 +67,7 @@ class PostService(
         return entities
             .use { Posts.first("id" eq postId) }
             .flatMap { it.image?.let { requestImage(it.original) } }
+            .doOnError { broadcastService.broadcast(Notifications.Post) }
             .doOnCompleted { broadcastService.broadcast(Notifications.Post) }
     }
 
