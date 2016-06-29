@@ -13,10 +13,12 @@ import y2k.joyreactor.services.repository.Entities
  * Created by y2k on 1/31/16.
  */
 
-inline fun <T, R> Observable<T>.mapDatabase(context: Entities, crossinline f: DataContext.(T) -> R): Observable<R> {
-    return flatMap { data ->
-        context.use { f(data) }
-    }
+inline fun <T, R> Observable<T>.mapEntities(context: Entities, crossinline f: DataContext.(T) -> R): Observable<R> {
+    return flatMap { data -> context.use { f(data) } }
+}
+
+inline fun <T, R> Observable<T>.doEntities(context: Entities, crossinline f: DataContext.(T) -> R): Completable {
+    return flatMap { data -> context.use { f(data) } }.toCompletable()
 }
 
 fun <T> Observable<T>.replaceIfNull(f: () -> Observable<T>): Observable<T> {

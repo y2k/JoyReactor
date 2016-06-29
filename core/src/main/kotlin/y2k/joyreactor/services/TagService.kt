@@ -4,7 +4,7 @@ import rx.Completable
 import rx.Observable
 import rx.Single
 import y2k.joyreactor.common.Notifications
-import y2k.joyreactor.common.mapDatabase
+import y2k.joyreactor.common.mapEntities
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.ListState
 import y2k.joyreactor.services.repository.Entities
@@ -64,7 +64,7 @@ class TagService(
 
     fun reloadFirstPage(group: Group): Completable {
         return requestAsync(group)
-            .mapDatabase(dataContext) {
+            .mapEntities(dataContext) {
                 TagPosts
                     .filter("groupId" to group.id)
                     .forEach { TagPosts.remove(it) }

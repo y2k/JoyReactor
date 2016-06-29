@@ -29,11 +29,10 @@ class PostService(
         return entities
             .use { Posts.getById(postId) }
             .flatMap { changePostFavoriteRequest(postId, !it.isFavorite) }
-            .mapDatabase(entities) {
+            .doEntities(entities) {
                 Posts.updateAll("id" eq postId, { it.copy(isFavorite = !it.isFavorite) })
-                broadcastService.broadcast(Notifications.Posts)
             }
-            .toCompletable()
+            .doOnTerminate { broadcastService.broadcast(Notifications.Post) }
     }
 
     fun getVideo(postId: String): Single<File> {
@@ -44,31 +43,26 @@ class PostService(
 
     fun synchronizePostWithImage(postId: Long): Completable {
         return syncPost(postId)
-            .flatMap { syncPostImage(postId) }
-            .toCompletable()
+            .andThen(syncPostImage(postId))
+            .doOnTerminate { broadcastService.broadcast(Notifications.Post) }
     }
 
-    private fun syncPost(postId: Long): Observable<*> {
+    private fun syncPost(postId: Long): Completable {
         return requestPost(postId)
-            .mapDatabase(entities) {
-                attachments.remove("postId" eq postId)
-                it.attachments.forEach { attachments.add(it) }
+            .doEntities(entities) {
+                attachments.replaceAll("postId" eq postId, it.attachments)
+                similarPosts.replaceAll("parentPostId" eq postId, it.similarPosts)
+                comments.replaceAll("postId" eq postId, it.comments)
 
-                similarPosts.remove("parentPostId" eq postId)
-                it.similarPosts.forEach { similarPosts.add(it) }
-
-                comments.remove("postId" eq postId)
-                it.comments.forEach { comments.add(it) }
+                broadcastService.broadcast(Notifications.Post)
             }
-            .doOnNext { broadcastService.broadcast(Notifications.Post) }
     }
 
-    private fun syncPostImage(postId: Long): Observable<*> {
+    private fun syncPostImage(postId: Long): Completable {
         return entities
-            .use { Posts.first("id" eq postId) }
-            .flatMap { it.image?.let { requestImage(it.original).toObservable() } }
-            .doOnError { broadcastService.broadcast(Notifications.Post) }
-            .doOnCompleted { broadcastService.broadcast(Notifications.Post) }
+            .useOnce { Posts.first("id" eq postId) }
+            .flatMap { it.image?.let { requestImage(it.original) } }
+            .toCompletable()
     }
 
     fun getTopComments(postId: Long, count: Int): Single<List<Comment>> {

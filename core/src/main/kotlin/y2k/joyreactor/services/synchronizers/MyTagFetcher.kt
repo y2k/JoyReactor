@@ -2,7 +2,7 @@ package y2k.joyreactor.services.synchronizers
 
 import rx.Completable
 import rx.Observable
-import y2k.joyreactor.common.mapDatabase
+import y2k.joyreactor.common.mapEntities
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.repository.Entities
@@ -24,7 +24,7 @@ class MyTagFetcher(
                 if (it == null) DefaultTagRequest().request()
                 else tagsForUserRequest.request(it)
             }
-            .mapDatabase(dataContext) { newTags ->
+            .mapEntities(dataContext) { newTags ->
                 val result = Tags.toList()
                     .union(newTags)
                     .distinctBy { it.serverId }
