@@ -2,11 +2,14 @@ package y2k.joyreactor.common
 
 import android.app.Application
 import android.database.sqlite.SQLiteDatabase
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.media.ThumbnailUtils
 import android.provider.MediaStore
 import com.j256.ormlite.android.AndroidConnectionSource
 import com.j256.ormlite.support.ConnectionSource
 import rx.Completable
+import rx.Single
 import y2k.joyreactor.App
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.Platform
@@ -20,6 +23,16 @@ import java.io.File
  */
 class AndroidPlatform(private val app: Application) : Platform {
 
+    override fun createTmpThumbnail(videoFile: File): Single<File> {
+        return ioSingle {
+            val thumb = ThumbnailUtils.createVideoThumbnail(
+                videoFile.absolutePath, MediaStore.Video.Thumbnails.MINI_KIND)
+            createTempFile().apply {
+                outputStream().use { thumb.compress(Bitmap.CompressFormat.JPEG, 90, it) }
+            }
+        }
+    }
+
     override fun makeReportService(): ReportService = AndroidReportService()
 
     @Suppress("UNCHECKED_CAST")
@@ -28,7 +41,8 @@ class AndroidPlatform(private val app: Application) : Platform {
     }
 
     override fun buildConnection(file: File): ConnectionSource {
-        val database = SQLiteDatabase.openDatabase(file.absolutePath, null, SQLiteDatabase.OPEN_READWRITE or SQLiteDatabase.CREATE_IF_NECESSARY)
+        val database = SQLiteDatabase.openDatabase(file.absolutePath, null,
+            SQLiteDatabase.OPEN_READWRITE or SQLiteDatabase.CREATE_IF_NECESSARY)
         return AndroidConnectionSource(database)
     }
 

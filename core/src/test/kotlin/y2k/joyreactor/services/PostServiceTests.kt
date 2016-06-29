@@ -45,7 +45,7 @@ class PostServiceTests {
 
         val actual = service.mainImageFromDisk(2686902).toBlocking().value()
 
-        assertNotNull(actual.result)
-        assertTrue("file = " + actual.result, actual.result!!.endsWith(".jpg"))
+        assertNotNull(actual)
+        assertTrue("file = " + actual, actual!!.endsWith(".jpg"))
     }
 }

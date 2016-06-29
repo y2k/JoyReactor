@@ -1,8 +1,11 @@
 package y2k.joyreactor.viewmodel
 
-import y2k.joyreactor.common.*
+import y2k.joyreactor.common.Notifications
+import y2k.joyreactor.common.pack
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.open
+import y2k.joyreactor.common.property
+import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Comment
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.LifeCycleService
@@ -24,7 +27,7 @@ class PostViewModel(
     val canCreateComments = property(false)
 
     val description = property("")
-    val poster = property(PartialResult.inProgress<File>(0, 100))
+    val poster = property<File>()
     val posterAspect = property(1f)
 
     val tags = property(emptyList<String>())

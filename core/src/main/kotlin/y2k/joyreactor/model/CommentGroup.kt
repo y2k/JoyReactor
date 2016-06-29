@@ -1,6 +1,5 @@
 package y2k.joyreactor.model
 
-import rx.Observable
 import rx.Single
 import y2k.joyreactor.services.repository.Entities
 import java.util.*

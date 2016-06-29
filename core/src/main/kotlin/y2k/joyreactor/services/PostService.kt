@@ -101,12 +101,19 @@ class PostService(
             .andThen { platform.saveToGallery(it) }
     }
 
-    fun mainImageFromDisk(serverPostId: Long): Single<PartialResult<File>> {
+    fun mainImageFromDisk(serverPostId: Long): Single<File?> {
         return entities
-            .use { Posts.getById(serverPostId) }
-            .flatMap { requestImage.requestFromCache(it.image!!.fullUrl(null)) }
-            .map { PartialResult.complete(it) }
-            .toSingle()
+            .useOnce { Posts.getById(serverPostId) }
+            .flatMap {
+                when {
+                    it.image == null -> Single.just(null)
+                    it.image.isAnimated -> {
+                        requestImage(it.image.original, onlyFromCache = true)
+                            .flatMap { platform.createTmpThumbnail(it) }
+                    }
+                    else -> requestImage(it.image.original, onlyFromCache = true)
+                }
+            }
     }
 
     fun getPost(postId: Long): Single<Post> = entities.useOnce { Posts.getById(postId) }

@@ -1,9 +1,7 @@
 package y2k.joyreactor.services.requests
 
-import rx.Observable
 import rx.Single
 import y2k.joyreactor.common.http.HttpClient
-import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.common.ioSingle
 import y2k.joyreactor.common.platform.Platform
 import java.io.File
@@ -16,15 +14,9 @@ class OriginalImageRequestFactory(
     private val httpClient: HttpClient,
     private val platform: Platform) {
 
-    fun requestFromCache(imageUrl: String): Observable<File> {
-        return ioObservable {
-            val file = getTargetFile(imageUrl)
-            if (!file.exists()) throw Exception()
-            file
-        }
-    }
-
-    operator fun invoke(imageUrl: String): Single<File> {
+    operator fun invoke(imageUrl: String, onlyFromCache: Boolean = false): Single<File> {
+        if (onlyFromCache) return requestFromCache(imageUrl)
+        
         return ioSingle {
             val file = getTargetFile(imageUrl)
             if (!file.exists()) {
@@ -35,6 +27,14 @@ class OriginalImageRequestFactory(
                     throw e
                 }
             }
+            file
+        }
+    }
+
+    private fun requestFromCache(imageUrl: String): Single<File> {
+        return ioSingle {
+            val file = getTargetFile(imageUrl)
+            if (!file.exists()) throw Exception()
             file
         }
     }

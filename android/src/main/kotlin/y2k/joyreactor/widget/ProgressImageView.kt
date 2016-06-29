@@ -51,6 +51,13 @@ class ProgressImageView(context: Context?, attrs: AttributeSet?) :
         }
     }
 
+    fun setImage(img: File?) {
+        image = when (img) {
+            null -> PartialResult.inProgress(0)
+            else -> PartialResult.complete(img)
+        }
+    }
+
     init {
         addView(imageView)
         addView(progress, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, Gravity.CENTER_VERTICAL))

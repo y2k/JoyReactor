@@ -128,12 +128,17 @@ fun Completable.pack() = PackedCompletable(this)
 
 class PackedCompletable(completable: Completable) {
 
-    var isBusy: Boolean = true
-    var finishedWithError: Boolean = false
+    @Volatile var isBusy: Boolean = true
+    @Volatile var finishedWithError: Boolean = false
 
     init {
-        completable.ui(
-            { isBusy = false },
-            { it.printStackTrace(); finishedWithError = true })
+        completable
+            .doOnCompleted { isBusy = false }
+            .doOnError {
+                it.printStackTrace()
+                isBusy = false
+                finishedWithError = true
+            }
+            .ui({}, {})
     }
 }

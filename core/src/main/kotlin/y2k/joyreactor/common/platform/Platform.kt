@@ -2,9 +2,8 @@ package y2k.joyreactor.common.platform
 
 import com.j256.ormlite.support.ConnectionSource
 import rx.Completable
-import rx.Observable
+import rx.Single
 import y2k.joyreactor.services.ReportService
-
 import java.io.File
 
 /**
@@ -25,4 +24,6 @@ interface Platform {
     fun <T> decodeImage(path: File): T
 
     fun makeReportService(): ReportService
+
+    fun createTmpThumbnail(videoFile: File): Single<File>
 }
