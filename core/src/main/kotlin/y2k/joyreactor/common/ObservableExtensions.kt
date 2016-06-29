@@ -19,26 +19,11 @@ inline fun <T, R> Observable<T>.mapDatabase(context: Entities, crossinline f: Da
     }
 }
 
-fun <T> Single<T>.replaceIfNull(f: () -> Single<T>): Single<T> {
-    return flatMap {
-        if (it != null) Single.just<T>(it)
-        else f()
-    }
-}
-
 fun <T> Observable<T>.replaceIfNull(f: () -> Observable<T>): Observable<T> {
     return flatMap {
         if (it != null) Observable.just<T>(it)
         else f()
     }
-}
-
-fun <T> Single<T>.toCompletable(): Completable {
-    return Completable.fromSingle(this)
-}
-
-fun <T> Completable.andThen(single: Single<T>): Single<T> {
-    return andThen(single.toObservable()).toSingle()
 }
 
 inline fun <T> Single<T>.subscribe(crossinline f: (T?, Throwable?) -> Unit): Subscription {
@@ -49,17 +34,6 @@ inline fun <T> Observable<T>.subscribe(crossinline f: (T?, Throwable?) -> Unit):
     return subscribe({ f(it, null) }, { f(null, it) })
 }
 
-fun <T> Observable<T>.peek(func: (T) -> Unit): Observable<T> {
-    return map {
-        func(it);
-        it
-    }
-}
-
-inline fun <T, R> Observable<T?>.mapNotNull(crossinline f: (T) -> R): Observable<R?> {
-    return map { it?.let(f) }
-}
-
 inline fun <T, R> Single<T?>.mapNotNull(crossinline f: (T) -> R): Single<R?> {
     return map { it?.let(f) }
 }
@@ -68,12 +42,8 @@ fun ioUnitObservable(func: () -> Unit): Observable<Unit> {
     return ioObservable(func)
 }
 
-fun <T, R> Single<T>.andThen(f: (T) -> Observable<R>): Observable<R> {
-    return flatMapObservable(f)
-}
-
-fun <T> Observable<T>.andThen(f: (T) -> Completable): Completable {
-    return flatMap { f(it).toObservable<T>() }.toCompletable()
+fun <T> Single<T>.andThen(f: (T) -> Completable): Completable {
+    return toObservable().flatMap { f(it).toObservable<T>() }.toCompletable()
 }
 
 fun ioCompletable(func: () -> Unit): Completable {
@@ -95,6 +65,18 @@ fun <T> ioObservable(func: () -> T): Observable<T> {
             try {
                 it.onNext(func())
                 it.onCompleted()
+            } catch (e: Exception) {
+                it.onError(e)
+            }
+        }
+    }
+}
+
+fun <T> ioSingle(func: () -> T): Single<T> {
+    return Single.create {
+        Schedulers.io().createWorker().schedule {
+            try {
+                it.onSuccess(func())
             } catch (e: Exception) {
                 it.onError(e)
             }

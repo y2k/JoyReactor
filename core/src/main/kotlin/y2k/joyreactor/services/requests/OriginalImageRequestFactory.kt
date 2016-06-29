@@ -1,8 +1,10 @@
 package y2k.joyreactor.services.requests
 
 import rx.Observable
+import rx.Single
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.ioObservable
+import y2k.joyreactor.common.ioSingle
 import y2k.joyreactor.common.platform.Platform
 import java.io.File
 import java.util.regex.Pattern
@@ -22,8 +24,8 @@ class OriginalImageRequestFactory(
         }
     }
 
-    operator fun invoke(imageUrl: String): Observable<File> {
-        return ioObservable {
+    operator fun invoke(imageUrl: String): Single<File> {
+        return ioSingle {
             val file = getTargetFile(imageUrl)
             if (!file.exists()) {
                 try {

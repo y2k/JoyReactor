@@ -36,8 +36,8 @@ class PostService(
             .toCompletable()
     }
 
-    fun getVideo(postId: String): Observable<File> {
-        return getPost(postId.toLong()).toObservable()
+    fun getVideo(postId: String): Single<File> {
+        return getPost(postId.toLong())
             .map { it.image!!.fullUrl("mp4") }
             .flatMap { requestImage(it) }
     }
@@ -66,7 +66,7 @@ class PostService(
     private fun syncPostImage(postId: Long): Observable<*> {
         return entities
             .use { Posts.first("id" eq postId) }
-            .flatMap { it.image?.let { requestImage(it.original) } }
+            .flatMap { it.image?.let { requestImage(it.original).toObservable() } }
             .doOnError { broadcastService.broadcast(Notifications.Post) }
             .doOnCompleted { broadcastService.broadcast(Notifications.Post) }
     }
@@ -103,7 +103,7 @@ class PostService(
 
     fun saveImageToGallery(postId: Long): Completable {
         return getPost(postId)
-            .andThen { mainImage(it.id) }
+            .flatMap { mainImage(it.id) }
             .andThen { platform.saveToGallery(it) }
     }
 
@@ -117,9 +117,9 @@ class PostService(
 
     fun getPost(postId: Long): Single<Post> = entities.useOnce { Posts.getById(postId) }
 
-    fun mainImage(serverPostId: Long): Observable<File> {
+    fun mainImage(serverPostId: Long): Single<File> {
         return entities
-            .use { Posts.getById(serverPostId) }
+            .useOnce { Posts.getById(serverPostId) }
             .flatMap { requestImage(it.image!!.fullUrl(null)) }
     }
 
