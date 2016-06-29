@@ -103,10 +103,8 @@ class PostService(
 
     fun saveImageToGallery(postId: Long): Completable {
         return getPost(postId)
-            .toObservable()
-            .flatMap { mainImage(it.id) }
-            .flatMap { platform.saveToGallery(it) }
-            .toCompletable()
+            .andThen { mainImage(it.id) }
+            .andThen { platform.saveToGallery(it) }
     }
 
     fun mainImageFromDisk(serverPostId: Long): Single<PartialResult<File>> {

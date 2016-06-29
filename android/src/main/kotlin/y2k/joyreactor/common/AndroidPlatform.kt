@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory
 import android.provider.MediaStore
 import com.j256.ormlite.android.AndroidConnectionSource
 import com.j256.ormlite.support.ConnectionSource
-import rx.Observable
+import rx.Completable
 import y2k.joyreactor.App
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.Platform
@@ -40,8 +40,8 @@ class AndroidPlatform(private val app: Application) : Platform {
         return app.assets.open(name + "." + ext).use { it.readBytes() }
     }
 
-    override fun saveToGallery(imageFile: File): Observable<*> {
-        return ioObservable {
+    override fun saveToGallery(imageFile: File): Completable {
+        return ioCompletable {
             MediaStore.Images.Media.insertImage(app.contentResolver, imageFile.absolutePath, null, null)
         }
     }

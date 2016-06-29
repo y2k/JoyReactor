@@ -1,6 +1,7 @@
 package y2k.joyreactor.common.platform
 
 import com.j256.ormlite.support.ConnectionSource
+import rx.Completable
 import rx.Observable
 import y2k.joyreactor.services.ReportService
 
@@ -17,7 +18,7 @@ interface Platform {
 
     fun loadFromBundle(name: String, ext: String): ByteArray
 
-    fun saveToGallery(imageFile: File): Observable<*>
+    fun saveToGallery(imageFile: File): Completable
 
     fun buildConnection(file: File): ConnectionSource
 

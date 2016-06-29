@@ -68,6 +68,27 @@ fun ioUnitObservable(func: () -> Unit): Observable<Unit> {
     return ioObservable(func)
 }
 
+fun <T, R> Single<T>.andThen(f: (T) -> Observable<R>): Observable<R> {
+    return flatMapObservable(f)
+}
+
+fun <T> Observable<T>.andThen(f: (T) -> Completable): Completable {
+    return flatMap { f(it).toObservable<T>() }.toCompletable()
+}
+
+fun ioCompletable(func: () -> Unit): Completable {
+    return Completable.create {
+        Schedulers.io().createWorker().schedule {
+            try {
+                func()
+                it.onCompleted()
+            } catch (e: Exception) {
+                it.onError(e)
+            }
+        }
+    }
+}
+
 fun <T> ioObservable(func: () -> T): Observable<T> {
     return Observable.create {
         Schedulers.io().createWorker().schedule {
