@@ -53,6 +53,8 @@ class PostParser {
         fun load(): Image? {
             val img = element.select("div.post_content img").first()
             if (img != null && img.hasAttr("width")) {
+                if (img.attr("height").endsWith("%")) return null
+
                 return Image(
                     if (hasFull(img))
                         img.parent().attr("href").replace("(/full/).+(-\\d+\\.)".toRegex(), "$1$2")
