@@ -83,4 +83,5 @@
     <string name="dislike">Минус</string>
     <string name="like">Плюс</string>
     <string name="top_comments">Лучшие комментарии</string>
+    <string name="updating">Обновление…</string>
 </resources>

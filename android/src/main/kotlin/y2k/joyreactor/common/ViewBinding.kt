@@ -3,7 +3,9 @@ package y2k.joyreactor.common
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.net.Uri
+import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.ContentLoadingProgressBar
@@ -62,6 +64,15 @@ private class ActivityViewResolver(val activity: Activity) : ViewResolver {
 class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
 
     val resolvers = arrayListOf(root)
+
+    fun snackbar(viewId: Int, stringRes: Int, property: ObservableProperty<Boolean>) {
+        val snackbar = Snackbar.make(find(viewId), stringRes, Snackbar.LENGTH_INDEFINITE)
+        snackbar.setActionTextColor(Color.WHITE)
+        property.subscribe {
+            if (it) snackbar.show()
+            else snackbar.dismiss()
+        }
+    }
 
     fun blockDialog(dialog: Dialog, property: ObservableProperty<Boolean>) {
         property.subscribe { dialog.setCancelable(!it) }

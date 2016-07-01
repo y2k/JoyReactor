@@ -12,6 +12,7 @@
         android:layout_height="wrap_content">
 
         <include layout="@layout/toolbar"/>
+
     </android.support.design.widget.AppBarLayout>
 
     <y2k.joyreactor.widget.HeaderRecyclerView
@@ -31,19 +32,6 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:src="@drawable/ic_comment_white_24dp"/>
-
-    <FrameLayout
-        android:id="@+id/progress"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white">
-
-        <ProgressBar
-            style="?android:borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
-    </FrameLayout>
 
     <TextView
         android:id="@+id/error"
