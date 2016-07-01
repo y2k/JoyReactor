@@ -5,6 +5,7 @@ import org.jsoup.nodes.TextNode
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.model.MyLike
 import y2k.joyreactor.model.Post
+import y2k.joyreactor.model.TagList
 import java.util.*
 import java.util.regex.Pattern
 
@@ -32,7 +33,7 @@ class PostParser {
             parser.commentCount,
             parser.rating,
             parser.myLike,
-            document.select(".taglist a").map { it.text() },
+            document.select(".taglist a").map { it.text() }.let { TagList(it) },
             extractNumberFromEnd(document.id()).toLong(),
             document.select("span.favorite").size > 0,
             when (desc) {

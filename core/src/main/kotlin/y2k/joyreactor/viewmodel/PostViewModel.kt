@@ -50,7 +50,7 @@ class PostViewModel(
             service.getPost(postId).ui {
                 posterAspect += it.imageAspectOrDefault(1f)
                 description += it.title
-                tags += it.tags
+                tags += it.tags.toList()
             }
         }
     }

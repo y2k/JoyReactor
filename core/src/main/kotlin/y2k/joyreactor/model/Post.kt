@@ -20,7 +20,8 @@ data class Post(
     @DatabaseField val rating: Float = 0f,
     @DatabaseField val myLike: MyLike = MyLike.Like,
 
-    val tags: List<String> = emptyList(),
+    @DatabaseField(dataType = DataType.SERIALIZABLE) val tags: TagList = TagList(),
+
     @DatabaseField(id = true) override val id: Long = 0,
     @DatabaseField val isFavorite: Boolean = false,
     @DatabaseField val description: String = ""
