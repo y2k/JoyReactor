@@ -309,7 +309,9 @@ class MenuBinding(menuId: Int, resolvers: List<ViewResolver>) {
 class SwipeRefreshLayoutBinding(private val view: SwipeRefreshLayout) {
 
     fun isRefreshing(property: ObservableProperty<Boolean>) {
-        property.subscribe { view.isRefreshing = it }
+        property.subscribe {
+            view.post { view.isRefreshing = it }
+        }
     }
 
     fun command(func: () -> Unit) {
