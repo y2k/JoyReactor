@@ -12,6 +12,7 @@ import y2k.joyreactor.services.repository.Entities
 import y2k.joyreactor.services.repository.IDataContext
 import y2k.joyreactor.services.repository.ormlite.OrmLiteDataContext
 import y2k.joyreactor.services.requests.*
+import y2k.joyreactor.services.requests.parser.PostParser
 import y2k.joyreactor.services.synchronizers.MyTagFetcher
 import y2k.joyreactor.services.synchronizers.PostMerger
 import y2k.joyreactor.services.synchronizers.PrivateMessageFetcher
@@ -49,7 +50,7 @@ object ServiceLocator {
         register { UserNameRequest(resolve()) }
         register { TagsForUserRequest(resolve(), resolve()) }
         register { OriginalImageRequestFactory(resolve(), resolve()) }
-        register { PostRequest(resolve(), resolve()) }
+        register { PostRequest(resolve(), resolve<PostParser>()) }
         register { ProfileRequestFactory(resolve()) }
         register { LoginRequestFactory(resolve()) }
         register { SendMessageRequest(resolve()) }

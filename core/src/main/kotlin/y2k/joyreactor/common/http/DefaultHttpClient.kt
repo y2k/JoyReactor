@@ -63,7 +63,7 @@ class DefaultHttpClient(private val cookies: CookieStorage) : HttpClient {
     fun executeRequest(url: String, init: (Request.Builder.() -> Unit)? = null): Response {
         val request = Request.Builder()
             .url(url)
-            .header("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko")
+            .header("User-Agent", "Opera/9.80 (X11; Linux i686; Ubuntu/14.10) Presto/2.12.388 Version/12.16")
             .header("Accept-Encoding", "gzip")
         if (init != null) request.init()
 

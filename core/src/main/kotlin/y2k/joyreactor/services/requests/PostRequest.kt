@@ -1,10 +1,10 @@
 package y2k.joyreactor.services.requests
 
+import org.jsoup.nodes.Element
 import rx.Observable
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.model.*
-import y2k.joyreactor.services.requests.parser.PostParser
 import java.util.*
 import java.util.regex.Pattern
 
@@ -13,19 +13,19 @@ import java.util.regex.Pattern
  */
 class PostRequest(
     private val httpClient: HttpClient,
-    private val parser: PostParser) : Function1<Long, Observable<PostRequest.Response>> {
+    private val parser: (Element) -> Pair<Post, List<Attachment>>) :
+    Function1<Long, Observable<PostRequest.Response>> {
 
     override operator fun invoke(postId: Long) = ioObservable { request(postId.toString()) }
 
     fun request(postId: String): Response {
         val commentsRequest = PostCommentsRequest()
         val similarPosts = ArrayList<SimilarPost>()
-        val attachments = ArrayList<Attachment>()
 
         val page = httpClient.getDocument(getPostUrl(postId))
 
         val postNode = page.select("div.postContainer").first()
-        val post = parser.parse(postNode)
+        val postWithAttachments = parser(postNode)
 
         commentsRequest.request(page, postId.toLong())
 
@@ -37,18 +37,9 @@ class PostRequest(
             similarPosts.add(similarPost)
         }
 
-        val imgElement = postNode.select("div.image > img")
-        if (imgElement.size > 1)
-            for (e in imgElement.subList(1, imgElement.size - 1)) {
-                val a = Attachment(
-                    postId.toLong(),
-                    Image(e.absUrl("src"),
-                        Integer.parseInt(e.attr("width")),
-                        Integer.parseInt(e.attr("height"))))
-                attachments.add(a)
-            }
-
-        return Response(post, commentsRequest.comments, similarPosts, attachments)
+        return Response(
+            postWithAttachments.first, commentsRequest.comments,
+            similarPosts, postWithAttachments.second)
     }
 
     private fun getPostId(href: String): String {

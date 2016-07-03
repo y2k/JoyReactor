@@ -24,7 +24,7 @@ class PostsForTagRequest(
 
                 val posts = doc
                     .select("div.postContainer")
-                    .map { parser.parse(it) }
+                    .map { parser(it).first }
 
                 val next = doc.select("a.next").first()
                 Data(posts, next?.let { extractNumberFromEnd(next.attr("href")) })

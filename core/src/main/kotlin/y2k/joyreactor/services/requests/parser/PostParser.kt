@@ -2,21 +2,18 @@ package y2k.joyreactor.services.requests.parser
 
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
-import y2k.joyreactor.model.Image
-import y2k.joyreactor.model.MyLike
-import y2k.joyreactor.model.Post
-import y2k.joyreactor.model.TagList
+import y2k.joyreactor.model.*
 import java.util.*
 import java.util.regex.Pattern
 
 /**
  * Created by y2k on 5/29/16.
  */
-class PostParser {
+class PostParser : Function1<Element, Pair<Post, List<Attachment>>> {
 
-    fun parse(document: Element): Post {
+    override operator fun invoke(document: Element): Pair<Post, List<Attachment>> {
         var image = ThumbnailParser(document).load()
-        if (image == null) image = YoutubeThumbnailParser(document).load()
+        if (image == null) image = YoutubeThumbnailParser(document).load().firstOrNull()
         if (image == null) image = VideoThumbnailParser(document).load()
 
         val parser = PostParser(document)
@@ -24,7 +21,7 @@ class PostParser {
         val title = document.select("div.post_content > div > h3").first()
         val desc = title?.nextSibling()
 
-        return Post(
+        val post = Post(
             title?.text() ?: "",
             image,
             document.select("div.uhead_nick > img").attr("src"),
@@ -41,6 +38,23 @@ class PostParser {
                 else -> ""
             }
         )
+
+        val attachments = document
+            .select("div.post_top div.image img")
+            .map {
+                val image = Image(
+                    it.absUrl("src"),
+                    Integer.parseInt(it.attr("width")),
+                    Integer.parseInt(it.attr("height")))
+                Attachment(post.id, image)
+            }
+            .union(
+                YoutubeThumbnailParser(document.select("div.post_top").first())
+                    .load().map { Attachment(post.id, it) })
+            .filterNot { it.image == post.image }
+            .toList()
+
+        return post to attachments
     }
 
     private fun extractNumberFromEnd(text: String): String {
@@ -74,14 +88,17 @@ class PostParser {
 
     private class YoutubeThumbnailParser(private val element: Element) {
 
-        fun load(): Image? {
-            val iframe = element.select("iframe.youtube-player").first() ?: return null
-            val m = YoutubeThumbnailParser.SRC_PATTERN.matcher(iframe.attr("src"))
-            if (!m.find()) throw IllegalStateException(iframe.attr("src"))
-            return Image(
-                "http://img.youtube.com/vi/" + m.group(1) + "/0.jpg",
-                Integer.parseInt(iframe.attr("width")),
-                Integer.parseInt(iframe.attr("height")))
+        fun load(): List<Image> {
+            return element
+                .select("iframe.youtube-player")
+                .map {
+                    val m = YoutubeThumbnailParser.SRC_PATTERN.matcher(it.attr("src"))
+                    if (!m.find()) throw IllegalStateException(it.attr("src"))
+                    Image(
+                        "http://img.youtube.com/vi/" + m.group(1) + "/0.jpg",
+                        Integer.parseInt(it.attr("width")),
+                        Integer.parseInt(it.attr("height")))
+                }
         }
 
         companion object {
