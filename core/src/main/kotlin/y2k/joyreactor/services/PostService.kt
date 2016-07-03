@@ -90,7 +90,7 @@ class PostService(
                 .mapNotNull { it.image }
             val commentAttachments = comments
                 .filter("postId" eq postId)
-                .mapNotNull { it.attachmentObject }
+                .mapNotNull { it.attachment }
             postAttachments.union(commentAttachments).toList()
         }
     }

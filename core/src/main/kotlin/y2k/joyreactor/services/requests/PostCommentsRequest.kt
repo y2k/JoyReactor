@@ -2,6 +2,7 @@ package y2k.joyreactor.services.requests
 
 import org.jsoup.nodes.Document
 import y2k.joyreactor.model.Comment
+import y2k.joyreactor.model.Image
 import java.util.*
 import java.util.regex.Pattern
 
@@ -19,20 +20,21 @@ class PostCommentsRequest {
             val parent = node.parent()
             val parentId = if ("comment_list" == parent.className()) NumberExtractor[parent.id()] else 0
 
+            val imgElement = node.select("div.image > img").first()
+
             val comment = Comment(
                 node.select("div.txt > div").first().text(),
                 node.select("img.avatar").attr("src"),
                 parentId,
                 java.lang.Float.parseFloat(node.select("span.comment_rating").text().trim { it <= ' ' }),
                 postId,
+                attachment = imgElement?.let {
+                    Image(
+                        clearImageUrl(imgElement.absUrl("src")),
+                        imgElement.attr("width").toInt(),
+                        imgElement.attr("height").toInt())
+                },
                 id = (node.select("span.comment_rating").attr("comment_id")).toLong())
-
-            val imgElement = node.select("div.image > img").first()
-            if (imgElement != null)
-                comment.setAttachmentObject(
-                    clearImageUrl(imgElement.absUrl("src")),
-                    Integer.parseInt(imgElement.attr("width")),
-                    Integer.parseInt(imgElement.attr("height")))
 
             result.add(comment)
         }

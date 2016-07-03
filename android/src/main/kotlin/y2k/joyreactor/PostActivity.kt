@@ -74,8 +74,8 @@ class PostActivity : BaseActivity() {
             rating.text = "" + item.rating
             replies.text = "" + item.replies
 
-            attachment.setVisible(item.attachmentObject != null)
-            attachment.image = item.attachmentObject
+            attachment.setVisible(item.attachment != null)
+            attachment.image = item.attachment
         }
     }
 }

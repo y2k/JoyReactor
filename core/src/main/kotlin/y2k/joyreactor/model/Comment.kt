@@ -1,5 +1,6 @@
 package y2k.joyreactor.model
 
+import com.j256.ormlite.field.DataType
 import com.j256.ormlite.field.DatabaseField
 import y2k.joyreactor.services.repository.Dto
 import java.io.Serializable
@@ -14,7 +15,8 @@ data class Comment(
     @DatabaseField val rating: Float = 0f,
     @DatabaseField val postId: Long = 0,
     @DatabaseField val level: Int = 0,
-    @DatabaseField var replies: Int = 0,
+    @DatabaseField var replies: Int = 0, // TODO: сделать immutable
+    @DatabaseField(dataType = DataType.SERIALIZABLE) val attachment: Image? = null,
     @DatabaseField(id = true) override val id: Long = 0
 ) : Dto, Serializable {
 
@@ -22,11 +24,4 @@ data class Comment(
 
     val userImageObject: UserImage
         get() = if (userImage == null) UserImage() else UserImage(userImage)
-
-    fun setAttachmentObject(url: String, width: Int, height: Int) {
-        attachmentObject = Image(url, width, height)
-    }
-
-    var attachmentObject: Image? = null
-        private set
 }
