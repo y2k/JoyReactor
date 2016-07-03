@@ -51,7 +51,7 @@ object ServiceLocator {
         register { TagsForUserRequest(resolve(), resolve()) }
         register { OriginalImageRequestFactory(resolve(), resolve()) }
         register { PostRequest(resolve(), resolve<PostParser>()) }
-        register { ProfileRequestFactory(resolve()) }
+        register { ProfileRequest(resolve()) }
         register { LoginRequestFactory(resolve()) }
         register { SendMessageRequest(resolve()) }
         register { CreateCommentRequest(resolve()) }
