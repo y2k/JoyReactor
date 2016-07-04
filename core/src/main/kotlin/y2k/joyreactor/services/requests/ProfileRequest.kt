@@ -42,7 +42,8 @@ class ProfileRequest(
         return "http://joyreactor.cc/user/" + username
     }
 
-    private class ProfileParser(private val document: Document) {
+    private class ProfileParser(
+        private val document: Document) {
 
         fun parse(): Profile {
             return Profile(
@@ -50,7 +51,9 @@ class ProfileRequest(
                 Image(document.select("div.sidebarContent > div.user > img").attr("src"), 0, 0),
                 document.select("#rating-text > b").text().replace(" ", "").toFloat(),
                 document.select(".star-row-0 > .star-0").size,
-                getProgressToNewStar())
+                getProgressToNewStar(),
+                getSubRatings(),
+                getAwards())
         }
 
         private fun getProgressToNewStar(): Float {
@@ -58,6 +61,23 @@ class ProfileRequest(
             val m = Pattern.compile("width:(\\d+)%;").matcher(style)
             if (!m.find()) throw IllegalStateException()
             return java.lang.Float.parseFloat(m.group(1))
+        }
+
+        private fun getSubRatings(): List<Profile.SubRating> {
+            return document
+                .select("div.blogs tr")
+                .filter { !it.select("small").isEmpty() }
+                .map {
+                    Profile.SubRating(
+                        "\\d[\\d\\. ]*".toRegex().find(it.select("small").text())!!.value.replace(" ", "").toFloat(),
+                        it.select("img").attr("alt"))
+                }
+        }
+
+        private fun getAwards(): List<Profile.Award> {
+            return document
+                .select("div.award_holder > img")
+                .map { Profile.Award(it.absUrl("src"), it.attr("alt")) }
         }
     }
 }
