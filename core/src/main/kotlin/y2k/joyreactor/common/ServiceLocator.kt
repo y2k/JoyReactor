@@ -7,7 +7,6 @@ import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.Platform
 import y2k.joyreactor.services.*
 import y2k.joyreactor.services.images.DiskCache
-import y2k.joyreactor.services.images.MultiTryDownloader
 import y2k.joyreactor.services.repository.Entities
 import y2k.joyreactor.services.repository.IDataContext
 import y2k.joyreactor.services.repository.ormlite.OrmLiteDataContext
@@ -76,7 +75,6 @@ object ServiceLocator {
         register { CommentsViewModel(resolve(), resolve(), resolve(), resolve()) }
 
         register { DiskCache(resolve()) }
-        register { MultiTryDownloader(resolve()) }
         register { ImageService(resolve(), resolve(), resolve()) }
 
         registerSingleton<IDataContext> { OrmLiteDataContext(resolve()) }

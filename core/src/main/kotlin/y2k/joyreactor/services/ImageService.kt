@@ -4,12 +4,13 @@ import rx.Observable
 import rx.Subscription
 import rx.subjects.BehaviorSubject
 import y2k.joyreactor.common.ForegroundScheduler
+import y2k.joyreactor.common.http.HttpClient
+import y2k.joyreactor.common.ioSingle
 import y2k.joyreactor.common.mapNotNull
 import y2k.joyreactor.common.platform.Platform
 import y2k.joyreactor.common.replaceIfNull
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.images.DiskCache
-import y2k.joyreactor.services.images.MultiTryDownloader
 import java.util.*
 
 /**
@@ -17,7 +18,7 @@ import java.util.*
  */
 class ImageService(
     private val diskCache: DiskCache,
-    private val client: MultiTryDownloader,
+    private val client: HttpClient,
     private val decoder: Platform) {
 
     fun makeUrl(image: Image?, width: Int, height: Int): String? {
@@ -57,9 +58,11 @@ class ImageService(
     }
 
     private fun putToCache(url: String): Observable<Unit> {
-        return client
-            .downloadAsync(diskCache.cacheDirectory, url)
-            .flatMapObservable { diskCache.put(it, url).toObservable() }
+        return ioSingle {
+            val tmp = createTempFile(directory = diskCache.cacheDirectory)
+            client.downloadToFile(url, tmp, null)
+            tmp
+        }.flatMap { diskCache.put(it, url) }.toObservable()
     }
 }
 
