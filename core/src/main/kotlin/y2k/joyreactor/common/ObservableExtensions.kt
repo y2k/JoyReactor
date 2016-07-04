@@ -18,7 +18,7 @@ inline fun <T, R> Observable<T>.doEntities(context: Entities, crossinline f: Dat
     return flatMap { data -> context.use { f(data) } }.toCompletable()
 }
 
-fun <T> Observable<T>.replaceIfNull(f: () -> Observable<T>): Observable<T> {
+fun <T> Observable<T?>.switchIfNull(f: () -> Observable<T>): Observable<T> {
     return flatMap {
         if (it != null) Observable.just<T>(it)
         else f()

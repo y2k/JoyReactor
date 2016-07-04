@@ -6,7 +6,7 @@ import rx.subjects.BehaviorSubject
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.mapNotNull
 import y2k.joyreactor.common.platform.Platform
-import y2k.joyreactor.common.replaceIfNull
+import y2k.joyreactor.common.switchIfNull
 import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.images.DiskCache
@@ -31,7 +31,7 @@ class ImageService(
         val publish = BehaviorSubject.create<T>()
         var subscription: Subscription? = null
         subscription = getFromCache<T>(imageUrl)
-            .replaceIfNull { putToCache(imageUrl) }
+            .switchIfNull { replaceToCache(imageUrl) }
             .ui({
                 if (state.sLinks[target] === subscription) {
                     publish.onNext(it)
@@ -43,7 +43,7 @@ class ImageService(
                 it.printStackTrace()
                 if (state.sLinks[target] === subscription)
                     state.sLinks.remove(target)
-                
+
                 publish.onCompleted()
             })
 
@@ -52,7 +52,7 @@ class ImageService(
         return publish
     }
 
-    private fun <T> putToCache(url: String): Observable<T> {
+    private fun <T> replaceToCache(url: String): Observable<T> {
         val tmp = createTempFile(directory = diskCache.cacheDirectory)
         return client.downloadToFile(url, tmp)
             .andThen(diskCache.put(tmp, url))
