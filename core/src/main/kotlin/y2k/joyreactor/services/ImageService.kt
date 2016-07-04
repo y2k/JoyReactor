@@ -1,11 +1,11 @@
 package y2k.joyreactor.services
 
+import rx.Completable
 import rx.Observable
 import rx.Subscription
 import rx.subjects.BehaviorSubject
 import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.common.http.HttpClient
-import y2k.joyreactor.common.ioSingle
 import y2k.joyreactor.common.mapNotNull
 import y2k.joyreactor.common.platform.Platform
 import y2k.joyreactor.common.replaceIfNull
@@ -34,7 +34,7 @@ class ImageService(
         val publish = BehaviorSubject.create<T>()
         var subscription: Subscription? = null
         subscription = getFromCache<T>(image)
-            .replaceIfNull { putToCache(image).flatMap { getFromCache<T>(image) } }
+            .replaceIfNull { putToCache(image).andThen(getFromCache<T>(image)) }
             .map { it!! }
             .observeOn(ForegroundScheduler.instance)
             .subscribe({
@@ -57,12 +57,9 @@ class ImageService(
         return diskCache.get(url).mapNotNull { decoder.decodeImage<T>(it) }.toObservable()
     }
 
-    private fun putToCache(url: String): Observable<Unit> {
-        return ioSingle {
-            val tmp = createTempFile(directory = diskCache.cacheDirectory)
-            client.downloadToFile(url, tmp, null)
-            tmp
-        }.flatMap { diskCache.put(it, url) }.toObservable()
+    private fun putToCache(url: String): Completable {
+        val tmp = createTempFile(directory = diskCache.cacheDirectory)
+        return client.downloadToFile(url, tmp).andThen(diskCache.put(tmp, url))
     }
 }
 

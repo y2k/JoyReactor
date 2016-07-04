@@ -1,6 +1,7 @@
 package y2k.joyreactor.requests
 
 import org.jsoup.nodes.Document
+import rx.Completable
 import y2k.joyreactor.common.firstOrThrow
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.http.RequestBuilder
@@ -18,6 +19,10 @@ class MockHttpClient : HttpClient {
             .firstOrThrow(IllegalStateException("url = $url")) { it.matches(url) }
             .let { it.find(url)!!.groupValues[1] }
             .let { MockRequest.loadDocument("$it.html") }
+    }
+
+    override fun downloadToFile(url: String, file: File): Completable {
+        throw UnsupportedOperationException("not implemented")
     }
 
     override fun downloadToFile(url: String, file: File, callback: ((Int, Int) -> Unit)?) {

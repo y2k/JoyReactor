@@ -1,9 +1,6 @@
 package y2k.joyreactor.common
 
-import rx.Completable
-import rx.Observable
-import rx.Single
-import rx.Subscription
+import rx.*
 import rx.schedulers.Schedulers
 import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.repository.DataContext
@@ -48,9 +45,11 @@ fun <T> Single<T>.andThen(f: (T) -> Completable): Completable {
     return toObservable().flatMap { f(it).toObservable<T>() }.toCompletable()
 }
 
-fun ioCompletable(func: () -> Unit): Completable {
+fun ioCompletable(func: () -> Unit): Completable = ioCompletable(Schedulers.io(), func)
+
+fun ioCompletable(scheduler: Scheduler, func: () -> Unit): Completable {
     return Completable.create {
-        Schedulers.io().createWorker().schedule {
+        scheduler.createWorker().schedule {
             try {
                 func()
                 it.onCompleted()
@@ -74,9 +73,11 @@ fun <T> ioObservable(func: () -> T): Observable<T> {
     }
 }
 
-fun <T> ioSingle(func: () -> T): Single<T> {
+fun <T> ioSingle(func: () -> T): Single<T> = ioSingle(Schedulers.io(), func)
+
+fun <T> ioSingle(scheduler: Scheduler, func: () -> T): Single<T> {
     return Single.create {
-        Schedulers.io().createWorker().schedule {
+        scheduler.createWorker().schedule {
             try {
                 it.onSuccess(func())
             } catch (e: Exception) {

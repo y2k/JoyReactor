@@ -1,12 +1,15 @@
 package y2k.joyreactor.common.http
 
 import org.jsoup.nodes.Document
+import rx.Completable
 import java.io.File
 
 /**
  * Created by y2k on 5/8/16.
  */
 interface HttpClient {
+
+    fun downloadToFile(url: String, file: File): Completable
 
     fun downloadToFile(url: String, file: File, callback: ((Int, Int) -> Unit)?)
 
