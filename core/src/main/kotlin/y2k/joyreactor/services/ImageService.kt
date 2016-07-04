@@ -1,13 +1,11 @@
 package y2k.joyreactor.services
 
 import rx.Observable
-import rx.Subscription
-import rx.subjects.BehaviorSubject
+import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.mapNotNull
 import y2k.joyreactor.common.platform.Platform
 import y2k.joyreactor.common.switchIfNull
-import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.images.DiskCache
 import java.util.*
@@ -24,32 +22,20 @@ class ImageService(
         return image?.thumbnailUrl(width, height)
     }
 
-    fun <T> to(state: LinksPool, imageUrl: String?, target: Any): Observable<T> {
-        state.sLinks.remove(target)?.let { it.unsubscribe() }
-        if (imageUrl == null) return Observable.just(null)
+    fun <T> to(state: LinksPool, imageUrl: String?, target: Any): Observable<T?> {
+        if (imageUrl == null) {
+            state.sLinks.remove(target)
+            return Observable.just(null)
+        }
 
-        val publish = BehaviorSubject.create<T>()
-        var subscription: Subscription? = null
-        subscription = getFromCache<T>(imageUrl)
+        val id = UUID.randomUUID()
+        state.sLinks.put(target, id)
+
+        return getFromCache<T>(imageUrl)
             .switchIfNull { replaceToCache(imageUrl) }
-            .ui({
-                if (state.sLinks[target] === subscription) {
-                    publish.onNext(it)
-                    state.sLinks.remove(target)
-                }
-
-                publish.onCompleted()
-            }, {
-                it.printStackTrace()
-                if (state.sLinks[target] === subscription)
-                    state.sLinks.remove(target)
-
-                publish.onCompleted()
-            })
-
-        publish.onNext(null)
-        state.sLinks.put(target, subscription)
-        return publish
+            .observeOn(ForegroundScheduler.instance)
+            .startWith(null as T?)
+            .filter { state.sLinks[target] == id }
     }
 
     private fun <T> replaceToCache(url: String): Observable<T> {
@@ -68,7 +54,7 @@ class ImageService(
 
 class LinksPool {
 
-    val sLinks = HashMap<Any, Subscription>()
+    val sLinks = HashMap<Any, UUID>()
 
     companion object {
 
