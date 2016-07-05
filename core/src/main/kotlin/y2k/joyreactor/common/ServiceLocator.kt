@@ -75,7 +75,7 @@ object ServiceLocator {
         register { CommentsViewModel(resolve(), resolve(), resolve(), resolve()) }
 
         register { DiskCache(resolve()) }
-        register { ImageService(resolve(), resolve(), resolve()) }
+        register { ImageService(resolve(), resolve(), resolve(), resolve()) }
 
         registerSingleton<IDataContext> { OrmLiteDataContext(resolve()) }
         register { Entities(resolve()) }

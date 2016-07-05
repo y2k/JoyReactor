@@ -16,26 +16,27 @@ import java.util.*
 class ImageService(
     private val diskCache: DiskCache,
     private val client: HttpClient,
-    private val decoder: Platform) {
+    private val decoder: Platform,
+    private val metaHolder: MetaStorage) {
 
     fun makeUrl(image: Image?, width: Int, height: Int): String? {
         return image?.thumbnailUrl(width, height)
     }
 
-    fun <T> to(state: LinksPool, imageUrl: String?, target: Any): Observable<T?> {
+    fun <T> to(imageUrl: String?, target: Any): Observable<T?> {
         if (imageUrl == null) {
-            state.sLinks.remove(target)
+            metaHolder.setKey(target, null)
             return Observable.just(null)
         }
 
         val id = UUID.randomUUID()
-        state.sLinks.put(target, id)
+        metaHolder.setKey(target, id)
 
         return getFromCache<T>(imageUrl)
             .switchIfNull { replaceToCache(imageUrl) }
             .observeOn(ForegroundScheduler.instance)
             .startWith(null as T?)
-            .filter { state.sLinks[target] == id }
+            .filter { metaHolder.getKey(target) == id }
     }
 
     private fun <T> replaceToCache(url: String): Observable<T> {
@@ -50,14 +51,10 @@ class ImageService(
             .mapNotNull { decoder.decodeImage<T>(it) }
             .toObservable()
     }
-}
 
-class LinksPool {
+    interface MetaStorage {
 
-    val sLinks = HashMap<Any, UUID>()
-
-    companion object {
-
-        val default = LinksPool()
+        fun setKey(target: Any, key: UUID?)
+        fun getKey(target: Any): UUID?
     }
 }

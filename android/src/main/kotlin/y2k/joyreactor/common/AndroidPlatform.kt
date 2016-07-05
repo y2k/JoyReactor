@@ -15,6 +15,8 @@ import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.Platform
 import y2k.joyreactor.platform.AndroidNavigation
 import y2k.joyreactor.platform.AndroidReportService
+import y2k.joyreactor.platform.ImageViewMetaStorage
+import y2k.joyreactor.services.ImageService
 import y2k.joyreactor.services.ReportService
 import java.io.File
 
@@ -22,6 +24,10 @@ import java.io.File
  * Created by y2k on 5/11/16.
  */
 class AndroidPlatform(private val app: Application) : Platform {
+
+    init {
+        ServiceLocator.register<ImageService.MetaStorage> { ImageViewMetaStorage() }
+    }
 
     override fun createTmpThumbnail(videoFile: File): Single<File> {
         return ioSingle {

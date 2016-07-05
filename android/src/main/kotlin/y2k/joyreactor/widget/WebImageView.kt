@@ -7,7 +7,6 @@ import android.util.AttributeSet
 import android.widget.ImageView
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.model.Image
-import y2k.joyreactor.services.LinksPool
 import y2k.joyreactor.services.ImageService
 import kotlin.properties.Delegates
 
@@ -29,7 +28,7 @@ class WebImageView(context: Context, attrs: AttributeSet) : ImageView(context, a
             state = ImageState(image, canvas.width, canvas.height)
 
             val url = imageService.makeUrl(state.image, state.width, state.height)
-            imageService.to<Bitmap>(LinksPool.default, url, this).subscribe { setImageBitmap(it) }
+            imageService.to<Bitmap>(url, this).subscribe { setImageBitmap(it) }
         }
     }
 
