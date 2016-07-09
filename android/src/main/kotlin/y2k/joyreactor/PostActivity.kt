@@ -1,12 +1,12 @@
 package y2k.joyreactor
 
 import android.os.Bundle
-import android.view.ViewGroup
-import android.widget.TextView
-import y2k.joyreactor.common.*
-import y2k.joyreactor.model.Comment
+import y2k.joyreactor.common.BaseActivity
+import y2k.joyreactor.common.ServiceLocator
+import y2k.joyreactor.common.bindingBuilder
+import y2k.joyreactor.common.setOnClick
 import y2k.joyreactor.viewmodel.PostViewModel
-import y2k.joyreactor.widget.WebImageView
+import y2k.joyreactor.widget.CommentComponent
 
 class PostActivity : BaseActivity() {
 
@@ -35,11 +35,9 @@ class PostActivity : BaseActivity() {
             textView(R.id.description, vm.description)
             recyclerView(R.id.list, vm.comments) {
                 itemId { it.id }
-                viewHolder {
-                    CommentViewHolder(it).apply {
-                        itemView.findViewById(R.id.action).setOnClickListener {
-                            lastComment?.let { vm.selectComment(it) }
-                        }
+                component {
+                    CommentComponent(it.context).apply {
+                        setOnClick(R.id.action) { vm.selectComment(value.value) }
                     }
                 }
             }
@@ -51,31 +49,6 @@ class PostActivity : BaseActivity() {
                 command(R.id.saveImageToGallery) { vm.saveToGallery() }
                 command(R.id.openInBrowser) { vm.openInBrowser() }
             }
-        }
-    }
-
-    class CommentViewHolder(parent: ViewGroup) :
-        ListViewHolder<Comment>(parent.inflate(R.layout.item_comment)) {
-
-        val rating by view<TextView>()
-        val text by view<TextView>()
-        val replies by view<TextView>()
-        val avatar by view<WebImageView>()
-        val attachment by view<WebImageView>()
-
-        var lastComment: Comment? = null
-
-        override fun update(item: Comment) {
-            lastComment = item
-            itemView.updateMargin(left = (28 * item.level + 8).dipToPx())
-
-            text.text = item.text
-            avatar.image = item.userImageObject.toImage()
-            rating.text = "" + item.rating
-            replies.text = "" + item.replies
-
-            attachment.setVisible(item.attachment != null)
-            attachment.image = item.attachment
         }
     }
 }

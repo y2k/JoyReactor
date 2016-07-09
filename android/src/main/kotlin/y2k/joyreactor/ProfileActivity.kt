@@ -25,6 +25,8 @@ class ProfileActivity : AppCompatActivity() {
             ratingBar(R.id.stars, vm.stars)
             progressBar(R.id.nextStarProgress, vm.nextStarProgress)
 
+            bind(R.id.awards, vm.awards)
+
             command(R.id.logout, { vm.logout() })
         }
     }

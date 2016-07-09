@@ -10,11 +10,16 @@ import android.view.ViewGroup
  * Created by y2k on 2/6/16.
  */
 
+fun ViewGroup.replaceViews(views: List<View>) {
+    removeAllViews()
+    views.forEach { addView(it) }
+}
+
 fun View.setVisible(visible: Boolean) {
     visibility = if (visible) View.VISIBLE else View.GONE
 }
 
-inline fun View.setOnClickListener(id: Int, crossinline onClick: () -> Unit) {
+inline fun View.setOnClick(id: Int, crossinline onClick: () -> Unit) {
     findViewById(id).setOnClickListener { onClick() }
 }
 

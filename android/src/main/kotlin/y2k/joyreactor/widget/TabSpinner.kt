@@ -11,7 +11,7 @@ import android.widget.BaseAdapter
 import android.widget.Spinner
 import android.widget.TextView
 import y2k.joyreactor.R
-import y2k.joyreactor.common.dipToPx
+import y2k.joyreactor.common.px
 import y2k.joyreactor.common.inflate
 
 /**
@@ -52,8 +52,8 @@ class TabSpinner(context: Context, attrs: AttributeSet?) : Spinner(context, attr
             val view = (convertView ?: inflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false)) as TextView
             view.text = items[position]
             view.setTextColor(Color.WHITE)
-            view.minWidth = 100.dipToPx()
-            view.setPaddingRelative(20.dipToPx(), 0, 0, 0)
+            view.minWidth = 100.px()
+            view.setPaddingRelative(20.px(), 0, 0, 0)
             return view
         }
 

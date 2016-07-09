@@ -267,9 +267,19 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
         })
     }
 
-    private fun <T : Any> find(id: Int): T {
+    fun <T : Any> find(id: Int): T {
         return resolvers.mapNotNull { it.find<T>(id) }.first()
     }
+
+    fun <T> bind(id: Int, property: ObservableProperty<T>) {
+        val view = find<BindableComponent<T>>(id)
+        property.subscribe { view.value += it }
+    }
+}
+
+interface BindableComponent<T> {
+
+    val value: ObservableProperty<T>
 }
 
 class EditTextBinding(val view: EditText) {
@@ -337,6 +347,10 @@ class DslRecyclerView<T> {
         this.createVH = createVH
     }
 
+    fun component(f: (ViewGroup) -> View) {
+        viewHolder { BindableListViewHolder(f(it)) }
+    }
+
     fun viewHolder(createVH: (ViewGroup) -> ListViewHolder<T>) {
         this.createVH = { v, i -> createVH(v) }
     }
@@ -367,6 +381,16 @@ class DslRecyclerView<T> {
     }
 
     class ItemViewTypeProperties<T>(val value: T, val items: List<T>, val position: Int)
+}
+
+class BindableListViewHolder<T>(view: View) : ListViewHolder<T>(view) {
+
+    @Suppress("UNCHECKED_CAST")
+    val component = view as BindableComponent<T>
+
+    override fun update(item: T) {
+        component.value += item
+    }
 }
 
 abstract class ListViewHolder<T>(view: View) : RecyclerView.ViewHolder(view) {

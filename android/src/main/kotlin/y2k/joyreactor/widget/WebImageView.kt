@@ -13,7 +13,7 @@ import kotlin.properties.Delegates
 /**
  * Created by y2k on 9/26/15.
  */
-class WebImageView(context: Context, attrs: AttributeSet) : ImageView(context, attrs) {
+class WebImageView(context: Context?, attrs: AttributeSet? = null) : ImageView(context, attrs) {
 
     val imageService = ServiceLocator.resolve<ImageService>()
     var image by Delegates.observable(null as Image?) { prop, old, new -> invalidate() }

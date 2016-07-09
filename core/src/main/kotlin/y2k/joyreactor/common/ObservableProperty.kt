@@ -46,10 +46,14 @@ class ObservableProperty<T>(initValue: T) {
     }
 }
 
-fun <T> property(defaultValue: T): ObservableProperty<T> {
-    return ObservableProperty(defaultValue)
+fun <T> property(defaultValue: T, f: (T) -> Unit): ObservableProperty<T> {
+    return property(defaultValue).apply { subscribe { f(it) } }
 }
 
-fun <T> property(): ObservableProperty<T?> {
-    return ObservableProperty(null)
+fun <T> listProperty(f: (List<T>) -> Unit): ObservableProperty<List<T>> {
+    return property(emptyList<T>()).apply { subscribe { f(it) } }
 }
+
+fun <T> property(defaultValue: T): ObservableProperty<T> = ObservableProperty(defaultValue)
+
+fun <T> property(): ObservableProperty<T?> = ObservableProperty(null)

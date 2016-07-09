@@ -85,4 +85,5 @@
     <string name="like">Like</string>
     <string name="dislike">Dislike</string>
     <string name="updating">Updating…</string>
+    <string name="awards">Awards:</string>
 </resources>

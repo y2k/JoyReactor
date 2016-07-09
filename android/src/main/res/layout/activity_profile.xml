@@ -4,121 +4,160 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <ScrollView
         android:gravity="center"
-        android:orientation="vertical">
-
-        <y2k.joyreactor.widget.RoundBorderLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <y2k.joyreactor.widget.WebImageView
-                android:id="@+id/avatar"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:scaleType="centerCrop"/>
-        </y2k.joyreactor.widget.RoundBorderLayout>
-
-        <TextView
-            android:id="@+id/username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:textColor="@color/text_secondary"
-            android:textSize="18sp"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:text="@string/rating"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp"/>
-
-            <TextView
-                android:id="@+id/rating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp"/>
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="17dp"
-            android:background="#E4E4E4"/>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/text_primary"
-            android:padding="18dp">
-
-            <RatingBar
-                android:id="@+id/stars"
-                android:layout_width="wrap_content"
-                android:layout_height="17dp"
-                android:layout_gravity="center"
-                android:isIndicator="true"
-                android:numStars="10"
-                android:progressDrawable="@drawable/drawable_star"/>
-        </FrameLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#E4E4E4"/>
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/text_primary"
-            android:orientation="vertical"
-            android:paddingBottom="20dp"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:paddingTop="20dp">
+            android:layout_height="wrap_content"
+            android:paddingTop="40dp"
+            android:paddingBottom="40dp"
+            android:clipToPadding="false"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <y2k.joyreactor.widget.RoundBorderLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <y2k.joyreactor.widget.WebImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:scaleType="centerCrop"/>
+            </y2k.joyreactor.widget.RoundBorderLayout>
 
             <TextView
+                android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/star_progress"
+                android:layout_marginTop="14dp"
                 android:textColor="@color/text_secondary"
-                android:textSize="14sp"/>
+                android:textSize="18sp"/>
 
-            <ProgressBar
-                android:id="@+id/nextStarProgress"
-                style="?android:attr/progressBarStyleHorizontal"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:text="@string/rating"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="21dp"
-                android:layout_marginTop="12dp"
-                android:max="100"
-                android:progressDrawable="@drawable/drawable_progress"/>
+                android:layout_height="1dp"
+                android:layout_marginTop="17dp"
+                android:background="#E4E4E4"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/text_primary"
+                android:padding="18dp">
+
+                <RatingBar
+                    android:id="@+id/stars"
+                    android:layout_width="wrap_content"
+                    android:layout_height="17dp"
+                    android:layout_gravity="center"
+                    android:isIndicator="true"
+                    android:numStars="10"
+                    android:progressDrawable="@drawable/drawable_star"/>
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E4E4E4"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@color/text_primary"
+                android:orientation="vertical"
+                android:paddingBottom="20dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:paddingTop="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/star_progress"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="16sp"/>
+
+                <ProgressBar
+                    android:id="@+id/nextStarProgress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="21dp"
+                    android:layout_marginTop="12dp"
+                    android:max="100"
+                    android:progressDrawable="@drawable/drawable_progress"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E4E4E4"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/text_primary"
+                android:orientation="vertical"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp">
+
+                <TextView
+                    android:text="@string/awards"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginBottom="20dp"/>
+
+                <y2k.joyreactor.widget.AwardsListComponent
+                    android:id="@+id/awards"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E4E4E4"/>
+
+            <Button
+                android:id="@+id/logout"
+                android:layout_width="300dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/drawable_yellow_button"
+                android:text="@string/logout"
+                android:textColor="@color/text_primary"
+                android:textSize="18sp"/>
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#E4E4E4"/>
-
-        <Button
-            android:id="@+id/logout"
-            android:layout_width="300dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="32dp"
-            android:background="@drawable/drawable_yellow_button"
-            android:text="@string/logout"
-            android:textColor="@color/text_primary"
-            android:textSize="18sp"/>
-    </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/progress"

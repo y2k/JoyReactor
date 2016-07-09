@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
  * Created by y2k on 2/1/16.
  */
 
-fun Int.dipToPx(): Int {
+fun Int.px(): Int {
     return (this * App.instance.resources.displayMetrics.density).toInt()
 }
 

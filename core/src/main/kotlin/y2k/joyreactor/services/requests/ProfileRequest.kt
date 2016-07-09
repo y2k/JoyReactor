@@ -2,6 +2,7 @@ package y2k.joyreactor.services.requests
 
 import org.jsoup.nodes.Document
 import rx.Observable
+import rx.Single
 import y2k.joyreactor.common.NotAuthorizedException
 import y2k.joyreactor.common.getDocumentAsync
 import y2k.joyreactor.common.http.HttpClient
@@ -14,16 +15,15 @@ import java.util.regex.Pattern
  * Created by y2k on 19/10/15.
  */
 class ProfileRequest(
-    private val httpClient: HttpClient) :
-    Function1<String, Observable<Profile>> {
+    private val httpClient: HttpClient) : Function1<String, Single<Profile>> {
 
-    override operator fun invoke(username: String): Observable<Profile> {
+    override operator fun invoke(username: String): Single<Profile> {
         return getUrl(username)
             .let { httpClient.getDocumentAsync(it) }
             .map { ProfileParser(it).parse() }
-            .toObservable()
     }
 
+    @Deprecated("Use operator invoke + UserNameRequest")
     fun request(): Observable<Profile> {
         return UserNameRequest(httpClient)
             .request()

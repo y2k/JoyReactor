@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.TextView
 import y2k.joyreactor.R
-import y2k.joyreactor.common.dipToPx
+import y2k.joyreactor.common.px
 import y2k.joyreactor.common.getChildren
 import y2k.joyreactor.common.inflate
 import java.util.*
@@ -18,7 +18,7 @@ import kotlin.properties.Delegates
  */
 class TagsView(context: Context?, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
-    val divider = 8.dipToPx()
+    val divider = 8.px()
     val positions = ArrayList<Point>()
 
     var tags by Delegates.observable(emptyList<String>()) { prop, old, new ->
@@ -34,7 +34,7 @@ class TagsView(context: Context?, attrs: AttributeSet?) : ViewGroup(context, att
         tags.forEach {
             addView((inflate(R.layout.item_post_tag) as TextView).apply {
                 text = "#${it.toLowerCase().replace("#", "")}"
-                setPadding(8.dipToPx(), 8.dipToPx(), 8.dipToPx(), 8.dipToPx())
+                setPadding(8.px(), 8.px(), 8.px(), 8.px())
                 setBackgroundResource(R.drawable.drawable_tag)
             })
         }

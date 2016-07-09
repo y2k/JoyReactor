@@ -9,7 +9,7 @@ import android.view.View
  */
 class ItemDividerDecoration(list: RecyclerView) : RecyclerView.ItemDecoration() {
 
-    private val divider = 4.dipToPx()
+    private val divider = 4.px()
 
     init {
         list.setPadding(divider, divider, divider, divider)

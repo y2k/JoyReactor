@@ -6,6 +6,7 @@ import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.common.property
 import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Image
+import y2k.joyreactor.model.Profile
 import y2k.joyreactor.services.ProfileService
 
 /**
@@ -24,6 +25,8 @@ class ProfileViewModel(
     val isBusy = property(false)
     val isError = property(false)
 
+    val awards = property(emptyList<Profile.Award>())
+
     init {
         isBusy += true
         service
@@ -34,6 +37,7 @@ class ProfileViewModel(
                 rating += it.rating
                 stars += it.stars.toFloat()
                 nextStarProgress += it.progressToNewStar
+                awards += it.awards
                 isBusy += false
             }, {
                 it.printStackTrace()
