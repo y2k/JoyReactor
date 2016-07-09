@@ -1,9 +1,12 @@
 package y2k.joyreactor
 
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
-import y2k.joyreactor.common.*
+import y2k.joyreactor.common.BaseActivity
+import y2k.joyreactor.common.ServiceLocator
+import y2k.joyreactor.common.bindingBuilder
+import y2k.joyreactor.common.setOnClick
 import y2k.joyreactor.viewmodel.CommentsViewModel
+import y2k.joyreactor.widget.CommentComponent
 
 /**
  * Created by y2k on 5/30/16.
@@ -21,9 +24,9 @@ class CommentsActivity : BaseActivity() {
 
             recyclerView(R.id.list, vm.comments) {
                 itemId { it.id }
-                viewHolder {
-                    PostActivity.CommentViewHolder(it).apply {
-                        setOnClick(R.id.action) { vm.selectComment(it) }
+                component {
+                    CommentComponent(it.context).apply {
+                        setOnClick(R.id.action) { vm.selectComment(value.value) }
                     }
                 }
             }

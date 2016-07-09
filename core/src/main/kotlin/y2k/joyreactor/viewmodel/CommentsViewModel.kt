@@ -5,6 +5,7 @@ import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.common.property
 import y2k.joyreactor.common.ui
+import y2k.joyreactor.model.Comment
 import y2k.joyreactor.model.CommentGroup
 import y2k.joyreactor.model.EmptyGroup
 import y2k.joyreactor.services.LifeCycleService
@@ -18,7 +19,7 @@ class CommentsViewModel(
     private val service: PostService,
     private val userService: ProfileService,
     private val navigation: NavigationService,
-    private val scope: LifeCycleService) {
+    scope: LifeCycleService) {
 
     val comments = property<CommentGroup>(EmptyGroup())
     val canCreateComments = property(false)
@@ -31,8 +32,7 @@ class CommentsViewModel(
         }
     }
 
-    fun selectComment(position: Int) {
-        val comment = comments.value[position]
+    fun selectComment(comment: Comment) {
         service
             .getCommentsAsync(comment.postId, comments.value.getNavigation(comment))
             .ui { comments += it }

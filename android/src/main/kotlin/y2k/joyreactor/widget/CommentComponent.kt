@@ -10,13 +10,13 @@ import y2k.joyreactor.common.*
 import y2k.joyreactor.model.Comment
 
 /**
-* Created by y2k on 10/07/16.
-*/
+ * Created by y2k on 10/07/16.
+ */
 class CommentComponent(
     context: Context?, attrs: AttributeSet? = null) :
     FrameLayout(context, attrs), BindableComponent<Comment> {
 
-    override val value = property(Comment())
+    override val value = property(stub)
 
     private val rating by view<TextView>()
     private val text by view<TextView>()
@@ -29,10 +29,10 @@ class CommentComponent(
         value.subscribe { onUpdate(it) }
     }
 
-    private fun onUpdate(item: Comment?) {
-        if (item == null) return
+    private fun onUpdate(item: Comment) {
+        if (item === stub) return
 
-        updateMargin(left = (28 * item.level + 8).px())
+        getChildAt(0).updateMargin(left = (28 * item.level + 8).px())
 
         text.text = item.text
         avatar.image = item.userImageObject.toImage()
@@ -41,5 +41,10 @@ class CommentComponent(
 
         attachment.setVisible(item.attachment != null)
         attachment.image = item.attachment
+    }
+
+    companion object {
+
+        private val stub = Comment()
     }
 }

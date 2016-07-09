@@ -388,6 +388,12 @@ class BindableListViewHolder<T>(view: View) : ListViewHolder<T>(view) {
     @Suppress("UNCHECKED_CAST")
     val component = view as BindableComponent<T>
 
+    init {
+        view.layoutParams = ViewGroup.MarginLayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
+
     override fun update(item: T) {
         component.value += item
     }
