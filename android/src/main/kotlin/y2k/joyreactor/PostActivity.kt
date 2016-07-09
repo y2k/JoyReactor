@@ -4,9 +4,7 @@ import android.os.Bundle
 import y2k.joyreactor.common.BaseActivity
 import y2k.joyreactor.common.ServiceLocator
 import y2k.joyreactor.common.bindingBuilder
-import y2k.joyreactor.common.setOnClick
 import y2k.joyreactor.viewmodel.PostViewModel
-import y2k.joyreactor.widget.CommentComponent
 
 class PostActivity : BaseActivity() {
 
@@ -16,8 +14,6 @@ class PostActivity : BaseActivity() {
 
         val vm = ServiceLocator.resolve<PostViewModel>(lifeCycleService)
         bindingBuilder(this) {
-            viewResolver(R.id.list)
-
             visibility(R.id.createComment, vm.canCreateComments)
             command(R.id.createComment) { vm.commentPost() }
 
@@ -33,17 +29,11 @@ class PostActivity : BaseActivity() {
             command(R.id.showMoreImages) { vm.showMoreImages() }
 
             textView(R.id.description, vm.description)
-            recyclerView(R.id.list, vm.comments) {
-                itemId { it.id }
-                component {
-                    CommentComponent(it.context).apply {
-                        setOnClick(R.id.action) { vm.selectComment(value.value) }
-                    }
-                }
-            }
+
+            bind(R.id.comments, vm.comments)
+            snackbar(R.id.comments, R.string.updating, vm.isBusy)
 
             visibility(R.id.error, vm.error)
-            snackbar(R.id.list, R.string.updating, vm.isBusy)
 
             menu(R.menu.menu_post) {
                 command(R.id.saveImageToGallery) { vm.saveToGallery() }
