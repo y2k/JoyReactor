@@ -11,6 +11,6 @@ class CommentService(
 
     fun createComment(postId: Long, commentText: String): Completable {
         return requestFactory(postId, commentText)
-            .andThen(postService.synchronizePostWithImage(postId.toLong()))
+            .andThen(postService.synchronizePostWithImage(postId))
     }
 }
