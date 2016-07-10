@@ -38,7 +38,7 @@ fun bindingBuilder(root: ViewResolver, init: BindingBuilder.() -> Unit) {
 }
 
 fun bindingBuilder(root: Activity, init: BindingBuilder.() -> Unit) {
-    BindingBuilder(ActivityViewResolver(root)).init()
+    BindingBuilder(ActivityViewResolver(root), root).init()
 }
 
 private class ViewGroupResolver(private val view: View) : ViewResolver {

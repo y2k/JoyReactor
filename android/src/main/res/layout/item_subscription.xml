@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/action"
-        android:foreground="?listChoiceBackgroundIndicator"
-        android:gravity="center_vertical"
-        android:minHeight="52dp"
-        android:paddingLeft="14dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/action"
+    android:foreground="?listChoiceBackgroundIndicator"
+    android:gravity="center_vertical"
+    android:minHeight="52dp"
+    android:paddingLeft="14dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <y2k.joyreactor.widget.RoundBorderLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
         <y2k.joyreactor.widget.WebImageView
-                android:id="@+id/icon"
-                android:layout_width="34dp"
-                android:layout_height="34dp"
-                android:scaleType="centerCrop"/>
+            android:id="@+id/icon"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:scaleType="centerCrop"/>
     </y2k.joyreactor.widget.RoundBorderLayout>
-    <TextView android:layout_marginLeft="13sp"
-              android:id="@+id/title"
-              android:layout_width="0dp"
-              android:layout_height="wrap_content"
-              android:layout_weight="1"
-              android:textColor="@color/text_primary"
-              android:textSize="14sp"/>
+    <TextView
+        android:layout_marginLeft="13sp"
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/text_primary"
+        android:textSize="14sp"/>
 </LinearLayout>

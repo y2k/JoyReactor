@@ -7,13 +7,11 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.support.v7.widget.Toolbar
 import android.view.View
-import android.widget.TextView
 import y2k.joyreactor.common.*
-import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.viewmodel.MainViewModel
 import y2k.joyreactor.viewmodel.MenuViewModel
-import y2k.joyreactor.widget.WebImageView
+import y2k.joyreactor.widget.TagComponent
 
 class MainActivity : BaseActivity() {
 
@@ -74,13 +72,7 @@ class MainActivity : BaseActivity() {
 
             recyclerView(R.id.listTags, vm.tags) {
                 itemId { it.id }
-                viewHolder {
-                    TagViewHolder(it.inflate(R.layout.item_subscription)).apply {
-                        itemView
-                            .findViewById(R.id.action)
-                            .setOnClickListener { vm.selectTag(vm.tags.value[layoutPosition - 1]) }
-                    }
-                }
+                component { TagComponent(context) { vm.selectTag(it) } }
             }
         }
     }
@@ -101,17 +93,6 @@ class MainActivity : BaseActivity() {
         }
 
         override fun update(item: Post?) {
-        }
-    }
-
-    class TagViewHolder(view: View) : ListViewHolder<Group>(view) {
-
-        val title = view.find<TextView>(R.id.title)
-        val icon = view.find<WebImageView>(R.id.icon)
-
-        override fun update(item: Group) {
-            title.text = item.title
-            icon.image = item.image
         }
     }
 }
