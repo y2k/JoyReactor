@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/imagesLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginLeft="8dp"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center_vertical"
+        android:text="@string/images"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="18sp"/>
+
+    <Button
+        android:id="@+id/showMoreImages"
+        style="?android:borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_alignParentRight="true"
+        android:text="@string/show_more"
+        android:textColor="@color/primary"
+        android:textSize="15sp"/>
+
+    <y2k.joyreactor.widget.ImagePanel
+        android:id="@+id/images"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imagesLabel"/>
+</merge>

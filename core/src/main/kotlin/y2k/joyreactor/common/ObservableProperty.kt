@@ -50,6 +50,8 @@ fun <T> property(defaultValue: T, f: (T) -> Unit): ObservableProperty<T> {
     return property(defaultValue).apply { subscribe { f(it) } }
 }
 
+fun <T> listProperty(): ObservableProperty<List<T>> = property(emptyList<T>())
+
 fun <T> listProperty(f: (List<T>) -> Unit): ObservableProperty<List<T>> {
     return property(emptyList<T>()).apply { subscribe { f(it) } }
 }

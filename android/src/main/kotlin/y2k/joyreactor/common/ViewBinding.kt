@@ -275,6 +275,18 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
         val view = find<BindableComponent<T>>(id)
         property.subscribe { view.value += it }
     }
+
+    fun command(id: Int, command: String, f: () -> Unit) {
+        val view = find<View>(id)
+        view.javaClass.getMethod(toSetterName(command), Function0::class.java).invoke(view, f)
+    }
+
+    fun <T> command(id: Int, command: String, f: (T) -> Unit) {
+        val view = find<View>(id)
+        view.javaClass.getMethod(toSetterName(command), Function1::class.java).invoke(view, f)
+    }
+
+    private fun toSetterName(prop: String) = "set${prop.substring(0, 1).toUpperCase()}${prop.substring(1)}"
 }
 
 interface BindableComponent<T> {

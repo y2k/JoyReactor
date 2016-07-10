@@ -21,6 +21,7 @@ class ViewGroupDelegate<out T : View>() {
 
     private var cached: T? = null
 
+    @Suppress("UNCHECKED_CAST")
     operator fun getValue(group: ViewGroup, property: KProperty<*>): T {
         if (cached == null) {
             val context = group.context
@@ -39,6 +40,7 @@ class ViewHolderDelegate<out T : View>() {
 
     private var cached: T? = null
 
+    @Suppress("UNCHECKED_CAST")
     operator fun getValue(holder: RecyclerView.ViewHolder, property: KProperty<*>): T {
         if (cached == null) {
             val context = holder.itemView.context
