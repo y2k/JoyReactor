@@ -17,7 +17,7 @@ class PostActivity : BaseActivity() {
         val vm = ServiceLocator.resolve<PostViewModel>(lifeCycleService)
         bindingBuilder(this) {
             visibility(R.id.createComment, vm.canCreateComments)
-            command(R.id.createComment) { vm.commentPost() }
+            command(R.id.createComment) { vm.createComment() }
 
             progressImageView(R.id.poster, vm.poster)
             fixedAspectPanel(R.id.posterPanel, vm.posterAspect)
