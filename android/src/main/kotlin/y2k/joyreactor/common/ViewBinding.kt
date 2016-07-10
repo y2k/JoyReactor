@@ -6,17 +6,11 @@ import android.content.Context
 import android.graphics.Color
 import android.net.Uri
 import android.support.design.widget.Snackbar
-import android.support.design.widget.TabLayout
-import android.support.v4.view.ViewPager
-import android.support.v4.widget.ContentLoadingProgressBar
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.*
 import y2k.joyreactor.App
 import y2k.joyreactor.model.Group
@@ -82,11 +76,6 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
         MenuBinding(menuId, resolvers).init()
     }
 
-    //    fun refreshLayout(id: Int, binding: Binding<Boolean>) {
-    //        val view = root.find<SwipeRefreshLayout>(id)
-    //        binding.subscribe { view.isRefreshing = it }
-    //    }
-
     fun spinnerTemp(id: Int, property: ObservableProperty<Group.Quality>) {
         val view = find<Spinner>(id)
         property.subscribe { view.setSelection(it.ordinal) }
@@ -112,25 +101,6 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 property += position
             }
-        }
-    }
-
-    fun tabLayout(id: Int, property: ObservableProperty<Int>) {
-        val view = find<TabLayout>(id)
-        view.setOnTabSelectedListener(object : OnTabSelectedListenerAdapter() {
-
-            override fun onTabReselected(tab: TabLayout.Tab) {
-                property += tab.position
-            }
-        })
-        property.subscribe { view.getTabAt(it)?.select() }
-    }
-
-    fun radioGroup(id: Int, property: ObservableProperty<Int>) {
-        val view = find<RadioGroup>(id)
-        property.subscribe { (view.getChildAt(it) as RadioButton).isChecked = true }
-        view.setOnCheckedChangeListener { group, id ->
-            view.getChildren().map { it as RadioButton }.indexOfFirst { it.isChecked }
         }
     }
 
@@ -191,11 +161,6 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
         view.adapter = dsl.build().apply { property.subscribe { update(it as List<T>) } }
     }
 
-    fun loadingProgressBar(id: Int, property: ObservableProperty<Boolean>) {
-        val view = find<ContentLoadingProgressBar>(id)
-        property.subscribe { if (it) view.show() else view.hide() }
-    }
-
     fun <T> textView(id: Int, property: ObservableProperty<T>) {
         val view = find<TextView>(id)
         property.subscribe { if (view.text.toString() != it.toString()) view.text = it.toString() }
@@ -221,15 +186,6 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
         property.subscribe { view.tags = it }
     }
 
-    fun imagePanel(id: Int, property: ObservableProperty<List<Image>>, f: (Image) -> Unit) {
-        val view = find<ImagePanel>(id)
-        property.subscribe { view.setImages(it, f) }
-    }
-
-    fun editText(id: Int, init: EditTextBinding.() -> Unit) {
-        EditTextBinding(find<EditText>(id)).init()
-    }
-
     fun editText(id: Int, property: ObservableProperty<String>) {
         val view = find<EditText>(id)
         property.subscribe { if (view.text.toString() != it) view.setText(it) }
@@ -252,19 +208,6 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
             if (invert) view.visibility = if (it) View.GONE else View.VISIBLE
             else view.visibility = if (it) View.VISIBLE else View.GONE
         }
-    }
-
-    fun webView(id: Int, init: WebViewBinding.() -> Unit) {
-        WebViewBinding(find<WebView>(id)).init()
-    }
-
-    fun viewPager(view: ViewPager, property: ObservableProperty<Int>) {
-        view.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
-
-            override fun onPageSelected(position: Int) {
-                property += position
-            }
-        })
     }
 
     fun <T : Any> find(id: Int): T {
@@ -292,23 +235,6 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
 interface BindableComponent<T> {
 
     val value: ObservableProperty<T>
-}
-
-class EditTextBinding(val view: EditText) {
-
-    fun text(property: ObservableProperty<String>) {
-        property.subscribe { if (view.text.toString() != it) view.setText(it) }
-        view.addTextChangedListener(object : TextWatcherAdapter() {
-
-            override fun afterTextChanged(s: Editable?) {
-                property += "" + s
-            }
-        })
-    }
-
-    fun error(property: ObservableProperty<Boolean>, text: String) {
-        property.subscribe { view.error = if (it) text else null }
-    }
 }
 
 class MenuBinding(menuId: Int, resolvers: List<ViewResolver>) {
@@ -418,36 +344,8 @@ abstract class ListViewHolder<T>(view: View) : RecyclerView.ViewHolder(view) {
 
 class ViewBinding(private val view: View) {
 
-    fun click(f: () -> Unit) {
-        view.setOnClickListener { f() }
-    }
-
     fun visibility(property: ObservableProperty<Boolean>) {
         property.subscribe { view.visibility = if (it) View.VISIBLE else View.GONE }
-    }
-}
-
-class WebViewBinding(private val webView: WebView) {
-
-    val settings: WebSettings
-        get() = webView.settings
-
-    fun url(property: ObservableProperty<String>) {
-        property.subscribe { webView.loadUrl(it) }
-    }
-
-    fun title(property: ObservableProperty<String>) {
-        webView.setWebViewClient(object : WebViewClient() {
-
-            override fun onPageFinished(view: WebView, url: String?) {
-                property += view.title
-            }
-
-            override fun shouldOverrideUrlLoading(view: WebView, url: String?): Boolean {
-                view.loadUrl(url)
-                return true;
-            }
-        })
     }
 }
 
