@@ -1,12 +1,12 @@
 package y2k.joyreactor.viewmodel
 
+import y2k.joyreactor.common.ListWithDivider
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.common.property
 import y2k.joyreactor.common.registerProperty
 import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Group
-import y2k.joyreactor.model.Post
 import y2k.joyreactor.services.*
 
 /**
@@ -21,7 +21,7 @@ class MainViewModel(
     private val reportService: ReportService) {
 
     val isBusy = property(false)
-    val posts = property(emptyList<Post?>())
+    val posts = property<ListWithDivider<PostItemViewModel>>()
     val hasNewPosts = property(false)
     val isError = property(false)
 
@@ -60,11 +60,6 @@ class MainViewModel(
     fun applyNew() = state.applyNew()
     fun loadMore() = state.loadMore()
     fun reloadFirstPage() = state.reloadFirstPage()
-
-    fun postClicked(position: Int) = state.postClicked(position)
-    fun playClicked(position: Int) = state.playClicked(position)
-    fun changeLike(position: Int) = state.changeLike(position)
-    fun toggleFavorite(position: Int) = state.toggleFavorite(position)
 
     fun openProfile() = navigation.open<ProfileViewModel>()
     fun openMessages() = navigation.open<ThreadsViewModel>()

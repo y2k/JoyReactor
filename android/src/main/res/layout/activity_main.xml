@@ -44,12 +44,10 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <android.support.v7.widget.RecyclerView
+            <y2k.joyreactor.widget.PostListComponent
                 android:id="@+id/list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layoutManager="android.support.v7.widget.StaggeredGridLayoutManager"
-                app:spanCount="1"/>
+                android:layout_height="match_parent"/>
         </y2k.joyreactor.widget.ColorSwipeRefreshLayout>
 
         <y2k.joyreactor.widget.ReloadButton

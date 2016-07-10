@@ -4,11 +4,8 @@ import android.os.Bundle
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.StaggeredGridLayoutManager
 import android.support.v7.widget.Toolbar
-import android.view.View
 import y2k.joyreactor.common.*
-import y2k.joyreactor.model.Post
 import y2k.joyreactor.viewmodel.MainViewModel
 import y2k.joyreactor.viewmodel.MenuViewModel
 import y2k.joyreactor.widget.TagComponent
@@ -36,23 +33,10 @@ class MainActivity : BaseActivity() {
                 isRefreshing(vm.isBusy)
                 command { vm.reloadFirstPage() }
             }
-            recyclerView(R.id.list, vm.posts) {
-                itemId { it?.id ?: 0L }
-                itemViewType { if (it.value == null) 2 else 1 }
-                viewHolderWithType { parent, type ->
-                    when (type) {
-                        1 -> PostViewHolder(parent.inflate(R.layout.item_feed)).apply {
-                            setOnClick(R.id.like) { vm.changeLike(it) }
-                            setOnClick(R.id.card, { vm.postClicked(it) })
-                            setOnClick(R.id.videoMark) { vm.playClicked(it) }
-                            setOnClick(R.id.favorite) { vm.toggleFavorite(it) }
-                        }
-                        else -> DividerHolder(parent.inflate(R.layout.item_post_divider)).apply {
-                            setOnClick(R.id.dividerButton) { vm.loadMore() }
-                        }
-                    }
-                }
-            }
+
+            bind(R.id.list, vm.posts)
+            command(R.id.list, "commandLoadMore") { vm.loadMore() }
+
             menu(R.menu.main) {
                 command(R.id.profile) { vm.openProfile() }
                 command(R.id.messages) { vm.openMessages() }
@@ -84,15 +68,5 @@ class MainActivity : BaseActivity() {
         setSupportActionBar(toolbar)
         ActionBarDrawerToggle(this, findViewById(R.id.drawer_layout) as DrawerLayout,
             toolbar, R.string.app_name, R.string.app_name).syncState()
-    }
-
-    class DividerHolder(view: View) : ListViewHolder<Post?>(view) {
-
-        init {
-            (itemView.layoutParams as StaggeredGridLayoutManager.LayoutParams).isFullSpan = true
-        }
-
-        override fun update(item: Post?) {
-        }
     }
 }
