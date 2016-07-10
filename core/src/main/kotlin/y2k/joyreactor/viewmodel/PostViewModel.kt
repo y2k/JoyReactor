@@ -1,10 +1,10 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.Notifications
-import y2k.joyreactor.common.pack
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.common.property
+import y2k.joyreactor.common.toTask
 import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Comment
 import y2k.joyreactor.model.Image
@@ -37,11 +37,13 @@ class PostViewModel(
     private val postId = navigation.argument.toLong()
 
     init {
-        val process = service.synchronizePostWithImage(postId).pack()
-        scope(Notifications.Post) {
+        val process = service.synchronizePostWithImage(postId).toTask(postId)
+        scope(process.notification) {
             isBusy += process.isBusy
             error += process.finishedWithError
+        }
 
+        scope(Notifications.Post) {
             poster += service.mainImageFromDisk(postId)
             images += service.getImages(postId)
             comments += service.getTopComments(postId, 10)
