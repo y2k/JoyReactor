@@ -11,6 +11,7 @@ import y2k.joyreactor.services.repository.Entities
 import y2k.joyreactor.services.repository.IDataContext
 import y2k.joyreactor.services.repository.ormlite.OrmLiteDataContext
 import y2k.joyreactor.services.requests.*
+import y2k.joyreactor.services.requests.parser.LikeParser
 import y2k.joyreactor.services.requests.parser.PostParser
 import y2k.joyreactor.services.synchronizers.MyTagFetcher
 import y2k.joyreactor.services.synchronizers.PostMerger
@@ -36,9 +37,11 @@ object ServiceLocator {
         register { resolve<Platform>().makeReportService() }
         register { BroadcastService }
 
+        register { PostParser(resolve<LikeParser>()) }
+
         register { TokenRequest(resolve()) }
         register { ChangePostFavoriteRequest(resolve(), resolve()) }
-        register { LikePostRequest(resolve(), resolve()) }
+        register { LikePostRequest(resolve(), resolve(), resolve<LikeParser>()) }
         register { MessageListRequest(resolve(), resolve()) }
         register { PostMerger(resolve(), resolve()) }
         register { MemoryBuffer }

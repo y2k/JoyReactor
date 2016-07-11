@@ -11,7 +11,7 @@ import java.util.regex.Pattern
 /**
  * Created by y2k on 5/29/16.
  */
-class PostParser : Function1<Element, Pair<Post, List<Attachment>>> {
+class PostParser(private val parseLike: (Element) -> MyLike) : Function1<Element, Pair<Post, List<Attachment>>> {
 
     override operator fun invoke(document: Element): Pair<Post, List<Attachment>> {
         val id = extractNumberFromEnd(document.id()).toLong()
@@ -72,7 +72,7 @@ class PostParser : Function1<Element, Pair<Post, List<Attachment>>> {
 
     private fun getMyLike(element: Element): MyLike {
         val e = element.select("span.post_rating > span").first()
-        return LikeParser(e).myLike
+        return parseLike(e)
     }
 
     private fun extractNumberFromEnd(text: String): String {

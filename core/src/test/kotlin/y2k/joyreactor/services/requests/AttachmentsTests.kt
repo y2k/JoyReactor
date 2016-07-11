@@ -5,6 +5,7 @@ import org.junit.Test
 import y2k.joyreactor.common.getResult
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.requests.MockHttpClient
+import y2k.joyreactor.services.requests.parser.LikeParser
 import y2k.joyreactor.services.requests.parser.PostParser
 
 /**
@@ -14,7 +15,7 @@ class AttachmentsTests {
 
     @Test
     fun test() {
-        val request = PostRequest(MockHttpClient(), PostParser())
+        val request = PostRequest(MockHttpClient(), PostParser(LikeParser()))
         val actual = request(2692649).getResult()
 
         assertArrayEquals(
