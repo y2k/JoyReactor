@@ -7,9 +7,9 @@ import y2k.joyreactor.common.http.getTextAsync
 /**
  * Created by y2k on 4/26/16.
  */
-class TokenRequest(private val httpClient: HttpClient) {
+class TokenRequest(private val httpClient: HttpClient) : Function0<Single<String>> {
 
-    fun request(): Single<String> {
+    override fun invoke(): Single<String> {
         return httpClient
             .getTextAsync("http://joyreactor.cc/donate")
             .map { tokenRegex.find(it)!!.groupValues[1] }

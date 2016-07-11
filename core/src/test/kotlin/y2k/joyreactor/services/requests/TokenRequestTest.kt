@@ -19,7 +19,8 @@ class TokenRequestTest {
 
     @Test
     fun test() {
-        val actual = TokenRequest(mockHttpClient).request().getResult()
+        val request = TokenRequest(mockHttpClient)
+        val actual = request().getResult()
         assertEquals(actual, "f374b51bc0fe00c0f6e6159aa28fee3f")
     }
 }

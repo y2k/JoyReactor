@@ -20,12 +20,11 @@ import y2k.joyreactor.model.MyLike
  */
 class LikePostRequest(
     private val httpClient: HttpClient,
-    private val tokenRequest: TokenRequest,
+    private val requestToken: () -> Single<String>,
     private val parseLike: (Element) -> MyLike) {
 
     operator fun invoke(id: Long, like: Boolean): Single<Pair<Float, MyLike>> {
-        return tokenRequest
-            .request()
+        return requestToken()
             .map { getUrl(id, it, like) }
             .flatMap {
                 httpClient

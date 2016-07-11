@@ -32,7 +32,7 @@ class LikePostRequestTest {
     }
 
     val mockTokenRequest = mock(TokenRequest::class.java).apply {
-        `when`(request()).then { Single.just("f374b51bc0fe00c0f6e6159aa28fee3f") }
+        `when`(invoke()).then { Single.just("f374b51bc0fe00c0f6e6159aa28fee3f") }
     }
 
     @Test

@@ -41,7 +41,7 @@ object ServiceLocator {
 
         register { TokenRequest(resolve()) }
         register { ChangePostFavoriteRequest(resolve(), resolve()) }
-        register { LikePostRequest(resolve(), resolve(), resolve<LikeParser>()) }
+        register { LikePostRequest(resolve(), resolve<TokenRequest>(), resolve<LikeParser>()) }
         register { MessageListRequest(resolve(), resolve()) }
         register { PostMerger(resolve(), resolve()) }
         register { MemoryBuffer }

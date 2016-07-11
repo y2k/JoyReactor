@@ -16,8 +16,7 @@ class ChangePostFavoriteRequest(
     // http://joyreactor.cc/favorite/delete/2646561?token=aa2e06a6265aad3ff2ec17b287bee4fa&rand=5241
 
     operator fun invoke(postId: Long, favorite: Boolean): Observable<Document> {
-        return tokenRequest
-            .request()
+        return tokenRequest()
             .toObservable()
             .map { token ->
                 val action = if (favorite) "create" else "delete"
