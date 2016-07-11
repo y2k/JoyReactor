@@ -12,49 +12,65 @@ import java.util.regex.Pattern
 class PostParser : Function1<Element, Pair<Post, List<Attachment>>> {
 
     override operator fun invoke(document: Element): Pair<Post, List<Attachment>> {
-        var image = ThumbnailParser(document).load()
-        if (image == null) image = YoutubeThumbnailParser(document).load().firstOrNull()
-        if (image == null) image = VideoThumbnailParser(document).load()
-
-        val parser = PostParser(document)
+        val id = extractNumberFromEnd(document.id()).toLong()
 
         val title = document.select("div.post_content > div > h3").first()
         val desc = title?.nextSibling()
+        val attachments = getAttachments(document, id)
 
         val post = Post(
-            title?.text() ?: "",
-            image,
-            document.select("div.uhead_nick > img").attr("src"),
-            document.select("div.uhead_nick > a").text(),
-            parser.created,
-            parser.commentCount,
-            parser.rating,
-            parser.myLike,
-            document.select(".taglist a").map { it.text() }.let { TagList(it) },
-            extractNumberFromEnd(document.id()).toLong(),
-            document.select("span.favorite").size > 0,
-            when (desc) {
+            title = title?.text() ?: "",
+            image = attachments.firstOrNull()?.image,
+            userImage = document.select("div.uhead_nick > img").attr("src"),
+            userName = document.select("div.uhead_nick > a").text(),
+            created = getCreated(document),
+            commentCount = getCommentCount(document),
+            rating = getRating(document),
+            myLike = getMyLike(document),
+            tags = document.select(".taglist a").map { it.text() }.let { TagList(it) },
+            id = id,
+            isFavorite = document.select("span.favorite").size > 0,
+            description = when (desc) {
                 is TextNode -> desc.text()
                 else -> ""
             }
         )
 
-        val attachments = document
-            .select("div.post_top div.image img")
-            .map {
-                val image = Image(
-                    it.absUrl("src"),
-                    Integer.parseInt(it.attr("width")),
-                    Integer.parseInt(it.attr("height")))
-                Attachment(post.id, image)
-            }
-            .union(
-                YoutubeThumbnailParser(document.select("div.post_top").first())
-                    .load().map { Attachment(post.id, it) })
-            .filterNot { it.image == post.image }
-            .toList()
+        return post to attachments.drop(1)
+    }
 
-        return post to attachments
+    private fun getAttachments(document: Element, id: Long): List<Attachment> {
+        val parsers = listOf(
+            ThumbnailParser(),
+            YoutubeThumbnailParser(),
+            VideoThumbnailParser())
+        return document
+            .select("div.post_top")
+            .flatMap { element -> parsers.flatMap { it(element) } }
+            .map { Attachment(id, it) }
+    }
+
+    private fun getCommentCount(element: Element): Int {
+        val e = element.select("a.commentnum").first()
+        val m = COMMENT_COUNT_REGEX.matcher(e.text())
+        if (!m.find()) throw IllegalStateException()
+        return Integer.parseInt(m.group())
+    }
+
+    private fun getRating(element: Element): Float {
+        val e = element.select("span.post_rating > span").first()
+        val m = RATING_REGEX.matcher(e.text())
+        return if (m.find()) java.lang.Float.parseFloat(m.group()) else 0f
+    }
+
+    private fun getCreated(element: Element): Date {
+        val e = element.select("span.date > span")
+        return Date(1000L * java.lang.Long.parseLong(e.attr("data-time")))
+    }
+
+    private fun getMyLike(element: Element): MyLike {
+        val e = element.select("span.post_rating > span").first()
+        return LikeParser(e).myLike
     }
 
     private fun extractNumberFromEnd(text: String): String {
@@ -63,32 +79,29 @@ class PostParser : Function1<Element, Pair<Post, List<Attachment>>> {
         return m.group()
     }
 
-    private class ThumbnailParser(private val element: Element) {
-
-        fun load(): Image? {
-            val img = element.select("div.post_content img").first()
-            if (img != null && img.hasAttr("width")) {
-                if (img.attr("height").endsWith("%")) return null
-
-                return Image(
-                    if (hasFull(img))
-                        img.parent().attr("href").replace("(/full/).+(-\\d+\\.)".toRegex(), "$1$2")
-                    else
-                        img.attr("src").replace("(/post/).+(-\\d+\\.)".toRegex(), "$1$2"),
-                    Integer.parseInt(img.attr("width")),
-                    Integer.parseInt(img.attr("height")))
-            }
-            return null
+    private class ThumbnailParser() : Function1<Element, List<Image>> {
+        override fun invoke(element: Element): List<Image> {
+            return element
+                .select("div.post_content img")
+                .filter { it != null && it.hasAttr("width") }
+                .filterNot { it.attr("height").endsWith("%") }
+                .map {
+                    Image(
+                        if (hasFull(it))
+                            it.parent().attr("href").replace("(/full/).+(-\\d+\\.)".toRegex(), "$1$2")
+                        else
+                            it.attr("src").replace("(/post/).+(-\\d+\\.)".toRegex(), "$1$2"),
+                        Integer.parseInt(it.attr("width")),
+                        Integer.parseInt(it.attr("height")))
+                }
         }
 
-        private fun hasFull(img: Element): Boolean {
-            return "a" == img.parent().tagName()
-        }
+        private fun hasFull(img: Element): Boolean = "a" == img.parent().tagName()
     }
 
-    private class YoutubeThumbnailParser(private val element: Element) {
+    private class YoutubeThumbnailParser() : Function1<Element, List<Image>> {
 
-        fun load(): List<Image> {
+        override fun invoke(element: Element): List<Image> {
             return element
                 .select("iframe.youtube-player")
                 .map {
@@ -107,55 +120,28 @@ class PostParser : Function1<Element, Pair<Post, List<Attachment>>> {
         }
     }
 
-    private class VideoThumbnailParser(private val element: Element) {
+    private class VideoThumbnailParser() : Function1<Element, List<Image>> {
 
-        fun load(): Image? {
-            val video = element.select("video[poster]").first() ?: return null
-            try {
-                return Image(
-                    element.select("span.video_gif_holder > a").first().attr("href").replace("(/post/).+(-)".toRegex(), "$1$2"),
-                    Integer.parseInt(video.attr("width")),
-                    Integer.parseInt(video.attr("height")))
-            } catch (e: Exception) {
-                println("ELEMENT | " + video)
-                throw e
-            }
+        override fun invoke(element: Element): List<Image> {
+            return element
+                .select("video[poster]")
+                .map {
+                    try {
+                        Image(
+                            element.select("span.video_gif_holder > a").first().attr("href").replace("(/post/).+(-)".toRegex(), "$1$2"),
+                            Integer.parseInt(it.attr("width")),
+                            Integer.parseInt(it.attr("height")))
+                    } catch (e: Exception) {
+                        println("ELEMENT | " + it)
+                        throw e
+                    }
+                }
         }
     }
 
-    private class PostParser(private val element: Element) {
+    companion object {
 
-        val commentCount: Int
-            get() {
-                val e = element.select("a.commentnum").first()
-                val m = COMMENT_COUNT_REGEX.matcher(e.text())
-                if (!m.find()) throw IllegalStateException()
-                return Integer.parseInt(m.group())
-            }
-
-        val rating: Float
-            get() {
-                val e = element.select("span.post_rating > span").first()
-                val m = RATING_REGEX.matcher(e.text())
-                return if (m.find()) java.lang.Float.parseFloat(m.group()) else 0f
-            }
-
-        val created: Date
-            get() {
-                val e = element.select("span.date > span")
-                return Date(1000L * java.lang.Long.parseLong(e.attr("data-time")))
-            }
-
-        val myLike: MyLike
-            get() {
-                val e = element.select("span.post_rating > span").first()
-                return LikeParser(e).myLike
-            }
-
-        companion object {
-
-            private val COMMENT_COUNT_REGEX = Pattern.compile("\\d+")
-            private val RATING_REGEX = Pattern.compile("[\\d\\.]+")
-        }
+        private val COMMENT_COUNT_REGEX = Pattern.compile("\\d+")
+        private val RATING_REGEX = Pattern.compile("[\\d\\.]+")
     }
 }
