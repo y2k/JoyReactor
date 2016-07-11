@@ -2,6 +2,7 @@ package y2k.joyreactor.services
 
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
@@ -30,6 +31,7 @@ import y2k.joyreactor.services.requests.OriginalImageRequestFactory
     ChangePostFavoriteRequest::class)
 class PostServiceTests {
 
+    @Ignore
     @Test
     fun test() {
         ForegroundScheduler.instance = Schedulers.immediate()

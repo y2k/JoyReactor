@@ -9,7 +9,7 @@ import org.mockito.Mockito.verify
 import org.powermock.api.mockito.PowerMockito.mock
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
-import rx.Observable
+import rx.Single
 import y2k.joyreactor.common.getResult
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.http.HttpRequestBuilder
@@ -32,7 +32,7 @@ class LikePostRequestTest {
     }
 
     val mockTokenRequest = mock(TokenRequest::class.java).apply {
-        `when`(request()).then { Observable.just("f374b51bc0fe00c0f6e6159aa28fee3f") }
+        `when`(request()).then { Single.just("f374b51bc0fe00c0f6e6159aa28fee3f") }
     }
 
     @Test

@@ -3,6 +3,7 @@ package y2k.joyreactor.services.requests
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.mockito.Mockito.mock
+import y2k.joyreactor.common.getResult
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.when_
 import y2k.joyreactor.requests.MockRequest
@@ -18,7 +19,7 @@ class TokenRequestTest {
 
     @Test
     fun test() {
-        val actual = TokenRequest(mockHttpClient).request().toBlocking().first()
+        val actual = TokenRequest(mockHttpClient).request().getResult()
         assertEquals(actual, "f374b51bc0fe00c0f6e6159aa28fee3f")
     }
 }

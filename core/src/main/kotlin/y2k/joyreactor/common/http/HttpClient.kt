@@ -2,6 +2,8 @@ package y2k.joyreactor.common.http
 
 import org.jsoup.nodes.Document
 import rx.Completable
+import rx.Single
+import y2k.joyreactor.common.ioSingle
 import java.io.File
 
 /**
@@ -31,4 +33,12 @@ interface RequestBuilder {
     fun get(url: String): Document
 
     fun post(url: String): Document
+}
+
+fun RequestBuilder.getAsync(url: String): Single<Document> {
+    return ioSingle { get(url) }
+}
+
+fun HttpClient.getTextAsync(url: String): Single<String> {
+    return ioSingle { getText(url) }
 }

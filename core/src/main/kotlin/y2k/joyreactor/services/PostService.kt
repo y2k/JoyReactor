@@ -127,12 +127,12 @@ class PostService(
     fun updatePostLike(postId: Long, like: Boolean): Completable {
         return likePostRequest(postId, like)
             .flatMap {
-                entities.use {
+                entities.useOnce {
                     val post = Posts.getById(postId)
                     Posts.add(post.copy(rating = it.first, myLike = it.second))
                 }
             }
-            .doOnCompleted { BroadcastService.broadcast(Notifications.Posts) }
             .toCompletable()
+            .doOnCompleted { BroadcastService.broadcast(Notifications.Posts) }
     }
 }

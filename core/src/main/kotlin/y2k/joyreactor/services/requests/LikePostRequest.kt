@@ -2,9 +2,10 @@ package y2k.joyreactor.services.requests
 
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import rx.Observable
+import rx.Single
 import y2k.joyreactor.common.ajax
 import y2k.joyreactor.common.http.HttpClient
+import y2k.joyreactor.common.http.getAsync
 import y2k.joyreactor.model.MyLike
 
 /**
@@ -22,21 +23,21 @@ class LikePostRequest(
     private val tokenRequest: TokenRequest,
     private val parseLike: (Element) -> MyLike) {
 
-    operator fun invoke(id: Long, like: Boolean): Observable<Pair<Float, MyLike>> {
+    operator fun invoke(id: Long, like: Boolean): Single<Pair<Float, MyLike>> {
         return tokenRequest
             .request()
-            .map {
-                val url = "http://joyreactor.cc/post_vote/add/$id/${action(like)}?token=$it&abyss=0"
-                val likeResponse = httpClient
+            .map { getUrl(id, it, like) }
+            .flatMap {
+                httpClient
                     .buildRequest()
                     .ajax("http://joyreactor.cc/")
-                    .get(url)
-
-                val rating = getNewRating(likeResponse)
-                val myLike = parseLike(likeResponse.body())
-                rating to myLike
+                    .getAsync(it)
             }
+            .map { Pair(getNewRating(it), parseLike(it.body())) }
     }
+
+    private fun getUrl(id: Long, token: String, like: Boolean) =
+        "http://joyreactor.cc/post_vote/add/$id/${action(like)}?token=$token&abyss=0"
 
     private fun action(like: Boolean) = if (like) "plus" else "minus"
 

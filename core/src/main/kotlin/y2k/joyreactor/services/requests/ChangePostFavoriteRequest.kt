@@ -18,6 +18,7 @@ class ChangePostFavoriteRequest(
     operator fun invoke(postId: Long, favorite: Boolean): Observable<Document> {
         return tokenRequest
             .request()
+            .toObservable()
             .map { token ->
                 val action = if (favorite) "create" else "delete"
                 httpClient
