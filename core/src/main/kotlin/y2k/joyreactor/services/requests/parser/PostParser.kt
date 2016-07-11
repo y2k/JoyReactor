@@ -2,6 +2,8 @@ package y2k.joyreactor.services.requests.parser
 
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
+import y2k.joyreactor.common.flatMapPair
+import y2k.joyreactor.common.join
 import y2k.joyreactor.model.*
 import java.util.*
 import java.util.regex.Pattern
@@ -40,13 +42,13 @@ class PostParser : Function1<Element, Pair<Post, List<Attachment>>> {
     }
 
     private fun getAttachments(document: Element, id: Long): List<Attachment> {
-        val parsers = listOf(
-            ThumbnailParser(),
-            YoutubeThumbnailParser(),
-            VideoThumbnailParser())
         return document
             .select("div.post_top")
-            .flatMap { element -> parsers.flatMap { it(element) } }
+            .join(listOf(
+                ThumbnailParser(),
+                YoutubeThumbnailParser(),
+                VideoThumbnailParser()))
+            .flatMapPair { e, parse -> parse(e) }
             .map { Attachment(id, it) }
     }
 
