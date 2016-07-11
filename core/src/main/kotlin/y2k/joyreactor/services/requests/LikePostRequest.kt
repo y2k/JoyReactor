@@ -25,7 +25,7 @@ class LikePostRequest(
 
     operator fun invoke(id: Long, like: Boolean): Single<Pair<Float, MyLike>> {
         return requestToken()
-            .map { getUrl(id, it, like) }
+            .map { token -> createUrl(id, token, like) }
             .flatMap {
                 httpClient
                     .buildRequest()
@@ -35,7 +35,7 @@ class LikePostRequest(
             .map { Pair(getNewRating(it), parseLike(it.body())) }
     }
 
-    private fun getUrl(id: Long, token: String, like: Boolean) =
+    private fun createUrl(id: Long, token: String, like: Boolean) =
         "http://joyreactor.cc/post_vote/add/$id/${action(like)}?token=$token&abyss=0"
 
     private fun action(like: Boolean) = if (like) "plus" else "minus"
