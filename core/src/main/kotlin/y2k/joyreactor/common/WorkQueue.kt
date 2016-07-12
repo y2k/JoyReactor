@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
  */
 object WorkQueue {
 
-    private val CACHE_LIFE = 1L to TimeUnit.SECONDS
+    private val CACHE_LIFE = 30L to TimeUnit.SECONDS
     private val workMap = HashMap<Any, LongWorkTask>()
 
     fun add(key: Any, completable: Completable): LongWorkTask {
