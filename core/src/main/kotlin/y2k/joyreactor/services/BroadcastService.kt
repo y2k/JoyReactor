@@ -17,6 +17,10 @@ object BroadcastService {
         broadcast(message, message)
     }
 
+    fun broadcastType(message: Any) {
+        broadcast(message.javaClass, message)
+    }
+
     fun broadcast(message: Any) {
         broadcast(message, message)
     }

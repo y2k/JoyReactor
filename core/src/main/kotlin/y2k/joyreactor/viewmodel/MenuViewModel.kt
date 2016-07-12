@@ -26,20 +26,20 @@ class MenuViewModel(
 
     fun selectTag(position: Int) {
         val tag = tags.value[position]
-        broadcastService.broadcast(BroadcastService.TagSelected(tag))
+        broadcastService.broadcastType(BroadcastService.TagSelected(tag))
     }
 
     fun selectTag(group: Group) {
-        broadcastService.broadcast(BroadcastService.TagSelected(group))
+        broadcastService.broadcastType(BroadcastService.TagSelected(group))
     }
 
     fun selectedFeatured() {
-        broadcastService.broadcast(BroadcastService.TagSelected(Group.makeFeatured()))
+        broadcastService.broadcastType(BroadcastService.TagSelected(Group.makeFeatured()))
     }
 
     fun selectedFavorite() {
         service
             .getTagForFavorite()
-            .ui { broadcastService.broadcast(BroadcastService.TagSelected(it)) }
+            .ui { broadcastService.broadcastType(BroadcastService.TagSelected(it)) }
     }
 }
