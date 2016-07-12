@@ -86,4 +86,5 @@
     <string name="dislike">Dislike</string>
     <string name="updating">Updating…</string>
     <string name="awards">Awards:</string>
+    <string name="allow_permission_and_try_again">Allow permission and try again</string>
 </resources>
