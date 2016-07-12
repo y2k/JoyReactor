@@ -3,6 +3,7 @@ package y2k.joyreactor.viewmodel
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.property
 import y2k.joyreactor.common.ui
+import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.CommentService
 import y2k.joyreactor.services.ProfileService

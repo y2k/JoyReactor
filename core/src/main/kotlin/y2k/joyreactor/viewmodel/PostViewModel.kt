@@ -22,6 +22,7 @@ class PostViewModel(
     private val navigation: NavigationService,
     scope: LifeCycleService) {
 
+    val isBlockBusy = property(false)
     val isBusy = property(true)
     val error = property(false)
     val canCreateComments = property(false)
@@ -63,8 +64,8 @@ class PostViewModel(
     fun openImage(image: Image) = navigation.open<ImageViewModel>(image.fullUrl())
 
     fun saveToGallery() {
-        isBusy += true
-        service.saveImageToGallery(postId).ui { isBusy += false }
+        isBlockBusy += true
+        service.saveImageToGallery(postId).ui { isBlockBusy += false }
     }
 
     fun selectComment(comment: Comment) = navigation.open<CommentsViewModel>(comment.id)

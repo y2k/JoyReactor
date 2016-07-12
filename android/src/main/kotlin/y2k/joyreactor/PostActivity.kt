@@ -19,6 +19,8 @@ class PostActivity : BaseActivity() {
             visibility(R.id.createComment, vm.canCreateComments)
             command(R.id.createComment) { vm.createComment() }
 
+            blockProgressDialog(vm.isBlockBusy)
+
             progressImageView(R.id.poster, vm.poster)
             fixedAspectPanel(R.id.posterPanel, vm.posterAspect)
 

@@ -2,6 +2,7 @@ package y2k.joyreactor.common
 
 import android.app.Activity
 import android.app.Dialog
+import android.app.ProgressDialog
 import android.content.Context
 import android.graphics.Color
 import android.net.Uri
@@ -13,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import y2k.joyreactor.App
+import y2k.joyreactor.R
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.widget.*
@@ -58,6 +60,14 @@ private class ActivityViewResolver(val activity: Activity) : ViewResolver {
 class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
 
     val resolvers = arrayListOf(root)
+
+    fun blockProgressDialog(property: ObservableProperty<Boolean>) {
+        val dialog = ProgressDialog(context).apply {
+            setMessage(context.getString(R.string.please_wait))
+            setCancelable(false)
+        }
+        property.subscribe { if (it) dialog.show() else dialog.hide() }
+    }
 
     fun snackbar(viewId: Int, stringRes: Int, property: ObservableProperty<Boolean>) {
         val snackbar = Snackbar.make(find(viewId), stringRes, Snackbar.LENGTH_INDEFINITE)

@@ -1,10 +1,7 @@
 package y2k.joyreactor.viewmodel
 
-import y2k.joyreactor.common.ListWithDivider
+import y2k.joyreactor.common.*
 import y2k.joyreactor.common.platform.NavigationService
-import y2k.joyreactor.common.property
-import y2k.joyreactor.common.subscribe
-import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.PostService

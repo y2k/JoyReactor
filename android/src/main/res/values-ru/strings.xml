@@ -86,4 +86,5 @@
     <string name="updating">Обновление…</string>
     <string name="awards">Награды:</string>
     <string name="allow_permission_and_try_again">Разрешите доступ и попробуйте снова</string>
+    <string name="please_wait">Пожалуйста подождите...</string>
 </resources>

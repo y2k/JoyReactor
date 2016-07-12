@@ -28,6 +28,6 @@ class PostItemViewModel(
     }
 
     fun toggleFavorite() {
-        postService.toggleFavorite(post.id).ui {}
+        postService.toggleFavorite(post.id).ui()
     }
 }

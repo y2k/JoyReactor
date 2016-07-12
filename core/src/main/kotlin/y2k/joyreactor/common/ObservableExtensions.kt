@@ -91,12 +91,16 @@ fun <T, R> Observable<T>.concatAndRepeat(other: Observable<R>): Observable<T> {
     return concatWith(other.flatMap { this })
 }
 
+fun Completable.ui(): Subscription {
+    return observeOn(ForegroundScheduler.instance).subscribe({ it.printStackTrace() }, {})
+}
+
 fun Completable.ui(onComplete: () -> Unit, onError: (Throwable) -> Unit): Subscription {
     return observeOn(ForegroundScheduler.instance).subscribe(onError, onComplete)
 }
 
-fun Completable.ui(onComplete: () -> Unit): Subscription {
-    return observeOn(ForegroundScheduler.instance).subscribe({ it.printStackTrace() }, onComplete)
+fun Completable.ui(onComplete: (Throwable?) -> Unit): Subscription {
+    return observeOn(ForegroundScheduler.instance).subscribe({ onComplete(it) }, { onComplete(null) })
 }
 
 fun <T> Observable<T>.ui(onNext: (T) -> Unit, onError: (Throwable) -> Unit): Subscription {
