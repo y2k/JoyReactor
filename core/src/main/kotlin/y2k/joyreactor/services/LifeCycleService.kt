@@ -1,6 +1,5 @@
 package y2k.joyreactor.services
 
-import y2k.joyreactor.common.Notifications
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -25,9 +24,9 @@ class LifeCycleService(
         actions.add(null to { broadcastService.register(this, token.java, func) })
     }
 
-    operator fun invoke(token: Notifications, func: () -> Unit) = scope(token, func)
+    operator fun invoke(token: Any, func: () -> Unit) = scope(token, func)
 
-    fun scope(token: Notifications, func: () -> Unit) {
+    fun scope(token: Any, func: () -> Unit) {
         val old = actions.firstOrNull { it.first == token }
         if (old != null) {
             old.first?.let { broadcastService.unregisterToken(it) }

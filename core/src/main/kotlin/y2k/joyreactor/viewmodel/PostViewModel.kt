@@ -38,8 +38,8 @@ class PostViewModel(
 
     init {
         val process = service.synchronizePostWithImage(postId).toTask(postId)
-        scope(process.notification) {
-            isBusy += process.isBusy
+        scope(process) {
+            isBusy += process.inProgress
             error += process.finishedWithError
         }
 

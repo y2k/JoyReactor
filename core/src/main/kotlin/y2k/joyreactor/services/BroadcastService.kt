@@ -18,7 +18,7 @@ object BroadcastService {
     }
 
     fun broadcast(message: Any) {
-        broadcast(message.javaClass, message)
+        broadcast(message, message)
     }
 
     fun broadcast(token: Any, message: Any) {

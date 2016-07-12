@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
  */
 object WorkQueue {
 
-    private val CACHE_LIFE = 30L to TimeUnit.SECONDS
+    private val CACHE_LIFE = 1L to TimeUnit.SECONDS
     private val workMap = HashMap<Any, LongWorkTask>()
 
     fun add(key: Any, completable: Completable): LongWorkTask {
@@ -37,23 +37,23 @@ fun Completable.toTask(key: Any): LongWorkTask = WorkQueue.add(key, this)
 class LongWorkTask(
     completable: Completable, private val onFinished: (Throwable?) -> Unit) {
 
-    val notification = Notifications.PostSync
-
-    @Volatile var isBusy: Boolean = true
-    @Volatile var finishedWithError: Boolean = false
+    var inProgress: Boolean = true
+    var finishedWithError: Boolean = false
 
     init {
         completable
-            .doOnCompleted {
-                isBusy = false
-                BroadcastService.broadcast(notification)
-            }
-            .doOnError {
+            .ui({
+                inProgress = false
+                BroadcastService.broadcast(this)
+
+                onFinished(null)
+            }, {
                 it.printStackTrace()
-                isBusy = false
+                inProgress = false
                 finishedWithError = true
-                BroadcastService.broadcast(notification)
-            }
-            .ui({ onFinished(null) }, onFinished)
+                BroadcastService.broadcast(this)
+
+                onFinished(it)
+            })
     }
 }
