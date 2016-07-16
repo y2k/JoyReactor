@@ -1,7 +1,6 @@
 package y2k.joyreactor.common
 
 import org.jsoup.nodes.Document
-import rx.Single
 import y2k.joyreactor.common.async.CompletableContinuation
 import y2k.joyreactor.common.async.runAsync
 import y2k.joyreactor.common.http.HttpClient
@@ -17,15 +16,18 @@ fun RequestBuilder.ajax(referer: String): RequestBuilder {
     return this;
 }
 
-fun RequestBuilder.postAsync(url: String): Single<Document> {
-    return ioObservable { post(url) }.toSingle()
-}
-
-@Deprecated("")
-fun HttpClient.getDocumentAsync_(url: String): Single<Document> {
-    return ioObservable { getDocument(url) }.toSingle()
+fun RequestBuilder.postAsync(url: String): CompletableContinuation<Document> {
+    return runAsync { post(url) }
 }
 
 fun HttpClient.getDocumentAsync(url: String): CompletableContinuation<Document> {
     return runAsync { getDocument(url) }
+}
+
+fun RequestBuilder.getAsync(url: String): CompletableContinuation<Document> {
+    return runAsync { get(url) }
+}
+
+fun HttpClient.getTextAsync(url: String): CompletableContinuation<String> {
+    return runAsync { getText(url) }
 }

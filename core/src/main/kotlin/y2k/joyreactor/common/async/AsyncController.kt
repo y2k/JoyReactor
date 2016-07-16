@@ -1,8 +1,5 @@
 package y2k.joyreactor.common.async
 
-import rx.Single
-import y2k.joyreactor.common.ui
-
 /**
  * Created by y2k on 16/07/16.
  */
@@ -35,10 +32,6 @@ class ContinuationController<T> {
 
     suspend fun <T> CompletableContinuation<T>.await_(machine: Continuation<CompletableContinuation.Result<T>>) {
         whenComplete_ { machine.resume(it) }
-    }
-
-    suspend fun <T> await(f: Single<T>, machine: Continuation<T>) {
-        f.ui { machine.resume(it) }
     }
 
     suspend fun <T> await(f: CompletableContinuation<T>, machine: Continuation<T>) {
