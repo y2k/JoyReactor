@@ -1,9 +1,6 @@
 package y2k.joyreactor.common
 
-import rx.Single
-import rx.Subscription
-import rx.subjects.PublishSubject
-import rx.subjects.Subject
+import y2k.joyreactor.common.async.CompletableContinuation
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -12,37 +9,39 @@ import kotlin.properties.Delegates
  */
 class ObservableProperty<T>(initValue: T) {
 
-    private val subject: Subject<T, T> = PublishSubject.create()
-
-    private val targetMap = HashMap<ObservableProperty<T>, Subscription>()
+    private val depProps = HashMap<ObservableProperty<T>, (T) -> Unit>()
+    private val callbacks = ArrayList<(T) -> Unit>()
 
     var value: T by Delegates.observable(initValue) { prop, old, new ->
-        if (new != old) subject.onNext(new)
+        if (new != old) callbacks.forEach { it(new) }
     }
 
     operator fun plusAssign(value: T) {
         this.value = value
     }
 
-    operator fun plusAssign(single: Single<T>) = single.ui { value = it }
+    operator fun plusAssign(single: CompletableContinuation<T>) {
+        single.whenComplete_ { value = it.result!! }
+    }
 
     fun subscribe(f: (T) -> Unit) {
-        subject.subscribe(f)
+        callbacks += f
         f(value)
     }
 
     fun subscribeLazy(f: (T) -> Unit) {
-        subject.subscribe(f)
+        callbacks += f
     }
 
     fun subscribe(target: ObservableProperty<T>) {
-        val sub = subject.subscribe { target += value }
-        targetMap[target] = sub
-        target += value
+        val f: (T) -> Unit = { target += it }
+        depProps[target] = f
+        callbacks += f
     }
 
     fun unsubscribe(target: ObservableProperty<T>) {
-        targetMap.remove(target)?.unsubscribe()
+        val f = depProps.remove(target)
+        if (f != null) callbacks -= f
     }
 }
 
