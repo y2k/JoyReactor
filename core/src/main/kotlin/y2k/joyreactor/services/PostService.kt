@@ -1,7 +1,5 @@
 package y2k.joyreactor.services
 
-import rx.Completable
-import rx.Single
 import y2k.joyreactor.common.*
 import y2k.joyreactor.common.async.CompletableContinuation
 import y2k.joyreactor.common.async.async_
@@ -26,19 +24,14 @@ class PostService(
     private val changePostFavoriteRequest: ChangePostFavoriteRequest,
     private val backgroundWorks: BackgroundWorks) {
 
-    fun toggleFavorite(postId: Long): Completable {
+    fun toggleFavorite(postId: Long): CompletableContinuation<*> {
         return entities
             .use { Posts.getById(postId) }
-            .flatMap { changePostFavoriteRequest(postId, !it.isFavorite) }
-            .doEntities(entities) {
+            .thenAsync { changePostFavoriteRequest(postId, !it.isFavorite) }
+            .thenAsync(entities) {
                 Posts.updateAll("id" eq postId, { it.copy(isFavorite = !it.isFavorite) })
             }
-            .doOnTerminate { broadcastService.broadcast(Notifications.Post) }
-    }
-
-    @Deprecated("")
-    fun synchronizePostWithImageOld(postId: Long): Completable {
-        TODO()
+            .then { broadcastService.broadcast(Notifications.Post) }
     }
 
     fun syncPostInBackground(postId: Long): Any {
@@ -74,25 +67,25 @@ class PostService(
             .thenAsync { requestImage(it.image!!.original, false) }
     }
 
-    fun getTopComments(postId: Long, count: Int): Single<List<Comment>> {
+    fun getTopComments(postId: Long, count: Int): CompletableContinuation<List<Comment>> {
         return RootComments.create(entities, postId)
-            .map { it.filter { it.level == 0 }.sortedByDescending { it.rating }.take(count) }
+            .then { it.filter { it.level == 0 }.sortedByDescending { it.rating }.take(count) }
     }
 
-    fun getCommentsAsync(postId: Long, parentCommentId: Long): Single<CommentGroup> {
+    fun getCommentsAsync(postId: Long, parentCommentId: Long): CompletableContinuation<CommentGroup> {
         return when (parentCommentId) {
             0L -> RootComments.create(entities, postId)
             else -> ChildComments.create(entities, parentCommentId, postId)
         }
     }
 
-    fun getCommentsForId(parentCommentId: Long): Single<CommentGroup> {
+    fun getCommentsForId(parentCommentId: Long): CompletableContinuation<CommentGroup> {
         return entities
             .useOnce { comments.getById(parentCommentId).postId }
-            .flatMap { ChildComments.create(entities, parentCommentId, it) }
+            .thenAsync { ChildComments.create(entities, parentCommentId, it) }
     }
 
-    fun getImages(postId: Long): Single<List<Image>> {
+    fun getImages(postId: Long): CompletableContinuation<List<Image>> {
         return entities.useOnce {
             val postAttachments = attachments
                 .filter("postId" eq postId)
@@ -106,16 +99,13 @@ class PostService(
 
     fun getPost(postId: Long): CompletableContinuation<Post> = entities.useAsync { Posts.getById(postId) }
 
-    fun updatePostLike(postId: Long, like: Boolean): Completable {
+    fun updatePostLike(postId: Long, like: Boolean): CompletableContinuation<*> {
         return likePostRequest(postId, like)
-            .flatMap {
-                entities.useOnce {
-                    val post = Posts.getById(postId)
-                    Posts.add(post.copy(rating = it.first, myLike = it.second))
-                }
+            .thenAsync(entities) {
+                val post = Posts.getById(postId)
+                Posts.add(post.copy(rating = it.first, myLike = it.second))
             }
-            .toCompletable()
-            .doOnCompleted { BroadcastService.broadcast(Notifications.Posts) }
+            .then { BroadcastService.broadcast(Notifications.Posts) }
     }
 
     fun getSyncStatus(postId: Long): WorkStatus = backgroundWorks.getStatus(postId.toKey())

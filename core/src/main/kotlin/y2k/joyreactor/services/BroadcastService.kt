@@ -1,7 +1,7 @@
 package y2k.joyreactor.services
 
-import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.common.Notifications
+import y2k.joyreactor.common.executeOnUi
 import y2k.joyreactor.model.Group
 import java.util.*
 
@@ -26,7 +26,7 @@ object BroadcastService {
     }
 
     fun broadcast(token: Any, message: Any) {
-        ForegroundScheduler.instance.createWorker().schedule {
+        executeOnUi {
             val observable = observers[token]
             observable?.notifyObservers(message)
         }

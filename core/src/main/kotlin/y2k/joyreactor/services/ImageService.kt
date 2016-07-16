@@ -1,11 +1,10 @@
 package y2k.joyreactor.services
 
-import rx.Observable
-import y2k.joyreactor.common.ForegroundScheduler
+import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.then
+import y2k.joyreactor.common.async.thenAsync
 import y2k.joyreactor.common.http.HttpClient
-import y2k.joyreactor.common.mapNotNull
 import y2k.joyreactor.common.platform.Platform
-import y2k.joyreactor.common.switchIfNull
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.images.DiskCache
 import java.util.*
@@ -23,10 +22,10 @@ class ImageService(
         return image?.thumbnailUrl(width, height)
     }
 
-    fun <T> to(imageUrl: String?, target: Any): Observable<T?> {
+    fun <T> to(imageUrl: String?, target: Any): CompletableContinuation<T?> {
         if (imageUrl == null) {
             metaHolder.setKey(target, null)
-            return Observable.just(null)
+            return CompletableContinuation.just(null)
         }
 
         val id = UUID.randomUUID()
@@ -34,22 +33,21 @@ class ImageService(
 
         return getFromCache<T>(imageUrl)
             .switchIfNull { replaceToCache(imageUrl) }
-            .observeOn(ForegroundScheduler.instance)
             .startWith(null as T?)
             .filter { metaHolder.getKey(target) == id }
     }
 
-    private fun <T> replaceToCache(url: String): Observable<T> {
+    private fun <T> replaceToCache(url: String): CompletableContinuation<T> {
         val tmp = createTempFile(directory = diskCache.cacheDirectory)
         return client.downloadToFile(url, tmp)
-            .andThen(diskCache.put(tmp, url))
-            .andThen(getFromCache<T>(url).map { it!! })
+            .thenAsync { diskCache.put(tmp, url) }
+            .thenAsync { getFromCache<T>(url).then { it!! } }
     }
 
-    private fun <T> getFromCache(url: String): Observable<T?> {
-        return diskCache.get(url)
-            .mapNotNull { decoder.decodeImage<T>(it) }
-            .toObservable()
+    private fun <T> getFromCache(url: String): CompletableContinuation<T?> {
+        return diskCache
+            .get(url)
+            .thenAsync { decoder.decodeImage<T>(it) }
     }
 
     interface MetaStorage {

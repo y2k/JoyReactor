@@ -1,11 +1,8 @@
 package y2k.joyreactor.services.images
 
-import rx.Completable
-import rx.Single
-import rx.schedulers.Schedulers
 import y2k.joyreactor.common.ApplicationDataVersion
-import y2k.joyreactor.common.ioCompletable
-import y2k.joyreactor.common.ioSingle
+import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.runAsync
 import y2k.joyreactor.common.platform.Platform
 import java.io.File
 import java.util.concurrent.Executors
@@ -19,14 +16,14 @@ class DiskCache(private val platform: Platform) {
         cacheDirectory.mkdirs()
     }
 
-    fun get(url: String): Single<File?> {
-        return ioSingle(Schedulers.from(DISK_EXECUTOR)) {
+    fun get(url: String): CompletableContinuation<File?> {
+        return runAsync(DISK_EXECUTOR) {
             urlToFile(url).let { if (it.exists()) it else null }
         }
     }
 
-    fun put(newImageFile: File, url: String): Completable {
-        return ioCompletable(Schedulers.from(DISK_EXECUTOR)) {
+    fun put(newImageFile: File, url: String): CompletableContinuation<*> {
+        return runAsync(DISK_EXECUTOR) {
             newImageFile.renameTo(urlToFile(url))
         }
     }
