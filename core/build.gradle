@@ -1,22 +1,7 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
 apply plugin: 'java'
 apply plugin: 'kotlin'
 
 version 'unspecified'
-
-repositories {
-    jcenter()
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-}
 
 sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
@@ -28,6 +13,12 @@ task copyTestResources(type: Copy) {
 }
 processTestResources.dependsOn copyTestResources
 
+repositories {
+    jcenter()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url  "http://dl.bintray.com/kotlin/kotlin-eap-1.1" }
+    maven { url "http://dl.bintray.com/kotlin/kotlinx.coroutines" }
+}
 dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'io.reactivex:rxjava:1.1.6'
