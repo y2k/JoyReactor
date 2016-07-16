@@ -1,6 +1,6 @@
 package y2k.joyreactor.services.synchronizers
 
-import rx.Observable
+import y2k.joyreactor.common.async.CompletableContinuation
 import y2k.joyreactor.model.Message
 import y2k.joyreactor.services.repository.DataSet
 import y2k.joyreactor.services.repository.Entities
@@ -17,7 +17,7 @@ class PrivateMessageFetcher(
     private var mineOldest: Date? = null
     private var theirOldest: Date? = null
 
-    fun execute(): Observable<Unit> {
+    fun execute(): CompletableContinuation<*> {
         return entities.use {
             var nextPage: String? = null
             for (page in 1..MaxPages) {

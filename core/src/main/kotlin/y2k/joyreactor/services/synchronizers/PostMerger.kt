@@ -1,6 +1,8 @@
 package y2k.joyreactor.services.synchronizers
 
-import rx.Observable
+import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.then
+import y2k.joyreactor.common.async.thenAsync
 import y2k.joyreactor.common.toArrayList
 import y2k.joyreactor.common.unionOrdered
 import y2k.joyreactor.model.Group
@@ -18,9 +20,9 @@ class PostMerger(
     private val buffer: MemoryBuffer,
     private val dataContext: Entities) {
 
-    fun mergeFirstPage(group: Group, newPosts: List<Post>): Observable<Unit> {
+    fun mergeFirstPage(group: Group, newPosts: List<Post>): CompletableContinuation<*> {
         return updatePostsAsync(newPosts)
-            .flatMap {
+            .thenAsync {
                 dataContext.use {
                     buffer.dividers[group.id] = newPosts.size
 
@@ -43,10 +45,10 @@ class PostMerger(
                     saveChanges()
                 }
             }
-            .doOnNext { buffer.hasNew[group.id] = false }
+            .then { buffer.hasNew[group.id] = false }
     }
 
-    fun isUnsafeUpdate(group: Group, newPosts: List<Post>): Observable<Boolean> {
+    fun isUnsafeUpdate(group: Group, newPosts: List<Post>): CompletableContinuation<Boolean> {
         return dataContext.use {
             val oldPosts = getPostsForTag(group)
             if (oldPosts.size == 0) return@use false
@@ -66,9 +68,9 @@ class PostMerger(
             .map { Posts.getById(it.postId) }
     }
 
-    fun mergeNextPage(group: Group, newPosts: List<Post>): Observable<Unit> {
+    fun mergeNextPage(group: Group, newPosts: List<Post>): CompletableContinuation<*> {
         return updatePostsAsync(newPosts)
-            .flatMap {
+            .thenAsync {
                 dataContext.use {
                     val links = TagPosts.filter("groupId" to group.id)
                     val actualPosts = links.subList(0, buffer.dividers[group.id]!!).toArrayList()
@@ -90,7 +92,7 @@ class PostMerger(
             }
     }
 
-    private fun updatePostsAsync(newPosts: List<Post>): Observable<Unit> {
+    private fun updatePostsAsync(newPosts: List<Post>): CompletableContinuation<*> {
         return dataContext.use {
             for (p in newPosts) {
                 val old = Posts.getByIdOrNull(p.id)

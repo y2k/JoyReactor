@@ -74,3 +74,17 @@ fun <T> CompletableContinuation<T>.onError(f: () -> T): CompletableContinuation<
     }
     return result
 }
+
+fun <T> CompletableContinuation<T>.onErrorAsync(f: () -> CompletableContinuation<T>): CompletableContinuation<T> {
+    val result = CompletableContinuation<T>()
+    whenComplete { t, e ->
+        if (e == null) result.resume(t!!)
+        else {
+            f().whenComplete_ {
+                if (it.error == null) result.resume(it.result!!)
+                else result.resumeWithException(it.error)
+            }
+        }
+    }
+    return result
+}

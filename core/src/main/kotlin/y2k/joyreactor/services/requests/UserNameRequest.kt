@@ -2,7 +2,6 @@ package y2k.joyreactor.services.requests
 
 import y2k.joyreactor.common.NotAuthorizedException
 import y2k.joyreactor.common.async.CompletableContinuation
-import y2k.joyreactor.common.async.runAsync
 import y2k.joyreactor.common.async.then
 import y2k.joyreactor.common.getDocumentAsync
 import y2k.joyreactor.common.http.HttpClient
@@ -20,13 +19,5 @@ class UserNameRequest(
                 val nameElement = it.select("a#settings").first()
                 nameElement?.text() ?: throw NotAuthorizedException()
             }
-    }
-
-    @Deprecated("Use operator invoke")
-    fun request(): CompletableContinuation<String?> {
-        return runAsync {
-            val document = httpClient.getDocument("http://joyreactor.cc/donate")
-            document.select("a#settings").first()?.text()
-        }
     }
 }
