@@ -1,8 +1,8 @@
 package y2k.joyreactor.services.requests
 
-import rx.Observable
+import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.runAsync
 import y2k.joyreactor.common.http.HttpClient
-import y2k.joyreactor.common.ioObservable
 import y2k.joyreactor.common.platform.Platform
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Image
@@ -17,8 +17,8 @@ class TagsForUserRequest(
 
     private val imageRequest = TagImageRequest(httpClient, platform)
 
-    fun request(username: String): Observable<List<Group>> {
-        return ioObservable {
+    fun request(username: String): CompletableContinuation<List<Group>> {
+        return runAsync {
             val document = httpClient.getDocument("http://joyreactor.cc/user/" + username)
             val tags = ArrayList<Group>()
             for (h in document.select(".sideheader")) {

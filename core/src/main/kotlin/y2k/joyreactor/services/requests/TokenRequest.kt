@@ -1,18 +1,19 @@
 package y2k.joyreactor.services.requests
 
-import rx.Single
+import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.then
+import y2k.joyreactor.common.getTextAsync
 import y2k.joyreactor.common.http.HttpClient
-import y2k.joyreactor.common.http.getTextAsync
 
 /**
  * Created by y2k on 4/26/16.
  */
-class TokenRequest(private val httpClient: HttpClient) : Function0<Single<String>> {
+class TokenRequest(private val httpClient: HttpClient) : Function0<CompletableContinuation<String>> {
 
-    override fun invoke(): Single<String> {
+    override fun invoke(): CompletableContinuation<String> {
         return httpClient
             .getTextAsync("http://joyreactor.cc/donate")
-            .map { tokenRegex.find(it)!!.groupValues[1] }
+            .then { tokenRegex.find(it)!!.groupValues[1] }
     }
 
     companion object {

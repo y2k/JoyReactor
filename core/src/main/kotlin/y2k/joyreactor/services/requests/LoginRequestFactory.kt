@@ -1,10 +1,10 @@
 package y2k.joyreactor.services.requests
 
 import org.jsoup.nodes.Document
-import rx.Completable
-import rx.Single
+import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.then
+import y2k.joyreactor.common.async.thenAsync
 import y2k.joyreactor.common.getDocumentAsync
-import y2k.joyreactor.common.getDocumentAsync_
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.postAsync
 
@@ -13,9 +13,9 @@ import y2k.joyreactor.common.postAsync
  */
 class LoginRequestFactory(private val httpClient: HttpClient) {
 
-    fun request(username: String, password: String): Completable {
+    fun request(username: String, password: String): CompletableContinuation<*> {
         return getSiteToken()
-            .flatMap {
+            .thenAsync {
                 httpClient
                     .buildRequest()
                     .addField("signin[username]", username)
@@ -23,14 +23,13 @@ class LoginRequestFactory(private val httpClient: HttpClient) {
                     .addField("signin[_csrf_token]", it)
                     .postAsync("http://joyreactor.cc/login")
             }
-            .doOnSuccess { validateIsSuccessLogin(it) }
-            .toCompletable()
+            .then { validateIsSuccessLogin(it) }
     }
 
-    private fun getSiteToken(): Single<String> {
+    private fun getSiteToken(): CompletableContinuation<String> {
         return httpClient
-            .getDocumentAsync_("http://joyreactor.cc/login")
-            .map { it.getElementById("signin__csrf_token").attr("value") }
+            .getDocumentAsync("http://joyreactor.cc/login")
+            .then { it.getElementById("signin__csrf_token").attr("value") }
     }
 
     private fun validateIsSuccessLogin(mainPage: Document) {

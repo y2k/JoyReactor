@@ -2,10 +2,12 @@ package y2k.joyreactor.services.requests
 
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import rx.Single
 import y2k.joyreactor.common.ajax
+import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.then
+import y2k.joyreactor.common.async.thenAsync
+import y2k.joyreactor.common.getAsync
 import y2k.joyreactor.common.http.HttpClient
-import y2k.joyreactor.common.http.getAsync
 import y2k.joyreactor.model.MyLike
 
 /**
@@ -20,19 +22,21 @@ import y2k.joyreactor.model.MyLike
  */
 class LikePostRequest(
     private val httpClient: HttpClient,
-    private val requestToken: () -> Single<String>,
+    private val requestToken: () -> CompletableContinuation<String>,
     private val parseLike: (Element) -> MyLike) {
 
-    operator fun invoke(id: Long, like: Boolean): Single<Pair<Float, MyLike>> {
+    operator fun invoke(id: Long, like: Boolean): CompletableContinuation<Pair<Float, MyLike>> {
         return requestToken()
-            .map { token -> createUrl(id, token, like) }
-            .flatMap {
+            .then { token -> createUrl(id, token, like) }
+            .thenAsync {
                 httpClient
                     .buildRequest()
                     .ajax("http://joyreactor.cc/")
                     .getAsync(it)
             }
-            .map { Pair(getNewRating(it), parseLike(it.body())) }
+            .then {
+                Pair(getNewRating(it), parseLike(it.body()))
+            }
     }
 
     private fun createUrl(id: Long, token: String, like: Boolean) =

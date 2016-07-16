@@ -1,30 +1,28 @@
 package y2k.joyreactor.services.requests
 
-import rx.Completable
+import y2k.joyreactor.common.async.CompletableContinuation
 import y2k.joyreactor.common.http.HttpClient
-import y2k.joyreactor.common.ioUnitObservable
+import y2k.joyreactor.common.postAsync
 import java.util.regex.Pattern
 
 /**
  * Created by y2k on 19/10/15.
  */
 class CreateCommentRequest(
-    private val httpClient: HttpClient) : Function2<Long, String, Completable> {
+    private val httpClient: HttpClient) : Function2<Long, String, CompletableContinuation<*>> {
 
     private val commentId: String? = null
 
-    override fun invoke(postId: Long, commentText: String): Completable {
-        return ioUnitObservable {
-            httpClient
-                .buildRequest()
-                .addField("parent_id", commentId ?: "0")
-                .addField("post_id", "" + postId)
-                .addField("token", getToken())
-                .addField("comment_text", commentText)
-                .putHeader("X-Requested-With", "XMLHttpRequest")
-                .putHeader("Referer", "http://joyreactor.cc/post/" + postId)
-                .post("http://joyreactor.cc/post_comment/create")
-        }.toCompletable()
+    override fun invoke(postId: Long, commentText: String): CompletableContinuation<*> {
+        return httpClient
+            .buildRequest()
+            .addField("parent_id", commentId ?: "0")
+            .addField("post_id", "" + postId)
+            .addField("token", getToken())
+            .addField("comment_text", commentText)
+            .putHeader("X-Requested-With", "XMLHttpRequest")
+            .putHeader("Referer", "http://joyreactor.cc/post/" + postId)
+            .postAsync("http://joyreactor.cc/post_comment/create")
     }
 
     private fun getToken(): String {
