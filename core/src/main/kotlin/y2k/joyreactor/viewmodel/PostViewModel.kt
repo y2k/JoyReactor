@@ -1,13 +1,12 @@
 package y2k.joyreactor.viewmodel
 
-import y2k.joyreactor.common.Notifications
+import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.common.property
-import y2k.joyreactor.common.toTask
-import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Comment
 import y2k.joyreactor.model.Image
+import y2k.joyreactor.services.AttachmentService
 import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.PostService
 import y2k.joyreactor.services.ProfileService
@@ -20,6 +19,7 @@ class PostViewModel(
     private val service: PostService,
     private val userService: ProfileService,
     private val navigation: NavigationService,
+    private val attachmentService: AttachmentService,
     scope: LifeCycleService) {
 
     val isBlockBusy = property(false)
@@ -38,22 +38,22 @@ class PostViewModel(
     private val postId = navigation.argument.toLong()
 
     init {
-        val process = service.synchronizePostWithImage(postId).toTask(postId)
-        scope(process) {
-            isBusy += process.inProgress
-            error += process.finishedWithError
-        }
+        scope(service.syncPostInBackground(postId)) {
+            async_ {
+                service.getSyncStatus(postId).let {
+                    isBusy += it.isInProgress
+                    error += it.isFinishedWithError
+                }
 
-        scope(Notifications.Post) {
-            poster += service.mainImageFromDisk(postId)
-            images += service.getImages(postId)
-            comments += service.getTopComments(postId, 10)
-            canCreateComments += userService.isAuthorized()
+                poster += await(attachmentService.mainImageFromDisk(postId))
+                images += await(service.getImages(postId))
+                comments += await(service.getTopComments(postId, 10))
+                canCreateComments += await(userService.isAuthorized())
 
-            service.getPost(postId).ui {
-                posterAspect += it.imageAspectOrDefault(1f)
-                description += it.title
-                tags += it.tags.toList()
+                val post = await(service.getPost(postId))
+                posterAspect += post.imageAspectOrDefault(1f)
+                description += post.title
+                tags += post.tags.toList()
             }
         }
     }
@@ -64,8 +64,11 @@ class PostViewModel(
     fun openImage(image: Image) = navigation.open<ImageViewModel>(image.fullUrl())
 
     fun saveToGallery() {
-        isBlockBusy += true
-        service.saveImageToGallery(postId).ui { isBlockBusy += false }
+        async_ {
+            isBlockBusy += true
+            await(attachmentService.saveImageToGallery(postId))
+            isBlockBusy += false
+        }
     }
 
     fun selectComment(comment: Comment) = navigation.open<CommentsViewModel>(comment.id)

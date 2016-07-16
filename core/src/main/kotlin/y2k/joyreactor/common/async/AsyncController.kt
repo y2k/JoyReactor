@@ -1,16 +1,19 @@
 package y2k.joyreactor.common.async
 
+import rx.Single
+import y2k.joyreactor.common.ui
+
 /**
  * Created by y2k on 16/07/16.
  */
 
-fun <T> asyncResult(coroutine c: ContinuationController<T>.() -> Continuation<Unit>): AsyncTask<T> {
+fun <T> async(coroutine c: ContinuationController<T>.() -> Continuation<Unit>): CompletableContinuation<T> {
     val controller = ContinuationController<T>()
     controller.c().resume(Unit)
     return controller.task
 }
 
-fun async(coroutine c: ContinuationController<Unit>.() -> Continuation<Unit>): AsyncTask<Unit> {
+fun async_(coroutine c: ContinuationController<Unit>.() -> Continuation<Unit>): CompletableContinuation<Unit> {
     val controller = ContinuationController<Unit>()
     controller.c().resume(Unit)
     return controller.task
@@ -20,7 +23,7 @@ fun async(coroutine c: ContinuationController<Unit>.() -> Continuation<Unit>): A
 @Suppress("unused", "UNUSED_PARAMETER")
 class ContinuationController<T> {
 
-    val task: AsyncTask<T> = AsyncTask()
+    val task: CompletableContinuation<T> = CompletableContinuation()
 
     operator fun handleResult(value: T, c: Continuation<Nothing>) {
         task.resume(value)
@@ -30,10 +33,27 @@ class ContinuationController<T> {
         task.resumeWithException(t)
     }
 
-    suspend fun <T> await(f: AsyncTask<T>, machine: Continuation<T>) {
+    suspend fun <T> CompletableContinuation<T>.await_(machine: Continuation<CompletableContinuation.Result<T>>) {
+        whenComplete_ { machine.resume(it) }
+    }
+
+    suspend fun <T> await(f: Single<T>, machine: Continuation<T>) {
+        f.ui { machine.resume(it) }
+    }
+
+    suspend fun <T> await(f: CompletableContinuation<T>, machine: Continuation<T>) {
         f.whenComplete { value, throwable ->
             if (throwable == null) machine.resume(value!!)
             else machine.resumeWithException(throwable)
+        }
+    }
+
+    suspend fun <T, R> CompletableContinuation<T>.than(f: (T) -> R, machine: Continuation<ExceptionalMonad<R>>) {
+        whenComplete { value, throwable ->
+            val monad = if (throwable == null) ExceptionalMonad(value)
+            else ExceptionalMonad(null, throwable)
+
+            machine.resume(monad.than(f))
         }
     }
 }

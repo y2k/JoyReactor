@@ -7,7 +7,7 @@ import kotlin.reflect.KClass
  * Created by y2k on 2/3/16.
  */
 class LifeCycleService(
-    private val broadcastService: BroadcastService) {
+    private val broadcastService: BroadcastService) : Function2<Any, () -> Unit, Unit> {
     private val actions = ArrayList<Pair<Any?, () -> Unit>>()
 
     private var isActivated = false
@@ -24,7 +24,7 @@ class LifeCycleService(
         actions.add(null to { broadcastService.register(this, token.java, func) })
     }
 
-    operator fun invoke(token: Any, func: () -> Unit) = scope(token, func)
+    override operator fun invoke(token: Any, func: () -> Unit) = scope(token, func)
 
     fun scope(token: Any, func: () -> Unit) {
         val old = actions.firstOrNull { it.first == token }

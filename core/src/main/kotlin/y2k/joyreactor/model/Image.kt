@@ -12,6 +12,9 @@ class Image(
     private val width: Int = 0,
     private val height: Int = 0) : Serializable {
 
+    val mp4: String
+        get() = fullUrl("mp4")
+
     private val url: String? = clearUrl(url)
 
     val original: String

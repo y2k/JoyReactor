@@ -1,5 +1,6 @@
 package y2k.joyreactor.viewmodel
 
+import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.property
 import y2k.joyreactor.common.ui
@@ -17,14 +18,14 @@ class ImageViewModel(
     val imageFile = property<File>()
 
     init {
-        isBusy += true
-        imageRequest(navigation.argument)
-            .ui({
-                imageFile += it
-                isBusy += false
-            }, {
-                it.printStackTrace()
-                isBusy += false
-            })
+        async_ {
+            isBusy += true
+            try {
+                imageFile += await(imageRequest(navigation.argument, false))
+            } catch (e: Exception) {
+                // TODO:
+            }
+            isBusy += false
+        }
     }
 }

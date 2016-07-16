@@ -1,8 +1,8 @@
 package y2k.joyreactor.viewmodel
 
+import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.property
-import y2k.joyreactor.common.ui
 import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.CommentService
@@ -24,9 +24,10 @@ class CreateCommentViewModel(
     val commentText = property("")
 
     init {
-        profileService.getProfile().ui {
-            username += it.userName
-            avatar += it.userImage
+        async_ {
+            val profile = await(profileService.getProfile())
+            username += profile.userName
+            avatar += profile.userImage
         }
     }
 

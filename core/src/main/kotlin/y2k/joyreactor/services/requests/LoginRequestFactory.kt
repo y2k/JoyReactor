@@ -4,6 +4,7 @@ import org.jsoup.nodes.Document
 import rx.Completable
 import rx.Single
 import y2k.joyreactor.common.getDocumentAsync
+import y2k.joyreactor.common.getDocumentAsync_
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.postAsync
 
@@ -28,7 +29,7 @@ class LoginRequestFactory(private val httpClient: HttpClient) {
 
     private fun getSiteToken(): Single<String> {
         return httpClient
-            .getDocumentAsync("http://joyreactor.cc/login")
+            .getDocumentAsync_("http://joyreactor.cc/login")
             .map { it.getElementById("signin__csrf_token").attr("value") }
     }
 

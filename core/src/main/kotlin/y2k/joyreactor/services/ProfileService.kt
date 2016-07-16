@@ -1,7 +1,10 @@
 package y2k.joyreactor.services
 
 import rx.Completable
-import rx.Single
+import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.onError
+import y2k.joyreactor.common.async.then
+import y2k.joyreactor.common.async.thenAsync
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.ioCompletable
 import y2k.joyreactor.model.Profile
@@ -12,26 +15,25 @@ import y2k.joyreactor.services.requests.LoginRequestFactory
  */
 class ProfileService(
     private val httpClient: HttpClient,
-    private val requestProfile: (String) -> Single<Profile>,
-    private val requestMyName: () -> Single<String>,
-    private val loginRequestFactory: LoginRequestFactory) {
+    private val requestProfile: (String) -> CompletableContinuation<Profile>,
+    private val loginRequestFactory: LoginRequestFactory,
+    private val requestMyName: () -> CompletableContinuation<String>
+) {
 
     fun login(username: String, password: String): Completable {
         return loginRequestFactory.request(username, password)
     }
 
-    fun getProfile(): Single<Profile> {
+    fun getProfile(): CompletableContinuation<Profile> {
         return requestMyName()
-            .flatMap { requestProfile(it) }
+            .thenAsync { requestProfile(it) }
     }
 
     fun logout(): Completable {
         return ioCompletable { httpClient.clearCookies() }
     }
 
-    fun isAuthorized(): Single<Boolean> {
-        return requestMyName()
-            .map { true }
-            .onErrorReturn { false }
+    fun isAuthorized(): CompletableContinuation<Boolean> {
+        return requestMyName().then { true }.onError { false }
     }
 }

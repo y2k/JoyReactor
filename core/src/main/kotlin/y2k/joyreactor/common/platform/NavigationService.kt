@@ -27,3 +27,10 @@ interface NavigationService {
 inline fun <reified T : Any> NavigationService.open(argument: Any? = null) {
     open(T::class, argument.toString())
 }
+
+inline fun <reified T> NavigationService.getArgument(): T {
+    return when (T::class) {
+        Long::class -> argument.toLong() as T
+        else -> TODO()
+    }
+}

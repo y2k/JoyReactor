@@ -1,15 +1,16 @@
 package y2k.joyreactor.services
 
 import rx.Completable
-import rx.Observable
 import rx.Single
 import y2k.joyreactor.common.*
-import y2k.joyreactor.common.platform.Platform
+import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.async_
+import y2k.joyreactor.common.async.then
+import y2k.joyreactor.common.async.thenAsync
 import y2k.joyreactor.model.*
 import y2k.joyreactor.services.repository.Entities
 import y2k.joyreactor.services.requests.ChangePostFavoriteRequest
 import y2k.joyreactor.services.requests.LikePostRequest
-import y2k.joyreactor.services.requests.OriginalImageRequestFactory
 import y2k.joyreactor.services.requests.PostRequest
 import java.io.File
 
@@ -17,13 +18,13 @@ import java.io.File
  * Created by y2k on 11/24/15.
  */
 class PostService(
-    private val requestImage: OriginalImageRequestFactory,
-    private val requestPost: (Long) -> Observable<PostRequest.Response>,
+    private val requestImage: (String, Boolean) -> CompletableContinuation<File>,
+    private val requestPost: (Long) -> CompletableContinuation<PostRequest.Response>,
     private val entities: Entities,
     private val likePostRequest: LikePostRequest,
-    private val platform: Platform,
     private val broadcastService: BroadcastService,
-    private val changePostFavoriteRequest: ChangePostFavoriteRequest) {
+    private val changePostFavoriteRequest: ChangePostFavoriteRequest,
+    private val backgroundWorks: BackgroundWorks) {
 
     fun toggleFavorite(postId: Long): Completable {
         return entities
@@ -35,34 +36,42 @@ class PostService(
             .doOnTerminate { broadcastService.broadcast(Notifications.Post) }
     }
 
-    fun getVideo(postId: String): Single<File> {
-        return getPost(postId.toLong())
-            .map { it.image!!.fullUrl("mp4") }
-            .flatMap { requestImage(it) }
+    @Deprecated("")
+    fun synchronizePostWithImageOld(postId: Long): Completable {
+        TODO()
     }
 
-    fun synchronizePostWithImage(postId: Long): Completable {
-        return syncPost(postId)
-            .andThen(syncPostImage(postId))
-            .doOnTerminate { broadcastService.broadcast(Notifications.Post) }
+    fun syncPostInBackground(postId: Long): Any {
+        async_ {
+            backgroundWorks.markWorkStarted(postId.toKey())
+            try {
+                await(syncPost(postId))
+                backgroundWorks.updateWorkStatus(postId.toKey())
+
+                await(syncPostImage(postId))
+                backgroundWorks.markWorkFinished(postId.toKey())
+            } catch (e: Exception) {
+                backgroundWorks.markWorkFinished(postId.toKey(), e)
+            }
+        }
+
+        return postId.toKey()
     }
 
-    private fun syncPost(postId: Long): Completable {
+    private fun syncPost(postId: Long): CompletableContinuation<*> {
         return requestPost(postId)
-            .doEntities(entities) {
+            .thenAsync(entities) {
                 attachments.replaceAll("postId" eq postId, it.attachments)
                 similarPosts.replaceAll("parentPostId" eq postId, it.similarPosts)
                 comments.replaceAll("postId" eq postId, it.comments)
-
-                broadcastService.broadcast(Notifications.Post)
             }
+            .then { broadcastService.broadcast(Notifications.Post) }
     }
 
-    private fun syncPostImage(postId: Long): Completable {
+    private fun syncPostImage(postId: Long): CompletableContinuation<*> {
         return entities
-            .useOnce { Posts.first("id" eq postId) }
-            .flatMap { it.image?.let { requestImage(it.original) } }
-            .toCompletable()
+            .useAsync { Posts.first("id" eq postId) }
+            .thenAsync { requestImage(it.image!!.original, false) }
     }
 
     fun getTopComments(postId: Long, count: Int): Single<List<Comment>> {
@@ -95,34 +104,7 @@ class PostService(
         }
     }
 
-    fun saveImageToGallery(postId: Long): Completable {
-        return getPost(postId)
-            .flatMap { mainImage(it.id) }
-            .andThen { platform.saveToGallery(it) }
-    }
-
-    fun mainImageFromDisk(serverPostId: Long): Single<File?> {
-        return entities
-            .useOnce { Posts.getById(serverPostId) }
-            .flatMap {
-                when {
-                    it.image == null -> Single.just(null)
-                    it.image.isAnimated -> {
-                        requestImage(it.image.original, onlyFromCache = true)
-                            .flatMap { platform.createTmpThumbnail(it) }
-                    }
-                    else -> requestImage(it.image.original, onlyFromCache = true)
-                }
-            }
-    }
-
-    fun getPost(postId: Long): Single<Post> = entities.useOnce { Posts.getById(postId) }
-
-    fun mainImage(serverPostId: Long): Single<File> {
-        return entities
-            .useOnce { Posts.getById(serverPostId) }
-            .flatMap { requestImage(it.image!!.fullUrl(null)) }
-    }
+    fun getPost(postId: Long): CompletableContinuation<Post> = entities.useAsync { Posts.getById(postId) }
 
     fun updatePostLike(postId: Long, like: Boolean): Completable {
         return likePostRequest(postId, like)
@@ -135,4 +117,8 @@ class PostService(
             .toCompletable()
             .doOnCompleted { BroadcastService.broadcast(Notifications.Posts) }
     }
+
+    fun getSyncStatus(postId: Long): WorkStatus = backgroundWorks.getStatus(postId.toKey())
+
+    private fun Long.toKey() = "sync-post-" + this
 }

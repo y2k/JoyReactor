@@ -1,10 +1,10 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.NotAuthorizedException
+import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.common.property
-import y2k.joyreactor.common.ui
 import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.model.Profile
@@ -29,35 +29,35 @@ class ProfileViewModel(
     val awards = property(emptyList<Profile.Award>())
 
     init {
-        isBusy += true
-        service
-            .getProfile()
-            .ui({
-                userName += it.userName
-                userImage += it.userImage
-                rating += it.rating
-                stars += it.stars.toFloat()
-                nextStarProgress += it.progressToNewStar
-                awards += it.awards
+        async_ {
+            isBusy += true
+            try {
+                val profile = await(service.getProfile())
+                userName += profile.userName
+                userImage += profile.userImage
+                rating += profile.rating
+                stars += profile.stars.toFloat()
+                nextStarProgress += profile.progressToNewStar
+                awards += profile.awards
                 isBusy += false
-            }, {
-                it.printStackTrace()
-                when (it) {
+            } catch (e: Exception) {
+                e.printStackTrace()
+                when (e) {
                     is NotAuthorizedException -> {
                         navigationService.open<LoginViewModel>()
                         navigationService.close()
                     }
                     else -> isError += true
                 }
-            })
+            }
+            isBusy += false
+        }
     }
 
     fun logout() {
-        service
-            .logout()
-            .ui {
-                navigationService.open<LoginViewModel>()
-                navigationService.close()
-            }
+        service.logout().ui {
+            navigationService.open<LoginViewModel>()
+            navigationService.close()
+        }
     }
 }

@@ -29,10 +29,7 @@ object ServiceLocator {
 
     init {
         registerSingleton<HttpClient> { DefaultHttpClient(CookieStorage(resolve())) }
-        register { PostViewModel(resolve(), resolve(), resolve(), resolve()) }
         register { NavigationService.instance }
-        register { ThreadsViewModel(resolve(), resolve(), resolve()) }
-        register { MessagesViewModel(resolve(), resolve()) }
 
         register { resolve<Platform>().makeReportService() }
         register { BroadcastService }
@@ -58,10 +55,15 @@ object ServiceLocator {
         register { SendMessageRequest(resolve()) }
         register { CreateCommentRequest(resolve()) }
 
-        register { PostService(resolve(), resolve<PostRequest>(), resolve(), resolve(), resolve(), resolve(), resolve()) }
+        register {
+            PostService(
+                resolve<OriginalImageRequestFactory>(),
+                resolve<PostRequest>(),
+                resolve(), resolve(), resolve(), resolve(), resolve())
+        }
         register { TagService(resolve(), resolve(), resolve(), resolve()) }
         register { UserService(resolve(), resolve(), resolve(), resolve()) }
-        register { ProfileService(resolve(), resolve<ProfileRequest>(), resolve<UserNameRequest>(), resolve()) }
+        register { ProfileService(resolve(), resolve<ProfileRequest>(), resolve(), resolve<UserNameRequest>()) }
         register { UserMessagesService(resolve(), resolve(), resolve()) }
         register { CommentService(resolve<CreateCommentRequest>(), resolve()) }
 
@@ -69,13 +71,16 @@ object ServiceLocator {
         register { MenuViewModel(resolve(), resolve(), resolve()) }
         register { GalleryViewModel(resolve(), resolve()) }
         register { ImageViewModel(resolve(), resolve()) }
-        register { VideoViewModel(resolve(), resolve()) }
+        register { VideoViewModel(resolve(), resolve(), resolve<LifeCycleService>()) }
         register { ProfileViewModel(resolve(), resolve()) }
         register { AddTagViewModel(resolve(), resolve()) }
         register { MainViewModel(resolve(), resolve(), resolve(), resolve(), resolve(), resolve()) }
         register { PostLikeViewModel(resolve(), resolve()) }
         register { CreateCommentViewModel(resolve(), resolve(), resolve()) }
         register { CommentsViewModel(resolve(), resolve(), resolve(), resolve()) }
+        register { ThreadsViewModel(resolve(), resolve(), resolve()) }
+        register { MessagesViewModel(resolve(), resolve()) }
+        register { PostViewModel(resolve(), resolve(), resolve(), resolve(), resolve()) }
 
         register { DiskCache(resolve()) }
         register { ImageService(resolve(), resolve(), resolve(), resolve()) }

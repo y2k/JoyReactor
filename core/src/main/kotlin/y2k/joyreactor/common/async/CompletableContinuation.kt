@@ -1,5 +1,7 @@
 package y2k.joyreactor.common.async
 
+import y2k.joyreactor.common.ForegroundScheduler
+import java.util.concurrent.Executor
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
@@ -7,12 +9,16 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by y2k on 16/07/16.
  */
-class AsyncTask<T> {
+class CompletableContinuation<T> {
+
+    @Volatile var isFinished = false
 
     private @Volatile var result: T? = null
     private @Volatile var error: Throwable? = null
-    private @Volatile var isFinished = false
     private @Volatile var callback: ((T?, Throwable?) -> Unit)? = null
+
+    val finishedWithError: Boolean
+        get() = error != null
 
     fun resume(data: T) {
         synchronized(this) {
@@ -34,10 +40,30 @@ class AsyncTask<T> {
         }
     }
 
+    @Deprecated("")
     fun whenComplete(f: (T?, Throwable?) -> Unit) {
         synchronized(this) {
             if (isFinished) f(result, error)
             else callback = f
+        }
+    }
+
+    fun whenComplete_(f: (Result<T>) -> Unit) {
+        synchronized(this) {
+            if (isFinished) f(Result(result, error))
+            else callback = { r, e -> f(Result(r, e)) }
+        }
+    }
+
+    data class Result<T>(val result: T?, val error: Throwable?)
+
+    companion object {
+
+        fun <T> just(value: T): CompletableContinuation<T> {
+            return CompletableContinuation<T>().apply {
+                isFinished = true
+                result = value
+            }
         }
     }
 }
@@ -52,13 +78,23 @@ private val THREAD_POOL_EXECUTOR = ThreadPoolExecutor(
     1, TimeUnit.SECONDS,
     LinkedBlockingQueue<Runnable>(128))
 
-fun <T> runAsync(f: () -> T): AsyncTask<T> {
-    val task = AsyncTask<T>()
-    THREAD_POOL_EXECUTOR.execute {
+
+fun delay(timeSpanInMs: Long): CompletableContinuation<*> {
+    return runAsync { Thread.sleep(timeSpanInMs) }
+}
+
+fun <T> runAsync(f: () -> T): CompletableContinuation<T> {
+    return runAsync(THREAD_POOL_EXECUTOR, f)
+}
+
+fun <T> runAsync(executor: Executor, f: () -> T): CompletableContinuation<T> {
+    val task = CompletableContinuation<T>()
+    executor.execute {
         try {
-            task.resume(f())
+            val result = f()
+            ForegroundScheduler.instance.createWorker().schedule { task.resume(result) }
         } catch (e: Exception) {
-            task.resumeWithException(e)
+            ForegroundScheduler.instance.createWorker().schedule { task.resumeWithException(e) }
         }
     }
     return task

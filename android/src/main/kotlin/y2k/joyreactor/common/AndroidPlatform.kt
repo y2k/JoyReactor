@@ -36,7 +36,7 @@ class AndroidPlatform(private val app: Application) : Platform {
         ServiceLocator.register<ImageService.MetaStorage> { ImageViewMetaStorage() }
     }
 
-    override fun createTmpThumbnail(videoFile: File): Single<File> {
+    override fun createTmpThumbnail_(videoFile: File): Single<File> {
         return ioSingle {
             val thumb = ThumbnailUtils.createVideoThumbnail(
                 videoFile.absolutePath, MediaStore.Video.Thumbnails.MINI_KIND)
@@ -67,7 +67,7 @@ class AndroidPlatform(private val app: Application) : Platform {
         return app.assets.open(name + "." + ext).use { it.readBytes() }
     }
 
-    override fun saveToGallery(imageFile: File): Completable {
+    override fun saveToGallery_(imageFile: File): Completable {
         return ioCompletable {
             val permissionCheck = ContextCompat.checkSelfPermission(app, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {

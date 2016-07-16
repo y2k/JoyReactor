@@ -1,6 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.Notifications
+import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.open
 import y2k.joyreactor.common.property
@@ -27,8 +28,10 @@ class CommentsViewModel(
     init {
         val commentId = navigation.argument.toLong()
         scope(Notifications.Post) {
-            comments += service.getCommentsForId(commentId)
-            canCreateComments += userService.isAuthorized()
+            async_ {
+                comments += service.getCommentsForId(commentId)
+                canCreateComments += await(userService.isAuthorized())
+            }
         }
     }
 
