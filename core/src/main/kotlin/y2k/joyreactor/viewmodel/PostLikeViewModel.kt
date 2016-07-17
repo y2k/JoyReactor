@@ -1,8 +1,8 @@
 package y2k.joyreactor.viewmodel
 
+import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.property
-import y2k.joyreactor.common.ui
 import y2k.joyreactor.services.PostService
 
 /**
@@ -20,17 +20,18 @@ class PostLikeViewModel(
     fun dislike() = updatePost(false)
 
     private fun updatePost(like: Boolean) {
-        isBusy += true
-        isError += false
-        service
-            .updatePostLike(getPostId(), like)
-            .ui({
+        async_ {
+            isBusy += true
+            isError += false
+            try {
+                await(service.updatePostLike(getPostId(), like))
                 navigation.close()
-            }, {
-                it.printStackTrace()
-                isBusy += false
+            } catch (e: Exception) {
+                e.printStackTrace()
                 isError += true
-            })
+            }
+            isBusy += false
+        }
     }
 
     private fun getPostId(): Long = navigation.argument.toLong()
