@@ -12,12 +12,12 @@ import java.util.*
  */
 class PrivateMessageFetcher(
     private val request: MessageListRequest,
-    private val entities: Entities) {
+    private val entities: Entities) : Function0<CompletableContinuation<*>> {
 
     private var mineOldest: Date? = null
     private var theirOldest: Date? = null
 
-    fun execute(): CompletableContinuation<*> {
+    override fun invoke(): CompletableContinuation<*> {
         return entities.use {
             var nextPage: String? = null
             for (page in 1..MaxPages) {
@@ -58,7 +58,7 @@ class PrivateMessageFetcher(
                 return true
         }
         if (theirOldest != null) {
-            if (messages.filter ("isMine" to false, "date" to theirOldest).none())
+            if (messages.filter("isMine" to false, "date" to theirOldest).none())
                 return true
         }
         return false

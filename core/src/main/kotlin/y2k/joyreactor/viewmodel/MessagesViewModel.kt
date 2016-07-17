@@ -1,8 +1,8 @@
 package y2k.joyreactor.viewmodel
 
+import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.property
-import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Message
 import y2k.joyreactor.services.UserMessagesService
 
@@ -17,15 +17,15 @@ class MessagesViewModel(
     val newMessage = property("")
 
     init {
-        service
-            .getMessages(navigation.argument)
-            .ui { messages += it }
+        async_ {
+            messages += service.getMessages(navigation.argument)
+        }
     }
 
     fun sendNewMessage() {
-        service
-            .sendNewMessage(navigation.argument, newMessage.value)
-            .ui { messages += it }
-        newMessage += ""
+        async_ {
+            messages += (service.sendNewMessage(navigation.argument, newMessage.value))
+            newMessage += ""
+        }
     }
 }
