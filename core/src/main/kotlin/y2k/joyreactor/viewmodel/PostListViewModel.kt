@@ -14,7 +14,7 @@ import y2k.joyreactor.services.TagService
  */
 class PostListViewModel(
     private val navigation: NavigationService,
-    lifeCycleService: LifeCycleService,
+    scope: LifeCycleService,
     private val service: TagService,
     private val postService: PostService,
     private val group: Group) {
@@ -25,7 +25,7 @@ class PostListViewModel(
     val isError = property(false)
 
     init {
-        lifeCycleService(service.keyForSyncPost(group)) {
+        scope(service.preloadNewPosts(group)) {
             async_ {
                 service.getSyncStatus(group).let {
                     isBusy += it.isInProgress
@@ -45,7 +45,7 @@ class PostListViewModel(
     // Commands
     // ==============================================================
 
-    fun applyNew() = service.applyNew_(group)
+    fun applyNew() = service.applyNew(group)
     fun loadMore() = service.loadNextPage(group)
     fun reloadFirstPage() = service.reloadFirstPage(group)
 }

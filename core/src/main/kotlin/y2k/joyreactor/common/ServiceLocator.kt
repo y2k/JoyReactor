@@ -63,7 +63,7 @@ object ServiceLocator {
                 resolve<PostRequest>(),
                 resolve(), resolve(), resolve(), resolve(), resolve())
         }
-        register { TagService(resolve(), resolve(), resolve(), resolve()) }
+        register { TagService(resolve(), resolve(), resolve(), resolve(), resolve()) }
 
         register { UserService(resolve(), resolve(), resolve(), resolve<MyTagFetcher>(), resolve()) }
 
