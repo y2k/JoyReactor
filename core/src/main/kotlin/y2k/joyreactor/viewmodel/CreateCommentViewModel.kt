@@ -2,8 +2,8 @@ package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.platform.NavigationService
+import y2k.joyreactor.common.platform.getArgument
 import y2k.joyreactor.common.property
-import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.CommentService
 import y2k.joyreactor.services.ProfileService
@@ -23,6 +23,8 @@ class CreateCommentViewModel(
 
     val commentText = property("")
 
+    val postId = navigation.getArgument<Long>()
+
     init {
         async_ {
             val profile = await(profileService.getProfile())
@@ -32,10 +34,10 @@ class CreateCommentViewModel(
     }
 
     fun create() {
-        isBusy += true
-        service.createComment(navigation.argument.toLong(), commentText.value).ui {
+        async_ {
+            isBusy += true
+            await(service.createComment(postId, commentText.value))
             navigation.close()
-            isBusy += false
         }
     }
 }

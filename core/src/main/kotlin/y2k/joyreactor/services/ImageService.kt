@@ -1,7 +1,8 @@
 package y2k.joyreactor.services
 
+import y2k.joyreactor.common.async.CanceledException
 import y2k.joyreactor.common.async.CompletableContinuation
-import y2k.joyreactor.common.async.then
+import y2k.joyreactor.common.async.async
 import y2k.joyreactor.common.async.thenAsync
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.platform.Platform
@@ -23,31 +24,41 @@ class ImageService(
     }
 
     fun <T> to(imageUrl: String?, target: Any): CompletableContinuation<T?> {
-        if (imageUrl == null) {
-            metaHolder.setKey(target, null)
-            return CompletableContinuation.just(null)
+        return async {
+            if (imageUrl == null) {
+                metaHolder.setKey(target, null)
+                return@async null
+            }
+
+            val id = UUID.randomUUID()
+            metaHolder.setKey(target, id)
+
+            val fromCache = await(getFromCache<T>(imageUrl))
+            val result = if (fromCache != null) fromCache
+            else {
+                await(replaceToCache(imageUrl))
+                await(getFromCache<T>(imageUrl))
+            }
+
+            if (metaHolder.getKey(target) != id) throw CanceledException()
+            result
         }
-
-        val id = UUID.randomUUID()
-        metaHolder.setKey(target, id)
-
-        return getFromCache<T>(imageUrl)
-            .switchIfNull { replaceToCache(imageUrl) }
-            .startWith(null as T?)
-            .filter { metaHolder.getKey(target) == id }
     }
 
-    private fun <T> replaceToCache(url: String): CompletableContinuation<T> {
+    private fun replaceToCache(url: String): CompletableContinuation<*> {
         val tmp = createTempFile(directory = diskCache.cacheDirectory)
-        return client.downloadToFile(url, tmp)
+        return client
+            .downloadToFile(url, tmp)
             .thenAsync { diskCache.put(tmp, url) }
-            .thenAsync { getFromCache<T>(url).then { it!! } }
     }
 
     private fun <T> getFromCache(url: String): CompletableContinuation<T?> {
         return diskCache
             .get(url)
-            .thenAsync { decoder.decodeImage<T>(it) }
+            .thenAsync {
+                if (it == null) CompletableContinuation.just(null)
+                else decoder.decodeImageAsync<T>(it)
+            }
     }
 
     interface MetaStorage {

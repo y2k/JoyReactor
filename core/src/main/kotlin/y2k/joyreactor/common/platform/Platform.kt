@@ -20,7 +20,7 @@ interface Platform {
 
     fun buildConnection(file: File): ConnectionSource
 
-    fun <T> decodeImage(path: File): T
+    fun <T> decodeImageAsync(path: File): CompletableContinuation<T?>
 
     fun makeReportService(): ReportService
 

@@ -1,6 +1,7 @@
 package y2k.joyreactor.services
 
 import y2k.joyreactor.common.Notifications
+import y2k.joyreactor.common.WorkStatus
 import y2k.joyreactor.common.async.CompletableContinuation
 import y2k.joyreactor.common.async.then
 import y2k.joyreactor.common.async.thenAsync
@@ -14,13 +15,13 @@ import y2k.joyreactor.services.synchronizers.PostMerger
  * Created by y2k on 11/24/15.
  */
 class TagService(
-    private val dataContext: Entities,
+    private val entities: Entities,
     private val postsRequest: PostsForTagRequest,
     private val merger: PostMerger,
     private val buffer: MemoryBuffer) {
 
-    fun queryPosts(group: Group): Pair<CompletableContinuation<ListState>, Notifications> {
-        return dataContext
+    fun queryPosts_(group: Group): Pair<CompletableContinuation<ListState>, Notifications> {
+        return entities
             .use {
                 TagPosts
                     .filter("groupId" to group.id)
@@ -31,6 +32,20 @@ class TagService(
                     buffer.dividers[group.id],
                     buffer.hasNew[group.id] ?: false)
             } to Notifications.Posts
+    }
+
+    fun queryPosts(group: Group): CompletableContinuation<ListState> {
+        return entities
+            .useAsync {
+                TagPosts
+                    .filter("groupId" to group.id)
+                    .map { Posts.getById(it.postId) }
+            }
+            .then {
+                ListState(it,
+                    buffer.dividers[group.id],
+                    buffer.hasNew[group.id] ?: false)
+            }
     }
 
     fun preloadNewPosts(group: Group): CompletableContinuation<*> {
@@ -45,21 +60,21 @@ class TagService(
             .then { notifyDataChanged() }
     }
 
-    fun applyNew(group: Group) {
+    fun applyNew_(group: Group) {
         merger
             .mergeFirstPage(group, buffer.requests[group.id]!!.posts)
             .then { notifyDataChanged() }
     }
 
-    fun loadNextPage(group: Group): CompletableContinuation<*> {
+    fun loadNextPage_(group: Group): CompletableContinuation<*> {
         return requestAsync(group, buffer.requests[group.id]!!.nextPage)
             .thenAsync { merger.mergeNextPage(group, it.posts) }
             .then { notifyDataChanged() }
     }
 
-    fun reloadFirstPage(group: Group): CompletableContinuation<*> {
+    fun reloadFirstPage_(group: Group): CompletableContinuation<*> {
         return requestAsync(group)
-            .thenAsync(dataContext) {
+            .thenAsync(entities) {
                 TagPosts
                     .filter("groupId" to group.id)
                     .forEach { TagPosts.remove(it) }
@@ -79,5 +94,25 @@ class TagService(
                 buffer.requests[group.id] = it
                 it
             }
+    }
+
+    fun getSyncStatus(group: Group): WorkStatus {
+        TODO()
+    }
+
+    fun keyForSyncPost(group: Group): Any {
+        TODO()
+    }
+
+    fun loadNextPage(group: Group) {
+        TODO()
+    }
+
+    fun reloadFirstPage(group: Group) {
+        TODO()
+    }
+
+    fun applyNew(group: Group) {
+        TODO()
     }
 }

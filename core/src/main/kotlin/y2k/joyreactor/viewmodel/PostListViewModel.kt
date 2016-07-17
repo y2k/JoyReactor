@@ -1,7 +1,9 @@
 package y2k.joyreactor.viewmodel
 
-import y2k.joyreactor.common.*
+import y2k.joyreactor.common.ListWithDivider
+import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.platform.NavigationService
+import y2k.joyreactor.common.property
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.PostService
@@ -23,48 +25,27 @@ class PostListViewModel(
     val isError = property(false)
 
     init {
-        service
-            .queryPosts(group)
-            .subscribe(lifeCycleService) {
-                hasNewPosts += it.hasNew
-                posts += it.posts
-                    .map { PostItemViewModel(navigation, postService, it) }
-                    .let { vms -> ListWithDivider(vms, it.divider) }
-            }
+        lifeCycleService(service.keyForSyncPost(group)) {
+            async_ {
+                service.getSyncStatus(group).let {
+                    isBusy += it.isInProgress
+                    isError += it.isFinishedWithError
+                }
 
-        isBusy += true
-        service
-            .preloadNewPosts(group)
-            .ui({ isBusy += false }, {
-                isError += true
-                isBusy += false
-            })
+                val status = await(service.queryPosts(group))
+                hasNewPosts += status.hasNew
+                posts += status.posts
+                    .map { PostItemViewModel(navigation, postService, it) }
+                    .let { vms -> ListWithDivider(vms, status.divider) }
+            }
+        }
     }
 
     // ==============================================================
     // Commands
     // ==============================================================
 
-    fun applyNew() {
-        hasNewPosts += false
-        service.applyNew(group)
-    }
-
-    fun loadMore() {
-        isBusy += true
-        service.loadNextPage(group).ui { isBusy += false }
-    }
-
-    fun reloadFirstPage() {
-        isBusy += true
-        isError += false
-        service.reloadFirstPage(group)
-            .ui({
-                isBusy += false
-                hasNewPosts += false
-            }, {
-                isBusy += false
-                isError += true
-            })
-    }
+    fun applyNew() = service.applyNew_(group)
+    fun loadMore() = service.loadNextPage(group)
+    fun reloadFirstPage() = service.reloadFirstPage(group)
 }

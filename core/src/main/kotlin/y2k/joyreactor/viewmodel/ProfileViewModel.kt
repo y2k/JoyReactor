@@ -5,7 +5,6 @@ import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.openVM
 import y2k.joyreactor.common.property
-import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.model.Profile
 import y2k.joyreactor.services.ProfileService
@@ -55,7 +54,8 @@ class ProfileViewModel(
     }
 
     fun logout() {
-        service.logout().ui {
+        async_ {
+            await(service.logout())
             navigationService.openVM<LoginViewModel>()
             navigationService.close()
         }

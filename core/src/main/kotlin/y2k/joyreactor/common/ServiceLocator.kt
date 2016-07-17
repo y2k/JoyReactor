@@ -50,7 +50,9 @@ object ServiceLocator {
         register { TagsForUserRequest(resolve(), resolve()) }
         register { OriginalImageRequestFactory(resolve(), resolve()) }
         register { PostRequest(resolve(), resolve<PostParser>()) }
-        register { ProfileRequest(resolve()) }
+
+        register { ProfileRequest(resolve(), resolve<UserNameRequest>()) }
+
         register { LoginRequestFactory(resolve()) }
         register { SendMessageRequest(resolve()) }
         register { CreateCommentRequest(resolve()) }
@@ -62,9 +64,13 @@ object ServiceLocator {
                 resolve(), resolve(), resolve(), resolve(), resolve())
         }
         register { TagService(resolve(), resolve(), resolve(), resolve()) }
-        register { UserService(resolve(), resolve(), resolve(), resolve()) }
+
+        register { UserService(resolve(), resolve(), resolve(), resolve<MyTagFetcher>(), resolve()) }
+
         register { ProfileService(resolve(), resolve<ProfileRequest>(), resolve(), resolve<UserNameRequest>()) }
-        register { UserMessagesService(resolve(), resolve(), resolve()) }
+
+        register { UserMessagesService(resolve(), resolve<PrivateMessageFetcher>(), resolve(), resolve()) }
+
         register { CommentService(resolve<CreateCommentRequest>(), resolve()) }
 
         register { LoginViewModel(resolve(), resolve()) }
