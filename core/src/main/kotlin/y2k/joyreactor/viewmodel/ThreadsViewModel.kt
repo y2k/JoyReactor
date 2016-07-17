@@ -31,4 +31,8 @@ class ThreadsViewModel(
     fun selectThread(index: Int) {
         navigation.openVM<MessagesViewModel>(threads.value[index].userName)
     }
+
+    fun refresh() {
+        TODO()
+    }
 }

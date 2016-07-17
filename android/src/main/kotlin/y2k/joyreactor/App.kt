@@ -1,12 +1,12 @@
 package y2k.joyreactor
 
 import android.app.Application
+import android.os.Handler
 import android.os.StrictMode
 import com.splunk.mint.Mint
 import y2k.joyreactor.common.AndroidPlatform
-import y2k.joyreactor.common.ForegroundScheduler
 import y2k.joyreactor.common.ServiceLocator
-import y2k.joyreactor.platform.HandlerSchedulerFactory
+import y2k.joyreactor.common.executeOnUi
 import y2k.joyreactor.common.platform.Platform
 
 /**
@@ -25,7 +25,8 @@ class App : Application() {
             Mint.initAndStartSession(this, "66d8751e")
         }
 
-        ForegroundScheduler.instance = HandlerSchedulerFactory().make()
+        val handler = Handler()
+        executeOnUi = { handler.post(it) }
         ServiceLocator.registerSingleton<Platform> { AndroidPlatform(this) }
     }
 

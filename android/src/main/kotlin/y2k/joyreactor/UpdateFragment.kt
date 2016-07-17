@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import y2k.joyreactor.common.BaseFragment
+import y2k.joyreactor.common.ServiceLocator
+import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.isVisible
-import y2k.joyreactor.common.ui
 import y2k.joyreactor.common.switchByScaleFromTo
 import y2k.joyreactor.platform.UpdateService
 
@@ -16,23 +16,32 @@ import y2k.joyreactor.platform.UpdateService
  */
 class UpdateFragment : BaseFragment() {
 
-    lateinit var service: UpdateService
+    val service = UpdateService(ServiceLocator.resolve(), App.instance)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        service = UpdateService(activity.applicationContext)
         val view = inflater.inflate(R.layout.fragment_update, container)
-        view.findViewById(R.id.button)
-            .setOnClickListener {
-                setBlocked(true)
-                service
-                    .update()
-                    .ui({
-                        setBlocked(false)
-                    }, {
-                        setBlocked(false)
-                        Toast.makeText(activity, R.string.unknow_error, Toast.LENGTH_LONG).show()
-                    })
+
+        lifeCycleService(service.downloadUpdate()) {
+            async_ {
+                setBlocked(service.isCheckInProgress())
+                view.isVisible = service.hasFileToInstall()
             }
+        }
+
+        view.findViewById(R.id.button).setOnClickListener { service.installUpdate() }
+
+//        view.findViewById(R.id.button).setOnClickListener {
+////            setBlocked(true)
+//            service.installUpdate()
+////                .update()
+////                .ui({
+////                    setBlocked(false)
+////                }, {
+////                    setBlocked(false)
+////                    Toast.makeText(activity, R.string.unknow_error, Toast.LENGTH_LONG).show()
+////                })
+//        }
+
         return view
     }
 
@@ -42,9 +51,9 @@ class UpdateFragment : BaseFragment() {
         else group.switchByScaleFromTo(1, 0)
     }
 
-    override fun onResume() {
-        super.onResume()
-        view?.isVisible = false
-        service.checkHasUpdates().ui { view?.isVisible = it }
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        view?.isVisible = false
+//        service.checkHasUpdates().ui { view?.isVisible = it }
+//    }
 }
