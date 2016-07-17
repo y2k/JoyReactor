@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.platform.NavigationService
-import y2k.joyreactor.common.platform.open
+import y2k.joyreactor.common.platform.openVM
 import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.services.PostService
@@ -15,16 +15,16 @@ class PostItemViewModel(
     val post: Post) {
 
     fun postClicked() {
-        navigation.open<PostViewModel>(post.id)
+        navigation.openVM<PostViewModel>(post.id)
     }
 
     fun playClicked() {
-        if (post.image?.isAnimated ?: false) navigation.open<VideoViewModel>(post.id)
-        else navigation.open<ImageViewModel>(post.image!!.fullUrl())
+        if (post.image?.isAnimated ?: false) navigation.openVM<VideoViewModel>(post.id)
+        else navigation.openVM<ImageViewModel>(post.image!!.fullUrl())
     }
 
     fun changeLike() {
-        navigation.open<PostLikeViewModel>("" + post.id)
+        navigation.openVM<PostLikeViewModel>("" + post.id)
     }
 
     fun toggleFavorite() {

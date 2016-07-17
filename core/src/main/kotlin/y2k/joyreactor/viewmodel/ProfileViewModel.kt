@@ -3,7 +3,7 @@ package y2k.joyreactor.viewmodel
 import y2k.joyreactor.common.NotAuthorizedException
 import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.platform.NavigationService
-import y2k.joyreactor.common.platform.open
+import y2k.joyreactor.common.platform.openVM
 import y2k.joyreactor.common.property
 import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Image
@@ -44,7 +44,7 @@ class ProfileViewModel(
                 e.printStackTrace()
                 when (e) {
                     is NotAuthorizedException -> {
-                        navigationService.open<LoginViewModel>()
+                        navigationService.openVM<LoginViewModel>()
                         navigationService.close()
                     }
                     else -> isError += true
@@ -56,7 +56,7 @@ class ProfileViewModel(
 
     fun logout() {
         service.logout().ui {
-            navigationService.open<LoginViewModel>()
+            navigationService.openVM<LoginViewModel>()
             navigationService.close()
         }
     }

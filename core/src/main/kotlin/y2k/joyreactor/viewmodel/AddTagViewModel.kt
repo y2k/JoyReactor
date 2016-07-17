@@ -1,8 +1,8 @@
 package y2k.joyreactor.viewmodel
 
+import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.property
-import y2k.joyreactor.common.ui
 import y2k.joyreactor.services.UserService
 
 /**
@@ -17,17 +17,17 @@ class AddTagViewModel(
     val error = property(false)
 
     fun add() {
-        isBusy += true
-        error += false
-        service
-            .favoriteTag(tag.value)
-            .ui({
-                isBusy += false
+        async_ {
+            isBusy += true
+            error += false
+
+            try {
+                await(service.favoriteTag(tag.value))
                 navigationService.close()
-            }, {
-                it.printStackTrace()
-                isBusy += false
+            } catch (e: Exception) {
                 error += true
-            })
+            }
+            isBusy += false
+        }
     }
 }

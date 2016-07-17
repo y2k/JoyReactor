@@ -1,7 +1,7 @@
 package y2k.joyreactor.services
 
-import rx.Observable
-import y2k.joyreactor.common.concatAndRepeat
+import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.thenAsync
 import y2k.joyreactor.model.Message
 import y2k.joyreactor.services.repository.Entities
 import y2k.joyreactor.services.requests.SendMessageRequest
@@ -15,14 +15,14 @@ class UserMessagesService(
     private val fetcher: PrivateMessageFetcher,
     private val entities: Entities) {
 
-    fun sendNewMessage(username: String, message: String): Observable<List<Message>> {
+    fun sendNewMessage(username: String, message: String): CompletableContinuation<List<Message>> {
         return sendRequest
             .request(username, message)
-            .flatMap { fetcher.execute() }
-            .flatMap { getMessages(username) }
+            .thenAsync { fetcher.execute() }
+            .thenAsync { getMessages(username) }
     }
 
-    fun getThreads(): Observable<List<Message>> {
+    fun getThreads(): CompletableContinuation<List<Message>> {
         return entities
             .use {
                 Messages
@@ -32,7 +32,7 @@ class UserMessagesService(
             .concatAndRepeat(fetcher.execute())
     }
 
-    fun getMessages(username: String): Observable<List<Message>> {
+    fun getMessages(username: String): CompletableContinuation<List<Message>> {
         return entities.use {
             Messages
                 .filter("userName" to username)

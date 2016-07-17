@@ -2,7 +2,7 @@ package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.platform.NavigationService
-import y2k.joyreactor.common.platform.open
+import y2k.joyreactor.common.platform.openVM
 import y2k.joyreactor.common.property
 import y2k.joyreactor.model.Comment
 import y2k.joyreactor.model.Image
@@ -59,9 +59,9 @@ class PostViewModel(
     }
 
     fun openInBrowser() = navigation.openBrowser("http://joyreactor.cc/post/" + postId)
-    fun createComment() = navigation.open<CreateCommentViewModel>(postId)
-    fun showMoreImages() = navigation.open<GalleryViewModel>(postId)
-    fun openImage(image: Image) = navigation.open<ImageViewModel>(image.fullUrl())
+    fun createComment() = navigation.openVM<CreateCommentViewModel>(postId)
+    fun showMoreImages() = navigation.openVM<GalleryViewModel>(postId)
+    fun openImage(image: Image) = navigation.openVM<ImageViewModel>(image.fullUrl())
 
     fun saveToGallery() {
         async_ {
@@ -71,5 +71,5 @@ class PostViewModel(
         }
     }
 
-    fun selectComment(comment: Comment) = navigation.open<CommentsViewModel>(comment.id)
+    fun selectComment(comment: Comment) = navigation.openVM<CommentsViewModel>(comment.id)
 }

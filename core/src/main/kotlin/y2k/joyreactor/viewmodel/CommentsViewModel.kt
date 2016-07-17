@@ -3,9 +3,8 @@ package y2k.joyreactor.viewmodel
 import y2k.joyreactor.common.Notifications
 import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.platform.NavigationService
-import y2k.joyreactor.common.platform.open
+import y2k.joyreactor.common.platform.openVM
 import y2k.joyreactor.common.property
-import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Comment
 import y2k.joyreactor.model.CommentGroup
 import y2k.joyreactor.model.EmptyGroup
@@ -36,10 +35,11 @@ class CommentsViewModel(
     }
 
     fun selectComment(comment: Comment) {
-        service
-            .getCommentsAsync(comment.postId, comments.value.getNavigation(comment))
-            .ui { comments += it }
+        async_ {
+            val navId = comments.value.getNavigation(comment)
+            comments += await(service.getCommentsAsync(comment.postId, navId))
+        }
     }
 
-    fun commentPost() = navigation.open<CreateCommentViewModel>(navigation.argument)
+    fun commentPost() = navigation.openVM<CreateCommentViewModel>(navigation.argument)
 }

@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.platform.NavigationService
-import y2k.joyreactor.common.platform.open
+import y2k.joyreactor.common.platform.openVM
 import y2k.joyreactor.common.property
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.PostService
@@ -21,6 +21,6 @@ class GalleryViewModel(
 
     fun openImage(index: Int) {
         val imgUrl = images.value[index].fullUrl()
-        navigation.open<ImageViewModel>(imgUrl)
+        navigation.openVM<ImageViewModel>(imgUrl)
     }
 }

@@ -1,11 +1,11 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.ListWithDivider
+import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.platform.NavigationService
-import y2k.joyreactor.common.platform.open
+import y2k.joyreactor.common.platform.openVM
 import y2k.joyreactor.common.property
 import y2k.joyreactor.common.registerProperty
-import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.services.*
 
@@ -38,31 +38,31 @@ class MainViewModel(
     }
 
     fun changeCurrentGroup(isFirst: Boolean = false) {
-        userService
-            .makeGroup(group.value, quality.value)
-            .ui {
-                if (!isFirst) {
-                    state.isBusy.unsubscribe(isBusy)
-                    state.posts.unsubscribe(posts)
-                    state.hasNewPosts.unsubscribe(hasNewPosts)
-                    state.isError.unsubscribe(isError)
-                }
+        async_ {
+            val it = await(userService.makeGroup(group.value, quality.value))
 
-                state = PostListViewModel(navigation, lifeCycleService, service, postService, it)
-
-                state.isBusy.subscribe(isBusy)
-                state.posts.subscribe(posts)
-                state.hasNewPosts.subscribe(hasNewPosts)
-                state.isError.subscribe(isError)
+            if (!isFirst) {
+                state.isBusy.unsubscribe(isBusy)
+                state.posts.unsubscribe(posts)
+                state.hasNewPosts.unsubscribe(hasNewPosts)
+                state.isError.unsubscribe(isError)
             }
+
+            state = PostListViewModel(navigation, lifeCycleService, service, postService, it)
+
+            state.isBusy.subscribe(isBusy)
+            state.posts.subscribe(posts)
+            state.hasNewPosts.subscribe(hasNewPosts)
+            state.isError.subscribe(isError)
+        }
     }
 
     fun applyNew() = state.applyNew()
     fun loadMore() = state.loadMore()
     fun reloadFirstPage() = state.reloadFirstPage()
 
-    fun openProfile() = navigation.open<ProfileViewModel>()
-    fun openMessages() = navigation.open<ThreadsViewModel>()
-    fun openAddTag() = navigation.open<AddTagViewModel>()
+    fun openProfile() = navigation.openVM<ProfileViewModel>()
+    fun openMessages() = navigation.openVM<ThreadsViewModel>()
+    fun openAddTag() = navigation.openVM<AddTagViewModel>()
     fun openFeedback() = reportService.createFeedback()
 }

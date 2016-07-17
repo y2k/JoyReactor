@@ -1,8 +1,7 @@
 package y2k.joyreactor.viewmodel
 
+import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.property
-import y2k.joyreactor.common.subscribe
-import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.services.BroadcastService
 import y2k.joyreactor.services.LifeCycleService
@@ -14,14 +13,16 @@ import y2k.joyreactor.services.UserService
 class MenuViewModel(
     private val service: UserService,
     private val broadcastService: BroadcastService,
-    private val lifeCycleService: LifeCycleService) {
+    scope: LifeCycleService) {
 
     val tags = property(emptyList<Group>())
 
     init {
-        service
-            .getMyTags()
-            .subscribe(lifeCycleService) { tags += it }
+        scope(service.syncTagsInBackground()) {
+            async_ {
+                tags += await(service.getMyTags())
+            }
+        }
     }
 
     fun selectTag(position: Int) {
@@ -38,8 +39,7 @@ class MenuViewModel(
     }
 
     fun selectedFavorite() {
-        service
-            .getTagForFavorite()
-            .ui { broadcastService.broadcastType(BroadcastService.TagSelected(it)) }
+        service.getTagForFavorite()
+            .whenComplete_ { broadcastService.broadcastType(BroadcastService.TagSelected(it.result!!)) }
     }
 }

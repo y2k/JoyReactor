@@ -24,7 +24,7 @@ interface NavigationService {
     }
 }
 
-inline fun <reified T : Any> NavigationService.open(argument: Any? = null) {
+inline fun <reified T : Any> NavigationService.openVM(argument: Any? = null) {
     open(T::class, argument.toString())
 }
 

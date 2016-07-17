@@ -15,9 +15,9 @@ import y2k.joyreactor.services.requests.UserNameRequest
 class MyTagFetcher(
     private val userNameRequest: UserNameRequest,
     private val tagsForUserRequest: TagsForUserRequest,
-    private val dataContext: Entities) {
+    private val dataContext: Entities) : Function0<CompletableContinuation<*>> {
 
-    fun synchronize(): CompletableContinuation<*> {
+    override fun invoke(): CompletableContinuation<*> {
         return userNameRequest()
             .thenAsync { tagsForUserRequest.request(it) }
             .onErrorAsync { DefaultTagRequest().request() }

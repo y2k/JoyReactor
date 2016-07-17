@@ -1,6 +1,6 @@
 package y2k.joyreactor.common.async
 
-import y2k.joyreactor.common.ForegroundScheduler
+import y2k.joyreactor.common.executeOnUi
 import java.util.concurrent.Executor
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
@@ -92,9 +92,9 @@ fun <T> runAsync(executor: Executor, f: () -> T): CompletableContinuation<T> {
     executor.execute {
         try {
             val result = f()
-            ForegroundScheduler.instance.createWorker().schedule { task.resume(result) }
+            executeOnUi { task.resume(result) }
         } catch (e: Exception) {
-            ForegroundScheduler.instance.createWorker().schedule { task.resumeWithException(e) }
+            executeOnUi { task.resumeWithException(e) }
         }
     }
     return task

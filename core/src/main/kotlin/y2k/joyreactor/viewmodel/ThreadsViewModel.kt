@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.platform.NavigationService
-import y2k.joyreactor.common.platform.open
+import y2k.joyreactor.common.platform.openVM
 import y2k.joyreactor.common.property
 import y2k.joyreactor.common.ui
 import y2k.joyreactor.model.Message
@@ -37,6 +37,6 @@ class ThreadsViewModel(
     }
 
     fun selectThread(index: Int) {
-        navigation.open<MessagesViewModel>(threads.value[index].userName)
+        navigation.openVM<MessagesViewModel>(threads.value[index].userName)
     }
 }
