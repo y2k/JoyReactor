@@ -16,7 +16,7 @@ class CompletableFuture<T> {
 
     fun complete(data: T) {
         synchronized(this) {
-            val r = Result(data)
+            val r = SuccessResult(data)
             result = r
             callback?.invoke(r)
         }
@@ -24,7 +24,7 @@ class CompletableFuture<T> {
 
     fun completeExceptionally(exception: Throwable) {
         synchronized(this) {
-            val r = Result<T>(null, exception)
+            val r = FailResult<T>(exception)
             result = r
             callback?.invoke(r)
         }
@@ -37,12 +37,30 @@ class CompletableFuture<T> {
         }
     }
 
-    data class Result<T>(val result: T?, val error: Throwable? = null)
+    class SuccessResult<T>(override val result: T) : Result<T>() {
+        override val error: Throwable
+            get() = throw UnsupportedOperationException()
+        override val isSuccess: Boolean
+            get() = true
+    }
+
+    class FailResult<T>(override val error: Throwable) : Result<T>() {
+        override val isSuccess: Boolean
+            get() = false
+        override val result: T
+            get() = throw UnsupportedOperationException()
+    }
+
+    abstract class Result<T>() {
+        abstract val error: Throwable
+        abstract val result: T
+        abstract val isSuccess: Boolean
+    }
 
     companion object {
 
         fun <T> just(value: T): CompletableFuture<T> {
-            return CompletableFuture<T>().apply { result = Result(value) }
+            return CompletableFuture<T>().apply { result = SuccessResult(value) }
         }
     }
 }
