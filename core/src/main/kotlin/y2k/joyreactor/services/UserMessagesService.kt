@@ -1,7 +1,7 @@
 package y2k.joyreactor.services
 
 import y2k.joyreactor.common.BackgroundWorks
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.thenAsync
 import y2k.joyreactor.model.Message
 import y2k.joyreactor.services.repository.Entities
@@ -12,18 +12,18 @@ import y2k.joyreactor.services.requests.SendMessageRequest
  */
 class UserMessagesService(
     private val sendRequest: SendMessageRequest,
-    private val fetcher: () -> CompletableContinuation<*>,
+    private val fetcher: () -> CompletableFuture<*>,
     private val entities: Entities,
     private val backgroundWorks: BackgroundWorks) {
 
-    fun sendNewMessage(username: String, message: String): CompletableContinuation<List<Message>> {
+    fun sendNewMessage(username: String, message: String): CompletableFuture<List<Message>> {
         return sendRequest
             .request(username, message)
             .thenAsync { fetcher() }
             .thenAsync { getMessages(username) }
     }
 
-    fun getThreads(): CompletableContinuation<List<Message>> {
+    fun getThreads(): CompletableFuture<List<Message>> {
         return entities.useAsync {
             Messages
                 .groupBy("userName", orderProp = "date")
@@ -31,7 +31,7 @@ class UserMessagesService(
         }
     }
 
-    fun getMessages(username: String): CompletableContinuation<List<Message>> {
+    fun getMessages(username: String): CompletableFuture<List<Message>> {
         return entities.use {
             Messages
                 .filter("userName" to username)
@@ -42,7 +42,7 @@ class UserMessagesService(
     fun syncInBackground(): String {
         val key = "sync-messages"
         backgroundWorks.markWorkStarted(key)
-        fetcher().whenComplete_ { backgroundWorks.markWorkFinished(key, it.error) }
+        fetcher().thenAccept { backgroundWorks.markWorkFinished(key, it.error) }
         return key
     }
 

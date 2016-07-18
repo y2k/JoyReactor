@@ -1,7 +1,7 @@
 package y2k.joyreactor.services
 
 import y2k.joyreactor.common.*
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.async.then
 import y2k.joyreactor.common.async.thenAsync
@@ -16,15 +16,15 @@ import java.io.File
  * Created by y2k on 11/24/15.
  */
 class PostService(
-    private val requestImage: (String, Boolean) -> CompletableContinuation<File>,
-    private val requestPost: (Long) -> CompletableContinuation<PostRequest.Response>,
+    private val requestImage: (String, Boolean) -> CompletableFuture<File>,
+    private val requestPost: (Long) -> CompletableFuture<PostRequest.Response>,
     private val entities: Entities,
     private val likePostRequest: LikePostRequest,
     private val broadcastService: BroadcastService,
     private val changePostFavoriteRequest: ChangePostFavoriteRequest,
     private val backgroundWorks: BackgroundWorks) {
 
-    fun toggleFavorite(postId: Long): CompletableContinuation<*> {
+    fun toggleFavorite(postId: Long): CompletableFuture<*> {
         return entities
             .use { Posts.getById(postId) }
             .thenAsync { changePostFavoriteRequest(postId, !it.isFavorite) }
@@ -51,7 +51,7 @@ class PostService(
         return postId.toKey()
     }
 
-    private fun syncPost(postId: Long): CompletableContinuation<*> {
+    private fun syncPost(postId: Long): CompletableFuture<*> {
         return requestPost(postId)
             .thenAsync(entities) {
                 attachments.replaceAll("postId" eq postId, it.attachments)
@@ -61,31 +61,31 @@ class PostService(
             .then { broadcastService.broadcast(Notifications.Post) }
     }
 
-    private fun syncPostImage(postId: Long): CompletableContinuation<*> {
+    private fun syncPostImage(postId: Long): CompletableFuture<*> {
         return entities
             .useAsync { Posts.first("id" eq postId) }
             .thenAsync { requestImage(it.image!!.original, false) }
     }
 
-    fun getTopComments(postId: Long, count: Int): CompletableContinuation<List<Comment>> {
+    fun getTopComments(postId: Long, count: Int): CompletableFuture<List<Comment>> {
         return RootComments.create(entities, postId)
             .then { it.filter { it.level == 0 }.sortedByDescending { it.rating }.take(count) }
     }
 
-    fun getCommentsAsync(postId: Long, parentCommentId: Long): CompletableContinuation<CommentGroup> {
+    fun getCommentsAsync(postId: Long, parentCommentId: Long): CompletableFuture<CommentGroup> {
         return when (parentCommentId) {
             0L -> RootComments.create(entities, postId)
             else -> ChildComments.create(entities, parentCommentId, postId)
         }
     }
 
-    fun getCommentsForId(parentCommentId: Long): CompletableContinuation<CommentGroup> {
+    fun getCommentsForId(parentCommentId: Long): CompletableFuture<CommentGroup> {
         return entities
             .useOnce { comments.getById(parentCommentId).postId }
             .thenAsync { ChildComments.create(entities, parentCommentId, it) }
     }
 
-    fun getImages(postId: Long): CompletableContinuation<List<Image>> {
+    fun getImages(postId: Long): CompletableFuture<List<Image>> {
         return entities.useOnce {
             val postAttachments = attachments
                 .filter("postId" eq postId)
@@ -97,9 +97,9 @@ class PostService(
         }
     }
 
-    fun getPost(postId: Long): CompletableContinuation<Post> = entities.useAsync { Posts.getById(postId) }
+    fun getPost(postId: Long): CompletableFuture<Post> = entities.useAsync { Posts.getById(postId) }
 
-    fun updatePostLike(postId: Long, like: Boolean): CompletableContinuation<*> {
+    fun updatePostLike(postId: Long, like: Boolean): CompletableFuture<*> {
         return likePostRequest(postId, like)
             .thenAsync(entities) {
                 val post = Posts.getById(postId)

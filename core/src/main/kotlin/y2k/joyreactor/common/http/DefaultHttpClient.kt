@@ -5,7 +5,7 @@ import okhttp3.Request
 import okhttp3.Response
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.runAsync
 import y2k.joyreactor.common.stream
 import y2k.joyreactor.common.string
@@ -26,7 +26,7 @@ class DefaultHttpClient(private val cookies: CookieStorage) : HttpClient {
         .addNetworkInterceptor { cookies.grab(it.proceed(it.request())) }
         .build()
 
-    override fun downloadToFile(url: String, file: File): CompletableContinuation<*> {
+    override fun downloadToFile(url: String, file: File): CompletableFuture<*> {
         return runAsync { downloadToFile(url, file, null) }
     }
 

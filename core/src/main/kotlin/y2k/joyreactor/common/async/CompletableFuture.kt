@@ -6,7 +6,7 @@ import java.util.concurrent.*
 /**
  * Created by y2k on 16/07/16.
  */
-class CompletableContinuation<T> {
+class CompletableFuture<T> {
 
     @Volatile var isFinished = false
 
@@ -17,7 +17,7 @@ class CompletableContinuation<T> {
     val finishedWithError: Boolean
         get() = error != null
 
-    fun resume(data: T) {
+    fun complete(data: T) {
         synchronized(this) {
             isFinished = true
             result = data
@@ -27,7 +27,7 @@ class CompletableContinuation<T> {
         }
     }
 
-    fun resumeWithException(exception: Throwable) {
+    fun completeExceptionally(exception: Throwable) {
         synchronized(this) {
             isFinished = true
             result = null
@@ -45,7 +45,7 @@ class CompletableContinuation<T> {
         }
     }
 
-    fun whenComplete_(f: (Result<T>) -> Unit) {
+    fun thenAccept(f: (Result<T>) -> Unit) {
         synchronized(this) {
             if (isFinished) f(Result(result, error))
             else callback = { r, e -> f(Result(r, e)) }
@@ -56,8 +56,8 @@ class CompletableContinuation<T> {
 
     companion object {
 
-        fun <T> just(value: T): CompletableContinuation<T> {
-            return CompletableContinuation<T>().apply {
+        fun <T> just(value: T): CompletableFuture<T> {
+            return CompletableFuture<T>().apply {
                 isFinished = true
                 result = value
             }
@@ -76,24 +76,24 @@ private val THREAD_POOL_EXECUTOR = ThreadPoolExecutor(
     LinkedBlockingQueue<Runnable>(128))
 
 
-fun delay(timeSpanInMs: Long): CompletableContinuation<*> {
+fun delay(timeSpanInMs: Long): CompletableFuture<*> {
     return runAsync { Thread.sleep(timeSpanInMs) }
 }
 
-fun <T> runAsync(f: () -> T): CompletableContinuation<T> {
+fun <T> runAsync(f: () -> T): CompletableFuture<T> {
     return runAsync(THREAD_POOL_EXECUTOR, f)
 }
 
-fun <T> just(value: T): CompletableContinuation<T> = CompletableContinuation.just(value)
+fun <T> just(value: T): CompletableFuture<T> = CompletableFuture.just(value)
 
-fun <T> runAsync(executor: Executor, f: () -> T): CompletableContinuation<T> {
-    val task = CompletableContinuation<T>()
+fun <T> runAsync(executor: Executor, f: () -> T): CompletableFuture<T> {
+    val task = CompletableFuture<T>()
     executor.execute {
         try {
             val result = f()
-            executeOnUi { task.resume(result) }
+            executeOnUi { task.complete(result) }
         } catch (e: Exception) {
-            executeOnUi { task.resumeWithException(e) }
+            executeOnUi { task.completeExceptionally(e) }
         }
     }
     return task

@@ -1,6 +1,6 @@
 package y2k.joyreactor.services.synchronizers
 
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.then
 import y2k.joyreactor.common.async.thenAsync
 import y2k.joyreactor.common.toArrayList
@@ -20,7 +20,7 @@ class PostMerger(
     private val buffer: MemoryBuffer,
     private val dataContext: Entities) {
 
-    fun mergeFirstPage(group: Group, newPosts: List<Post>): CompletableContinuation<*> {
+    fun mergeFirstPage(group: Group, newPosts: List<Post>): CompletableFuture<*> {
         return updatePostsAsync(newPosts)
             .thenAsync {
                 dataContext.use {
@@ -48,7 +48,7 @@ class PostMerger(
             .then { buffer.hasNew[group.id] = false }
     }
 
-    fun isUnsafeUpdate(group: Group, newPosts: List<Post>): CompletableContinuation<Boolean> {
+    fun isUnsafeUpdate(group: Group, newPosts: List<Post>): CompletableFuture<Boolean> {
         return dataContext.use {
             val oldPosts = getPostsForTag(group)
             if (oldPosts.size == 0) return@use false
@@ -68,7 +68,7 @@ class PostMerger(
             .map { Posts.getById(it.postId) }
     }
 
-    fun mergeNextPage(group: Group, newPosts: List<Post>): CompletableContinuation<*> {
+    fun mergeNextPage(group: Group, newPosts: List<Post>): CompletableFuture<*> {
         return updatePostsAsync(newPosts)
             .thenAsync {
                 dataContext.use {
@@ -92,7 +92,7 @@ class PostMerger(
             }
     }
 
-    private fun updatePostsAsync(newPosts: List<Post>): CompletableContinuation<*> {
+    private fun updatePostsAsync(newPosts: List<Post>): CompletableFuture<*> {
         return dataContext.use {
             for (p in newPosts) {
                 val old = Posts.getByIdOrNull(p.id)

@@ -40,6 +40,6 @@ class MenuViewModel(
 
     fun selectedFavorite() {
         service.getTagForFavorite()
-            .whenComplete_ { broadcastService.broadcastType(BroadcastService.TagSelected(it.result!!)) }
+            .thenAccept { broadcastService.broadcastType(BroadcastService.TagSelected(it.result!!)) }
     }
 }

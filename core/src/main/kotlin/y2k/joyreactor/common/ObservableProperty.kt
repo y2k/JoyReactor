@@ -1,6 +1,6 @@
 package y2k.joyreactor.common
 
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -20,8 +20,8 @@ class ObservableProperty<T>(initValue: T) {
         this.value = value
     }
 
-    operator fun plusAssign(single: CompletableContinuation<T>) {
-        single.whenComplete_ { value = it.result!! }
+    operator fun plusAssign(single: CompletableFuture<T>) {
+        single.thenAccept { value = it.result!! }
     }
 
     fun subscribe(f: (T) -> Unit) {

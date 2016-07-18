@@ -1,6 +1,6 @@
 package y2k.joyreactor.services.synchronizers
 
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.model.Message
 import y2k.joyreactor.services.repository.DataSet
 import y2k.joyreactor.services.repository.Entities
@@ -12,12 +12,12 @@ import java.util.*
  */
 class PrivateMessageFetcher(
     private val request: MessageListRequest,
-    private val entities: Entities) : Function0<CompletableContinuation<*>> {
+    private val entities: Entities) : Function0<CompletableFuture<*>> {
 
     private var mineOldest: Date? = null
     private var theirOldest: Date? = null
 
-    override fun invoke(): CompletableContinuation<*> {
+    override fun invoke(): CompletableFuture<*> {
         return entities.use {
             var nextPage: String? = null
             for (page in 1..MaxPages) {

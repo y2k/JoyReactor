@@ -2,7 +2,7 @@ package y2k.joyreactor.services
 
 import y2k.joyreactor.common.BackgroundWorks
 import y2k.joyreactor.common.WorkStatus
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.then
 import y2k.joyreactor.common.async.thenAsync
 import y2k.joyreactor.model.Group
@@ -21,7 +21,7 @@ class TagService(
     private val buffer: MemoryBuffer,
     private val backgroundWorks: BackgroundWorks) {
 
-    fun queryPosts(group: Group): CompletableContinuation<ListState> {
+    fun queryPosts(group: Group): CompletableFuture<ListState> {
         return entities
             .useAsync {
                 TagPosts
@@ -35,7 +35,7 @@ class TagService(
             }
     }
 
-    fun requestAsync(group: Group, page: String? = null): CompletableContinuation<PostsForTagRequest.Data> {
+    fun requestAsync(group: Group, page: String? = null): CompletableFuture<PostsForTagRequest.Data> {
         return postsRequest
             .requestAsync(group, page)
             .then {
@@ -52,10 +52,10 @@ class TagService(
             .thenAsync { merger.isUnsafeUpdate(group, it.posts) }
             .then { buffer.hasNew[group.id] = it; it }
             .thenAsync {
-                if (it) CompletableContinuation.just(null)
+                if (it) CompletableFuture.just(null)
                 else merger.mergeFirstPage(group, buffer.requests[group.id]!!.posts)
             }
-            .whenComplete_ { backgroundWorks.markWorkFinished(group.toKey(), it.error) }
+            .thenAccept { backgroundWorks.markWorkFinished(group.toKey(), it.error) }
         return group.toKey()
     }
 
@@ -67,7 +67,7 @@ class TagService(
         backgroundWorks.markWorkStarted(group.toKey())
         requestAsync(group, buffer.requests[group.id]!!.nextPage)
             .thenAsync { merger.mergeNextPage(group, it.posts) }
-            .whenComplete_ { backgroundWorks.markWorkFinished(group.toKey(), it.error) }
+            .thenAccept { backgroundWorks.markWorkFinished(group.toKey(), it.error) }
     }
 
     fun reloadFirstPage(group: Group) {
@@ -81,7 +81,7 @@ class TagService(
                 it
             }
             .thenAsync { merger.mergeFirstPage(group, it.posts) }
-            .whenComplete_ { backgroundWorks.markWorkFinished(group.toKey(), it.error) }
+            .thenAccept { backgroundWorks.markWorkFinished(group.toKey(), it.error) }
     }
 
     private fun Group.toKey(): String = serverId

@@ -1,7 +1,7 @@
 package y2k.joyreactor.services.requests
 
 import org.jsoup.nodes.Document
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.runAsync
 import y2k.joyreactor.common.async.thenAsync
 import y2k.joyreactor.common.getDocumentAsync
@@ -15,17 +15,17 @@ import java.util.regex.Pattern
  */
 class ProfileRequest(
     private val httpClient: HttpClient,
-    private val requestUsername: () -> CompletableContinuation<String>) :
-    Function1<String, CompletableContinuation<Profile>> {
+    private val requestUsername: () -> CompletableFuture<String>) :
+    Function1<String, CompletableFuture<Profile>> {
 
-    override operator fun invoke(username: String): CompletableContinuation<Profile> {
+    override operator fun invoke(username: String): CompletableFuture<Profile> {
         return getUrl(username)
             .let { httpClient.getDocumentAsync(it) }
             .thenAsync { ProfileParser(it).parseAsync() }
     }
 
     @Deprecated("Use operator invoke + UserNameRequest")
-    fun request(): CompletableContinuation<Profile> {
+    fun request(): CompletableFuture<Profile> {
         return requestUsername()
             .thenAsync { httpClient.getDocumentAsync(getUrl(it)) }
             .thenAsync { ProfileParser(it).parseAsync() }
@@ -36,7 +36,7 @@ class ProfileRequest(
     private class ProfileParser(
         private val document: Document) {
 
-        fun parseAsync(): CompletableContinuation<Profile> {
+        fun parseAsync(): CompletableFuture<Profile> {
             return runAsync {
                 Profile(
                     document.select("div.sidebarContent > div.user > span").text(),

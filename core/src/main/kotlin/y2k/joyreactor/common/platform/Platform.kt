@@ -1,7 +1,7 @@
 package y2k.joyreactor.common.platform
 
 import com.j256.ormlite.support.ConnectionSource
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.services.ReportService
 import java.io.File
 
@@ -16,13 +16,13 @@ interface Platform {
 
     fun loadFromBundle(name: String, ext: String): ByteArray
 
-    fun saveToGallery(imageFile: File): CompletableContinuation<*>
+    fun saveToGallery(imageFile: File): CompletableFuture<*>
 
     fun buildConnection(file: File): ConnectionSource
 
-    fun <T> decodeImageAsync(path: File): CompletableContinuation<T?>
+    fun <T> decodeImageAsync(path: File): CompletableFuture<T?>
 
     fun makeReportService(): ReportService
 
-    fun createTmpThumbnail(videoFile: File): CompletableContinuation<File>
+    fun createTmpThumbnail(videoFile: File): CompletableFuture<File>
 }

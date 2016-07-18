@@ -1,6 +1,6 @@
 package y2k.joyreactor.services.requests
 
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.postAsync
 import java.util.regex.Pattern
@@ -9,11 +9,11 @@ import java.util.regex.Pattern
  * Created by y2k on 19/10/15.
  */
 class CreateCommentRequest(
-    private val httpClient: HttpClient) : Function2<Long, String, CompletableContinuation<*>> {
+    private val httpClient: HttpClient) : Function2<Long, String, CompletableFuture<*>> {
 
     private val commentId: String? = null
 
-    override fun invoke(postId: Long, commentText: String): CompletableContinuation<*> {
+    override fun invoke(postId: Long, commentText: String): CompletableFuture<*> {
         return httpClient
             .buildRequest()
             .addField("parent_id", commentId ?: "0")

@@ -1,6 +1,6 @@
 package y2k.joyreactor.services.requests
 
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.runAsync
 import y2k.joyreactor.common.http.HttpClient
 import java.net.URLEncoder
@@ -10,7 +10,7 @@ import java.net.URLEncoder
  */
 class AddTagRequest(private val httpClient: HttpClient) {
 
-    fun request(tagName: String): CompletableContinuation<*> {
+    fun request(tagName: String): CompletableFuture<*> {
         return runAsync {
             val tagUrl = "http://joyreactor.cc/tag/" + URLEncoder.encode(tagName)
             val tagPage = httpClient.getDocument(tagUrl)

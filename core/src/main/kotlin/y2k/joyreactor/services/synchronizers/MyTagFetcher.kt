@@ -1,6 +1,6 @@
 package y2k.joyreactor.services.synchronizers
 
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.onErrorAsync
 import y2k.joyreactor.common.async.thenAsync
 import y2k.joyreactor.model.Group
@@ -15,9 +15,9 @@ import y2k.joyreactor.services.requests.UserNameRequest
 class MyTagFetcher(
     private val userNameRequest: UserNameRequest,
     private val tagsForUserRequest: TagsForUserRequest,
-    private val dataContext: Entities) : Function0<CompletableContinuation<*>> {
+    private val dataContext: Entities) : Function0<CompletableFuture<*>> {
 
-    override fun invoke(): CompletableContinuation<*> {
+    override fun invoke(): CompletableFuture<*> {
         return userNameRequest()
             .thenAsync { tagsForUserRequest.request(it) }
             .onErrorAsync { DefaultTagRequest().request() }
@@ -54,8 +54,8 @@ class MyTagFetcher(
             return Group.makeTag(title, Image("http://img0.joyreactor.cc/pics/avatar/tag/" + tagId))
         }
 
-        fun request(): CompletableContinuation<List<Group>> {
-            return CompletableContinuation.just(tags)
+        fun request(): CompletableFuture<List<Group>> {
+            return CompletableFuture.just(tags)
         }
     }
 }

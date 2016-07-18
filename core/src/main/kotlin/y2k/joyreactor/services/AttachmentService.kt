@@ -2,7 +2,7 @@ package y2k.joyreactor.services
 
 import y2k.joyreactor.common.BackgroundWorks
 import y2k.joyreactor.common.WorkStatus
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.thenAsync
 import y2k.joyreactor.common.async.then_
 import y2k.joyreactor.common.platform.Platform
@@ -13,12 +13,12 @@ import java.io.File
  * Created by y2k on 16/07/16.
  */
 class AttachmentService(
-    private val requestImage: (String, Boolean) -> CompletableContinuation<File?>,
+    private val requestImage: (String, Boolean) -> CompletableFuture<File?>,
     private val entities: Entities,
     private val workQueue: BackgroundWorks,
     private val platform: Platform) {
 
-    fun getVideoFile(postId: Long): CompletableContinuation<File?> {
+    fun getVideoFile(postId: Long): CompletableFuture<File?> {
         return entities
             .useAsync { Posts.getById(postId) }
             .thenAsync { requestImage(it.image!!.mp4, true) }
@@ -37,12 +37,12 @@ class AttachmentService(
         return postId.toKey()
     }
 
-    fun mainImageFromDisk(serverPostId: Long): CompletableContinuation<File?> {
+    fun mainImageFromDisk(serverPostId: Long): CompletableFuture<File?> {
         return entities
             .useAsync { Posts.getById(serverPostId) }
             .thenAsync {
                 when {
-                    it.image == null -> CompletableContinuation.just(null as File?)
+                    it.image == null -> CompletableFuture.just(null as File?)
                     it.image.isAnimated -> {
                         requestImage(it.image.original, true)
                             .thenAsync { platform.createTmpThumbnail(it!!) }
@@ -52,7 +52,7 @@ class AttachmentService(
             }
     }
 
-    fun saveImageToGallery(postId: Long): CompletableContinuation<*> {
+    fun saveImageToGallery(postId: Long): CompletableFuture<*> {
         return entities
             .useAsync { Posts.getById(postId) }
             .thenAsync { requestImage(it.image!!.fullUrl(null), false) }

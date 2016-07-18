@@ -10,24 +10,24 @@ import y2k.joyreactor.services.requests.LoginRequestFactory
  */
 class ProfileService(
     private val httpClient: HttpClient,
-    private val requestProfile: (String) -> CompletableContinuation<Profile>,
+    private val requestProfile: (String) -> CompletableFuture<Profile>,
     private val loginRequestFactory: LoginRequestFactory,
-    private val requestMyName: () -> CompletableContinuation<String>) {
+    private val requestMyName: () -> CompletableFuture<String>) {
 
-    fun login(username: String, password: String): CompletableContinuation<*> {
+    fun login(username: String, password: String): CompletableFuture<*> {
         return loginRequestFactory.request(username, password)
     }
 
-    fun getProfile(): CompletableContinuation<Profile> {
+    fun getProfile(): CompletableFuture<Profile> {
         return requestMyName()
             .thenAsync { requestProfile(it) }
     }
 
-    fun logout(): CompletableContinuation<*> {
+    fun logout(): CompletableFuture<*> {
         return runAsync { httpClient.clearCookies() }
     }
 
-    fun isAuthorized(): CompletableContinuation<Boolean> {
+    fun isAuthorized(): CompletableFuture<Boolean> {
         return requestMyName().then { true }.onError { false }
     }
 }

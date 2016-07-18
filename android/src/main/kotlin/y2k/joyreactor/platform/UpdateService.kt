@@ -6,9 +6,8 @@ import android.net.Uri
 import org.json.JSONObject
 import y2k.joyreactor.BuildConfig
 import y2k.joyreactor.common.BackgroundWorks
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.async_
-import y2k.joyreactor.common.async.just
 import y2k.joyreactor.common.async.runAsync
 import y2k.joyreactor.common.downloadToFileAsync
 import y2k.joyreactor.services.MemoryBuffer
@@ -64,7 +63,7 @@ class UpdateService(
             stateStorage["last-check-for-update"] = value
         }
 
-    private fun getGitHubInformationAboutLastRelease(): CompletableContinuation<ReleaseInfo> {
+    private fun getGitHubInformationAboutLastRelease(): CompletableFuture<ReleaseInfo> {
         return runAsync {
             val info = URL(url).readText().let { JSONObject(it) }
             ReleaseInfo(

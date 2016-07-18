@@ -1,6 +1,6 @@
 package y2k.joyreactor.services.requests
 
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.runAsync
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.platform.Platform
@@ -13,9 +13,9 @@ import java.util.regex.Pattern
 class OriginalImageRequestFactory(
     private val httpClient: HttpClient,
     private val platform: Platform) :
-    Function2<String, Boolean, CompletableContinuation<File>> {
+    Function2<String, Boolean, CompletableFuture<File>> {
 
-    override operator fun invoke(imageUrl: String, onlyFromCache: Boolean): CompletableContinuation<File> {
+    override operator fun invoke(imageUrl: String, onlyFromCache: Boolean): CompletableFuture<File> {
         if (onlyFromCache) return requestFromCache(imageUrl)
 
         return runAsync {
@@ -32,7 +32,7 @@ class OriginalImageRequestFactory(
         }
     }
 
-    private fun requestFromCache(imageUrl: String): CompletableContinuation<File> {
+    private fun requestFromCache(imageUrl: String): CompletableFuture<File> {
         return runAsync {
             val file = getTargetFile(imageUrl)
             if (!file.exists()) throw Exception()

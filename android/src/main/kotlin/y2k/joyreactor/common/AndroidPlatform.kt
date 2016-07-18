@@ -16,7 +16,7 @@ import com.j256.ormlite.android.AndroidConnectionSource
 import com.j256.ormlite.support.ConnectionSource
 import y2k.joyreactor.App
 import y2k.joyreactor.R
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.async.runAsync
 import y2k.joyreactor.common.platform.NavigationService
@@ -37,7 +37,7 @@ class AndroidPlatform(private val app: Application) : Platform {
         ServiceLocator.register<ImageService.MetaStorage> { ImageViewMetaStorage() }
     }
 
-    override fun createTmpThumbnail(videoFile: File): CompletableContinuation<File> {
+    override fun createTmpThumbnail(videoFile: File): CompletableFuture<File> {
         return runAsync {
             val thumb = ThumbnailUtils.createVideoThumbnail(
                 videoFile.absolutePath, MediaStore.Video.Thumbnails.MINI_KIND)
@@ -50,7 +50,7 @@ class AndroidPlatform(private val app: Application) : Platform {
     override fun makeReportService(): ReportService = AndroidReportService()
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T> decodeImageAsync(path: File): CompletableContinuation<T?> {
+    override fun <T> decodeImageAsync(path: File): CompletableFuture<T?> {
         return runAsync { BitmapFactory.decodeFile(path.absolutePath) as T }
     }
 
@@ -68,7 +68,7 @@ class AndroidPlatform(private val app: Application) : Platform {
         return app.assets.open(name + "." + ext).use { it.readBytes() }
     }
 
-    override fun saveToGallery(imageFile: File): CompletableContinuation<*> {
+    override fun saveToGallery(imageFile: File): CompletableFuture<*> {
         return async_ {
             val permissionCheck = ContextCompat.checkSelfPermission(app, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {

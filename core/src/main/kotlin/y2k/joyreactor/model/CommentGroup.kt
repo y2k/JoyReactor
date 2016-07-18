@@ -1,6 +1,6 @@
 package y2k.joyreactor.model
 
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.services.repository.Entities
 import java.util.*
 
@@ -27,7 +27,7 @@ class RootComments() : ArrayList<Comment>(), CommentGroup {
 
     companion object {
 
-        fun create(entities: Entities, postId: Long): CompletableContinuation<CommentGroup> {
+        fun create(entities: Entities, postId: Long): CompletableFuture<CommentGroup> {
             return entities.useOnce {
                 val firstLevelComments = HashSet<Long>()
                 val comments = comments
@@ -58,7 +58,7 @@ class ChildComments() : ArrayList<Comment>(), CommentGroup {
 
     companion object {
 
-        fun create(entities: Entities, parentCommentId: Long, postId: Long): CompletableContinuation<CommentGroup> {
+        fun create(entities: Entities, parentCommentId: Long, postId: Long): CompletableFuture<CommentGroup> {
             return entities.useOnce {
                 val parent = comments
                     .filter("postId" to postId)

@@ -31,7 +31,7 @@ class WebImageView(context: Context?, attrs: AttributeSet? = null) : ImageView(c
 
             imageService
                 .download<Bitmap>(url, this)
-                .whenComplete_ { if (it.result != null) setImageBitmap(it.result) }
+                .thenAccept { if (it.result != null) setImageBitmap(it.result) }
         }
     }
 

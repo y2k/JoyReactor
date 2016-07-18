@@ -1,7 +1,7 @@
 package y2k.joyreactor.services.requests
 
 import y2k.joyreactor.common.ajax
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.postAsync
 
@@ -10,7 +10,7 @@ import y2k.joyreactor.common.postAsync
  */
 class SendMessageRequest(private val httpClient: HttpClient) {
 
-    fun request(username: String, message: String): CompletableContinuation<*> {
+    fun request(username: String, message: String): CompletableFuture<*> {
         return httpClient
             .buildRequest()
             .addField("username", username)

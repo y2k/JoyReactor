@@ -1,6 +1,6 @@
 package y2k.joyreactor.services.requests
 
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.runAsync
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.model.Group
@@ -16,7 +16,7 @@ class PostsForTagRequest(
     private val urlBuilder: UrlBuilder,
     private val parser: PostParser) {
 
-    fun requestAsync(groupId: Group, pageId: String? = null): CompletableContinuation<Data> {
+    fun requestAsync(groupId: Group, pageId: String? = null): CompletableFuture<Data> {
         return runAsync {
             val url = urlBuilder.build(groupId, pageId)
             val doc = httpClient.getDocument(url)

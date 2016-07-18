@@ -1,7 +1,7 @@
 package y2k.joyreactor.services.images
 
 import y2k.joyreactor.common.ApplicationDataVersion
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.runAsync
 import y2k.joyreactor.common.platform.Platform
 import java.io.File
@@ -16,13 +16,13 @@ class DiskCache(private val platform: Platform) {
         cacheDirectory.mkdirs()
     }
 
-    fun get(url: String): CompletableContinuation<File?> {
+    fun get(url: String): CompletableFuture<File?> {
         return runAsync(DISK_EXECUTOR) {
             urlToFile(url).let { if (it.exists()) it else null }
         }
     }
 
-    fun put(newImageFile: File, url: String): CompletableContinuation<*> {
+    fun put(newImageFile: File, url: String): CompletableFuture<*> {
         return runAsync(DISK_EXECUTOR) {
             newImageFile.renameTo(urlToFile(url))
         }

@@ -1,7 +1,7 @@
 package y2k.joyreactor.common.http
 
 import org.jsoup.nodes.Document
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import java.io.File
 
 /**
@@ -9,7 +9,7 @@ import java.io.File
  */
 interface HttpClient {
 
-    fun downloadToFile(url: String, file: File): CompletableContinuation<*>
+    fun downloadToFile(url: String, file: File): CompletableFuture<*>
 
     fun downloadToFile(url: String, file: File, callback: ((Int, Int) -> Unit)?)
 

@@ -1,7 +1,7 @@
 package y2k.joyreactor.services
 
 import y2k.joyreactor.common.BackgroundWorks
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.then
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.services.repository.Entities
@@ -15,10 +15,10 @@ class UserService(
     private val addTagRequest: AddTagRequest,
     private val entities: Entities,
     private val userNameRequest: UserNameRequest,
-    private val synchronizer: () -> CompletableContinuation<*>,
+    private val synchronizer: () -> CompletableFuture<*>,
     private val backgroundWorks: BackgroundWorks) {
 
-    fun getMyTags(): CompletableContinuation<List<Group>> {
+    fun getMyTags(): CompletableFuture<List<Group>> {
         return entities
             .useAsync {
                 Tags.filter("isVisible" to true)
@@ -26,16 +26,16 @@ class UserService(
             }
     }
 
-    fun favoriteTag(tag: String): CompletableContinuation<*> {
+    fun favoriteTag(tag: String): CompletableFuture<*> {
         return addTagRequest.request(tag)
     }
 
-    fun getTagForFavorite(): CompletableContinuation<Group> {
+    fun getTagForFavorite(): CompletableFuture<Group> {
         return userNameRequest()
             .then { Group.makeFavorite(it) }
     }
 
-    fun makeGroup(base: Group, quality: Group.Quality): CompletableContinuation<Group> {
+    fun makeGroup(base: Group, quality: Group.Quality): CompletableFuture<Group> {
         return entities.use {
             val group = Group(base, quality)
             val exists = Tags.filter("serverId" to group.serverId).firstOrNull()
@@ -46,7 +46,7 @@ class UserService(
     fun syncTagsInBackground(): Any {
         val key = "sync-my-tags"
         backgroundWorks.markWorkStarted(key)
-        synchronizer().whenComplete_ { backgroundWorks.markWorkFinished(key, it.error) }
+        synchronizer().thenAccept { backgroundWorks.markWorkFinished(key, it.error) }
         return key
     }
 }

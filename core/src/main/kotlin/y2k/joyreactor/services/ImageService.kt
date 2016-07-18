@@ -1,7 +1,7 @@
 package y2k.joyreactor.services
 
 import y2k.joyreactor.common.async.CanceledException
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.async
 import y2k.joyreactor.common.async.thenAsync
 import y2k.joyreactor.common.http.HttpClient
@@ -23,7 +23,7 @@ class ImageService(
         return image?.thumbnailUrl(width, height)
     }
 
-    fun <T> download(imageUrl: String?, target: Any): CompletableContinuation<T?> {
+    fun <T> download(imageUrl: String?, target: Any): CompletableFuture<T?> {
         return async {
             if (imageUrl == null) {
                 metaHolder.setKey(target, null)
@@ -45,18 +45,18 @@ class ImageService(
         }
     }
 
-    private fun replaceToCache(url: String): CompletableContinuation<*> {
+    private fun replaceToCache(url: String): CompletableFuture<*> {
         val tmp = createTempFile(directory = diskCache.cacheDirectory)
         return client
             .downloadToFile(url, tmp)
             .thenAsync { diskCache.put(tmp, url) }
     }
 
-    private fun <T> getFromCache(url: String): CompletableContinuation<T?> {
+    private fun <T> getFromCache(url: String): CompletableFuture<T?> {
         return diskCache
             .get(url)
             .thenAsync {
-                if (it == null) CompletableContinuation.just(null)
+                if (it == null) CompletableFuture.just(null)
                 else decoder.decodeImageAsync<T>(it)
             }
     }

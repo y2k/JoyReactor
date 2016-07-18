@@ -27,25 +27,30 @@ import y2k.joyreactor.services.repository.Entities
 //    return result
 //}
 
-fun <T, R> CompletableContinuation<T>.then_(f: (ExceptionalMonad<T>) -> R): CompletableContinuation<R> {
-    val result = CompletableContinuation<R>()
-    whenComplete_ {
+fun <T, R> CompletableFuture<T>.then_(f: (ExceptionalMonad<T>) -> R): CompletableFuture<R> {
+    val result = CompletableFuture<R>()
+    thenAccept {
         if (it.error == null) f(ExceptionalMonad(it.result))
         else f(ExceptionalMonad(error = it.error))
     }
     return result
 }
 
-fun <T, R> CompletableContinuation<T>.then(f: (T) -> R): CompletableContinuation<R> {
-    val result = CompletableContinuation<R>()
-    whenComplete { t, e ->
-        if (e == null) result.resume(f(t!!))
-        else result.resumeWithException(e)
+fun <T, R> CompletableFuture<T>.then(f: (T) -> R): CompletableFuture<R> {
+    val continuation = CompletableFuture<R>()
+    thenAccept {
+        if (it.error == null) {
+            try {
+                continuation.complete(f(it.result!!))
+            } catch (e: Exception) {
+                continuation.completeExceptionally(e)
+            }
+        } else continuation.completeExceptionally(it.error)
     }
-    return result
+    return continuation
 }
 
-fun <T, R> CompletableContinuation<T>.thenAsync(entities: Entities, f: DataContext.(T) -> R): CompletableContinuation<R> {
+fun <T, R> CompletableFuture<T>.thenAsync(entities: Entities, f: DataContext.(T) -> R): CompletableFuture<R> {
     return thenAsync {
         entities.useAsync {
             f(it)
@@ -53,36 +58,36 @@ fun <T, R> CompletableContinuation<T>.thenAsync(entities: Entities, f: DataConte
     }
 }
 
-fun <T, R> CompletableContinuation<T>.thenAsync(f: (T) -> CompletableContinuation<out R>): CompletableContinuation<R> {
-    val result = CompletableContinuation<R>()
+fun <T, R> CompletableFuture<T>.thenAsync(f: (T) -> CompletableFuture<out R>): CompletableFuture<R> {
+    val result = CompletableFuture<R>()
     whenComplete { t, e ->
         if (e == null) {
             f(t!!).whenComplete { r2, e2 ->
-                if (e2 == null) result.resume(r2!!)
-                else result.resumeWithException(e2)
+                if (e2 == null) result.complete(r2!!)
+                else result.completeExceptionally(e2)
             }
-        } else result.resumeWithException(e)
+        } else result.completeExceptionally(e)
     }
     return result
 }
 
-fun <T> CompletableContinuation<T>.onError(f: () -> T): CompletableContinuation<T> {
-    val result = CompletableContinuation<T>()
+fun <T> CompletableFuture<T>.onError(f: () -> T): CompletableFuture<T> {
+    val result = CompletableFuture<T>()
     whenComplete { t, e ->
-        if (e == null) result.resume(t!!)
-        else result.resume(f())
+        if (e == null) result.complete(t!!)
+        else result.complete(f())
     }
     return result
 }
 
-fun <T> CompletableContinuation<T>.onErrorAsync(f: () -> CompletableContinuation<T>): CompletableContinuation<T> {
-    val result = CompletableContinuation<T>()
+fun <T> CompletableFuture<T>.onErrorAsync(f: () -> CompletableFuture<T>): CompletableFuture<T> {
+    val result = CompletableFuture<T>()
     whenComplete { t, e ->
-        if (e == null) result.resume(t!!)
+        if (e == null) result.complete(t!!)
         else {
-            f().whenComplete_ {
-                if (it.error == null) result.resume(it.result!!)
-                else result.resumeWithException(it.error)
+            f().thenAccept {
+                if (it.error == null) result.complete(it.result!!)
+                else result.completeExceptionally(it.error)
             }
         }
     }

@@ -1,6 +1,6 @@
 package y2k.joyreactor.services.requests
 
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.runAsync
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.platform.Platform
@@ -17,7 +17,7 @@ class TagsForUserRequest(
 
     private val imageRequest = TagImageRequest(httpClient, platform)
 
-    fun request(username: String): CompletableContinuation<List<Group>> {
+    fun request(username: String): CompletableFuture<List<Group>> {
         return runAsync {
             val document = httpClient.getDocument("http://joyreactor.cc/user/" + username)
             val tags = ArrayList<Group>()

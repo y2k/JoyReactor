@@ -1,7 +1,7 @@
 package y2k.joyreactor.services.requests
 
 import org.jsoup.nodes.Element
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.runAsync
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.model.*
@@ -14,7 +14,7 @@ import java.util.regex.Pattern
 class PostRequest(
     private val httpClient: HttpClient,
     private val parser: (Element) -> Pair<Post, List<Attachment>>) :
-    Function1<Long, CompletableContinuation<PostRequest.Response>> {
+    Function1<Long, CompletableFuture<PostRequest.Response>> {
 
     override operator fun invoke(postId: Long) = runAsync { request(postId.toString()) }
 

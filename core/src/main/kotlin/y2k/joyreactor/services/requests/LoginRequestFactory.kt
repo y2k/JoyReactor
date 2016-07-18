@@ -1,7 +1,7 @@
 package y2k.joyreactor.services.requests
 
 import org.jsoup.nodes.Document
-import y2k.joyreactor.common.async.CompletableContinuation
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.then
 import y2k.joyreactor.common.async.thenAsync
 import y2k.joyreactor.common.getDocumentAsync
@@ -13,7 +13,7 @@ import y2k.joyreactor.common.postAsync
  */
 class LoginRequestFactory(private val httpClient: HttpClient) {
 
-    fun request(username: String, password: String): CompletableContinuation<*> {
+    fun request(username: String, password: String): CompletableFuture<*> {
         return getSiteToken()
             .thenAsync {
                 httpClient
@@ -26,7 +26,7 @@ class LoginRequestFactory(private val httpClient: HttpClient) {
             .then { validateIsSuccessLogin(it) }
     }
 
-    private fun getSiteToken(): CompletableContinuation<String> {
+    private fun getSiteToken(): CompletableFuture<String> {
         return httpClient
             .getDocumentAsync("http://joyreactor.cc/login")
             .then { it.getElementById("signin__csrf_token").attr("value") }
