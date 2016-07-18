@@ -1,66 +1,48 @@
 package y2k.joyreactor.common.async
 
 import y2k.joyreactor.common.executeOnUi
-import java.util.concurrent.*
+import java.util.concurrent.Executor
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by y2k on 16/07/16.
  */
 class CompletableFuture<T> {
 
-    @Volatile var isFinished = false
-
-    private @Volatile var result: T? = null
-    private @Volatile var error: Throwable? = null
-    private @Volatile var callback: ((T?, Throwable?) -> Unit)? = null
-
-    val finishedWithError: Boolean
-        get() = error != null
+    private @Volatile var result: Result<T>? = null
+    private @Volatile var callback: ((Result<T>) -> Unit)? = null
 
     fun complete(data: T) {
         synchronized(this) {
-            isFinished = true
-            result = data
-            error = null
-
-            callback?.invoke(result, error)
+            val r = Result(data)
+            result = r
+            callback?.invoke(r)
         }
     }
 
     fun completeExceptionally(exception: Throwable) {
         synchronized(this) {
-            isFinished = true
-            result = null
-            error = exception
-
-            callback?.invoke(result, error)
-        }
-    }
-
-    @Deprecated("")
-    fun whenComplete(f: (T?, Throwable?) -> Unit) {
-        synchronized(this) {
-            if (isFinished) f(result, error)
-            else callback = f
+            val r = Result<T>(null, exception)
+            result = r
+            callback?.invoke(r)
         }
     }
 
     fun thenAccept(f: (Result<T>) -> Unit) {
         synchronized(this) {
-            if (isFinished) f(Result(result, error))
-            else callback = { r, e -> f(Result(r, e)) }
+            val r = result
+            if (r == null) callback = f else f(r)
         }
     }
 
-    data class Result<T>(val result: T?, val error: Throwable?)
+    data class Result<T>(val result: T?, val error: Throwable? = null)
 
     companion object {
 
         fun <T> just(value: T): CompletableFuture<T> {
-            return CompletableFuture<T>().apply {
-                isFinished = true
-                result = value
-            }
+            return CompletableFuture<T>().apply { result = Result(value) }
         }
     }
 }
@@ -83,8 +65,6 @@ fun delay(timeSpanInMs: Long): CompletableFuture<*> {
 fun <T> runAsync(f: () -> T): CompletableFuture<T> {
     return runAsync(THREAD_POOL_EXECUTOR, f)
 }
-
-fun <T> just(value: T): CompletableFuture<T> = CompletableFuture.just(value)
 
 fun <T> runAsync(executor: Executor, f: () -> T): CompletableFuture<T> {
     val task = CompletableFuture<T>()
