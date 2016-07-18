@@ -28,21 +28,25 @@ class UpdateService(
 
     fun isCheckInProgress(): Boolean = backgroundWorks.getStatus(key).isInProgress
 
-    fun tryDownloadUpdate(): Any {
+    fun requestDownloadUpdate(): Any {
         async_ {
             if (backgroundWorks.getStatus(key).isInProgress) return@async_
             backgroundWorks.markWorkStarted(key)
             try {
-                if (System.currentTimeMillis() - lastCheck <= TimeUnit.MINUTES.toMillis(15)) return@async_
-                val info = await(getGitHubInformationAboutLastRelease())
-                if (info.version <= BuildConfig.VERSION_CODE) return@async_
-                if (info.version <= updateVersion) return@async_
-
-                await(URL(info.downloadUrl)
-                    .openConnection()
-                    .apply { addRequestProperty("Accept", "application/octet-stream") }
-                    .downloadToFileAsync(File(context.externalCacheDir, "update.apk")))
-                updateVersion = info.version
+                if (BuildConfig.VERSION_CODE >= updateVersion) {
+                    if (System.currentTimeMillis() - lastCheck > TimeUnit.MINUTES.toMillis(15)) {
+                        val info = await(getGitHubInformationAboutLastRelease())
+                        if (BuildConfig.VERSION_CODE < info.version) {
+                            if (info.version > updateVersion) {
+                                await(URL(info.downloadUrl)
+                                    .openConnection()
+                                    .apply { addRequestProperty("Accept", "application/octet-stream") }
+                                    .downloadToFileAsync(File(context.externalCacheDir, "update.apk")))
+                                updateVersion = info.version
+                            }
+                        }
+                    }
+                }
                 backgroundWorks.markWorkFinished(key)
             } catch (e: Exception) {
                 backgroundWorks.markWorkFinished(key, e)
@@ -72,9 +76,7 @@ class UpdateService(
         }
     }
 
-    fun hasFileToInstall(): Boolean {
-        return updateVersion > BuildConfig.VERSION_NAME.buildNumber
-    }
+    fun hasFileToInstall() = BuildConfig.VERSION_CODE < updateVersion
 
     private val String.buildNumber: Int
         get() = split('.').last().toInt()

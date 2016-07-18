@@ -11,22 +11,15 @@ object MemoryBuffer {
     val hasNew = makeMap<Long, Boolean>()
     val requests = makeMap<Long, PostsForTagRequest.Data>()
     val dividers = makeMap<Long, Int>()
+    private val commonMap = makeMap<String, Any>()
 
     private fun <T, R> makeMap(): MutableMap<T, R> = Collections.synchronizedMap(HashMap<T, R>())
 
-    operator fun get(key: String): String? {
-        TODO()
-    }
-
-    fun getInt(key: String): Int? {
-        TODO()
-    }
-
     operator fun set(key: String, value: Any?) {
-        TODO()
+        if (value == null) commonMap.remove(key)
+        else commonMap[key] = value
     }
 
-    fun getLong(key: String): Long? {
-        TODO()
-    }
+    fun getInt(key: String) = commonMap[key] as Int?
+    fun getLong(key: String) = commonMap[key] as Long?
 }

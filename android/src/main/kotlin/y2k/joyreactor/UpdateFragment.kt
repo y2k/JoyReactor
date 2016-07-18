@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import y2k.joyreactor.common.BaseFragment
 import y2k.joyreactor.common.ServiceLocator
-import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.isVisible
 import y2k.joyreactor.common.switchByScaleFromTo
 import y2k.joyreactor.platform.UpdateService
@@ -20,11 +19,9 @@ class UpdateFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_update, container)
-        lifeCycleService(service.tryDownloadUpdate()) {
-            async_ {
-                setBlocked(service.isCheckInProgress())
-                view.isVisible = service.hasFileToInstall()
-            }
+        lifeCycleService(service.requestDownloadUpdate()) {
+            setBlocked(service.isCheckInProgress())
+            view.isVisible = service.hasFileToInstall()
         }
         view.findViewById(R.id.button).setOnClickListener { service.installUpdate() }
         return view

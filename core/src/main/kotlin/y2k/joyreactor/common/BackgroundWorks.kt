@@ -4,13 +4,14 @@ import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.async.delay
 import y2k.joyreactor.services.BroadcastService
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by y2k on 10/07/16.
  */
 object BackgroundWorks {
 
-    private const val CACHE_LIFE = 30 * 1000L
+    private val CACHE_LIFE = TimeUnit.SECONDS.toMillis(30)
     private val statusMap = HashMap<Any, WorkStatus>()
 
     fun updateWorkStatus(key: Any) {
