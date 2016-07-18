@@ -13,4 +13,20 @@ object MemoryBuffer {
     val dividers = makeMap<Long, Int>()
 
     private fun <T, R> makeMap(): MutableMap<T, R> = Collections.synchronizedMap(HashMap<T, R>())
+
+    operator fun get(key: String): String? {
+        TODO()
+    }
+
+    fun getInt(key: String): Int? {
+        TODO()
+    }
+
+    operator fun set(key: String, value: Any?) {
+        TODO()
+    }
+
+    fun getLong(key: String): Long? {
+        TODO()
+    }
 }

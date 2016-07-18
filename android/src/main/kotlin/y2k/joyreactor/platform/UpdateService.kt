@@ -1,6 +1,5 @@
 package y2k.joyreactor.platform
 
-import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -9,52 +8,77 @@ import y2k.joyreactor.BuildConfig
 import y2k.joyreactor.common.BackgroundWorks
 import y2k.joyreactor.common.async.CompletableContinuation
 import y2k.joyreactor.common.async.async_
+import y2k.joyreactor.common.async.just
 import y2k.joyreactor.common.async.runAsync
+import y2k.joyreactor.common.downloadToFileAsync
+import y2k.joyreactor.services.MemoryBuffer
 import java.io.File
 import java.net.URL
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by y2k on 05/02/16.
  */
 class UpdateService(
     private val backgroundWorks: BackgroundWorks,
-    private val context: Context) {
+    private val context: Context,
+    private val stateStorage: MemoryBuffer) {
 
     private val url = "https://api.github.com/repos/y2k/JoyReactor/releases/latest"
-    private val prefs = context.getSharedPreferences("update-service", 0)
     private val key = "update-app"
 
     fun isCheckInProgress(): Boolean = backgroundWorks.getStatus(key).isInProgress
 
-    fun downloadUpdate(): Any {
+    fun tryDownloadUpdate(): Any {
         async_ {
             if (backgroundWorks.getStatus(key).isInProgress) return@async_
             backgroundWorks.markWorkStarted(key)
+            try {
+                if (System.currentTimeMillis() - lastCheck <= TimeUnit.MINUTES.toMillis(15)) return@async_
+                val info = await(getGitHubInformationAboutLastRelease())
+                if (info.version <= BuildConfig.VERSION_CODE) return@async_
+                if (info.version <= updateVersion) return@async_
 
-            if (System.currentTimeMillis() - prefs.getLong("last-check", 0) < AlarmManager.INTERVAL_FIFTEEN_MINUTES)
-                return@async_
-
-            prefs.edit()
-                .putLong("last-check", System.currentTimeMillis())
-                .putString("server-version", await(getLatestRelease()).getString("tag_name"))
-                .apply()
-            BuildConfig.VERSION_NAME.code < prefs.getString("server-version", "").code
-
-            val url = await(getLatestRelease())
-                .getJSONArray("assets").getJSONObject(0).getString("url")
-            val file = File(context.externalCacheDir, "update.apk")
-
-            URL(url).openConnection()
-                .apply { addRequestProperty("Accept", "application/octet-stream") }
-                .inputStream.use { stream -> file.outputStream().use { stream.copyTo(it) } }
+                await(URL(info.downloadUrl)
+                    .openConnection()
+                    .apply { addRequestProperty("Accept", "application/octet-stream") }
+                    .downloadToFileAsync(File(context.externalCacheDir, "update.apk")))
+                updateVersion = info.version
+                backgroundWorks.markWorkFinished(key)
+            } catch (e: Exception) {
+                backgroundWorks.markWorkFinished(key, e)
+            }
         }
-
         return key
     }
 
-    fun hasFileToInstall(): CompletableContinuation<Boolean> {
-        return runAsync { File(context.externalCacheDir, "update.apk").exists() }
+    private var updateVersion: Int
+        get() = stateStorage.getInt("update-version") ?: 0
+        set(value) {
+            stateStorage["update-version"] = value
+        }
+
+    private var lastCheck: Long
+        get() = stateStorage.getLong("last-check-for-update") ?: 0L
+        set(value) {
+            stateStorage["last-check-for-update"] = value
+        }
+
+    private fun getGitHubInformationAboutLastRelease(): CompletableContinuation<ReleaseInfo> {
+        return runAsync {
+            val info = URL(url).readText().let { JSONObject(it) }
+            ReleaseInfo(
+                version = info.getString("tag_name").buildNumber,
+                downloadUrl = info.getJSONArray("assets").getJSONObject(0).getString("url"))
+        }
     }
+
+    fun hasFileToInstall(): CompletableContinuation<Boolean> {
+        return just(updateVersion > BuildConfig.VERSION_NAME.buildNumber)
+    }
+
+    private val String.buildNumber: Int
+        get() = split('.').last().toInt()
 
     fun installUpdate() {
         val file = File(context.externalCacheDir, "update.apk")
@@ -65,48 +89,5 @@ class UpdateService(
             })
     }
 
-//    fun checkHasUpdates(): CompletableContinuation<Boolean> {
-//        if (BuildConfig.DEBUG) return CompletableContinuation.just(false)
-//        return runAsync {
-//            synchronizeWithServer()
-//            BuildConfig.VERSION_NAME.code < prefs.getString("server-version", "").code
-//        }
-//    }
-//
-//    private fun synchronizeWithServer() {
-//        if (System.currentTimeMillis() - prefs.getLong("last-check", 0) < AlarmManager.INTERVAL_FIFTEEN_MINUTES) return
-//        prefs.edit()
-//            .putLong("last-check", System.currentTimeMillis())
-//            .putString("server-version", getLatestRelease().getString("tag_name"))
-//            .apply()
-//    }
-//
-//    fun update(): CompletableContinuation<Unit> {
-//        return runAsync {
-//            val url = getLatestRelease().getJSONArray("assets").getJSONObject(0).getString("url")
-//            val file = File(context.externalCacheDir, "update.apk")
-//
-//            URL(url).openConnection()
-//                .apply { addRequestProperty("Accept", "application/octet-stream") }
-//                .inputStream.use { stream -> file.outputStream().use { stream.copyTo(it) } }
-//
-//            context.startActivity(
-//                Intent(Intent.ACTION_VIEW).apply {
-//                    setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-//                    setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                })
-//        }
-//    }
-
-    val String.code: Int
-        get() = split('.').last().toInt()
-
-    private fun getLatestRelease(): CompletableContinuation<JSONObject> {
-        return runAsync {
-            URL(url).readText().let { JSONObject(it) }
-        }
-
-//        val json = URL("https://api.github.com/repos/y2k/JoyReactor/releases/latest").readText()
-//        return JSONObject(json)
-    }
+    data class ReleaseInfo(val version: Int, val downloadUrl: String)
 }

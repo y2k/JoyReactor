@@ -1,10 +1,7 @@
 package y2k.joyreactor.common.async
 
 import y2k.joyreactor.common.executeOnUi
-import java.util.concurrent.Executor
-import java.util.concurrent.LinkedBlockingQueue
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.*
 
 /**
  * Created by y2k on 16/07/16.
@@ -86,6 +83,8 @@ fun delay(timeSpanInMs: Long): CompletableContinuation<*> {
 fun <T> runAsync(f: () -> T): CompletableContinuation<T> {
     return runAsync(THREAD_POOL_EXECUTOR, f)
 }
+
+fun <T> just(value: T): CompletableContinuation<T> = CompletableContinuation.just(value)
 
 fun <T> runAsync(executor: Executor, f: () -> T): CompletableContinuation<T> {
     val task = CompletableContinuation<T>()

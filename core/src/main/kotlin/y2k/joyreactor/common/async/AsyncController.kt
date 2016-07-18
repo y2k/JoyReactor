@@ -35,16 +35,16 @@ class ContinuationController<T> {
     }
 
     suspend fun <T> await(f: CompletableContinuation<T>, machine: Continuation<T>) {
-        f.whenComplete { value, throwable ->
-            if (throwable == null) machine.resume(value!!)
-            else machine.resumeWithException(throwable)
+        f.whenComplete_ {
+            if (it.error == null) machine.resume(it.result!!)
+            else machine.resumeWithException(it.error)
         }
     }
 
     suspend fun <T, R> CompletableContinuation<T>.than(f: (T) -> R, machine: Continuation<ExceptionalMonad<R>>) {
-        whenComplete { value, throwable ->
-            val monad = if (throwable == null) ExceptionalMonad(value)
-            else ExceptionalMonad(null, throwable)
+        whenComplete_ {
+            val monad = if (it.error == null) ExceptionalMonad(it.result)
+            else ExceptionalMonad(null, it.error)
 
             machine.resume(monad.than(f))
         }

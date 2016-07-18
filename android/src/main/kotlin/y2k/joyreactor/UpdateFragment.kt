@@ -21,7 +21,7 @@ class UpdateFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_update, container)
 
-        lifeCycleService(service.downloadUpdate()) {
+        lifeCycleService(service.tryDownloadUpdate()) {
             async_ {
                 setBlocked(service.isCheckInProgress())
                 view.isVisible = service.hasFileToInstall()
