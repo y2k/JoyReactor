@@ -42,7 +42,7 @@ class UserMessagesService(
     fun syncInBackground(): String {
         val key = "sync-messages"
         backgroundWorks.markWorkStarted(key)
-        fetcher().thenAccept { backgroundWorks.markWorkFinished(key, it.error) }
+        fetcher().thenAccept { backgroundWorks.markWorkFinished(key, it.errorOrNull) }
         return key
     }
 

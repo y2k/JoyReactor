@@ -55,6 +55,9 @@ class CompletableFuture<T> {
         abstract val error: Throwable
         abstract val result: T
         abstract val isSuccess: Boolean
+
+        val errorOrNull: Throwable?
+            get() = if (isSuccess) null else error
     }
 
     companion object {

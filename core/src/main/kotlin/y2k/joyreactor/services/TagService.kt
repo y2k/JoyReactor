@@ -55,7 +55,7 @@ class TagService(
                 if (it) CompletableFuture.just(null)
                 else merger.mergeFirstPage(group, buffer.requests[group.id]!!.posts)
             }
-            .thenAccept { backgroundWorks.markWorkFinished(group.toKey(), it.error) }
+            .thenAccept { backgroundWorks.markWorkFinished(group.toKey(), it.errorOrNull) }
         return group.toKey()
     }
 
@@ -67,7 +67,7 @@ class TagService(
         backgroundWorks.markWorkStarted(group.toKey())
         requestAsync(group, buffer.requests[group.id]!!.nextPage)
             .thenAsync { merger.mergeNextPage(group, it.posts) }
-            .thenAccept { backgroundWorks.markWorkFinished(group.toKey(), it.error) }
+            .thenAccept { backgroundWorks.markWorkFinished(group.toKey(), it.errorOrNull) }
     }
 
     fun reloadFirstPage(group: Group) {
@@ -81,7 +81,7 @@ class TagService(
                 it
             }
             .thenAsync { merger.mergeFirstPage(group, it.posts) }
-            .thenAccept { backgroundWorks.markWorkFinished(group.toKey(), it.error) }
+            .thenAccept { backgroundWorks.markWorkFinished(group.toKey(), it.errorOrNull) }
     }
 
     private fun Group.toKey(): String = serverId

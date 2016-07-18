@@ -46,7 +46,7 @@ class UserService(
     fun syncTagsInBackground(): Any {
         val key = "sync-my-tags"
         backgroundWorks.markWorkStarted(key)
-        synchronizer().thenAccept { backgroundWorks.markWorkFinished(key, it.error) }
+        synchronizer().thenAccept { backgroundWorks.markWorkFinished(key, it.errorOrNull) }
         return key
     }
 }
