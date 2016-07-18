@@ -65,14 +65,11 @@ object ServiceLocator {
                 resolve(), resolve(), resolve(), resolve(), resolve())
         }
         register { TagService(resolve(), resolve(), resolve(), resolve(), resolve()) }
-
         register { UserService(resolve(), resolve(), resolve(), resolve<MyTagFetcher>(), resolve()) }
-
         register { ProfileService(resolve(), resolve<ProfileRequest>(), resolve(), resolve<UserNameRequest>()) }
-
         register { UserMessagesService(resolve(), resolve<PrivateMessageFetcher>(), resolve(), resolve()) }
-
         register { CommentService(resolve<CreateCommentRequest>(), resolve()) }
+        register { AttachmentService(resolve<OriginalImageRequestFactory>(), resolve(), resolve(), resolve()) }
 
         register { LoginViewModel(resolve(), resolve()) }
         register { MenuViewModel(resolve(), resolve(), resolve()) }

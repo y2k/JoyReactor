@@ -13,9 +13,9 @@ import java.util.regex.Pattern
 class OriginalImageRequestFactory(
     private val httpClient: HttpClient,
     private val platform: Platform) :
-    Function2<String, Boolean, CompletableFuture<File>> {
+    Function2<String, Boolean, CompletableFuture<File?>> {
 
-    override operator fun invoke(imageUrl: String, onlyFromCache: Boolean): CompletableFuture<File> {
+    override operator fun invoke(imageUrl: String, onlyFromCache: Boolean): CompletableFuture<File?> {
         if (onlyFromCache) return requestFromCache(imageUrl)
 
         return runAsync {
@@ -32,7 +32,7 @@ class OriginalImageRequestFactory(
         }
     }
 
-    private fun requestFromCache(imageUrl: String): CompletableFuture<File> {
+    private fun requestFromCache(imageUrl: String): CompletableFuture<File?> {
         return runAsync {
             val file = getTargetFile(imageUrl)
             if (!file.exists()) throw Exception()

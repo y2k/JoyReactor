@@ -16,7 +16,7 @@ import java.io.File
  * Created by y2k on 11/24/15.
  */
 class PostService(
-    private val requestImage: (String, Boolean) -> CompletableFuture<File>,
+    private val requestImage: (String, Boolean) -> CompletableFuture<File?>,
     private val requestPost: (Long) -> CompletableFuture<PostRequest.Response>,
     private val entities: Entities,
     private val likePostRequest: LikePostRequest,
