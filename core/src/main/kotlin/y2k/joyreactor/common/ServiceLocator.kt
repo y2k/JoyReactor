@@ -33,6 +33,7 @@ object ServiceLocator {
 
         register { resolve<Platform>().makeReportService() }
         register { BroadcastService }
+        register { BackgroundWorks }
 
         register { PostParser(resolve<LikeParser>()) }
 
