@@ -9,8 +9,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ProgressBar
 import y2k.joyreactor.common.PartialResult
-import y2k.joyreactor.common.ioObservable
-import y2k.joyreactor.common.ui
+import y2k.joyreactor.common.async.async_
 import java.io.File
 import kotlin.properties.Delegates
 
@@ -26,27 +25,28 @@ class ProgressImageView(context: Context?, attrs: AttributeSet?) :
     var image by Delegates.observable(PartialResult.inProgress<File>(0, 100)) { prop, old, new ->
         if (old == new) return@observable
 
-        val file = new.result
-        if (file == null) {
-            progress.visibility = View.VISIBLE
-            progress.progress = new.progress
-            progress.max = new.max
-        } else {
-            progress.visibility = View.GONE
-            ioObservable {
-                val op = BitmapFactory.Options()
-                op.inJustDecodeBounds = true
-                BitmapFactory.decodeFile(file.absolutePath, op)
+        async_ {
+            val file = new.result
+            if (file == null) {
+                progress.visibility = View.VISIBLE
+                progress.progress = new.progress
+                progress.max = new.max
+            } else {
+                progress.visibility = View.GONE
+                val bitmap = runAsync {
+                    val op = BitmapFactory.Options()
+                    op.inJustDecodeBounds = true
+                    BitmapFactory.decodeFile(file.absolutePath, op)
 
-                val met = resources.displayMetrics
-                op.inJustDecodeBounds = false
-                op.inSampleSize = Math.max(
-                    op.outWidth / met.widthPixels,
-                    op.outHeight / met.heightPixels)
+                    val met = resources.displayMetrics
+                    op.inJustDecodeBounds = false
+                    op.inSampleSize = Math.max(
+                        op.outWidth / met.widthPixels,
+                        op.outHeight / met.heightPixels)
 
-                BitmapFactory.decodeFile(file.absolutePath, op)
-            }.ui {
-                imageView.setImageBitmap(it)
+                    BitmapFactory.decodeFile(file.absolutePath, op)
+                }
+                imageView.setImageBitmap(bitmap)
             }
         }
     }

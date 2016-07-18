@@ -41,6 +41,13 @@ class ContinuationController<T> {
         }
     }
 
+    suspend fun <T> runAsync(f: () -> T, machine: Continuation<T>) {
+        runAsync(f).whenComplete_ {
+            if (it.error == null) machine.resume(it.result!!)
+            else machine.resumeWithException(it.error)
+        }
+    }
+
     suspend fun <T, R> CompletableContinuation<T>.than(f: (T) -> R, machine: Continuation<ExceptionalMonad<R>>) {
         whenComplete_ {
             val monad = if (it.error == null) ExceptionalMonad(it.result)

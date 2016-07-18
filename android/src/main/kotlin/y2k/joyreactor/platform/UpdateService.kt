@@ -73,8 +73,8 @@ class UpdateService(
         }
     }
 
-    fun hasFileToInstall(): CompletableContinuation<Boolean> {
-        return just(updateVersion > BuildConfig.VERSION_NAME.buildNumber)
+    fun hasFileToInstall(): Boolean {
+        return updateVersion > BuildConfig.VERSION_NAME.buildNumber
     }
 
     private val String.buildNumber: Int

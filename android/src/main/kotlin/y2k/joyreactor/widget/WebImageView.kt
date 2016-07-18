@@ -28,7 +28,10 @@ class WebImageView(context: Context?, attrs: AttributeSet? = null) : ImageView(c
             state = ImageState(image, canvas.width, canvas.height)
 
             val url = imageService.makeUrl(state.image, state.width, state.height)
-            imageService.to<Bitmap>(url, this).subscribe { setImageBitmap(it) }
+
+            imageService
+                .download<Bitmap>(url, this)
+                .whenComplete_ { if (it.result != null) setImageBitmap(it.result) }
         }
     }
 

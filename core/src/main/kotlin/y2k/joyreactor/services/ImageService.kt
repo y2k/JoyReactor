@@ -23,7 +23,7 @@ class ImageService(
         return image?.thumbnailUrl(width, height)
     }
 
-    fun <T> to(imageUrl: String?, target: Any): CompletableContinuation<T?> {
+    fun <T> download(imageUrl: String?, target: Any): CompletableContinuation<T?> {
         return async {
             if (imageUrl == null) {
                 metaHolder.setKey(target, null)
