@@ -84,5 +84,7 @@ class TagService(
             .thenAccept { backgroundWorks.markWorkFinished(group.toKey(), it.errorOrNull) }
     }
 
-    private fun Group.toKey(): String = serverId
+    private fun Group.toKey(): String = getKeyFromWatchSync() + serverId
+
+    fun getKeyFromWatchSync() = "sync-posts-"
 }

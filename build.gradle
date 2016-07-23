@@ -21,7 +21,7 @@ def computeAppVersionName() {
 }
 
 def computeAppVersionCode() {
-    return Integer.parseInt(System.getenv("SING_BUILD") ?: "0")
+    return Integer.parseInt(System.getenv("SING_BUILD") ?: "999999")
 }
 
 def computeFeedbackTelegram() {

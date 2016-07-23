@@ -28,7 +28,7 @@ class AttachmentService(
         return workQueue.getStatus(postId.toKey())
     }
 
-    fun downloadInBackground(postId: Long): Any {
+    fun downloadInBackground(postId: Long): String {
         workQueue.markWorkStarted(postId.toKey())
         entities
             .useAsync { Posts.getById(postId) }

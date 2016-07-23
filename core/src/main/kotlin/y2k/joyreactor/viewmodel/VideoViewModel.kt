@@ -13,7 +13,7 @@ import java.io.File
 class VideoViewModel(
     navigation: NavigationService,
     service: AttachmentService,
-    scope: (Any, () -> Unit) -> Unit) {
+    scope: (String, () -> Unit) -> Unit) {
 
     val isBusy = property(true)
     val isError = property(false)

@@ -6,6 +6,12 @@ import java.util.*
  * Created by y2k on 1/31/16.
  */
 
+inline fun <K, V> Map<K, V>.firstOrNull(f: (K) -> Boolean): V? {
+    for ((key, value) in this)
+        if (f(key)) return value
+    return null
+}
+
 inline fun <T, T2, R> List<Pair<T, T2>>.flatMapPair(f: (T, T2) -> List<R>): List<R> {
     return flatMap { f(it.first, it.second) }
 }
@@ -31,7 +37,3 @@ fun <T> List<T>.groupToPair(): List<Pair<T, T>> {
         .groupBy { it.index and 2 }
         .map { it.value[0].value to it.value[1].value }
 }
-
-//fun <T> MutableMap<T, T>.put(item: Pair<T, T>) {
-//    put(item.first, item.second)
-//}

@@ -12,18 +12,18 @@ import java.util.concurrent.TimeUnit
 object BackgroundWorks {
 
     private val CACHE_LIFE = TimeUnit.SECONDS.toMillis(30)
-    private val statusMap = HashMap<Any, WorkStatus>()
+    private val statusMap = HashMap<String, WorkStatus>()
 
-    fun updateWorkStatus(key: Any) {
+    fun updateWorkStatus(key: String) {
         markWorkStarted(key)
     }
 
-    fun markWorkStarted(key: Any) {
+    fun markWorkStarted(key: String) {
         statusMap[key] = WorkStatus(isFinished = false)
         BroadcastService.broadcast(key)
     }
 
-    fun markWorkFinished(key: Any, error: Throwable? = null) {
+    fun markWorkFinished(key: String, error: Throwable? = null) {
         if (error == null) {
             statusMap.remove(key)
         } else {
@@ -36,7 +36,7 @@ object BackgroundWorks {
         BroadcastService.broadcast(key)
     }
 
-    fun getStatus(key: Any): WorkStatus {
+    fun getStatus(key: String): WorkStatus {
         return statusMap[key] ?: WorkStatus(isFinished = true)
     }
 }

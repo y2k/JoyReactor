@@ -16,7 +16,7 @@ class MainViewModel(
     private val navigation: NavigationService,
     private val service: TagService,
     private val userService: UserService,
-    private val lifeCycleService: LifeCycleService,
+    scope: LifeCycleService,
     private val postService: PostService,
     private val reportService: ReportService) {
 
@@ -26,43 +26,106 @@ class MainViewModel(
     val isError = property(false)
 
     val quality = property(Group.Quality.Good)
-    val group = property(Group.makeFeatured())
+    private val group = property(Group.makeFeatured())
 
-    private lateinit var state: PostListViewModel
+//    private lateinit var state: PostListViewModel
 
     init {
-        lifeCycleService.registerProperty(BroadcastService.TagSelected::class, group)
-        group.subscribeLazy { changeCurrentGroup() }
-        quality.subscribeLazy { changeCurrentGroup() }
-        changeCurrentGroup(true)
-    }
+        scope.registerProperty(BroadcastService.TagSelected::class, group)
+//        group.subscribeLazy { changeCurrentGroup() }
+//        quality.subscribeLazy { changeCurrentGroup() }
+//        changeCurrentGroup(true)
 
-    fun changeCurrentGroup(isFirst: Boolean = false) {
-        async_ {
-            val it = await(userService.makeGroup(group.value, quality.value))
+//        scope(BroadcastService.TagSelected::class) {
+//            group.value
+//        }
+        quality.subscribe { service.preloadNewPosts(groupWithQuality()) }
+        group.subscribe { service.preloadNewPosts(groupWithQuality()) }
+//        scope.register(BroadcastService.TagSelected::class) {
+//            service.preloadNewPosts(myGroup())
+//            group.value = it.group
+//        }
 
-            if (!isFirst) {
-                state.isBusy.unsubscribe(isBusy)
-                state.posts.unsubscribe(posts)
-                state.hasNewPosts.unsubscribe(hasNewPosts)
-                state.isError.unsubscribe(isError)
+        scope(service.getKeyFromWatchSync()) {
+            async_ {
+                service.getSyncStatus(groupWithQuality()).let {
+                    isBusy += it.isInProgress
+                    isError += it.isFinishedWithError
+                }
+
+                val status = await(service.queryPosts(groupWithQuality()))
+                hasNewPosts += status.hasNew
+                posts += status.posts
+                    .map { PostItemViewModel(navigation, postService, it) }
+                    .let { vms -> ListWithDivider(vms, status.divider) }
             }
-
-            state = PostListViewModel(navigation, lifeCycleService, service, postService, it)
-
-            state.isBusy.subscribe(isBusy)
-            state.posts.subscribe(posts)
-            state.hasNewPosts.subscribe(hasNewPosts)
-            state.isError.subscribe(isError)
         }
     }
 
-    fun applyNew() = state.applyNew()
-    fun loadMore() = state.loadMore()
-    fun reloadFirstPage() = state.reloadFirstPage()
+//    init {
+//        scope.registerProperty(BroadcastService.TagSelected::class, group)
+////        group.subscribeLazy { changeCurrentGroup() }
+////        quality.subscribeLazy { changeCurrentGroup() }
+////        changeCurrentGroup(true)
+//
+////        scope(BroadcastService.TagSelected::class) {
+////            group.value
+////        }
+//        quality.subscribe { service.preloadNewPosts(groupWithQuality()) }
+//        group.subscribe { service.preloadNewPosts(groupWithQuality()) }
+////        scope.register(BroadcastService.TagSelected::class) {
+////            service.preloadNewPosts(myGroup())
+////            group.value = it.group
+////        }
+//
+//        scope(service.getKeyFromWatchSync()) {
+//            async_ {
+//                service.getSyncStatus(groupWithQuality()).let {
+//                    isBusy += it.isInProgress
+//                    isError += it.isFinishedWithError
+//                }
+//
+//                val status = await(service.queryPosts(groupWithQuality()))
+//                hasNewPosts += status.hasNew
+//                posts += status.posts
+//                    .map { PostItemViewModel(navigation, postService, it) }
+//                    .let { vms -> ListWithDivider(vms, status.divider) }
+//            }
+//        }
+//    }
+
+//    fun changeCurrentGroup(isFirst: Boolean = false) {
+//        async_ {
+//            val it = await(userService.makeGroup(group.value, quality.value))
+//
+//            if (!isFirst) {
+//                state.isBusy.unsubscribe(isBusy)
+//                state.posts.unsubscribe(posts)
+//                state.hasNewPosts.unsubscribe(hasNewPosts)
+//                state.isError.unsubscribe(isError)
+//            }
+//
+//            state = PostListViewModel(navigation, scope, service, postService, it)
+//
+//            state.isBusy.subscribe(isBusy)
+//            state.posts.subscribe(posts)
+//            state.hasNewPosts.subscribe(hasNewPosts)
+//            state.isError.subscribe(isError)
+//        }
+//    }
+
+//    fun applyNew() = state.applyNew()
+//    fun loadMore() = state.loadMore()
+//    fun reloadFirstPage() = state.reloadFirstPage()
+
+    fun applyNew() = service.applyNew(groupWithQuality())
+    fun loadMore() = service.loadNextPage(groupWithQuality())
+    fun reloadFirstPage() = service.reloadFirstPage(groupWithQuality())
 
     fun openProfile() = navigation.openVM<ProfileViewModel>()
     fun openMessages() = navigation.openVM<ThreadsViewModel>()
     fun openAddTag() = navigation.openVM<AddTagViewModel>()
     fun openFeedback() = reportService.createFeedback()
+
+    private fun groupWithQuality() = Group(group.value, quality.value)
 }

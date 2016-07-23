@@ -6,8 +6,9 @@ import android.os.StrictMode
 import com.splunk.mint.Mint
 import y2k.joyreactor.common.AndroidPlatform
 import y2k.joyreactor.common.ServiceLocator
-import y2k.joyreactor.common.executeOnUi
+import y2k.joyreactor.common.async.UI_EXECUTOR
 import y2k.joyreactor.common.platform.Platform
+import java.util.concurrent.Executor
 
 /**
  * Created by y2k on 9/26/15.
@@ -26,7 +27,7 @@ class App : Application() {
         }
 
         val handler = Handler()
-        executeOnUi = { handler.post(it) }
+        UI_EXECUTOR = Executor { handler.post(it) }
         ServiceLocator.registerSingleton<Platform> { AndroidPlatform(this) }
     }
 

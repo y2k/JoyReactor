@@ -26,15 +26,14 @@ class PostService(
 
     fun toggleFavorite(postId: Long): CompletableFuture<*> {
         return entities
-            .use { Posts.getById(postId) }
+            .useAsync { Posts.getById(postId) }
             .thenAsync { changePostFavoriteRequest(postId, !it.isFavorite) }
             .thenAsync(entities) {
                 Posts.updateAll("id" eq postId, { it.copy(isFavorite = !it.isFavorite) })
             }
-            .then { broadcastService.broadcast(Notifications.Post) }
     }
 
-    fun syncPostInBackground(postId: Long): Any {
+    fun syncPostInBackground(postId: Long): String {
         async_ {
             backgroundWorks.markWorkStarted(postId.toKey())
             try {
@@ -58,7 +57,6 @@ class PostService(
                 similarPosts.replaceAll("parentPostId" eq postId, it.similarPosts)
                 comments.replaceAll("postId" eq postId, it.comments)
             }
-            .then { broadcastService.broadcast(Notifications.Post) }
     }
 
     private fun syncPostImage(postId: Long): CompletableFuture<*> {
@@ -105,7 +103,6 @@ class PostService(
                 val post = Posts.getById(postId)
                 Posts.add(post.copy(rating = it.first, myLike = it.second))
             }
-            .then { BroadcastService.broadcast(Notifications.Posts) }
     }
 
     fun getSyncStatus(postId: Long): WorkStatus = backgroundWorks.getStatus(postId.toKey())

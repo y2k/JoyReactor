@@ -1,6 +1,5 @@
 package y2k.joyreactor.common.async
 
-import y2k.joyreactor.common.executeOnUi
 import java.util.concurrent.Executor
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
@@ -78,6 +77,7 @@ private val THREAD_POOL_EXECUTOR = ThreadPoolExecutor(
     1, TimeUnit.SECONDS,
     LinkedBlockingQueue<Runnable>(128))
 
+var UI_EXECUTOR: Executor = Executor { TODO() }
 
 fun delay(timeSpanInMs: Long): CompletableFuture<*> {
     return runAsync { Thread.sleep(timeSpanInMs) }
@@ -92,9 +92,9 @@ fun <T> runAsync(executor: Executor, f: () -> T): CompletableFuture<T> {
     executor.execute {
         try {
             val result = f()
-            executeOnUi { task.complete(result) }
+            UI_EXECUTOR.execute { task.complete(result) }
         } catch (e: Exception) {
-            executeOnUi { task.completeExceptionally(e) }
+            UI_EXECUTOR.execute { task.completeExceptionally(e) }
         }
     }
     return task

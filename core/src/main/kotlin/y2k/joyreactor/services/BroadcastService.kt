@@ -1,7 +1,6 @@
 package y2k.joyreactor.services
 
-import y2k.joyreactor.common.Notifications
-import y2k.joyreactor.common.executeOnUi
+import y2k.joyreactor.common.async.UI_EXECUTOR
 import y2k.joyreactor.model.Group
 import java.util.*
 
@@ -13,10 +12,6 @@ object BroadcastService {
     private val observers = HashMap<Any, Observable>()
     private val registrations = HashMap<ActionObserver<*>, Any>()
 
-    fun broadcast(message: Notifications) {
-        broadcast(message, message)
-    }
-
     fun broadcastType(message: Any) {
         broadcast(message.javaClass, message)
     }
@@ -26,9 +21,15 @@ object BroadcastService {
     }
 
     fun broadcast(token: Any, message: Any) {
-        executeOnUi {
-            val observable = observers[token]
-            observable?.notifyObservers(message)
+        UI_EXECUTOR.execute {
+            if (token is String) {
+                observers
+                    .toList()
+                    .filter { val s = it.first; s is String && token.startsWith(s) }
+                    .forEach { it.second.notifyObservers(message) }
+            } else {
+                observers[token]?.notifyObservers(message)
+            }
         }
     }
 
@@ -45,8 +46,7 @@ object BroadcastService {
     }
 
     fun unregisterToken(token: Any) {
-        var observable = observers.remove(token)
-        if (observable != null) observable.deleteObservers()
+        observers.remove(token)?.deleteObservers()
     }
 
     fun unregister(receiver: Any) {

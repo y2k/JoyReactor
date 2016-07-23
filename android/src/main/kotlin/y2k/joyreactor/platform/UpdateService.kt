@@ -28,7 +28,7 @@ class UpdateService(
 
     fun isCheckInProgress(): Boolean = backgroundWorks.getStatus(key).isInProgress
 
-    fun requestDownloadUpdate(): Any {
+    fun requestDownloadUpdate(): String {
         async_ {
             if (backgroundWorks.getStatus(key).isInProgress) return@async_
             backgroundWorks.markWorkStarted(key)
