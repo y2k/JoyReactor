@@ -15,7 +15,7 @@ object BackgroundWorks {
     private val statusMap = HashMap<String, WorkStatus>()
 
     fun updateWorkStatus(key: String) {
-        markWorkStarted(key)
+        BroadcastService.broadcast(key)
     }
 
     fun markWorkStarted(key: String) {

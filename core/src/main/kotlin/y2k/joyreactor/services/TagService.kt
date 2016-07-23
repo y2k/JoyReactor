@@ -60,7 +60,9 @@ class TagService(
     }
 
     fun applyNew(group: Group) {
-        merger.mergeFirstPage(group, buffer.requests[group.id]!!.posts)
+        merger
+            .mergeFirstPage(group, buffer.requests[group.id]!!.posts)
+            .thenAccept { backgroundWorks.updateWorkStatus(group.toKey()) }
     }
 
     fun loadNextPage(group: Group) {
