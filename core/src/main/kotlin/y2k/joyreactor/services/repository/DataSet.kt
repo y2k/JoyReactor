@@ -29,6 +29,4 @@ interface DataSet <T : Dto> {
 interface Dto {
 
     val id: Long
-
-    fun identify(newId: Long): Dto
 }

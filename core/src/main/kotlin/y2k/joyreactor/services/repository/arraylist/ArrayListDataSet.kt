@@ -26,11 +26,8 @@ class ArrayListDataSet<T : Dto>(val type: KClass<T>) : DataSet<T> {
     }
 
     override fun add(element: T): T {
-        val id = (Math.random() * Long.MAX_VALUE).toLong()
-        @Suppress("UNCHECKED_CAST")
-        val e = if (element.id == 0L) element.identify(id)  as T else element
-        items.add(e)
-        return e
+        items.add(element)
+        return element
     }
 
     override fun toList(): List<T> {

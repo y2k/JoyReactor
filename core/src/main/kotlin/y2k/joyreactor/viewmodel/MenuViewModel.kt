@@ -4,7 +4,6 @@ import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.property
 import y2k.joyreactor.model.Group
 import y2k.joyreactor.services.BroadcastService
-import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.UserService
 
 /**
@@ -12,8 +11,8 @@ import y2k.joyreactor.services.UserService
  */
 class MenuViewModel(
     private val service: UserService,
-    private val broadcastService: BroadcastService,
-    scope: LifeCycleService) {
+    private val broadcast: (Any) -> Unit,
+    scope: (String, () -> Unit) -> Unit) {
 
     val tags = property(emptyList<Group>())
 
@@ -27,19 +26,19 @@ class MenuViewModel(
 
     fun selectTag(position: Int) {
         val tag = tags.value[position]
-        broadcastService.broadcastType(BroadcastService.TagSelected(tag))
+        broadcast(BroadcastService.TagSelected(tag))
     }
 
     fun selectTag(group: Group) {
-        broadcastService.broadcastType(BroadcastService.TagSelected(group))
+        broadcast(BroadcastService.TagSelected(group))
     }
 
     fun selectedFeatured() {
-        broadcastService.broadcastType(BroadcastService.TagSelected(Group.makeFeatured()))
+        broadcast(BroadcastService.TagSelected(Group.makeFeatured()))
     }
 
     fun selectedFavorite() {
         service.getTagForFavorite()
-            .thenAccept { broadcastService.broadcastType(BroadcastService.TagSelected(it.result!!)) }
+            .thenAccept { broadcast(BroadcastService.TagSelected(it.result)) }
     }
 }

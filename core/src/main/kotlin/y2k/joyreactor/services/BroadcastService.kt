@@ -7,10 +7,17 @@ import java.util.*
 /**
  * Created by y2k on 2/3/16.
  */
-object BroadcastService {
+object BroadcastService : Function1<Any, Unit> {
 
     private val observers = HashMap<Any, Observable>()
     private val registrations = HashMap<ActionObserver<*>, Any>()
+
+    override fun invoke(message: Any) {
+        when (message) {
+            is String -> broadcast(message, message)
+            else -> broadcast(message.javaClass, message)
+        }
+    }
 
     fun broadcastType(message: Any) {
         broadcast(message.javaClass, message)

@@ -72,13 +72,25 @@ object ServiceLocator {
         register { AttachmentService(resolve<OriginalImageRequestFactory>(), resolve(), resolve(), resolve()) }
 
         register { LoginViewModel(resolve(), resolve()) }
-        register { MenuViewModel(resolve(), resolve(), resolve()) }
+        register {
+            MenuViewModel(
+                resolve(),
+                resolve<BroadcastService>(),
+                resolve<LifeCycleService>())
+        }
         register { GalleryViewModel(resolve(), resolve()) }
         register { ImageViewModel(resolve(), resolve()) }
         register { VideoViewModel(resolve(), resolve(), resolve<LifeCycleService>()) }
         register { ProfileViewModel(resolve(), resolve()) }
         register { AddTagViewModel(resolve(), resolve()) }
-        register { MainViewModel(resolve(), resolve(), resolve(), resolve(), resolve(), resolve()) }
+        register {
+            MainViewModel(
+                resolve<NavigationService>(),
+                resolve(),
+                resolve(),
+                resolve(),
+                resolve())
+        }
         register { PostLikeViewModel(resolve(), resolve()) }
         register { CreateCommentViewModel(resolve(), resolve(), resolve()) }
         register { CommentsViewModel(resolve(), resolve(), resolve(), resolve()) }

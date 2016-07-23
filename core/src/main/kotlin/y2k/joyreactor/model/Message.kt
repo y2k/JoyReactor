@@ -14,10 +14,7 @@ data class Message(
     @DatabaseField val isMine: Boolean = false,
     @DatabaseField val userName: String = "",
     @DatabaseField val userImage: String? = null,
-    @DatabaseField(generatedId = true) override val id: Long = 0
-) : Dto, Serializable {
-
-    override fun identify(newId: Long) = copy(id = newId)
+    @DatabaseField(generatedId = true) override val id: Long = 0) : Dto, Serializable {
 
     fun getUserImageObject(): UserImage {
         return if (userImage == null) UserImage() else UserImage(userImage)

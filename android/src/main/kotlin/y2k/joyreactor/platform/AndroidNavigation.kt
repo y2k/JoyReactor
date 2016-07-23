@@ -24,7 +24,6 @@ import kotlin.reflect.KClass
  * Created by y2k on 10/19/15.
  */
 class AndroidNavigation(app: Application) : NavigationService {
-
     private val fragmentManager: FragmentManager?
         get() = (currentActivity as AppCompatActivity?)?.supportFragmentManager
 
@@ -38,6 +37,10 @@ class AndroidNavigation(app: Application) : NavigationService {
         val dialog = fragmentManager?.findFragmentByTag("dialog")
         if (dialog == null) currentActivity?.finish()
         else (dialog as DialogFragment).dismiss()
+    }
+
+    override fun invoke(vmType: KClass<*>, arg: Any?) {
+        open(vmType, arg.toString())
     }
 
     override fun <T : Any> open(vmType: KClass<T>, argument: String) {

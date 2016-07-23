@@ -6,7 +6,7 @@ import kotlin.reflect.KClass
 /**
  * Created by y2k on 02/10/15.
  */
-interface NavigationService {
+interface NavigationService : Function2<KClass<*>, Any?, Unit> {
 
     fun openBrowser(url: String)
 

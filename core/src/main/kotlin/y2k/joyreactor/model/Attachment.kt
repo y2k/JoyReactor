@@ -11,8 +11,4 @@ import java.io.Serializable
 data class Attachment(
     @DatabaseField val postId: Long = 0,
     @DatabaseField(dataType = DataType.SERIALIZABLE) val image: Image? = null,
-    @DatabaseField(generatedId = true) override val id: Long = 0
-) : Dto, Serializable {
-
-    override fun identify(newId: Long) = copy(id = newId)
-}
+    @DatabaseField(generatedId = true) override val id: Long = 0) : Dto, Serializable

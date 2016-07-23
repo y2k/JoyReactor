@@ -17,10 +17,7 @@ data class Comment(
     @DatabaseField val level: Int = 0,
     @DatabaseField var replies: Int = 0, // TODO: сделать immutable
     @DatabaseField(dataType = DataType.SERIALIZABLE) val attachment: Image? = null,
-    @DatabaseField(id = true) override val id: Long = 0
-) : Dto, Serializable {
-
-    override fun identify(newId: Long) = copy(id = newId)
+    @DatabaseField(id = true) override val id: Long = 0) : Dto, Serializable {
 
     val userImageObject: UserImage
         get() = if (userImage == null) UserImage() else UserImage(userImage)

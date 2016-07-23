@@ -11,8 +11,4 @@ import java.io.Serializable
 data class SimilarPost(
     @DatabaseField val parentPostId: Long = 0,
     @DatabaseField(dataType = DataType.SERIALIZABLE) val image: Image? = null,
-    @DatabaseField(id = true) override val id: Long = 0
-) : Dto, Serializable {
-
-    override fun identify(newId: Long) = copy(id = newId)
-}
+    @DatabaseField(id = true) override val id: Long = 0) : Dto, Serializable

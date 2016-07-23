@@ -10,9 +10,4 @@ import java.io.Serializable
 data class GroupPost(
     @DatabaseField val groupId: Long = 0,
     @DatabaseField val postId: Long = 0,
-    @DatabaseField(generatedId = true) override val id: Long = 0) : Serializable, Dto {
-
-    override fun identify(newId: Long): GroupPost {
-        return copy(id = newId)
-    }
-}
+    @DatabaseField(generatedId = true) override val id: Long = 0) : Serializable, Dto

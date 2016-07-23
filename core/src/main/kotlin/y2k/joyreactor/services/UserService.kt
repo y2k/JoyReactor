@@ -15,7 +15,7 @@ class UserService(
     private val addTagRequest: AddTagRequest,
     private val entities: Entities,
     private val userNameRequest: UserNameRequest,
-    private val synchronizer: () -> CompletableFuture<*>,
+    private val synchronize: () -> CompletableFuture<*>,
     private val backgroundWorks: BackgroundWorks) {
 
     fun getMyTags(): CompletableFuture<List<Group>> {
@@ -46,7 +46,7 @@ class UserService(
     fun syncTagsInBackground(): String {
         val key = "sync-my-tags"
         backgroundWorks.markWorkStarted(key)
-        synchronizer().thenAccept { backgroundWorks.markWorkFinished(key, it.errorOrNull) }
+        synchronize().thenAccept { backgroundWorks.markWorkFinished(key, it.errorOrNull) }
         return key
     }
 }
