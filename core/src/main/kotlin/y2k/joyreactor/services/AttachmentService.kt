@@ -15,7 +15,7 @@ import java.io.File
 class AttachmentService(
     private val requestImage: (String, Boolean) -> CompletableFuture<File?>,
     private val entities: Entities,
-    private val workQueue: BackgroundWorks,
+    private val backgroundWorks: BackgroundWorks,
     private val platform: Platform) {
 
     fun getVideoFile(postId: Long): CompletableFuture<File?> {
@@ -25,15 +25,15 @@ class AttachmentService(
     }
 
     fun getDownloadStatus(postId: Long): WorkStatus {
-        return workQueue.getStatus(postId.toKey())
+        return backgroundWorks.getStatus(postId.toKey())
     }
 
     fun downloadInBackground(postId: Long): String {
-        workQueue.markWorkStarted(postId.toKey())
+        backgroundWorks.markWorkStarted(postId.toKey())
         entities
             .useAsync { Posts.getById(postId) }
             .thenAsync { requestImage(it.image!!.mp4, false) }
-            .then_ { workQueue.markWorkFinished(postId.toKey(), it.error) }
+            .then_ { backgroundWorks.markWorkFinished(postId.toKey(), it.error) }
         return postId.toKey()
     }
 
@@ -52,33 +52,18 @@ class AttachmentService(
             }
     }
 
-    fun saveImageToGallery(postId: Long): CompletableFuture<*> {
-        return entities
+    private fun Long.toKey() = "sync-video-" + this
+
+    fun saveImageToGallery(postId: Long) {
+        backgroundWorks.markWorkStarted(saveImageKey())
+        entities
             .useAsync { Posts.getById(postId) }
             .thenAsync { requestImage(it.image!!.fullUrl(null), false) }
             .thenAsync { platform.saveToGallery(it!!) }
+            .thenAccept { backgroundWorks.markWorkFinished(saveImageKey(), it.errorOrNull) }
     }
 
-//    fun mainImage(serverPostId: Long): CompletableContinuation<File> {
-//        return entities
-//            .useOnce { Posts.getById(serverPostId) }
-//            .flatMap { requestImage_(it.image!!.fullUrl(null)) }
-//    }
+    fun getSaveStatus(): Boolean = backgroundWorks.getStatus(saveImageKey()).isInProgress
 
-//    fun mainImageFromDisk(serverPostId: Long): Single<File?> {
-//        return entities
-//            .useOnce { Posts.getById(serverPostId) }
-//            .flatMap {
-//                when {
-//                    it.image == null -> Single.just(null)
-//                    it.image.isAnimated -> {
-//                        requestImage_(it.image.original, onlyFromCache = true)
-//                            .flatMap { platform.createTmpThumbnail(it) }
-//                    }
-//                    else -> requestImage_(it.image.original, onlyFromCache = true)
-//                }
-//            }
-//    }
-
-    private fun Long.toKey() = "sync-video-" + this
+    fun saveImageKey() = "save-attachment"
 }

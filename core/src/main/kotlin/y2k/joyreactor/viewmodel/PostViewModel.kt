@@ -7,7 +7,6 @@ import y2k.joyreactor.common.property
 import y2k.joyreactor.model.Comment
 import y2k.joyreactor.model.Image
 import y2k.joyreactor.services.AttachmentService
-import y2k.joyreactor.services.LifeCycleService
 import y2k.joyreactor.services.PostService
 import y2k.joyreactor.services.ProfileService
 import java.io.File
@@ -20,7 +19,7 @@ class PostViewModel(
     private val userService: ProfileService,
     private val navigation: NavigationService,
     private val attachmentService: AttachmentService,
-    scope: LifeCycleService) {
+    scope: (String, () -> Unit) -> Unit) {
 
     val isBlockBusy = property(false)
     val isBusy = property(true)
@@ -56,20 +55,17 @@ class PostViewModel(
                 tags += post.tags.toList()
             }
         }
+
+        scope(attachmentService.saveImageKey()) {
+            isBlockBusy += attachmentService.getSaveStatus()
+        }
     }
 
     fun openInBrowser() = navigation.openBrowser("http://joyreactor.cc/post/" + postId)
     fun createComment() = navigation.openVM<CreateCommentViewModel>(postId)
     fun showMoreImages() = navigation.openVM<GalleryViewModel>(postId)
     fun openImage(image: Image) = navigation.openVM<ImageViewModel>(image.fullUrl())
-
-    fun saveToGallery() {
-        async_ {
-            isBlockBusy += true
-            await(attachmentService.saveImageToGallery(postId))
-            isBlockBusy += false
-        }
-    }
+    fun saveToGallery() = attachmentService.saveImageToGallery(postId)
 
     fun selectComment(comment: Comment) = navigation.openVM<CommentsViewModel>(comment.id)
 }
