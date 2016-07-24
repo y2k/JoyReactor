@@ -42,7 +42,6 @@ class PostServiceTests {
             mock(Entities::class.java),
             mock(LikePostRequest::class.java),
             mock(Platform::class.java),
-            mock(BroadcastService::class.java),
             mock(ChangePostFavoriteRequest::class.java))
 
         val actual = service.mainImageFromDisk(2686902).toBlocking().value()

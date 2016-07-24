@@ -63,6 +63,13 @@ class AttachmentService(
             .thenAccept { backgroundWorks.markWorkFinished(saveImageKey(), it.errorOrNull) }
     }
 
+    fun saveImageToGalleryAsync(postId: Long): CompletableFuture<*> {
+        return entities
+            .useAsync { Posts.getById(postId) }
+            .thenAsync { requestImage(it.image!!.fullUrl(null), false) }
+            .thenAsync { platform.saveToGallery(it!!) }
+    }
+
     fun getSaveStatus(): Boolean = backgroundWorks.getStatus(saveImageKey()).isInProgress
 
     fun saveImageKey() = "save-attachment"

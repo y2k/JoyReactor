@@ -1,22 +1,27 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.common.ListWithDivider
+import y2k.joyreactor.common.WorkStatus
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.property
 import y2k.joyreactor.common.registerProperty
 import y2k.joyreactor.model.Group
-import y2k.joyreactor.services.*
+import y2k.joyreactor.model.ListState
+import y2k.joyreactor.services.BroadcastService
+import y2k.joyreactor.services.LifeCycleService
+import y2k.joyreactor.services.Works
 import kotlin.reflect.KClass
 
 /**
  * Created by y2k on 5/9/16.
  */
 class MainViewModel(
-    private val navigateTo: (KClass<*>, Any?) -> Unit,
-    private val service: TagService,
-    scope: LifeCycleService,
-    private val postService: PostService,
-    private val reportService: ReportService) {
+    val syncInBackground: (Works, Any) -> Unit,
+    val watchForBackground: (Works, Any, (WorkStatus) -> Unit) -> Unit,
+    val queryPosts: (Long) -> CompletableFuture<ListState>,
+    val navigateTo: (KClass<*>, Any?) -> Unit,
+    scope: LifeCycleService) {
 
     val isBusy = property(false)
     val posts = property<ListWithDivider<PostItemViewModel>>()
@@ -28,34 +33,31 @@ class MainViewModel(
 
     init {
         scope.registerProperty(BroadcastService.TagSelected::class, group)
-        quality.subscribe { service.preloadNewPosts(groupWithQuality()) }
-        group.subscribe { service.preloadNewPosts(groupWithQuality()) }
+        quality.subscribe { syncInBackground(Works.syncPostsPreloadNewPosts, getGroupId()) }
+        group.subscribe { syncInBackground(Works.syncPostsPreloadNewPosts, getGroupId()) }
 
-        scope(service.getKeyFromWatchSync()) {
+        watchForBackground(Works.syncPosts, getGroupId()) { status ->
             async_ {
-                service.getSyncStatus(groupWithQuality()).let {
-                    isBusy += it.isInProgress
-                    isError += it.isFinishedWithError
-                }
+                isBusy += status.isInProgress
+                isError += status.isFinishedWithError
 
-                val status = await(service.queryPosts(groupWithQuality()))
-                hasNewPosts += status.hasNew
-                posts += status.posts
-                    .map { PostItemViewModel(navigateTo, postService, it) }
-                    .let { vms -> ListWithDivider(vms, status.divider) }
+                val data = await(queryPosts(getGroupId()))
+                hasNewPosts += data.hasNew
+                posts += data.posts
+                    .map { PostItemViewModel(navigateTo, syncInBackground, it) }
+                    .let { vms -> ListWithDivider(vms, data.divider) }
             }
         }
     }
 
-    private fun groupWithQuality() = Group(group.value, quality.value)
+    fun applyNew() = syncInBackground(Works.syncPostsApplyNew, getGroupId())
+    fun loadMore() = syncInBackground(Works.syncPostsLoadNextPage, getGroupId())
+    fun reloadFirstPage() = syncInBackground(Works.syncPostsReloadFirstPage, getGroupId())
 
-    fun applyNew() = service.applyNew(groupWithQuality())
-    fun loadMore() = service.loadNextPage(groupWithQuality())
-
-    fun reloadFirstPage() = service.reloadFirstPage(groupWithQuality())
     fun openProfile() = navigateTo(ProfileViewModel::class, null)
     fun openMessages() = navigateTo(ThreadsViewModel::class, null)
     fun openAddTag() = navigateTo(AddTagViewModel::class, null)
+    fun openFeedback() = navigateTo(CreateFeedback::class, null)
 
-    fun openFeedback() = reportService.createFeedback()
+    private fun getGroupId() = Group(group.value, quality.value).id
 }

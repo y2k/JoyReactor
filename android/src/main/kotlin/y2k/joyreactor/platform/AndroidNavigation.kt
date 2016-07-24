@@ -24,6 +24,7 @@ import kotlin.reflect.KClass
  * Created by y2k on 10/19/15.
  */
 class AndroidNavigation(app: Application) : NavigationService {
+
     private val fragmentManager: FragmentManager?
         get() = (currentActivity as AppCompatActivity?)?.supportFragmentManager
 
@@ -67,6 +68,9 @@ class AndroidNavigation(app: Application) : NavigationService {
     private fun startActivity(activityType: KClass<*>) {
         currentActivity?.startActivity(activityType)
     }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T> getArgument(): T = sArgument as T
 
     override val argument: String
         get() = sArgument

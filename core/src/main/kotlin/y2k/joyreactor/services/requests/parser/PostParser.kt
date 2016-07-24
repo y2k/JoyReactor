@@ -11,7 +11,8 @@ import java.util.regex.Pattern
 /**
  * Created by y2k on 5/29/16.
  */
-class PostParser(private val parseLike: (Element) -> MyLike) : Function1<Element, Pair<Post, List<Attachment>>> {
+class PostParser(
+    private val parseLike: (Element) -> MyLike) : Function1<Element, Pair<Post, List<Attachment>>> {
 
     override operator fun invoke(document: Element): Pair<Post, List<Attachment>> {
         val id = extractNumberFromEnd(document.id()).toLong()

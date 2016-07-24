@@ -37,6 +37,8 @@ object ServiceLocator {
 
         register { PostParser(resolve<LikeParser>()) }
 
+        register { SyncInBackgroundService(resolve(), resolve(), resolve(), resolve(), resolve()) }
+
         register { TokenRequest(resolve()) }
         register { ChangePostFavoriteRequest(resolve(), resolve()) }
         register { LikePostRequest(resolve(), resolve<TokenRequest>(), resolve<LikeParser>()) }
@@ -60,11 +62,12 @@ object ServiceLocator {
 
         register {
             PostService(
+                resolve(),
                 resolve<OriginalImageRequestFactory>(),
                 resolve<PostRequest>(),
-                resolve(), resolve(), resolve(), resolve(), resolve())
+                resolve(), resolve(), resolve())
         }
-        register { TagService(resolve(), resolve(), resolve(), resolve(), resolve()) }
+        register { TagService(resolve(), resolve(), resolve(), resolve()) }
         register { UserService(resolve(), resolve(), resolve(), resolve<MyTagFetcher>(), resolve()) }
         register { ProfileService(resolve(), resolve<ProfileRequest>(), resolve(), resolve<UserNameRequest>()) }
         register { UserMessagesService(resolve(), resolve<PrivateMessageFetcher>(), resolve(), resolve()) }
@@ -83,20 +86,30 @@ object ServiceLocator {
         register { VideoViewModel(resolve(), resolve(), resolve<LifeCycleService>()) }
         register { ProfileViewModel(resolve(), resolve()) }
         register { AddTagViewModel(resolve(), resolve()) }
+
         register {
             MainViewModel(
+                { a, b -> resolve<SyncInBackgroundService>().sync(a, b) },
+                { a, b, c -> resolve<SyncInBackgroundService>().watchForBackground(a, b, c) },
+                { a -> resolve<TagService>().queryPostsAsync(a) },
                 resolve<NavigationService>(),
-                resolve(),
-                resolve(),
-                resolve(),
                 resolve())
         }
+//        register {
+//            PostViewModel(
+//                resolve<ProfileService>()::isAuthorized,
+//                resolve<PostService>()::getPostData,
+//                resolve<SyncInBackgroundService>()::sync,
+//                resolve<SyncInBackgroundService>()::watchForBackground,
+//                { resolve<NavigationService>().getArgument<Long>() },
+//                resolve<NavigationService>())
+//        }
+
         register { PostLikeViewModel(resolve(), resolve()) }
         register { CreateCommentViewModel(resolve(), resolve(), resolve()) }
         register { CommentsViewModel(resolve(), resolve(), resolve(), resolve()) }
         register { ThreadsViewModel(resolve(), resolve(), resolve()) }
         register { MessagesViewModel(resolve(), resolve()) }
-        register { PostViewModel(resolve(), resolve(), resolve(), resolve(), resolve()) }
 
         register { DiskCache(resolve()) }
         register { ImageService(resolve(), resolve(), resolve(), resolve()) }

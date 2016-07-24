@@ -1,8 +1,7 @@
 package y2k.joyreactor.services
 
-import y2k.joyreactor.common.BackgroundWorks
-import y2k.joyreactor.common.WorkStatus
 import y2k.joyreactor.common.async.CompletableFuture
+import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.async.then
 import y2k.joyreactor.common.async.thenAsync
 import y2k.joyreactor.model.Group
@@ -18,21 +17,32 @@ class TagService(
     private val entities: Entities,
     private val postsRequest: PostsForTagRequest,
     private val merger: PostMerger,
-    private val buffer: MemoryBuffer,
-    private val backgroundWorks: BackgroundWorks) {
+    private val buffer: MemoryBuffer) {
 
-    fun queryPosts(group: Group): CompletableFuture<ListState> {
+    fun queryPostsAsync(groupId: Long): CompletableFuture<ListState> {
         return entities
             .useAsync {
                 TagPosts
-                    .filter("groupId" to group.id)
+                    .filter("groupId" to groupId)
                     .map { Posts.getById(it.postId) }
             }
             .then {
                 ListState(it,
-                    buffer.dividers[group.id],
-                    buffer.hasNew[group.id] ?: false)
+                    buffer.dividers[groupId],
+                    buffer.hasNew[groupId] ?: false)
             }
+    }
+
+    fun preloadNewPosts(groupId: Long): CompletableFuture<*> {
+        return async_ {
+            val group = await(entities.useAsync { Tags.getById(groupId) })
+            val data = await(requestAsync(group))
+            val unsafe = await(merger.isUnsafeUpdate(group, data.posts))
+            buffer.hasNew[groupId] = unsafe
+
+            if (!unsafe)
+                await(merger.mergeFirstPage(group, buffer.requests[groupId]!!.posts))
+        }
     }
 
     fun requestAsync(group: Group, page: String? = null): CompletableFuture<PostsForTagRequest.Data> {
@@ -44,49 +54,32 @@ class TagService(
             }
     }
 
-    fun getSyncStatus(group: Group): WorkStatus = backgroundWorks.getStatus(group.toKey())
-
-    fun preloadNewPosts(group: Group): Any {
-        backgroundWorks.markWorkStarted(group.toKey())
-        requestAsync(group)
-            .thenAsync { merger.isUnsafeUpdate(group, it.posts) }
-            .then { buffer.hasNew[group.id] = it; it }
-            .thenAsync {
-                if (it) CompletableFuture.just(null)
-                else merger.mergeFirstPage(group, buffer.requests[group.id]!!.posts)
-            }
-            .thenAccept { backgroundWorks.markWorkFinished(group.toKey(), it.errorOrNull) }
-        return group.toKey()
+    fun applyNew(groupId: Long): CompletableFuture<*> {
+        return entities
+            .useAsync { Tags.getById(groupId) }
+            .thenAsync { merger.mergeFirstPage(it, buffer.requests[it.id]!!.posts) }
     }
 
-    fun applyNew(group: Group) {
-        merger
-            .mergeFirstPage(group, buffer.requests[group.id]!!.posts)
-            .thenAccept { backgroundWorks.updateWorkStatus(group.toKey()) }
+    fun loadNextPage(groupId: Long): CompletableFuture<*> {
+        return async_ {
+            val group = await(entities.useAsync { Tags.getById(groupId) })
+            val data = await(requestAsync(group, buffer.requests[group.id]!!.nextPage))
+            await(merger.mergeNextPage(group, data.posts))
+        }
     }
 
-    fun loadNextPage(group: Group) {
-        backgroundWorks.markWorkStarted(group.toKey())
-        requestAsync(group, buffer.requests[group.id]!!.nextPage)
-            .thenAsync { merger.mergeNextPage(group, it.posts) }
-            .thenAccept { backgroundWorks.markWorkFinished(group.toKey(), it.errorOrNull) }
-    }
+    fun reloadFirstPage(groupId: Long): CompletableFuture<*> {
+        return async_ {
+            val group = await(entities.useAsync { Tags.getById(groupId) })
+            val data = await(requestAsync(group))
 
-    fun reloadFirstPage(group: Group) {
-        backgroundWorks.markWorkStarted(group.toKey())
-        requestAsync(group)
-            .thenAsync(entities) {
+            await(entities.useAsync {
                 TagPosts
                     .filter("groupId" to group.id)
                     .forEach { TagPosts.remove(it) }
                 saveChanges()
-                it
-            }
-            .thenAsync { merger.mergeFirstPage(group, it.posts) }
-            .thenAccept { backgroundWorks.markWorkFinished(group.toKey(), it.errorOrNull) }
+            })
+            await(merger.mergeFirstPage(group, data.posts))
+        }
     }
-
-    private fun Group.toKey(): String = getKeyFromWatchSync() + serverId
-
-    fun getKeyFromWatchSync() = "sync-posts-"
 }

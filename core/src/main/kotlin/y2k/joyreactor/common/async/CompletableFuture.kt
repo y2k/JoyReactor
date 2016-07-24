@@ -71,20 +71,20 @@ private val CPU_COUNT = Runtime.getRuntime().availableProcessors()
 private val CORE_POOL_SIZE = CPU_COUNT + 1
 private val MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1
 
-private val THREAD_POOL_EXECUTOR = ThreadPoolExecutor(
+private val BACKGROUND_EXECUTOR = ThreadPoolExecutor(
     CORE_POOL_SIZE,
     MAXIMUM_POOL_SIZE,
     1, TimeUnit.SECONDS,
     LinkedBlockingQueue<Runnable>(128))
 
-var UI_EXECUTOR: Executor = Executor { TODO() }
+var MAIN_EXECUTOR: Executor = BACKGROUND_EXECUTOR
 
 fun delay(timeSpanInMs: Long): CompletableFuture<*> {
     return runAsync { Thread.sleep(timeSpanInMs) }
 }
 
 fun <T> runAsync(f: () -> T): CompletableFuture<T> {
-    return runAsync(THREAD_POOL_EXECUTOR, f)
+    return runAsync(BACKGROUND_EXECUTOR, f)
 }
 
 fun <T> runAsync(executor: Executor, f: () -> T): CompletableFuture<T> {
@@ -92,9 +92,9 @@ fun <T> runAsync(executor: Executor, f: () -> T): CompletableFuture<T> {
     executor.execute {
         try {
             val result = f()
-            UI_EXECUTOR.execute { task.complete(result) }
+            MAIN_EXECUTOR.execute { task.complete(result) }
         } catch (e: Exception) {
-            UI_EXECUTOR.execute { task.completeExceptionally(e) }
+            MAIN_EXECUTOR.execute { task.completeExceptionally(e) }
         }
     }
     return task

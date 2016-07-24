@@ -1,10 +1,10 @@
 package y2k.joyreactor.services
 
-import y2k.joyreactor.common.*
-import y2k.joyreactor.common.async.CompletableFuture
-import y2k.joyreactor.common.async.async_
-import y2k.joyreactor.common.async.then
-import y2k.joyreactor.common.async.thenAsync
+import y2k.joyreactor.common.PostData
+import y2k.joyreactor.common.async.*
+import y2k.joyreactor.common.first
+import y2k.joyreactor.common.replaceAll
+import y2k.joyreactor.common.updateAll
 import y2k.joyreactor.model.*
 import y2k.joyreactor.services.repository.Entities
 import y2k.joyreactor.services.requests.ChangePostFavoriteRequest
@@ -16,13 +16,12 @@ import java.io.File
  * Created by y2k on 11/24/15.
  */
 class PostService(
+    private val attachmentService: AttachmentService,
     private val requestImage: (String, Boolean) -> CompletableFuture<File?>,
     private val requestPost: (Long) -> CompletableFuture<PostRequest.Response>,
     private val entities: Entities,
     private val likePostRequest: LikePostRequest,
-    private val broadcastService: BroadcastService,
-    private val changePostFavoriteRequest: ChangePostFavoriteRequest,
-    private val backgroundWorks: BackgroundWorks) {
+    private val changePostFavoriteRequest: ChangePostFavoriteRequest) {
 
     fun toggleFavorite(postId: Long): CompletableFuture<*> {
         return entities
@@ -33,21 +32,22 @@ class PostService(
             }
     }
 
-    fun syncPostInBackground(postId: Long): String {
-        async_ {
-            backgroundWorks.markWorkStarted(postId.toKey())
-            try {
-                await(syncPost(postId))
-                backgroundWorks.updateWorkStatus(postId.toKey())
 
-                await(syncPostImage(postId))
-                backgroundWorks.markWorkFinished(postId.toKey())
-            } catch (e: Exception) {
-                backgroundWorks.markWorkFinished(postId.toKey(), e)
-            }
+    fun getPostData(postId: Long): CompletableFuture<PostData> {
+        return async {
+            PostData(
+                post = await(entities.useAsync { Posts.getById(postId) }),
+                images = await(getImagesAsync(postId)),
+                topComments = await(getTopComments(postId, 10)),
+                poster = await(attachmentService.mainImageFromDisk(postId)))
         }
+    }
 
-        return postId.toKey()
+    fun syncPostAsync(postId: Long): CompletableFuture<*> {
+        return async_ {
+            await(syncPost(postId))
+            await(syncPostImage(postId))
+        }
     }
 
     private fun syncPost(postId: Long): CompletableFuture<*> {
@@ -65,7 +65,7 @@ class PostService(
             .thenAsync { requestImage(it.image!!.original, false) }
     }
 
-    fun getTopComments(postId: Long, count: Int): CompletableFuture<List<Comment>> {
+    private fun getTopComments(postId: Long, count: Int): CompletableFuture<List<Comment>> {
         return RootComments.create(entities, postId)
             .then { it.filter { it.level == 0 }.sortedByDescending { it.rating }.take(count) }
     }
@@ -79,12 +79,12 @@ class PostService(
 
     fun getCommentsForId(parentCommentId: Long): CompletableFuture<CommentGroup> {
         return entities
-            .useOnce { comments.getById(parentCommentId).postId }
+            .useAsync { comments.getById(parentCommentId).postId }
             .thenAsync { ChildComments.create(entities, parentCommentId, it) }
     }
 
-    fun getImages(postId: Long): CompletableFuture<List<Image>> {
-        return entities.useOnce {
+    private fun getImagesAsync(postId: Long): CompletableFuture<List<Image>> {
+        return entities.useAsync {
             val postAttachments = attachments
                 .filter("postId" eq postId)
                 .mapNotNull { it.image }
@@ -95,7 +95,17 @@ class PostService(
         }
     }
 
-    fun getPost(postId: Long): CompletableFuture<Post> = entities.useAsync { Posts.getById(postId) }
+    fun getImages(postId: Long): CompletableFuture<List<Image>> {
+        return entities.useAsync {
+            val postAttachments = attachments
+                .filter("postId" eq postId)
+                .mapNotNull { it.image }
+            val commentAttachments = comments
+                .filter("postId" eq postId)
+                .mapNotNull { it.attachment }
+            postAttachments.union(commentAttachments).toList()
+        }
+    }
 
     fun updatePostLike(postId: Long, like: Boolean): CompletableFuture<*> {
         return likePostRequest(postId, like)
@@ -104,8 +114,4 @@ class PostService(
                 Posts.add(post.copy(rating = it.first, myLike = it.second))
             }
     }
-
-    fun getSyncStatus(postId: Long): WorkStatus = backgroundWorks.getStatus(postId.toKey())
-
-    private fun Long.toKey() = "sync-post-" + this
 }

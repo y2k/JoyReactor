@@ -16,6 +16,8 @@ interface NavigationService : Function2<KClass<*>, Any?, Unit> {
 
     fun <T : Any> open(vmType: KClass<T>, argument: String)
 
+    fun <T> getArgument(): T
+
     companion object {
 
         @Deprecated("")

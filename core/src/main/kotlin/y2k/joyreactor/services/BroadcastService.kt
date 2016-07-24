@@ -1,6 +1,6 @@
 package y2k.joyreactor.services
 
-import y2k.joyreactor.common.async.UI_EXECUTOR
+import y2k.joyreactor.common.async.MAIN_EXECUTOR
 import y2k.joyreactor.model.Group
 import java.util.*
 
@@ -28,7 +28,7 @@ object BroadcastService : Function1<Any, Unit> {
     }
 
     fun broadcast(token: Any, message: Any) {
-        UI_EXECUTOR.execute {
+        MAIN_EXECUTOR.execute {
             if (token is String) {
                 observers
                     .toList()

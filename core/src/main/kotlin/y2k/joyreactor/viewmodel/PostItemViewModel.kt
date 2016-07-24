@@ -1,7 +1,7 @@
 package y2k.joyreactor.viewmodel
 
 import y2k.joyreactor.model.Post
-import y2k.joyreactor.services.PostService
+import y2k.joyreactor.services.Works
 import kotlin.reflect.KClass
 
 /**
@@ -9,7 +9,7 @@ import kotlin.reflect.KClass
  */
 class PostItemViewModel(
     private val navigation: (KClass<*>, Any?) -> Unit,
-    private val postService: PostService,
+    private val syncInBackground: (Works, Any) -> Unit,
     val post: Post) {
 
     fun postClicked() {
@@ -25,7 +25,5 @@ class PostItemViewModel(
         navigation(PostLikeViewModel::class, "" + post.id)
     }
 
-    fun toggleFavorite() {
-        postService.toggleFavorite(post.id)
-    }
+    fun toggleFavorite() = syncInBackground(Works.toggleFavorite, post.id)
 }
