@@ -49,4 +49,6 @@ class UserService(
         synchronize().thenAccept { backgroundWorks.markWorkFinished(key, it.errorOrNull) }
         return key
     }
+
+    fun syncTags(): CompletableFuture<*> = synchronize()
 }

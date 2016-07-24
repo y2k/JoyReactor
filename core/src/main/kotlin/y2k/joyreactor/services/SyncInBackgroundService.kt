@@ -2,11 +2,13 @@ package y2k.joyreactor.services
 
 import y2k.joyreactor.common.BackgroundWorks
 import y2k.joyreactor.common.WorkStatus
+import y2k.joyreactor.common.async.CompletableFuture
 
 /**
  * Created by y2k on 24/07/16.
  */
 class SyncInBackgroundService(
+    val synchronizeGroups: () -> CompletableFuture<*>,
     val attachmentService: AttachmentService,
     val postService: PostService,
     val tagService: TagService,
@@ -25,6 +27,8 @@ class SyncInBackgroundService(
             key.startsWith("" + Works.syncPost) -> postService.syncPostAsync(arg as Long)
             key.startsWith("" + Works.saveAttachment) -> attachmentService.saveImageToGalleryAsync(arg as Long)
             key.startsWith("" + Works.toggleFavorite) -> postService.toggleFavorite(arg as Long)
+            key.startsWith("" + Works.syncGroups) -> synchronizeGroups()
+
             else -> throw IllegalArgumentException("key: $key")
         }
         task.thenAccept { backgroundWorks.markWorkFinished(toKey(arg, key), it.errorOrNull) }
@@ -51,4 +55,6 @@ enum class Works {
     syncPostsApplyNew,
     syncPostsLoadNextPage,
     syncPostsReloadFirstPage,
+
+    syncGroups,
 }

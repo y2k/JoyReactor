@@ -37,7 +37,15 @@ object ServiceLocator {
 
         register { PostParser(resolve<LikeParser>()) }
 
-        register { SyncInBackgroundService(resolve(), resolve(), resolve(), resolve(), resolve()) }
+        register {
+            SyncInBackgroundService(
+                resolve<MyTagFetcher>(),
+                resolve(),
+                resolve(),
+                resolve(),
+                resolve(),
+                resolve())
+        }
 
         register { TokenRequest(resolve()) }
         register { ChangePostFavoriteRequest(resolve(), resolve()) }
@@ -77,9 +85,11 @@ object ServiceLocator {
         register { LoginViewModel(resolve(), resolve()) }
         register {
             MenuViewModel(
-                resolve(),
-                resolve<BroadcastService>(),
-                resolve<LifeCycleService>())
+                { a, b -> resolve<SyncInBackgroundService>().sync(a, b) },
+                { a, b, c -> resolve<SyncInBackgroundService>().watchForBackground(a, b, c) },
+                { resolve<UserService>().getMyTags() },
+                { resolve<UserService>().getTagForFavorite() },
+                resolve<BroadcastService>())
         }
         register { GalleryViewModel(resolve(), resolve()) }
         register { ImageViewModel(resolve(), resolve()) }
@@ -95,15 +105,15 @@ object ServiceLocator {
                 resolve<NavigationService>(),
                 resolve())
         }
-//        register {
-//            PostViewModel(
-//                resolve<ProfileService>()::isAuthorized,
-//                resolve<PostService>()::getPostData,
-//                resolve<SyncInBackgroundService>()::sync,
-//                resolve<SyncInBackgroundService>()::watchForBackground,
-//                { resolve<NavigationService>().getArgument<Long>() },
-//                resolve<NavigationService>())
-//        }
+        register {
+            PostViewModel(
+                { resolve<ProfileService>().isAuthorized() },
+                { a -> resolve<PostService>().getPostData(a) },
+                { a, b -> resolve<SyncInBackgroundService>().sync(a, b) },
+                { a, b, c -> resolve<SyncInBackgroundService>().watchForBackground(a, b, c) },
+                { resolve<NavigationService>().getArgument<Long>() },
+                resolve<NavigationService>())
+        }
 
         register { PostLikeViewModel(resolve(), resolve()) }
         register { CreateCommentViewModel(resolve(), resolve(), resolve()) }
