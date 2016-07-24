@@ -2,10 +2,15 @@ package y2k.joyreactor.common
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import y2k.joyreactor.App
+import y2k.joyreactor.common.async.CompletableFuture
+import y2k.joyreactor.common.async.runAsync
+import java.io.File
 import kotlin.reflect.KClass
 
 /**

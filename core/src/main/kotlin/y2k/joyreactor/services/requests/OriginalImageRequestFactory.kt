@@ -35,8 +35,7 @@ class OriginalImageRequestFactory(
     private fun requestFromCache(imageUrl: String): CompletableFuture<File?> {
         return runAsync {
             val file = getTargetFile(imageUrl)
-            if (!file.exists()) throw Exception()
-            file
+            if (file.exists()) file else null
         }
     }
 

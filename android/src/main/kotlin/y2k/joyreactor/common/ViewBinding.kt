@@ -183,7 +183,7 @@ class BindingBuilder(root: ViewResolver, val context: Context = App.instance) {
 
     fun progressImageView(id: Int, property: ObservableProperty<File?>) {
         val view = find<ProgressImageView>(id)
-        property.subscribe { view.setImage(it) }
+        property.subscribe { view.image = it }
     }
 
     fun imageView(id: Int, property: ObservableProperty<File?>) {

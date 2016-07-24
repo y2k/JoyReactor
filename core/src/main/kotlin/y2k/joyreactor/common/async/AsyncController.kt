@@ -16,6 +16,12 @@ fun async_(coroutine c: ContinuationController<Unit>.() -> Continuation<Unit>): 
     return controller.task
 }
 
+fun async__(coroutine c: ContinuationController<Unit>.() -> Continuation<Unit>) {
+    val controller = ContinuationController<Unit>()
+    controller.c().resume(Unit)
+    controller.task.thenAccept { if (!it.isSuccess) throw it.error }
+}
+
 @AllowSuspendExtensions
 @Suppress("unused", "UNUSED_PARAMETER")
 class ContinuationController<T> {
