@@ -33,25 +33,25 @@ class TagService(
             }
     }
 
-    fun preloadNewPosts(groupId: Long): CompletableFuture<*> {
+    fun preloadNewPosts(group: Group): CompletableFuture<*> {
         return async_ {
-            val group = await(entities.useAsync { Tags.getById(groupId) })
+            await(entities.useAsync {
+                if (Tags.getByIdOrNull(group.id) == null)
+                    Tags.add(group)
+            })
             val data = await(requestAsync(group))
             val unsafe = await(merger.isUnsafeUpdate(group, data.posts))
-            buffer.hasNew[groupId] = unsafe
+            buffer.hasNew[group.id] = unsafe
 
             if (!unsafe)
-                await(merger.mergeFirstPage(group, buffer.requests[groupId]!!.posts))
+                await(merger.mergeFirstPage(group, buffer.requests[group.id]!!.posts))
         }
     }
 
     fun requestAsync(group: Group, page: String? = null): CompletableFuture<PostsForTagRequest.Data> {
         return postsRequest
             .requestAsync(group, page)
-            .then {
-                buffer.requests[group.id] = it
-                it
-            }
+            .then { buffer.requests[group.id] = it; it }
     }
 
     fun applyNew(groupId: Long): CompletableFuture<*> {

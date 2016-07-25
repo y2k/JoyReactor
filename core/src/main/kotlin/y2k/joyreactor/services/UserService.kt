@@ -1,6 +1,5 @@
 package y2k.joyreactor.services
 
-import y2k.joyreactor.common.BackgroundWorks
 import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.then
 import y2k.joyreactor.model.Group
@@ -14,9 +13,7 @@ import y2k.joyreactor.services.requests.UserNameRequest
 class UserService(
     private val addTagRequest: AddTagRequest,
     private val entities: Entities,
-    private val userNameRequest: UserNameRequest,
-    private val synchronize: () -> CompletableFuture<*>,
-    private val backgroundWorks: BackgroundWorks) {
+    private val userNameRequest: UserNameRequest) {
 
     fun getMyTags(): CompletableFuture<List<Group>> {
         return entities
@@ -42,13 +39,4 @@ class UserService(
             exists ?: Tags.add(group).apply { saveChanges() }
         }
     }
-
-    fun syncTagsInBackground(): String {
-        val key = "sync-my-tags"
-        backgroundWorks.markWorkStarted(key)
-        synchronize().thenAccept { backgroundWorks.markWorkFinished(key, it.errorOrNull) }
-        return key
-    }
-
-    fun syncTags(): CompletableFuture<*> = synchronize()
 }

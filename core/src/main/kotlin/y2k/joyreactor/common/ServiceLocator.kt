@@ -76,7 +76,7 @@ object ServiceLocator {
                 resolve(), resolve(), resolve())
         }
         register { TagService(resolve(), resolve(), resolve(), resolve()) }
-        register { UserService(resolve(), resolve(), resolve(), resolve<MyTagFetcher>(), resolve()) }
+        register { UserService(resolve(), resolve(), resolve()) }
         register { ProfileService(resolve(), resolve<ProfileRequest>(), resolve(), resolve<UserNameRequest>()) }
         register { UserMessagesService(resolve(), resolve<PrivateMessageFetcher>(), resolve(), resolve()) }
         register { CommentService(resolve<CreateCommentRequest>(), resolve()) }
@@ -111,7 +111,7 @@ object ServiceLocator {
                 { a -> resolve<PostService>().getPostData(a) },
                 { a, b -> resolve<SyncInBackgroundService>().sync(a, b) },
                 { a, b, c -> resolve<SyncInBackgroundService>().watchForBackground(a, b, c) },
-                { resolve<NavigationService>().getArgument<Long>() },
+                { resolve<NavigationService>().argument.toLong() },
                 resolve<NavigationService>())
         }
 

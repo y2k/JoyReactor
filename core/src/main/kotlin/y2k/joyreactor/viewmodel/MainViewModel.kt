@@ -33,8 +33,8 @@ class MainViewModel(
 
     init {
         scope.registerProperty(BroadcastService.TagSelected::class, group)
-        quality.subscribe { syncInBackground(Works.syncPostsPreloadNewPosts, getGroupId()) }
-        group.subscribe { syncInBackground(Works.syncPostsPreloadNewPosts, getGroupId()) }
+        quality.subscribe { syncInBackground(Works.syncPostsPreloadNewPosts, getGroup()) }
+        group.subscribe { syncInBackground(Works.syncPostsPreloadNewPosts, getGroup()) }
 
         watchForBackground(Works.syncPosts, getGroupId()) { status ->
             async_ {
@@ -59,5 +59,7 @@ class MainViewModel(
     fun openAddTag() = navigateTo(AddTagViewModel::class, null)
     fun openFeedback() = navigateTo(CreateFeedback::class, null)
 
-    private fun getGroupId() = Group(group.value, quality.value).id
+    private fun getGroupId() = getGroup().id
+
+    private fun getGroup() = Group(group.value, quality.value)
 }

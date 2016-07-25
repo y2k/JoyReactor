@@ -70,7 +70,9 @@ class AndroidNavigation(app: Application) : NavigationService {
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T> getArgument(): T = sArgument as T
+    override fun <T> getArgument(): T {
+        return argument as T
+    }
 
     override val argument: String
         get() = sArgument
