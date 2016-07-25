@@ -42,7 +42,7 @@ class AttachmentService(
             .useAsync { Posts.getById(serverPostId) }
             .thenAsync {
                 when {
-                    it.image == null -> CompletableFuture.just(null as File?)
+                    it.image == null -> CompletableFuture.completedFuture(null as File?)
                     it.image.isAnimated -> {
                         requestImage(it.image.original, true)
                             .thenAsync { platform.createTmpThumbnail(it!!) }

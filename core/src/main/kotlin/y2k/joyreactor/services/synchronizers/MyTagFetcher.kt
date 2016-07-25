@@ -55,7 +55,7 @@ class MyTagFetcher(
         }
 
         fun request(): CompletableFuture<List<Group>> {
-            return CompletableFuture.just(tags)
+            return CompletableFuture.completedFuture(tags)
         }
     }
 }

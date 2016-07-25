@@ -32,7 +32,7 @@ class LoginRequestTest {
     @Test
     fun test() {
         val request = LoginRequestFactory(mockHttpClient)
-        request.request("user500", "password").await()
+        request.request("user500", "password").get()
 
         verify(mockRequestBuilder).addField("signin[username]", "user500")
         verify(mockRequestBuilder).addField("signin[password]", "password")

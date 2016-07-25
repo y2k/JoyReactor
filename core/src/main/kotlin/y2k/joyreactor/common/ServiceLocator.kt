@@ -5,6 +5,7 @@ import y2k.joyreactor.common.http.DefaultHttpClient
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.Platform
+import y2k.joyreactor.common.platform.getArgument
 import y2k.joyreactor.services.*
 import y2k.joyreactor.services.images.DiskCache
 import y2k.joyreactor.services.repository.Entities
@@ -29,7 +30,6 @@ object ServiceLocator {
 
     init {
         registerSingleton<HttpClient> { DefaultHttpClient(CookieStorage(resolve())) }
-        register { NavigationService.instance }
 
         register { resolve<Platform>().makeReportService() }
         register { BroadcastService }
@@ -116,7 +116,7 @@ object ServiceLocator {
                 postService::getPostData,
                 syncInBackgroundService::sync,
                 syncInBackgroundService::watchForBackground,
-                { resolve<NavigationService>().argument.toLong() },
+                { resolve<NavigationService>().getArgument<Long>() },
                 resolve<NavigationService>())
         }
 

@@ -3,7 +3,6 @@ package y2k.joyreactor.services.requests
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import y2k.joyreactor.common.getResult
 import y2k.joyreactor.model.Profile
 import y2k.joyreactor.requests.MockHttpClient
 
@@ -14,8 +13,8 @@ class ProfileRequestTests {
 
     @Test
     fun golodTest() {
-        val request = ProfileRequest(MockHttpClient())
-        val actual = request("golod").getResult()
+        val request = ProfileRequest(MockHttpClient(), { TODO() })
+        val actual = request("golod").get()
 
         assertEquals(4056.3f, actual.rating)
         assertArrayEquals(
@@ -44,8 +43,8 @@ class ProfileRequestTests {
 
     @Test
     fun ikaryTest() {
-        val request = ProfileRequest(MockHttpClient())
-        val actual = request("ikari").getResult()
+        val request = ProfileRequest(MockHttpClient(), { TODO() })
+        val actual = request("ikari").get()
 
         assertEquals(3368.7f, actual.rating)
     }

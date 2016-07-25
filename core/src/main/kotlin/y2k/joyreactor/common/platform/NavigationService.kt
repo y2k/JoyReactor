@@ -1,6 +1,5 @@
 package y2k.joyreactor.common.platform
 
-import y2k.joyreactor.common.ServiceLocator
 import kotlin.reflect.KClass
 
 /**
@@ -15,15 +14,6 @@ interface NavigationService : Function2<KClass<*>, Any?, Unit> {
     val argument: String
 
     fun <T : Any> open(vmType: KClass<T>, argument: String)
-
-    fun <T> getArgument(): T
-
-    companion object {
-
-        @Deprecated("")
-        val instance: NavigationService
-            get() = ServiceLocator.resolve<y2k.joyreactor.common.platform.Platform>().navigator
-    }
 }
 
 inline fun <reified T : Any> NavigationService.openVM(argument: Any? = null) {
@@ -33,6 +23,7 @@ inline fun <reified T : Any> NavigationService.openVM(argument: Any? = null) {
 inline fun <reified T> NavigationService.getArgument(): T {
     return when (T::class) {
         Long::class -> argument.toLong() as T
-        else -> TODO()
+        String::class -> argument as T
+        else -> throw IllegalArgumentException("type = ${T::class}")
     }
 }

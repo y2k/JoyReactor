@@ -1,7 +1,7 @@
 package y2k.joyreactor.requests
 
 import org.jsoup.nodes.Document
-import rx.Completable
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.firstOrThrow
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.http.RequestBuilder
@@ -21,7 +21,7 @@ class MockHttpClient : HttpClient {
             .let { MockRequest.loadDocument("$it.html") }
     }
 
-    override fun downloadToFile(url: String, file: File): Completable {
+    override fun downloadToFile(url: String, file: File): CompletableFuture<*> {
         throw UnsupportedOperationException("not implemented")
     }
 

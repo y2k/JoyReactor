@@ -67,7 +67,6 @@ class PostsForTagRequestTest {
     private fun execute(httpClient: HttpClient, group: Group, page: String? = null): List<Post> {
         return PostsForTagRequest(httpClient, UrlBuilder(), PostParser(LikeParser()))
             .requestAsync(group, page)
-            .toBlocking().last()
-            .posts
+            .get().posts
     }
 }

@@ -16,9 +16,12 @@ class PostRequest(
     private val parser: (Element) -> Pair<Post, List<Attachment>>) :
     Function1<Long, CompletableFuture<PostRequest.Response>> {
 
-    override operator fun invoke(postId: Long) = runAsync { request(postId.toString()) }
+    override operator fun invoke(postId: Long) = runAsync { doRequest(postId.toString()) }
 
-    fun request(postId: String): Response {
+    @Deprecated("")
+    fun request(postId: String): Response = doRequest(postId)
+
+    private fun doRequest(postId: String): Response {
         val commentsRequest = PostCommentsRequest()
         val similarPosts = ArrayList<SimilarPost>()
 

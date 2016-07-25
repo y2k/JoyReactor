@@ -9,8 +9,7 @@ import org.mockito.Mockito.verify
 import org.powermock.api.mockito.PowerMockito.mock
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
-import rx.Single
-import y2k.joyreactor.common.getResult
+import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.http.HttpRequestBuilder
 import y2k.joyreactor.model.MyLike
@@ -32,13 +31,13 @@ class LikePostRequestTest {
     }
 
     val mockTokenRequest = mock(TokenRequest::class.java).apply {
-        `when`(invoke()).then { Single.just("f374b51bc0fe00c0f6e6159aa28fee3f") }
+        `when`(invoke()).then { CompletableFuture.completedFuture("f374b51bc0fe00c0f6e6159aa28fee3f") }
     }
 
     @Test
     fun test() {
         val request = LikePostRequest(mockHttpClient, mockTokenRequest, LikeParser())
-        val actual = request(99, true).getResult()
+        val actual = request(99, true).get()
         assertEquals(13f, actual.first)
         assertEquals(MyLike.Like, actual.second)
         verify(mockRequestBuilder).get(url)

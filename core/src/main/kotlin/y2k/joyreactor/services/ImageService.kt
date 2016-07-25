@@ -56,7 +56,7 @@ class ImageService(
         return diskCache
             .get(url)
             .thenAsync {
-                if (it == null) CompletableFuture.just(null)
+                if (it == null) CompletableFuture.completedFuture(null)
                 else decoder.decodeImageAsync<T>(it)
             }
     }

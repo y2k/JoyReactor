@@ -69,11 +69,6 @@ class AndroidNavigation(app: Application) : NavigationService {
         currentActivity?.startActivity(activityType)
     }
 
-    @Suppress("UNCHECKED_CAST")
-    override fun <T> getArgument(): T {
-        return argument as T
-    }
-
     override val argument: String
         get() = sArgument
 

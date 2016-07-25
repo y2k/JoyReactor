@@ -1,9 +1,6 @@
 package y2k.joyreactor.common.async
 
-import java.util.concurrent.Executor
-import java.util.concurrent.LinkedBlockingQueue
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.*
 
 /**
  * Created by y2k on 16/07/16.
@@ -36,6 +33,16 @@ class CompletableFuture<T> {
         }
     }
 
+    fun get(): T {
+        val lock = CountDownLatch(1)
+        var r: Result<T> = FailResult(Exception())
+        thenAccept { r = it; lock.countDown() }
+        lock.await()
+
+        if (!r.isSuccess) throw r.error
+        return r.result
+    }
+
     class SuccessResult<T>(override val result: T) : Result<T>() {
         override val error: Throwable
             get() = throw UnsupportedOperationException()
@@ -61,8 +68,12 @@ class CompletableFuture<T> {
 
     companion object {
 
-        fun <T> just(value: T): CompletableFuture<T> {
+        fun <T> completedFuture(value: T): CompletableFuture<T> {
             return CompletableFuture<T>().apply { result = SuccessResult(value) }
+        }
+
+        fun <T> failedFuture(e: Throwable): CompletableFuture<T> {
+            return CompletableFuture<T>().apply { result = FailResult(e) }
         }
     }
 }

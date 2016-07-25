@@ -35,6 +35,7 @@ class AndroidPlatform(private val app: Application) : Platform {
 
     init {
         ServiceLocator.register<ImageService.MetaStorage> { ImageViewMetaStorage() }
+        ServiceLocator.registerSingleton<NavigationService> { AndroidNavigation(app) }
     }
 
     override fun createTmpThumbnail(videoFile: File): CompletableFuture<File> {
