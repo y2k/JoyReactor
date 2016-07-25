@@ -98,19 +98,24 @@ object ServiceLocator {
         register { AddTagViewModel(resolve(), resolve()) }
 
         register {
+            val syncInBackgroundService = resolve<SyncInBackgroundService>()
+            val tagService = resolve<TagService>()
             MainViewModel(
-                { a, b -> resolve<SyncInBackgroundService>().sync(a, b) },
-                { a, b, c -> resolve<SyncInBackgroundService>().watchForBackground(a, b, c) },
-                { a -> resolve<TagService>().queryPostsAsync(a) },
+                syncInBackgroundService::sync,
+                syncInBackgroundService::watchForBackground,
+                tagService::queryPostsAsync,
                 resolve<NavigationService>(),
                 resolve())
         }
         register {
+            val syncInBackgroundService = resolve<SyncInBackgroundService>()
+            val profileService = resolve<ProfileService>()
+            val postService = resolve<PostService>()
             PostViewModel(
-                { resolve<ProfileService>().isAuthorized() },
-                { a -> resolve<PostService>().getPostData(a) },
-                { a, b -> resolve<SyncInBackgroundService>().sync(a, b) },
-                { a, b, c -> resolve<SyncInBackgroundService>().watchForBackground(a, b, c) },
+                profileService::isAuthorized,
+                postService::getPostData,
+                syncInBackgroundService::sync,
+                syncInBackgroundService::watchForBackground,
                 { resolve<NavigationService>().argument.toLong() },
                 resolve<NavigationService>())
         }
