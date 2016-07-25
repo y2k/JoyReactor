@@ -13,11 +13,10 @@ import java.util.*
  */
 class TagsForUserRequest(
     private val httpClient: HttpClient,
-    val platform: Platform) {
-
-    private val imageRequest = TagImageRequest(httpClient, platform)
+    private val platform: Platform) {
 
     fun request(username: String): CompletableFuture<List<Group>> {
+        val imageRequest = TagImageRequest(httpClient, platform)
         return runAsync {
             val document = httpClient.getDocument("http://joyreactor.cc/user/" + username)
             val tags = ArrayList<Group>()
