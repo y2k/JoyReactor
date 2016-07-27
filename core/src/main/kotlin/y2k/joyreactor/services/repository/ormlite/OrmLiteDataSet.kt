@@ -38,12 +38,14 @@ class OrmLiteDataSet<T>(private val dao: Dao<T, Long>) : DataSet<T> {
         dao.autoClose { forEach(f) }
     }
 
-    override fun getById(id: Long): T {
-        return dao.queryForId(id)
+    override fun getById(id: Any): T {
+//        return dao.queryForId(id)
+        return dao.queryBuilder().where().eq("id", id).queryForFirst()
     }
 
-    override fun getByIdOrNull(id: Long): T? {
-        return dao.queryForId(id)
+    override fun getByIdOrNull(id: Any): T? {
+//        return dao.queryForId(id)
+        return dao.queryBuilder().where().eq("id", id).queryForFirst()
     }
 
     override fun filter(vararg conditions: Pair<String, Any?>): List<T> {

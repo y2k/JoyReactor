@@ -17,9 +17,9 @@ import kotlin.reflect.KClass
  * Created by y2k on 5/9/16.
  */
 class MainViewModel(
-    val syncInBackground: (Works, Long) -> Unit,
-    val watchForBackground: (Works, ((Long) -> WorkStatus) -> Unit) -> Unit,
-    val queryPosts: (Long) -> CompletableFuture<ListState>,
+    val syncInBackground: (Works, String) -> Unit,
+    val watchForBackground: (Works, ((String) -> WorkStatus) -> Unit) -> Unit,
+    val queryPosts: (String) -> CompletableFuture<ListState>,
     val navigateTo: (KClass<*>, Any?) -> Unit,
     scope: LifeCycleService) {
 
@@ -29,7 +29,7 @@ class MainViewModel(
     val isError = property(false)
 
     val quality = property(Group.Quality.Good)
-    private val group = property(Group.makeFeatured())
+    private val group = property(Group.makeFeatured().id)
 
     init {
         scope.registerProperty(BroadcastService.TagSelected::class, group)
@@ -59,6 +59,6 @@ class MainViewModel(
     fun openAddTag() = navigateTo(AddTagViewModel::class, null)
     fun openFeedback() = navigateTo(CreateFeedback::class, null)
 
-    private val selected: Long
-        get() = Group(group.value, quality.value).id
+    private val selected: String
+        get() = Group(Group(id = group.value), quality.value).id
 }

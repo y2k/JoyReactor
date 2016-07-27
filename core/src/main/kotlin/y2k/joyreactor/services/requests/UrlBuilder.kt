@@ -9,8 +9,14 @@ import java.net.URLEncoder
  */
 class UrlBuilder {
 
+    @Deprecated("")
     fun build(group: Group, pageId: String?): String {
+        return build(group.id, pageId)
+    }
+
+    fun build(groupId: String, pageId: String?): String {
         val url = StringBuilder("/")
+        val group = Group(groupId)
         when (group.type) {
             Group.Type.User -> url.append("user/" + URLEncoder.encode(group.name))
             Group.Type.Tag -> url.append("tag/" + URLEncoder.encode(group.name))

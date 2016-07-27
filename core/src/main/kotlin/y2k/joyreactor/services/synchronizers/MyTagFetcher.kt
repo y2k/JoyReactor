@@ -25,8 +25,8 @@ class MyTagFetcher(
                 val result = Tags.toList()
                     .union(newTags)
                     .union(listOf(Group.makeFeatured()))
-                    .distinctBy { it.serverId }
-                    .map { s -> s.copy(isVisible = newTags.any { it.serverId == s.serverId }) }
+                    .distinctBy { it.id }
+                    .map { s -> s.copy(isVisible = newTags.any { it.id == s.id }) }
 
                 Tags.clear()
                 result.forEach {

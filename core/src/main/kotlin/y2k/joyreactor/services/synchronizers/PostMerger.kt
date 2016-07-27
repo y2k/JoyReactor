@@ -5,7 +5,6 @@ import y2k.joyreactor.common.async.then
 import y2k.joyreactor.common.async.thenAsync
 import y2k.joyreactor.common.toArrayList
 import y2k.joyreactor.common.unionOrdered
-import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.GroupPost
 import y2k.joyreactor.model.Post
 import y2k.joyreactor.services.MemoryBuffer
@@ -20,22 +19,22 @@ class PostMerger(
     private val buffer: MemoryBuffer,
     private val dataContext: Entities) {
 
-    fun mergeFirstPage(group: Group, newPosts: List<Post>): CompletableFuture<*> {
+    fun mergeFirstPage(groupId: String, newPosts: List<Post>): CompletableFuture<*> {
         return updatePostsAsync(newPosts)
             .thenAsync {
                 dataContext.use {
-                    buffer.dividers[group.id] = newPosts.size
+                    buffer.dividers[groupId] = newPosts.size
 
                     val result = ArrayList<GroupPost>()
                     for (s in newPosts)
-                        result.add(GroupPost(group.id, s.id))
+                        result.add(GroupPost(groupId, s.id))
                     TagPosts
-                        .filter("groupId" to group.id)
+                        .filter("groupId" to groupId)
                         .filterNot { s -> newPosts.any { it.id == s.postId } }
                         .forEach { result.add(it) }
 
                     TagPosts
-                        .filter("groupId" to group.id)
+                        .filter("groupId" to groupId)
                         .forEach { TagPosts.remove(it) }
 
                     // TODO: Понять почему здесь падает
@@ -45,10 +44,10 @@ class PostMerger(
                     saveChanges()
                 }
             }
-            .then { buffer.hasNew[group.id] = false }
+            .then { buffer.hasNew[groupId] = false }
     }
 
-    fun isUnsafeUpdate(group: Group, newPosts: List<Post>): CompletableFuture<Boolean> {
+    fun isUnsafeUpdate(group: String, newPosts: List<Post>): CompletableFuture<Boolean> {
         return dataContext.use {
             val oldPosts = getPostsForTag(group)
             if (oldPosts.size == 0) return@use false
@@ -62,25 +61,25 @@ class PostMerger(
         }
     }
 
-    private fun DataContext.getPostsForTag(group: Group): List<Post> {
+    private fun DataContext.getPostsForTag(groupId: String): List<Post> {
         return TagPosts
-            .filter("groupId" to group.id)
+            .filter("groupId" to groupId)
             .map { Posts.getById(it.postId) }
     }
 
-    fun mergeNextPage(group: Group, newPosts: List<Post>): CompletableFuture<*> {
+    fun mergeNextPage(groupId: String, newPosts: List<Post>): CompletableFuture<*> {
         return updatePostsAsync(newPosts)
             .thenAsync {
                 dataContext.use {
-                    val links = TagPosts.filter("groupId" to group.id)
-                    val actualPosts = links.subList(0, buffer.dividers[group.id]!!).toArrayList()
-                    val expiredPosts = links.subList(buffer.dividers[group.id]!!, links.size).toArrayList()
+                    val links = TagPosts.filter("groupId" eq groupId)
+                    val actualPosts = links.subList(0, buffer.dividers[groupId]!!).toArrayList()
+                    val expiredPosts = links.subList(buffer.dividers[groupId]!!, links.size).toArrayList()
 
                     for (p in newPosts) {
-                        addIfNew(group, actualPosts, p)
+                        addIfNew(groupId, actualPosts, p)
                         remove(expiredPosts, p)
                     }
-                    buffer.dividers[group.id] = actualPosts.size
+                    buffer.dividers[groupId] = actualPosts.size
 
                     links.forEach { TagPosts.remove(it) }
                     actualPosts
@@ -106,10 +105,10 @@ class PostMerger(
         }
     }
 
-    private fun addIfNew(group: Group, list: MutableList<GroupPost>, item: Post) {
+    private fun addIfNew(groupId: String, list: MutableList<GroupPost>, item: Post) {
         for (s in list)
             if (s.postId == item.id) return
-        list.add(GroupPost(group.id, item.id))
+        list.add(GroupPost(groupId, item.id))
     }
 
     private fun remove(list: MutableList<GroupPost>, item: Post) {

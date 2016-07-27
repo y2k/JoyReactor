@@ -29,9 +29,11 @@ class MenuViewModel(
         }
     }
 
-    fun selectTag(group: Group) = broadcast(BroadcastService.TagSelected(group))
-    fun selectedFeatured() = broadcast(BroadcastService.TagSelected(Group.makeFeatured()))
+    fun selectTag(group: Group) = broadcast(BroadcastService.TagSelected(group.id))
+    fun selectedFeatured() = broadcast(BroadcastService.TagSelected(Group.makeFeatured().id))
     fun selectedFavorite() {
-        getTagForFavorite().thenAccept { broadcast(BroadcastService.TagSelected(it.result)) }
+        getTagForFavorite().thenAccept {
+            broadcast(BroadcastService.TagSelected(it.result.id))
+        }
     }
 }

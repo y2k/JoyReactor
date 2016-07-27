@@ -1,7 +1,6 @@
 package y2k.joyreactor.services
 
 import y2k.joyreactor.common.async.MAIN_EXECUTOR
-import y2k.joyreactor.model.Group
 import java.util.*
 
 /**
@@ -67,7 +66,7 @@ object BroadcastService : Function1<Any, Unit> {
 
     abstract class SubscriptionChangeMessage<T>(val newValue: T)
 
-    class TagSelected(var group: Group) : SubscriptionChangeMessage<Group>(group)
+    class TagSelected(var groupId: String) : SubscriptionChangeMessage<String>(groupId)
 
     private class ActionObserver<T>(private val callback: (T) -> Unit) : Observer {
 

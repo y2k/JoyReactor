@@ -14,9 +14,15 @@ import java.util.regex.Pattern
 class PostsForTagRequest(
     private val httpClient: HttpClient,
     private val urlBuilder: UrlBuilder,
-    private val parser: PostParser) {
+    private val parser: PostParser) :
+    Function2<String, String?, CompletableFuture<PostsForTagRequest.Data>> {
 
-    fun requestAsync(groupId: Group, pageId: String? = null): CompletableFuture<Data> {
+    @Deprecated("")
+    fun requestAsync(group: Group, pageId: String? = null): CompletableFuture<Data> {
+        return this(group.id, pageId)
+    }
+
+    override fun invoke(groupId: String, pageId: String?): CompletableFuture<Data> {
         return runAsync {
             val url = urlBuilder.build(groupId, pageId)
             val doc = httpClient.getDocument(url)

@@ -3,8 +3,6 @@ package y2k.joyreactor.services
 import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.async.then
-import y2k.joyreactor.common.async.thenAsync
-import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.ListState
 import y2k.joyreactor.services.repository.Entities
 import y2k.joyreactor.services.requests.PostsForTagRequest
@@ -15,11 +13,11 @@ import y2k.joyreactor.services.synchronizers.PostMerger
  */
 class TagService(
     private val entities: Entities,
-    private val postsRequest: PostsForTagRequest,
+    private val requestPosts: PostsForTagRequest,
     private val merger: PostMerger,
     private val buffer: MemoryBuffer) {
 
-    fun queryPostsAsync(groupId: Long): CompletableFuture<ListState> {
+    fun queryPostsAsync(groupId: String): CompletableFuture<ListState> {
         return entities
             .useAsync {
                 TagPosts
@@ -33,54 +31,52 @@ class TagService(
             }
     }
 
-    fun preloadNewPosts(groupId: Long): CompletableFuture<*> {
+    fun preloadNewPosts(groupId: String): CompletableFuture<*> {
         return async_ {
-            val group = await(entities.useAsync { Tags.getById(groupId) })
-            await(entities.useAsync {
-                if (Tags.getByIdOrNull(group.id) == null)
-                    Tags.add(group)
-            })
-            val data = await(requestAsync(group))
-            val unsafe = await(merger.isUnsafeUpdate(group, data.posts))
-            buffer.hasNew[group.id] = unsafe
+//            val group = await(entities.useAsync { Tags.getById(groupId) })
+//            await(entities.useAsync {
+//                if (Tags.getByIdOrNull(group.id) == null)
+//                    Tags.add(group)
+//            })
+            val data = await(requestAsync(groupId))
+            val unsafe = await(merger.isUnsafeUpdate(groupId, data.posts))
+            buffer.hasNew[groupId] = unsafe
 
             if (!unsafe)
-                await(merger.mergeFirstPage(group, buffer.requests[group.id]!!.posts))
+                await(merger.mergeFirstPage(groupId, buffer.requests[groupId]!!.posts))
         }
     }
 
-    fun requestAsync(group: Group, page: String? = null): CompletableFuture<PostsForTagRequest.Data> {
-        return postsRequest
-            .requestAsync(group, page)
-            .then { buffer.requests[group.id] = it; it }
+    fun applyNew(groupId: String): CompletableFuture<*> {
+        return merger.mergeFirstPage(groupId, buffer.requests[groupId]!!.posts)
+//        return entities
+//            .useAsync { Tags.getById(groupId). }
+//            .thenAsync { merger.mergeFirstPage(it, buffer.requests[it.id]!!.posts) }
     }
 
-    fun applyNew(groupId: Long): CompletableFuture<*> {
-        return entities
-            .useAsync { Tags.getById(groupId) }
-            .thenAsync { merger.mergeFirstPage(it, buffer.requests[it.id]!!.posts) }
-    }
-
-    fun loadNextPage(groupId: Long): CompletableFuture<*> {
+    fun loadNextPage(groupId: String): CompletableFuture<*> {
         return async_ {
-            val group = await(entities.useAsync { Tags.getById(groupId) })
-            val data = await(requestAsync(group, buffer.requests[group.id]!!.nextPage))
-            await(merger.mergeNextPage(group, data.posts))
+            val data = await(requestAsync(groupId, buffer.requests[groupId]!!.nextPage))
+            await(merger.mergeNextPage(groupId, data.posts))
         }
     }
 
-    fun reloadFirstPage(groupId: Long): CompletableFuture<*> {
+    fun requestAsync(groupId: String, page: String? = null): CompletableFuture<PostsForTagRequest.Data> {
+        return requestPosts(groupId, page)
+            .then { buffer.requests[groupId] = it; it }
+    }
+
+    fun reloadFirstPage(groupId: String): CompletableFuture<*> {
         return async_ {
-            val group = await(entities.useAsync { Tags.getById(groupId) })
-            val data = await(requestAsync(group))
+            val data = await(requestAsync(groupId))
 
             await(entities.useAsync {
                 TagPosts
-                    .filter("groupId" to group.id)
+                    .filter("groupId" to groupId)
                     .forEach { TagPosts.remove(it) }
                 saveChanges()
             })
-            await(merger.mergeFirstPage(group, data.posts))
+            await(merger.mergeFirstPage(groupId, data.posts))
         }
     }
 }

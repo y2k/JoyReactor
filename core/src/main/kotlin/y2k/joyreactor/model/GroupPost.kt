@@ -7,6 +7,6 @@ import java.io.Serializable
  * Created by y2k on 11/24/15.
  */
 data class GroupPost(
-    @DatabaseField val groupId: Long = 0,
+    @DatabaseField val groupId: String = "",
     @DatabaseField val postId: Long = 0,
     @DatabaseField(generatedId = true) val id: Long = 0) : Serializable

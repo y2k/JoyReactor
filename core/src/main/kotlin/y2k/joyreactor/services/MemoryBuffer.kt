@@ -8,9 +8,9 @@ import java.util.*
  */
 object MemoryBuffer {
 
-    val hasNew = makeMap<Long, Boolean>()
-    val requests = makeMap<Long, PostsForTagRequest.Data>()
-    val dividers = makeMap<Long, Int>()
+    val hasNew = makeMap<String, Boolean>()
+    val requests = makeMap<String, PostsForTagRequest.Data>()
+    val dividers = makeMap<String, Int>()
     private val commonMap = makeMap<String, Any>()
 
     private fun <T, R> makeMap(): MutableMap<T, R> = Collections.synchronizedMap(HashMap<T, R>())

@@ -17,9 +17,9 @@ interface DataSet<T> {
 
     fun forEach(f: (T) -> Unit)
 
-    fun getById(id: Long): T
+    fun getById(id: Any): T
 
-    fun getByIdOrNull(id: Long): T?
+    fun getByIdOrNull(id: Any): T?
 
     fun filter(vararg conditions: Pair<String, Any?>): List<T>
 
