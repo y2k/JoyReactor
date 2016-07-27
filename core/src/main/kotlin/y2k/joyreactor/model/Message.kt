@@ -1,7 +1,6 @@
 package y2k.joyreactor.model
 
 import com.j256.ormlite.field.DatabaseField
-import y2k.joyreactor.services.repository.Dto
 import java.io.Serializable
 import java.util.*
 
@@ -14,7 +13,7 @@ data class Message(
     @DatabaseField val isMine: Boolean = false,
     @DatabaseField val userName: String = "",
     @DatabaseField val userImage: String? = null,
-    @DatabaseField(generatedId = true) override val id: Long = 0) : Dto, Serializable {
+    @DatabaseField(generatedId = true) val id: Long = 0) : Serializable {
 
     fun getUserImageObject(): UserImage {
         return if (userImage == null) UserImage() else UserImage(userImage)

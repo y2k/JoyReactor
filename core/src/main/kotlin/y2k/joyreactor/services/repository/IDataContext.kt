@@ -10,5 +10,5 @@ interface IDataContext : Closeable {
 
     fun saveChanges()
 
-    fun <T : Dto> register(type: KClass<T>): DataSet<T>
+    fun <T : Any> register(type: KClass<T>): DataSet<T>
 }

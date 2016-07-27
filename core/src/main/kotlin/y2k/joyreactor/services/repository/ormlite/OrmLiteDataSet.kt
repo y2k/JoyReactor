@@ -5,12 +5,11 @@ import com.j256.ormlite.stmt.Where
 import y2k.joyreactor.common.autoClose
 import y2k.joyreactor.common.queryRawList
 import y2k.joyreactor.services.repository.DataSet
-import y2k.joyreactor.services.repository.Dto
 
 /**
  * Created by y2k on 4/10/16.
  */
-class OrmLiteDataSet<T : Dto>(private val dao: Dao<T, Long>) : DataSet<T> {
+class OrmLiteDataSet<T>(private val dao: Dao<T, Long>) : DataSet<T> {
 
     override fun clear() {
         dao.deleteBuilder().delete()

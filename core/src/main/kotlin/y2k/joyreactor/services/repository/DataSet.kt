@@ -3,7 +3,7 @@ package y2k.joyreactor.services.repository
 /**
  * Created by y2k on 4/9/16.
  */
-interface DataSet <T : Dto> {
+interface DataSet<T> {
 
     fun clear()
 
@@ -24,9 +24,4 @@ interface DataSet <T : Dto> {
     fun filter(vararg conditions: Pair<String, Any?>): List<T>
 
     fun groupBy(groupProp: String, orderProp: String): List<T>
-}
-
-interface Dto {
-
-    val id: Long
 }

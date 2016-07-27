@@ -6,7 +6,6 @@ import com.j256.ormlite.table.TableUtils
 import y2k.joyreactor.common.ApplicationDataVersion
 import y2k.joyreactor.common.platform.Platform
 import y2k.joyreactor.services.repository.DataSet
-import y2k.joyreactor.services.repository.Dto
 import y2k.joyreactor.services.repository.IDataContext
 import java.io.File
 import kotlin.reflect.KClass
@@ -19,7 +18,7 @@ class OrmLiteDataContext(val platform: Platform) : IDataContext {
     val path = File(platform.currentDirectory, "main.$ApplicationDataVersion.db")
     val connection = platform.buildConnection(path)
 
-    override fun <T : Dto> register(type: KClass<T>): DataSet<T> {
+    override fun <T : Any> register(type: KClass<T>): DataSet<T> {
         val dao: Dao<T, Long> = DaoManager.createDao(connection, type.java)
         TableUtils.createTableIfNotExists(connection, type.java)
         return OrmLiteDataSet(dao)

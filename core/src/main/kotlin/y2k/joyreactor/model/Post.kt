@@ -2,7 +2,6 @@ package y2k.joyreactor.model
 
 import com.j256.ormlite.field.DataType
 import com.j256.ormlite.field.DatabaseField
-import y2k.joyreactor.services.repository.Dto
 import java.io.Serializable
 import java.util.*
 
@@ -22,9 +21,9 @@ data class Post(
 
     @DatabaseField(dataType = DataType.SERIALIZABLE) val tags: TagList = TagList(),
 
-    @DatabaseField(id = true) override val id: Long = 0,
+    @DatabaseField(id = true) val id: Long = 0,
     @DatabaseField val isFavorite: Boolean = false,
-    @DatabaseField val description: String = "") : Serializable, Comparable<Post>, Dto {
+    @DatabaseField val description: String = "") : Serializable, Comparable<Post> {
 
     fun imageAspectOrDefault(default: Float): Float {
         return image?.aspect ?: default
