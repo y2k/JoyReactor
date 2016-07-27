@@ -17,8 +17,8 @@ import kotlin.reflect.KClass
 class PostViewModel(
     val checkIsAuthorized: () -> CompletableFuture<Boolean>,
     val getPostData: (Long) -> CompletableFuture<PostData>,
-    val syncInBackground: (Works, Any) -> Unit,
-    val watchForBackground: (Works, Any, (WorkStatus) -> Unit) -> Unit,
+    val syncInBackground: (Works, Long) -> Unit,
+    val watchForBackground: (Works, Long, (WorkStatus) -> Unit) -> Unit,
     val getArgument: () -> Long,
     val navigateTo: (KClass<*>, Any?) -> Unit) {
 
@@ -38,8 +38,8 @@ class PostViewModel(
     private val postId = getArgument()
 
     init {
-        syncInBackground(Works.syncPost, postId)
-        watchForBackground(Works.syncPost, postId) { status ->
+        syncInBackground(Works.syncOnePost, postId)
+        watchForBackground(Works.syncOnePost, postId) { status ->
             async_ {
                 status.let {
                     isBusy += it.isInProgress

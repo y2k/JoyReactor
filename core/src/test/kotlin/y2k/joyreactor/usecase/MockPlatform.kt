@@ -1,5 +1,6 @@
 package y2k.joyreactor.usecase
 
+import com.j256.ormlite.jdbc.JdbcConnectionSource
 import com.j256.ormlite.support.ConnectionSource
 import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.platform.NavigationService
@@ -23,7 +24,8 @@ class MockPlatform() : Platform {
     }
 
     override fun buildConnection(file: File): ConnectionSource {
-        TODO()
+        Class.forName("org.sqlite.JDBC")
+        return JdbcConnectionSource("jdbc:sqlite::memory:")
     }
 
     override fun <T> decodeImageAsync(path: File): CompletableFuture<T?> {

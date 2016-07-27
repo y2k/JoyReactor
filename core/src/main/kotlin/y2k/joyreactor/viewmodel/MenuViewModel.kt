@@ -12,8 +12,8 @@ import y2k.joyreactor.services.Works
  * Created by y2k on 3/8/16.
  */
 class MenuViewModel(
-    val syncInBackground: (Works, Any) -> Unit,
-    val watchForBackground: (Works, Any, (WorkStatus) -> Unit) -> Unit,
+    val syncInBackground: (Works, Long) -> Unit,
+    val watchForBackground: (Works, Long, (WorkStatus) -> Unit) -> Unit,
     val getMyTags: () -> CompletableFuture<List<Group>>,
     val getTagForFavorite: () -> CompletableFuture<Group>,
     val broadcast: (Any) -> Unit) {
@@ -21,8 +21,8 @@ class MenuViewModel(
     val tags = property(emptyList<Group>())
 
     init {
-        syncInBackground(Works.syncGroups, false)
-        watchForBackground(Works.syncGroups, false) {
+        syncInBackground(Works.syncGroups, 0L)
+        watchForBackground(Works.syncGroups, 0L) {
             async_ {
                 tags += await(getMyTags())
             }

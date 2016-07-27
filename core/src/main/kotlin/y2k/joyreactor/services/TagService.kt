@@ -33,8 +33,9 @@ class TagService(
             }
     }
 
-    fun preloadNewPosts(group: Group): CompletableFuture<*> {
+    fun preloadNewPosts(groupId: Long): CompletableFuture<*> {
         return async_ {
+            val group = await(entities.useAsync { Tags.getById(groupId) })
             await(entities.useAsync {
                 if (Tags.getByIdOrNull(group.id) == null)
                     Tags.add(group)

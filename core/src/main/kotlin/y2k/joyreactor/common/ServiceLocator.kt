@@ -84,9 +84,10 @@ object ServiceLocator {
 
         register { LoginViewModel(resolve(), resolve()) }
         register {
+            val syncInBackgroundService = resolve<SyncInBackgroundService>()
             MenuViewModel(
-                { a, b -> resolve<SyncInBackgroundService>().sync(a, b) },
-                { a, b, c -> resolve<SyncInBackgroundService>().watchForBackground(a, b, c) },
+                syncInBackgroundService::sync,
+                syncInBackgroundService::watchForBackground,
                 { resolve<UserService>().getMyTags() },
                 { resolve<UserService>().getTagForFavorite() },
                 resolve<BroadcastService>())
@@ -102,7 +103,7 @@ object ServiceLocator {
             val tagService = resolve<TagService>()
             MainViewModel(
                 syncInBackgroundService::sync,
-                syncInBackgroundService::watchForBackground,
+                syncInBackgroundService::watchForBackground_,
                 tagService::queryPostsAsync,
                 resolve<NavigationService>(),
                 resolve())

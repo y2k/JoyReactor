@@ -17,8 +17,8 @@ import kotlin.reflect.KClass
  * Created by y2k on 5/9/16.
  */
 class MainViewModel(
-    val syncInBackground: (Works, Any) -> Unit,
-    val watchForBackground: (Works, Any, (WorkStatus) -> Unit) -> Unit,
+    val syncInBackground: (Works, Long) -> Unit,
+    val watchForBackground: (Works, ((Long) -> WorkStatus) -> Unit) -> Unit,
     val queryPosts: (Long) -> CompletableFuture<ListState>,
     val navigateTo: (KClass<*>, Any?) -> Unit,
     scope: LifeCycleService) {
@@ -33,15 +33,15 @@ class MainViewModel(
 
     init {
         scope.registerProperty(BroadcastService.TagSelected::class, group)
-        quality.subscribe { syncInBackground(Works.syncPostsPreloadNewPosts, getGroup()) }
-        group.subscribe { syncInBackground(Works.syncPostsPreloadNewPosts, getGroup()) }
+        quality.subscribe { syncInBackground(Works.syncPostsPreloadNewPosts, selected) }
+        group.subscribe { syncInBackground(Works.syncPostsPreloadNewPosts, selected) }
 
-        watchForBackground(Works.syncPosts, getGroupId()) { status ->
+        watchForBackground(Works.syncPosts) { getStatus ->
             async_ {
-                isBusy += status.isInProgress
-                isError += status.isFinishedWithError
+                isBusy += getStatus(selected).isInProgress
+                isError += getStatus(selected).isFinishedWithError
 
-                val data = await(queryPosts(getGroupId()))
+                val data = await(queryPosts(selected))
                 hasNewPosts += data.hasNew
                 posts += data.posts
                     .map { PostItemViewModel(navigateTo, syncInBackground, it) }
@@ -50,16 +50,15 @@ class MainViewModel(
         }
     }
 
-    fun applyNew() = syncInBackground(Works.syncPostsApplyNew, getGroupId())
-    fun loadMore() = syncInBackground(Works.syncPostsLoadNextPage, getGroupId())
-    fun reloadFirstPage() = syncInBackground(Works.syncPostsReloadFirstPage, getGroupId())
+    fun applyNew() = syncInBackground(Works.syncPostsApplyNew, selected)
+    fun loadMore() = syncInBackground(Works.syncPostsLoadNextPage, selected)
+    fun reloadFirstPage() = syncInBackground(Works.syncPostsReloadFirstPage, selected)
 
     fun openProfile() = navigateTo(ProfileViewModel::class, null)
     fun openMessages() = navigateTo(ThreadsViewModel::class, null)
     fun openAddTag() = navigateTo(AddTagViewModel::class, null)
     fun openFeedback() = navigateTo(CreateFeedback::class, null)
 
-    private fun getGroupId() = getGroup().id
-
-    private fun getGroup() = Group(group.value, quality.value)
+    private val selected: Long
+        get() = Group(group.value, quality.value).id
 }

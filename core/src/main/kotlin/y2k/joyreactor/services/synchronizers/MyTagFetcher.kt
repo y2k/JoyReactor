@@ -24,11 +24,16 @@ class MyTagFetcher(
             .thenAsync(dataContext) { newTags ->
                 val result = Tags.toList()
                     .union(newTags)
+                    .union(listOf(Group.makeFeatured()))
                     .distinctBy { it.serverId }
                     .map { s -> s.copy(isVisible = newTags.any { it.serverId == s.serverId }) }
 
                 Tags.clear()
-                result.forEach { Tags.add(it) }
+                result.forEach {
+                    Tags.add(Group(it, Group.Quality.Good).copy(isVisible = true))
+                    Tags.add(Group(it, Group.Quality.Best))
+                    Tags.add(Group(it, Group.Quality.All))
+                }
             }
     }
 

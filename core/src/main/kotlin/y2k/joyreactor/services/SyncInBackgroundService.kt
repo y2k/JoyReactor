@@ -3,7 +3,6 @@ package y2k.joyreactor.services
 import y2k.joyreactor.common.BackgroundWorks
 import y2k.joyreactor.common.WorkStatus
 import y2k.joyreactor.common.async.CompletableFuture
-import y2k.joyreactor.model.Group
 
 /**
  * Created by y2k on 24/07/16.
@@ -16,38 +15,43 @@ class SyncInBackgroundService(
     val backgroundWorks: BackgroundWorks,
     val scope: LifeCycleService) {
 
-    fun sync(keyEnum: Works, arg: Any) {
-        val key = "" + keyEnum
-        backgroundWorks.markWorkStarted(toKey(arg, key))
-        val task = when {
-            key.startsWith("" + Works.syncPostsPreloadNewPosts) -> tagService.preloadNewPosts(arg as Group)
-            key.startsWith("" + Works.syncPostsApplyNew) -> tagService.applyNew(arg as Long)
-            key.startsWith("" + Works.syncPostsLoadNextPage) -> tagService.loadNextPage(arg as Long)
-            key.startsWith("" + Works.syncPostsReloadFirstPage) -> tagService.reloadFirstPage(arg as Long)
+    fun sync(work: Works, arg: Long) {
+        val task = when (work) {
+            Works.syncPostsPreloadNewPosts -> tagService.preloadNewPosts(arg)
+            Works.syncPostsApplyNew -> tagService.applyNew(arg)
+            Works.syncPostsLoadNextPage -> tagService.loadNextPage(arg)
+            Works.syncPostsReloadFirstPage -> tagService.reloadFirstPage(arg)
 
-            key.startsWith("" + Works.syncPost) -> postService.syncPostAsync(arg as Long)
-            key.startsWith("" + Works.saveAttachment) -> attachmentService.saveImageToGalleryAsync(arg as Long)
-            key.startsWith("" + Works.toggleFavorite) -> postService.toggleFavorite(arg as Long)
-            key.startsWith("" + Works.syncGroups) -> synchronizeGroups()
+            Works.syncOnePost -> postService.syncPostAsync(arg)
+            Works.saveAttachment -> attachmentService.saveImageToGalleryAsync(arg)
+            Works.toggleFavorite -> postService.toggleFavorite(arg)
+            Works.syncGroups -> synchronizeGroups()
 
-            else -> throw IllegalArgumentException("key: $key")
+            else -> throw IllegalArgumentException("key: $work")
         }
-        task.thenAccept { backgroundWorks.markWorkFinished(toKey(arg, key), it.errorOrNull) }
+
+        backgroundWorks.markWorkStarted(makeKey(work, arg))
+        task.thenAccept { backgroundWorks.markWorkFinished(makeKey(work, arg), it.errorOrNull) }
     }
 
-    fun watchForBackground(keyEnum: Works, arg: Any, f: (WorkStatus) -> Unit) {
-        val key = "" + keyEnum
-        scope(toKey(arg, key)) {
-            val status = backgroundWorks.getStatus(toKey(arg, key))
-            f(status)
+    fun watchForBackground(work: Works, arg: Long, callback: (WorkStatus) -> Unit) {
+        scope(makeKey(work)) {
+            val status = backgroundWorks.getStatus(makeKey(work, arg))
+            callback(status)
         }
     }
 
-    private fun toKey(arg: Any, key: String) = "$arg$key"
+    fun watchForBackground_(work: Works, callback: ((Long) -> WorkStatus) -> Unit) {
+        scope(makeKey(work)) {
+            callback { backgroundWorks.getStatus(makeKey(work, it)) }
+        }
+    }
+
+    private fun makeKey(work: Works, arg: Any? = null) = "$work/${arg?.toString() ?: ""}"
 }
 
 enum class Works {
-    syncPost,
+    syncOnePost,
     saveAttachment,
     toggleFavorite,
 

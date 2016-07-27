@@ -88,7 +88,7 @@ private val BACKGROUND_EXECUTOR = ThreadPoolExecutor(
     1, TimeUnit.SECONDS,
     LinkedBlockingQueue<Runnable>(128))
 
-var MAIN_EXECUTOR: Executor = BACKGROUND_EXECUTOR
+var MAIN_EXECUTOR: Executor = Executor { it.run() }
 
 fun delay(timeSpanInMs: Long): CompletableFuture<*> {
     return runAsync { Thread.sleep(timeSpanInMs) }
