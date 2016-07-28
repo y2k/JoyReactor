@@ -1,12 +1,13 @@
 package y2k.joyreactor.services.requests
 
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.runAsync
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.model.Post
+import y2k.joyreactor.model.PostWithAttachments
 import y2k.joyreactor.model.PostsWithNext
-import y2k.joyreactor.services.requests.parser.PostParser
 import java.util.regex.Pattern
 
 /**
@@ -15,7 +16,7 @@ import java.util.regex.Pattern
 class PostsForTagRequest(
     private val httpClient: HttpClient,
     private val urlBuilder: UrlBuilder,
-    private val parser: PostParser) :
+    private val parser: (Element) -> PostWithAttachments) :
     Function2<String, String?, CompletableFuture<PostsWithNext>> {
 
     override fun invoke(groupId: String, pageId: String?): CompletableFuture<PostsWithNext> {

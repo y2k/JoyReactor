@@ -47,27 +47,28 @@ object ServiceLocator {
                 resolve())
         }
 
+        /** Requests */
         register { TokenRequest(resolve()) }
         register { ChangePostFavoriteRequest(resolve(), resolve()) }
         register { LikePostRequest(resolve(), resolve<TokenRequest>(), resolve<LikeParser>()) }
         register { MessageListRequest(resolve(), resolve()) }
-        register { PostMerger(resolve(), resolve()) }
-        register { MemoryBuffer }
-        register { MyTagFetcher(resolve(), resolve(), resolve()) }
-        register { PrivateMessageFetcher(resolve(), resolve()) }
-        register { PostsForTagRequest(resolve(), resolve(), resolve()) }
+        register { PostsForTagRequest(resolve(), resolve(), resolve<PostParser>()) }
         register { AddTagRequest(resolve()) }
         register { UserNameRequest(resolve()) }
         register { TagsForUserRequest(resolve(), resolve()) }
         register { OriginalImageRequestFactory(resolve(), resolve()) }
         register { PostRequest(resolve(), resolve<PostParser>()) }
-
         register { ProfileRequest(resolve(), resolve<UserNameRequest>()) }
-
         register { LoginRequestFactory(resolve()) }
         register { SendMessageRequest(resolve()) }
         register { CreateCommentRequest(resolve()) }
 
+        register { PostMerger(resolve(), resolve()) }
+        register { MemoryBuffer }
+        register { MyTagFetcher(resolve(), resolve(), resolve()) }
+        register { PrivateMessageFetcher(resolve(), resolve()) }
+
+        /** Services */
         register {
             PostService(
                 resolve(),
@@ -82,6 +83,7 @@ object ServiceLocator {
         register { CommentService(resolve<CreateCommentRequest>(), resolve()) }
         register { AttachmentService(resolve<OriginalImageRequestFactory>(), resolve(), resolve(), resolve()) }
 
+        /** ViewModels */
         register { LoginViewModel(resolve(), resolve()) }
         register {
             val syncInBackgroundService = resolve<SyncInBackgroundService>()
@@ -97,7 +99,6 @@ object ServiceLocator {
         register { VideoViewModel(resolve(), resolve(), resolve<LifeCycleService>()) }
         register { ProfileViewModel(resolve(), resolve()) }
         register { AddTagViewModel(resolve(), resolve()) }
-
         register {
             val syncInBackgroundService = resolve<SyncInBackgroundService>()
             val tagService = resolve<TagService>()
@@ -120,7 +121,6 @@ object ServiceLocator {
                 { resolve<NavigationService>().getArgument<Long>() },
                 resolve<NavigationService>())
         }
-
         register { PostLikeViewModel(resolve(), resolve()) }
         register { CreateCommentViewModel(resolve(), resolve(), resolve()) }
         register { CommentsViewModel(resolve(), resolve(), resolve(), resolve()) }
