@@ -15,16 +15,16 @@ class SyncInBackgroundService(
     val backgroundWorks: BackgroundWorks,
     val scope: LifeCycleService) {
 
-    fun sync(work: Works, arg: Long) {
+    fun sync(work: Works, arg: Any) {
         val task = when (work) {
-            Works.syncPostsPreloadNewPosts -> tagService.preloadNewPosts(arg)
-            Works.syncPostsApplyNew -> tagService.applyNew(arg)
-            Works.syncPostsLoadNextPage -> tagService.loadNextPage(arg)
-            Works.syncPostsReloadFirstPage -> tagService.reloadFirstPage(arg)
+            Works.syncPostsPreloadNewPosts -> tagService.preloadNewPosts(arg as String)
+            Works.syncPostsApplyNew -> tagService.applyNew(arg as String)
+            Works.syncPostsLoadNextPage -> tagService.loadNextPage(arg as String)
+            Works.syncPostsReloadFirstPage -> tagService.reloadFirstPage(arg as String)
 
-            Works.syncOnePost -> postService.syncPostAsync(arg)
-            Works.saveAttachment -> attachmentService.saveImageToGalleryAsync(arg)
-            Works.toggleFavorite -> postService.toggleFavorite(arg)
+            Works.syncOnePost -> postService.syncPostAsync(arg as Long)
+            Works.saveAttachment -> attachmentService.saveImageToGalleryAsync(arg as Long)
+            Works.toggleFavorite -> postService.toggleFavorite(arg as Long)
             Works.syncGroups -> synchronizeGroups()
 
             else -> throw IllegalArgumentException("key: $work")
@@ -41,7 +41,7 @@ class SyncInBackgroundService(
         }
     }
 
-    fun watchForBackground_(work: Works, callback: ((Long) -> WorkStatus) -> Unit) {
+    fun watchForBackground_(work: Works, callback: ((Any) -> WorkStatus) -> Unit) {
         scope(makeKey(work)) {
             callback { backgroundWorks.getStatus(makeKey(work, it)) }
         }

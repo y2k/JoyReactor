@@ -24,7 +24,6 @@ class MyTagFetcher(
             .thenAsync(dataContext) { newTags ->
                 val result = Tags.toList()
                     .union(newTags)
-                    .union(listOf(Group.makeFeatured()))
                     .distinctBy { it.id }
                     .map { s -> s.copy(isVisible = newTags.any { it.id == s.id }) }
 

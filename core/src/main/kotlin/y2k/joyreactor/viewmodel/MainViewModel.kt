@@ -17,8 +17,8 @@ import kotlin.reflect.KClass
  * Created by y2k on 5/9/16.
  */
 class MainViewModel(
-    val syncInBackground: (Works, String) -> Unit,
-    val watchForBackground: (Works, ((String) -> WorkStatus) -> Unit) -> Unit,
+    val syncInBackground: (Works, Any) -> Unit,
+    val watchForBackground: (Works, ((Any) -> WorkStatus) -> Unit) -> Unit,
     val queryPosts: (String) -> CompletableFuture<ListState>,
     val navigateTo: (KClass<*>, Any?) -> Unit,
     scope: LifeCycleService) {

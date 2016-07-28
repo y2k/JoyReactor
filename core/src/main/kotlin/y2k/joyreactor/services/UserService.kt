@@ -31,12 +31,4 @@ class UserService(
         return userNameRequest()
             .then { Group.makeFavorite(it) }
     }
-
-    fun makeGroup(base: Group, quality: Group.Quality): CompletableFuture<Group> {
-        return entities.use {
-            val group = Group(base, quality)
-            val exists = Tags.filter("serverId" to group.serverId).firstOrNull()
-            exists ?: Tags.add(group).apply { saveChanges() }
-        }
-    }
 }

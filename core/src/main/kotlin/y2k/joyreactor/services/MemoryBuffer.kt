@@ -1,6 +1,6 @@
 package y2k.joyreactor.services
 
-import y2k.joyreactor.services.requests.PostsForTagRequest
+import y2k.joyreactor.model.PostsWithNext
 import java.util.*
 
 /**
@@ -9,7 +9,7 @@ import java.util.*
 object MemoryBuffer {
 
     val hasNew = makeMap<String, Boolean>()
-    val requests = makeMap<String, PostsForTagRequest.Data>()
+    val requests = makeMap<String, PostsWithNext>()
     val dividers = makeMap<String, Int>()
     private val commonMap = makeMap<String, Any>()
 

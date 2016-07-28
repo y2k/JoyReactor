@@ -13,7 +13,7 @@ import java.util.regex.Pattern
  */
 class PostRequest(
     private val httpClient: HttpClient,
-    private val parser: (Element) -> Pair<Post, List<Attachment>>) :
+    private val parser: (Element) -> PostWithAttachments) :
     Function1<Long, CompletableFuture<PostRequest.Response>> {
 
     override operator fun invoke(postId: Long) = runAsync { doRequest(postId.toString()) }
@@ -41,8 +41,10 @@ class PostRequest(
         }
 
         return Response(
-            postWithAttachments.first, commentsRequest.comments,
-            similarPosts, postWithAttachments.second)
+            postWithAttachments.post,
+            commentsRequest.comments,
+            similarPosts,
+            postWithAttachments.attachments)
     }
 
     private fun getPostId(href: String): String {

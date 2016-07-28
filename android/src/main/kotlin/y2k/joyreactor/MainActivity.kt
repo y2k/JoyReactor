@@ -55,7 +55,7 @@ class MainActivity : BaseActivity() {
             command(R.id.selectFavorite, { vm.selectedFavorite() })
 
             recyclerView(R.id.listTags, vm.tags) {
-                itemId { it.id }
+                itemId { it.id.hashCode().toLong() }
                 component { TagComponent(context) { vm.selectTag(it) } }
             }
         }

@@ -4,6 +4,7 @@ import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.async_
 import y2k.joyreactor.common.async.then
 import y2k.joyreactor.model.ListState
+import y2k.joyreactor.model.PostsWithNext
 import y2k.joyreactor.services.repository.Entities
 import y2k.joyreactor.services.requests.PostsForTagRequest
 import y2k.joyreactor.services.synchronizers.PostMerger
@@ -61,7 +62,7 @@ class TagService(
         }
     }
 
-    fun requestAsync(groupId: String, page: String? = null): CompletableFuture<PostsForTagRequest.Data> {
+    fun requestAsync(groupId: String, page: String? = null): CompletableFuture<PostsWithNext> {
         return requestPosts(groupId, page)
             .then { buffer.requests[groupId] = it; it }
     }

@@ -9,7 +9,7 @@ import kotlin.reflect.KClass
  */
 class PostItemViewModel(
     private val navigation: (KClass<*>, Any?) -> Unit,
-    private val syncInBackground: (Works, Long) -> Unit,
+    private val syncInBackground: (Works, Any) -> Unit,
     val post: Post) {
 
     fun postClicked() {

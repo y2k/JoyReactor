@@ -1,10 +1,11 @@
 package y2k.joyreactor.services.requests
 
+import org.jsoup.nodes.Document
 import y2k.joyreactor.common.async.CompletableFuture
 import y2k.joyreactor.common.async.runAsync
 import y2k.joyreactor.common.http.HttpClient
-import y2k.joyreactor.model.Group
 import y2k.joyreactor.model.Post
+import y2k.joyreactor.model.PostsWithNext
 import y2k.joyreactor.services.requests.parser.PostParser
 import java.util.regex.Pattern
 
@@ -15,32 +16,30 @@ class PostsForTagRequest(
     private val httpClient: HttpClient,
     private val urlBuilder: UrlBuilder,
     private val parser: PostParser) :
-    Function2<String, String?, CompletableFuture<PostsForTagRequest.Data>> {
+    Function2<String, String?, CompletableFuture<PostsWithNext>> {
 
-    @Deprecated("")
-    fun requestAsync(group: Group, pageId: String? = null): CompletableFuture<Data> {
-        return this(group.id, pageId)
-    }
-
-    override fun invoke(groupId: String, pageId: String?): CompletableFuture<Data> {
+    override fun invoke(groupId: String, pageId: String?): CompletableFuture<PostsWithNext> {
         return runAsync {
             val url = urlBuilder.build(groupId, pageId)
             val doc = httpClient.getDocument(url)
-
-            val posts = doc
-                .select("div.postContainer")
-                .map { parser(it).first }
-
-            val next = doc.select("a.next").first()
-            Data(posts, next?.let { extractNumberFromEnd(next.attr("href")) })
+            PostsWithNext(getPosts(doc), getNext(doc))
         }
     }
 
-    private fun extractNumberFromEnd(text: String): String {
-        val m = Pattern.compile("\\d+$").matcher(text)
+    private fun getPosts(doc: Document): List<Post> {
+        return doc
+            .select("div.postContainer")
+            .map { parser(it).post }
+    }
+
+    private fun getNext(doc: Document): String? {
+        return doc.select("a.next").first()
+            ?.let { doc.select("a.next").first().attr("href").extractNumberFromEnd() }
+    }
+
+    private fun String.extractNumberFromEnd(): String {
+        val m = Pattern.compile("\\d+$").matcher(this)
         if (!m.find()) throw IllegalStateException()
         return m.group()
     }
-
-    class Data(val posts: List<Post>, val nextPage: String?)
 }

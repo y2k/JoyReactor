@@ -12,9 +12,10 @@ import java.util.regex.Pattern
  * Created by y2k on 5/29/16.
  */
 class PostParser(
-    private val parseLike: (Element) -> MyLike) : Function1<Element, Pair<Post, List<Attachment>>> {
+    private val parseLike: (Element) -> MyLike) :
+    Function1<Element, PostWithAttachments> {
 
-    override operator fun invoke(document: Element): Pair<Post, List<Attachment>> {
+    override operator fun invoke(document: Element): PostWithAttachments {
         val id = extractNumberFromEnd(document.id()).toLong()
 
         val title = document.select("div.post_content > div > h3").first()
@@ -39,7 +40,7 @@ class PostParser(
             }
         )
 
-        return post to attachments.drop(1)
+        return PostWithAttachments(post, attachments.drop(1))
     }
 
     private fun getAttachments(document: Element, id: Long): List<Attachment> {

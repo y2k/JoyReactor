@@ -19,7 +19,7 @@ class PostsForTagRequestTest {
     @Test
     fun testTitles() {
         val httpClient = mock(HttpClient::class.java).apply {
-            `when`(getDocument(anyString())).then { MockRequest.loadDocument("titles.html") }
+            `when`(getDocument("http://joyreactor.cc/")).then { MockRequest.loadDocument("titles.html") }
         }
         val actual = execute(httpClient, Group.makeFeatured())
 
@@ -65,8 +65,7 @@ class PostsForTagRequestTest {
     }
 
     private fun execute(httpClient: HttpClient, group: Group, page: String? = null): List<Post> {
-        return PostsForTagRequest(httpClient, UrlBuilder(), PostParser(LikeParser()))
-            .requestAsync(group, page)
-            .get().posts
+        val request = PostsForTagRequest(httpClient, UrlBuilder(), PostParser(LikeParser()))
+        return request(group.id, page).get().posts
     }
 }
