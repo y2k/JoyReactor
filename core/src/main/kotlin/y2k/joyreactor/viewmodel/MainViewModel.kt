@@ -29,7 +29,7 @@ class MainViewModel(
     val isError = property(false)
 
     val quality = property(Group.Quality.Good)
-    private val group = property(Group.makeFeatured().id)
+    val group = property(Group.makeFeatured().id)
 
     init {
         scope.registerProperty(BroadcastService.TagSelected::class, group)

@@ -41,13 +41,13 @@ class SyncInBackgroundService(
         }
     }
 
-    fun watchForBackground_(work: Works, callback: ((Any) -> WorkStatus) -> Unit) {
+    fun watchForBackground_(work: Works, onChanged: ((Any) -> WorkStatus) -> Unit) {
         scope(makeKey(work)) {
-            callback { backgroundWorks.getStatus(makeKey(work, it)) }
+            onChanged { backgroundWorks.getStatus(makeKey(work, it)) }
         }
     }
 
-    private fun makeKey(work: Works, arg: Any? = null) = "$work/${arg?.toString() ?: ""}"
+    private fun makeKey(work: Works, arg: Any? = null) = "$work${arg?.toString() ?: ""}"
 }
 
 enum class Works {
