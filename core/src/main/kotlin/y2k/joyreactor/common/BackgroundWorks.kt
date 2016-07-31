@@ -18,12 +18,12 @@ object BackgroundWorks {
         BroadcastService.broadcast(key)
     }
 
-    fun markWorkStarted(key: String) {
+    fun markWorkStarted(key: String, broadcastKey: String) {
         statusMap[key] = WorkStatus(isFinished = false)
-        BroadcastService.broadcast(key)
+        BroadcastService.broadcast(broadcastKey)
     }
 
-    fun markWorkFinished(key: String, error: Throwable? = null) {
+    fun markWorkFinished(key: String, broadcastKey: String, error: Throwable? = null) {
         if (error == null) {
             statusMap.remove(key)
         } else {
@@ -33,7 +33,7 @@ object BackgroundWorks {
                 statusMap.remove(key)
             }
         }
-        BroadcastService.broadcast(key)
+        BroadcastService.broadcast(broadcastKey)
     }
 
     fun getStatus(key: String): WorkStatus {

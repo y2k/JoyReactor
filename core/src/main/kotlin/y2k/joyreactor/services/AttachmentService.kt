@@ -29,11 +29,11 @@ class AttachmentService(
     }
 
     fun downloadInBackground(postId: Long): String {
-        backgroundWorks.markWorkStarted(postId.toKey())
+        backgroundWorks.markWorkStarted(postId.toKey(), postId.toKey())
         entities
             .useAsync { Posts.getById(postId) }
             .thenAsync { requestImage(it.image!!.mp4, false) }
-            .then_ { backgroundWorks.markWorkFinished(postId.toKey(), it.error) }
+            .then_ { backgroundWorks.markWorkFinished(postId.toKey(), postId.toKey(), it.error) }
         return postId.toKey()
     }
 
@@ -55,12 +55,12 @@ class AttachmentService(
     private fun Long.toKey() = "sync-video-" + this
 
     fun saveImageToGallery(postId: Long) {
-        backgroundWorks.markWorkStarted(saveImageKey())
+        backgroundWorks.markWorkStarted(saveImageKey(), saveImageKey())
         entities
             .useAsync { Posts.getById(postId) }
             .thenAsync { requestImage(it.image!!.fullUrl(null), false) }
             .thenAsync { platform.saveToGallery(it!!) }
-            .thenAccept { backgroundWorks.markWorkFinished(saveImageKey(), it.errorOrNull) }
+            .thenAccept { backgroundWorks.markWorkFinished(saveImageKey(), saveImageKey(), it.errorOrNull) }
     }
 
     fun saveImageToGalleryAsync(postId: Long): CompletableFuture<*> {

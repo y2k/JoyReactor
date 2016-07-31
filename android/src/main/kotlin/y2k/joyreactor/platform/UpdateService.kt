@@ -31,7 +31,7 @@ class UpdateService(
     fun requestDownloadUpdate(): String {
         async_ {
             if (backgroundWorks.getStatus(key).isInProgress) return@async_
-            backgroundWorks.markWorkStarted(key)
+            backgroundWorks.markWorkStarted(key, key)
             try {
                 if (BuildConfig.VERSION_CODE >= updateVersion) {
                     if (System.currentTimeMillis() - lastCheck > TimeUnit.MINUTES.toMillis(15)) {
@@ -47,9 +47,9 @@ class UpdateService(
                         }
                     }
                 }
-                backgroundWorks.markWorkFinished(key)
+                backgroundWorks.markWorkFinished(key, key)
             } catch (e: Exception) {
-                backgroundWorks.markWorkFinished(key, e)
+                backgroundWorks.markWorkFinished(key, key, e)
             }
         }
         return key

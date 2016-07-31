@@ -17,8 +17,9 @@ import kotlin.reflect.KClass
  * Created by y2k on 5/9/16.
  */
 class MainViewModel(
-    val syncInBackground: (Works, Any) -> Unit,
-    val watchForBackground: (Works, ((Any) -> WorkStatus) -> Unit) -> Unit,
+    val executeBackgroundTask: (Works, Any) -> Unit,
+    val waitBackgroundTask: (Works, () -> Unit) -> Unit,
+    val statusBackgroundTask: (Works, Any) -> WorkStatus,
     val queryPosts: (String) -> CompletableFuture<ListState>,
     val navigateTo: (KClass<*>, Any?) -> Unit,
     scope: LifeCycleService) {
@@ -33,26 +34,27 @@ class MainViewModel(
 
     init {
         scope.registerProperty(BroadcastService.TagSelected::class, group)
-        quality.subscribe { syncInBackground(Works.syncPostsPreloadNewPosts, selected) }
-        group.subscribe { syncInBackground(Works.syncPostsPreloadNewPosts, selected) }
+        quality.subscribe { executeBackgroundTask(Works.syncPostsPreloadNewPosts, selected) }
+        group.subscribe { executeBackgroundTask(Works.syncPostsPreloadNewPosts, selected) }
 
-        watchForBackground(Works.syncPosts) { getStatus ->
+        waitBackgroundTask(Works.syncPosts) {
             async_ {
-                isBusy += getStatus(selected).isInProgress
-                isError += getStatus(selected).isFinishedWithError
+                val status = statusBackgroundTask(Works.syncPosts, selected)
+                isBusy += status.isInProgress
+                isError += status.isFinishedWithError
 
                 val data = await(queryPosts(selected))
                 hasNewPosts += data.hasNew
                 posts += data.posts
-                    .map { PostItemViewModel(navigateTo, syncInBackground, it) }
+                    .map { PostItemViewModel(navigateTo, executeBackgroundTask, it) }
                     .let { vms -> ListWithDivider(vms, data.divider) }
             }
         }
     }
 
-    fun applyNew() = syncInBackground(Works.syncPostsApplyNew, selected)
-    fun loadMore() = syncInBackground(Works.syncPostsLoadNextPage, selected)
-    fun reloadFirstPage() = syncInBackground(Works.syncPostsReloadFirstPage, selected)
+    fun applyNew() = executeBackgroundTask(Works.syncPostsApplyNew, selected)
+    fun loadMore() = executeBackgroundTask(Works.syncPostsLoadNextPage, selected)
+    fun reloadFirstPage() = executeBackgroundTask(Works.syncPostsReloadFirstPage, selected)
 
     fun openProfile() = navigateTo(ProfileViewModel::class, null)
     fun openMessages() = navigateTo(ThreadsViewModel::class, null)

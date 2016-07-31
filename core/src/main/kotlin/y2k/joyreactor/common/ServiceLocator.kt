@@ -104,7 +104,8 @@ object ServiceLocator {
             val tagService = resolve<TagService>()
             MainViewModel(
                 syncInBackgroundService::sync,
-                syncInBackgroundService::watchForBackground_,
+                syncInBackgroundService::watchForBackground,
+                syncInBackgroundService::statusBackgroundTask,
                 tagService::queryPostsAsync,
                 resolve<NavigationService>(),
                 resolve())

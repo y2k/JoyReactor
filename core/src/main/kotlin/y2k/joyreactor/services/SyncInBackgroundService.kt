@@ -30,8 +30,13 @@ class SyncInBackgroundService(
             else -> throw IllegalArgumentException("key: $work")
         }
 
-        backgroundWorks.markWorkStarted(makeKey(work, arg))
-        task.thenAccept { backgroundWorks.markWorkFinished(makeKey(work, arg), it.errorOrNull) }
+        val syncWorkList = listOf(
+            Works.syncPostsPreloadNewPosts, Works.syncPostsApplyNew,
+            Works.syncPostsLoadNextPage, Works.syncPostsReloadFirstPage)
+        val key = if (syncWorkList.contains(work)) makeKey(Works.syncPosts, arg) else makeKey(work, arg)
+        val broadcastKey = if (syncWorkList.contains(work)) makeKey(Works.syncPosts) else makeKey(work, arg)
+        backgroundWorks.markWorkStarted(key, broadcastKey)
+        task.thenAccept { backgroundWorks.markWorkFinished(key, broadcastKey, it.errorOrNull) }
     }
 
     fun watchForBackground(work: Works, arg: Long, callback: (WorkStatus) -> Unit) {
@@ -41,13 +46,18 @@ class SyncInBackgroundService(
         }
     }
 
-    fun watchForBackground_(work: Works, onChanged: ((Any) -> WorkStatus) -> Unit) {
-        scope(makeKey(work)) {
-            onChanged { backgroundWorks.getStatus(makeKey(work, it)) }
-        }
+    fun watchForBackground(work: Works, onChanged: () -> Unit) {
+        scope(makeKey(work)) { onChanged() }
     }
 
-    private fun makeKey(work: Works, arg: Any? = null) = "$work${arg?.toString() ?: ""}"
+    fun statusBackgroundTask(work: Works, arg: Any): WorkStatus {
+        return backgroundWorks.getStatus(makeKey(work, arg))
+    }
+
+    private fun makeKey(work: Works, arg: Any? = null): String {
+        val key = arg?.toString() ?: ""
+        return "$work/$key"
+    }
 }
 
 enum class Works {
