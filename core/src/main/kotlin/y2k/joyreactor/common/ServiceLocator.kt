@@ -5,7 +5,6 @@ import y2k.joyreactor.common.http.DefaultHttpClient
 import y2k.joyreactor.common.http.HttpClient
 import y2k.joyreactor.common.platform.NavigationService
 import y2k.joyreactor.common.platform.Platform
-import y2k.joyreactor.common.platform.getArgument
 import y2k.joyreactor.services.*
 import y2k.joyreactor.services.images.DiskCache
 import y2k.joyreactor.services.repository.Entities
@@ -119,7 +118,7 @@ object ServiceLocator {
                 postService::getPostData,
                 syncInBackgroundService::sync,
                 syncInBackgroundService::watchForBackground,
-                { resolve<NavigationService>().getArgument<Long>() },
+                { resolve<NavigationService>().argument.toLong() },
                 resolve<NavigationService>())
         }
         register { PostLikeViewModel(resolve(), resolve()) }
