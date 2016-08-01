@@ -31,26 +31,26 @@ class ProfileViewModel(
         async_ {
             isBusy += true
             try {
-                val profile = await(service.getProfile())
-                userName += profile.userName
-                userImage += profile.userImage
-                rating += profile.rating
-                stars += profile.stars.toFloat()
-                nextStarProgress += profile.progressToNewStar
-                awards += profile.awards
+                setProperties(await(service.getProfile()))
                 isBusy += false
+            } catch(e: NotAuthorizedException) {
+                navigationService.openVM<LoginViewModel>()
+                navigationService.close()
             } catch (e: Exception) {
                 e.printStackTrace()
-                when (e) {
-                    is NotAuthorizedException -> {
-                        navigationService.openVM<LoginViewModel>()
-                        navigationService.close()
-                    }
-                    else -> isError += true
-                }
+                isError += true
+                isBusy += false
             }
-            isBusy += false
         }
+    }
+
+    private fun setProperties(profile: Profile) {
+        userName += profile.userName
+        userImage += profile.userImage
+        rating += profile.rating
+        stars += profile.stars.toFloat()
+        nextStarProgress += profile.progressToNewStar
+        awards += profile.awards
     }
 
     fun logout() {

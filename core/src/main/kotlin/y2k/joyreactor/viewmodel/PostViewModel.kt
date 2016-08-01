@@ -17,8 +17,8 @@ import kotlin.reflect.KClass
 class PostViewModel(
     val checkIsAuthorized: () -> CompletableFuture<Boolean>,
     val getPostData: (Long) -> CompletableFuture<PostData>,
-    val syncInBackground: (Works, Long) -> Unit,
-    val watchForBackground: (Works, Long, (WorkStatus) -> Unit) -> Unit,
+    val executeBackgroundTask: (Works, Long) -> Unit,
+    val waitBackgroundTask: (Works, Long, (WorkStatus) -> Unit) -> Unit,
     val getArgument: () -> Long,
     val navigateTo: (KClass<*>, Any?) -> Unit) {
 
@@ -38,8 +38,8 @@ class PostViewModel(
     private val postId = getArgument()
 
     init {
-        syncInBackground(Works.syncOnePost, postId)
-        watchForBackground(Works.syncOnePost, postId) { status ->
+        executeBackgroundTask(Works.syncOnePost, postId)
+        waitBackgroundTask(Works.syncOnePost, postId) { status ->
             async_ {
                 status.let {
                     isBusy += it.isInProgress
@@ -60,14 +60,14 @@ class PostViewModel(
             }
         }
 
-        watchForBackground(Works.saveAttachment, postId) { isBlockBusy += it.isInProgress }
+        waitBackgroundTask(Works.saveAttachment, postId) { isBlockBusy += it.isInProgress }
     }
 
     fun openInBrowser() = navigateTo(BrowserViewModel::class, "http://joyreactor.cc/post/" + postId)
     fun createComment() = navigateTo(CreateCommentViewModel::class, postId)
     fun showMoreImages() = navigateTo(GalleryViewModel::class, postId)
     fun openImage(image: Image) = navigateTo(ImageViewModel::class, image.fullUrl())
-    fun saveToGallery() = syncInBackground(Works.saveAttachment, postId)
+    fun saveToGallery() = executeBackgroundTask(Works.saveAttachment, postId)
 
     fun selectComment(comment: Comment) = navigateTo(CommentsViewModel::class, comment.id)
 }
