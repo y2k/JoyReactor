@@ -1,5 +1,6 @@
 package y2k.joyreactor.common
 
+import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
@@ -11,6 +12,25 @@ import y2k.joyreactor.services.LifeCycleService
 /**
  * Created by y2k on 3/4/16.
  */
+
+open class VMActivity : BaseActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContentView(getContentView())
+        setSupportActionBar(findViewById(R.id.toolbar) as Toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun getContentView(): Int {
+        return javaClass.simpleName
+            .replace("Activity", "")
+            .let { "activity_" + it.toLowerCase() }
+            .let { resources.getIdentifier(it, "layout", packageName) }
+    }
+}
+
 open class BaseActivity : AppCompatActivity() {
 
     var menuHolder = MenuHolder()
