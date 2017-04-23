@@ -16,8 +16,7 @@ processTestResources.dependsOn copyTestResources
 repositories {
     jcenter()
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-    maven { url  "http://dl.bintray.com/kotlin/kotlin-eap-1.1" }
-    maven { url "http://dl.bintray.com/kotlin/kotlinx.coroutines" }
+    maven { url 'http://dl.bintray.com/kotlin/kotlinx.coroutines' }
 }
 dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.2.0'

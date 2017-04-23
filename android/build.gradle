@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    compileSdkVersion 25
+    buildToolsVersion "24.0.3"
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId "y2k.joyreactor"
         minSdkVersion 15
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode computeAppVersionCode()
         versionName computeAppVersionName()
         generatedDensities = []
@@ -44,29 +44,16 @@ android {
     }
 }
 
-// buildscript {
-//     repositories {
-//         jcenter()
-//         mavenCentral()
-//     }
-
-//     dependencies {
-//         classpath 'com.android.tools.build:gradle:2.1.0'
-//         classpath 'com.google.gms:google-services:3.0.0'
-//     }
-// }
-
 repositories {
     jcenter()
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-    maven { url "https://mint.splunk.com/gradle/" }
-    maven { url  "http://dl.bintray.com/kotlin/kotlin-eap-1.1" }
-    maven { url "http://dl.bintray.com/kotlin/kotlinx.coroutines" }
+    maven { url 'https://mint.splunk.com/gradle/' }
+    maven { url 'http://dl.bintray.com/kotlin/kotlinx.coroutines' }
     mavenCentral()
 }
 
 ext {
-    supportLibVersion = '24.0.0'
+    supportLibVersion = '25.3.1'
 }
 
 dependencies {
